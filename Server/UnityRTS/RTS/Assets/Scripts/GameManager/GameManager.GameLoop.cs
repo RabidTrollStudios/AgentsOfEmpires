@@ -19,6 +19,7 @@ namespace GameManager
 			if (gameState == GameState.PLAYING)
 			{
 				UpdateTimerUI();
+				UpdateCustomDebugUI();
 				ProcessUserInput();
 
 				roundWinner = DetermineRoundWinner();
@@ -56,7 +57,7 @@ namespace GameManager
 							DisplayMultiAgentResults();
 						}
 
-						TimeToDisplayBanner = 5.0f;
+						TimeToDisplayBanner = 3.0f;
 						gameState = GameState.FINISHED;
 					}
 					else
@@ -73,7 +74,7 @@ namespace GameManager
 			else if (gameState == GameState.FINISHED)
 			{
 				TimeToDisplayBanner -= Time.deltaTime;
-				if (TimeToDisplayBanner < 0.0f)
+				if (TimeToDisplayBanner < 0.0f && (Input.anyKeyDown || Input.GetMouseButtonDown(0)))
 				{
 #if UNITY_EDITOR
 					UnityEditor.EditorApplication.isPlaying = false;

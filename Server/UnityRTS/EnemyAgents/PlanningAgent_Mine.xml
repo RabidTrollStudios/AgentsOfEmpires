@@ -10,14 +10,52 @@
              AI is handled by other classes (like pathfinding).
             </summary>
         </member>
+        <member name="M:PlanningAgent.PlanningAgent.EvaluateState(PlanningAgent.PlanningAgent.GameState)">
+            <summary>
+            Evaluate whether the agent should regress (-1), stay (0), or progress (1)
+            based on the min/max thresholds defined in stateThresholds for the given state.
+            Returns -1 if any actual count is below its min.
+            Returns  1 if all actual counts are at or above their max.
+            Returns  0 otherwise.
+            </summary>
+        </member>
         <member name="M:PlanningAgent.PlanningAgent.BuildBuilding(AgentSDK.UnitType,AgentSDK.IGameState,AgentSDK.IAgentActions)">
             <summary>
             Build a building
             </summary>
         </member>
-        <member name="M:PlanningAgent.PlanningAgent.AttackEnemy(System.Collections.Generic.List{System.Int32},AgentSDK.IGameState,AgentSDK.IAgentActions)">
+        <member name="M:PlanningAgent.PlanningAgent.RallyIdleTroops(AgentSDK.IGameState,AgentSDK.IAgentActions)">
             <summary>
-            Attack the enemy
+            Move idle troops that are near a barracks to a nearby build position so they don't block spawns.
+            </summary>
+        </member>
+        <member name="M:PlanningAgent.PlanningAgent.DefendBase(AgentSDK.IGameState,AgentSDK.IAgentActions)">
+            <summary>
+            Defend: only attack enemies that are within a radius of our buildings or workers.
+            Each idle troop attacks the closest threatening enemy.
+            </summary>
+        </member>
+        <member name="M:PlanningAgent.PlanningAgent.FindClosestThreat(System.Collections.Generic.List{System.Int32},AgentSDK.Position,System.Single,AgentSDK.IGameState,System.Single@,System.Int32@)">
+            <summary>
+            Find the closest enemy (to the troop) that is within radius of any of our buildings or workers.
+            </summary>
+        </member>
+        <member name="M:PlanningAgent.PlanningAgent.CoordinatedAttack(AgentSDK.IGameState,AgentSDK.IAgentActions)">
+            <summary>
+            Split targeting by unit type: soldiers charge closest enemy (melee),
+            archers prefer closest enemy within their attack range to avoid
+            competing for the same cells as soldiers.
+            </summary>
+        </member>
+        <member name="M:PlanningAgent.PlanningAgent.FindClosestTo(System.Collections.Generic.List{System.Int32},AgentSDK.Position,AgentSDK.IGameState)">
+            <summary>
+            Find the closest enemy to a given position.
+            </summary>
+        </member>
+        <member name="M:PlanningAgent.PlanningAgent.FindClosestWithinRange(System.Collections.Generic.List{System.Int32},AgentSDK.Position,System.Single,AgentSDK.IGameState)">
+            <summary>
+            Find the closest enemy within a maximum range of a given position.
+            Returns -1 if no enemy is within range.
             </summary>
         </member>
         <member name="M:PlanningAgent.PlanningAgent.InitializeMatch">
@@ -34,12 +72,6 @@
         <member name="M:PlanningAgent.PlanningAgent.Update(AgentSDK.IGameState,AgentSDK.IAgentActions)">
             <summary>
             Update the GameManager - called once per frame
-            </summary>
-        </member>
-        <member name="M:PlanningAgent.PlanningAgent.FindClosestUnits(System.Collections.Generic.List{System.Int32},AgentSDK.IGameState)">
-            <summary>
-            Find closest enemy units sorted by distance to main base
-            Returns dictionary of unitNbr -> distance
             </summary>
         </member>
     </members>

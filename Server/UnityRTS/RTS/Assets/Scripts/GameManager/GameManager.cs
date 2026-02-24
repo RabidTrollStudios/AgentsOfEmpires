@@ -102,6 +102,19 @@ namespace GameManager
 		/// </summary>
 		[SerializeField] private Canvas OrcDebuggerCanvas;
 
+		[Header("Custom Debug")]
+		[SerializeField] private Text HumanCustomDebugText;
+		[SerializeField] private Text OrcCustomDebugText;
+
+		[Header("Debug Toggles")]
+		[SerializeField] private Toggle AgentToggle;
+		[SerializeField] private Toggle UnitToggle;
+		[SerializeField] private Toggle InfluenceToggle;
+		[SerializeField] private Toggle MoveTintToggle;
+		[SerializeField] private Toggle GatherTintToggle;
+		[SerializeField] private Toggle AttackTintToggle;
+		[SerializeField] private Toggle PathTintToggle;
+
 		#endregion
 
 		#region Public Properties
@@ -135,6 +148,26 @@ namespace GameManager
 		/// Turns the agent debugging UIs on and off
 		/// </summary>
 		public bool HasAgentDebugging { get; private set; }
+
+		/// <summary>
+		/// Tints MOVE-state units blue when enabled
+		/// </summary>
+		public bool HasMoveTint { get; private set; }
+
+		/// <summary>
+		/// Tints GATHER-state workers when enabled
+		/// </summary>
+		public bool HasGatherTint { get; private set; }
+
+		/// <summary>
+		/// Tints ATTACK-state units red when enabled
+		/// </summary>
+		public bool HasAttackTint { get; private set; }
+
+		/// <summary>
+		/// Shows unit path lines when enabled
+		/// </summary>
+		public bool HasPathTint { get; private set; }
 
 		#endregion
 
@@ -212,6 +245,7 @@ namespace GameManager
 		/// </summary>
 		private void Awake()
 		{
+			if (TotalNbrOfRounds % 2 == 0) TotalNbrOfRounds++;
 			Constants.GAME_SPEED = StartingGameSpeed;
 			Constants.CalculateGameConstants();
 
@@ -224,6 +258,8 @@ namespace GameManager
 			unitManager = new UnitManager(mapManager, Prefabs);
 			eventDispatcher = new EventDispatcher(unitManager, mapManager);
 			agentLoader = new AgentLoader(pathToDLLs);
+
+			InitializeDebugToggles();
 
 			unitManager.OrcUnitPrefabs = new Dictionary<UnitType, GameObject>()
 			{

@@ -55,6 +55,12 @@ namespace AgentSDK
         /// <summary>Pre-computed valid build positions for 3x3 structures</summary>
         protected List<Position> buildPositions;
 
+        /// <summary>
+        /// Debug text displayed on the Custom Debug UI overlay.
+        /// Set this in your Update() method to show agent state info.
+        /// </summary>
+        public string DebugText { get; protected set; } = "";
+
         #endregion
 
         /// <summary>

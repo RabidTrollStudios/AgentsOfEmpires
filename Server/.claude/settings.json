@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git checkout:*)",
+      "Bash(dir:*)",
+      "Bash(cmd /c \"dir C:\\\\Git\\\\Warcrap\\\\Server\\\\UnityRTS\\\\EnemyAgents 2>&1\")",
+      "Bash(cmd /c dir \"C:\\\\Git\\\\Warcrap\\\\Server\\\\UnityRTS\\\\EnemyAgents\")",
+      "Bash(echo:*)",
+      "Bash(done)",
+      "Bash(cmd /c copy:*)",
+      "Bash(cmd /c dir \"C:\\\\Git\\\\Warcrap\\\\Server\\\\UnityRTS\\\\EnemyAgents\\\\AgentSDK.dll\")",
+      "Bash(for agent in Phalanx Volley ArcherOnly ArcherSwarm Balanced Commander EconBoom Gatherer Idle SoldierRush Swarm Turtle)",
+      "Bash(do echo \"=== Building $agent ===\")"
+    ]
+  }
+}

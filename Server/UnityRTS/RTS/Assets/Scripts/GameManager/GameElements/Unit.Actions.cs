@@ -58,6 +58,7 @@ namespace GameManager.GameElements
 		/// <param name="args">arguments for the building task</param>
 		internal void StartBuilding(BuildEventArgs args)
 		{
+			ExitMine();
 			// Exclude the building worker's cell - the worker will move to a neighbor before building
 			var workerExclusion = new HashSet<Vector3Int> { GridPosition };
 
@@ -112,12 +113,22 @@ namespace GameManager.GameElements
 		/// <param name="args">arguments for moving task</param>
 		internal void StartMoving(MoveEventArgs args)
 		{
+			ExitMine();
+
 			if (CurrentAction != UnitAction.BUILD
 				&& CanMove)
 			{
 				pathFailCount = 0;
 				pathBackoffMultiplier = 1;
-				path = GameManager.Instance.Map.GetPathBetweenGridPositions(GridPosition, args.Target);
+
+				// Try avoidUnits first — this produces a path through truly empty cells
+				// that FixedUpdate can follow immediately without local-avoidance delays.
+				path = GameManager.Instance.Map.GetPathBetweenGridPositions(GridPosition, args.Target, avoidUnits: true);
+
+				// Fall back to walkable path if surrounded (avoidUnits can't expand any neighbors)
+				if (path.Count == 0)
+					path = GameManager.Instance.Map.GetPathBetweenGridPositions(GridPosition, args.Target);
+
 				if (path.Count > 0)
 				{
 					TargetGridPos = args.Target;
@@ -146,6 +157,8 @@ namespace GameManager.GameElements
 		/// <param name="args">arguments for the gathering task</param>
 		internal void StartGathering(GatherEventArgs args)
 		{
+			ExitMine();
+
 			if (CurrentAction != UnitAction.BUILD
 				&& CanGather
 				&& GameManager.Instance.Units.GetUnit(args.ResourceUnit.UnitNbr) != null
@@ -190,15 +203,23 @@ namespace GameManager.GameElements
 		/// <param name="args">arguments for attacking task</param>
 		internal void StartAttacking(AttackEventArgs args)
 		{
+			ExitMine();
+
 			if (CurrentAction != UnitAction.BUILD && CanAttack)
 			{
 				var targetUnit = args.Target.GetComponent<Unit>();
 				pathFailCount = 0;
 				pathBackoffMultiplier = 1;
-				UpdatePath(GridPosition, targetUnit.UnitType, targetUnit.GridPosition, forceImmediate: true);
 
-				if (path.Count > 0)
+				// Check if already within effective attack range — if so, start
+				// attacking immediately without pathfinding toward the target.
+				// This prevents ranged units from walking up to melee range.
+				float effectiveRange = GameConstants.EffectiveAttackRange(UnitType, targetUnit.UnitType);
+				float dist = Vector3.Distance(targetUnit.CenterGridPosition, CenterGridPosition);
+
+				if (dist < effectiveRange)
 				{
+					path.Clear();
 					TargetGridPos = targetUnit.GridPosition;
 					TargetUnitType = targetUnit.UnitType;
 					CurrentAction = UnitAction.ATTACK;
@@ -206,12 +227,28 @@ namespace GameManager.GameElements
 					damage = 0.0f;
 					totalDamage = 0.0f;
 					GetCmdLog()?.LogCommand("ATTACK", $"{UnitType}#{UnitNbr} at {GridPosition} -> {targetUnit.UnitType}#{targetUnit.UnitNbr} at {targetUnit.GridPosition}",
-						$"STARTED (path={path.Count} steps)");
+						$"STARTED (already in range, dist={dist:F1})");
 				}
 				else
 				{
-					GetCmdLog()?.LogCommand("ATTACK", $"{UnitType}#{UnitNbr} at {GridPosition} -> {targetUnit.UnitType}#{targetUnit.UnitNbr} at {targetUnit.GridPosition}",
-						"EXEC_FAILED: no path found to target");
+					UpdatePath(GridPosition, targetUnit.UnitType, targetUnit.GridPosition, forceImmediate: true);
+
+					if (path.Count > 0)
+					{
+						TargetGridPos = targetUnit.GridPosition;
+						TargetUnitType = targetUnit.UnitType;
+						CurrentAction = UnitAction.ATTACK;
+						AttackUnit = args.Target;
+						damage = 0.0f;
+						totalDamage = 0.0f;
+						GetCmdLog()?.LogCommand("ATTACK", $"{UnitType}#{UnitNbr} at {GridPosition} -> {targetUnit.UnitType}#{targetUnit.UnitNbr} at {targetUnit.GridPosition}",
+							$"STARTED (path={path.Count} steps)");
+					}
+					else
+					{
+						GetCmdLog()?.LogCommand("ATTACK", $"{UnitType}#{UnitNbr} at {GridPosition} -> {targetUnit.UnitType}#{targetUnit.UnitNbr} at {targetUnit.GridPosition}",
+							"EXEC_FAILED: no path found to target");
+					}
 				}
 			}
 			else

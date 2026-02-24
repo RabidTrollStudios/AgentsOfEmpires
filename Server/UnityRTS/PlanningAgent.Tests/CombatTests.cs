@@ -89,14 +89,14 @@ namespace PlanningAgent.Tests
             game.InitializeRound();
 
             float baseBefore = game.GetUnitsByType(1, UnitType.BASE)[0].Health;
-            game.Run(50);
+            game.Run(20);
 
             var bases = game.GetUnitsByType(1, UnitType.BASE);
             Assert.Single(bases);
-            // Archer damage (3 * 20 = 60 dps) is much less than soldier (20 * 20 = 400 dps)
-            // BASE has 1000 HP, so archer shouldn't kill it in 50 ticks
+            // Archer base damage 40, scaled by game speed. BASE has 1000 HP,
+            // so a single archer shouldn't kill it in 20 ticks (40*20=800 damage).
             Assert.True(bases[0].Health < baseBefore);
-            Assert.True(bases[0].Health > 0, "BASE should still be alive — archer DPS is low");
+            Assert.True(bases[0].Health > 0, "BASE should still be alive — archer DPS is moderate");
         }
 
         [Fact]

@@ -303,18 +303,26 @@ namespace GameManager
 		/// <summary>
 		/// Get the path from a gridPosition to a position near the unit on any side of it
 		/// </summary>
-		public List<Vector3Int> GetPathToUnit(Vector3Int gridPosition, UnitType unitType, Vector3Int unitGridPosition)
+		public List<Vector3Int> GetPathToUnit(Vector3Int gridPosition, UnitType unitType, Vector3Int unitGridPosition, bool avoidUnits = false)
 		{
 			List<Vector3Int> path = new List<Vector3Int>();
 			List<Vector3Int> allNeighbors = GetGridPositionsNearUnit(unitType, unitGridPosition);
 			List<Vector3Int> positions = GetBuildableGridPositionsNearUnit(unitType, unitGridPosition);
+
+			// Sort neighbors by distance to the requesting unit so it targets the closest open cell first
+			positions.Sort((a, b) =>
+			{
+				float distA = (a - gridPosition).sqrMagnitude;
+				float distB = (b - gridPosition).sqrMagnitude;
+				return distA.CompareTo(distB);
+			});
 
 			// One-time diagnostic dump for failed BUILD pathfinding
 			bool shouldLog = !hasLoggedPathDiag;
 
 			foreach (var position in positions)
 			{
-				path = GetPathBetweenGridPositions(gridPosition, position);
+				path = GetPathBetweenGridPositions(gridPosition, position, avoidUnits);
 				if (path.Count > 0)
 				{
 					return path;
@@ -374,14 +382,14 @@ namespace GameManager
 		/// <summary>
 		/// Gets the path between two grid positions
 		/// </summary>
-		public List<Vector3Int> GetPathBetweenGridPositions(Vector3Int startGridPosition, Vector3Int endGridPosition)
+		public List<Vector3Int> GetPathBetweenGridPositions(Vector3Int startGridPosition, Vector3Int endGridPosition, bool avoidUnits = false)
 		{
 			List<Vector3Int> path = new List<Vector3Int>();
 
 			int start = Utility.GridToInt(startGridPosition, MapSize);
 			int end = Utility.GridToInt(endGridPosition, MapSize);
 
-			List<int> pathOfInts = Graph.AStarSearch(start, end);
+			List<int> pathOfInts = Graph.AStarSearch(start, end, avoidUnits: avoidUnits);
 
 			foreach (var nodeNbr in pathOfInts)
 			{

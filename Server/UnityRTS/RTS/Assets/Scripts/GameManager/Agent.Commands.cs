@@ -31,7 +31,7 @@ namespace GameManager
 				CmdLog?.LogCommand("MOVE", $"{unit.UnitType}#{unit.UnitNbr} at {unit.GridPosition} -> {target}", "FAILED: target not on map");
 				return;
 			}
-			if (!GameManager.Instance.Map.IsGridPositionBuildable(target))
+			if (!GameManager.Instance.Map.IsGridPositionWalkable(target))
 			{
 				CmdLog?.LogCommand("MOVE", $"{unit.UnitType}#{unit.UnitNbr} at {unit.GridPosition} -> {target}", "FAILED: target not walkable");
 				return;

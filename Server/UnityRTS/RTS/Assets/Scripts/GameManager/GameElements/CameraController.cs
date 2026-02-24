@@ -10,6 +10,8 @@ namespace GameManager.GameElements
 
 		const float dragMultiplier = 40f;
 		const float scrollMultiplier = 10f;
+		const float minZoom = 1f;
+		const float maxZoom = 23f;
 
 		bool isDraggingLeftBtn;
 		Vector3 mousePositionOld;
@@ -21,6 +23,10 @@ namespace GameManager.GameElements
 			isDraggingLeftBtn = false;
 			isDraggingRightBtn = false;
 			mousePositionOld = Vector3.zero;
+
+			var cam = GetComponent<Camera>();
+			if (cam != null)
+				cam.orthographicSize = 23f;
 		}
 
 		// Update is called once per frame
@@ -49,7 +55,8 @@ namespace GameManager.GameElements
 			// Handle Zoom Behavior
 			if (Math.Abs(Input.GetAxis("Mouse ScrollWheel")) > .00001f)
 			{
-				gameObject.GetComponent<Camera>().orthographicSize += -Input.GetAxis("Mouse ScrollWheel") * scrollMultiplier;
+				var cam = gameObject.GetComponent<Camera>();
+				cam.orthographicSize = Math.Min(maxZoom, Math.Max(minZoom, cam.orthographicSize + -Input.GetAxis("Mouse ScrollWheel") * scrollMultiplier));
 			}
 
 			// Handle Zoom Behavior using right-button
@@ -63,7 +70,8 @@ namespace GameManager.GameElements
 				Vector3 delta = new Vector3((Input.mousePosition.x - mousePositionOld.x) / Screen.width,
 					(Input.mousePosition.y - mousePositionOld.y) / Screen.height,
 					0);
-				gameObject.GetComponent<Camera>().orthographicSize -= delta.y * dragMultiplier;
+				var cam = gameObject.GetComponent<Camera>();
+				cam.orthographicSize = Math.Min(maxZoom, Math.Max(minZoom, cam.orthographicSize - delta.y * dragMultiplier));
 
 				mousePositionOld = Input.mousePosition;
 			}

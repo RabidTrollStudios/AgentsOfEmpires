@@ -201,13 +201,13 @@ namespace PlanningAgent.Tests
             var map = new SimMap(30, 30);
             var positions = map.GetPositionsNearUnit(UnitType.BASE, new Position(10, 10));
 
-            // 3x3 building: ring around it should have (3+2)*2 + (3)*2 = 16 cells
-            // Top row (5 cells) + bottom row (5 cells) + left col (3 cells) + right col (3 cells) = 16
-            Assert.Equal(16, positions.Count);
+            // 4x4 building (BASE): ring around it should have (4+2)*2 + (4)*2 = 20 cells
+            // Top row (6 cells) + bottom row (6 cells) + left col (4 cells) + right col (4 cells) = 20
+            Assert.Equal(20, positions.Count);
 
             // None should be inside the footprint
-            for (int i = 0; i < 3; i++)
-                for (int j = 0; j < 3; j++)
+            for (int i = 0; i < 4; i++)
+                for (int j = 0; j < 4; j++)
                     Assert.DoesNotContain(new Position(10 + i, 10 - j), positions);
         }
 

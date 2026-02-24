@@ -124,16 +124,7 @@ namespace GameManager
         /// <summary>
         /// Initial health associated with each unit
         /// </summary>
-        public static readonly Dictionary<UnitType, float> HEALTH = new Dictionary<UnitType, float>()
-        {
-            { UnitType.MINE,        10000f },
-            { UnitType.WORKER,      50.0f },
-            { UnitType.SOLDIER,     100.0f },
-            { UnitType.ARCHER,      75.0f },
-            { UnitType.BASE,        1000.0f },
-            { UnitType.BARRACKS,    500.0f },
-            { UnitType.REFINERY,    500.0f },
-        };
+        public static readonly Dictionary<UnitType, float> HEALTH = new Dictionary<UnitType, float>(GameConstants.HEALTH);
 
 
         /// <summary>
@@ -203,7 +194,19 @@ namespace GameManager
 		internal static float SCALAR_DAMAGE;
 
 		/// <summary>
-        /// Primary moving speed that all troops are scaled by
+		/// Base move speed factor applied to GAME_SPEED to get worker speed.
+		/// Worker speed = GAME_SPEED * BASE_MOVE_SPEED.
+		/// </summary>
+		private const float BASE_MOVE_SPEED = 0.1f;
+
+		/// <summary>Soldier moves at 2.25x worker speed (slower, armored).</summary>
+		private const float SOLDIER_SPEED_MULTIPLIER = 2.25f;
+
+		/// <summary>Archer moves at 3.0x worker speed (light, fast — 33% faster than soldier).</summary>
+		private const float ARCHER_SPEED_MULTIPLIER = 3.0f;
+
+		/// <summary>
+        /// Base moving speed (= worker speed). Multiply by unit speed multipliers for other units.
         /// </summary>
         internal static float SCALAR_MOVING_SPEED;
 
@@ -290,16 +293,16 @@ namespace GameManager
 	        // because the singleton may not exist yet when the type initializer runs)
 	        HEALTH[UnitType.MINE] = GameManager.Instance.StartingMineGold;
 
-	        SCALAR_MOVING_SPEED = GAME_SPEED;
+	        SCALAR_MOVING_SPEED = GAME_SPEED * BASE_MOVE_SPEED;
 	        MOVING_SPEED = new Dictionary<UnitType, float>()
 	        {
-		        { UnitType.MINE,        0.0f},
-		        { UnitType.WORKER,      SCALAR_MOVING_SPEED * 0.1f},
-		        { UnitType.SOLDIER,     SCALAR_MOVING_SPEED * 0.2f },
-		        { UnitType.ARCHER,      SCALAR_MOVING_SPEED * 0.2f },
+		        { UnitType.MINE,        0.0f },
+		        { UnitType.WORKER,      SCALAR_MOVING_SPEED },
+		        { UnitType.SOLDIER,     SCALAR_MOVING_SPEED * SOLDIER_SPEED_MULTIPLIER },
+		        { UnitType.ARCHER,      SCALAR_MOVING_SPEED * ARCHER_SPEED_MULTIPLIER },
 		        { UnitType.BASE,        0.0f },
 		        { UnitType.BARRACKS,    0.0f },
-		        { UnitType.REFINERY,    0.0f},
+		        { UnitType.REFINERY,    0.0f },
 	        };
 
 	        SCALAR_MINING_SPEED = GAME_SPEED;
@@ -319,28 +322,14 @@ namespace GameManager
 			MINING_CAPACITY = new Dictionary<UnitType, float>(GameConstants.MINING_CAPACITY);
 
 			SCALAR_CREATION_TIME = GAME_SPEED > 0 ? 1f / GAME_SPEED : float.PositiveInfinity;
-	        CREATION_TIME = new Dictionary<UnitType, float>()
-	        {
-		        { UnitType.MINE,        0.0f },
-		        { UnitType.WORKER,      SCALAR_CREATION_TIME * 2 },
-		        { UnitType.SOLDIER,     SCALAR_CREATION_TIME * 4 },
-		        { UnitType.ARCHER,      SCALAR_CREATION_TIME * 5 },
-		        { UnitType.BASE,        SCALAR_CREATION_TIME * 10 },
-		        { UnitType.BARRACKS,    SCALAR_CREATION_TIME * 15 },
-		        { UnitType.REFINERY,    SCALAR_CREATION_TIME * 15 },
-	        };
+	        CREATION_TIME = new Dictionary<UnitType, float>();
+	        foreach (var kvp in GameConstants.CREATION_TIME_MULTIPLIER)
+		        CREATION_TIME[kvp.Key] = kvp.Value * SCALAR_CREATION_TIME;
 
 	        SCALAR_DAMAGE = GAME_SPEED;
-	        DAMAGE = new Dictionary<UnitType, float>()
-	        {
-		        { UnitType.MINE,        0.0f },
-		        { UnitType.WORKER,      0.0f },
-		        { UnitType.SOLDIER,     20.0f * SCALAR_DAMAGE },
-		        { UnitType.ARCHER,      3.0f * SCALAR_DAMAGE},
-		        { UnitType.BASE,        0.0f },
-		        { UnitType.BARRACKS,    0.0f },
-		        { UnitType.REFINERY,    0.0f },
-	        };
+	        DAMAGE = new Dictionary<UnitType, float>();
+	        foreach (var kvp in GameConstants.BASE_DAMAGE)
+		        DAMAGE[kvp.Key] = kvp.Value * SCALAR_DAMAGE;
 
         }
 

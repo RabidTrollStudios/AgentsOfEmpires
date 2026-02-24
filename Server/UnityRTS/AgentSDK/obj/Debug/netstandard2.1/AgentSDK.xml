@@ -36,9 +36,25 @@
             How much gold a worker can carry per mining trip
             </summary>
         </member>
+        <member name="F:AgentSDK.GameConstants.BASE_DAMAGE">
+            <summary>
+            Base damage per game-speed unit (multiply by game speed to get actual DPS).
+            </summary>
+        </member>
+        <member name="F:AgentSDK.GameConstants.CREATION_TIME_MULTIPLIER">
+            <summary>
+            Creation time multipliers (divide by game speed to get duration in seconds).
+            </summary>
+        </member>
         <member name="F:AgentSDK.GameConstants.ATTACK_RANGE">
             <summary>
             Attack range for each unit type (in grid units)
+            </summary>
+        </member>
+        <member name="F:AgentSDK.GameConstants.MOVEMENT_SPEED">
+            <summary>
+            Movement speed multiplier for each unit type (1.0 = baseline).
+            Soldiers are slower (armored/heavy), archers are faster (light).
             </summary>
         </member>
         <member name="F:AgentSDK.GameConstants.UNIT_SIZE">
@@ -75,6 +91,20 @@
         </member>
         <member name="F:AgentSDK.GameConstants.CAN_GATHER">
             <summary>Which unit types can gather resources</summary>
+        </member>
+        <member name="M:AgentSDK.GameConstants.EffectiveAttackRange(AgentSDK.UnitType,AgentSDK.UnitType)">
+            <summary>
+            Compute effective attack range against a target, accounting for target unit size.
+            Effective range = base attack range + max(target width, target height) / 2.
+            </summary>
+        </member>
+        <member name="M:AgentSDK.GameConstants.DamageMultiplier(AgentSDK.UnitType,AgentSDK.UnitType)">
+            <summary>
+            Damage multiplier based on attacker/defender type interaction.
+            Soldiers (melee, armored) take 75% damage from ranged attacks.
+            Archers (ranged, unarmored) take 125% damage from melee attacks.
+            All other matchups are 1.0x.
+            </summary>
         </member>
         <member name="T:AgentSDK.IAgentActions">
             <summary>
@@ -201,6 +231,14 @@
             Returns an empty list if no path exists.
             </summary>
         </member>
+        <member name="M:AgentSDK.IGameState.GetPathBetween(AgentSDK.Position,AgentSDK.Position,System.Boolean)">
+            <summary>
+            Find the shortest path between two grid positions.
+            When avoidUnits is true, cells occupied by mobile units are treated as impassable
+            (uses buildable checks instead of walkable), producing paths that avoid other units.
+            Returns an empty list if no path exists.
+            </summary>
+        </member>
         <member name="M:AgentSDK.IGameState.GetPathToUnit(AgentSDK.Position,AgentSDK.UnitType,AgentSDK.Position)">
             <summary>
             Find a path from a position to any walkable tile adjacent to a unit.
@@ -315,6 +353,12 @@
         <member name="F:AgentSDK.PlanningAgentBase.buildPositions">
             <summary>Pre-computed valid build positions for 3x3 structures</summary>
         </member>
+        <member name="P:AgentSDK.PlanningAgentBase.DebugText">
+            <summary>
+            Debug text displayed on the Custom Debug UI overlay.
+            Set this in your Update() method to show agent state info.
+            </summary>
+        </member>
         <member name="M:AgentSDK.PlanningAgentBase.InitializeMatch">
             <summary>
             Called once per match. Override to set up match-level state.
@@ -369,6 +413,12 @@
         <member name="M:AgentSDK.Position.Distance(AgentSDK.Position,AgentSDK.Position)">
             <summary>
             Euclidean distance between two positions
+            </summary>
+        </member>
+        <member name="M:AgentSDK.Position.Center(AgentSDK.Position,AgentSDK.Position)">
+            <summary>
+            Center cell of a unit's footprint given its top-left corner and size.
+            For 1x1 units returns the same position; for 3x3 returns topLeft+(1,-1).
             </summary>
         </member>
         <member name="T:AgentSDK.UnitAction">
@@ -435,6 +485,14 @@
         </member>
         <member name="P:AgentSDK.UnitInfo.OwnerAgentNbr">
             <summary>Agent number of the unit's owner</summary>
+        </member>
+        <member name="P:AgentSDK.UnitInfo.CenterPosition">
+            <summary>
+            Center cell of this unit's footprint.
+            Use this for distance calculations instead of GridPosition, which is the top-left corner.
+            For 1x1 units (soldiers, archers, workers) this equals GridPosition.
+            For 3x3 structures (bases, barracks, mines, refineries) this is GridPosition+(1,-1).
+            </summary>
         </member>
         <member name="T:AgentSDK.UnitType">
             <summary>

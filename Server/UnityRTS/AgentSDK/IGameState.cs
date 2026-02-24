@@ -74,6 +74,14 @@ namespace AgentSDK
         IReadOnlyList<Position> GetPathBetween(Position start, Position end);
 
         /// <summary>
+        /// Find the shortest path between two grid positions.
+        /// When avoidUnits is true, cells occupied by mobile units are treated as impassable
+        /// (uses buildable checks instead of walkable), producing paths that avoid other units.
+        /// Returns an empty list if no path exists.
+        /// </summary>
+        IReadOnlyList<Position> GetPathBetween(Position start, Position end, bool avoidUnits);
+
+        /// <summary>
         /// Find a path from a position to any walkable tile adjacent to a unit.
         /// Returns an empty list if no path exists.
         /// </summary>

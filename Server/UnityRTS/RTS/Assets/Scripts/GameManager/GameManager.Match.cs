@@ -1,4 +1,4 @@
-using AgentSDK;
+﻿using AgentSDK;
 using GameManager.GameElements;
 using Preloader;
 using System.Collections;
@@ -190,18 +190,119 @@ namespace GameManager
 
 		private void PlaceUnits()
         {
-	        int initAgentNbr = Random.Range(0, 2);
+	        // Identify human and orc agent numbers
+	        int humanAgentNbr = -1;
+	        int orcAgentNbr = -1;
+	        foreach (var kvp in Agents)
+	        {
+		        if (kvp.Value.GetComponent<AgentController>().Agent.AgentName == Constants.HUMAN_ABBR)
+			        humanAgentNbr = kvp.Key;
+		        else
+			        orcAgentNbr = kvp.Key;
+	        }
 
-	        // Find and place sequentially so each placement marks its area unbuildable
-	        // before the next location is chosen, preventing overlap
-	        Vector3Int workerLocation = mapManager.GetRandomBuildableLocation(UnitType.BASE);
-	        unitManager.PlaceUnit(Agents[initAgentNbr], workerLocation, UnitType.WORKER, Color.white);
+        // Grid positions use top-left corner convention (IsAreaBuildable extends +X and -Y).
+        // World center of a unit = (topLeft.x + size.x/2, topLeft.y - size.y/2 + 1)
+        //   1x1  workers/troops:          world center = grid + (0.5, 0.5)  =>  valid grid [1, 71] x [1, 40]
+        //   3x3  mine/barracks/refinery:  world center = grid + (1.5,-0.5)  =>  valid top-left [1, 69] x [3, 40]
+        //   4x4  base:                    world center = grid + (2, -1)      =>  valid top-left [1, 68] x [4, 40]
 
-	        Vector3Int mineLocation = mapManager.GetRandomBuildableLocation(UnitType.MINE);
-	        unitManager.PlaceUnit(Agents[initAgentNbr], mineLocation, UnitType.MINE, Color.white);
+        // Worker spawn corners - use BASE buildability so there's room to build a base at spawn
+        const int workerMinXY = 1;   // world 1.5  = first valid 1x1 position
+        const int workerMaxX  = 71;  // world 71.5 = last valid 1x1 position in X
+        const int workerMaxY  = 40;  // world 40.5 = last valid 1x1 position in Y
 
-	        unitManager.PlaceUnit(Agents[(initAgentNbr + 1) % 2], FindMirroredLocation(workerLocation, UnitType.BASE), UnitType.WORKER, Color.white);
-	        unitManager.PlaceUnit(Agents[(initAgentNbr + 1) % 2], FindMirroredLocation(mineLocation, UnitType.BASE), UnitType.MINE, Color.white);
+        Vector3Int humanWorkerLoc = GetBuildableLocationNearCorner(workerMinXY, workerMinXY, UnitType.BASE);
+        unitManager.PlaceUnit(Agents[humanAgentNbr], humanWorkerLoc, UnitType.WORKER, Color.white);
+
+        Vector3Int orcWorkerLoc = GetBuildableLocationNearCorner(workerMaxX, workerMaxY, UnitType.BASE);
+        unitManager.PlaceUnit(Agents[orcAgentNbr], orcWorkerLoc, UnitType.WORKER, Color.white);
+
+        // Mine placement - top-left of 3x3 footprint. World center = (topLeft.x + 1.5, topLeft.y - 0.5)
+        //   Valid world centers: (2.5, 2.5) to (70.5, 39.5)
+        //   Valid top-left range: X in [1, 69], Y in [3, 40]
+        const int mineMinX = 1;   // world center x = 1 + 1.5 = 2.5
+        const int mineMaxX = 69;  // world center x = 69 + 1.5 = 70.5
+        const int mineMinY = 3;   // world center y = 3 - 0.5 = 2.5
+        const int mineMaxY = 40;  // world center y = 40 - 0.5 = 39.5
+
+        int halfMineX = (mineMinX + mineMaxX) / 2;  // = 35
+        int halfMineY = (mineMinY + mineMaxY) / 2;  // = 21
+
+        // Spawn mine1 in the bottom-left quadrant of valid mine top-lefts; mirror mine2 to upper-right
+        Vector3Int mine1Loc = Vector3Int.zero;
+        Vector3Int mine2Loc = Vector3Int.zero;
+        int mineAttempts = 0;
+        do
+        {
+	        mine1Loc = new Vector3Int(
+		        Random.Range(mineMinX, halfMineX + 1),   // [1, 35]
+		        Random.Range(mineMinY, halfMineY + 1), 0);  // [3, 21]
+	        // Symmetric mirror: mineMin + mineMax - coord
+	        mine2Loc = new Vector3Int(
+		        mineMinX + mineMaxX - mine1Loc.x,   // 1 + 69 - x = 70 - x  =>  [35, 69]
+		        mineMinY + mineMaxY - mine1Loc.y, 0);  // 3 + 40 - y = 43 - y  =>  [22, 40]
+	        mineAttempts++;
+        } while ((!mapManager.IsBoundedAreaBuildable(UnitType.MINE, mine1Loc)
+	        || !mapManager.IsBoundedAreaBuildable(UnitType.MINE, mine2Loc)
+	        || IsInCorner(mine1Loc, 5)
+	        || IsInCorner(mine2Loc, 5)
+	        || (Mathf.Abs(mine1Loc.x - mine2Loc.x) <= 2 && Mathf.Abs(mine1Loc.y - mine2Loc.y) <= 2)) && mineAttempts < 1000);
+        // mine1 is near HUM spawn (lower-left); mine2 is its symmetric mirror near ORC spawn (upper-right)
+        unitManager.PlaceUnit(Agents[humanAgentNbr], mine1Loc, UnitType.MINE, Color.white);
+        unitManager.PlaceUnit(Agents[orcAgentNbr], mine2Loc, UnitType.MINE, Color.white);
+        }
+
+        /// <summary>
+        /// Search outward from a corner position for the first buildable location.
+        /// </summary>
+        private Vector3Int GetBuildableLocationNearCorner(int cornerX, int cornerY, UnitType sizeType)
+        {
+	        int maxRadius = Mathf.Max(mapManager.MapSize.x, mapManager.MapSize.y);
+	        for (int radius = 0; radius < maxRadius; radius++)
+	        {
+		        for (int dx = -radius; dx <= radius; dx++)
+		        {
+			        for (int dy = -radius; dy <= radius; dy++)
+			        {
+				        // Only check the perimeter of each ring
+				        if (radius > 0 && Mathf.Abs(dx) != radius && Mathf.Abs(dy) != radius)
+					        continue;
+
+				        Vector3Int pos = new Vector3Int(cornerX + dx, cornerY + dy, 0);
+				        if (Utility.IsValidGridLocation(pos, mapManager.MapSize)
+				            && mapManager.IsAreaBuildable(sizeType, pos))
+					        return pos;
+			        }
+		        }
+	        }
+	        // Fallback to random
+	        return mapManager.GetRandomBuildableLocation(sizeType);
+        }
+
+        /// <summary>
+        /// Find a random buildable location that is not in the upper-right or lower-left corners.
+        /// </summary>
+        private Vector3Int GetRandomBuildableLocationExcludingCorners(UnitType unitType)
+        {
+	        const int CORNER_MARGIN = 5;
+	        Vector3Int location;
+	        int attempts = 0;
+	        do
+	        {
+		        location = mapManager.GetRandomBuildableLocation(unitType);
+		        attempts++;
+	        } while (IsInCorner(location, CORNER_MARGIN) && attempts < 1000);
+	        return location;
+        }
+
+        private bool IsInCorner(Vector3Int pos, int margin)
+        {
+	        bool nearLeft = pos.x < margin;
+	        bool nearRight = pos.x >= mapManager.MapSize.x - margin;
+	        bool nearBottom = pos.y < margin;
+	        bool nearTop = pos.y >= mapManager.MapSize.y - margin;
+	        return (nearLeft && nearBottom) || (nearRight && nearTop);
         }
 
         /// <summary>

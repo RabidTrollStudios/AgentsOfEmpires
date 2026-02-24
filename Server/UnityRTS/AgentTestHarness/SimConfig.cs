@@ -13,7 +13,7 @@ namespace AgentTestHarness
         public int MapHeight { get; set; } = 30;
 
         /// <summary>Starting gold for each agent.</summary>
-        public int StartingGold { get; set; } = 5000;
+        public int StartingGold { get; set; } = 1000;
 
         /// <summary>Starting gold in each mine (also used as mine health).</summary>
         public int StartingMineGold { get; set; } = 10000;

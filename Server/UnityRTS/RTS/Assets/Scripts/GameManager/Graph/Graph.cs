@@ -96,7 +96,7 @@ namespace GameManager.Graph
         /// <summary>Why the last search ended: "found", "cap", "exhausted", "same_node", "end_blocked"</summary>
         public string LastSearchResult { get; private set; }
 
-        public List<int> AStarSearch(int startNodeNbr, int endNodeNbr, int maxExpansions = 2000)
+        public List<int> AStarSearch(int startNodeNbr, int endNodeNbr, int maxExpansions = 2000, bool avoidUnits = false)
         {
 			List<int> path = new List<int>();
             LastSearchExpansions = 0;
@@ -112,8 +112,8 @@ namespace GameManager.Graph
                 return path;
             }
 
-            // Early-exit: if the end node is not walkable (terrain/building), no path can reach it
-            if (!nodesDict[endNodeNbr].item.IsWalkable())
+            // Early-exit: if the end node is blocked, no path can reach it
+            if (avoidUnits ? !nodesDict[endNodeNbr].item.IsBuildable() : !nodesDict[endNodeNbr].item.IsWalkable())
             {
                 LastSearchResult = "end_blocked";
                 return path;
@@ -170,8 +170,8 @@ namespace GameManager.Graph
                     // Get the neighbor of this node via the edge
                     Node<T> neighbor = edge.GetNeighbor(currPNode.item);
 
-                    // If the node can be walked through (walkable = passable terrain, ignores mobile units)
-                    if (neighbor.item.IsWalkable())
+                    // If the node can be traversed (avoidUnits: only truly empty cells; normal: passable terrain)
+                    if (avoidUnits ? neighbor.item.IsBuildable() : neighbor.item.IsWalkable())
                     {
                         // Calculate the new cost through this node to this neighbor
                         double newCost = currPNode.item.cost + edge.cost + EstimateCost(neighbor.number, endNodeNbr);

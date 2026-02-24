@@ -32,6 +32,14 @@ namespace AgentSDK
             return (float)Math.Sqrt(dx * dx + dy * dy);
         }
 
+        /// <summary>
+        /// Center cell of a unit's footprint given its top-left corner and size.
+        /// For 1x1 units returns the same position; for 3x3 returns topLeft+(1,-1).
+        /// </summary>
+        public static Position Center(Position topLeft, Position size) =>
+            new Position(topLeft.X + (size.X - 1) / 2,
+                         topLeft.Y - (size.Y - 1) / 2);
+
         public static Position operator +(Position a, Position b) => new Position(a.X + b.X, a.Y + b.Y);
         public static Position operator -(Position a, Position b) => new Position(a.X - b.X, a.Y - b.Y);
         public static bool operator ==(Position a, Position b) => a.X == b.X && a.Y == b.Y;

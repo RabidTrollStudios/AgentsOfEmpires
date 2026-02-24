@@ -77,6 +77,11 @@ namespace AgentTestHarness
             return game.Map.FindPath(start, end);
         }
 
+        public IReadOnlyList<Position> GetPathBetween(Position start, Position end, bool avoidUnits)
+        {
+            return game.Map.FindPath(start, end, avoidUnits);
+        }
+
         public IReadOnlyList<Position> GetPathToUnit(Position start, UnitType unitType, Position unitPosition)
         {
             return game.Map.FindPathToUnit(start, unitType, unitPosition);

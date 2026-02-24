@@ -47,6 +47,9 @@ namespace AgentTestHarness
         internal GatherPhase GatherPhase;
         internal float MiningTimer;
 
+        // Movement speed accumulator (for fractional movement)
+        internal float MoveAccumulator;
+
         // Attack state
         internal int AttackTargetNbr;
 
@@ -62,6 +65,19 @@ namespace AgentTestHarness
             AttackTargetNbr = -1;
             GatherMineNbr = -1;
             GatherBaseNbr = -1;
+        }
+
+        /// <summary>
+        /// Center cell of this unit's footprint. Use for distance calculations.
+        /// For 1x1 units equals GridPosition; for 3x3 structures returns GridPosition+(1,-1).
+        /// </summary>
+        public Position CenterPosition
+        {
+            get
+            {
+                var size = GameConstants.UNIT_SIZE[UnitType];
+                return Position.Center(GridPosition, size);
+            }
         }
 
         /// <summary>

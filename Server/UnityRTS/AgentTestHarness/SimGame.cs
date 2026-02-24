@@ -62,28 +62,14 @@ namespace AgentTestHarness
             int gs = Config.GameSpeed;
             scalarCreationTime = gs > 0 ? 1f / gs : float.PositiveInfinity;
 
-            creationTime = new Dictionary<UnitType, float>
-            {
-                { UnitType.MINE, 0f },
-                { UnitType.WORKER, scalarCreationTime * 2f },
-                { UnitType.SOLDIER, scalarCreationTime * 4f },
-                { UnitType.ARCHER, scalarCreationTime * 5f },
-                { UnitType.BASE, scalarCreationTime * 10f },
-                { UnitType.BARRACKS, scalarCreationTime * 15f },
-                { UnitType.REFINERY, scalarCreationTime * 15f },
-            };
+            creationTime = new Dictionary<UnitType, float>();
+            foreach (var kvp in GameConstants.CREATION_TIME_MULTIPLIER)
+                creationTime[kvp.Key] = kvp.Value * scalarCreationTime;
 
             float scalarDamage = gs;
-            damage = new Dictionary<UnitType, float>
-            {
-                { UnitType.MINE, 0f },
-                { UnitType.WORKER, 0f },
-                { UnitType.SOLDIER, 20f * scalarDamage },
-                { UnitType.ARCHER, 3f * scalarDamage },
-                { UnitType.BASE, 0f },
-                { UnitType.BARRACKS, 0f },
-                { UnitType.REFINERY, 0f },
-            };
+            damage = new Dictionary<UnitType, float>();
+            foreach (var kvp in GameConstants.BASE_DAMAGE)
+                damage[kvp.Key] = kvp.Value * scalarDamage;
 
             float miningBoost = GameConstants.MINING_BOOST;
             miningSpeed = gs * miningBoost * 20f; // gold per second

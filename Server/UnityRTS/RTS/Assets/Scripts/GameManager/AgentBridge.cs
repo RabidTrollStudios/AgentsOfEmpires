@@ -14,6 +14,12 @@ namespace GameManager
         private GameStateAdapter gameState;
         private AgentActionsAdapter actions;
 
+        /// <summary>
+        /// Debug text from the planning agent, if it extends PlanningAgentBase.
+        /// </summary>
+        public string PlanningAgentDebugText =>
+            (planningAgent as PlanningAgentBase)?.DebugText ?? "";
+
         internal void SetPlanningAgent(IPlanningAgent agent)
         {
             this.planningAgent = agent;

@@ -6,27 +6,8 @@
     <members>
         <member name="T:PlanningAgent.PlanningAgent">
             <summary>
-            A simple dummy agent for testing purposes.
-            </summary>
-        </member>
-        <member name="M:PlanningAgent.PlanningAgent.BuildBuilding(AgentSDK.UnitType,AgentSDK.IGameState,AgentSDK.IAgentActions)">
-            <summary>
-            Build a building
-            </summary>
-        </member>
-        <member name="M:PlanningAgent.PlanningAgent.AttackEnemy(System.Collections.Generic.List{System.Int32},AgentSDK.IGameState,AgentSDK.IAgentActions)">
-            <summary>
-            Attack the enemy
-            </summary>
-        </member>
-        <member name="M:PlanningAgent.PlanningAgent.InitializeMatch">
-            <summary>
-            Called before each match between two agents.
-            </summary>
-        </member>
-        <member name="M:PlanningAgent.PlanningAgent.Update(AgentSDK.IGameState,AgentSDK.IAgentActions)">
-            <summary>
-            Update the GameManager - called once per frame
+            [MEDIUM] Minimal economy, fast barracks, soldier rush with 3+.
+            Punishes slow builders — runs out of gold quickly if the rush fails.
             </summary>
         </member>
     </members>

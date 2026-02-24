@@ -143,6 +143,30 @@ namespace GameManager
             return result;
         }
 
+        public IReadOnlyList<Position> GetPathBetween(Position start, Position end, bool avoidUnits)
+        {
+            if (!avoidUnits)
+                return GetPathBetween(start, end);
+
+            ResetCacheIfNewFrame();
+
+            if (pathCallsThisFrame >= MAX_PATH_CALLS_PER_FRAME)
+            {
+                GameManager.Instance.Log("WARNING: Agent " + agentNbr
+                    + " exceeded pathfinding budget (" + MAX_PATH_CALLS_PER_FRAME + " calls/frame)",
+                    GameManager.Instance.gameObject);
+                return EmptyPath;
+            }
+
+            pathCallsThisFrame++;
+            var path = mapManager.GetPathBetweenGridPositions(
+                new Vector3Int(start.X, start.Y, 0),
+                new Vector3Int(end.X, end.Y, 0),
+                avoidUnits: true);
+            var result = path.Select(p => new Position(p.x, p.y)).ToList();
+            return result;
+        }
+
         public IReadOnlyList<Position> GetPathToUnit(Position start, AgentSDK.UnitType unitType, Position unitPos)
         {
             ResetCacheIfNewFrame();

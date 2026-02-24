@@ -62,9 +62,23 @@ namespace GameManager.GameElements
 		}
 
 		/// <summary>
-		/// Position on the grid of this agent
+		/// Position on the grid of this agent (top-left corner of footprint)
 		/// </summary>
 		public Vector3Int GridPosition { get; internal set; }
+
+		/// <summary>
+		/// Center cell of this unit's footprint. Use for distance calculations.
+		/// For 1x1 units equals GridPosition; for 3x3 structures returns GridPosition+(1,-1).
+		/// </summary>
+		internal Vector3Int CenterGridPosition
+		{
+			get
+			{
+				var size = Constants.UNIT_SIZE[UnitType];
+				return new Vector3Int(GridPosition.x + (size.x - 1) / 2,
+				                      GridPosition.y - (size.y - 1) / 2, 0);
+			}
+		}
 
 		/// <summary>
 		/// Current hit points of this unit
@@ -98,6 +112,8 @@ namespace GameManager.GameElements
 		private int totalGold = 0;
 		private float minedGold = 0.0f;
 		private GatherPhase gatherPhase = GatherPhase.TO_MINE;
+		private bool isInsideMine = false;
+		private Vector3Int mineEntryGridPos;
 
 		// Training Variables
 		// Building Variables
@@ -119,6 +135,34 @@ namespace GameManager.GameElements
 		private int pathFailCount = 0;
 		private int pathBackoffMultiplier = 1;
 		private int localAvoidWaitFrames = 0;
+
+		// Path visualization
+		private LineRenderer pathLineRenderer;
+		// Red line from attacker to its target
+		private LineRenderer targetLineRenderer;
+
+		// State indicator squares under unit
+		private SpriteRenderer attackIndicator;
+		private SpriteRenderer moveIndicator;
+		private SpriteRenderer gatherIndicator;
+		private static Sprite _squareSprite;
+
+		/// <summary>
+		/// Lazily create a shared filled-square sprite for state indicators.
+		/// </summary>
+		private static Sprite GetSquareSprite()
+		{
+			if (_squareSprite != null) return _squareSprite;
+			int size = 4;
+			var tex = new Texture2D(size, size, TextureFormat.RGBA32, false);
+			for (int y = 0; y < size; y++)
+				for (int x = 0; x < size; x++)
+					tex.SetPixel(x, y, Color.white);
+			tex.Apply();
+			tex.filterMode = FilterMode.Point;
+			_squareSprite = Sprite.Create(tex, new Rect(0, 0, size, size), new Vector2(0.5f, 0.5f), size);
+			return _squareSprite;
+		}
 
 		#endregion
 
@@ -328,6 +372,68 @@ namespace GameManager.GameElements
 			GridPosition = gridPosition;
 			Health = Constants.HEALTH[UnitType];
 			animator = gameObject.GetComponent<Animator>();
+
+			pathLineRenderer = gameObject.AddComponent<LineRenderer>();
+			pathLineRenderer.startWidth = 0.05f;
+			pathLineRenderer.endWidth = 0.05f;
+			pathLineRenderer.material = new Material(Shader.Find("Sprites/Default"));
+			pathLineRenderer.startColor = Color.cyan;
+			pathLineRenderer.endColor = Color.cyan;
+			pathLineRenderer.useWorldSpace = true;
+			pathLineRenderer.sortingOrder = 10;
+			pathLineRenderer.positionCount = 0;
+
+			var targetLineObj = new GameObject("TargetLine");
+			targetLineObj.transform.SetParent(transform);
+			targetLineObj.transform.localPosition = Vector3.zero;
+			targetLineRenderer = targetLineObj.AddComponent<LineRenderer>();
+			targetLineRenderer.startWidth = 0.05f;
+			targetLineRenderer.endWidth = 0.05f;
+			targetLineRenderer.material = new Material(Shader.Find("Sprites/Default"));
+			targetLineRenderer.startColor = Color.red;
+			targetLineRenderer.endColor = Color.red;
+			targetLineRenderer.useWorldSpace = true;
+			targetLineRenderer.sortingOrder = 11;
+			targetLineRenderer.positionCount = 0;
+
+			// Determine indicator colors by agent faction
+			bool isOrc = agent.GetComponent<AgentController>()?.Agent?.AgentName == Constants.ORC_ABBR;
+			Color moveColor = isOrc ? Color.cyan : Color.blue;
+			Color actionColor = isOrc ? Color.magenta : Color.red;
+
+			// Square indicators shown under units by state
+			var attackObj = new GameObject("AttackIndicator") { layer = LayerMask.NameToLayer("Units") };
+			attackObj.transform.SetParent(transform);
+			attackObj.transform.localPosition = Vector3.zero;
+			attackObj.transform.localScale = new Vector3(0.9f, 0.9f, 1f);
+			attackIndicator = attackObj.AddComponent<SpriteRenderer>();
+			attackIndicator.sprite = GetSquareSprite();
+			attackIndicator.color = actionColor;
+			attackIndicator.sortingLayerName = "Agents";
+			attackIndicator.sortingOrder = 0;
+			attackIndicator.enabled = false;
+
+			var moveObj = new GameObject("MoveIndicator") { layer = LayerMask.NameToLayer("Units") };
+			moveObj.transform.SetParent(transform);
+			moveObj.transform.localPosition = Vector3.zero;
+			moveObj.transform.localScale = new Vector3(0.9f, 0.9f, 1f);
+			moveIndicator = moveObj.AddComponent<SpriteRenderer>();
+			moveIndicator.sprite = GetSquareSprite();
+			moveIndicator.color = moveColor;
+			moveIndicator.sortingLayerName = "Agents";
+			moveIndicator.sortingOrder = 0;
+			moveIndicator.enabled = false;
+
+			var gatherObj = new GameObject("GatherIndicator") { layer = LayerMask.NameToLayer("Units") };
+			gatherObj.transform.SetParent(transform);
+			gatherObj.transform.localPosition = Vector3.zero;
+			gatherObj.transform.localScale = new Vector3(0.9f, 0.9f, 1f);
+			gatherIndicator = gatherObj.AddComponent<SpriteRenderer>();
+			gatherIndicator.sprite = GetSquareSprite();
+			gatherIndicator.color = actionColor;
+			gatherIndicator.sortingLayerName = "Agents";
+			gatherIndicator.sortingOrder = 0;
+			gatherIndicator.enabled = false;
 		}
 
 		#endregion

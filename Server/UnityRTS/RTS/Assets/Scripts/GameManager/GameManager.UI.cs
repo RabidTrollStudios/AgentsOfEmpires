@@ -15,18 +15,102 @@ namespace GameManager
 			Prefabs.SpeedText.text = Constants.GAME_SPEED.ToString();
 		}
 
+		private void InitializeDebugToggles()
+		{
+			HasAgentDebugging = true;
+			HasUnitDebugging = true;
+			HasMoveTint = true;
+			HasGatherTint = true;
+			HasAttackTint = true;
+			HasPathTint = true;
+
+			if (AgentToggle != null)
+			{
+				AgentToggle.onValueChanged.AddListener(OnAgentToggleChanged);
+				AgentToggle.isOn = true;
+			}
+			if (UnitToggle != null)
+			{
+				UnitToggle.onValueChanged.AddListener(OnUnitToggleChanged);
+				UnitToggle.isOn = false;
+			}
+			if (InfluenceToggle != null)
+			{
+				InfluenceToggle.onValueChanged.AddListener(OnInfluenceToggleChanged);
+				InfluenceToggle.isOn = false;
+			}
+			if (MoveTintToggle != null)
+			{
+				MoveTintToggle.onValueChanged.AddListener(OnMoveTintToggleChanged);
+				MoveTintToggle.isOn = true;
+			}
+			if (GatherTintToggle != null)
+			{
+				GatherTintToggle.onValueChanged.AddListener(OnGatherTintToggleChanged);
+				GatherTintToggle.isOn = true;
+			}
+			if (AttackTintToggle != null)
+			{
+				AttackTintToggle.onValueChanged.AddListener(OnAttackTintToggleChanged);
+				AttackTintToggle.isOn = true;
+			}
+			if (PathTintToggle != null)
+			{
+				PathTintToggle.onValueChanged.AddListener(OnPathTintToggleChanged);
+				PathTintToggle.isOn = true;
+			}
+		}
+
+		public void OnAgentToggleChanged(bool val) { HasAgentDebugging = val; }
+		public void OnUnitToggleChanged(bool val) { HasUnitDebugging = val; }
+		public void OnInfluenceToggleChanged(bool val) { mapManager.InfluenceMap.gameObject.SetActive(val); }
+		public void OnMoveTintToggleChanged(bool val) { HasMoveTint = val; }
+		public void OnGatherTintToggleChanged(bool val) { HasGatherTint = val; }
+		public void OnAttackTintToggleChanged(bool val) { HasAttackTint = val; }
+		public void OnPathTintToggleChanged(bool val) { HasPathTint = val; }
+
 		private void ProcessUserInput()
 		{
 			if (Input.GetKeyDown(KeyCode.Alpha1) || Input.GetKeyDown(KeyCode.Keypad1))
 			{
-				Log("Setting Agent Debugging: " + HasAgentDebugging, this.gameObject);
 				HasAgentDebugging = !HasAgentDebugging;
+				if (AgentToggle != null) AgentToggle.isOn = HasAgentDebugging;
 			}
 
 			if (Input.GetKeyDown(KeyCode.Alpha2) || Input.GetKeyDown(KeyCode.Keypad2))
 			{
-				Log("Setting Unit Debugging: " + HasUnitDebugging, this.gameObject);
 				HasUnitDebugging = !HasUnitDebugging;
+				if (UnitToggle != null) UnitToggle.isOn = HasUnitDebugging;
+			}
+
+			if (Input.GetKeyDown(KeyCode.Alpha3) || Input.GetKeyDown(KeyCode.Keypad3))
+			{
+				mapManager.InfluenceMap.gameObject.SetActive(!mapManager.InfluenceMap.gameObject.activeSelf);
+				if (InfluenceToggle != null) InfluenceToggle.isOn = mapManager.InfluenceMap.gameObject.activeSelf;
+			}
+
+			if (Input.GetKeyDown(KeyCode.Alpha4) || Input.GetKeyDown(KeyCode.Keypad4))
+			{
+				HasMoveTint = !HasMoveTint;
+				if (MoveTintToggle != null) MoveTintToggle.isOn = HasMoveTint;
+			}
+
+			if (Input.GetKeyDown(KeyCode.Alpha5) || Input.GetKeyDown(KeyCode.Keypad5))
+			{
+				HasGatherTint = !HasGatherTint;
+				if (GatherTintToggle != null) GatherTintToggle.isOn = HasGatherTint;
+			}
+
+			if (Input.GetKeyDown(KeyCode.Alpha6) || Input.GetKeyDown(KeyCode.Keypad6))
+			{
+				HasAttackTint = !HasAttackTint;
+				if (AttackTintToggle != null) AttackTintToggle.isOn = HasAttackTint;
+			}
+
+			if (Input.GetKeyDown(KeyCode.Alpha7) || Input.GetKeyDown(KeyCode.Keypad7))
+			{
+				HasPathTint = !HasPathTint;
+				if (PathTintToggle != null) PathTintToggle.isOn = HasPathTint;
 			}
 
 			if ((Input.GetKeyDown(KeyCode.Equals) || Input.GetKeyDown(KeyCode.Plus)
@@ -44,11 +128,6 @@ namespace GameManager
 				Constants.GAME_SPEED -= 1;
 				Log("Decreasing GameSpeed: " + Constants.GAME_SPEED, this.gameObject);
 				Constants.CalculateGameConstants();
-			}
-
-			if (Input.GetKeyDown(KeyCode.Alpha3) || Input.GetKeyDown(KeyCode.Keypad3))
-			{
-				mapManager.InfluenceMap.gameObject.SetActive(!mapManager.InfluenceMap.gameObject.activeSelf);
 			}
 		}
 
@@ -128,6 +207,41 @@ namespace GameManager
 	                      .Agent.AgentDLLName + " won\n" + nbrWins +
 	                  " of " + TotalNbrOfRounds + " rounds!";
         }
+
+		/// <summary>
+		/// Update the Custom Debug text overlays with agent debug info.
+		/// Routes each agent's PlanningAgentDebugText to the correct panel
+		/// (Human or Orc) based on AgentName.
+		/// </summary>
+		private void UpdateCustomDebugUI()
+		{
+			if (HumanCustomDebugText == null && OrcCustomDebugText == null) return;
+
+			if (!HasAgentDebugging || Agents == null || Agents.Count == 0)
+			{
+				if (HumanCustomDebugText != null) HumanCustomDebugText.text = "";
+				if (OrcCustomDebugText != null) OrcCustomDebugText.text = "";
+				return;
+			}
+
+			foreach (var kvp in Agents)
+			{
+				var controller = kvp.Value.GetComponent<AgentController>();
+				if (controller?.Agent == null) continue;
+				var bridge = controller.Agent as AgentBridge;
+				if (bridge == null) continue;
+
+				string debugText = bridge.PlanningAgentDebugText;
+				string display = string.IsNullOrEmpty(debugText)
+					? ""
+					: controller.Agent.AgentDLLName + "\n" + debugText;
+
+				if (controller.Agent.AgentName == Constants.HUMAN_ABBR && HumanCustomDebugText != null)
+					HumanCustomDebugText.text = display;
+				else if (controller.Agent.AgentName == Constants.ORC_ABBR && OrcCustomDebugText != null)
+					OrcCustomDebugText.text = display;
+			}
+		}
 
 		#endregion
 

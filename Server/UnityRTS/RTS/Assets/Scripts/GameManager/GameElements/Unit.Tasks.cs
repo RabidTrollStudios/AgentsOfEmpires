@@ -19,17 +19,19 @@ namespace GameManager.GameElements
 			{
 				path.Clear();
 				CurrentAction = UnitAction.IDLE;
+				damage = 0.0f;
 				return;
 			}
 
 			// If we're close enough to the unit, attack it and stop moving
-			if (Vector3.Distance(AttackUnit.GetComponent<Unit>().GridPosition, GridPosition)
-				< Constants.ATTACK_RANGE[UnitType])
+			if (Vector3.Distance(AttackUnit.GetComponent<Unit>().CenterGridPosition, CenterGridPosition)
+				< GameConstants.EffectiveAttackRange(UnitType, AttackUnit.GetComponent<Unit>().UnitType))
 			{
 				path.Clear();
 
-				// Attack this unit
-				damage += (Time.deltaTime * Constants.DAMAGE[UnitType]);
+				// Attack this unit (apply armor/damage-type multiplier)
+				damage += (Time.deltaTime * Constants.DAMAGE[UnitType]
+					* GameConstants.DamageMultiplier(UnitType, AttackUnit.GetComponent<Unit>().UnitType));
 				if (damage > 1)
 				{
 					AttackUnit.GetComponent<Unit>().Health -= (int)damage;
@@ -37,21 +39,93 @@ namespace GameManager.GameElements
 					damage -= (int)damage;
 				}
 
-				// If the enemy unit is dead, stop attacking
+				// If the enemy unit is dead, stop attacking immediately
 				if (AttackUnit.GetComponent<Unit>().Health <= 0)
 				{
 					CurrentAction = UnitAction.IDLE;
+					damage = 0.0f;
+					return;
 				}
 			}
-			// Otherwise, we're too far from the unit, recalculate a path to it
-			else //if (Vector3.Distance(AttackUnit.GetComponent<Unit>().GridPosition, GridPosition)
-				 //	>= Constants.ATTACK_RANGE[UnitType])
+			// Otherwise, we're too far — pursue the assigned target
+			else
 			{
+				// Ranged units (attack range > 1) hold position — they don't advance
+				// toward enemies. They only fire when enemies come within range.
+				float baseRange = GameConstants.ATTACK_RANGE[UnitType];
+				if (baseRange > 1f)
+					return;
+
 				TargetGridPos = AttackUnit.GetComponent<Unit>().GridPosition;
 
-				// Find a position near the unit to attack
+				// Use normal cooldown for pursuit re-pathing. pathUpdateCounter already
+				// accumulated while the unit followed its previous path, so the first
+				// re-path after a path expires is nearly instant. Subsequent retries use
+				// exponential backoff, which prevents rapid pathFailCount cascading that
+				// caused archers to flicker between ATTACK and IDLE.
 				UpdatePath(GridPosition, TargetUnitType, TargetGridPos);
+
+				// After sustained failure, try to find a reachable alternative target
+				if (path.Count == 0 && pathFailCount >= 3)
+				{
+					Unit alt = FindClosestReachableEnemy(AttackUnit);
+					if (alt != null)
+					{
+						AttackUnit = alt;
+						TargetGridPos = alt.GridPosition;
+						TargetUnitType = alt.UnitType;
+						damage = 0.0f;
+						pathFailCount = 0;
+						pathBackoffMultiplier = 1;
+						UpdatePath(GridPosition, TargetUnitType, TargetGridPos, forceImmediate: true);
+					}
+					else
+					{
+						// Can't reach any enemy right now — keep trying the current target.
+						// The unit stays in ATTACK and retries via the cooldown/backoff mechanism.
+						// It only goes IDLE when the target actually dies (handled above).
+						pathFailCount = 0;
+						pathBackoffMultiplier = 1;
+					}
+				}
 			}
+		}
+
+		/// <summary>
+		/// Find the closest enemy unit that we can actually pathfind to.
+		/// Tries up to 3 closest enemies by distance. Returns null if none are reachable.
+		/// </summary>
+		private Unit FindClosestReachableEnemy(Unit excluding)
+		{
+			int myAgentNbr = Agent.GetComponent<AgentController>().Agent.AgentNbr;
+			var enemies = new List<(Unit unit, float dist)>();
+
+			foreach (var kvp in GameManager.Instance.Units.GetAllUnits())
+			{
+				Unit enemy = kvp.Value.GetComponent<Unit>();
+				if (enemy == excluding) continue;
+				if (enemy.Agent.GetComponent<AgentController>().Agent.AgentNbr == myAgentNbr) continue;
+				if (enemy.UnitType == UnitType.MINE) continue;
+				if (enemy.Health <= 0) continue;
+
+				float dist = Vector3.Distance(enemy.CenterGridPosition, CenterGridPosition);
+				enemies.Add((enemy, dist));
+			}
+
+			enemies.Sort((a, b) => a.dist.CompareTo(b.dist));
+
+			int tried = 0;
+			foreach (var (enemy, dist) in enemies)
+			{
+				if (tried >= 3) break;
+				tried++;
+
+				var testPath = GameManager.Instance.Map.GetPathToUnit(GridPosition, enemy.UnitType, enemy.GridPosition);
+				if (testPath.Count > 0)
+					return enemy;
+			}
+
+			return null;
 		}
 
 		/// <summary>
@@ -106,10 +180,11 @@ namespace GameManager.GameElements
 			{
 				var positions = GameManager.Instance.Map.GetBuildableGridPositionsNearUnit(UnitType, GridPosition);
 
-				// Find a cell near us to spawn the trained troop
+				// Find a random cell near us to spawn the trained troop
 				if (positions.Count > 0)
 				{
-					GameManager.Instance.Units.PlaceUnit(Agent, positions[0], taskUnitType, Color);
+					Vector3Int spawnPos = positions[UnityEngine.Random.Range(0, positions.Count)];
+					GameManager.Instance.Units.PlaceUnit(Agent, spawnPos, taskUnitType, Color);
 					path.Clear();
 					CurrentAction = UnitAction.IDLE;
 				}
@@ -117,36 +192,78 @@ namespace GameManager.GameElements
 		}
 
 		/// <summary>
+		/// Hide the worker inside the mine: free its grid cell and disable its sprite.
+		/// </summary>
+		private void EnterMine()
+		{
+			isInsideMine = true;
+			mineEntryGridPos = MineUnit.GetComponent<Unit>().GridPosition;
+
+			// Free the worker's grid cell so other units can walk through
+			GameManager.Instance.Map.SetAreaBuildability(UnitType, GridPosition, true);
+
+			// Hide the worker sprite
+			var sr = GetComponent<SpriteRenderer>();
+			if (sr != null) sr.enabled = false;
+		}
+
+		/// <summary>
+		/// Reappear at a random buildable cell neighboring the mine.
+		/// </summary>
+		private void ExitMine()
+		{
+			if (!isInsideMine) return;
+			isInsideMine = false;
+
+			// Find a random buildable neighbor of the mine
+			var neighbors = GameManager.Instance.Map.GetBuildableGridPositionsNearUnit(UnitType.MINE, mineEntryGridPos);
+			if (neighbors.Count > 0)
+			{
+				Vector3Int spawnPos = neighbors[UnityEngine.Random.Range(0, neighbors.Count)];
+				GridPosition = spawnPos;
+				WorldPosition = (Vector3)spawnPos + new Vector3(0.5f, 0.5f, 0);
+			}
+			// else: stay at current GridPosition (fallback)
+
+			// Mark the new position as occupied
+			GameManager.Instance.Map.SetAreaBuildability(UnitType, GridPosition, false);
+
+			// Show the worker sprite
+			var sr = GetComponent<SpriteRenderer>();
+			if (sr != null) sr.enabled = true;
+		}
+
+		/// <summary>
 		/// Update the gather task
 		/// </summary>
 		private void UpdateGather()
 		{
+			// If the assigned mine is gone and we're still heading toward it, stop immediately
+			if (gatherPhase == GatherPhase.TO_MINE
+				&& (MineUnit == null || MineUnit.GetComponent<Unit>().Health <= 0))
+			{
+				path.Clear();
+				CurrentAction = UnitAction.IDLE;
+				return;
+			}
+
 			if (path.Count != 0)
 				return;
 
-			// If we're headed to the mine
+			// If we're headed to the mine (mine is guaranteed alive by the early check above)
 			if (gatherPhase == GatherPhase.TO_MINE)
 			{
-				// If there is no mine
-				if (MineUnit == null || MineUnit.GetComponent<Unit>().Health <= 0)
+				// If we've just arrived at the mine
+				if (GameManager.Instance.Map.IsNeighborOfUnit(GridPosition, TargetUnitType, TargetGridPos))
 				{
-					path.Clear();
-					CurrentAction = UnitAction.IDLE;
+					gatherPhase = GatherPhase.MINING;
+					minedGold = 0.0f;
+					taskTime = 0f;
+					EnterMine();
 				}
-				// If we've exhausted our path
-				else if (path.Count == 0)
+				else
 				{
-					// If we've just arrived at the mine
-					if (GameManager.Instance.Map.IsNeighborOfUnit(GridPosition, TargetUnitType, TargetGridPos))
-					{
-						gatherPhase = GatherPhase.MINING;
-						minedGold = 0.0f;
-						taskTime = 0f;
-					}
-					else
-					{
-						UpdatePath(GridPosition, TargetUnitType, TargetGridPos);
-					}
+					UpdatePath(GridPosition, TargetUnitType, TargetGridPos);
 				}
 			}
 			// if we're currently mining
@@ -155,6 +272,8 @@ namespace GameManager.GameElements
 				// If the mine is empty and gone
 				if (MineUnit == null || MineUnit.GetComponent<Unit>().Health <= 0)
 				{
+					ExitMine();
+
 					if (BaseUnit == null)
 					{
 						path.Clear();
@@ -165,7 +284,7 @@ namespace GameManager.GameElements
 					gatherPhase = GatherPhase.TO_BASE;
 					TargetUnitType = UnitType.BASE;
 					TargetGridPos = BaseUnit.GetComponent<Unit>().GridPosition;
-					UpdatePath(GridPosition, TargetUnitType, TargetGridPos);
+					UpdatePath(GridPosition, TargetUnitType, TargetGridPos, forceImmediate: true, avoidUnits: true);
 				}
 				// Otherwise if there is a mine, collect totalGold
 				else if (MineUnit.GetComponent<Unit>().Health > 0)
@@ -184,13 +303,15 @@ namespace GameManager.GameElements
 					// If we've reached our mining capacity
 					if (totalGold >= MiningCapacity && BaseUnit != null)
 					{
+						ExitMine();
 						gatherPhase = GatherPhase.TO_BASE;
 						TargetUnitType = UnitType.BASE;
 						TargetGridPos = BaseUnit.GetComponent<Unit>().GridPosition;
-						UpdatePath(GridPosition, TargetUnitType, TargetGridPos);
+						UpdatePath(GridPosition, TargetUnitType, TargetGridPos, forceImmediate: true, avoidUnits: true);
 					}
 					else if (totalGold >= MiningCapacity && BaseUnit == null)
 					{
+						ExitMine();
 						path.Clear();
 						CurrentAction = UnitAction.IDLE;
 					}

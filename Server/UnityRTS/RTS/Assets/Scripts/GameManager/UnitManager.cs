@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using AgentSDK;
 using GameManager.GameElements;
@@ -68,8 +68,8 @@ namespace GameManager
 		/// </summary>
 		public GameObject PlaceUnit(GameObject agent, Vector3Int gridPosition, UnitType unitType, Color color)
 		{
-			Vector3 position = gridPosition + new Vector3((Constants.UNIT_SIZE[unitType].x - 1) * 0.5f,
-								   -(Constants.UNIT_SIZE[unitType].y - 1) * 0.5f);
+			Vector3 position = gridPosition + new Vector3(Constants.UNIT_SIZE[unitType].x * 0.5f,
+								   1f - Constants.UNIT_SIZE[unitType].y * 0.5f);
 
 			GameObject unit = Object.Instantiate(
 				UnitPrefabs[agent.GetComponent<AgentController>().Agent.AgentNbr][unitType],

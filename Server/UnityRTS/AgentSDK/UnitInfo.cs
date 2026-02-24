@@ -42,6 +42,21 @@ namespace AgentSDK
         /// <summary>Agent number of the unit's owner</summary>
         public int OwnerAgentNbr { get; }
 
+        /// <summary>
+        /// Center cell of this unit's footprint.
+        /// Use this for distance calculations instead of GridPosition, which is the top-left corner.
+        /// For 1x1 units (soldiers, archers, workers) this equals GridPosition.
+        /// For 3x3 structures (bases, barracks, mines, refineries) this is GridPosition+(1,-1).
+        /// </summary>
+        public Position CenterPosition
+        {
+            get
+            {
+                var size = GameConstants.UNIT_SIZE[UnitType];
+                return Position.Center(GridPosition, size);
+            }
+        }
+
         public UnitInfo(int unitNbr, UnitType unitType, Position gridPosition,
             float health, bool isBuilt, UnitAction currentAction,
             bool canMove, bool canBuild, bool canTrain, bool canAttack,

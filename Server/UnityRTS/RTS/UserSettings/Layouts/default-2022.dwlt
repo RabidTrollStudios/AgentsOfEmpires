@@ -19,7 +19,7 @@ MonoBehaviour:
     width: 1920
     height: 989
   m_ShowMode: 4
-  m_Title: Test Runner
+  m_Title: Console
   m_RootView: {fileID: 2}
   m_MinSize: {x: 875, y: 321}
   m_MaxSize: {x: 10000, y: 10000}
@@ -119,7 +119,7 @@ MonoBehaviour:
   m_MinSize: {x: 300, y: 100}
   m_MaxSize: {x: 24288, y: 16192}
   vertical: 0
-  controlID: 5318
+  controlID: 22366
   draggingID: 0
 --- !u!114 &6
 MonoBehaviour:
@@ -135,17 +135,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Children:
   - {fileID: 7}
-  - {fileID: 10}
+  - {fileID: 8}
   m_Position:
     serializedVersion: 2
     x: 0
     y: 0
-    width: 1407
+    width: 1404
     height: 939
   m_MinSize: {x: 200, y: 100}
   m_MaxSize: {x: 16192, y: 16192}
-  vertical: 1
-  controlID: 5258
+  vertical: 0
+  controlID: 22367
   draggingID: 0
 --- !u!114 &7
 MonoBehaviour:
@@ -156,32 +156,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 1
-  m_Script: {fileID: 12010, guid: 0000000000000000e000000000000000, type: 0}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Children:
-  - {fileID: 8}
-  - {fileID: 9}
-  m_Position:
-    serializedVersion: 2
-    x: 0
-    y: 0
-    width: 1407
-    height: 643
-  m_MinSize: {x: 200, y: 50}
-  m_MaxSize: {x: 16192, y: 8096}
-  vertical: 0
-  controlID: 5259
-  draggingID: 0
---- !u!114 &8
-MonoBehaviour:
-  m_ObjectHideFlags: 52
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 1
   m_Script: {fileID: 12006, guid: 0000000000000000e000000000000000, type: 0}
   m_Name: 
   m_EditorClassIdentifier: 
@@ -190,8 +164,8 @@ MonoBehaviour:
     serializedVersion: 2
     x: 0
     y: 0
-    width: 364
-    height: 643
+    width: 289
+    height: 939
   m_MinSize: {x: 201, y: 221}
   m_MaxSize: {x: 4001, y: 4021}
   m_ActualView: {fileID: 13}
@@ -199,6 +173,32 @@ MonoBehaviour:
   - {fileID: 13}
   m_Selected: 0
   m_LastSelected: 0
+--- !u!114 &8
+MonoBehaviour:
+  m_ObjectHideFlags: 52
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 12010, guid: 0000000000000000e000000000000000, type: 0}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Children:
+  - {fileID: 9}
+  - {fileID: 10}
+  m_Position:
+    serializedVersion: 2
+    x: 289
+    y: 0
+    width: 1115
+    height: 939
+  m_MinSize: {x: 100, y: 100}
+  m_MaxSize: {x: 8096, y: 16192}
+  vertical: 1
+  controlID: 22457
+  draggingID: 0
 --- !u!114 &9
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -209,24 +209,25 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 1
   m_Script: {fileID: 12006, guid: 0000000000000000e000000000000000, type: 0}
-  m_Name: TestRunnerWindow
+  m_Name: GameView
   m_EditorClassIdentifier: 
   m_Children: []
   m_Position:
     serializedVersion: 2
-    x: 364
+    x: 0
     y: 0
-    width: 1043
-    height: 643
-  m_MinSize: {x: 102, y: 121}
-  m_MaxSize: {x: 4002, y: 4021}
-  m_ActualView: {fileID: 15}
+    width: 1115
+    height: 626
+  m_MinSize: {x: 201, y: 221}
+  m_MaxSize: {x: 4001, y: 4021}
+  m_ActualView: {fileID: 12}
   m_Panes:
   - {fileID: 14}
   - {fileID: 12}
   - {fileID: 15}
-  m_Selected: 2
-  m_LastSelected: 1
+  - {fileID: 16}
+  m_Selected: 1
+  m_LastSelected: 0
 --- !u!114 &10
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -243,17 +244,17 @@ MonoBehaviour:
   m_Position:
     serializedVersion: 2
     x: 0
-    y: 643
-    width: 1407
-    height: 296
+    y: 626
+    width: 1115
+    height: 313
   m_MinSize: {x: 101, y: 121}
   m_MaxSize: {x: 4001, y: 4021}
   m_ActualView: {fileID: 17}
   m_Panes:
-  - {fileID: 16}
   - {fileID: 17}
-  m_Selected: 1
-  m_LastSelected: 0
+  - {fileID: 18}
+  m_Selected: 0
+  m_LastSelected: 1
 --- !u!114 &11
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -269,15 +270,15 @@ MonoBehaviour:
   m_Children: []
   m_Position:
     serializedVersion: 2
-    x: 1407
+    x: 1404
     y: 0
-    width: 513
+    width: 516
     height: 939
   m_MinSize: {x: 276, y: 121}
   m_MaxSize: {x: 4001, y: 4021}
-  m_ActualView: {fileID: 18}
+  m_ActualView: {fileID: 19}
   m_Panes:
-  - {fileID: 18}
+  - {fileID: 19}
   m_Selected: 0
   m_LastSelected: 0
 --- !u!114 &12
@@ -296,15 +297,15 @@ MonoBehaviour:
   m_MaxSize: {x: 4000, y: 4000}
   m_TitleContent:
     m_Text: Game
-    m_Image: {fileID: -6423792434712278376, guid: 0000000000000000d000000000000000,
+    m_Image: {fileID: -2087823869225018852, guid: 0000000000000000d000000000000000,
       type: 0}
     m_Tooltip: 
   m_Pos:
     serializedVersion: 2
-    x: 2924
+    x: 2849
     y: 73
-    width: 1041
-    height: 622
+    width: 1113
+    height: 605
   m_SerializedDataModeController:
     m_DataMode: 0
     m_PreferredDataMode: 0
@@ -357,23 +358,23 @@ MonoBehaviour:
       serializedVersion: 2
       x: 0
       y: 21
-      width: 1041
-      height: 601
-    m_Scale: {x: 0.5421875, y: 0.5421875}
-    m_Translation: {x: 520.5, y: 300.50003}
+      width: 1113
+      height: 584
+    m_Scale: {x: 0.5407408, y: 0.5407407}
+    m_Translation: {x: 556.5, y: 292}
     m_MarginLeft: 0
     m_MarginRight: 0
     m_MarginTop: 0
     m_MarginBottom: 0
     m_LastShownAreaInsideMargins:
       serializedVersion: 2
-      x: -960
-      y: -554.2363
-      width: 1920
-      height: 1108.4727
+      x: -1029.1438
+      y: -540
+      width: 2058.2876
+      height: 1080
     m_MinimalGUI: 1
-  m_defaultScale: 0.5421875
-  m_LastWindowPixelSize: {x: 1041, y: 622}
+  m_defaultScale: 0.5407407
+  m_LastWindowPixelSize: {x: 1113, y: 605}
   m_ClearInEditMode: 1
   m_NoCameraWarning: 1
   m_LowResolutionForAspectRatios: 01000000000000000000
@@ -396,15 +397,15 @@ MonoBehaviour:
   m_MaxSize: {x: 4000, y: 4000}
   m_TitleContent:
     m_Text: Hierarchy
-    m_Image: {fileID: 7966133145522015247, guid: 0000000000000000d000000000000000,
+    m_Image: {fileID: -590624980919486359, guid: 0000000000000000d000000000000000,
       type: 0}
     m_Tooltip: 
   m_Pos:
     serializedVersion: 2
     x: 2560
     y: 73
-    width: 363
-    height: 622
+    width: 288
+    height: 918
   m_SerializedDataModeController:
     m_DataMode: 0
     m_PreferredDataMode: 0
@@ -418,9 +419,9 @@ MonoBehaviour:
   m_SceneHierarchy:
     m_TreeViewState:
       scrollPos: {x: 0, y: 0}
-      m_SelectedIDs: 
-      m_LastClickedID: 0
-      m_ExpandedIDs: 801efaffb61efaffbc20faff709afaffa69afaffc09cfafff415fbff2a16fbff4618fbff1c92fbff5292fbff6c94fbff120ffcff480ffcff9a10fcff148cfcfff29ffdfffca1fdff621efeff1a81ffff
+      m_SelectedIDs: 4e7d0000
+      m_LastClickedID: 32078
+      m_ExpandedIDs: 08cbfbff901cfcffaa59fcffac59fcffae59fcffca59fcff4269fcffa26afcffc69fffffd09fffffda9fffff28fbffff8c570000b85b0000
       m_RenameOverlay:
         m_UserAcceptedRename: 0
         m_Name: 
@@ -436,7 +437,7 @@ MonoBehaviour:
         m_IsRenaming: 0
         m_OriginalEventType: 11
         m_IsRenamingFilename: 0
-        m_ClientGUIView: {fileID: 8}
+        m_ClientGUIView: {fileID: 7}
       m_SearchString: 
     m_ExpandedScenes: []
     m_CurrenRootInstanceID: 0
@@ -460,15 +461,15 @@ MonoBehaviour:
   m_MaxSize: {x: 4000, y: 4000}
   m_TitleContent:
     m_Text: Scene
-    m_Image: {fileID: 2593428753322112591, guid: 0000000000000000d000000000000000,
+    m_Image: {fileID: 2318424515335265636, guid: 0000000000000000d000000000000000,
       type: 0}
     m_Tooltip: 
   m_Pos:
     serializedVersion: 2
-    x: 2924
+    x: 2923
     y: 73
-    width: 1041
-    height: 622
+    width: 1039.3334
+    height: 621.6667
   m_SerializedDataModeController:
     m_DataMode: 0
     m_PreferredDataMode: 0
@@ -840,9 +841,9 @@ MonoBehaviour:
   m_PlayAudio: 0
   m_AudioPlay: 0
   m_Position:
-    m_Target: {x: 43.504726, y: 19.429161, z: -10.187602}
+    m_Target: {x: 1780.6537, y: 481.29282, z: -1.2486537}
     speed: 2
-    m_Value: {x: 43.504726, y: 19.429161, z: -10.187602}
+    m_Value: {x: 1780.6537, y: 481.29282, z: -1.2486537}
   m_RenderMode: 0
   m_CameraMode:
     drawMode: 0
@@ -892,9 +893,9 @@ MonoBehaviour:
     speed: 2
     m_Value: {x: 0, y: 0, z: 0, w: 1}
   m_Size:
-    m_Target: 28.760132
+    m_Target: 195.576
     speed: 2
-    m_Value: 28.760132
+    m_Value: 195.576
   m_Ortho:
     m_Target: 1
     speed: 2
@@ -954,7 +955,7 @@ MonoBehaviour:
     m_SaveData: []
     m_OverlaysVisible: 1
   m_Spl:
-    ID: 5357
+    ID: 1291
     splitterInitialOffset: 0
     currentActiveSplitter: -1
     realSizes:
@@ -985,9 +986,9 @@ MonoBehaviour:
       uniqueId: '[RTS][suite]'
       name: RTS
       fullName: RTS
-      resultStatus: 2
-      duration: 0.269013
-      messages: One or more child tests had errors
+      resultStatus: 1
+      duration: 10.848781
+      messages: 
       output: 
       stacktrace: 
       notRunnable: 0
@@ -1001,9 +1002,9 @@ MonoBehaviour:
       uniqueId: '[GameManager.Tests.PlayMode.dll][suite]'
       name: GameManager.Tests.PlayMode.dll
       fullName: C:/Git/Warcrap/Server/UnityRTS/RTS/Library/ScriptAssemblies/GameManager.Tests.PlayMode.dll
-      resultStatus: 2
-      duration: 0.2574406
-      messages: One or more child tests had errors
+      resultStatus: 1
+      duration: 10.838104
+      messages: 
       output: 
       stacktrace: 
       notRunnable: 0
@@ -1017,9 +1018,9 @@ MonoBehaviour:
       uniqueId: GameManager.Tests.PlayMode.dll/[GameManager][suite]
       name: GameManager
       fullName: GameManager
-      resultStatus: 2
-      duration: 0.2542951
-      messages: One or more child tests had errors
+      resultStatus: 1
+      duration: 10.8349695
+      messages: 
       output: 
       stacktrace: 
       notRunnable: 0
@@ -1033,9 +1034,9 @@ MonoBehaviour:
       uniqueId: GameManager.Tests.PlayMode.dll/GameManager/[Tests][suite]
       name: Tests
       fullName: GameManager.Tests
-      resultStatus: 2
-      duration: 0.2514053
-      messages: One or more child tests had errors
+      resultStatus: 1
+      duration: 10.832907
+      messages: 
       output: 
       stacktrace: 
       notRunnable: 0
@@ -1049,9 +1050,9 @@ MonoBehaviour:
       uniqueId: GameManager.Tests.PlayMode.dll/GameManager/Tests/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode][suite]
       name: PlayMode
       fullName: GameManager.Tests.PlayMode
-      resultStatus: 2
-      duration: 0.2491321
-      messages: One or more child tests had errors
+      resultStatus: 1
+      duration: 10.83052
+      messages: 
       output: 
       stacktrace: 
       notRunnable: 0
@@ -1065,9 +1066,9 @@ MonoBehaviour:
       uniqueId: GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.UnitBuildTests][suite]
       name: UnitBuildTests
       fullName: GameManager.Tests.PlayMode.UnitBuildTests
-      resultStatus: 2
-      duration: 0.0643007
-      messages: One or more child tests had errors
+      resultStatus: 1
+      duration: 1.4019936
+      messages: 
       output: 
       stacktrace: 
       notRunnable: 0
@@ -1081,18 +1082,16 @@ MonoBehaviour:
       uniqueId: GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/UnitBuildTests/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.UnitBuildTests.BuildBase_GoldDeductedAtStart]
       name: BuildBase_GoldDeductedAtStart
       fullName: GameManager.Tests.PlayMode.UnitBuildTests.BuildBase_GoldDeductedAtStart
-      resultStatus: 2
-      duration: 0.0194474
-      messages: "SetUp : System.TypeInitializationException : The type initializer
-        for 'GameManager.Constants' threw an exception.\r\n  ----> System.NullReferenceException
-        : Object reference not set to an instance of an object"
-      output: 
-      stacktrace: "--SetUp\r\n  at GameManager.Tests.PlayMode.PlayModeTestBase+<SetUp>d__1.MoveNext
-        () [0x00020] in C:\\Git\\Warcrap\\Server\\UnityRTS\\RTS\\Assets\\Tests\\PlayMode\\PlayModeTestBase.cs:23
-        \r\n  at UnityEngine.TestTools.BeforeAfterTestCommandBase`1+<ExecuteEnumerable>d__15[T].MoveNext
-        () [0x00185] in .\\Library\\PackageCache\\com.unity.test-framework@1.1.33\\UnityEngine.TestRunner\\NUnitExtensions\\Commands\\BeforeAfterTestCommandBase.cs:129
-        \r\n--NullReferenceException\r\n  at GameManager.Constants..cctor () [0x0000a]
-        in C:\\Git\\Warcrap\\Server\\UnityRTS\\RTS\\Assets\\Scripts\\GameManager\\Constants.cs:127 "
+      resultStatus: 1
+      duration: 0.1566134
+      messages: 
+      output: '<color=cyan>Creating: ./PlanningAgent_TestDLL.csv</color>
+
+        <color=cyan>Creating:
+        ./PlanningAgent_TestDLL.csv</color>
+
+'
+      stacktrace: 
       notRunnable: 0
       ignoredOrSkipped: 0
       description: 
@@ -1105,18 +1104,16 @@ MonoBehaviour:
       uniqueId: GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/UnitBuildTests/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.UnitBuildTests.BuildingPlaced_FootprintCellsBecomeUnwalkable]
       name: BuildingPlaced_FootprintCellsBecomeUnwalkable
       fullName: GameManager.Tests.PlayMode.UnitBuildTests.BuildingPlaced_FootprintCellsBecomeUnwalkable
-      resultStatus: 2
-      duration: 0.0028083
-      messages: "SetUp : System.TypeInitializationException : The type initializer
-        for 'GameManager.Constants' threw an exception.\r\n  ----> System.NullReferenceException
-        : Object reference not set to an instance of an object"
-      output: 
-      stacktrace: "--SetUp\r\n  at GameManager.Tests.PlayMode.PlayModeTestBase+<SetUp>d__1.MoveNext
-        () [0x00020] in C:\\Git\\Warcrap\\Server\\UnityRTS\\RTS\\Assets\\Tests\\PlayMode\\PlayModeTestBase.cs:23
-        \r\n  at UnityEngine.TestTools.BeforeAfterTestCommandBase`1+<ExecuteEnumerable>d__15[T].MoveNext
-        () [0x00185] in .\\Library\\PackageCache\\com.unity.test-framework@1.1.33\\UnityEngine.TestRunner\\NUnitExtensions\\Commands\\BeforeAfterTestCommandBase.cs:129
-        \r\n--NullReferenceException\r\n  at GameManager.Constants..cctor () [0x0000a]
-        in C:\\Git\\Warcrap\\Server\\UnityRTS\\RTS\\Assets\\Scripts\\GameManager\\Constants.cs:127 "
+      resultStatus: 1
+      duration: 0.0282147
+      messages: 
+      output: '<color=cyan>Creating: ./PlanningAgent_TestDLL.csv</color>
+
+        <color=cyan>Creating:
+        ./PlanningAgent_TestDLL.csv</color>
+
+'
+      stacktrace: 
       notRunnable: 0
       ignoredOrSkipped: 0
       description: 
@@ -1129,18 +1126,18 @@ MonoBehaviour:
       uniqueId: GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/UnitBuildTests/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.UnitBuildTests.BuildNearMapEdge_FitsWithinBounds]
       name: BuildNearMapEdge_FitsWithinBounds
       fullName: GameManager.Tests.PlayMode.UnitBuildTests.BuildNearMapEdge_FitsWithinBounds
-      resultStatus: 2
-      duration: 0.0026107
-      messages: "SetUp : System.TypeInitializationException : The type initializer
-        for 'GameManager.Constants' threw an exception.\r\n  ----> System.NullReferenceException
-        : Object reference not set to an instance of an object"
-      output: 
-      stacktrace: "--SetUp\r\n  at GameManager.Tests.PlayMode.PlayModeTestBase+<SetUp>d__1.MoveNext
-        () [0x00020] in C:\\Git\\Warcrap\\Server\\UnityRTS\\RTS\\Assets\\Tests\\PlayMode\\PlayModeTestBase.cs:23
-        \r\n  at UnityEngine.TestTools.BeforeAfterTestCommandBase`1+<ExecuteEnumerable>d__15[T].MoveNext
-        () [0x00185] in .\\Library\\PackageCache\\com.unity.test-framework@1.1.33\\UnityEngine.TestRunner\\NUnitExtensions\\Commands\\BeforeAfterTestCommandBase.cs:129
-        \r\n--NullReferenceException\r\n  at GameManager.Constants..cctor () [0x0000a]
-        in C:\\Git\\Warcrap\\Server\\UnityRTS\\RTS\\Assets\\Scripts\\GameManager\\Constants.cs:127 "
+      resultStatus: 1
+      duration: 0.2821845
+      messages: 
+      output: '<color=cyan>Creating: ./PlanningAgent_TestDLL.csv</color>
+
+        <color=cyan>Creating:
+        ./PlanningAgent_TestDLL.csv</color>
+
+        Animator is not playing an AnimatorController
+
+'
+      stacktrace: 
       notRunnable: 0
       ignoredOrSkipped: 0
       description: 
@@ -1153,18 +1150,16 @@ MonoBehaviour:
       uniqueId: GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/UnitBuildTests/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.UnitBuildTests.BuildOnOccupiedLocation_CommandRejectedGoldUnchanged]
       name: BuildOnOccupiedLocation_CommandRejectedGoldUnchanged
       fullName: GameManager.Tests.PlayMode.UnitBuildTests.BuildOnOccupiedLocation_CommandRejectedGoldUnchanged
-      resultStatus: 2
-      duration: 0.0022519
-      messages: "SetUp : System.TypeInitializationException : The type initializer
-        for 'GameManager.Constants' threw an exception.\r\n  ----> System.NullReferenceException
-        : Object reference not set to an instance of an object"
-      output: 
-      stacktrace: "--SetUp\r\n  at GameManager.Tests.PlayMode.PlayModeTestBase+<SetUp>d__1.MoveNext
-        () [0x00020] in C:\\Git\\Warcrap\\Server\\UnityRTS\\RTS\\Assets\\Tests\\PlayMode\\PlayModeTestBase.cs:23
-        \r\n  at UnityEngine.TestTools.BeforeAfterTestCommandBase`1+<ExecuteEnumerable>d__15[T].MoveNext
-        () [0x00185] in .\\Library\\PackageCache\\com.unity.test-framework@1.1.33\\UnityEngine.TestRunner\\NUnitExtensions\\Commands\\BeforeAfterTestCommandBase.cs:129
-        \r\n--NullReferenceException\r\n  at GameManager.Constants..cctor () [0x0000a]
-        in C:\\Git\\Warcrap\\Server\\UnityRTS\\RTS\\Assets\\Scripts\\GameManager\\Constants.cs:127 "
+      resultStatus: 1
+      duration: 0.023971
+      messages: 
+      output: '<color=cyan>Creating: ./PlanningAgent_TestDLL.csv</color>
+
+        <color=cyan>Creating:
+        ./PlanningAgent_TestDLL.csv</color>
+
+'
+      stacktrace: 
       notRunnable: 0
       ignoredOrSkipped: 0
       description: 
@@ -1177,18 +1172,16 @@ MonoBehaviour:
       uniqueId: GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/UnitBuildTests/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.UnitBuildTests.BuildWithInsufficientGold_CommandRejected]
       name: BuildWithInsufficientGold_CommandRejected
       fullName: GameManager.Tests.PlayMode.UnitBuildTests.BuildWithInsufficientGold_CommandRejected
-      resultStatus: 2
-      duration: 0.0030545
-      messages: "SetUp : System.TypeInitializationException : The type initializer
-        for 'GameManager.Constants' threw an exception.\r\n  ----> System.NullReferenceException
-        : Object reference not set to an instance of an object"
-      output: 
-      stacktrace: "--SetUp\r\n  at GameManager.Tests.PlayMode.PlayModeTestBase+<SetUp>d__1.MoveNext
-        () [0x00020] in C:\\Git\\Warcrap\\Server\\UnityRTS\\RTS\\Assets\\Tests\\PlayMode\\PlayModeTestBase.cs:23
-        \r\n  at UnityEngine.TestTools.BeforeAfterTestCommandBase`1+<ExecuteEnumerable>d__15[T].MoveNext
-        () [0x00185] in .\\Library\\PackageCache\\com.unity.test-framework@1.1.33\\UnityEngine.TestRunner\\NUnitExtensions\\Commands\\BeforeAfterTestCommandBase.cs:129
-        \r\n--NullReferenceException\r\n  at GameManager.Constants..cctor () [0x0000a]
-        in C:\\Git\\Warcrap\\Server\\UnityRTS\\RTS\\Assets\\Scripts\\GameManager\\Constants.cs:127 "
+      resultStatus: 1
+      duration: 0.0211088
+      messages: 
+      output: '<color=cyan>Creating: ./PlanningAgent_TestDLL.csv</color>
+
+        <color=cyan>Creating:
+        ./PlanningAgent_TestDLL.csv</color>
+
+'
+      stacktrace: 
       notRunnable: 0
       ignoredOrSkipped: 0
       description: 
@@ -1201,18 +1194,67 @@ MonoBehaviour:
       uniqueId: GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/UnitBuildTests/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.UnitBuildTests.BuildWithNoPath_BuildingNotPlacedGoldUnchanged]
       name: BuildWithNoPath_BuildingNotPlacedGoldUnchanged
       fullName: GameManager.Tests.PlayMode.UnitBuildTests.BuildWithNoPath_BuildingNotPlacedGoldUnchanged
-      resultStatus: 2
-      duration: 0.0030677
-      messages: "SetUp : System.TypeInitializationException : The type initializer
-        for 'GameManager.Constants' threw an exception.\r\n  ----> System.NullReferenceException
-        : Object reference not set to an instance of an object"
-      output: 
-      stacktrace: "--SetUp\r\n  at GameManager.Tests.PlayMode.PlayModeTestBase+<SetUp>d__1.MoveNext
-        () [0x00020] in C:\\Git\\Warcrap\\Server\\UnityRTS\\RTS\\Assets\\Tests\\PlayMode\\PlayModeTestBase.cs:23
-        \r\n  at UnityEngine.TestTools.BeforeAfterTestCommandBase`1+<ExecuteEnumerable>d__15[T].MoveNext
-        () [0x00185] in .\\Library\\PackageCache\\com.unity.test-framework@1.1.33\\UnityEngine.TestRunner\\NUnitExtensions\\Commands\\BeforeAfterTestCommandBase.cs:129
-        \r\n--NullReferenceException\r\n  at GameManager.Constants..cctor () [0x0000a]
-        in C:\\Git\\Warcrap\\Server\\UnityRTS\\RTS\\Assets\\Scripts\\GameManager\\Constants.cs:127 "
+      resultStatus: 1
+      duration: 0.0536466
+      messages: 
+      output: '<color=cyan>Creating: ./PlanningAgent_TestDLL.csv</color>
+
+        <color=cyan>Creating:
+        ./PlanningAgent_TestDLL.csv</color>
+
+        <color=cyan>PATH_DIAG: (5, 5,
+        0)->(19, 21, 0) failed: exhausted expansions=1</color>
+
+        <color=cyan>PATH_DIAG:
+        (5, 5, 0)->(19, 17, 0) failed: exhausted expansions=1</color>
+
+        <color=cyan>PATH_DIAG:
+        (5, 5, 0)->(20, 21, 0) failed: exhausted expansions=1</color>
+
+        <color=cyan>PATH_DIAG:
+        (5, 5, 0)->(20, 17, 0) failed: exhausted expansions=1</color>
+
+        <color=cyan>PATH_DIAG:
+        (5, 5, 0)->(21, 21, 0) failed: exhausted expansions=1</color>
+
+        <color=cyan>PATH_DIAG:
+        (5, 5, 0)->(21, 17, 0) failed: exhausted expansions=1</color>
+
+        <color=cyan>PATH_DIAG:
+        (5, 5, 0)->(22, 21, 0) failed: exhausted expansions=1</color>
+
+        <color=cyan>PATH_DIAG:
+        (5, 5, 0)->(22, 17, 0) failed: exhausted expansions=1</color>
+
+        <color=cyan>PATH_DIAG:
+        (5, 5, 0)->(23, 21, 0) failed: exhausted expansions=1</color>
+
+        <color=cyan>PATH_DIAG:
+        (5, 5, 0)->(23, 17, 0) failed: exhausted expansions=1</color>
+
+        <color=cyan>PATH_DIAG:
+        (5, 5, 0)->(19, 18, 0) failed: exhausted expansions=1</color>
+
+        <color=cyan>PATH_DIAG:
+        (5, 5, 0)->(23, 18, 0) failed: exhausted expansions=1</color>
+
+        <color=cyan>PATH_DIAG:
+        (5, 5, 0)->(19, 19, 0) failed: exhausted expansions=1</color>
+
+        <color=cyan>PATH_DIAG:
+        (5, 5, 0)->(23, 19, 0) failed: exhausted expansions=1</color>
+
+        <color=cyan>PATH_DIAG:
+        (5, 5, 0)->(19, 20, 0) failed: exhausted expansions=1</color>
+
+        <color=cyan>PATH_DIAG:
+        (5, 5, 0)->(23, 20, 0) failed: exhausted expansions=1</color>
+
+        <color=cyan>PATH_DIAG:
+        wrote diagnostics to C:/Git/Warcrap/Server/UnityRTS/RTS/Assets/../PathDiag.txt</color>
+
+'
+      stacktrace: 
       notRunnable: 0
       ignoredOrSkipped: 0
       description: 
@@ -1225,18 +1267,18 @@ MonoBehaviour:
       uniqueId: GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/UnitBuildTests/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.UnitBuildTests.WorkerAdjacentToBuildSite_BuildsQuickly]
       name: WorkerAdjacentToBuildSite_BuildsQuickly
       fullName: GameManager.Tests.PlayMode.UnitBuildTests.WorkerAdjacentToBuildSite_BuildsQuickly
-      resultStatus: 2
-      duration: 0.0039467
-      messages: "SetUp : System.TypeInitializationException : The type initializer
-        for 'GameManager.Constants' threw an exception.\r\n  ----> System.NullReferenceException
-        : Object reference not set to an instance of an object"
-      output: 
-      stacktrace: "--SetUp\r\n  at GameManager.Tests.PlayMode.PlayModeTestBase+<SetUp>d__1.MoveNext
-        () [0x00020] in C:\\Git\\Warcrap\\Server\\UnityRTS\\RTS\\Assets\\Tests\\PlayMode\\PlayModeTestBase.cs:23
-        \r\n  at UnityEngine.TestTools.BeforeAfterTestCommandBase`1+<ExecuteEnumerable>d__15[T].MoveNext
-        () [0x00185] in .\\Library\\PackageCache\\com.unity.test-framework@1.1.33\\UnityEngine.TestRunner\\NUnitExtensions\\Commands\\BeforeAfterTestCommandBase.cs:129
-        \r\n--NullReferenceException\r\n  at GameManager.Constants..cctor () [0x0000a]
-        in C:\\Git\\Warcrap\\Server\\UnityRTS\\RTS\\Assets\\Scripts\\GameManager\\Constants.cs:127 "
+      resultStatus: 1
+      duration: 0.2779579
+      messages: 
+      output: '<color=cyan>Creating: ./PlanningAgent_TestDLL.csv</color>
+
+        <color=cyan>Creating:
+        ./PlanningAgent_TestDLL.csv</color>
+
+        Animator is not playing an AnimatorController
+
+'
+      stacktrace: 
       notRunnable: 0
       ignoredOrSkipped: 0
       description: 
@@ -1249,18 +1291,18 @@ MonoBehaviour:
       uniqueId: GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/UnitBuildTests/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.UnitBuildTests.WorkerBuildsBase_IsBuiltTransitionsToTrue]
       name: WorkerBuildsBase_IsBuiltTransitionsToTrue
       fullName: GameManager.Tests.PlayMode.UnitBuildTests.WorkerBuildsBase_IsBuiltTransitionsToTrue
-      resultStatus: 2
-      duration: 0.0047352
-      messages: "SetUp : System.TypeInitializationException : The type initializer
-        for 'GameManager.Constants' threw an exception.\r\n  ----> System.NullReferenceException
-        : Object reference not set to an instance of an object"
-      output: 
-      stacktrace: "--SetUp\r\n  at GameManager.Tests.PlayMode.PlayModeTestBase+<SetUp>d__1.MoveNext
-        () [0x00020] in C:\\Git\\Warcrap\\Server\\UnityRTS\\RTS\\Assets\\Tests\\PlayMode\\PlayModeTestBase.cs:23
-        \r\n  at UnityEngine.TestTools.BeforeAfterTestCommandBase`1+<ExecuteEnumerable>d__15[T].MoveNext
-        () [0x00185] in .\\Library\\PackageCache\\com.unity.test-framework@1.1.33\\UnityEngine.TestRunner\\NUnitExtensions\\Commands\\BeforeAfterTestCommandBase.cs:129
-        \r\n--NullReferenceException\r\n  at GameManager.Constants..cctor () [0x0000a]
-        in C:\\Git\\Warcrap\\Server\\UnityRTS\\RTS\\Assets\\Scripts\\GameManager\\Constants.cs:127 "
+      resultStatus: 1
+      duration: 0.2699675
+      messages: 
+      output: '<color=cyan>Creating: ./PlanningAgent_TestDLL.csv</color>
+
+        <color=cyan>Creating:
+        ./PlanningAgent_TestDLL.csv</color>
+
+        Animator is not playing an AnimatorController
+
+'
+      stacktrace: 
       notRunnable: 0
       ignoredOrSkipped: 0
       description: 
@@ -1273,18 +1315,18 @@ MonoBehaviour:
       uniqueId: GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/UnitBuildTests/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.UnitBuildTests.WorkerBuildsBase_WorkerGoesIdleAfterCompletion]
       name: WorkerBuildsBase_WorkerGoesIdleAfterCompletion
       fullName: GameManager.Tests.PlayMode.UnitBuildTests.WorkerBuildsBase_WorkerGoesIdleAfterCompletion
-      resultStatus: 2
-      duration: 0.0031766
-      messages: "SetUp : System.TypeInitializationException : The type initializer
-        for 'GameManager.Constants' threw an exception.\r\n  ----> System.NullReferenceException
-        : Object reference not set to an instance of an object"
-      output: 
-      stacktrace: "--SetUp\r\n  at GameManager.Tests.PlayMode.PlayModeTestBase+<SetUp>d__1.MoveNext
-        () [0x00020] in C:\\Git\\Warcrap\\Server\\UnityRTS\\RTS\\Assets\\Tests\\PlayMode\\PlayModeTestBase.cs:23
-        \r\n  at UnityEngine.TestTools.BeforeAfterTestCommandBase`1+<ExecuteEnumerable>d__15[T].MoveNext
-        () [0x00185] in .\\Library\\PackageCache\\com.unity.test-framework@1.1.33\\UnityEngine.TestRunner\\NUnitExtensions\\Commands\\BeforeAfterTestCommandBase.cs:129
-        \r\n--NullReferenceException\r\n  at GameManager.Constants..cctor () [0x0000a]
-        in C:\\Git\\Warcrap\\Server\\UnityRTS\\RTS\\Assets\\Scripts\\GameManager\\Constants.cs:127 "
+      resultStatus: 1
+      duration: 0.2690611
+      messages: 
+      output: '<color=cyan>Creating: ./PlanningAgent_TestDLL.csv</color>
+
+        <color=cyan>Creating:
+        ./PlanningAgent_TestDLL.csv</color>
+
+        Animator is not playing an AnimatorController
+
+'
+      stacktrace: 
       notRunnable: 0
       ignoredOrSkipped: 0
       description: 
@@ -1297,9 +1339,9 @@ MonoBehaviour:
       uniqueId: GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.UnitDestructionTests][suite]
       name: UnitDestructionTests
       fullName: GameManager.Tests.PlayMode.UnitDestructionTests
-      resultStatus: 2
-      duration: 0.0388856
-      messages: One or more child tests had errors
+      resultStatus: 1
+      duration: 0.2088123
+      messages: 
       output: 
       stacktrace: 
       notRunnable: 0
@@ -1313,18 +1355,16 @@ MonoBehaviour:
       uniqueId: GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/UnitDestructionTests/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.UnitDestructionTests.Attacker_TargetDestroyedExternally_GoesIdleNoCrash]
       name: Attacker_TargetDestroyedExternally_GoesIdleNoCrash
       fullName: GameManager.Tests.PlayMode.UnitDestructionTests.Attacker_TargetDestroyedExternally_GoesIdleNoCrash
-      resultStatus: 2
-      duration: 0.0032528
-      messages: "SetUp : System.TypeInitializationException : The type initializer
-        for 'GameManager.Constants' threw an exception.\r\n  ----> System.NullReferenceException
-        : Object reference not set to an instance of an object"
-      output: 
-      stacktrace: "--SetUp\r\n  at GameManager.Tests.PlayMode.PlayModeTestBase+<SetUp>d__1.MoveNext
-        () [0x00020] in C:\\Git\\Warcrap\\Server\\UnityRTS\\RTS\\Assets\\Tests\\PlayMode\\PlayModeTestBase.cs:23
-        \r\n  at UnityEngine.TestTools.BeforeAfterTestCommandBase`1+<ExecuteEnumerable>d__15[T].MoveNext
-        () [0x00185] in .\\Library\\PackageCache\\com.unity.test-framework@1.1.33\\UnityEngine.TestRunner\\NUnitExtensions\\Commands\\BeforeAfterTestCommandBase.cs:129
-        \r\n--NullReferenceException\r\n  at GameManager.Constants..cctor () [0x0000a]
-        in C:\\Git\\Warcrap\\Server\\UnityRTS\\RTS\\Assets\\Scripts\\GameManager\\Constants.cs:127 "
+      resultStatus: 1
+      duration: 0.0309361
+      messages: 
+      output: '<color=cyan>Creating: ./PlanningAgent_TestDLL.csv</color>
+
+        <color=cyan>Creating:
+        ./PlanningAgent_TestDLL.csv</color>
+
+'
+      stacktrace: 
       notRunnable: 0
       ignoredOrSkipped: 0
       description: 
@@ -1337,18 +1377,16 @@ MonoBehaviour:
       uniqueId: GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/UnitDestructionTests/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.UnitDestructionTests.Building_Destroyed_AllOccupiedCellsFreed]
       name: Building_Destroyed_AllOccupiedCellsFreed
       fullName: GameManager.Tests.PlayMode.UnitDestructionTests.Building_Destroyed_AllOccupiedCellsFreed
-      resultStatus: 2
-      duration: 0.0034443
-      messages: "SetUp : System.TypeInitializationException : The type initializer
-        for 'GameManager.Constants' threw an exception.\r\n  ----> System.NullReferenceException
-        : Object reference not set to an instance of an object"
-      output: 
-      stacktrace: "--SetUp\r\n  at GameManager.Tests.PlayMode.PlayModeTestBase+<SetUp>d__1.MoveNext
-        () [0x00020] in C:\\Git\\Warcrap\\Server\\UnityRTS\\RTS\\Assets\\Tests\\PlayMode\\PlayModeTestBase.cs:23
-        \r\n  at UnityEngine.TestTools.BeforeAfterTestCommandBase`1+<ExecuteEnumerable>d__15[T].MoveNext
-        () [0x00185] in .\\Library\\PackageCache\\com.unity.test-framework@1.1.33\\UnityEngine.TestRunner\\NUnitExtensions\\Commands\\BeforeAfterTestCommandBase.cs:129
-        \r\n--NullReferenceException\r\n  at GameManager.Constants..cctor () [0x0000a]
-        in C:\\Git\\Warcrap\\Server\\UnityRTS\\RTS\\Assets\\Scripts\\GameManager\\Constants.cs:127 "
+      resultStatus: 1
+      duration: 0.0287497
+      messages: 
+      output: '<color=cyan>Creating: ./PlanningAgent_TestDLL.csv</color>
+
+        <color=cyan>Creating:
+        ./PlanningAgent_TestDLL.csv</color>
+
+'
+      stacktrace: 
       notRunnable: 0
       ignoredOrSkipped: 0
       description: 
@@ -1361,18 +1399,16 @@ MonoBehaviour:
       uniqueId: GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/UnitDestructionTests/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.UnitDestructionTests.DestroyLastUnitOfType_QueryReturnsEmpty]
       name: DestroyLastUnitOfType_QueryReturnsEmpty
       fullName: GameManager.Tests.PlayMode.UnitDestructionTests.DestroyLastUnitOfType_QueryReturnsEmpty
-      resultStatus: 2
-      duration: 0.0038537
-      messages: "SetUp : System.TypeInitializationException : The type initializer
-        for 'GameManager.Constants' threw an exception.\r\n  ----> System.NullReferenceException
-        : Object reference not set to an instance of an object"
-      output: 
-      stacktrace: "--SetUp\r\n  at GameManager.Tests.PlayMode.PlayModeTestBase+<SetUp>d__1.MoveNext
-        () [0x00020] in C:\\Git\\Warcrap\\Server\\UnityRTS\\RTS\\Assets\\Tests\\PlayMode\\PlayModeTestBase.cs:23
-        \r\n  at UnityEngine.TestTools.BeforeAfterTestCommandBase`1+<ExecuteEnumerable>d__15[T].MoveNext
-        () [0x00185] in .\\Library\\PackageCache\\com.unity.test-framework@1.1.33\\UnityEngine.TestRunner\\NUnitExtensions\\Commands\\BeforeAfterTestCommandBase.cs:129
-        \r\n--NullReferenceException\r\n  at GameManager.Constants..cctor () [0x0000a]
-        in C:\\Git\\Warcrap\\Server\\UnityRTS\\RTS\\Assets\\Scripts\\GameManager\\Constants.cs:127 "
+      resultStatus: 1
+      duration: 0.0211768
+      messages: 
+      output: '<color=cyan>Creating: ./PlanningAgent_TestDLL.csv</color>
+
+        <color=cyan>Creating:
+        ./PlanningAgent_TestDLL.csv</color>
+
+'
+      stacktrace: 
       notRunnable: 0
       ignoredOrSkipped: 0
       description: 
@@ -1385,18 +1421,16 @@ MonoBehaviour:
       uniqueId: GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/UnitDestructionTests/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.UnitDestructionTests.ManyUnits_CreatedAndDestroyed_UnitManagerConsistent]
       name: ManyUnits_CreatedAndDestroyed_UnitManagerConsistent
       fullName: GameManager.Tests.PlayMode.UnitDestructionTests.ManyUnits_CreatedAndDestroyed_UnitManagerConsistent
-      resultStatus: 2
-      duration: 0.0039433
-      messages: "SetUp : System.TypeInitializationException : The type initializer
-        for 'GameManager.Constants' threw an exception.\r\n  ----> System.NullReferenceException
-        : Object reference not set to an instance of an object"
-      output: 
-      stacktrace: "--SetUp\r\n  at GameManager.Tests.PlayMode.PlayModeTestBase+<SetUp>d__1.MoveNext
-        () [0x00020] in C:\\Git\\Warcrap\\Server\\UnityRTS\\RTS\\Assets\\Tests\\PlayMode\\PlayModeTestBase.cs:23
-        \r\n  at UnityEngine.TestTools.BeforeAfterTestCommandBase`1+<ExecuteEnumerable>d__15[T].MoveNext
-        () [0x00185] in .\\Library\\PackageCache\\com.unity.test-framework@1.1.33\\UnityEngine.TestRunner\\NUnitExtensions\\Commands\\BeforeAfterTestCommandBase.cs:129
-        \r\n--NullReferenceException\r\n  at GameManager.Constants..cctor () [0x0000a]
-        in C:\\Git\\Warcrap\\Server\\UnityRTS\\RTS\\Assets\\Scripts\\GameManager\\Constants.cs:127 "
+      resultStatus: 1
+      duration: 0.0272783
+      messages: 
+      output: '<color=cyan>Creating: ./PlanningAgent_TestDLL.csv</color>
+
+        <color=cyan>Creating:
+        ./PlanningAgent_TestDLL.csv</color>
+
+'
+      stacktrace: 
       notRunnable: 0
       ignoredOrSkipped: 0
       description: 
@@ -1409,18 +1443,16 @@ MonoBehaviour:
       uniqueId: GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/UnitDestructionTests/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.UnitDestructionTests.Unit_HealthExactlyZero_TriggersDestruction]
       name: Unit_HealthExactlyZero_TriggersDestruction
       fullName: GameManager.Tests.PlayMode.UnitDestructionTests.Unit_HealthExactlyZero_TriggersDestruction
-      resultStatus: 2
-      duration: 0.0053708
-      messages: "SetUp : System.TypeInitializationException : The type initializer
-        for 'GameManager.Constants' threw an exception.\r\n  ----> System.NullReferenceException
-        : Object reference not set to an instance of an object"
-      output: 
-      stacktrace: "--SetUp\r\n  at GameManager.Tests.PlayMode.PlayModeTestBase+<SetUp>d__1.MoveNext
-        () [0x00020] in C:\\Git\\Warcrap\\Server\\UnityRTS\\RTS\\Assets\\Tests\\PlayMode\\PlayModeTestBase.cs:23
-        \r\n  at UnityEngine.TestTools.BeforeAfterTestCommandBase`1+<ExecuteEnumerable>d__15[T].MoveNext
-        () [0x00185] in .\\Library\\PackageCache\\com.unity.test-framework@1.1.33\\UnityEngine.TestRunner\\NUnitExtensions\\Commands\\BeforeAfterTestCommandBase.cs:129
-        \r\n--NullReferenceException\r\n  at GameManager.Constants..cctor () [0x0000a]
-        in C:\\Git\\Warcrap\\Server\\UnityRTS\\RTS\\Assets\\Scripts\\GameManager\\Constants.cs:127 "
+      resultStatus: 1
+      duration: 0.0230535
+      messages: 
+      output: '<color=cyan>Creating: ./PlanningAgent_TestDLL.csv</color>
+
+        <color=cyan>Creating:
+        ./PlanningAgent_TestDLL.csv</color>
+
+'
+      stacktrace: 
       notRunnable: 0
       ignoredOrSkipped: 0
       description: 
@@ -1433,18 +1465,16 @@ MonoBehaviour:
       uniqueId: GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/UnitDestructionTests/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.UnitDestructionTests.Unit_HealthLargeNegative_TriggersDestruction]
       name: Unit_HealthLargeNegative_TriggersDestruction
       fullName: GameManager.Tests.PlayMode.UnitDestructionTests.Unit_HealthLargeNegative_TriggersDestruction
-      resultStatus: 2
-      duration: 0.0060575
-      messages: "SetUp : System.TypeInitializationException : The type initializer
-        for 'GameManager.Constants' threw an exception.\r\n  ----> System.NullReferenceException
-        : Object reference not set to an instance of an object"
-      output: 
-      stacktrace: "--SetUp\r\n  at GameManager.Tests.PlayMode.PlayModeTestBase+<SetUp>d__1.MoveNext
-        () [0x00020] in C:\\Git\\Warcrap\\Server\\UnityRTS\\RTS\\Assets\\Tests\\PlayMode\\PlayModeTestBase.cs:23
-        \r\n  at UnityEngine.TestTools.BeforeAfterTestCommandBase`1+<ExecuteEnumerable>d__15[T].MoveNext
-        () [0x00185] in .\\Library\\PackageCache\\com.unity.test-framework@1.1.33\\UnityEngine.TestRunner\\NUnitExtensions\\Commands\\BeforeAfterTestCommandBase.cs:129
-        \r\n--NullReferenceException\r\n  at GameManager.Constants..cctor () [0x0000a]
-        in C:\\Git\\Warcrap\\Server\\UnityRTS\\RTS\\Assets\\Scripts\\GameManager\\Constants.cs:127 "
+      resultStatus: 1
+      duration: 0.0200868
+      messages: 
+      output: '<color=cyan>Creating: ./PlanningAgent_TestDLL.csv</color>
+
+        <color=cyan>Creating:
+        ./PlanningAgent_TestDLL.csv</color>
+
+'
+      stacktrace: 
       notRunnable: 0
       ignoredOrSkipped: 0
       description: 
@@ -1457,18 +1487,16 @@ MonoBehaviour:
       uniqueId: GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/UnitDestructionTests/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.UnitDestructionTests.Unit_HealthZero_DestroyedAndRemovedFromUnitManager]
       name: Unit_HealthZero_DestroyedAndRemovedFromUnitManager
       fullName: GameManager.Tests.PlayMode.UnitDestructionTests.Unit_HealthZero_DestroyedAndRemovedFromUnitManager
-      resultStatus: 2
-      duration: 0.0037241
-      messages: "SetUp : System.TypeInitializationException : The type initializer
-        for 'GameManager.Constants' threw an exception.\r\n  ----> System.NullReferenceException
-        : Object reference not set to an instance of an object"
-      output: 
-      stacktrace: "--SetUp\r\n  at GameManager.Tests.PlayMode.PlayModeTestBase+<SetUp>d__1.MoveNext
-        () [0x00020] in C:\\Git\\Warcrap\\Server\\UnityRTS\\RTS\\Assets\\Tests\\PlayMode\\PlayModeTestBase.cs:23
-        \r\n  at UnityEngine.TestTools.BeforeAfterTestCommandBase`1+<ExecuteEnumerable>d__15[T].MoveNext
-        () [0x00185] in .\\Library\\PackageCache\\com.unity.test-framework@1.1.33\\UnityEngine.TestRunner\\NUnitExtensions\\Commands\\BeforeAfterTestCommandBase.cs:129
-        \r\n--NullReferenceException\r\n  at GameManager.Constants..cctor () [0x0000a]
-        in C:\\Git\\Warcrap\\Server\\UnityRTS\\RTS\\Assets\\Scripts\\GameManager\\Constants.cs:127 "
+      resultStatus: 1
+      duration: 0.0215101
+      messages: 
+      output: '<color=cyan>Creating: ./PlanningAgent_TestDLL.csv</color>
+
+        <color=cyan>Creating:
+        ./PlanningAgent_TestDLL.csv</color>
+
+'
+      stacktrace: 
       notRunnable: 0
       ignoredOrSkipped: 0
       description: 
@@ -1481,18 +1509,16 @@ MonoBehaviour:
       uniqueId: GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/UnitDestructionTests/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.UnitDestructionTests.Worker_Destroyed_CellBecomesBuildable]
       name: Worker_Destroyed_CellBecomesBuildable
       fullName: GameManager.Tests.PlayMode.UnitDestructionTests.Worker_Destroyed_CellBecomesBuildable
-      resultStatus: 2
-      duration: 0.0041157
-      messages: "SetUp : System.TypeInitializationException : The type initializer
-        for 'GameManager.Constants' threw an exception.\r\n  ----> System.NullReferenceException
-        : Object reference not set to an instance of an object"
-      output: 
-      stacktrace: "--SetUp\r\n  at GameManager.Tests.PlayMode.PlayModeTestBase+<SetUp>d__1.MoveNext
-        () [0x00020] in C:\\Git\\Warcrap\\Server\\UnityRTS\\RTS\\Assets\\Tests\\PlayMode\\PlayModeTestBase.cs:23
-        \r\n  at UnityEngine.TestTools.BeforeAfterTestCommandBase`1+<ExecuteEnumerable>d__15[T].MoveNext
-        () [0x00185] in .\\Library\\PackageCache\\com.unity.test-framework@1.1.33\\UnityEngine.TestRunner\\NUnitExtensions\\Commands\\BeforeAfterTestCommandBase.cs:129
-        \r\n--NullReferenceException\r\n  at GameManager.Constants..cctor () [0x0000a]
-        in C:\\Git\\Warcrap\\Server\\UnityRTS\\RTS\\Assets\\Scripts\\GameManager\\Constants.cs:127 "
+      resultStatus: 1
+      duration: 0.0298313
+      messages: 
+      output: '<color=cyan>Creating: ./PlanningAgent_TestDLL.csv</color>
+
+        <color=cyan>Creating:
+        ./PlanningAgent_TestDLL.csv</color>
+
+'
+      stacktrace: 
       notRunnable: 0
       ignoredOrSkipped: 0
       description: 
@@ -1505,9 +1531,9 @@ MonoBehaviour:
       uniqueId: GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.UnitGatherTests][suite]
       name: UnitGatherTests
       fullName: GameManager.Tests.PlayMode.UnitGatherTests
-      resultStatus: 2
-      duration: 0.0472628
-      messages: One or more child tests had errors
+      resultStatus: 1
+      duration: 3.3052518
+      messages: 
       output: 
       stacktrace: 
       notRunnable: 0
@@ -1521,18 +1547,16 @@ MonoBehaviour:
       uniqueId: GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/UnitGatherTests/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.UnitGatherTests.Gather_BaseDestroyedMidTrip_WorkerGoesIdle]
       name: Gather_BaseDestroyedMidTrip_WorkerGoesIdle
       fullName: GameManager.Tests.PlayMode.UnitGatherTests.Gather_BaseDestroyedMidTrip_WorkerGoesIdle
-      resultStatus: 2
-      duration: 0.003768
-      messages: "SetUp : System.TypeInitializationException : The type initializer
-        for 'GameManager.Constants' threw an exception.\r\n  ----> System.NullReferenceException
-        : Object reference not set to an instance of an object"
-      output: 
-      stacktrace: "--SetUp\r\n  at GameManager.Tests.PlayMode.PlayModeTestBase+<SetUp>d__1.MoveNext
-        () [0x00020] in C:\\Git\\Warcrap\\Server\\UnityRTS\\RTS\\Assets\\Tests\\PlayMode\\PlayModeTestBase.cs:23
-        \r\n  at UnityEngine.TestTools.BeforeAfterTestCommandBase`1+<ExecuteEnumerable>d__15[T].MoveNext
-        () [0x00185] in .\\Library\\PackageCache\\com.unity.test-framework@1.1.33\\UnityEngine.TestRunner\\NUnitExtensions\\Commands\\BeforeAfterTestCommandBase.cs:129
-        \r\n--NullReferenceException\r\n  at GameManager.Constants..cctor () [0x0000a]
-        in C:\\Git\\Warcrap\\Server\\UnityRTS\\RTS\\Assets\\Scripts\\GameManager\\Constants.cs:127 "
+      resultStatus: 1
+      duration: 0.1704128
+      messages: 
+      output: '<color=cyan>Creating: ./PlanningAgent_TestDLL.csv</color>
+
+        <color=cyan>Creating:
+        ./PlanningAgent_TestDLL.csv</color>
+
+'
+      stacktrace: 
       notRunnable: 0
       ignoredOrSkipped: 0
       description: 
@@ -1545,18 +1569,16 @@ MonoBehaviour:
       uniqueId: GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/UnitGatherTests/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.UnitGatherTests.Gather_MineCloseToBase_GoldStillDeposited]
       name: Gather_MineCloseToBase_GoldStillDeposited
       fullName: GameManager.Tests.PlayMode.UnitGatherTests.Gather_MineCloseToBase_GoldStillDeposited
-      resultStatus: 2
-      duration: 0.0035212
-      messages: "SetUp : System.TypeInitializationException : The type initializer
-        for 'GameManager.Constants' threw an exception.\r\n  ----> System.NullReferenceException
-        : Object reference not set to an instance of an object"
-      output: 
-      stacktrace: "--SetUp\r\n  at GameManager.Tests.PlayMode.PlayModeTestBase+<SetUp>d__1.MoveNext
-        () [0x00020] in C:\\Git\\Warcrap\\Server\\UnityRTS\\RTS\\Assets\\Tests\\PlayMode\\PlayModeTestBase.cs:23
-        \r\n  at UnityEngine.TestTools.BeforeAfterTestCommandBase`1+<ExecuteEnumerable>d__15[T].MoveNext
-        () [0x00185] in .\\Library\\PackageCache\\com.unity.test-framework@1.1.33\\UnityEngine.TestRunner\\NUnitExtensions\\Commands\\BeforeAfterTestCommandBase.cs:129
-        \r\n--NullReferenceException\r\n  at GameManager.Constants..cctor () [0x0000a]
-        in C:\\Git\\Warcrap\\Server\\UnityRTS\\RTS\\Assets\\Scripts\\GameManager\\Constants.cs:127 "
+      resultStatus: 1
+      duration: 0.2544047
+      messages: 
+      output: '<color=cyan>Creating: ./PlanningAgent_TestDLL.csv</color>
+
+        <color=cyan>Creating:
+        ./PlanningAgent_TestDLL.csv</color>
+
+'
+      stacktrace: 
       notRunnable: 0
       ignoredOrSkipped: 0
       description: 
@@ -1569,18 +1591,16 @@ MonoBehaviour:
       uniqueId: GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/UnitGatherTests/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.UnitGatherTests.Gather_MineDestroyedMidTrip_WorkerGoesIdle]
       name: Gather_MineDestroyedMidTrip_WorkerGoesIdle
       fullName: GameManager.Tests.PlayMode.UnitGatherTests.Gather_MineDestroyedMidTrip_WorkerGoesIdle
-      resultStatus: 2
-      duration: 0.0051529
-      messages: "SetUp : System.TypeInitializationException : The type initializer
-        for 'GameManager.Constants' threw an exception.\r\n  ----> System.NullReferenceException
-        : Object reference not set to an instance of an object"
-      output: 
-      stacktrace: "--SetUp\r\n  at GameManager.Tests.PlayMode.PlayModeTestBase+<SetUp>d__1.MoveNext
-        () [0x00020] in C:\\Git\\Warcrap\\Server\\UnityRTS\\RTS\\Assets\\Tests\\PlayMode\\PlayModeTestBase.cs:23
-        \r\n  at UnityEngine.TestTools.BeforeAfterTestCommandBase`1+<ExecuteEnumerable>d__15[T].MoveNext
-        () [0x00185] in .\\Library\\PackageCache\\com.unity.test-framework@1.1.33\\UnityEngine.TestRunner\\NUnitExtensions\\Commands\\BeforeAfterTestCommandBase.cs:129
-        \r\n--NullReferenceException\r\n  at GameManager.Constants..cctor () [0x0000a]
-        in C:\\Git\\Warcrap\\Server\\UnityRTS\\RTS\\Assets\\Scripts\\GameManager\\Constants.cs:127 "
+      resultStatus: 1
+      duration: 0.1374066
+      messages: 
+      output: '<color=cyan>Creating: ./PlanningAgent_TestDLL.csv</color>
+
+        <color=cyan>Creating:
+        ./PlanningAgent_TestDLL.csv</color>
+
+'
+      stacktrace: 
       notRunnable: 0
       ignoredOrSkipped: 0
       description: 
@@ -1593,18 +1613,16 @@ MonoBehaviour:
       uniqueId: GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/UnitGatherTests/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.UnitGatherTests.Gather_MineFarFromBase_GatherCompletesEventually]
       name: Gather_MineFarFromBase_GatherCompletesEventually
       fullName: GameManager.Tests.PlayMode.UnitGatherTests.Gather_MineFarFromBase_GatherCompletesEventually
-      resultStatus: 2
-      duration: 0.0050812
-      messages: "SetUp : System.TypeInitializationException : The type initializer
-        for 'GameManager.Constants' threw an exception.\r\n  ----> System.NullReferenceException
-        : Object reference not set to an instance of an object"
-      output: 
-      stacktrace: "--SetUp\r\n  at GameManager.Tests.PlayMode.PlayModeTestBase+<SetUp>d__1.MoveNext
-        () [0x00020] in C:\\Git\\Warcrap\\Server\\UnityRTS\\RTS\\Assets\\Tests\\PlayMode\\PlayModeTestBase.cs:23
-        \r\n  at UnityEngine.TestTools.BeforeAfterTestCommandBase`1+<ExecuteEnumerable>d__15[T].MoveNext
-        () [0x00185] in .\\Library\\PackageCache\\com.unity.test-framework@1.1.33\\UnityEngine.TestRunner\\NUnitExtensions\\Commands\\BeforeAfterTestCommandBase.cs:129
-        \r\n--NullReferenceException\r\n  at GameManager.Constants..cctor () [0x0000a]
-        in C:\\Git\\Warcrap\\Server\\UnityRTS\\RTS\\Assets\\Scripts\\GameManager\\Constants.cs:127 "
+      resultStatus: 1
+      duration: 1.0578161
+      messages: 
+      output: '<color=cyan>Creating: ./PlanningAgent_TestDLL.csv</color>
+
+        <color=cyan>Creating:
+        ./PlanningAgent_TestDLL.csv</color>
+
+'
+      stacktrace: 
       notRunnable: 0
       ignoredOrSkipped: 0
       description: 
@@ -1617,18 +1635,16 @@ MonoBehaviour:
       uniqueId: GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/UnitGatherTests/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.UnitGatherTests.Gather_MineHealthDecreases_DuringMining]
       name: Gather_MineHealthDecreases_DuringMining
       fullName: GameManager.Tests.PlayMode.UnitGatherTests.Gather_MineHealthDecreases_DuringMining
-      resultStatus: 2
-      duration: 0.0027944
-      messages: "SetUp : System.TypeInitializationException : The type initializer
-        for 'GameManager.Constants' threw an exception.\r\n  ----> System.NullReferenceException
-        : Object reference not set to an instance of an object"
-      output: 
-      stacktrace: "--SetUp\r\n  at GameManager.Tests.PlayMode.PlayModeTestBase+<SetUp>d__1.MoveNext
-        () [0x00020] in C:\\Git\\Warcrap\\Server\\UnityRTS\\RTS\\Assets\\Tests\\PlayMode\\PlayModeTestBase.cs:23
-        \r\n  at UnityEngine.TestTools.BeforeAfterTestCommandBase`1+<ExecuteEnumerable>d__15[T].MoveNext
-        () [0x00185] in .\\Library\\PackageCache\\com.unity.test-framework@1.1.33\\UnityEngine.TestRunner\\NUnitExtensions\\Commands\\BeforeAfterTestCommandBase.cs:129
-        \r\n--NullReferenceException\r\n  at GameManager.Constants..cctor () [0x0000a]
-        in C:\\Git\\Warcrap\\Server\\UnityRTS\\RTS\\Assets\\Scripts\\GameManager\\Constants.cs:127 "
+      resultStatus: 1
+      duration: 0.0252219
+      messages: 
+      output: '<color=cyan>Creating: ./PlanningAgent_TestDLL.csv</color>
+
+        <color=cyan>Creating:
+        ./PlanningAgent_TestDLL.csv</color>
+
+'
+      stacktrace: 
       notRunnable: 0
       ignoredOrSkipped: 0
       description: 
@@ -1641,18 +1657,16 @@ MonoBehaviour:
       uniqueId: GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/UnitGatherTests/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.UnitGatherTests.Gather_MineLowHealth_WorkerGoesIdleAfterDepletion]
       name: Gather_MineLowHealth_WorkerGoesIdleAfterDepletion
       fullName: GameManager.Tests.PlayMode.UnitGatherTests.Gather_MineLowHealth_WorkerGoesIdleAfterDepletion
-      resultStatus: 2
-      duration: 0.0051041
-      messages: "SetUp : System.TypeInitializationException : The type initializer
-        for 'GameManager.Constants' threw an exception.\r\n  ----> System.NullReferenceException
-        : Object reference not set to an instance of an object"
-      output: 
-      stacktrace: "--SetUp\r\n  at GameManager.Tests.PlayMode.PlayModeTestBase+<SetUp>d__1.MoveNext
-        () [0x00020] in C:\\Git\\Warcrap\\Server\\UnityRTS\\RTS\\Assets\\Tests\\PlayMode\\PlayModeTestBase.cs:23
-        \r\n  at UnityEngine.TestTools.BeforeAfterTestCommandBase`1+<ExecuteEnumerable>d__15[T].MoveNext
-        () [0x00185] in .\\Library\\PackageCache\\com.unity.test-framework@1.1.33\\UnityEngine.TestRunner\\NUnitExtensions\\Commands\\BeforeAfterTestCommandBase.cs:129
-        \r\n--NullReferenceException\r\n  at GameManager.Constants..cctor () [0x0000a]
-        in C:\\Git\\Warcrap\\Server\\UnityRTS\\RTS\\Assets\\Scripts\\GameManager\\Constants.cs:127 "
+      resultStatus: 1
+      duration: 0.1958869
+      messages: 
+      output: '<color=cyan>Creating: ./PlanningAgent_TestDLL.csv</color>
+
+        <color=cyan>Creating:
+        ./PlanningAgent_TestDLL.csv</color>
+
+'
+      stacktrace: 
       notRunnable: 0
       ignoredOrSkipped: 0
       description: 
@@ -1665,18 +1679,16 @@ MonoBehaviour:
       uniqueId: GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/UnitGatherTests/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.UnitGatherTests.Gather_MultipleWorkersSameMine_AllDepositGold]
       name: Gather_MultipleWorkersSameMine_AllDepositGold
       fullName: GameManager.Tests.PlayMode.UnitGatherTests.Gather_MultipleWorkersSameMine_AllDepositGold
-      resultStatus: 2
-      duration: 0.0057467
-      messages: "SetUp : System.TypeInitializationException : The type initializer
-        for 'GameManager.Constants' threw an exception.\r\n  ----> System.NullReferenceException
-        : Object reference not set to an instance of an object"
-      output: 
-      stacktrace: "--SetUp\r\n  at GameManager.Tests.PlayMode.PlayModeTestBase+<SetUp>d__1.MoveNext
-        () [0x00020] in C:\\Git\\Warcrap\\Server\\UnityRTS\\RTS\\Assets\\Tests\\PlayMode\\PlayModeTestBase.cs:23
-        \r\n  at UnityEngine.TestTools.BeforeAfterTestCommandBase`1+<ExecuteEnumerable>d__15[T].MoveNext
-        () [0x00185] in .\\Library\\PackageCache\\com.unity.test-framework@1.1.33\\UnityEngine.TestRunner\\NUnitExtensions\\Commands\\BeforeAfterTestCommandBase.cs:129
-        \r\n--NullReferenceException\r\n  at GameManager.Constants..cctor () [0x0000a]
-        in C:\\Git\\Warcrap\\Server\\UnityRTS\\RTS\\Assets\\Scripts\\GameManager\\Constants.cs:127 "
+      resultStatus: 1
+      duration: 0.5596607
+      messages: 
+      output: '<color=cyan>Creating: ./PlanningAgent_TestDLL.csv</color>
+
+        <color=cyan>Creating:
+        ./PlanningAgent_TestDLL.csv</color>
+
+'
+      stacktrace: 
       notRunnable: 0
       ignoredOrSkipped: 0
       description: 
@@ -1689,18 +1701,16 @@ MonoBehaviour:
       uniqueId: GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/UnitGatherTests/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.UnitGatherTests.Gather_WorkerCompletesRoundTrip_AgentGoldIncreases]
       name: Gather_WorkerCompletesRoundTrip_AgentGoldIncreases
       fullName: GameManager.Tests.PlayMode.UnitGatherTests.Gather_WorkerCompletesRoundTrip_AgentGoldIncreases
-      resultStatus: 2
-      duration: 0.0029556
-      messages: "SetUp : System.TypeInitializationException : The type initializer
-        for 'GameManager.Constants' threw an exception.\r\n  ----> System.NullReferenceException
-        : Object reference not set to an instance of an object"
-      output: 
-      stacktrace: "--SetUp\r\n  at GameManager.Tests.PlayMode.PlayModeTestBase+<SetUp>d__1.MoveNext
-        () [0x00020] in C:\\Git\\Warcrap\\Server\\UnityRTS\\RTS\\Assets\\Tests\\PlayMode\\PlayModeTestBase.cs:23
-        \r\n  at UnityEngine.TestTools.BeforeAfterTestCommandBase`1+<ExecuteEnumerable>d__15[T].MoveNext
-        () [0x00185] in .\\Library\\PackageCache\\com.unity.test-framework@1.1.33\\UnityEngine.TestRunner\\NUnitExtensions\\Commands\\BeforeAfterTestCommandBase.cs:129
-        \r\n--NullReferenceException\r\n  at GameManager.Constants..cctor () [0x0000a]
-        in C:\\Git\\Warcrap\\Server\\UnityRTS\\RTS\\Assets\\Scripts\\GameManager\\Constants.cs:127 "
+      resultStatus: 1
+      duration: 0.458234
+      messages: 
+      output: '<color=cyan>Creating: ./PlanningAgent_TestDLL.csv</color>
+
+        <color=cyan>Creating:
+        ./PlanningAgent_TestDLL.csv</color>
+
+'
+      stacktrace: 
       notRunnable: 0
       ignoredOrSkipped: 0
       description: 
@@ -1713,18 +1723,16 @@ MonoBehaviour:
       uniqueId: GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/UnitGatherTests/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.UnitGatherTests.Gather_WorkerContinuesAfterFirstDeposit_StillGathering]
       name: Gather_WorkerContinuesAfterFirstDeposit_StillGathering
       fullName: GameManager.Tests.PlayMode.UnitGatherTests.Gather_WorkerContinuesAfterFirstDeposit_StillGathering
-      resultStatus: 2
-      duration: 0.006079
-      messages: "SetUp : System.TypeInitializationException : The type initializer
-        for 'GameManager.Constants' threw an exception.\r\n  ----> System.NullReferenceException
-        : Object reference not set to an instance of an object"
-      output: 
-      stacktrace: "--SetUp\r\n  at GameManager.Tests.PlayMode.PlayModeTestBase+<SetUp>d__1.MoveNext
-        () [0x00020] in C:\\Git\\Warcrap\\Server\\UnityRTS\\RTS\\Assets\\Tests\\PlayMode\\PlayModeTestBase.cs:23
-        \r\n  at UnityEngine.TestTools.BeforeAfterTestCommandBase`1+<ExecuteEnumerable>d__15[T].MoveNext
-        () [0x00185] in .\\Library\\PackageCache\\com.unity.test-framework@1.1.33\\UnityEngine.TestRunner\\NUnitExtensions\\Commands\\BeforeAfterTestCommandBase.cs:129
-        \r\n--NullReferenceException\r\n  at GameManager.Constants..cctor () [0x0000a]
-        in C:\\Git\\Warcrap\\Server\\UnityRTS\\RTS\\Assets\\Scripts\\GameManager\\Constants.cs:127 "
+      resultStatus: 1
+      duration: 0.4385129
+      messages: 
+      output: '<color=cyan>Creating: ./PlanningAgent_TestDLL.csv</color>
+
+        <color=cyan>Creating:
+        ./PlanningAgent_TestDLL.csv</color>
+
+'
+      stacktrace: 
       notRunnable: 0
       ignoredOrSkipped: 0
       description: 
@@ -1737,9 +1745,9 @@ MonoBehaviour:
       uniqueId: GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.UnitMovementTests][suite]
       name: UnitMovementTests
       fullName: GameManager.Tests.PlayMode.UnitMovementTests
-      resultStatus: 2
-      duration: 0.0517768
-      messages: One or more child tests had errors
+      resultStatus: 1
+      duration: 2.220995
+      messages: 
       output: 
       stacktrace: 
       notRunnable: 0
@@ -1753,18 +1761,16 @@ MonoBehaviour:
       uniqueId: GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/UnitMovementTests/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.UnitMovementTests.MultipleWorkers_MovingSimultaneously_AllResolve]
       name: MultipleWorkers_MovingSimultaneously_AllResolve
       fullName: GameManager.Tests.PlayMode.UnitMovementTests.MultipleWorkers_MovingSimultaneously_AllResolve
-      resultStatus: 2
-      duration: 0.0035733
-      messages: "SetUp : System.TypeInitializationException : The type initializer
-        for 'GameManager.Constants' threw an exception.\r\n  ----> System.NullReferenceException
-        : Object reference not set to an instance of an object"
-      output: 
-      stacktrace: "--SetUp\r\n  at GameManager.Tests.PlayMode.PlayModeTestBase+<SetUp>d__1.MoveNext
-        () [0x00020] in C:\\Git\\Warcrap\\Server\\UnityRTS\\RTS\\Assets\\Tests\\PlayMode\\PlayModeTestBase.cs:23
-        \r\n  at UnityEngine.TestTools.BeforeAfterTestCommandBase`1+<ExecuteEnumerable>d__15[T].MoveNext
-        () [0x00185] in .\\Library\\PackageCache\\com.unity.test-framework@1.1.33\\UnityEngine.TestRunner\\NUnitExtensions\\Commands\\BeforeAfterTestCommandBase.cs:129
-        \r\n--NullReferenceException\r\n  at GameManager.Constants..cctor () [0x0000a]
-        in C:\\Git\\Warcrap\\Server\\UnityRTS\\RTS\\Assets\\Scripts\\GameManager\\Constants.cs:127 "
+      resultStatus: 1
+      duration: 0.4956213
+      messages: 
+      output: '<color=cyan>Creating: ./PlanningAgent_TestDLL.csv</color>
+
+        <color=cyan>Creating:
+        ./PlanningAgent_TestDLL.csv</color>
+
+'
+      stacktrace: 
       notRunnable: 0
       ignoredOrSkipped: 0
       description: 
@@ -1777,18 +1783,16 @@ MonoBehaviour:
       uniqueId: GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/UnitMovementTests/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.UnitMovementTests.Worker_AtMapEdge_MovesToInteriorTarget]
       name: Worker_AtMapEdge_MovesToInteriorTarget
       fullName: GameManager.Tests.PlayMode.UnitMovementTests.Worker_AtMapEdge_MovesToInteriorTarget
-      resultStatus: 2
-      duration: 0.0035802
-      messages: "SetUp : System.TypeInitializationException : The type initializer
-        for 'GameManager.Constants' threw an exception.\r\n  ----> System.NullReferenceException
-        : Object reference not set to an instance of an object"
-      output: 
-      stacktrace: "--SetUp\r\n  at GameManager.Tests.PlayMode.PlayModeTestBase+<SetUp>d__1.MoveNext
-        () [0x00020] in C:\\Git\\Warcrap\\Server\\UnityRTS\\RTS\\Assets\\Tests\\PlayMode\\PlayModeTestBase.cs:23
-        \r\n  at UnityEngine.TestTools.BeforeAfterTestCommandBase`1+<ExecuteEnumerable>d__15[T].MoveNext
-        () [0x00185] in .\\Library\\PackageCache\\com.unity.test-framework@1.1.33\\UnityEngine.TestRunner\\NUnitExtensions\\Commands\\BeforeAfterTestCommandBase.cs:129
-        \r\n--NullReferenceException\r\n  at GameManager.Constants..cctor () [0x0000a]
-        in C:\\Git\\Warcrap\\Server\\UnityRTS\\RTS\\Assets\\Scripts\\GameManager\\Constants.cs:127 "
+      resultStatus: 1
+      duration: 0.3005796
+      messages: 
+      output: '<color=cyan>Creating: ./PlanningAgent_TestDLL.csv</color>
+
+        <color=cyan>Creating:
+        ./PlanningAgent_TestDLL.csv</color>
+
+'
+      stacktrace: 
       notRunnable: 0
       ignoredOrSkipped: 0
       description: 
@@ -1801,18 +1805,16 @@ MonoBehaviour:
       uniqueId: GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/UnitMovementTests/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.UnitMovementTests.Worker_MoveCommand_ArrivesAtDestinationAndGoesIdle]
       name: Worker_MoveCommand_ArrivesAtDestinationAndGoesIdle
       fullName: GameManager.Tests.PlayMode.UnitMovementTests.Worker_MoveCommand_ArrivesAtDestinationAndGoesIdle
-      resultStatus: 2
-      duration: 0.0040841
-      messages: "SetUp : System.TypeInitializationException : The type initializer
-        for 'GameManager.Constants' threw an exception.\r\n  ----> System.NullReferenceException
-        : Object reference not set to an instance of an object"
-      output: 
-      stacktrace: "--SetUp\r\n  at GameManager.Tests.PlayMode.PlayModeTestBase+<SetUp>d__1.MoveNext
-        () [0x00020] in C:\\Git\\Warcrap\\Server\\UnityRTS\\RTS\\Assets\\Tests\\PlayMode\\PlayModeTestBase.cs:23
-        \r\n  at UnityEngine.TestTools.BeforeAfterTestCommandBase`1+<ExecuteEnumerable>d__15[T].MoveNext
-        () [0x00185] in .\\Library\\PackageCache\\com.unity.test-framework@1.1.33\\UnityEngine.TestRunner\\NUnitExtensions\\Commands\\BeforeAfterTestCommandBase.cs:129
-        \r\n--NullReferenceException\r\n  at GameManager.Constants..cctor () [0x0000a]
-        in C:\\Git\\Warcrap\\Server\\UnityRTS\\RTS\\Assets\\Scripts\\GameManager\\Constants.cs:127 "
+      resultStatus: 1
+      duration: 0.1195751
+      messages: 
+      output: '<color=cyan>Creating: ./PlanningAgent_TestDLL.csv</color>
+
+        <color=cyan>Creating:
+        ./PlanningAgent_TestDLL.csv</color>
+
+'
+      stacktrace: 
       notRunnable: 0
       ignoredOrSkipped: 0
       description: 
@@ -1825,18 +1827,16 @@ MonoBehaviour:
       uniqueId: GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/UnitMovementTests/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.UnitMovementTests.Worker_Movement_OriginalCellFreedAfterMove]
       name: Worker_Movement_OriginalCellFreedAfterMove
       fullName: GameManager.Tests.PlayMode.UnitMovementTests.Worker_Movement_OriginalCellFreedAfterMove
-      resultStatus: 2
-      duration: 0.0038928
-      messages: "SetUp : System.TypeInitializationException : The type initializer
-        for 'GameManager.Constants' threw an exception.\r\n  ----> System.NullReferenceException
-        : Object reference not set to an instance of an object"
-      output: 
-      stacktrace: "--SetUp\r\n  at GameManager.Tests.PlayMode.PlayModeTestBase+<SetUp>d__1.MoveNext
-        () [0x00020] in C:\\Git\\Warcrap\\Server\\UnityRTS\\RTS\\Assets\\Tests\\PlayMode\\PlayModeTestBase.cs:23
-        \r\n  at UnityEngine.TestTools.BeforeAfterTestCommandBase`1+<ExecuteEnumerable>d__15[T].MoveNext
-        () [0x00185] in .\\Library\\PackageCache\\com.unity.test-framework@1.1.33\\UnityEngine.TestRunner\\NUnitExtensions\\Commands\\BeforeAfterTestCommandBase.cs:129
-        \r\n--NullReferenceException\r\n  at GameManager.Constants..cctor () [0x0000a]
-        in C:\\Git\\Warcrap\\Server\\UnityRTS\\RTS\\Assets\\Scripts\\GameManager\\Constants.cs:127 "
+      resultStatus: 1
+      duration: 0.0604349
+      messages: 
+      output: '<color=cyan>Creating: ./PlanningAgent_TestDLL.csv</color>
+
+        <color=cyan>Creating:
+        ./PlanningAgent_TestDLL.csv</color>
+
+'
+      stacktrace: 
       notRunnable: 0
       ignoredOrSkipped: 0
       description: 
@@ -1849,18 +1849,16 @@ MonoBehaviour:
       uniqueId: GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/UnitMovementTests/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.UnitMovementTests.Worker_MovesToNearMapCorner_ArrivesSuccessfully]
       name: Worker_MovesToNearMapCorner_ArrivesSuccessfully
       fullName: GameManager.Tests.PlayMode.UnitMovementTests.Worker_MovesToNearMapCorner_ArrivesSuccessfully
-      resultStatus: 2
-      duration: 0.0041047
-      messages: "SetUp : System.TypeInitializationException : The type initializer
-        for 'GameManager.Constants' threw an exception.\r\n  ----> System.NullReferenceException
-        : Object reference not set to an instance of an object"
-      output: 
-      stacktrace: "--SetUp\r\n  at GameManager.Tests.PlayMode.PlayModeTestBase+<SetUp>d__1.MoveNext
-        () [0x00020] in C:\\Git\\Warcrap\\Server\\UnityRTS\\RTS\\Assets\\Tests\\PlayMode\\PlayModeTestBase.cs:23
-        \r\n  at UnityEngine.TestTools.BeforeAfterTestCommandBase`1+<ExecuteEnumerable>d__15[T].MoveNext
-        () [0x00185] in .\\Library\\PackageCache\\com.unity.test-framework@1.1.33\\UnityEngine.TestRunner\\NUnitExtensions\\Commands\\BeforeAfterTestCommandBase.cs:129
-        \r\n--NullReferenceException\r\n  at GameManager.Constants..cctor () [0x0000a]
-        in C:\\Git\\Warcrap\\Server\\UnityRTS\\RTS\\Assets\\Scripts\\GameManager\\Constants.cs:127 "
+      resultStatus: 1
+      duration: 0.2397984
+      messages: 
+      output: '<color=cyan>Creating: ./PlanningAgent_TestDLL.csv</color>
+
+        <color=cyan>Creating:
+        ./PlanningAgent_TestDLL.csv</color>
+
+'
+      stacktrace: 
       notRunnable: 0
       ignoredOrSkipped: 0
       description: 
@@ -1873,18 +1871,16 @@ MonoBehaviour:
       uniqueId: GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/UnitMovementTests/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.UnitMovementTests.Worker_MoveToSamePosition_StaysIdle]
       name: Worker_MoveToSamePosition_StaysIdle
       fullName: GameManager.Tests.PlayMode.UnitMovementTests.Worker_MoveToSamePosition_StaysIdle
-      resultStatus: 2
-      duration: 0.005984
-      messages: "SetUp : System.TypeInitializationException : The type initializer
-        for 'GameManager.Constants' threw an exception.\r\n  ----> System.NullReferenceException
-        : Object reference not set to an instance of an object"
-      output: 
-      stacktrace: "--SetUp\r\n  at GameManager.Tests.PlayMode.PlayModeTestBase+<SetUp>d__1.MoveNext
-        () [0x00020] in C:\\Git\\Warcrap\\Server\\UnityRTS\\RTS\\Assets\\Tests\\PlayMode\\PlayModeTestBase.cs:23
-        \r\n  at UnityEngine.TestTools.BeforeAfterTestCommandBase`1+<ExecuteEnumerable>d__15[T].MoveNext
-        () [0x00185] in .\\Library\\PackageCache\\com.unity.test-framework@1.1.33\\UnityEngine.TestRunner\\NUnitExtensions\\Commands\\BeforeAfterTestCommandBase.cs:129
-        \r\n--NullReferenceException\r\n  at GameManager.Constants..cctor () [0x0000a]
-        in C:\\Git\\Warcrap\\Server\\UnityRTS\\RTS\\Assets\\Scripts\\GameManager\\Constants.cs:127 "
+      resultStatus: 1
+      duration: 0.0409862
+      messages: 
+      output: '<color=cyan>Creating: ./PlanningAgent_TestDLL.csv</color>
+
+        <color=cyan>Creating:
+        ./PlanningAgent_TestDLL.csv</color>
+
+'
+      stacktrace: 
       notRunnable: 0
       ignoredOrSkipped: 0
       description: 
@@ -1897,18 +1893,16 @@ MonoBehaviour:
       uniqueId: GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/UnitMovementTests/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.UnitMovementTests.Worker_MultiStepPath_ReachesFinalTarget]
       name: Worker_MultiStepPath_ReachesFinalTarget
       fullName: GameManager.Tests.PlayMode.UnitMovementTests.Worker_MultiStepPath_ReachesFinalTarget
-      resultStatus: 2
-      duration: 0.0027088
-      messages: "SetUp : System.TypeInitializationException : The type initializer
-        for 'GameManager.Constants' threw an exception.\r\n  ----> System.NullReferenceException
-        : Object reference not set to an instance of an object"
-      output: 
-      stacktrace: "--SetUp\r\n  at GameManager.Tests.PlayMode.PlayModeTestBase+<SetUp>d__1.MoveNext
-        () [0x00020] in C:\\Git\\Warcrap\\Server\\UnityRTS\\RTS\\Assets\\Tests\\PlayMode\\PlayModeTestBase.cs:23
-        \r\n  at UnityEngine.TestTools.BeforeAfterTestCommandBase`1+<ExecuteEnumerable>d__15[T].MoveNext
-        () [0x00185] in .\\Library\\PackageCache\\com.unity.test-framework@1.1.33\\UnityEngine.TestRunner\\NUnitExtensions\\Commands\\BeforeAfterTestCommandBase.cs:129
-        \r\n--NullReferenceException\r\n  at GameManager.Constants..cctor () [0x0000a]
-        in C:\\Git\\Warcrap\\Server\\UnityRTS\\RTS\\Assets\\Scripts\\GameManager\\Constants.cs:127 "
+      resultStatus: 1
+      duration: 0.3771383
+      messages: 
+      output: '<color=cyan>Creating: ./PlanningAgent_TestDLL.csv</color>
+
+        <color=cyan>Creating:
+        ./PlanningAgent_TestDLL.csv</color>
+
+'
+      stacktrace: 
       notRunnable: 0
       ignoredOrSkipped: 0
       description: 
@@ -1921,18 +1915,16 @@ MonoBehaviour:
       uniqueId: GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/UnitMovementTests/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.UnitMovementTests.Worker_OnUnwalkableStart_PathfindsOut]
       name: Worker_OnUnwalkableStart_PathfindsOut
       fullName: GameManager.Tests.PlayMode.UnitMovementTests.Worker_OnUnwalkableStart_PathfindsOut
-      resultStatus: 2
-      duration: 0.0052463
-      messages: "SetUp : System.TypeInitializationException : The type initializer
-        for 'GameManager.Constants' threw an exception.\r\n  ----> System.NullReferenceException
-        : Object reference not set to an instance of an object"
-      output: 
-      stacktrace: "--SetUp\r\n  at GameManager.Tests.PlayMode.PlayModeTestBase+<SetUp>d__1.MoveNext
-        () [0x00020] in C:\\Git\\Warcrap\\Server\\UnityRTS\\RTS\\Assets\\Tests\\PlayMode\\PlayModeTestBase.cs:23
-        \r\n  at UnityEngine.TestTools.BeforeAfterTestCommandBase`1+<ExecuteEnumerable>d__15[T].MoveNext
-        () [0x00185] in .\\Library\\PackageCache\\com.unity.test-framework@1.1.33\\UnityEngine.TestRunner\\NUnitExtensions\\Commands\\BeforeAfterTestCommandBase.cs:129
-        \r\n--NullReferenceException\r\n  at GameManager.Constants..cctor () [0x0000a]
-        in C:\\Git\\Warcrap\\Server\\UnityRTS\\RTS\\Assets\\Scripts\\GameManager\\Constants.cs:127 "
+      resultStatus: 1
+      duration: 0.1628639
+      messages: 
+      output: '<color=cyan>Creating: ./PlanningAgent_TestDLL.csv</color>
+
+        <color=cyan>Creating:
+        ./PlanningAgent_TestDLL.csv</color>
+
+'
+      stacktrace: 
       notRunnable: 0
       ignoredOrSkipped: 0
       description: 
@@ -1945,18 +1937,43 @@ MonoBehaviour:
       uniqueId: GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/UnitMovementTests/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.UnitMovementTests.Worker_PathBlockedMidTraversal_RepathsOrGoesIdle]
       name: Worker_PathBlockedMidTraversal_RepathsOrGoesIdle
       fullName: GameManager.Tests.PlayMode.UnitMovementTests.Worker_PathBlockedMidTraversal_RepathsOrGoesIdle
-      resultStatus: 2
-      duration: 0.0051539
-      messages: "SetUp : System.TypeInitializationException : The type initializer
-        for 'GameManager.Constants' threw an exception.\r\n  ----> System.NullReferenceException
-        : Object reference not set to an instance of an object"
-      output: 
-      stacktrace: "--SetUp\r\n  at GameManager.Tests.PlayMode.PlayModeTestBase+<SetUp>d__1.MoveNext
-        () [0x00020] in C:\\Git\\Warcrap\\Server\\UnityRTS\\RTS\\Assets\\Tests\\PlayMode\\PlayModeTestBase.cs:23
-        \r\n  at UnityEngine.TestTools.BeforeAfterTestCommandBase`1+<ExecuteEnumerable>d__15[T].MoveNext
-        () [0x00185] in .\\Library\\PackageCache\\com.unity.test-framework@1.1.33\\UnityEngine.TestRunner\\NUnitExtensions\\Commands\\BeforeAfterTestCommandBase.cs:129
-        \r\n--NullReferenceException\r\n  at GameManager.Constants..cctor () [0x0000a]
-        in C:\\Git\\Warcrap\\Server\\UnityRTS\\RTS\\Assets\\Scripts\\GameManager\\Constants.cs:127 "
+      resultStatus: 1
+      duration: 0.098435
+      messages: 
+      output: '<color=cyan>Creating: ./PlanningAgent_TestDLL.csv</color>
+
+        <color=cyan>Creating:
+        ./PlanningAgent_TestDLL.csv</color>
+
+        <color=cyan>PATH_DIAG: (5, 8,
+        0)->(4, 21, 0) failed: exhausted expansions=1</color>
+
+        <color=cyan>PATH_DIAG:
+        (5, 8, 0)->(4, 19, 0) failed: exhausted expansions=1</color>
+
+        <color=cyan>PATH_DIAG:
+        (5, 8, 0)->(5, 21, 0) failed: exhausted expansions=1</color>
+
+        <color=cyan>PATH_DIAG:
+        (5, 8, 0)->(5, 19, 0) failed: exhausted expansions=1</color>
+
+        <color=cyan>PATH_DIAG:
+        (5, 8, 0)->(6, 21, 0) failed: exhausted expansions=1</color>
+
+        <color=cyan>PATH_DIAG:
+        (5, 8, 0)->(6, 19, 0) failed: exhausted expansions=1</color>
+
+        <color=cyan>PATH_DIAG:
+        (5, 8, 0)->(4, 20, 0) failed: exhausted expansions=1</color>
+
+        <color=cyan>PATH_DIAG:
+        (5, 8, 0)->(6, 20, 0) failed: exhausted expansions=1</color>
+
+        <color=cyan>PATH_DIAG:
+        wrote diagnostics to C:/Git/Warcrap/Server/UnityRTS/RTS/Assets/../PathDiag.txt</color>
+
+'
+      stacktrace: 
       notRunnable: 0
       ignoredOrSkipped: 0
       description: 
@@ -1969,18 +1986,16 @@ MonoBehaviour:
       uniqueId: GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/UnitMovementTests/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.UnitMovementTests.Worker_SurroundedByUnwalkable_GoesIdle]
       name: Worker_SurroundedByUnwalkable_GoesIdle
       fullName: GameManager.Tests.PlayMode.UnitMovementTests.Worker_SurroundedByUnwalkable_GoesIdle
-      resultStatus: 2
-      duration: 0.0037583
-      messages: "SetUp : System.TypeInitializationException : The type initializer
-        for 'GameManager.Constants' threw an exception.\r\n  ----> System.NullReferenceException
-        : Object reference not set to an instance of an object"
-      output: 
-      stacktrace: "--SetUp\r\n  at GameManager.Tests.PlayMode.PlayModeTestBase+<SetUp>d__1.MoveNext
-        () [0x00020] in C:\\Git\\Warcrap\\Server\\UnityRTS\\RTS\\Assets\\Tests\\PlayMode\\PlayModeTestBase.cs:23
-        \r\n  at UnityEngine.TestTools.BeforeAfterTestCommandBase`1+<ExecuteEnumerable>d__15[T].MoveNext
-        () [0x00185] in .\\Library\\PackageCache\\com.unity.test-framework@1.1.33\\UnityEngine.TestRunner\\NUnitExtensions\\Commands\\BeforeAfterTestCommandBase.cs:129
-        \r\n--NullReferenceException\r\n  at GameManager.Constants..cctor () [0x0000a]
-        in C:\\Git\\Warcrap\\Server\\UnityRTS\\RTS\\Assets\\Scripts\\GameManager\\Constants.cs:127 "
+      resultStatus: 1
+      duration: 0.3183205
+      messages: 
+      output: '<color=cyan>Creating: ./PlanningAgent_TestDLL.csv</color>
+
+        <color=cyan>Creating:
+        ./PlanningAgent_TestDLL.csv</color>
+
+'
+      stacktrace: 
       notRunnable: 0
       ignoredOrSkipped: 0
       description: 
@@ -1993,9 +2008,9 @@ MonoBehaviour:
       uniqueId: GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.UnitTrainingTests][suite]
       name: UnitTrainingTests
       fullName: GameManager.Tests.PlayMode.UnitTrainingTests
-      resultStatus: 2
-      duration: 0.0418155
-      messages: One or more child tests had errors
+      resultStatus: 1
+      duration: 3.6859322
+      messages: 
       output: 
       stacktrace: 
       notRunnable: 0
@@ -2009,18 +2024,16 @@ MonoBehaviour:
       uniqueId: GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/UnitTrainingTests/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.UnitTrainingTests.BaseTrainsWorker_ActionIsTrainThenIdle]
       name: BaseTrainsWorker_ActionIsTrainThenIdle
       fullName: GameManager.Tests.PlayMode.UnitTrainingTests.BaseTrainsWorker_ActionIsTrainThenIdle
-      resultStatus: 2
-      duration: 0.0038786
-      messages: "SetUp : System.TypeInitializationException : The type initializer
-        for 'GameManager.Constants' threw an exception.\r\n  ----> System.NullReferenceException
-        : Object reference not set to an instance of an object"
-      output: 
-      stacktrace: "--SetUp\r\n  at GameManager.Tests.PlayMode.PlayModeTestBase+<SetUp>d__1.MoveNext
-        () [0x00020] in C:\\Git\\Warcrap\\Server\\UnityRTS\\RTS\\Assets\\Tests\\PlayMode\\PlayModeTestBase.cs:23
-        \r\n  at UnityEngine.TestTools.BeforeAfterTestCommandBase`1+<ExecuteEnumerable>d__15[T].MoveNext
-        () [0x00185] in .\\Library\\PackageCache\\com.unity.test-framework@1.1.33\\UnityEngine.TestRunner\\NUnitExtensions\\Commands\\BeforeAfterTestCommandBase.cs:129
-        \r\n--NullReferenceException\r\n  at GameManager.Constants..cctor () [0x0000a]
-        in C:\\Git\\Warcrap\\Server\\UnityRTS\\RTS\\Assets\\Scripts\\GameManager\\Constants.cs:127 "
+      resultStatus: 1
+      duration: 0.0763869
+      messages: 
+      output: '<color=cyan>Creating: ./PlanningAgent_TestDLL.csv</color>
+
+        <color=cyan>Creating:
+        ./PlanningAgent_TestDLL.csv</color>
+
+'
+      stacktrace: 
       notRunnable: 0
       ignoredOrSkipped: 0
       description: 
@@ -2033,18 +2046,16 @@ MonoBehaviour:
       uniqueId: GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/UnitTrainingTests/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.UnitTrainingTests.BaseTrainsWorker_NewWorkerAppearsAfterCreationTime]
       name: BaseTrainsWorker_NewWorkerAppearsAfterCreationTime
       fullName: GameManager.Tests.PlayMode.UnitTrainingTests.BaseTrainsWorker_NewWorkerAppearsAfterCreationTime
-      resultStatus: 2
-      duration: 0.0028032
-      messages: "SetUp : System.TypeInitializationException : The type initializer
-        for 'GameManager.Constants' threw an exception.\r\n  ----> System.NullReferenceException
-        : Object reference not set to an instance of an object"
-      output: 
-      stacktrace: "--SetUp\r\n  at GameManager.Tests.PlayMode.PlayModeTestBase+<SetUp>d__1.MoveNext
-        () [0x00020] in C:\\Git\\Warcrap\\Server\\UnityRTS\\RTS\\Assets\\Tests\\PlayMode\\PlayModeTestBase.cs:23
-        \r\n  at UnityEngine.TestTools.BeforeAfterTestCommandBase`1+<ExecuteEnumerable>d__15[T].MoveNext
-        () [0x00185] in .\\Library\\PackageCache\\com.unity.test-framework@1.1.33\\UnityEngine.TestRunner\\NUnitExtensions\\Commands\\BeforeAfterTestCommandBase.cs:129
-        \r\n--NullReferenceException\r\n  at GameManager.Constants..cctor () [0x0000a]
-        in C:\\Git\\Warcrap\\Server\\UnityRTS\\RTS\\Assets\\Scripts\\GameManager\\Constants.cs:127 "
+      resultStatus: 1
+      duration: 0.0680743
+      messages: 
+      output: '<color=cyan>Creating: ./PlanningAgent_TestDLL.csv</color>
+
+        <color=cyan>Creating:
+        ./PlanningAgent_TestDLL.csv</color>
+
+'
+      stacktrace: 
       notRunnable: 0
       ignoredOrSkipped: 0
       description: 
@@ -2057,18 +2068,16 @@ MonoBehaviour:
       uniqueId: GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/UnitTrainingTests/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.UnitTrainingTests.TrainAtMaxSpeed_CompletesNearlyInstantly]
       name: TrainAtMaxSpeed_CompletesNearlyInstantly
       fullName: GameManager.Tests.PlayMode.UnitTrainingTests.TrainAtMaxSpeed_CompletesNearlyInstantly
-      resultStatus: 2
-      duration: 0.0064399
-      messages: "SetUp : System.TypeInitializationException : The type initializer
-        for 'GameManager.Constants' threw an exception.\r\n  ----> System.NullReferenceException
-        : Object reference not set to an instance of an object"
-      output: 
-      stacktrace: "--SetUp\r\n  at GameManager.Tests.PlayMode.PlayModeTestBase+<SetUp>d__1.MoveNext
-        () [0x00020] in C:\\Git\\Warcrap\\Server\\UnityRTS\\RTS\\Assets\\Tests\\PlayMode\\PlayModeTestBase.cs:23
-        \r\n  at UnityEngine.TestTools.BeforeAfterTestCommandBase`1+<ExecuteEnumerable>d__15[T].MoveNext
-        () [0x00185] in .\\Library\\PackageCache\\com.unity.test-framework@1.1.33\\UnityEngine.TestRunner\\NUnitExtensions\\Commands\\BeforeAfterTestCommandBase.cs:129
-        \r\n--NullReferenceException\r\n  at GameManager.Constants..cctor () [0x0000a]
-        in C:\\Git\\Warcrap\\Server\\UnityRTS\\RTS\\Assets\\Scripts\\GameManager\\Constants.cs:127 "
+      resultStatus: 1
+      duration: 0.0517774
+      messages: 
+      output: '<color=cyan>Creating: ./PlanningAgent_TestDLL.csv</color>
+
+        <color=cyan>Creating:
+        ./PlanningAgent_TestDLL.csv</color>
+
+'
+      stacktrace: 
       notRunnable: 0
       ignoredOrSkipped: 0
       description: 
@@ -2081,18 +2090,16 @@ MonoBehaviour:
       uniqueId: GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/UnitTrainingTests/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.UnitTrainingTests.TrainedWorker_HasCorrectTypeAndOccupiesCell]
       name: TrainedWorker_HasCorrectTypeAndOccupiesCell
       fullName: GameManager.Tests.PlayMode.UnitTrainingTests.TrainedWorker_HasCorrectTypeAndOccupiesCell
-      resultStatus: 2
-      duration: 0.0027043
-      messages: "SetUp : System.TypeInitializationException : The type initializer
-        for 'GameManager.Constants' threw an exception.\r\n  ----> System.NullReferenceException
-        : Object reference not set to an instance of an object"
-      output: 
-      stacktrace: "--SetUp\r\n  at GameManager.Tests.PlayMode.PlayModeTestBase+<SetUp>d__1.MoveNext
-        () [0x00020] in C:\\Git\\Warcrap\\Server\\UnityRTS\\RTS\\Assets\\Tests\\PlayMode\\PlayModeTestBase.cs:23
-        \r\n  at UnityEngine.TestTools.BeforeAfterTestCommandBase`1+<ExecuteEnumerable>d__15[T].MoveNext
-        () [0x00185] in .\\Library\\PackageCache\\com.unity.test-framework@1.1.33\\UnityEngine.TestRunner\\NUnitExtensions\\Commands\\BeforeAfterTestCommandBase.cs:129
-        \r\n--NullReferenceException\r\n  at GameManager.Constants..cctor () [0x0000a]
-        in C:\\Git\\Warcrap\\Server\\UnityRTS\\RTS\\Assets\\Scripts\\GameManager\\Constants.cs:127 "
+      resultStatus: 1
+      duration: 0.0691678
+      messages: 
+      output: '<color=cyan>Creating: ./PlanningAgent_TestDLL.csv</color>
+
+        <color=cyan>Creating:
+        ./PlanningAgent_TestDLL.csv</color>
+
+'
+      stacktrace: 
       notRunnable: 0
       ignoredOrSkipped: 0
       description: 
@@ -2105,18 +2112,16 @@ MonoBehaviour:
       uniqueId: GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/UnitTrainingTests/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.UnitTrainingTests.TrainedWorker_SpawnsOutsideBuildingFootprint]
       name: TrainedWorker_SpawnsOutsideBuildingFootprint
       fullName: GameManager.Tests.PlayMode.UnitTrainingTests.TrainedWorker_SpawnsOutsideBuildingFootprint
-      resultStatus: 2
-      duration: 0.0031166
-      messages: "SetUp : System.TypeInitializationException : The type initializer
-        for 'GameManager.Constants' threw an exception.\r\n  ----> System.NullReferenceException
-        : Object reference not set to an instance of an object"
-      output: 
-      stacktrace: "--SetUp\r\n  at GameManager.Tests.PlayMode.PlayModeTestBase+<SetUp>d__1.MoveNext
-        () [0x00020] in C:\\Git\\Warcrap\\Server\\UnityRTS\\RTS\\Assets\\Tests\\PlayMode\\PlayModeTestBase.cs:23
-        \r\n  at UnityEngine.TestTools.BeforeAfterTestCommandBase`1+<ExecuteEnumerable>d__15[T].MoveNext
-        () [0x00185] in .\\Library\\PackageCache\\com.unity.test-framework@1.1.33\\UnityEngine.TestRunner\\NUnitExtensions\\Commands\\BeforeAfterTestCommandBase.cs:129
-        \r\n--NullReferenceException\r\n  at GameManager.Constants..cctor () [0x0000a]
-        in C:\\Git\\Warcrap\\Server\\UnityRTS\\RTS\\Assets\\Scripts\\GameManager\\Constants.cs:127 "
+      resultStatus: 1
+      duration: 0.077885
+      messages: 
+      output: '<color=cyan>Creating: ./PlanningAgent_TestDLL.csv</color>
+
+        <color=cyan>Creating:
+        ./PlanningAgent_TestDLL.csv</color>
+
+'
+      stacktrace: 
       notRunnable: 0
       ignoredOrSkipped: 0
       description: 
@@ -2129,18 +2134,16 @@ MonoBehaviour:
       uniqueId: GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/UnitTrainingTests/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.UnitTrainingTests.TrainFiveWorkersSequentially_AllExistOnDistinctCells]
       name: TrainFiveWorkersSequentially_AllExistOnDistinctCells
       fullName: GameManager.Tests.PlayMode.UnitTrainingTests.TrainFiveWorkersSequentially_AllExistOnDistinctCells
-      resultStatus: 2
-      duration: 0.0034466
-      messages: "SetUp : System.TypeInitializationException : The type initializer
-        for 'GameManager.Constants' threw an exception.\r\n  ----> System.NullReferenceException
-        : Object reference not set to an instance of an object"
-      output: 
-      stacktrace: "--SetUp\r\n  at GameManager.Tests.PlayMode.PlayModeTestBase+<SetUp>d__1.MoveNext
-        () [0x00020] in C:\\Git\\Warcrap\\Server\\UnityRTS\\RTS\\Assets\\Tests\\PlayMode\\PlayModeTestBase.cs:23
-        \r\n  at UnityEngine.TestTools.BeforeAfterTestCommandBase`1+<ExecuteEnumerable>d__15[T].MoveNext
-        () [0x00185] in .\\Library\\PackageCache\\com.unity.test-framework@1.1.33\\UnityEngine.TestRunner\\NUnitExtensions\\Commands\\BeforeAfterTestCommandBase.cs:129
-        \r\n--NullReferenceException\r\n  at GameManager.Constants..cctor () [0x0000a]
-        in C:\\Git\\Warcrap\\Server\\UnityRTS\\RTS\\Assets\\Scripts\\GameManager\\Constants.cs:127 "
+      resultStatus: 1
+      duration: 0.2670179
+      messages: 
+      output: '<color=cyan>Creating: ./PlanningAgent_TestDLL.csv</color>
+
+        <color=cyan>Creating:
+        ./PlanningAgent_TestDLL.csv</color>
+
+'
+      stacktrace: 
       notRunnable: 0
       ignoredOrSkipped: 0
       description: 
@@ -2153,18 +2156,16 @@ MonoBehaviour:
       uniqueId: GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/UnitTrainingTests/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.UnitTrainingTests.TrainInvalidUnitType_CommandRejectedGoldUnchanged]
       name: TrainInvalidUnitType_CommandRejectedGoldUnchanged
       fullName: GameManager.Tests.PlayMode.UnitTrainingTests.TrainInvalidUnitType_CommandRejectedGoldUnchanged
-      resultStatus: 2
-      duration: 0.0046073
-      messages: "SetUp : System.TypeInitializationException : The type initializer
-        for 'GameManager.Constants' threw an exception.\r\n  ----> System.NullReferenceException
-        : Object reference not set to an instance of an object"
-      output: 
-      stacktrace: "--SetUp\r\n  at GameManager.Tests.PlayMode.PlayModeTestBase+<SetUp>d__1.MoveNext
-        () [0x00020] in C:\\Git\\Warcrap\\Server\\UnityRTS\\RTS\\Assets\\Tests\\PlayMode\\PlayModeTestBase.cs:23
-        \r\n  at UnityEngine.TestTools.BeforeAfterTestCommandBase`1+<ExecuteEnumerable>d__15[T].MoveNext
-        () [0x00185] in .\\Library\\PackageCache\\com.unity.test-framework@1.1.33\\UnityEngine.TestRunner\\NUnitExtensions\\Commands\\BeforeAfterTestCommandBase.cs:129
-        \r\n--NullReferenceException\r\n  at GameManager.Constants..cctor () [0x0000a]
-        in C:\\Git\\Warcrap\\Server\\UnityRTS\\RTS\\Assets\\Scripts\\GameManager\\Constants.cs:127 "
+      resultStatus: 1
+      duration: 0.0178304
+      messages: 
+      output: '<color=cyan>Creating: ./PlanningAgent_TestDLL.csv</color>
+
+        <color=cyan>Creating:
+        ./PlanningAgent_TestDLL.csv</color>
+
+'
+      stacktrace: 
       notRunnable: 0
       ignoredOrSkipped: 0
       description: 
@@ -2177,18 +2178,16 @@ MonoBehaviour:
       uniqueId: GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/UnitTrainingTests/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.UnitTrainingTests.TrainWhileAlreadyTraining_SecondCommandRejected]
       name: TrainWhileAlreadyTraining_SecondCommandRejected
       fullName: GameManager.Tests.PlayMode.UnitTrainingTests.TrainWhileAlreadyTraining_SecondCommandRejected
-      resultStatus: 2
-      duration: 0.0037044
-      messages: "SetUp : System.TypeInitializationException : The type initializer
-        for 'GameManager.Constants' threw an exception.\r\n  ----> System.NullReferenceException
-        : Object reference not set to an instance of an object"
-      output: 
-      stacktrace: "--SetUp\r\n  at GameManager.Tests.PlayMode.PlayModeTestBase+<SetUp>d__1.MoveNext
-        () [0x00020] in C:\\Git\\Warcrap\\Server\\UnityRTS\\RTS\\Assets\\Tests\\PlayMode\\PlayModeTestBase.cs:23
-        \r\n  at UnityEngine.TestTools.BeforeAfterTestCommandBase`1+<ExecuteEnumerable>d__15[T].MoveNext
-        () [0x00185] in .\\Library\\PackageCache\\com.unity.test-framework@1.1.33\\UnityEngine.TestRunner\\NUnitExtensions\\Commands\\BeforeAfterTestCommandBase.cs:129
-        \r\n--NullReferenceException\r\n  at GameManager.Constants..cctor () [0x0000a]
-        in C:\\Git\\Warcrap\\Server\\UnityRTS\\RTS\\Assets\\Scripts\\GameManager\\Constants.cs:127 "
+      resultStatus: 1
+      duration: 0.0273548
+      messages: 
+      output: '<color=cyan>Creating: ./PlanningAgent_TestDLL.csv</color>
+
+        <color=cyan>Creating:
+        ./PlanningAgent_TestDLL.csv</color>
+
+'
+      stacktrace: 
       notRunnable: 0
       ignoredOrSkipped: 0
       description: 
@@ -2201,18 +2200,16 @@ MonoBehaviour:
       uniqueId: GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/UnitTrainingTests/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.UnitTrainingTests.TrainWithAllNeighborsOccupied_StaysInTrain]
       name: TrainWithAllNeighborsOccupied_StaysInTrain
       fullName: GameManager.Tests.PlayMode.UnitTrainingTests.TrainWithAllNeighborsOccupied_StaysInTrain
-      resultStatus: 2
-      duration: 0.0038486
-      messages: "SetUp : System.TypeInitializationException : The type initializer
-        for 'GameManager.Constants' threw an exception.\r\n  ----> System.NullReferenceException
-        : Object reference not set to an instance of an object"
-      output: 
-      stacktrace: "--SetUp\r\n  at GameManager.Tests.PlayMode.PlayModeTestBase+<SetUp>d__1.MoveNext
-        () [0x00020] in C:\\Git\\Warcrap\\Server\\UnityRTS\\RTS\\Assets\\Tests\\PlayMode\\PlayModeTestBase.cs:23
-        \r\n  at UnityEngine.TestTools.BeforeAfterTestCommandBase`1+<ExecuteEnumerable>d__15[T].MoveNext
-        () [0x00185] in .\\Library\\PackageCache\\com.unity.test-framework@1.1.33\\UnityEngine.TestRunner\\NUnitExtensions\\Commands\\BeforeAfterTestCommandBase.cs:129
-        \r\n--NullReferenceException\r\n  at GameManager.Constants..cctor () [0x0000a]
-        in C:\\Git\\Warcrap\\Server\\UnityRTS\\RTS\\Assets\\Scripts\\GameManager\\Constants.cs:127 "
+      resultStatus: 1
+      duration: 3.0241697
+      messages: 
+      output: '<color=cyan>Creating: ./PlanningAgent_TestDLL.csv</color>
+
+        <color=cyan>Creating:
+        ./PlanningAgent_TestDLL.csv</color>
+
+'
+      stacktrace: 
       notRunnable: 0
       ignoredOrSkipped: 0
       description: 
@@ -2221,26 +2218,20 @@ MonoBehaviour:
       - Uncategorized
       parentId: 1041
       parentUniqueId: GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.UnitTrainingTests][suite]
-    m_ResultText: "BuildBase_GoldDeductedAtStart (0.019s)\n---\nSetUp : System.TypeInitializationException
-      : The type initializer for 'GameManager.Constants' threw an exception.\r\n 
-      ----> System.NullReferenceException : Object reference not set to an instance
-      of an object\n---\n--SetUp\r\n  at GameManager.Tests.PlayMode.PlayModeTestBase+<SetUp>d__1.MoveNext
-      () [0x00020] in C:\\Git\\Warcrap\\Server\\UnityRTS\\RTS\\Assets\\Tests\\PlayMode\\PlayModeTestBase.cs:23
-      \r\n  at UnityEngine.TestTools.BeforeAfterTestCommandBase`1+<ExecuteEnumerable>d__15[T].MoveNext
-      () [0x00185] in .\\Library\\PackageCache\\com.unity.test-framework@1.1.33\\UnityEngine.TestRunner\\NUnitExtensions\\Commands\\BeforeAfterTestCommandBase.cs:129
-      \r\n--NullReferenceException\r\n  at GameManager.Constants..cctor () [0x0000a]
-      in C:\\Git\\Warcrap\\Server\\UnityRTS\\RTS\\Assets\\Scripts\\GameManager\\Constants.cs:127"
-    m_ResultStacktrace: "--SetUp\r\n  at GameManager.Tests.PlayMode.PlayModeTestBase+<SetUp>d__1.MoveNext
-      () [0x00020] in C:\\Git\\Warcrap\\Server\\UnityRTS\\RTS\\Assets\\Tests\\PlayMode\\PlayModeTestBase.cs:23
-      \r\n  at UnityEngine.TestTools.BeforeAfterTestCommandBase`1+<ExecuteEnumerable>d__15[T].MoveNext
-      () [0x00185] in .\\Library\\PackageCache\\com.unity.test-framework@1.1.33\\UnityEngine.TestRunner\\NUnitExtensions\\Commands\\BeforeAfterTestCommandBase.cs:129
-      \r\n--NullReferenceException\r\n  at GameManager.Constants..cctor () [0x0000a]
-      in C:\\Git\\Warcrap\\Server\\UnityRTS\\RTS\\Assets\\Scripts\\GameManager\\Constants.cs:127 "
+    m_ResultText: 'BaseTrainsWorker_ActionIsTrainThenIdle (0.076s)
+
+      ---
+
+      <color=cyan>Creating:
+      ./PlanningAgent_TestDLL.csv</color>
+
+      <color=cyan>Creating: ./PlanningAgent_TestDLL.csv</color>'
+    m_ResultStacktrace: 
     m_TestListState:
       scrollPos: {x: 0, y: 0}
-      m_SelectedIDs: 285b0e76
-      m_LastClickedID: 1980652328
-      m_ExpandedIDs: cd4b9ca9786348df478657f0f12b781d85d57e39973cfa42d33f7c61ffffff7f
+      m_SelectedIDs: 89b1ff6b
+      m_LastClickedID: 1811919241
+      m_ExpandedIDs: cd4b9ca9786348df478657f0f12b781d85d57e39973cfa42d33f7c61873ea175ffffff7f
       m_RenameOverlay:
         m_UserAcceptedRename: 0
         m_Name: 
@@ -2275,7 +2266,7 @@ MonoBehaviour:
       name: RTS
       fullName: RTS
       resultStatus: 1
-      duration: 0.2829213
+      duration: 0.3106523
       messages: 
       output: 
       stacktrace: 
@@ -2291,7 +2282,7 @@ MonoBehaviour:
       name: GameManager.Tests.EditMode.dll
       fullName: C:/Git/Warcrap/Server/UnityRTS/RTS/Library/ScriptAssemblies/GameManager.Tests.EditMode.dll
       resultStatus: 1
-      duration: 0.2411198
+      duration: 0.2739413
       messages: 
       output: 
       stacktrace: 
@@ -2307,7 +2298,7 @@ MonoBehaviour:
       name: GameManager
       fullName: GameManager
       resultStatus: 1
-      duration: 0.2393132
+      duration: 0.2725861
       messages: 
       output: 
       stacktrace: 
@@ -2323,7 +2314,7 @@ MonoBehaviour:
       name: Tests
       fullName: GameManager.Tests.AssemblySetup
       resultStatus: 1
-      duration: 0.2375413
+      duration: 0.2711678
       messages: 
       output: 
       stacktrace: 
@@ -2339,7 +2330,7 @@ MonoBehaviour:
       name: AStarSearchTests
       fullName: GameManager.Tests.AStarSearchTests
       resultStatus: 1
-      duration: 0.0941494
+      duration: 0.1018142
       messages: 
       output: 
       stacktrace: 
@@ -2355,7 +2346,7 @@ MonoBehaviour:
       name: AdjacentNodes_ReturnsOneStep
       fullName: GameManager.Tests.AStarSearchTests.AdjacentNodes_ReturnsOneStep
       resultStatus: 1
-      duration: 0.0183395
+      duration: 0.0187425
       messages: 
       output: 
       stacktrace: 
@@ -2372,7 +2363,7 @@ MonoBehaviour:
       name: DefaultCap_FindsPath
       fullName: GameManager.Tests.AStarSearchTests.DefaultCap_FindsPath
       resultStatus: 1
-      duration: 0.0037585
+      duration: 0.003935
       messages: 
       output: 
       stacktrace: 
@@ -2389,7 +2380,7 @@ MonoBehaviour:
       name: DiagonalPath_ReturnsOneStep
       fullName: GameManager.Tests.AStarSearchTests.DiagonalPath_ReturnsOneStep
       resultStatus: 1
-      duration: 0.0003425
+      duration: 0.0005078
       messages: 
       output: 
       stacktrace: 
@@ -2406,7 +2397,7 @@ MonoBehaviour:
       name: EndNodeBlocked_ReturnsEmpty
       fullName: GameManager.Tests.AStarSearchTests.EndNodeBlocked_ReturnsEmpty
       resultStatus: 1
-      duration: 0.0003714
+      duration: 0.0005365
       messages: 
       output: 
       stacktrace: 
@@ -2423,7 +2414,7 @@ MonoBehaviour:
       name: ExpansionCap_ReturnsCap
       fullName: GameManager.Tests.AStarSearchTests.ExpansionCap_ReturnsCap
       resultStatus: 1
-      duration: 0.0005048
+      duration: 0.0007469
       messages: 
       output: 
       stacktrace: 
@@ -2440,7 +2431,7 @@ MonoBehaviour:
       name: FindClosestNeighbor_NoEdges_ReturnsMinusOne
       fullName: GameManager.Tests.AStarSearchTests.FindClosestNeighbor_NoEdges_ReturnsMinusOne
       resultStatus: 1
-      duration: 0.0004108
+      duration: 0.0004857
       messages: 
       output: 
       stacktrace: 
@@ -2457,7 +2448,7 @@ MonoBehaviour:
       name: FindClosestNeighbor_ReturnsNearest
       fullName: GameManager.Tests.AStarSearchTests.FindClosestNeighbor_ReturnsNearest
       resultStatus: 1
-      duration: 0.000279
+      duration: 0.0003201
       messages: 
       output: 
       stacktrace: 
@@ -2474,7 +2465,7 @@ MonoBehaviour:
       name: FullyEnclosed_ReturnsExhausted
       fullName: GameManager.Tests.AStarSearchTests.FullyEnclosed_ReturnsExhausted
       resultStatus: 1
-      duration: 0.0003863
+      duration: 0.0004595
       messages: 
       output: 
       stacktrace: 
@@ -2491,7 +2482,7 @@ MonoBehaviour:
       name: LargeGrid_100x100_CompletesQuickly
       fullName: GameManager.Tests.AStarSearchTests.LargeGrid_100x100_CompletesQuickly
       resultStatus: 1
-      duration: 0.0453402
+      duration: 0.0476851
       messages: 
       output: 
       stacktrace: 
@@ -2508,7 +2499,7 @@ MonoBehaviour:
       name: LongerPath_CorrectLength
       fullName: GameManager.Tests.AStarSearchTests.LongerPath_CorrectLength
       resultStatus: 1
-      duration: 0.000329
+      duration: 0.0003807
       messages: 
       output: 
       stacktrace: 
@@ -2525,7 +2516,7 @@ MonoBehaviour:
       name: PathDoesNotIncludeStart
       fullName: GameManager.Tests.AStarSearchTests.PathDoesNotIncludeStart
       resultStatus: 1
-      duration: 0.0018566
+      duration: 0.0021591
       messages: 
       output: 
       stacktrace: 
@@ -2542,7 +2533,7 @@ MonoBehaviour:
       name: PathEndsAtTarget
       fullName: GameManager.Tests.AStarSearchTests.PathEndsAtTarget
       resultStatus: 1
-      duration: 0.0002894
+      duration: 0.0003828
       messages: 
       output: 
       stacktrace: 
@@ -2559,7 +2550,7 @@ MonoBehaviour:
       name: PathIsContiguous
       fullName: GameManager.Tests.AStarSearchTests.PathIsContiguous
       resultStatus: 1
-      duration: 0.0011028
+      duration: 0.0010431
       messages: 
       output: 
       stacktrace: 
@@ -2576,7 +2567,7 @@ MonoBehaviour:
       name: ResetSearch_ClearsAllNodes
       fullName: GameManager.Tests.AStarSearchTests.ResetSearch_ClearsAllNodes
       resultStatus: 1
-      duration: 0.0013312
+      duration: 0.0013374
       messages: 
       output: 
       stacktrace: 
@@ -2593,7 +2584,7 @@ MonoBehaviour:
       name: RunTwice_SecondSearchValid
       fullName: GameManager.Tests.AStarSearchTests.RunTwice_SecondSearchValid
       resultStatus: 1
-      duration: 0.0003138
+      duration: 0.0003489
       messages: 
       output: 
       stacktrace: 
@@ -2610,7 +2601,7 @@ MonoBehaviour:
       name: SameNode_ReturnsEmpty_SameNode
       fullName: GameManager.Tests.AStarSearchTests.SameNode_ReturnsEmpty_SameNode
       resultStatus: 1
-      duration: 0.0002395
+      duration: 0.0003019
       messages: 
       output: 
       stacktrace: 
@@ -2627,7 +2618,7 @@ MonoBehaviour:
       name: StartBlocked_StillFindsPathThroughWalkableNeighbors
       fullName: GameManager.Tests.AStarSearchTests.StartBlocked_StillFindsPathThroughWalkableNeighbors
       resultStatus: 1
-      duration: 0.0004202
+      duration: 0.0004142
       messages: 
       output: 
       stacktrace: 
@@ -2644,7 +2635,7 @@ MonoBehaviour:
       name: WallChannel_PathGoesAround
       fullName: GameManager.Tests.AStarSearchTests.WallChannel_PathGoesAround
       resultStatus: 1
-      duration: 0.0006657
+      duration: 0.000878
       messages: 
       output: 
       stacktrace: 
@@ -2661,7 +2652,7 @@ MonoBehaviour:
       name: ConstantsTests
       fullName: GameManager.Tests.ConstantsTests
       resultStatus: 1
-      duration: 0.0290757
+      duration: 0.0250663
       messages: 
       output: 
       stacktrace: 
@@ -2677,7 +2668,7 @@ MonoBehaviour:
       name: CostDelegatedFromSDK
       fullName: GameManager.Tests.ConstantsTests.CostDelegatedFromSDK
       resultStatus: 1
-      duration: 0.0151075
+      duration: 0.0145787
       messages: 
       output: 
       stacktrace: 
@@ -2694,7 +2685,7 @@ MonoBehaviour:
       name: HealthMine_MatchesStartingGold
       fullName: GameManager.Tests.ConstantsTests.HealthMine_MatchesStartingGold
       resultStatus: 1
-      duration: 0.000273
+      duration: 0.0004622
       messages: 
       output: 
       stacktrace: 
@@ -2711,7 +2702,7 @@ MonoBehaviour:
       name: ImmobileUnits_ZeroSpeed
       fullName: GameManager.Tests.ConstantsTests.ImmobileUnits_ZeroSpeed
       resultStatus: 1
-      duration: 0.0006981
+      duration: 0.0011078
       messages: 
       output: 
       stacktrace: 
@@ -2728,7 +2719,7 @@ MonoBehaviour:
       name: MaxSpeed_CreationTimeInverse
       fullName: GameManager.Tests.ConstantsTests.MaxSpeed_CreationTimeInverse
       resultStatus: 1
-      duration: 0.0001941
+      duration: 0.0003635
       messages: 
       output: 
       stacktrace: 
@@ -2745,7 +2736,7 @@ MonoBehaviour:
       name: NonCombatants_ZeroDamage
       fullName: GameManager.Tests.ConstantsTests.NonCombatants_ZeroDamage
       resultStatus: 1
-      duration: 0.0002181
+      duration: 0.0002566
       messages: 
       output: 
       stacktrace: 
@@ -2762,7 +2753,7 @@ MonoBehaviour:
       name: Speed1_SoldierDamage
       fullName: GameManager.Tests.ConstantsTests.Speed1_SoldierDamage
       resultStatus: 1
-      duration: 0.0001628
+      duration: 0.0001564
       messages: 
       output: 
       stacktrace: 
@@ -2779,7 +2770,7 @@ MonoBehaviour:
       name: Speed1_WorkerMovingSpeed
       fullName: GameManager.Tests.ConstantsTests.Speed1_WorkerMovingSpeed
       resultStatus: 1
-      duration: 0.0001556
+      duration: 0.0001574
       messages: 
       output: 
       stacktrace: 
@@ -2796,7 +2787,7 @@ MonoBehaviour:
       name: Speed3_SoldierDamageScales
       fullName: GameManager.Tests.ConstantsTests.Speed3_SoldierDamageScales
       resultStatus: 1
-      duration: 0.0001657
+      duration: 0.0001637
       messages: 
       output: 
       stacktrace: 
@@ -2813,7 +2804,7 @@ MonoBehaviour:
       name: Speed5_WorkerMovingSpeedScales
       fullName: GameManager.Tests.ConstantsTests.Speed5_WorkerMovingSpeedScales
       resultStatus: 1
-      duration: 0.0001809
+      duration: 0.0001721
       messages: 
       output: 
       stacktrace: 
@@ -2830,7 +2821,7 @@ MonoBehaviour:
       name: SpeedZero_CreationTimeIsExplicitInfinity
       fullName: GameManager.Tests.ConstantsTests.SpeedZero_CreationTimeIsExplicitInfinity
       resultStatus: 1
-      duration: 0.0002516
+      duration: 0.0002498
       messages: 
       output: 
       stacktrace: 
@@ -2847,7 +2838,7 @@ MonoBehaviour:
       name: GridCellTests
       fullName: GameManager.Tests.GridCellTests
       resultStatus: 1
-      duration: 0.0169552
+      duration: 0.0733858
       messages: 
       output: 
       stacktrace: 
@@ -2863,7 +2854,7 @@ MonoBehaviour:
       name: Constructor_DefaultsBothTrue
       fullName: GameManager.Tests.GridCellTests.Constructor_DefaultsBothTrue
       resultStatus: 1
-      duration: 0.0021682
+      duration: 0.0021167
       messages: 
       output: 
       stacktrace: 
@@ -2880,7 +2871,7 @@ MonoBehaviour:
       name: Constructor_ZeroPosition_Works
       fullName: GameManager.Tests.GridCellTests.Constructor_ZeroPosition_Works
       resultStatus: 1
-      duration: 0.0016796
+      duration: 0.0014853
       messages: 
       output: 
       stacktrace: 
@@ -2897,7 +2888,7 @@ MonoBehaviour:
       name: GetPosition_ReturnsConstructorPosition
       fullName: GameManager.Tests.GridCellTests.GetPosition_ReturnsConstructorPosition
       resultStatus: 1
-      duration: 0.0003507
+      duration: 0.0002866
       messages: 
       output: 
       stacktrace: 
@@ -2914,7 +2905,7 @@ MonoBehaviour:
       name: IndependentState_NoCrossAffect
       fullName: GameManager.Tests.GridCellTests.IndependentState_NoCrossAffect
       resultStatus: 1
-      duration: 0.0005468
+      duration: 0.0004501
       messages: 
       output: 
       stacktrace: 
@@ -2931,7 +2922,7 @@ MonoBehaviour:
       name: SetBuildable_Toggle_RestoresState
       fullName: GameManager.Tests.GridCellTests.SetBuildable_Toggle_RestoresState
       resultStatus: 1
-      duration: 0.0002549
+      duration: 0.0002551
       messages: 
       output: 
       stacktrace: 
@@ -2948,7 +2939,7 @@ MonoBehaviour:
       name: SetBuildableFalse_WalkableUnchanged
       fullName: GameManager.Tests.GridCellTests.SetBuildableFalse_WalkableUnchanged
       resultStatus: 1
-      duration: 0.0002351
+      duration: 0.0002544
       messages: 
       output: 
       stacktrace: 
@@ -2965,7 +2956,7 @@ MonoBehaviour:
       name: SetWalkable_Toggle_RestoresState
       fullName: GameManager.Tests.GridCellTests.SetWalkable_Toggle_RestoresState
       resultStatus: 1
-      duration: 0.0002413
+      duration: 0.0002244
       messages: 
       output: 
       stacktrace: 
@@ -2982,7 +2973,7 @@ MonoBehaviour:
       name: SetWalkableFalse_BuildableUnchanged
       fullName: GameManager.Tests.GridCellTests.SetWalkableFalse_BuildableUnchanged
       resultStatus: 1
-      duration: 0.0002297
+      duration: 0.0003145
       messages: 
       output: 
       stacktrace: 
@@ -2999,7 +2990,7 @@ MonoBehaviour:
       name: MapManagerTests
       fullName: GameManager.Tests.MapManagerTests
       resultStatus: 1
-      duration: 0.0450619
+      duration: 0.0233529
       messages: 
       output: 
       stacktrace: 
@@ -3015,7 +3006,7 @@ MonoBehaviour:
       name: GetGridPositionsNearUnit_Worker_Returns8
       fullName: GameManager.Tests.MapManagerTests.GetGridPositionsNearUnit_Worker_Returns8
       resultStatus: 1
-      duration: 0.0046139
+      duration: 0.0044726
       messages: 
       output: 
       stacktrace: 
@@ -3032,7 +3023,7 @@ MonoBehaviour:
       name: GetPathBetweenGridPositions_FindsPath
       fullName: GameManager.Tests.MapManagerTests.GetPathBetweenGridPositions_FindsPath
       resultStatus: 1
-      duration: 0.0014733
+      duration: 0.001512
       messages: 
       output: 
       stacktrace: 
@@ -3049,7 +3040,7 @@ MonoBehaviour:
       name: IsAreaBuildable_AtMapEdge_Works
       fullName: GameManager.Tests.MapManagerTests.IsAreaBuildable_AtMapEdge_Works
       resultStatus: 1
-      duration: 0.0010176
+      duration: 0.0010186
       messages: 
       output: 
       stacktrace: 
@@ -3066,7 +3057,7 @@ MonoBehaviour:
       name: IsAreaBuildable_Base3x3_FullyOpen_True
       fullName: GameManager.Tests.MapManagerTests.IsAreaBuildable_Base3x3_FullyOpen_True
       resultStatus: 1
-      duration: 0.0006397
+      duration: 0.0006293
       messages: 
       output: 
       stacktrace: 
@@ -3083,7 +3074,7 @@ MonoBehaviour:
       name: IsAreaBuildable_Base3x3_PartiallyBlocked_False
       fullName: GameManager.Tests.MapManagerTests.IsAreaBuildable_Base3x3_PartiallyBlocked_False
       resultStatus: 1
-      duration: 0.001117
+      duration: 0.0011411
       messages: 
       output: 
       stacktrace: 
@@ -3100,7 +3091,7 @@ MonoBehaviour:
       name: IsAreaBuildable_BaseOverlapsEdge_False
       fullName: GameManager.Tests.MapManagerTests.IsAreaBuildable_BaseOverlapsEdge_False
       resultStatus: 1
-      duration: 0.0044254
+      duration: 0.00062
       messages: 
       output: 
       stacktrace: 
@@ -3117,7 +3108,7 @@ MonoBehaviour:
       name: IsAreaBuildable_OffMap_ReturnsFalse
       fullName: GameManager.Tests.MapManagerTests.IsAreaBuildable_OffMap_ReturnsFalse
       resultStatus: 1
-      duration: 0.0008162
+      duration: 0.0006579
       messages: 
       output: 
       stacktrace: 
@@ -3134,7 +3125,7 @@ MonoBehaviour:
       name: IsAreaBuildable_WorkerOnBlocked_False
       fullName: GameManager.Tests.MapManagerTests.IsAreaBuildable_WorkerOnBlocked_False
       resultStatus: 1
-      duration: 0.0021264
+      duration: 0.0016053
       messages: 
       output: 
       stacktrace: 
@@ -3151,7 +3142,7 @@ MonoBehaviour:
       name: IsAreaBuildable_WorkerOnOpen_True
       fullName: GameManager.Tests.MapManagerTests.IsAreaBuildable_WorkerOnOpen_True
       resultStatus: 1
-      duration: 0.0015363
+      duration: 0.0006641
       messages: 
       output: 
       stacktrace: 
@@ -3168,7 +3159,7 @@ MonoBehaviour:
       name: IsBoundedAreaBuildable_AdjacentWall_False
       fullName: GameManager.Tests.MapManagerTests.IsBoundedAreaBuildable_AdjacentWall_False
       resultStatus: 1
-      duration: 0.0045034
+      duration: 0.0013665
       messages: 
       output: 
       stacktrace: 
@@ -3185,7 +3176,7 @@ MonoBehaviour:
       name: IsBoundedAreaBuildable_Open_True
       fullName: GameManager.Tests.MapManagerTests.IsBoundedAreaBuildable_Open_True
       resultStatus: 1
-      duration: 0.0013699
+      duration: 0.0006318
       messages: 
       output: 
       stacktrace: 
@@ -3202,7 +3193,7 @@ MonoBehaviour:
       name: SetAreaBuildability_Building_WalkableFalse
       fullName: GameManager.Tests.MapManagerTests.SetAreaBuildability_Building_WalkableFalse
       resultStatus: 1
-      duration: 0.0022626
+      duration: 0.001289
       messages: 
       output: 
       stacktrace: 
@@ -3219,7 +3210,7 @@ MonoBehaviour:
       name: SetAreaBuildability_MobileUnit_WalkableStaysTrue
       fullName: GameManager.Tests.MapManagerTests.SetAreaBuildability_MobileUnit_WalkableStaysTrue
       resultStatus: 1
-      duration: 0.0014239
+      duration: 0.0006783
       messages: 
       output: 
       stacktrace: 
@@ -3236,7 +3227,7 @@ MonoBehaviour:
       name: SetAreaBuildability_Restore_BothTrue
       fullName: GameManager.Tests.MapManagerTests.SetAreaBuildability_Restore_BothTrue
       resultStatus: 1
-      duration: 0.0041894
+      duration: 0.0006868
       messages: 
       output: 
       stacktrace: 
@@ -3253,7 +3244,7 @@ MonoBehaviour:
       name: PriorityQueueTests
       fullName: GameManager.Tests.PriorityQueueTests
       resultStatus: 1
-      duration: 0.0276402
+      duration: 0.0189717
       messages: 
       output: 
       stacktrace: 
@@ -3269,7 +3260,7 @@ MonoBehaviour:
       name: ChangePriority_Decrease_MovesToFront
       fullName: GameManager.Tests.PriorityQueueTests.ChangePriority_Decrease_MovesToFront
       resultStatus: 1
-      duration: 0.0014523
+      duration: 0.0012036
       messages: 
       output: 
       stacktrace: 
@@ -3286,7 +3277,7 @@ MonoBehaviour:
       name: ChangePriority_Increase_MovesToBack
       fullName: GameManager.Tests.PriorityQueueTests.ChangePriority_Increase_MovesToBack
       resultStatus: 1
-      duration: 0.0002645
+      duration: 0.0002526
       messages: 
       output: 
       stacktrace: 
@@ -3303,7 +3294,7 @@ MonoBehaviour:
       name: ChangePriority_NeverEnqueued_NoEffect
       fullName: GameManager.Tests.PriorityQueueTests.ChangePriority_NeverEnqueued_NoEffect
       resultStatus: 1
-      duration: 0.0007358
+      duration: 0.0007145
       messages: 
       output: 
       stacktrace: 
@@ -3320,7 +3311,7 @@ MonoBehaviour:
       name: Clear_ResetsCount
       fullName: GameManager.Tests.PriorityQueueTests.Clear_ResetsCount
       resultStatus: 1
-      duration: 0.0002297
+      duration: 0.0002553
       messages: 
       output: 
       stacktrace: 
@@ -3337,7 +3328,7 @@ MonoBehaviour:
       name: Dequeue_AfterClear_ThrowsException
       fullName: GameManager.Tests.PriorityQueueTests.Dequeue_AfterClear_ThrowsException
       resultStatus: 1
-      duration: 0.0009099
+      duration: 0.0010286
       messages: 
       output: 
       stacktrace: 
@@ -3354,7 +3345,7 @@ MonoBehaviour:
       name: Dequeue_EmptyQueue_ThrowsException
       fullName: GameManager.Tests.PriorityQueueTests.Dequeue_EmptyQueue_ThrowsException
       resultStatus: 1
-      duration: 0.0002097
+      duration: 0.0002731
       messages: 
       output: 
       stacktrace: 
@@ -3371,7 +3362,7 @@ MonoBehaviour:
       name: Dequeue_MultipleItems_ReturnedInPriorityOrder
       fullName: GameManager.Tests.PriorityQueueTests.Dequeue_MultipleItems_ReturnedInPriorityOrder
       resultStatus: 1
-      duration: 0.0002202
+      duration: 0.000212
       messages: 
       output: 
       stacktrace: 
@@ -3388,7 +3379,7 @@ MonoBehaviour:
       name: Dequeue_SingleItem_ReturnsIt
       fullName: GameManager.Tests.PriorityQueueTests.Dequeue_SingleItem_ReturnsIt
       resultStatus: 1
-      duration: 0.0001871
+      duration: 0.0002181
       messages: 
       output: 
       stacktrace: 
@@ -3405,7 +3396,7 @@ MonoBehaviour:
       name: Enqueue_DuplicatePriorities_AllItemsReturned
       fullName: GameManager.Tests.PriorityQueueTests.Enqueue_DuplicatePriorities_AllItemsReturned
       resultStatus: 1
-      duration: 0.0002707
+      duration: 0.0002702
       messages: 
       output: 
       stacktrace: 
@@ -3422,7 +3413,7 @@ MonoBehaviour:
       name: Enqueue_SingleItem_CountIsOne
       fullName: GameManager.Tests.PriorityQueueTests.Enqueue_SingleItem_CountIsOne
       resultStatus: 1
-      duration: 0.0001574
+      duration: 0.0001915
       messages: 
       output: 
       stacktrace: 
@@ -3439,7 +3430,7 @@ MonoBehaviour:
       name: Stress_InterleavedEnqueueDequeue_Ordering
       fullName: GameManager.Tests.PriorityQueueTests.Stress_InterleavedEnqueueDequeue_Ordering
       resultStatus: 1
-      duration: 0.0026249
+      duration: 0.0027891
       messages: 
       output: 
       stacktrace: 
@@ -3456,7 +3447,7 @@ MonoBehaviour:
       name: Stress_ThousandElements_HeapOrdering
       fullName: GameManager.Tests.PriorityQueueTests.Stress_ThousandElements_HeapOrdering
       resultStatus: 1
-      duration: 0.0057579
+      duration: 0.0059087
       messages: 
       output: 
       stacktrace: 
@@ -3473,7 +3464,7 @@ MonoBehaviour:
       name: UtilityTests
       fullName: GameManager.Tests.UtilityTests
       resultStatus: 1
-      duration: 0.0184974
+      duration: 0.0168666
       messages: 
       output: 
       stacktrace: 
@@ -3489,7 +3480,7 @@ MonoBehaviour:
       name: ConvertDirection_AllEight_Correct
       fullName: GameManager.Tests.UtilityTests.ConvertDirection_AllEight_Correct
       resultStatus: 1
-      duration: 0.0008185
+      duration: 0.0008573
       messages: 
       output: 
       stacktrace: 
@@ -3506,7 +3497,7 @@ MonoBehaviour:
       name: ConvertDirection_LargeDelta_ClampsCorrectly
       fullName: GameManager.Tests.UtilityTests.ConvertDirection_LargeDelta_ClampsCorrectly
       resultStatus: 1
-      duration: 0.0002343
+      duration: 0.0002251
       messages: 
       output: 
       stacktrace: 
@@ -3523,7 +3514,7 @@ MonoBehaviour:
       name: ConvertDirection_LargeNegativeSteps_SW
       fullName: GameManager.Tests.UtilityTests.ConvertDirection_LargeNegativeSteps_SW
       resultStatus: 1
-      duration: 0.0001722
+      duration: 0.0001809
       messages: 
       output: 
       stacktrace: 
@@ -3540,7 +3531,7 @@ MonoBehaviour:
       name: ConvertDirection_MatchesConstantsMap
       fullName: GameManager.Tests.UtilityTests.ConvertDirection_MatchesConstantsMap
       resultStatus: 1
-      duration: 0.0007479
+      duration: 0.0007878
       messages: 
       output: 
       stacktrace: 
@@ -3557,7 +3548,7 @@ MonoBehaviour:
       name: ConvertDirection_SamePosition_ReturnsNone
       fullName: GameManager.Tests.UtilityTests.ConvertDirection_SamePosition_ReturnsNone
       resultStatus: 1
-      duration: 0.0001686
+      duration: 0.0002008
       messages: 
       output: 
       stacktrace: 
@@ -3574,7 +3565,7 @@ MonoBehaviour:
       name: GridToInt_Overload_EncodesCorrectly
       fullName: GameManager.Tests.UtilityTests.GridToInt_Overload_EncodesCorrectly
       resultStatus: 1
-      duration: 0.000156
+      duration: 0.0001587
       messages: 
       output: 
       stacktrace: 
@@ -3591,7 +3582,7 @@ MonoBehaviour:
       name: IntToGrid_Overload_DecodesCorrectly
       fullName: GameManager.Tests.UtilityTests.IntToGrid_Overload_DecodesCorrectly
       resultStatus: 1
-      duration: 0.000415
+      duration: 0.0003958
       messages: 
       output: 
       stacktrace: 
@@ -3608,7 +3599,7 @@ MonoBehaviour:
       name: IsValidGridLocation_BoundaryValues
       fullName: GameManager.Tests.UtilityTests.IsValidGridLocation_BoundaryValues
       resultStatus: 1
-      duration: 0.0002514
+      duration: 0.0002381
       messages: 
       output: 
       stacktrace: 
@@ -3625,7 +3616,7 @@ MonoBehaviour:
       name: SafeNormalize_Diagonal_ReturnsNormalized
       fullName: GameManager.Tests.UtilityTests.SafeNormalize_Diagonal_ReturnsNormalized
       resultStatus: 1
-      duration: 0.0003277
+      duration: 0.0004414
       messages: 
       output: 
       stacktrace: 
@@ -3642,7 +3633,7 @@ MonoBehaviour:
       name: SafeNormalize_PureX_ReturnsUnitX
       fullName: GameManager.Tests.UtilityTests.SafeNormalize_PureX_ReturnsUnitX
       resultStatus: 1
-      duration: 0.0002003
+      duration: 0.0002042
       messages: 
       output: 
       stacktrace: 
@@ -3659,7 +3650,7 @@ MonoBehaviour:
       name: SafeNormalize_PureY_ReturnsUnitY
       fullName: GameManager.Tests.UtilityTests.SafeNormalize_PureY_ReturnsUnitY
       resultStatus: 1
-      duration: 0.0001472
+      duration: 0.000146
       messages: 
       output: 
       stacktrace: 
@@ -3676,7 +3667,7 @@ MonoBehaviour:
       name: SafeNormalize_ZeroVector_ReturnsZero
       fullName: GameManager.Tests.UtilityTests.SafeNormalize_ZeroVector_ReturnsZero
       resultStatus: 1
-      duration: 0.0001662
+      duration: 0.0001546
       messages: 
       output: 
       stacktrace: 
@@ -3728,6 +3719,103 @@ MonoBehaviour:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 13855, guid: 0000000000000000e000000000000000, type: 0}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_MinSize: {x: 310, y: 200}
+  m_MaxSize: {x: 4000, y: 4000}
+  m_TitleContent:
+    m_Text: Preferences
+    m_Image: {fileID: 8487775502441791945, guid: 0000000000000000d000000000000000,
+      type: 0}
+    m_Tooltip: 
+  m_Pos:
+    serializedVersion: 2
+    x: 2924
+    y: 73
+    width: 1041
+    height: 622
+  m_SerializedDataModeController:
+    m_DataMode: 0
+    m_PreferredDataMode: 0
+    m_SupportedDataModes: 
+    isAutomatic: 1
+  m_ViewDataDictionary: {fileID: 0}
+  m_OverlayCanvas:
+    m_LastAppliedPresetName: Default
+    m_SaveData: []
+    m_OverlaysVisible: 1
+  m_PosLeft: {x: 0, y: 0}
+  m_PosRight: {x: 0, y: 0}
+  m_Scope: 0
+  m_SplitterFlex: 0.2
+  m_SearchText: 
+  m_TreeViewState:
+    scrollPos: {x: 0, y: 0}
+    m_SelectedIDs: ce3102cc
+    m_LastClickedID: -872271410
+    m_ExpandedIDs: 2956c29689577ec10000000001fecd11
+    m_RenameOverlay:
+      m_UserAcceptedRename: 0
+      m_Name: 
+      m_OriginalName: 
+      m_EditFieldRect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 0
+        height: 0
+      m_UserData: 0
+      m_IsWaitingForDelay: 0
+      m_IsRenaming: 0
+      m_OriginalEventType: 11
+      m_IsRenamingFilename: 0
+      m_ClientGUIView: {fileID: 0}
+    m_SearchString: 
+--- !u!114 &17
+MonoBehaviour:
+  m_ObjectHideFlags: 52
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 1
+  m_Script: {fileID: 12003, guid: 0000000000000000e000000000000000, type: 0}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_MinSize: {x: 100, y: 100}
+  m_MaxSize: {x: 4000, y: 4000}
+  m_TitleContent:
+    m_Text: Console
+    m_Image: {fileID: 111653112392082826, guid: 0000000000000000d000000000000000,
+      type: 0}
+    m_Tooltip: 
+  m_Pos:
+    serializedVersion: 2
+    x: 2849
+    y: 699
+    width: 1113
+    height: 292
+  m_SerializedDataModeController:
+    m_DataMode: 0
+    m_PreferredDataMode: 0
+    m_SupportedDataModes: 
+    isAutomatic: 1
+  m_ViewDataDictionary: {fileID: 0}
+  m_OverlayCanvas:
+    m_LastAppliedPresetName: Default
+    m_SaveData: []
+    m_OverlaysVisible: 1
+--- !u!114 &18
+MonoBehaviour:
+  m_ObjectHideFlags: 52
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
   m_EditorHideFlags: 1
   m_Script: {fileID: 12014, guid: 0000000000000000e000000000000000, type: 0}
   m_Name: 
@@ -3736,15 +3824,15 @@ MonoBehaviour:
   m_MaxSize: {x: 10000, y: 10000}
   m_TitleContent:
     m_Text: Project
-    m_Image: {fileID: -5467254957812901981, guid: 0000000000000000d000000000000000,
+    m_Image: {fileID: -7501376956915960154, guid: 0000000000000000d000000000000000,
       type: 0}
     m_Tooltip: 
   m_Pos:
     serializedVersion: 2
-    x: 0
-    y: 716
-    width: 1406
-    height: 275
+    x: 2849
+    y: 699
+    width: 1113
+    height: 292
   m_SerializedDataModeController:
     m_DataMode: 0
     m_PreferredDataMode: 0
@@ -3766,7 +3854,7 @@ MonoBehaviour:
     m_SkipHidden: 0
     m_SearchArea: 1
     m_Folders:
-    - Packages/com.unity.collab-proxy/Editor/Assets/Styles
+    - Assets/Tiles/Grass Tiles
     m_Globs: []
     m_OriginalText: 
     m_ImportLogFlags: 0
@@ -3774,16 +3862,16 @@ MonoBehaviour:
   m_ViewMode: 1
   m_StartGridSize: 96
   m_LastFolders:
-  - Packages/com.unity.collab-proxy/Editor/Assets/Styles
+  - Assets/Tiles/Grass Tiles
   m_LastFoldersGridSize: 96
   m_LastProjectPath: C:\Git\Warcrap\Server\UnityRTS\RTS
   m_LockTracker:
     m_IsLocked: 0
   m_FolderTreeState:
-    scrollPos: {x: 0, y: 433}
-    m_SelectedIDs: 940b0000
-    m_LastClickedID: 2964
-    m_ExpandedIDs: 000000001cba00001eba000020ba000022ba0000
+    scrollPos: {x: 0, y: 132}
+    m_SelectedIDs: 7c630500
+    m_LastClickedID: 353148
+    m_ExpandedIDs: 00000000948a0000968a0000988a00009a8a00009c8a000000ca9a3b
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -3811,7 +3899,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 
     m_LastClickedID: 0
-    m_ExpandedIDs: 000000001cba00001eba000020ba000022ba0000
+    m_ExpandedIDs: 00000000948a0000968a0000988a00009a8a00009c8a000000ca9a3b
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -3836,8 +3924,8 @@ MonoBehaviour:
       m_Icon: {fileID: 0}
       m_ResourceFile: 
   m_ListAreaState:
-    m_SelectedInstanceIDs: dee00000
-    m_LastClickedInstanceID: 57566
+    m_SelectedInstanceIDs: 4e7d0000
+    m_LastClickedInstanceID: 32078
     m_HadKeyboardFocusLastEvent: 0
     m_ExpandedInstanceIDs: c6230000
     m_RenameOverlay:
@@ -3867,42 +3955,7 @@ MonoBehaviour:
     m_GridSize: 96
   m_SkipHiddenPackages: 0
   m_DirectoriesAreaWidth: 197
---- !u!114 &17
-MonoBehaviour:
-  m_ObjectHideFlags: 52
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 1
-  m_Script: {fileID: 12003, guid: 0000000000000000e000000000000000, type: 0}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_MinSize: {x: 100, y: 100}
-  m_MaxSize: {x: 4000, y: 4000}
-  m_TitleContent:
-    m_Text: Console
-    m_Image: {fileID: -4327648978806127646, guid: 0000000000000000d000000000000000,
-      type: 0}
-    m_Tooltip: 
-  m_Pos:
-    serializedVersion: 2
-    x: 2560
-    y: 716
-    width: 1406
-    height: 275
-  m_SerializedDataModeController:
-    m_DataMode: 0
-    m_PreferredDataMode: 0
-    m_SupportedDataModes: 
-    isAutomatic: 1
-  m_ViewDataDictionary: {fileID: 0}
-  m_OverlayCanvas:
-    m_LastAppliedPresetName: Default
-    m_SaveData: []
-    m_OverlaysVisible: 1
---- !u!114 &18
+--- !u!114 &19
 MonoBehaviour:
   m_ObjectHideFlags: 52
   m_CorrespondingSourceObject: {fileID: 0}
@@ -3918,14 +3971,14 @@ MonoBehaviour:
   m_MaxSize: {x: 4000, y: 4000}
   m_TitleContent:
     m_Text: Inspector
-    m_Image: {fileID: -2667387946076563598, guid: 0000000000000000d000000000000000,
+    m_Image: {fileID: -6905738622615590433, guid: 0000000000000000d000000000000000,
       type: 0}
     m_Tooltip: 
   m_Pos:
     serializedVersion: 2
-    x: 3967
+    x: 3964
     y: 73
-    width: 512
+    width: 515
     height: 918
   m_SerializedDataModeController:
     m_DataMode: 0

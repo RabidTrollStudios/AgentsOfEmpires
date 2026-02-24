@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using AgentSDK;
@@ -25,6 +25,8 @@ namespace GameManager.GameElements
 			HasDebugging = GameManager.Instance.HasUnitDebugging;
 
 			UpdateDebuggingInfo();
+			UpdatePathVisualization();
+			UpdateTargetVisualization();
 
 			// If this unit is dead, destroy it
 			if (Health <= 0)
@@ -65,6 +67,55 @@ namespace GameManager.GameElements
 					UpdateTrain();
 				}
 			}
+
+		}
+
+		/// <summary>
+		/// Apply action-based tinting after the Animator has finished
+		/// updating the sprite, so our color override is not clobbered.
+		/// </summary>
+		internal void LateUpdate()
+		{
+			UpdateStateColor();
+		}
+
+		/// <summary>
+		/// Tint the sprite based on the unit's current action for visual debugging.
+		/// IDLE = normal, MOVE = blue, ATTACK = red.
+		/// Orc archers/soldiers use cyan (MOVE) and magenta (ATTACK) for contrast
+		/// against their darker base sprites.
+		/// </summary>
+		private void UpdateStateColor()
+		{
+			bool showAttack = CurrentAction == UnitAction.ATTACK && GameManager.Instance.HasAttackTint;
+			bool showMove = CurrentAction == UnitAction.MOVE && GameManager.Instance.HasMoveTint;
+			bool showGather = CurrentAction == UnitAction.GATHER && GameManager.Instance.HasGatherTint;
+
+			// Don't show indicators when the worker is hidden inside a mine
+			if (isInsideMine)
+			{
+				showAttack = false;
+				showMove = false;
+				showGather = false;
+			}
+
+			bool anyIndicator = showAttack || showMove || showGather;
+
+			if (attackIndicator != null) attackIndicator.enabled = showAttack;
+			if (moveIndicator != null) moveIndicator.enabled = showMove;
+			if (gatherIndicator != null) gatherIndicator.enabled = showGather;
+
+			// Fade the root unit sprite to 50% alpha when an indicator is active.
+			// Only modify the root SpriteRenderer to avoid interfering with
+			// Animator-controlled child renderers.
+			float alpha = anyIndicator ? 0.5f : 1f;
+			var rootSr = GetComponent<SpriteRenderer>();
+			if (rootSr != null && rootSr.enabled)
+			{
+				var c = rootSr.color;
+				if (System.Math.Abs(c.a - alpha) > 0.01f)
+					rootSr.color = new Color(c.r, c.g, c.b, alpha);
+			}
 		}
 
 		/// <summary>
@@ -101,13 +152,13 @@ namespace GameManager.GameElements
 				{
 					localAvoidWaitFrames = 0;
 
-					// Calculate our velocity toward our target and move along it
-					velocity = nextTarget - WorldPosition;
+					// Units snap to cell centers: grid cell (i,j) has world center (i+0.5, j+0.5)
+					Vector3 nextCenter = (Vector3)nextTarget + new Vector3(0.5f, 0.5f, 0);
+					velocity = nextCenter - WorldPosition;
 					velocity = Utility.SafeNormalize(velocity);
 
 					// Determine how far we are from our current target
-					float distToTarget =
-						Vector3.Distance(nextTarget, WorldPosition);
+					float distToTarget = Vector3.Distance(nextCenter, WorldPosition);
 
 					// If we're close to our target but we're in the middle of the path
 					// Move to the target and then move toward the next point
@@ -116,12 +167,13 @@ namespace GameManager.GameElements
 						GameManager.Instance.Map.SetAreaBuildability(gameObject.GetComponent<Unit>().UnitType, nextTarget, false);
 						GameManager.Instance.Map.SetAreaBuildability(gameObject.GetComponent<Unit>().UnitType, GridPosition, true);
 						GridPosition = nextTarget;
-						WorldPosition = nextTarget;
+						WorldPosition = nextCenter;
 						path.RemoveAt(0);
 						if (path.Count > 0)
 						{
 							nextTarget = path[0];
-							velocity = Utility.SafeNormalize(nextTarget - WorldPosition);
+							nextCenter = (Vector3)nextTarget + new Vector3(0.5f, 0.5f, 0);
+							velocity = Utility.SafeNormalize(nextCenter - WorldPosition);
 							WorldPosition += velocity * (Speed - distToTarget);
 						}
 					}
@@ -137,10 +189,26 @@ namespace GameManager.GameElements
 					// Walkable but not buildable = blocked by a mobile unit (temporary obstacle)
 					if (GameManager.Instance.Map.IsGridPositionWalkable(nextTarget))
 					{
+						// For MOVE commands: if close to the destination and blocked by a mobile
+						// unit, stop here rather than endlessly sidestepping and re-pathing.
+						// This prevents rally/retreat units from wandering around congested areas.
+						if (CurrentAction == UnitAction.MOVE)
+						{
+							float distToTarget = Vector3.Distance((Vector3)GridPosition, (Vector3)TargetGridPos);
+							if (path.Count == 1 || distToTarget <= 3.0f)
+							{
+								path.Clear();
+								localAvoidWaitFrames = 0;
+								return;
+							}
+						}
+
 						localAvoidWaitFrames++;
 
-						// Phase 1: Wait a few frames — the blocker may move on its own
-						if (localAvoidWaitFrames <= 3)
+						// Phase 1: Wait a few frames — the blocker may move on its own.
+						// MOVE actions (retreats, rallies) skip the wait and try to sidestep immediately
+						// so retreating units aren't pinned down by adjacent blockers.
+						if (CurrentAction != UnitAction.MOVE && localAvoidWaitFrames <= 3)
 							return;
 
 						// Phase 2: Try to sidestep around the blocker
@@ -152,10 +220,26 @@ namespace GameManager.GameElements
 							return;
 						}
 
-						// Phase 3: After extended wait, fall back to full re-path
-						if (localAvoidWaitFrames > 10)
+						// Phase 3: After extended wait, re-path avoiding unit-occupied cells
+						// so the unit finds a route around the congestion.
+						// MOVE actions use a shorter wait threshold for faster response.
+						int rePathThreshold = CurrentAction == UnitAction.MOVE ? 4 : 10;
+						if (localAvoidWaitFrames > rePathThreshold)
 						{
-							UpdatePath(GridPosition, TargetUnitType, TargetGridPos);
+							// For MOVE actions: preserve the existing path if re-path fails.
+							// UpdatePath replaces path unconditionally; an empty result would
+							// cause UpdateMove → IDLE, cutting retreats/rallies short.
+							if (CurrentAction == UnitAction.MOVE)
+							{
+								var savedPath = new List<Vector3Int>(path);
+								UpdatePath(GridPosition, TargetUnitType, TargetGridPos, forceImmediate: true, avoidUnits: true);
+								if (path.Count == 0)
+									path = savedPath;
+							}
+							else
+							{
+								UpdatePath(GridPosition, TargetUnitType, TargetGridPos, forceImmediate: true, avoidUnits: true);
+							}
 							localAvoidWaitFrames = 0;
 						}
 					}
@@ -166,6 +250,11 @@ namespace GameManager.GameElements
 						UpdatePath(GridPosition, TargetUnitType, TargetGridPos);
 					}
 				}
+			}
+			else if (CanMove)
+			{
+				// Snap to grid cell center when not actively moving
+				WorldPosition = (Vector3)GridPosition + new Vector3(0.5f, 0.5f, 0);
 			}
 		}
 
@@ -260,13 +349,13 @@ namespace GameManager.GameElements
 		/// After repeated failures, the unit goes idle.
 		/// Use forceImmediate=true to bypass the cooldown throttle (for initial path computation).
 		/// </summary>
-		private void UpdatePath(Vector3Int gridPosition, UnitType targetUnitType, Vector3Int targetGridPos, bool forceImmediate = false)
+		private void UpdatePath(Vector3Int gridPosition, UnitType targetUnitType, Vector3Int targetGridPos, bool forceImmediate = false, bool avoidUnits = false)
 		{
 			int cooldown = (60 / Constants.GAME_SPEED) * pathBackoffMultiplier;
 			if (forceImmediate || pathUpdateCounter > cooldown)
 			{
 				pathUpdateCounter = 0;
-				path = GameManager.Instance.Map.GetPathToUnit(GridPosition, targetUnitType, targetGridPos);
+				path = GameManager.Instance.Map.GetPathToUnit(GridPosition, targetUnitType, targetGridPos, avoidUnits);
 
 				if (path.Count == 0)
 				{
@@ -275,7 +364,10 @@ namespace GameManager.GameElements
 
 					if (pathFailCount >= 5)
 					{
-						CurrentAction = UnitAction.IDLE;
+						// ATTACK pursuit handles its own retarget/idle logic in UpdateAttack;
+						// don't yank it to IDLE here — the target may still be shootable from range.
+						if (CurrentAction != UnitAction.ATTACK)
+							CurrentAction = UnitAction.IDLE;
 						pathFailCount = 0;
 						pathBackoffMultiplier = 1;
 					}
@@ -286,6 +378,57 @@ namespace GameManager.GameElements
 					pathBackoffMultiplier = 1;
 				}
 			}
+		}
+
+		/// <summary>
+		/// Draw a blue line along the unit's remaining path when path debugging is enabled.
+		/// Falls back to a direct line to the target when path is empty but unit is active.
+		/// </summary>
+		private void UpdatePathVisualization()
+		{
+			if (pathLineRenderer == null) return;
+
+			if (!GameManager.Instance.HasPathTint)
+			{
+				pathLineRenderer.positionCount = 0;
+				return;
+			}
+
+			if (path != null && path.Count > 0)
+			{
+				pathLineRenderer.positionCount = path.Count + 1;
+				pathLineRenderer.SetPosition(0, WorldPosition);
+				for (int i = 0; i < path.Count; i++)
+				{
+					Vector3 cellCenter = (Vector3)path[i] + new Vector3(0.5f, 0.5f, 0);
+					pathLineRenderer.SetPosition(i + 1, cellCenter);
+				}
+			}
+			else
+			{
+				pathLineRenderer.positionCount = 0;
+			}
+		}
+
+		/// <summary>
+		/// Draw a red line from this unit to its attack target when attack tint is enabled.
+		/// </summary>
+		private void UpdateTargetVisualization()
+		{
+			if (targetLineRenderer == null) return;
+
+			if (!GameManager.Instance.HasAttackTint
+				|| CurrentAction != UnitAction.ATTACK
+				|| AttackUnit == null)
+			{
+				targetLineRenderer.positionCount = 0;
+				return;
+			}
+
+			Vector3 targetPos = (Vector3)AttackUnit.GetComponent<Unit>().CenterGridPosition + new Vector3(0.5f, 0.5f, 0);
+			targetLineRenderer.positionCount = 2;
+			targetLineRenderer.SetPosition(0, WorldPosition);
+			targetLineRenderer.SetPosition(1, targetPos);
 		}
 
 		/// <summary>

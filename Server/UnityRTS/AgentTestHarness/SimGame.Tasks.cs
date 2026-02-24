@@ -57,6 +57,12 @@ namespace AgentTestHarness
         {
             if (unit.Path == null || unit.PathIndex >= unit.Path.Count) return;
 
+            // Fractional movement: accumulate speed each tick, move when >= 1.0
+            float speed = GameConstants.MOVEMENT_SPEED[unit.UnitType];
+            unit.MoveAccumulator += speed;
+            if (unit.MoveAccumulator < 1.0f) return;
+            unit.MoveAccumulator -= 1.0f;
+
             Position nextPos = unit.Path[unit.PathIndex];
 
             // Free old cell, occupy new cell
@@ -189,7 +195,13 @@ namespace AgentTestHarness
 
             // Arrived adjacent to mine — start mining
             worker.GatherPhase = GatherPhase.MINING;
-            float miningTime = miningSpeed > 0 ? miningCapacity / miningSpeed : 1f;
+            // Apply per-agent refinery boost: rate = base * (1 + MINING_BOOST * refineryCount)
+            int refineryCount = 0;
+            foreach (var u in Units.Values)
+                if (u.OwnerAgentNbr == worker.OwnerAgentNbr && u.UnitType == UnitType.REFINERY && u.IsBuilt)
+                    refineryCount++;
+            float effectiveSpeed = miningSpeed * (1f + GameConstants.MINING_BOOST * refineryCount);
+            float miningTime = effectiveSpeed > 0 ? miningCapacity / effectiveSpeed : 1f;
             worker.MiningTimer = miningTime;
         }
 
@@ -267,7 +279,7 @@ namespace AgentTestHarness
 
         private void AdvanceAttack(SimUnit attacker)
         {
-            if (!Units.TryGetValue(attacker.AttackTargetNbr, out var target))
+            if (!Units.TryGetValue(attacker.AttackTargetNbr, out var target) || target.Health <= 0)
             {
                 // Target dead or removed
                 attacker.CurrentAction = UnitAction.IDLE;
@@ -275,18 +287,43 @@ namespace AgentTestHarness
                 return;
             }
 
-            float range = GameConstants.ATTACK_RANGE[attacker.UnitType];
-            float dist = Position.Distance(attacker.GridPosition, target.GridPosition);
+            float range = GameConstants.EffectiveAttackRange(attacker.UnitType, target.UnitType);
+            float dist = Position.Distance(attacker.CenterPosition, target.CenterPosition);
 
             if (dist <= range + 0.1f)
             {
-                // In range — deal damage
-                float dmg = damage[attacker.UnitType] * Config.TickDuration;
+                // In range — deal damage (apply armor/damage-type multiplier)
+                float dmg = damage[attacker.UnitType] * Config.TickDuration
+                    * GameConstants.DamageMultiplier(attacker.UnitType, target.UnitType);
                 target.Health -= dmg;
+
+                // Target killed — return to idle immediately
+                if (target.Health <= 0)
+                {
+                    attacker.CurrentAction = UnitAction.IDLE;
+                    attacker.Path = null;
+                    return;
+                }
             }
             else
             {
-                // Out of range — move closer
+                // Retarget interrupt: if any enemy is within attack range, switch to them
+                int? closerNbr = FindClosestEnemyInRange(attacker);
+                if (closerNbr.HasValue && closerNbr.Value != attacker.AttackTargetNbr)
+                {
+                    attacker.AttackTargetNbr = closerNbr.Value;
+                    attacker.Path = null;
+                    attacker.PathIndex = 0;
+                    return;
+                }
+
+                // Ranged units (attack range > 1) hold position — they don't advance toward enemies.
+                // They only fire when enemies come within range.
+                float baseRange = GameConstants.ATTACK_RANGE[attacker.UnitType];
+                if (baseRange > 1f)
+                    return;
+
+                // Out of range — move closer (melee units only)
                 if (attacker.Path != null && attacker.PathIndex < attacker.Path.Count)
                 {
                     MoveUnitOneStep(attacker);
@@ -303,6 +340,33 @@ namespace AgentTestHarness
                     }
                 }
             }
+        }
+
+        /// <summary>
+        /// Find the closest enemy unit within effective attack range of the attacker.
+        /// Returns null if no enemy is in range.
+        /// </summary>
+        private int? FindClosestEnemyInRange(SimUnit attacker)
+        {
+            float closestDist = float.MaxValue;
+            int? closest = null;
+
+            foreach (var kvp in Units)
+            {
+                var enemy = kvp.Value;
+                if (enemy.OwnerAgentNbr == attacker.OwnerAgentNbr) continue;
+                if (enemy.UnitType == UnitType.MINE) continue;
+                if (enemy.Health <= 0) continue;
+
+                float effectiveRange = GameConstants.EffectiveAttackRange(attacker.UnitType, enemy.UnitType);
+                float dist = Position.Distance(attacker.CenterPosition, enemy.CenterPosition);
+                if (dist <= effectiveRange + 0.1f && dist < closestDist)
+                {
+                    closestDist = dist;
+                    closest = enemy.UnitNbr;
+                }
+            }
+            return closest;
         }
 
         #endregion
