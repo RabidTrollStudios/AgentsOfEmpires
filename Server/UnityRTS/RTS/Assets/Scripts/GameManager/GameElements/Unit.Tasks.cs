@@ -50,12 +50,6 @@ namespace GameManager.GameElements
 			// Otherwise, we're too far — pursue the assigned target
 			else
 			{
-				// Ranged units (attack range > 1) hold position — they don't advance
-				// toward enemies. They only fire when enemies come within range.
-				float baseRange = GameConstants.ATTACK_RANGE[UnitType];
-				if (baseRange > 1f)
-					return;
-
 				TargetGridPos = AttackUnit.GetComponent<Unit>().GridPosition;
 
 				// Use normal cooldown for pursuit re-pathing. pathUpdateCounter already

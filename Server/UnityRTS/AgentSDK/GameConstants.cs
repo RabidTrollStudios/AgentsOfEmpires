@@ -42,12 +42,12 @@ namespace AgentSDK
             new ReadOnlyDictionary<UnitType, float>(new Dictionary<UnitType, float>()
             {
                 { UnitType.MINE,        0.0f },
-                { UnitType.WORKER,      50.0f },
+                { UnitType.WORKER,      200.0f },
                 { UnitType.SOLDIER,     1200.0f },
                 { UnitType.ARCHER,      800.0f },
-                { UnitType.BASE,        1000.0f },
-                { UnitType.BARRACKS,    500.0f },
-                { UnitType.REFINERY,    500.0f },
+                { UnitType.BASE,        4000.0f },
+                { UnitType.BARRACKS,    2000.0f },
+                { UnitType.REFINERY,    2000.0f },
             });
 
         /// <summary>

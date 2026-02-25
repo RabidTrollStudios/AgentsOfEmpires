@@ -317,13 +317,7 @@ namespace AgentTestHarness
                     return;
                 }
 
-                // Ranged units (attack range > 1) hold position — they don't advance toward enemies.
-                // They only fire when enemies come within range.
-                float baseRange = GameConstants.ATTACK_RANGE[attacker.UnitType];
-                if (baseRange > 1f)
-                    return;
-
-                // Out of range — move closer (melee units only)
+                // Out of range — move closer
                 if (attacker.Path != null && attacker.PathIndex < attacker.Path.Count)
                 {
                     MoveUnitOneStep(attacker);
