@@ -251,12 +251,12 @@ namespace AgentSDK
         /// </summary>
         public static float DamageMultiplier(UnitType attacker, UnitType defender)
         {
-            // Melee vs unarmored: soldiers deal 1.25x to archers
+            // Melee vs unarmored: soldiers deal 1.15x to archers
             if (attacker == UnitType.SOLDIER && defender == UnitType.ARCHER)
-                return 1.25f;
-            // Ranged vs armored: archers deal 0.75x to soldiers
+                return 1.15f;
+            // Ranged vs armored: archers deal 0.85x to soldiers
             if (attacker == UnitType.ARCHER && defender == UnitType.SOLDIER)
-                return 0.75f;
+                return 0.85f;
             return 1.0f;
         }
     }
