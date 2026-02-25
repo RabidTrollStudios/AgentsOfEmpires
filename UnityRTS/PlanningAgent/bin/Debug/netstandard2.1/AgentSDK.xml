@@ -1,0 +1,524 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>AgentSDK</name>
+    </assembly>
+    <members>
+        <member name="T:AgentSDK.GameConstants">
+            <summary>
+            Game balance constants. These are the authoritative values used by the game engine.
+            </summary>
+        </member>
+        <member name="F:AgentSDK.GameConstants.MINING_BOOST">
+            <summary>Gold mining boost multiplier when a refinery is built</summary>
+        </member>
+        <member name="F:AgentSDK.GameConstants.SCALAR_COST">
+            <summary>Base cost scalar (all costs are multiples of this)</summary>
+        </member>
+        <member name="F:AgentSDK.GameConstants.SCALAR_MINING_CAPACITY">
+            <summary>Base mining capacity scalar</summary>
+        </member>
+        <member name="F:AgentSDK.GameConstants.COST">
+            <summary>
+            Cost to build or train each unit type.
+            Check your Gold against these before issuing Build/Train commands.
+            </summary>
+        </member>
+        <member name="F:AgentSDK.GameConstants.HEALTH">
+            <summary>
+            Maximum health for each unit type.
+            Note: Mine health (starting gold) varies per game configuration;
+            read UnitInfo.Health at runtime for the actual value.
+            </summary>
+        </member>
+        <member name="F:AgentSDK.GameConstants.MINING_CAPACITY">
+            <summary>
+            How much gold a worker can carry per mining trip
+            </summary>
+        </member>
+        <member name="F:AgentSDK.GameConstants.BASE_DAMAGE">
+            <summary>
+            Base damage per game-speed unit (multiply by game speed to get actual DPS).
+            </summary>
+        </member>
+        <member name="F:AgentSDK.GameConstants.CREATION_TIME_MULTIPLIER">
+            <summary>
+            Creation time multipliers (divide by game speed to get duration in seconds).
+            </summary>
+        </member>
+        <member name="F:AgentSDK.GameConstants.ATTACK_RANGE">
+            <summary>
+            Attack range for each unit type (in grid units)
+            </summary>
+        </member>
+        <member name="F:AgentSDK.GameConstants.MOVEMENT_SPEED">
+            <summary>
+            Movement speed multiplier for each unit type (1.0 = baseline).
+            Soldiers are slower (armored/heavy), archers are faster (light).
+            </summary>
+        </member>
+        <member name="F:AgentSDK.GameConstants.UNIT_SIZE">
+            <summary>
+            Size of each unit on the grid (width, height)
+            </summary>
+        </member>
+        <member name="F:AgentSDK.GameConstants.DEPENDENCY">
+            <summary>
+            Prerequisites required before building/training each unit type
+            </summary>
+        </member>
+        <member name="F:AgentSDK.GameConstants.BUILDS">
+            <summary>
+            What structures each unit type can build
+            </summary>
+        </member>
+        <member name="F:AgentSDK.GameConstants.TRAINS">
+            <summary>
+            What unit types each structure can train
+            </summary>
+        </member>
+        <member name="F:AgentSDK.GameConstants.CAN_MOVE">
+            <summary>Which unit types can move</summary>
+        </member>
+        <member name="F:AgentSDK.GameConstants.CAN_BUILD">
+            <summary>Which unit types can build structures</summary>
+        </member>
+        <member name="F:AgentSDK.GameConstants.CAN_TRAIN">
+            <summary>Which unit types can train units</summary>
+        </member>
+        <member name="F:AgentSDK.GameConstants.CAN_ATTACK">
+            <summary>Which unit types can attack</summary>
+        </member>
+        <member name="F:AgentSDK.GameConstants.CAN_GATHER">
+            <summary>Which unit types can gather resources</summary>
+        </member>
+        <member name="M:AgentSDK.GameConstants.EffectiveAttackRange(AgentSDK.UnitType,AgentSDK.UnitType)">
+            <summary>
+            Compute effective attack range against a target, accounting for target unit size.
+            Effective range = base attack range + max(target width, target height) / 2.
+            </summary>
+        </member>
+        <member name="M:AgentSDK.GameConstants.DamageMultiplier(AgentSDK.UnitType,AgentSDK.UnitType)">
+            <summary>
+            Damage multiplier based on attacker/defender type interaction.
+            Soldiers (melee, armored) take 75% damage from ranged attacks.
+            Archers (ranged, unarmored) take 125% damage from melee attacks.
+            All other matchups are 1.0x.
+            </summary>
+        </member>
+        <member name="T:AgentSDK.IAgentActions">
+            <summary>
+            Interface for issuing commands to your units.
+            All commands are validated by the game engine - invalid commands are ignored with a log message.
+            </summary>
+        </member>
+        <member name="M:AgentSDK.IAgentActions.Move(System.Int32,AgentSDK.Position)">
+            <summary>
+            Move a unit to a target grid position.
+            The unit must be able to move and the target must be walkable.
+            </summary>
+            <param name="unitNbr">The unit to move</param>
+            <param name="target">The grid position to move to</param>
+        </member>
+        <member name="M:AgentSDK.IAgentActions.Build(System.Int32,AgentSDK.Position,AgentSDK.UnitType)">
+            <summary>
+            Send a worker to build a structure at a target position.
+            Requires sufficient gold and all dependencies met.
+            </summary>
+            <param name="unitNbr">The worker unit that will build</param>
+            <param name="target">Where to place the structure</param>
+            <param name="unitType">Type of structure to build (BASE, BARRACKS, or REFINERY)</param>
+        </member>
+        <member name="M:AgentSDK.IAgentActions.Gather(System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Send a worker to gather gold from a mine and return it to a base.
+            </summary>
+            <param name="workerNbr">The worker unit</param>
+            <param name="mineNbr">The gold mine to gather from</param>
+            <param name="baseNbr">The base to return gold to</param>
+        </member>
+        <member name="M:AgentSDK.IAgentActions.Train(System.Int32,AgentSDK.UnitType)">
+            <summary>
+            Train a new unit at a structure.
+            Requires sufficient gold and the structure must be fully built.
+            </summary>
+            <param name="buildingNbr">The structure that will train (BASE or BARRACKS)</param>
+            <param name="unitType">Type of unit to train (WORKER, SOLDIER, or ARCHER)</param>
+        </member>
+        <member name="M:AgentSDK.IAgentActions.Attack(System.Int32,System.Int32)">
+            <summary>
+            Command a combat unit to attack an enemy unit.
+            Cannot attack your own units or mines.
+            </summary>
+            <param name="unitNbr">Your attacking unit</param>
+            <param name="targetNbr">The enemy unit to attack</param>
+        </member>
+        <member name="M:AgentSDK.IAgentActions.Log(System.String)">
+            <summary>
+            Log a message to your agent's CSV output file.
+            Useful for debugging and learning data.
+            </summary>
+            <param name="message">The message to log</param>
+        </member>
+        <member name="T:AgentSDK.IGameState">
+            <summary>
+            Read-only view of the current game state.
+            Passed to your agent each frame so you can make decisions.
+            </summary>
+        </member>
+        <member name="P:AgentSDK.IGameState.MyAgentNbr">
+            <summary>Your agent's unique number</summary>
+        </member>
+        <member name="P:AgentSDK.IGameState.EnemyAgentNbr">
+            <summary>The enemy agent's unique number</summary>
+        </member>
+        <member name="P:AgentSDK.IGameState.MyGold">
+            <summary>Your current gold</summary>
+        </member>
+        <member name="P:AgentSDK.IGameState.EnemyGold">
+            <summary>The enemy's current gold</summary>
+        </member>
+        <member name="P:AgentSDK.IGameState.MapSize">
+            <summary>Size of the map grid</summary>
+        </member>
+        <member name="P:AgentSDK.IGameState.MyWins">
+            <summary>Your agent's win count</summary>
+        </member>
+        <member name="M:AgentSDK.IGameState.GetMyUnits(AgentSDK.UnitType)">
+            <summary>
+            Get all of your units of a specific type.
+            Returns a list of unit numbers (IDs).
+            </summary>
+        </member>
+        <member name="M:AgentSDK.IGameState.GetEnemyUnits(AgentSDK.UnitType)">
+            <summary>
+            Get all enemy units of a specific type.
+            Returns a list of unit numbers (IDs).
+            </summary>
+        </member>
+        <member name="M:AgentSDK.IGameState.GetAllUnits(AgentSDK.UnitType)">
+            <summary>
+            Get all units of a specific type regardless of owner (e.g., mines).
+            Returns a list of unit numbers (IDs).
+            </summary>
+        </member>
+        <member name="M:AgentSDK.IGameState.GetUnit(System.Int32)">
+            <summary>
+            Get detailed info about a specific unit by its number.
+            Returns null if the unit doesn't exist.
+            </summary>
+        </member>
+        <member name="M:AgentSDK.IGameState.IsPositionBuildable(AgentSDK.Position)">
+            <summary>
+            Is a specific grid position walkable/buildable?
+            </summary>
+        </member>
+        <member name="M:AgentSDK.IGameState.IsAreaBuildable(AgentSDK.UnitType,AgentSDK.Position)">
+            <summary>
+            Can a unit of this type be placed at this position?
+            Checks all tiles the unit would occupy based on its size.
+            </summary>
+        </member>
+        <member name="M:AgentSDK.IGameState.IsBoundedAreaBuildable(AgentSDK.UnitType,AgentSDK.Position)">
+            <summary>
+            Can a unit of this type be placed at this position with a walkable border?
+            Like IsAreaBuildable but also checks one tile of clearance around the unit.
+            </summary>
+        </member>
+        <member name="M:AgentSDK.IGameState.GetPathBetween(AgentSDK.Position,AgentSDK.Position)">
+            <summary>
+            Find the shortest path between two grid positions.
+            Returns an empty list if no path exists.
+            </summary>
+        </member>
+        <member name="M:AgentSDK.IGameState.GetPathBetween(AgentSDK.Position,AgentSDK.Position,System.Boolean)">
+            <summary>
+            Find the shortest path between two grid positions.
+            When avoidUnits is true, cells occupied by mobile units are treated as impassable
+            (uses buildable checks instead of walkable), producing paths that avoid other units.
+            Returns an empty list if no path exists.
+            </summary>
+        </member>
+        <member name="M:AgentSDK.IGameState.GetPathToUnit(AgentSDK.Position,AgentSDK.UnitType,AgentSDK.Position)">
+            <summary>
+            Find a path from a position to any walkable tile adjacent to a unit.
+            Returns an empty list if no path exists.
+            </summary>
+        </member>
+        <member name="M:AgentSDK.IGameState.GetBuildablePositionsNearUnit(AgentSDK.UnitType,AgentSDK.Position)">
+            <summary>
+            Get all buildable positions adjacent to a unit.
+            </summary>
+        </member>
+        <member name="M:AgentSDK.IGameState.FindProspectiveBuildPositions(AgentSDK.UnitType)">
+            <summary>
+            Find all valid build positions on the map for a given unit type.
+            Checks bounded area buildability (clearance around the unit).
+            </summary>
+        </member>
+        <member name="T:AgentSDK.IPlanningAgent">
+            <summary>
+            The interface your AI agent must implement.
+            The game engine will call these methods at the appropriate times.
+            </summary>
+        </member>
+        <member name="M:AgentSDK.IPlanningAgent.InitializeMatch">
+            <summary>
+            Called once at the beginning of a match (before any rounds).
+            Use this for one-time setup that persists across rounds.
+            </summary>
+        </member>
+        <member name="M:AgentSDK.IPlanningAgent.InitializeRound(AgentSDK.IGameState)">
+            <summary>
+            Called at the beginning of each round.
+            Use this to reset per-round state. The game state is available
+            for initial queries (e.g., finding build positions).
+            </summary>
+            <param name="state">The initial game state for this round</param>
+        </member>
+        <member name="M:AgentSDK.IPlanningAgent.Update(AgentSDK.IGameState,AgentSDK.IAgentActions)">
+            <summary>
+            Called every frame during gameplay.
+            This is your main decision-making method - query the game state
+            and issue commands to your units.
+            </summary>
+            <param name="state">Current game state (read-only)</param>
+            <param name="actions">Interface for issuing commands</param>
+        </member>
+        <member name="M:AgentSDK.IPlanningAgent.Learn(AgentSDK.IGameState)">
+            <summary>
+            Called at the end of each round before units are destroyed.
+            Use this to observe the win/loss state and learn from it.
+            </summary>
+            <param name="state">The final game state for this round</param>
+        </member>
+        <member name="T:AgentSDK.PlanningAgentBase">
+             <summary>
+             Optional convenience base class for agents.
+             Provides unit tracking lists and an UpdateGameState() helper
+             so you don't have to query unit lists manually each frame.
+            
+             To use: extend this class and override Update() and InitializeMatch().
+             Call UpdateGameState(state) at the start of your Update() method.
+             </summary>
+        </member>
+        <member name="F:AgentSDK.PlanningAgentBase.enemyAgentNbr">
+            <summary>The enemy's agent number</summary>
+        </member>
+        <member name="F:AgentSDK.PlanningAgentBase.mainMineNbr">
+            <summary>Your primary mine number (-1 if not set)</summary>
+        </member>
+        <member name="F:AgentSDK.PlanningAgentBase.mainBaseNbr">
+            <summary>Your primary base number (-1 if not set)</summary>
+        </member>
+        <member name="F:AgentSDK.PlanningAgentBase.mines">
+            <summary>All gold mines on the map</summary>
+        </member>
+        <member name="F:AgentSDK.PlanningAgentBase.myWorkers">
+            <summary>Your workers</summary>
+        </member>
+        <member name="F:AgentSDK.PlanningAgentBase.mySoldiers">
+            <summary>Your soldiers</summary>
+        </member>
+        <member name="F:AgentSDK.PlanningAgentBase.myArchers">
+            <summary>Your archers</summary>
+        </member>
+        <member name="F:AgentSDK.PlanningAgentBase.myBases">
+            <summary>Your bases</summary>
+        </member>
+        <member name="F:AgentSDK.PlanningAgentBase.myBarracks">
+            <summary>Your barracks</summary>
+        </member>
+        <member name="F:AgentSDK.PlanningAgentBase.myRefineries">
+            <summary>Your refineries</summary>
+        </member>
+        <member name="F:AgentSDK.PlanningAgentBase.enemyWorkers">
+            <summary>Enemy workers</summary>
+        </member>
+        <member name="F:AgentSDK.PlanningAgentBase.enemySoldiers">
+            <summary>Enemy soldiers</summary>
+        </member>
+        <member name="F:AgentSDK.PlanningAgentBase.enemyArchers">
+            <summary>Enemy archers</summary>
+        </member>
+        <member name="F:AgentSDK.PlanningAgentBase.enemyBases">
+            <summary>Enemy bases</summary>
+        </member>
+        <member name="F:AgentSDK.PlanningAgentBase.enemyBarracks">
+            <summary>Enemy barracks</summary>
+        </member>
+        <member name="F:AgentSDK.PlanningAgentBase.enemyRefineries">
+            <summary>Enemy refineries</summary>
+        </member>
+        <member name="F:AgentSDK.PlanningAgentBase.buildPositions">
+            <summary>Pre-computed valid build positions for 3x3 structures</summary>
+        </member>
+        <member name="P:AgentSDK.PlanningAgentBase.DebugText">
+            <summary>
+            Debug text displayed on the Custom Debug UI overlay.
+            Set this in your Update() method to show agent state info.
+            </summary>
+        </member>
+        <member name="M:AgentSDK.PlanningAgentBase.InitializeMatch">
+            <summary>
+            Called once per match. Override to set up match-level state.
+            </summary>
+        </member>
+        <member name="M:AgentSDK.PlanningAgentBase.InitializeRound(AgentSDK.IGameState)">
+            <summary>
+            Called at the start of each round. Initializes all unit tracking lists
+            and finds prospective build positions.
+            If you override this, call base.InitializeRound(state) first.
+            </summary>
+        </member>
+        <member name="M:AgentSDK.PlanningAgentBase.Update(AgentSDK.IGameState,AgentSDK.IAgentActions)">
+            <summary>
+            Your main AI logic. Override this to implement your strategy.
+            Call UpdateGameState(state) at the beginning to refresh unit lists.
+            </summary>
+        </member>
+        <member name="M:AgentSDK.PlanningAgentBase.Learn(AgentSDK.IGameState)">
+            <summary>
+            Called after each round ends. Override to implement learning.
+            Default implementation does nothing.
+            </summary>
+        </member>
+        <member name="M:AgentSDK.PlanningAgentBase.HasBuiltUnit(System.Collections.Generic.List{System.Int32},AgentSDK.IGameState)">
+            <summary>
+            Returns true if any unit in the list is fully built.
+            Use this to check dependencies before building/training
+            (e.g., HasBuiltUnit(myBases, state) before building a barracks).
+            </summary>
+        </member>
+        <member name="M:AgentSDK.PlanningAgentBase.UpdateGameState(AgentSDK.IGameState)">
+            <summary>
+            Refreshes all unit tracking lists from the current game state.
+            Call this at the start of your Update() method.
+            </summary>
+        </member>
+        <member name="T:AgentSDK.Position">
+            <summary>
+            A 2D grid position. Replaces Unity's Vector3Int for agent code.
+            </summary>
+        </member>
+        <member name="P:AgentSDK.Position.X">
+            <summary>X coordinate on the grid</summary>
+        </member>
+        <member name="P:AgentSDK.Position.Y">
+            <summary>Y coordinate on the grid</summary>
+        </member>
+        <member name="P:AgentSDK.Position.Zero">
+            <summary>Position (0, 0)</summary>
+        </member>
+        <member name="M:AgentSDK.Position.Distance(AgentSDK.Position,AgentSDK.Position)">
+            <summary>
+            Euclidean distance between two positions
+            </summary>
+        </member>
+        <member name="M:AgentSDK.Position.Center(AgentSDK.Position,AgentSDK.Position)">
+            <summary>
+            Center cell of a unit's footprint given its top-left corner and size.
+            For 1x1 units returns the same position; for 3x3 returns topLeft+(1,-1).
+            </summary>
+        </member>
+        <member name="T:AgentSDK.UnitAction">
+            <summary>
+            Actions a unit can be performing
+            </summary>
+        </member>
+        <member name="F:AgentSDK.UnitAction.IDLE">
+            <summary>Unit has nothing to do</summary>
+        </member>
+        <member name="F:AgentSDK.UnitAction.MOVE">
+            <summary>Moving to a point</summary>
+        </member>
+        <member name="F:AgentSDK.UnitAction.TRAIN">
+            <summary>Training a new unit</summary>
+        </member>
+        <member name="F:AgentSDK.UnitAction.BUILD">
+            <summary>Building a structure</summary>
+        </member>
+        <member name="F:AgentSDK.UnitAction.GATHER">
+            <summary>Gathering resources</summary>
+        </member>
+        <member name="F:AgentSDK.UnitAction.ATTACK">
+            <summary>Attacking a target</summary>
+        </member>
+        <member name="T:AgentSDK.UnitInfo">
+            <summary>
+            Read-only snapshot of a unit's current state.
+            You cannot modify game state through this struct.
+            </summary>
+        </member>
+        <member name="P:AgentSDK.UnitInfo.UnitNbr">
+            <summary>Unique identifier for this unit</summary>
+        </member>
+        <member name="P:AgentSDK.UnitInfo.UnitType">
+            <summary>Type of this unit</summary>
+        </member>
+        <member name="P:AgentSDK.UnitInfo.GridPosition">
+            <summary>Current grid position</summary>
+        </member>
+        <member name="P:AgentSDK.UnitInfo.Health">
+            <summary>Current health (for mines, this is remaining gold)</summary>
+        </member>
+        <member name="P:AgentSDK.UnitInfo.IsBuilt">
+            <summary>Whether this unit has finished being built/trained</summary>
+        </member>
+        <member name="P:AgentSDK.UnitInfo.CurrentAction">
+            <summary>What the unit is currently doing</summary>
+        </member>
+        <member name="P:AgentSDK.UnitInfo.CanMove">
+            <summary>Whether this unit type can move</summary>
+        </member>
+        <member name="P:AgentSDK.UnitInfo.CanBuild">
+            <summary>Whether this unit type can build structures</summary>
+        </member>
+        <member name="P:AgentSDK.UnitInfo.CanTrain">
+            <summary>Whether this unit type can train units</summary>
+        </member>
+        <member name="P:AgentSDK.UnitInfo.CanAttack">
+            <summary>Whether this unit type can attack</summary>
+        </member>
+        <member name="P:AgentSDK.UnitInfo.CanGather">
+            <summary>Whether this unit type can gather resources</summary>
+        </member>
+        <member name="P:AgentSDK.UnitInfo.OwnerAgentNbr">
+            <summary>Agent number of the unit's owner</summary>
+        </member>
+        <member name="P:AgentSDK.UnitInfo.CenterPosition">
+            <summary>
+            Center cell of this unit's footprint.
+            Use this for distance calculations instead of GridPosition, which is the top-left corner.
+            For 1x1 units (soldiers, archers, workers) this equals GridPosition.
+            For 3x3 structures (bases, barracks, mines, refineries) this is GridPosition+(1,-1).
+            </summary>
+        </member>
+        <member name="T:AgentSDK.UnitType">
+            <summary>
+            All unit types in the game
+            </summary>
+        </member>
+        <member name="F:AgentSDK.UnitType.MINE">
+            <summary>Gold mine resource</summary>
+        </member>
+        <member name="F:AgentSDK.UnitType.WORKER">
+            <summary>Worker unit - gathers resources and builds structures</summary>
+        </member>
+        <member name="F:AgentSDK.UnitType.SOLDIER">
+            <summary>Melee combat unit</summary>
+        </member>
+        <member name="F:AgentSDK.UnitType.ARCHER">
+            <summary>Ranged combat unit</summary>
+        </member>
+        <member name="F:AgentSDK.UnitType.BASE">
+            <summary>Main base structure - trains workers</summary>
+        </member>
+        <member name="F:AgentSDK.UnitType.BARRACKS">
+            <summary>Military structure - trains soldiers and archers</summary>
+        </member>
+        <member name="F:AgentSDK.UnitType.REFINERY">
+            <summary>Economic structure - boosts mining speed</summary>
+        </member>
+    </members>
+</doc>
