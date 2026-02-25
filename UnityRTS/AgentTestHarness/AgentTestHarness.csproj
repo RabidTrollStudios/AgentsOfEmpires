@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <RootNamespace>AgentTestHarness</RootNamespace>
+    <AssemblyName>AgentTestHarness</AssemblyName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Reference Include="AgentSDK">
+      <HintPath>..\AgentSDK\bin\Debug\netstandard2.1\AgentSDK.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>
