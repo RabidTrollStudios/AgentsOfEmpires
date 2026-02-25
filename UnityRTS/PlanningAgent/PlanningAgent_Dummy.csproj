@@ -1,0 +1,30 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <!-- STUDENTS: Change this to your unique name (e.g., JohnD, TeamAlpha) -->
+    <AgentName>Dummy</AgentName>
+
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <RootNamespace>PlanningAgent</RootNamespace>
+    <AssemblyName>PlanningAgent</AssemblyName>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Reference Include="AgentSDK">
+      <HintPath>..\AgentSDK\bin\Debug\netstandard2.1\AgentSDK.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="PlanningAgent.cs" />
+    <Compile Remove="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+
+  <Target Name="CopyToEnemyAgents" AfterTargets="Build">
+    <Copy SourceFiles="$(TargetDir)PlanningAgent.dll" DestinationFiles="$(ProjectDir)..\EnemyAgents\PlanningAgent_$(AgentName).dll" SkipUnchangedFiles="true" />
+    <Copy SourceFiles="$(TargetDir)PlanningAgent.pdb" DestinationFiles="$(ProjectDir)..\EnemyAgents\PlanningAgent_$(AgentName).pdb" SkipUnchangedFiles="true" Condition="Exists('$(TargetDir)PlanningAgent.pdb')" />
+    <Copy SourceFiles="$(TargetDir)PlanningAgent.xml" DestinationFiles="$(ProjectDir)..\EnemyAgents\PlanningAgent_$(AgentName).xml" SkipUnchangedFiles="true" Condition="Exists('$(TargetDir)PlanningAgent.xml')" />
+  </Target>
+
+</Project>
