@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <RootNamespace>AgentSDK</RootNamespace>
+    <AssemblyName>AgentSDK</AssemblyName>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+  </PropertyGroup>
+
+  <Target Name="CopyToUnityPlugins" AfterTargets="Build">
+    <Copy SourceFiles="$(TargetDir)AgentSDK.dll" DestinationFiles="$(ProjectDir)..\RTS\Assets\Plugins\AgentSDK.dll" SkipUnchangedFiles="true" />
+    <Copy SourceFiles="$(TargetDir)AgentSDK.xml" DestinationFiles="$(ProjectDir)..\RTS\Assets\Plugins\AgentSDK.xml" SkipUnchangedFiles="true" Condition="Exists('$(TargetDir)AgentSDK.xml')" />
+  </Target>
+
+</Project>
