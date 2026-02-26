@@ -51,6 +51,12 @@
             Attack range for each unit type (in grid units)
             </summary>
         </member>
+        <member name="F:AgentSDK.GameConstants.MOVEMENT_SPEED">
+            <summary>
+            Movement speed multiplier for each unit type (1.0 = baseline).
+            Soldiers are slower (armored/heavy), archers are faster (light).
+            </summary>
+        </member>
         <member name="F:AgentSDK.GameConstants.UNIT_SIZE">
             <summary>
             Size of each unit on the grid (width, height)
@@ -90,6 +96,14 @@
             <summary>
             Compute effective attack range against a target, accounting for target unit size.
             Effective range = base attack range + max(target width, target height) / 2.
+            </summary>
+        </member>
+        <member name="M:AgentSDK.GameConstants.DamageMultiplier(AgentSDK.UnitType,AgentSDK.UnitType)">
+            <summary>
+            Damage multiplier based on attacker/defender type interaction.
+            Soldiers (melee, armored) take 75% damage from ranged attacks.
+            Archers (ranged, unarmored) take 125% damage from melee attacks.
+            All other matchups are 1.0x.
             </summary>
         </member>
         <member name="T:AgentSDK.IAgentActions">
