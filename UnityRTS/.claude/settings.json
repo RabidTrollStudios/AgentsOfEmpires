@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(dotnet build AgentSDK/ -c Debug)",
+      "Bash(dotnet build PlanningAgent/PlanningAgent.csproj -c Debug)",
+      "Bash(dotnet build Opponents/Opponents.csproj -c Debug -p:AgentName=Dummy -p:AgentFile=../PlanningAgent/PlanningAgent_Dummy.cs)",
+      "Bash(for agent in Idle ArcherOnly Balanced Commander EconBoom Gatherer SoldierRush Swarm Phalanx Volley ArcherSwarm Turtle)",
+      "Bash(do echo \"=== Building $agent ===\")",
+      "Bash(dotnet build Opponents/Opponents.csproj -c Debug -p:AgentName=$agent -p:AgentFile=$agent.cs)",
+      "Bash(done)"
+    ]
+  }
+}
