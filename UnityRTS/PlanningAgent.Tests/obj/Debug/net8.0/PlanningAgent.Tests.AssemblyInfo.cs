@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("PlanningAgent.Tests")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+f449e5f957a26a2dfbb4878560e5bc2c33bc1d23")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+ec0032ffc914a623f03d0b19465f29d455834adf")]
 [assembly: System.Reflection.AssemblyProductAttribute("PlanningAgent.Tests")]
 [assembly: System.Reflection.AssemblyTitleAttribute("PlanningAgent.Tests")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
