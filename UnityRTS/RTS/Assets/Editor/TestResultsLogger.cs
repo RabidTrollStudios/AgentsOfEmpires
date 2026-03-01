@@ -6,14 +6,15 @@ using UnityEditor.TestTools.TestRunner.Api;
 using UnityEngine;
 
 /// <summary>
-/// Automatically writes test results to Logs/test-results.txt after every test run.
-/// Claude Code can then read that file without requiring copy-paste.
+/// Automatically writes test results to Logs/ after every test run.
+/// EditMode results go to test-results-editmode.txt, PlayMode to test-results-playmode.txt.
+/// Claude Code can then read those files without requiring copy-paste.
 /// </summary>
 [InitializeOnLoad]
 public static class TestResultsLogger
 {
-    private static readonly string ResultsPath =
-        Path.Combine(Application.dataPath, "..", "Logs", "test-results.txt");
+    private static readonly string LogsDir =
+        Path.Combine(Application.dataPath, "..", "Logs");
 
     static TestResultsLogger()
     {
@@ -23,22 +24,36 @@ public static class TestResultsLogger
 
     private class Callbacks : ICallbacks
     {
-        public void RunStarted(ITestAdaptor testsToRun) { }
+        private bool _isPlayMode;
+
+        public void RunStarted(ITestAdaptor testsToRun)
+        {
+            // Detect mode from the root suite name (contains "PlayMode" or "EditMode")
+            _isPlayMode = ContainsPlayMode(testsToRun);
+        }
 
         public void RunFinished(ITestResultAdaptor result)
         {
+            string mode = _isPlayMode ? "PlayMode" : "EditMode";
+            string fileName = _isPlayMode ? "test-results-playmode.txt" : "test-results-editmode.txt";
+            string path = Path.Combine(LogsDir, fileName);
+
+            int passed = 0, failed = 0, skipped = 0;
+            CountResults(result, ref passed, ref failed, ref skipped);
+
             var sb = new StringBuilder();
-            sb.AppendLine($"=== Test Run Finished: {DateTime.Now:yyyy-MM-dd HH:mm:ss} ===");
+            sb.AppendLine($"=== {mode} Test Run: {DateTime.Now:yyyy-MM-dd HH:mm:ss} ===");
             sb.AppendLine($"Result: {result.TestStatus}  |  Duration: {result.Duration:F2}s");
+            sb.AppendLine($"Passed: {passed}  Failed: {failed}  Skipped: {skipped}");
             sb.AppendLine();
 
             WriteResult(sb, result, 0);
 
             try
             {
-                Directory.CreateDirectory(Path.GetDirectoryName(ResultsPath));
-                File.WriteAllText(ResultsPath, sb.ToString());
-                Debug.Log($"[TestResultsLogger] Results written to {ResultsPath}");
+                Directory.CreateDirectory(LogsDir);
+                File.WriteAllText(path, sb.ToString());
+                Debug.Log($"[TestResultsLogger] {mode} results written to {path}");
             }
             catch (Exception ex)
             {
@@ -47,15 +62,36 @@ public static class TestResultsLogger
         }
 
         public void TestStarted(ITestAdaptor test) { }
+        public void TestFinished(ITestResultAdaptor result) { }
 
-        public void TestFinished(ITestResultAdaptor result)
+        private static bool ContainsPlayMode(ITestAdaptor node)
         {
-            // Individual failures are captured in RunFinished via tree traversal
+            if (node == null) return false;
+            if (node.FullName != null && node.FullName.Contains("PlayMode")) return true;
+            if (node.HasChildren)
+                foreach (var child in node.Children)
+                    if (ContainsPlayMode(child)) return true;
+            return false;
+        }
+
+        private static void CountResults(ITestResultAdaptor result, ref int passed, ref int failed, ref int skipped)
+        {
+            if (!result.HasChildren)
+            {
+                switch (result.TestStatus)
+                {
+                    case TestStatus.Passed:  passed++;  break;
+                    case TestStatus.Failed:  failed++;  break;
+                    case TestStatus.Skipped: skipped++; break;
+                }
+                return;
+            }
+            foreach (var child in result.Children)
+                CountResults(child, ref passed, ref failed, ref skipped);
         }
 
         private static void WriteResult(StringBuilder sb, ITestResultAdaptor result, int depth)
         {
-            // Only print leaf tests (actual test methods), skip suite nodes
             bool isLeaf = !result.HasChildren;
 
             if (isLeaf)
