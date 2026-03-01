@@ -134,27 +134,29 @@ namespace GameManager.GameElements
 			if (buildPhase == BuildPhase.TO_POSITION)
 			{
 				// If we're at the end of our path, start building
-				if (path.Count == 0) // && IsNeighborOfUnit(taskLocation))
+				if (path.Count == 0)
 				{
 					path.Clear();
-					taskTime = 0f;
+					// Don't reset progress — resume from where the building left off
 					buildPhase = BuildPhase.BUILDING;
 				}
 			}
 			else if (buildPhase == BuildPhase.BUILDING)
 			{
-				taskTime += Time.deltaTime;
+				if (currentBuilding == null)
+				{
+					CurrentAction = UnitAction.IDLE;
+					return;
+				}
+
+				var buildUnit = currentBuilding.GetComponent<Unit>();
+				buildUnit.BuildProgress += Time.deltaTime;
 
 				// if we're building a unit and we have finished the task
-				if (taskTime >= Constants.CREATION_TIME[taskUnitType])
+				if (buildUnit.BuildProgress >= Constants.CREATION_TIME[taskUnitType])
 				{
-					if (currentBuilding == null)
-					{
-						return;
-					}
-
-					currentBuilding.GetComponent<Unit>().IsBuilt = true;
-					currentBuilding.GetComponent<Animator>().SetBool("IsBuilt", IsBuilt);
+					buildUnit.IsBuilt = true;
+					currentBuilding.GetComponent<Animator>().SetBool("IsBuilt", buildUnit.IsBuilt);
 					path.Clear();
 					CurrentAction = UnitAction.IDLE;
 					currentBuilding = null;

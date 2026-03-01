@@ -31,11 +31,18 @@ namespace GameManager.GameElements
 			// If this unit is dead, destroy it
 			if (Health <= 0)
 			{
+				// Release building reference — progress is safely on the building itself
+				if (currentBuilding != null)
+					currentBuilding.GetComponent<Unit>().ActiveBuilderNbr = -1;
+				currentBuilding = null;
 				GameManager.Instance.Units.DestroyUnit(gameObject);
 			}
 			// Otherwise, if this unit is idle
 			else if (CurrentAction == UnitAction.IDLE)
 			{
+				if (currentBuilding != null)
+					currentBuilding.GetComponent<Unit>().ActiveBuilderNbr = -1;
+				currentBuilding = null;
 				path.Clear();
 				TargetGridPos = GridPosition; // TODO
 				TargetUnitType = UnitType.WORKER;

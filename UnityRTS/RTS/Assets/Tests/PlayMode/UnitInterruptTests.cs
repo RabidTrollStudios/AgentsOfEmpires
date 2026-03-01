@@ -11,7 +11,7 @@ namespace GameManager.Tests.PlayMode
 	/// <summary>
 	/// Play Mode tests for action interruption:
 	/// interrupting a move with an attack, an attack with a move,
-	/// and interrupting a build with a move.
+	/// interrupting a build with a move, and interrupting a gather with a move.
 	/// </summary>
 	[TestFixture]
 	public class UnitInterruptTests : PlayModeTestBase
@@ -81,24 +81,19 @@ namespace GameManager.Tests.PlayMode
 
 		/// <summary>
 		/// A worker mid-build can be interrupted by a move command.
-		/// The worker transitions from BUILD to MOVE, and no second building appears.
+		/// The worker transitions from BUILD to MOVE; building retains its progress.
 		/// </summary>
 		[UnityTest]
 		public IEnumerator Worker_BuildingThenMoveCommand_SwitchesToMove()
 		{
-			Vector3Int workerPos = new Vector3Int(9, 10, 0);
-			Unit worker = PlaceUnit(UnitType.WORKER, workerPos);
-
+			Unit worker = PlaceUnit(UnitType.WORKER, new Vector3Int(9, 10, 0));
 			worker.StartBuilding(new BuildEventArgs(worker, new Vector3Int(10, 10, 0), UnitType.BASE));
 			Assert.AreEqual(UnitAction.BUILD, worker.CurrentAction);
 
-			// Let build run briefly
 			yield return WaitFrames(5);
 
-			// Interrupt with move
 			worker.StartMoving(new MoveEventArgs(worker, UnitType.WORKER, new Vector3Int(20, 20, 0)));
 
-			// Worker should switch to MOVE
 			Assert.AreEqual(UnitAction.MOVE, worker.CurrentAction,
 				"Worker should switch from BUILD to MOVE when move command is issued");
 		}

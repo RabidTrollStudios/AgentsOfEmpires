@@ -113,8 +113,8 @@ namespace GameManager.Tests.PlayMode
 		public IEnumerator MultipleBuilds_DeductCumulativeCost()
 		{
 			Agent agent = GetAgent0();
-			// Give enough gold for two workers
-			agent.Gold = (int)(Constants.COST[UnitType.WORKER] * 3);
+			// Give enough gold for two BASE builds
+			agent.Gold = (int)(Constants.COST[UnitType.BASE] * 2);
 			int startGold = agent.Gold;
 
 			Unit w1 = PlaceUnit(UnitType.WORKER, new Vector3Int(9, 10, 0));

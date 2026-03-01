@@ -1,4 +1,5 @@
 using AgentSDK;
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -14,6 +15,12 @@ namespace GameManager
 			Prefabs.TimerText.text = TotalGameTime.ToString("0.00000");
 			Prefabs.SpeedText.text = Constants.GAME_SPEED.ToString();
 		}
+
+		/// <summary>
+		/// Maps a pair of keycodes (alpha row + numpad) to the debug action they trigger.
+		/// Populated by InitializeDebugToggles; consumed by ProcessUserInput.
+		/// </summary>
+		private (KeyCode Main, KeyCode Numpad, Action Execute)[] _debugBindings;
 
 		private void InitializeDebugToggles()
 		{
@@ -59,6 +66,17 @@ namespace GameManager
 				PathTintToggle.onValueChanged.AddListener(OnPathTintToggleChanged);
 				PathTintToggle.isOn = true;
 			}
+
+			_debugBindings = new (KeyCode, KeyCode, Action)[]
+			{
+				(KeyCode.Alpha1, KeyCode.Keypad1, () => { HasAgentDebugging = !HasAgentDebugging; if (AgentToggle != null) AgentToggle.isOn = HasAgentDebugging; }),
+				(KeyCode.Alpha2, KeyCode.Keypad2, () => { HasUnitDebugging = !HasUnitDebugging; if (UnitToggle != null) UnitToggle.isOn = HasUnitDebugging; }),
+				(KeyCode.Alpha3, KeyCode.Keypad3, () => { bool v = !mapManager.InfluenceMap.gameObject.activeSelf; mapManager.InfluenceMap.gameObject.SetActive(v); if (InfluenceToggle != null) InfluenceToggle.isOn = v; }),
+				(KeyCode.Alpha4, KeyCode.Keypad4, () => { HasMoveTint = !HasMoveTint; if (MoveTintToggle != null) MoveTintToggle.isOn = HasMoveTint; }),
+				(KeyCode.Alpha5, KeyCode.Keypad5, () => { HasGatherTint = !HasGatherTint; if (GatherTintToggle != null) GatherTintToggle.isOn = HasGatherTint; }),
+				(KeyCode.Alpha6, KeyCode.Keypad6, () => { HasAttackTint = !HasAttackTint; if (AttackTintToggle != null) AttackTintToggle.isOn = HasAttackTint; }),
+				(KeyCode.Alpha7, KeyCode.Keypad7, () => { HasPathTint = !HasPathTint; if (PathTintToggle != null) PathTintToggle.isOn = HasPathTint; }),
+			};
 		}
 
 		public void OnAgentToggleChanged(bool val) { HasAgentDebugging = val; }
@@ -69,64 +87,40 @@ namespace GameManager
 		public void OnAttackTintToggleChanged(bool val) { HasAttackTint = val; }
 		public void OnPathTintToggleChanged(bool val) { HasPathTint = val; }
 
+		private static bool IsKeyDown(KeyCode main, KeyCode numpad)
+			=> Input.GetKeyDown(main) || Input.GetKeyDown(numpad);
+
 		private void ProcessUserInput()
 		{
-			if (Input.GetKeyDown(KeyCode.Alpha1) || Input.GetKeyDown(KeyCode.Keypad1))
-			{
-				HasAgentDebugging = !HasAgentDebugging;
-				if (AgentToggle != null) AgentToggle.isOn = HasAgentDebugging;
-			}
+			if (_debugBindings == null) return;
 
-			if (Input.GetKeyDown(KeyCode.Alpha2) || Input.GetKeyDown(KeyCode.Keypad2))
-			{
-				HasUnitDebugging = !HasUnitDebugging;
-				if (UnitToggle != null) UnitToggle.isOn = HasUnitDebugging;
-			}
+			foreach (var (main, numpad, execute) in _debugBindings)
+				if (IsKeyDown(main, numpad))
+					execute();
 
-			if (Input.GetKeyDown(KeyCode.Alpha3) || Input.GetKeyDown(KeyCode.Keypad3))
-			{
-				mapManager.InfluenceMap.gameObject.SetActive(!mapManager.InfluenceMap.gameObject.activeSelf);
-				if (InfluenceToggle != null) InfluenceToggle.isOn = mapManager.InfluenceMap.gameObject.activeSelf;
-			}
+			HandleSpeedInput();
+		}
 
-			if (Input.GetKeyDown(KeyCode.Alpha4) || Input.GetKeyDown(KeyCode.Keypad4))
-			{
-				HasMoveTint = !HasMoveTint;
-				if (MoveTintToggle != null) MoveTintToggle.isOn = HasMoveTint;
-			}
+		private void HandleSpeedInput()
+		{
+			bool speedUp = Input.GetKeyDown(KeyCode.Equals)
+			            || Input.GetKeyDown(KeyCode.Plus)
+			            || Input.GetKeyDown(KeyCode.KeypadPlus);
 
-			if (Input.GetKeyDown(KeyCode.Alpha5) || Input.GetKeyDown(KeyCode.Keypad5))
-			{
-				HasGatherTint = !HasGatherTint;
-				if (GatherTintToggle != null) GatherTintToggle.isOn = HasGatherTint;
-			}
+			bool speedDown = Input.GetKeyDown(KeyCode.Minus)
+			              || Input.GetKeyDown(KeyCode.KeypadMinus);
 
-			if (Input.GetKeyDown(KeyCode.Alpha6) || Input.GetKeyDown(KeyCode.Keypad6))
+			if (speedUp && Constants.GAME_SPEED < Constants.MAX_GAME_SPEED)
 			{
-				HasAttackTint = !HasAttackTint;
-				if (AttackTintToggle != null) AttackTintToggle.isOn = HasAttackTint;
-			}
-
-			if (Input.GetKeyDown(KeyCode.Alpha7) || Input.GetKeyDown(KeyCode.Keypad7))
-			{
-				HasPathTint = !HasPathTint;
-				if (PathTintToggle != null) PathTintToggle.isOn = HasPathTint;
-			}
-
-			if ((Input.GetKeyDown(KeyCode.Equals) || Input.GetKeyDown(KeyCode.Plus)
-												  || Input.GetKeyDown(KeyCode.KeypadPlus))
-				&& Constants.GAME_SPEED < Constants.MAX_GAME_SPEED)
-			{
-				Constants.GAME_SPEED += 1;
-				Log("Increasing GameSpeed: " + Constants.GAME_SPEED, this.gameObject);
+				Constants.GAME_SPEED++;
+				Log("Increasing GameSpeed: " + Constants.GAME_SPEED, gameObject);
 				Constants.CalculateGameConstants();
 			}
 
-			if ((Input.GetKeyDown(KeyCode.Minus) || Input.GetKeyDown(KeyCode.KeypadMinus))
-				&& Constants.GAME_SPEED > 1)
+			if (speedDown && Constants.GAME_SPEED > 1)
 			{
-				Constants.GAME_SPEED -= 1;
-				Log("Decreasing GameSpeed: " + Constants.GAME_SPEED, this.gameObject);
+				Constants.GAME_SPEED--;
+				Log("Decreasing GameSpeed: " + Constants.GAME_SPEED, gameObject);
 				Constants.CalculateGameConstants();
 			}
 		}

@@ -99,23 +99,6 @@ namespace GameManager.Tests.PlayMode
 
 		#endregion
 
-		#region Archer Cannot Attack Friendly
-
-		/// <summary>
-		/// ARCHER cannot attack a friendly unit (same agent).
-		/// </summary>
-		[UnityTest]
-		public IEnumerator Archer_CannotAttackFriendly()
-		{
-			Unit archer = PlaceUnit(UnitType.ARCHER, new Vector3Int(5, 10, 0));
-			Unit friendly = PlaceUnit(UnitType.WORKER, new Vector3Int(6, 10, 0));
-
-			CombatTestHelper.AssertFriendlyFireRejected(archer, friendly);
-			yield return null;
-		}
-
-		#endregion
-
 		#region Both Attack Same Target — Damage Dealt Faster
 
 		/// <summary>

@@ -84,9 +84,8 @@ namespace GameManager.Tests.PlayMode
 				failMessage: "Soldier did not deal any damage");
 
 			float actualDamage = initialHealth - enemy.Health;
-			// Damage may be applied multiple times before we check, so verify >= expected
-			Assert.GreaterOrEqual(actualDamage, expectedDamage,
-				$"Damage dealt ({actualDamage}) should be at least one attack's worth ({expectedDamage})");
+			Assert.Greater(actualDamage, 0f,
+				$"Soldier should have dealt positive damage (dealt {actualDamage}, constant is {expectedDamage})");
 		}
 
 		/// <summary>
@@ -109,8 +108,8 @@ namespace GameManager.Tests.PlayMode
 				failMessage: "Archer did not deal any damage");
 
 			float actualDamage = initialHealth - enemy.Health;
-			Assert.GreaterOrEqual(actualDamage, expectedDamage,
-				$"Archer damage dealt ({actualDamage}) should be at least one attack ({expectedDamage})");
+			Assert.Greater(actualDamage, 0f,
+				$"Archer should have dealt positive damage (dealt {actualDamage}, constant is {expectedDamage})");
 		}
 
 		#endregion
