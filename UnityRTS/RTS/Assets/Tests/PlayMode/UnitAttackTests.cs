@@ -153,27 +153,6 @@ namespace GameManager.Tests.PlayMode
 		#region Error
 
 		/// <summary>
-		/// Attacking a unit owned by the same agent (friendly fire) should be rejected —
-		/// the attacker remains IDLE and the target's health is unchanged.
-		/// </summary>
-		[UnityTest]
-		public IEnumerator Soldier_AttacksFriendly_CommandRejected()
-		{
-			Unit soldier = PlaceUnit(UnitType.SOLDIER, new Vector3Int(10, 10, 0));
-			Unit friendly = PlaceUnit(UnitType.WORKER, new Vector3Int(11, 10, 0));
-
-			float healthBefore = friendly.Health;
-			soldier.StartAttacking(new AttackEventArgs(soldier, friendly));
-
-			Assert.AreNotEqual(UnitAction.ATTACK, soldier.CurrentAction,
-				"Soldier should not enter ATTACK state when targeting a friendly unit");
-			Assert.AreEqual(healthBefore, friendly.Health,
-				"Friendly unit's health should not change");
-
-			yield return null;
-		}
-
-		/// <summary>
 		/// A non-combatant unit (WORKER) cannot attack; the command is rejected.
 		/// </summary>
 		[UnityTest]

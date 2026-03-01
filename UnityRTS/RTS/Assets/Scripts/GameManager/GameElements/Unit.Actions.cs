@@ -53,6 +53,23 @@ namespace GameManager.GameElements
 		}
 
 		/// <summary>
+		/// Find an unfinished building of the given type anchored at position that
+		/// has no active builder (i.e. the original worker was interrupted or killed).
+		/// Returns null if none found or if another worker is already building it.
+		/// </summary>
+		private Unit FindUnbuiltBuildingAt(Vector3Int position, UnitType unitType)
+		{
+			foreach (var kvp in GameManager.Instance.Units.GetAllUnits())
+			{
+				Unit u = kvp.Value.GetComponent<Unit>();
+				if (u != null && !u.IsBuilt && u.UnitType == unitType && u.GridPosition == position
+				    && u.ActiveBuilderNbr == -1)
+					return u;
+			}
+			return null;
+		}
+
+		/// <summary>
 		/// Start building another unit
 		/// </summary>
 		/// <param name="args">arguments for the building task</param>
@@ -61,6 +78,33 @@ namespace GameManager.GameElements
 			ExitMine();
 			// Exclude the building worker's cell - the worker will move to a neighbor before building
 			var workerExclusion = new HashSet<Vector3Int> { GridPosition };
+
+			// ── RESUME PATH ──────────────────────────────────────────────────────
+			// If there is already an incomplete building at the target, skip placement
+			// and walk the worker over to finish it.
+			Unit pausedBuilding = FindUnbuiltBuildingAt(args.TargetPosition, args.UnitType);
+			if (pausedBuilding != null && CanBuild && CurrentAction != UnitAction.BUILD)
+			{
+				UpdatePath(GridPosition, pausedBuilding.UnitType, pausedBuilding.GridPosition, forceImmediate: true);
+				if (path.Count > 0)
+				{
+					currentBuilding = pausedBuilding.gameObject;
+					pausedBuilding.ActiveBuilderNbr = UnitNbr;
+					CurrentAction = UnitAction.BUILD;
+					buildPhase = BuildPhase.TO_POSITION;
+					taskUnitType = pausedBuilding.UnitType;
+					TargetGridPos = pausedBuilding.GridPosition;
+					GetCmdLog()?.LogCommand("BUILD", $"worker#{UnitNbr} -> RESUME {args.UnitType} at {args.TargetPosition}",
+						$"RESUMING (progress={pausedBuilding.BuildProgress:F2}s, path={path.Count} steps)");
+				}
+				else
+				{
+					GetCmdLog()?.LogCommand("BUILD", $"worker#{UnitNbr} -> RESUME {args.UnitType} at {args.TargetPosition}",
+						"EXEC_FAILED: no path to paused building");
+				}
+				return;
+			}
+			// ── END RESUME PATH ──────────────────────────────────────────────────
 
 			// If this unit is currently idle, build the new unit
 			if (CurrentAction != UnitAction.BUILD
@@ -81,6 +125,7 @@ namespace GameManager.GameElements
 				if (path.Count > 0)
 				{
 					currentBuilding = GameManager.Instance.Units.PlaceUnit(Agent, args.TargetPosition, args.UnitType, Color.white);
+					currentBuilding.GetComponent<Unit>().ActiveBuilderNbr = UnitNbr;
 					CurrentAction = UnitAction.BUILD;
 					buildPhase = BuildPhase.TO_POSITION;
 					taskUnitType = args.UnitType;
@@ -115,8 +160,16 @@ namespace GameManager.GameElements
 		{
 			ExitMine();
 
-			if (CurrentAction != UnitAction.BUILD
-				&& CanMove)
+			// Allow MOVE to interrupt BUILD — building retains its progress
+			if (CurrentAction == UnitAction.BUILD)
+			{
+				if (currentBuilding != null)
+					currentBuilding.GetComponent<Unit>().ActiveBuilderNbr = -1;
+				currentBuilding = null;
+				CurrentAction = UnitAction.IDLE;
+			}
+
+			if (CanMove)
 			{
 				pathFailCount = 0;
 				pathBackoffMultiplier = 1;
@@ -145,9 +198,8 @@ namespace GameManager.GameElements
 			}
 			else
 			{
-				string reason = CurrentAction == UnitAction.BUILD ? "unit is building" : "unit can't move";
 				GetCmdLog()?.LogCommand("MOVE", $"{UnitType}#{UnitNbr} at {GridPosition} -> {args.Target}",
-					$"EXEC_FAILED: {reason}");
+					"EXEC_FAILED: unit can't move");
 			}
 		}
 

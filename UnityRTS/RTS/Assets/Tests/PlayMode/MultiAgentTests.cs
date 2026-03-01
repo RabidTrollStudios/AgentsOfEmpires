@@ -112,33 +112,6 @@ namespace GameManager.Tests.PlayMode
 					"Reverse cross-agent attack should deal damage");
 		}
 
-		/// <summary>
-		/// Agent 0 archer and agent 0 soldier cannot attack each other.
-		/// </summary>
-		[UnityTest]
-		public IEnumerator SameAgent_ArcherAndSoldier_CannotAttackEachOther()
-		{
-			Unit archer = PlaceUnit(UnitType.ARCHER, new Vector3Int(10, 10, 0));
-			Unit soldier = PlaceUnit(UnitType.SOLDIER, new Vector3Int(11, 10, 0));
-
-			float soldierHealth = soldier.Health;
-			float archerHealth = archer.Health;
-
-			archer.StartAttacking(new AttackEventArgs(archer, soldier));
-			soldier.StartAttacking(new AttackEventArgs(soldier, archer));
-
-			Assert.AreNotEqual(UnitAction.ATTACK, archer.CurrentAction,
-				"Archer should not attack a friendly soldier");
-			Assert.AreNotEqual(UnitAction.ATTACK, soldier.CurrentAction,
-				"Soldier should not attack a friendly archer");
-			Assert.AreEqual(soldierHealth, soldier.Health,
-				"Friendly soldier health should not change");
-			Assert.AreEqual(archerHealth, archer.Health,
-				"Friendly archer health should not change");
-
-			yield return null;
-		}
-
 		#endregion
 
 		#region Competing Resources

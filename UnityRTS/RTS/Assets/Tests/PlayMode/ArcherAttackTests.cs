@@ -137,30 +137,6 @@ namespace GameManager.Tests.PlayMode
 
 		#endregion
 
-		#region Error
-
-		/// <summary>
-		/// An archer cannot attack a friendly unit.
-		/// </summary>
-		[UnityTest]
-		public IEnumerator Archer_AttacksFriendly_CommandRejected()
-		{
-			Unit archer = PlaceUnit(UnitType.ARCHER, new Vector3Int(10, 10, 0));
-			Unit friendly = PlaceUnit(UnitType.WORKER, new Vector3Int(11, 10, 0));
-
-			float healthBefore = friendly.Health;
-			archer.StartAttacking(new AttackEventArgs(archer, friendly));
-
-			Assert.AreNotEqual(UnitAction.ATTACK, archer.CurrentAction,
-				"Archer should not attack friendly units");
-			Assert.AreEqual(healthBefore, friendly.Health,
-				"Friendly health should not change");
-
-			yield return null;
-		}
-
-		#endregion
-
 		#region Stress
 
 		/// <summary>

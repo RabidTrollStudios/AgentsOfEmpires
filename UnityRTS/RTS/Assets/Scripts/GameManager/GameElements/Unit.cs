@@ -38,6 +38,19 @@ namespace GameManager.GameElements
 		public bool IsBuilt { get; internal set; }
 
 		/// <summary>
+		/// Accumulated build time in seconds. Only meaningful when IsBuilt=false.
+		/// Allows construction to pause and resume independently of which worker is building.
+		/// </summary>
+		internal float BuildProgress { get; set; }
+
+		/// <summary>
+		/// UnitNbr of the worker currently constructing this building.
+		/// -1 when unattended (paused or interrupted). Only meaningful when IsBuilt=false.
+		/// Prevents a second worker from resuming a build that is already active.
+		/// </summary>
+		internal int ActiveBuilderNbr { get; set; } = -1;
+
+		/// <summary>
 		/// Color of this agent
 		/// </summary>
 		public Color Color { get; internal set; }

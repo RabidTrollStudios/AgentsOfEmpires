@@ -155,25 +155,25 @@ namespace GameManager.Tests.PlayMode
 		// ------------------------------------------------------------------
 
 		/// <summary>
-		/// Build a 3x3 base near the map edge at position (27, 2). The
-		/// footprint (27..29, 0..2) should fit within the 30x30 map bounds.
+		/// Build a 4x4 BASE near the map edge at position (25, 2). The
+		/// footprint x=[25,28], y=[2,(-1)] — x fits within the 30x30 map bounds.
 		/// </summary>
 		[UnityTest]
 		public IEnumerator BuildNearMapEdge_FitsWithinBounds()
 		{
-			Vector3Int workerPos = new Vector3Int(26, 2, 0);
-			Vector3Int buildPos = new Vector3Int(27, 2, 0);
+			Vector3Int workerPos = new Vector3Int(24, 2, 0);
+			Vector3Int buildPos = new Vector3Int(25, 2, 0);
 			Unit worker = PlaceUnit(UnitType.WORKER, workerPos);
 
 			// Verify the area is buildable before issuing the command
 			// Exclude the worker's own cell (same as StartBuilding does)
 			var exclusion = new HashSet<Vector3Int> { workerPos };
 			Assert.IsTrue(ctx.MapManager.IsAreaBuildable(UnitType.BASE, buildPos, exclusion),
-				"3x3 area at (27,2) should be buildable within 30x30 map");
+				"4x4 area at (25,2) should be buildable within 30x30 map");
 
 			worker.StartBuilding(new BuildEventArgs(worker, buildPos, UnitType.BASE));
 
-			Assert.AreEqual(UnitAction.BUILD, worker.CurrentAction,
+				Assert.AreEqual(UnitAction.BUILD, worker.CurrentAction,
 				"Worker should accept build command near map edge");
 
 			// Wait for construction to finish
@@ -237,8 +237,10 @@ namespace GameManager.Tests.PlayMode
 		{
 			Vector3Int buildPos = new Vector3Int(10, 10, 0);
 
-			// Place a base at the target location first
-			PlaceUnit(UnitType.BASE, buildPos);
+			// Place a complete base at the target location first.
+			// IsBuilt must be true so the resume path doesn't treat it as a paused build.
+			Unit blocker = PlaceUnit(UnitType.BASE, buildPos);
+			blocker.IsBuilt = true;
 
 			// Place a worker nearby
 			Vector3Int workerPos = new Vector3Int(8, 10, 0);

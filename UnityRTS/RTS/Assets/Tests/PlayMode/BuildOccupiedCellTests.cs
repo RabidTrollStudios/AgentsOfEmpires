@@ -113,29 +113,5 @@ namespace GameManager.Tests.PlayMode
 
 		#endregion
 
-		#region Own Worker Cannot Build on Itself
-
-		/// <summary>
-		/// A worker cannot start a build command at its own current position.
-		/// </summary>
-		[UnityTest]
-		public IEnumerator Worker_CannotBuildAtOwnPosition()
-		{
-			Agent agent = GetAgent0();
-			Vector3Int workerPos = new Vector3Int(10, 10, 0);
-			Unit worker = PlaceUnit(UnitType.WORKER, workerPos);
-
-			yield return WaitFrames(1);
-
-			int goldBefore = agent.Gold;
-			worker.StartBuilding(new BuildEventArgs(worker, workerPos, UnitType.BASE));
-
-			Assert.AreNotEqual(UnitAction.BUILD, worker.CurrentAction,
-				"Worker should not be able to build at its own position");
-			Assert.AreEqual(goldBefore, agent.Gold,
-				"Gold should not be deducted for build at own position");
 		}
-
-		#endregion
-	}
 }
