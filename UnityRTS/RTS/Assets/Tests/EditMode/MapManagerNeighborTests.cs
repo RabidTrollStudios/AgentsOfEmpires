@@ -31,15 +31,15 @@ namespace GameManager.Tests
 		#region GetGridPositionsNearUnit
 
 		/// <summary>
-		/// A 3x3 BASE at an interior position has 16 perimeter neighbors.
-		/// The formula: 2*(size.x+2) + 2*size.y = 2*5 + 2*3 = 16.
+		/// A BASE at an interior position has 20 perimeter neighbors.
+		/// The formula: 2*(size.x+2) + 2*size.y = 2*(4+2) + 2*4 = 20.
 		/// </summary>
 		[Test]
-		public void GetGridPositionsNearUnit_Base3x3_Interior_Returns16()
+		public void GetGridPositionsNearUnit_Base_Interior_Returns20()
 		{
 			var positions = manager.GetGridPositionsNearUnit(UnitType.BASE, new Vector3Int(5, 5, 0));
-			Assert.AreEqual(16, positions.Count,
-				"3x3 BASE at (5,5) should have 16 perimeter cells (all within 20x20 map)");
+			Assert.AreEqual(20, positions.Count,
+				"BASE at (5,5) should have 20 perimeter cells (all within 20x20 map)");
 		}
 
 		/// <summary>
@@ -198,25 +198,26 @@ namespace GameManager.Tests
 		}
 
 		/// <summary>
-		/// Cells adjacent to any side of a 3x3 BASE are neighbors.
+		/// Cells adjacent to any side of a BASE are neighbors.
+		/// BASE footprint at (5,5): x=[5,8], y=[2,5] (4x4).
 		/// </summary>
 		[Test]
-		public void IsNeighborOfUnit_Base3x3_VariousSides_AllTrue()
+		public void IsNeighborOfUnit_Base_VariousSides_AllTrue()
 		{
 			var basePos = new Vector3Int(5, 5, 0);
-			// Cells just outside each side of the 3x3 footprint
+			// Cells just outside each side of the 4x4 footprint
 			var testCells = new[]
 			{
-				new Vector3Int(5, 6, 0),   // north of top row
-				new Vector3Int(5, 2, 0),   // south of bottom row
-				new Vector3Int(4, 5, 0),   // west of leftmost col
-				new Vector3Int(8, 5, 0),   // east of rightmost col
+				new Vector3Int(5, 6, 0),   // north of top row  (y=6 > top y=5)
+				new Vector3Int(5, 1, 0),   // south of bottom row (y=1 < bottom y=2)
+				new Vector3Int(4, 5, 0),   // west of leftmost col (x=4 < left x=5)
+				new Vector3Int(9, 5, 0),   // east of rightmost col (x=9 > right x=8)
 			};
 
 			foreach (var cell in testCells)
 			{
 				Assert.IsTrue(manager.IsNeighborOfUnit(cell, UnitType.BASE, basePos),
-					$"Cell {cell} should be a neighbor of 3x3 BASE at {basePos}");
+					$"Cell {cell} should be a neighbor of BASE at {basePos}");
 			}
 		}
 

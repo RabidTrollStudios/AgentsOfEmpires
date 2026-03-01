@@ -1,267 +1,270 @@
-=== Test Run Finished: 2026-03-01 13:22:33 ===
-Result: Failed  |  Duration: 1.02s
+=== Test Run Finished: 2026-03-01 13:37:27 ===
+Result: Failed  |  Duration: 34.15s
 
-          [PASS] GameManager.Tests.AStarAvoidUnitsTests.AvoidUnits_AllNeighborsNonBuildable_Exhausted
-          [PASS] GameManager.Tests.AStarAvoidUnitsTests.AvoidUnits_EndNotBuildable_ReturnsEndBlocked
-          [PASS] GameManager.Tests.AStarAvoidUnitsTests.AvoidUnits_NonBuildableInMiddle_PathGoesAround
-          [PASS] GameManager.Tests.AStarAvoidUnitsTests.DefaultMode_EndNotBuildable_ButWalkable_FindsPath
-          [PASS] GameManager.Tests.AStarAvoidUnitsTests.DefaultMode_NonBuildableCellsTraversable_PathMayGoThrough
-          [PASS] GameManager.Tests.AStarAvoidUnitsTests.OpenGrid_BothModes_SamePathLength
-          [PASS] GameManager.Tests.AStarOptimalityTests.LinearChain_ReturnsExactHopCount
-          [PASS] GameManager.Tests.AStarOptimalityTests.LongLinearPath_AllStepsAreContiguous
-          [PASS] GameManager.Tests.AStarOptimalityTests.MultipleSearches_EachFindsCorrectTarget
-          [PASS] GameManager.Tests.AStarOptimalityTests.Path_DoesNotContainStartNode
-          [PASS] GameManager.Tests.AStarOptimalityTests.SecondSearch_AfterReset_FindsNewTarget
-          [PASS] GameManager.Tests.AStarOptimalityTests.ShortDiagonalVsLongerOrtho_TakesFewerHops
-          [PASS] GameManager.Tests.AStarOptimalityTests.WallDetour_PathLengthIsBoundedAbove
-          [PASS] GameManager.Tests.AStarSearchTests.AdjacentNodes_ReturnsOneStep
-          [PASS] GameManager.Tests.AStarSearchTests.DefaultCap_FindsPath
-          [PASS] GameManager.Tests.AStarSearchTests.DiagonalPath_ReturnsOneStep
-          [PASS] GameManager.Tests.AStarSearchTests.EndNodeBlocked_ReturnsEmpty
-          [PASS] GameManager.Tests.AStarSearchTests.ExpansionCap_ReturnsCap
-          [PASS] GameManager.Tests.AStarSearchTests.FindClosestNeighbor_NoEdges_ReturnsMinusOne
-          [PASS] GameManager.Tests.AStarSearchTests.FindClosestNeighbor_ReturnsNearest
-          [PASS] GameManager.Tests.AStarSearchTests.FullyEnclosed_ReturnsExhausted
-          [PASS] GameManager.Tests.AStarSearchTests.LargeGrid_100x100_CompletesQuickly
-          [PASS] GameManager.Tests.AStarSearchTests.LongerPath_CorrectLength
-          [PASS] GameManager.Tests.AStarSearchTests.PathDoesNotIncludeStart
-          [PASS] GameManager.Tests.AStarSearchTests.PathEndsAtTarget
-          [PASS] GameManager.Tests.AStarSearchTests.PathIsContiguous
-          [PASS] GameManager.Tests.AStarSearchTests.ResetSearch_ClearsAllNodes
-          [PASS] GameManager.Tests.AStarSearchTests.RunTwice_SecondSearchValid
-          [PASS] GameManager.Tests.AStarSearchTests.SameNode_ReturnsEmpty_SameNode
-          [PASS] GameManager.Tests.AStarSearchTests.StartBlocked_StillFindsPathThroughWalkableNeighbors
-          [PASS] GameManager.Tests.AStarSearchTests.WallChannel_PathGoesAround
-          [PASS] GameManager.Tests.ConstantsAttackSizeTests.AttackRange_AllNonNegative
-          [PASS] GameManager.Tests.ConstantsAttackSizeTests.AttackRange_CombatUnits_HavePositiveRange
-          [PASS] GameManager.Tests.ConstantsAttackSizeTests.AttackRange_ConsistentWithCanAttack
-          [PASS] GameManager.Tests.ConstantsAttackSizeTests.AttackRange_HasAllSevenUnitTypes
-          [PASS] GameManager.Tests.ConstantsAttackSizeTests.AttackRange_NonCombatUnits_HaveZeroRange
-          [PASS] GameManager.Tests.ConstantsAttackSizeTests.UnitSize_AllNonNegativeDimensions
-          [PASS] GameManager.Tests.ConstantsAttackSizeTests.UnitSize_Buildings_LargerThanOneByOne
-          [PASS] GameManager.Tests.ConstantsAttackSizeTests.UnitSize_HasAllSevenUnitTypes
-          [PASS] GameManager.Tests.ConstantsAttackSizeTests.UnitSize_MobileUnits_AreOneByOne
-          [PASS] GameManager.Tests.ConstantsCapabilityDictTests.CanAttack_HasAllSevenUnitTypes
-          [PASS] GameManager.Tests.ConstantsCapabilityDictTests.CanBuild_HasAllSevenUnitTypes
-          [PASS] GameManager.Tests.ConstantsCapabilityDictTests.CanGather_HasAllSevenUnitTypes
-          [PASS] GameManager.Tests.ConstantsCapabilityDictTests.CanMove_HasAllSevenUnitTypes
-          [PASS] GameManager.Tests.ConstantsCapabilityDictTests.CanTrain_HasAllSevenUnitTypes
-          [PASS] GameManager.Tests.ConstantsCapabilityDictTests.Immobile_AlsoCannotAttack
-          [PASS] GameManager.Tests.ConstantsCapabilityDictTests.Immobile_AlsoCannotGather
-          [PASS] GameManager.Tests.ConstantsCapabilityDictTests.NoBuildAndTrainOverlap
-          [PASS] GameManager.Tests.ConstantsCapabilityTests.AttackRange_ArcherGreaterThanSoldier
-          [PASS] GameManager.Tests.ConstantsCapabilityTests.CanAttack_OnlySoldierAndArcherAreTrue
-          [PASS] GameManager.Tests.ConstantsCapabilityTests.CanBuild_OnlyWorkerIsTrue
-          [PASS] GameManager.Tests.ConstantsCapabilityTests.CanGather_OnlyWorkerIsTrue
-          [PASS] GameManager.Tests.ConstantsCapabilityTests.CanMove_OnlyMobileUnitsAreTrue
-          [PASS] GameManager.Tests.ConstantsCapabilityTests.CanTrain_OnlyBaseAndBarracksAreTrue
-          [PASS] GameManager.Tests.ConstantsCapabilityTests.Dependency_BarracksDependsOnBase
-          [FAIL] GameManager.Tests.ConstantsCapabilityTests.Dependency_BaseAndWorkerHaveNoDependencies
-                   WORKER should have no dependencies
-                   Expected: 0
-                   But was:  1
-                 
-          [PASS] GameManager.Tests.ConstantsCapabilityTests.Dependency_RefineryDependsOnBase
-          [PASS] GameManager.Tests.ConstantsCapabilityTests.TrainsMatrix_CorrectUnitTypes
-          [PASS] GameManager.Tests.ConstantsCapabilityTests.TrainsMatrix_DoesNotContainWrongTypes
-          [PASS] GameManager.Tests.ConstantsCapabilityTests.UnitValue_CombatUnitsWorthMoreThanWorker
-          [PASS] GameManager.Tests.ConstantsCapabilityTests.UnitValue_MineIsZero
-          [PASS] GameManager.Tests.ConstantsCapabilityTests.WorkerBuilds_BaseBarracksRefinery
-          [FAIL] GameManager.Tests.ConstantsHealthTests.Health_AllValuesPositive
-                   HEALTH for MINE should be > 0
-                   Expected: greater than 0.0f
-                   But was:  0.0f
-                 
-          [PASS] GameManager.Tests.ConstantsHealthTests.Health_BarracksGreaterThanWorker
-          [PASS] GameManager.Tests.ConstantsHealthTests.Health_BaseGreaterThanWorker
-          [PASS] GameManager.Tests.ConstantsHealthTests.Health_CombatUnitsGreaterThanWorker
-          [PASS] GameManager.Tests.ConstantsHealthTests.Health_DictionaryIsNotNull
-          [PASS] GameManager.Tests.ConstantsHealthTests.Health_HasAllSevenUnitTypes
-          [FAIL] GameManager.Tests.ConstantsHealthTests.Health_MineLargerThanCombatUnits
-                   MINE health (= starting gold) should exceed SOLDIER combat health
-                   Expected: greater than 1200.0f
-                   But was:  0.0f
-                 
-          [PASS] GameManager.Tests.ConstantsTests.CostDelegatedFromSDK
-          [PASS] GameManager.Tests.ConstantsTests.HealthMine_MatchesStartingGold
-          [PASS] GameManager.Tests.ConstantsTests.ImmobileUnits_ZeroSpeed
-          [PASS] GameManager.Tests.ConstantsTests.MaxSpeed_CreationTimeInverse
-          [PASS] GameManager.Tests.ConstantsTests.NonCombatants_ZeroDamage
-          [FAIL] GameManager.Tests.ConstantsTests.Speed1_SoldierDamage
-                   Expected: 20.0d +/- 0.0010000000474974513d
-                   But was:  48.0d
-                 
-          [PASS] GameManager.Tests.ConstantsTests.Speed1_WorkerMovingSpeed
-          [FAIL] GameManager.Tests.ConstantsTests.Speed3_SoldierDamageScales
-                   Expected: 60.0d +/- 0.0010000000474974513d
-                   But was:  144.0d
-                 
-          [PASS] GameManager.Tests.ConstantsTests.Speed5_WorkerMovingSpeedScales
-          [PASS] GameManager.Tests.ConstantsTests.SpeedZero_CreationTimeIsExplicitInfinity
-          [PASS] GameManager.Tests.ConstantsUnitValueTests.UnitValue_AllNonNegative
-          [PASS] GameManager.Tests.ConstantsUnitValueTests.UnitValue_Archer_IsFive
-          [PASS] GameManager.Tests.ConstantsUnitValueTests.UnitValue_ArcherGreaterThanSoldier
-          [PASS] GameManager.Tests.ConstantsUnitValueTests.UnitValue_Barracks_IsThree
-          [PASS] GameManager.Tests.ConstantsUnitValueTests.UnitValue_BarracksGreaterThanBase
-          [PASS] GameManager.Tests.ConstantsUnitValueTests.UnitValue_Base_IsTwo
-          [PASS] GameManager.Tests.ConstantsUnitValueTests.UnitValue_BaseGreaterThanWorker
-          [PASS] GameManager.Tests.ConstantsUnitValueTests.UnitValue_HasAllSevenUnitTypes
-          [PASS] GameManager.Tests.ConstantsUnitValueTests.UnitValue_Mine_IsZero
-          [PASS] GameManager.Tests.ConstantsUnitValueTests.UnitValue_Soldier_IsFour
-          [PASS] GameManager.Tests.ConstantsUnitValueTests.UnitValue_WorkerAndRefinery_AreOne
-          [PASS] GameManager.Tests.DirectionMappingTests.Direction_E_MapsToRight
-          [PASS] GameManager.Tests.DirectionMappingTests.Direction_N_MapsToUp
-          [PASS] GameManager.Tests.DirectionMappingTests.Direction_NE_MapsToUpperRight
-          [PASS] GameManager.Tests.DirectionMappingTests.Direction_NW_MapsToUpperLeft
-          [PASS] GameManager.Tests.DirectionMappingTests.Direction_S_MapsToDown
-          [PASS] GameManager.Tests.DirectionMappingTests.Direction_SE_MapsToLowerRight
-          [PASS] GameManager.Tests.DirectionMappingTests.Direction_SW_MapsToLowerLeft
-          [PASS] GameManager.Tests.DirectionMappingTests.Direction_W_MapsToLeft
-          [PASS] GameManager.Tests.DirectionMappingTests.Directions_ContainsAllEightDirections
-          [PASS] GameManager.Tests.DirectionMappingTests.Directions_DoesNotContainNone
-          [PASS] GameManager.Tests.DirectionMappingTests.Directions_HasExactlyEightEntries
-          [PASS] GameManager.Tests.DirectionMappingTests.OppositeDirections_SumToZero
-          [PASS] GameManager.Tests.GraphBFSTests.AStar_NonUniform_StillFindsPath
-          [PASS] GameManager.Tests.GraphBFSTests.BFS_NonUniform_ThrowsException
-          [PASS] GameManager.Tests.GraphBFSTests.BFS_Uniform_DoesNotThrow
-          [PASS] GameManager.Tests.GraphBFSTests.BFS_Uniform_ReturnsEmptyPath
-          [PASS] GameManager.Tests.GraphBFSTests.IsUniform_CanBeSetToTrue
-          [PASS] GameManager.Tests.GraphBFSTests.IsUniform_DefaultIsFalse
-          [PASS] GameManager.Tests.GraphEdgeTests.Edge_Cost_StoredCorrectly
-          [PASS] GameManager.Tests.GraphEdgeTests.Edge_End_PointsToEndNode
-          [PASS] GameManager.Tests.GraphEdgeTests.Edge_Start_PointsToStartNode
-          [PASS] GameManager.Tests.GraphEdgeTests.GetNeighbor_CalledTwice_ReturnsSameResult
-          [PASS] GameManager.Tests.GraphEdgeTests.GetNeighbor_FromEnd_ReturnsStart
-          [PASS] GameManager.Tests.GraphEdgeTests.GetNeighbor_FromStart_ReturnsEnd
-          [PASS] GameManager.Tests.GraphEdgeTests.GetNeighbor_FromThirdNode_ReturnsStart
-          [PASS] GameManager.Tests.GraphEdgeTests.SharedEdge_SameObjectInBothNodes
-          [PASS] GameManager.Tests.GraphEdgeTests.TwoEdges_StoreSeparateCosts
-          [PASS] GameManager.Tests.GraphNodeTests.Node_InitialBackPtr_IsNull
-          [PASS] GameManager.Tests.GraphNodeTests.Node_InitialCost_IsMaxValue
-          [PASS] GameManager.Tests.GraphNodeTests.Node_InitialEdges_IsEmpty
-          [PASS] GameManager.Tests.GraphNodeTests.Node_InitialPriorityNode_IsNull
-          [PASS] GameManager.Tests.GraphNodeTests.Node_Item_MatchesAddedCell
-          [PASS] GameManager.Tests.GraphNodeTests.Node_Number_MatchesAddedValue
-          [PASS] GameManager.Tests.GraphNodeTests.NodeCopyCtor_EdgesListIsEmpty
-          [PASS] GameManager.Tests.GraphNodeTests.NodeCopyCtor_PreservesItem
-          [PASS] GameManager.Tests.GraphNodeTests.NodeCopyCtor_PreservesNumber
-          [PASS] GameManager.Tests.GraphNodeTests.ResetSearchVariables_ClearsBackPtr
-          [PASS] GameManager.Tests.GraphNodeTests.ResetSearchVariables_ClearsPriorityNode
-          [PASS] GameManager.Tests.GraphNodeTests.ResetSearchVariables_RestoresCostToMaxValue
-          [PASS] GameManager.Tests.GraphStructureTests.AddEdge_CostStoredCorrectly
-          [PASS] GameManager.Tests.GraphStructureTests.AddEdge_EdgeAppearsInEndNodeEdges
-          [PASS] GameManager.Tests.GraphStructureTests.AddEdge_EdgeAppearsInStartNodeEdges
-          [PASS] GameManager.Tests.GraphStructureTests.AddEdge_IncreasesGlobalEdgeCount
-          [PASS] GameManager.Tests.GraphStructureTests.AddMultipleEdgesFromOneNode_AllInEdgeList
-          [PASS] GameManager.Tests.GraphStructureTests.AddMultipleNodes_AllRetrievable
-          [PASS] GameManager.Tests.GraphStructureTests.AddNode_NodeExistsInDict
-          [PASS] GameManager.Tests.GraphStructureTests.CopyConstructor_PreservesEdgeCount
-          [PASS] GameManager.Tests.GraphStructureTests.CopyConstructor_PreservesNodeCount
-          [PASS] GameManager.Tests.GraphStructureTests.EmptyGraph_HasNoNodesOrEdges
-          [PASS] GameManager.Tests.GraphStructureTests.IsolatedNode_HasNoEdges
-          [PASS] GameManager.Tests.GridCellTests.Constructor_DefaultsBothTrue
-          [PASS] GameManager.Tests.GridCellTests.Constructor_ZeroPosition_Works
-          [PASS] GameManager.Tests.GridCellTests.GetPosition_ReturnsConstructorPosition
-          [PASS] GameManager.Tests.GridCellTests.IndependentState_NoCrossAffect
-          [PASS] GameManager.Tests.GridCellTests.SetBuildable_Toggle_RestoresState
-          [PASS] GameManager.Tests.GridCellTests.SetBuildableFalse_WalkableUnchanged
-          [PASS] GameManager.Tests.GridCellTests.SetWalkable_Toggle_RestoresState
-          [PASS] GameManager.Tests.GridCellTests.SetWalkableFalse_BuildableUnchanged
-          [PASS] GameManager.Tests.MapManagerGetPathTests.GetBuildableGridPositionsNearUnit_AllNeighborsBlocked_ReturnsEmpty
-          [PASS] GameManager.Tests.MapManagerGetPathTests.GetBuildableGridPositionsNearUnit_OpenMap_ReturnsAllNeighbors
-          [PASS] GameManager.Tests.MapManagerGetPathTests.GetPathBetweenGridPositions_AdjacentTarget_ReturnsOneStep
-          [PASS] GameManager.Tests.MapManagerGetPathTests.GetPathBetweenGridPositions_DoesNotIncludeStart
-          [PASS] GameManager.Tests.MapManagerGetPathTests.GetPathBetweenGridPositions_FullDiagonal_FindsPath
-          [PASS] GameManager.Tests.MapManagerGetPathTests.GetPathBetweenGridPositions_OpenGrid_ReturnsPathEndingAtTarget
-          [PASS] GameManager.Tests.MapManagerGetPathTests.GetPathBetweenGridPositions_SamePosition_ReturnsEmptyPath
-          [PASS] GameManager.Tests.MapManagerGetPathTests.GetPathBetweenGridPositions_TargetEnclosed_ReturnsEmpty
-          [PASS] GameManager.Tests.MapManagerGetPathTests.GetPathBetweenGridPositions_WithWall_RouteGoesAround
-          [PASS] GameManager.Tests.MapManagerNeighborTests.GetBuildableGridPositionsNearUnit_AllBlocked_ReturnsEmpty
-          [PASS] GameManager.Tests.MapManagerNeighborTests.GetBuildableGridPositionsNearUnit_OneBlocked_ReducedByOne
-          [PASS] GameManager.Tests.MapManagerNeighborTests.GetBuildableGridPositionsNearUnit_OpenMap_EqualsAll
-          [PASS] GameManager.Tests.MapManagerNeighborTests.GetGridPositionsNearUnit_Base3x3_AtEdge_FewerNeighbors
-          [FAIL] GameManager.Tests.MapManagerNeighborTests.GetGridPositionsNearUnit_Base3x3_Interior_Returns16
-                   3x3 BASE at (5,5) should have 16 perimeter cells (all within 20x20 map)
-                   Expected: 16
-                   But was:  20
-                 
-          [PASS] GameManager.Tests.MapManagerNeighborTests.GetGridPositionsNearUnit_NoneInsideFootprint
-          [PASS] GameManager.Tests.MapManagerNeighborTests.GetGridPositionsNearUnit_Worker_AtCorner_Returns3
-          [PASS] GameManager.Tests.MapManagerNeighborTests.GetGridPositionsNearUnit_Worker_AtLeftEdge_Returns5
-          [PASS] GameManager.Tests.MapManagerNeighborTests.GetPathToUnit_CallerAlreadyAdjacent_ShortPath
-          [PASS] GameManager.Tests.MapManagerNeighborTests.GetPathToUnit_OpenMap_FindsPath
-          [PASS] GameManager.Tests.MapManagerNeighborTests.IsNeighborOfUnit_AdjacentCell_ReturnsTrue
-          [FAIL] GameManager.Tests.MapManagerNeighborTests.IsNeighborOfUnit_Base3x3_VariousSides_AllTrue
-                   Cell (5, 2, 0) should be a neighbor of 3x3 BASE at (5, 5, 0)
-                   Expected: True
-                   But was:  False
-                 
-          [PASS] GameManager.Tests.MapManagerNeighborTests.IsNeighborOfUnit_SameCell_ReturnsFalse
-          [PASS] GameManager.Tests.MapManagerNeighborTests.IsNeighborOfUnit_TwoStepsAway_ReturnsFalse
-          [PASS] GameManager.Tests.MapManagerTests.GetGridPositionsNearUnit_Worker_Returns8
-          [PASS] GameManager.Tests.MapManagerTests.GetPathBetweenGridPositions_FindsPath
-          [PASS] GameManager.Tests.MapManagerTests.IsAreaBuildable_AtMapEdge_Works
-          [PASS] GameManager.Tests.MapManagerTests.IsAreaBuildable_Base3x3_FullyOpen_True
-          [PASS] GameManager.Tests.MapManagerTests.IsAreaBuildable_Base3x3_PartiallyBlocked_False
-          [PASS] GameManager.Tests.MapManagerTests.IsAreaBuildable_BaseOverlapsEdge_False
-          [PASS] GameManager.Tests.MapManagerTests.IsAreaBuildable_OffMap_ReturnsFalse
-          [PASS] GameManager.Tests.MapManagerTests.IsAreaBuildable_WorkerOnBlocked_False
-          [PASS] GameManager.Tests.MapManagerTests.IsAreaBuildable_WorkerOnOpen_True
-          [PASS] GameManager.Tests.MapManagerTests.IsBoundedAreaBuildable_AdjacentWall_False
-          [PASS] GameManager.Tests.MapManagerTests.IsBoundedAreaBuildable_Open_True
-          [PASS] GameManager.Tests.MapManagerTests.SetAreaBuildability_Building_WalkableFalse
-          [PASS] GameManager.Tests.MapManagerTests.SetAreaBuildability_MobileUnit_WalkableStaysTrue
-          [PASS] GameManager.Tests.MapManagerTests.SetAreaBuildability_Restore_BothTrue
-          [PASS] GameManager.Tests.PriorityNodeTests.AfterEnqueue_IndexIsNonNegative
-          [PASS] GameManager.Tests.PriorityNodeTests.CompareTo_EqualPriority_ReturnsZero
-          [PASS] GameManager.Tests.PriorityNodeTests.CompareTo_HigherPriority_ReturnsPositive
-          [PASS] GameManager.Tests.PriorityNodeTests.CompareTo_LowerPriority_ReturnsNegative
-          [PASS] GameManager.Tests.PriorityNodeTests.CompareTo_Null_ThrowsException
-          [PASS] GameManager.Tests.PriorityNodeTests.LowestPriorityNode_HasIndexZero
-          [PASS] GameManager.Tests.PriorityNodeTests.PriorityNode_InitialIndex_IsMinusOne
-          [PASS] GameManager.Tests.PriorityNodeTests.PriorityNode_StoresItem
-          [PASS] GameManager.Tests.PriorityNodeTests.PriorityNode_StoresPriority
-          [PASS] GameManager.Tests.PriorityNodeTests.PriorityNodeCopyCtor_PreservesIndex
-          [PASS] GameManager.Tests.PriorityNodeTests.PriorityNodeCopyCtor_PreservesItem
-          [PASS] GameManager.Tests.PriorityNodeTests.PriorityNodeCopyCtor_PreservesPriority
-          [PASS] GameManager.Tests.PriorityQueueTests.ChangePriority_Decrease_MovesToFront
-          [PASS] GameManager.Tests.PriorityQueueTests.ChangePriority_Increase_MovesToBack
-          [PASS] GameManager.Tests.PriorityQueueTests.ChangePriority_NeverEnqueued_NoEffect
-          [PASS] GameManager.Tests.PriorityQueueTests.Clear_ResetsCount
-          [PASS] GameManager.Tests.PriorityQueueTests.Dequeue_AfterClear_ThrowsException
-          [PASS] GameManager.Tests.PriorityQueueTests.Dequeue_EmptyQueue_ThrowsException
-          [PASS] GameManager.Tests.PriorityQueueTests.Dequeue_MultipleItems_ReturnedInPriorityOrder
-          [PASS] GameManager.Tests.PriorityQueueTests.Dequeue_SingleItem_ReturnsIt
-          [PASS] GameManager.Tests.PriorityQueueTests.Enqueue_DuplicatePriorities_AllItemsReturned
-          [PASS] GameManager.Tests.PriorityQueueTests.Enqueue_SingleItem_CountIsOne
-          [PASS] GameManager.Tests.PriorityQueueTests.Stress_InterleavedEnqueueDequeue_Ordering
-          [PASS] GameManager.Tests.PriorityQueueTests.Stress_ThousandElements_HeapOrdering
-          [PASS] GameManager.Tests.UtilityAdditionalTests.ConvertPositionToDirection_LargeDeltaFromNonOrigin_NW
-          [PASS] GameManager.Tests.UtilityAdditionalTests.ConvertPositionToDirection_NonOriginStart_N
-          [PASS] GameManager.Tests.UtilityAdditionalTests.ConvertPositionToDirection_NonOriginStart_SE
-          [PASS] GameManager.Tests.UtilityAdditionalTests.ConvertPositionToDirection_NonOriginStart_W
-          [PASS] GameManager.Tests.UtilityAdditionalTests.ConvertPositionToDirection_SamePositionNonOrigin_None
-          [PASS] GameManager.Tests.UtilityAdditionalTests.GridToInt_IntToGrid_RoundTrip_NonSquare
-          [PASS] GameManager.Tests.UtilityAdditionalTests.GridToInt_IntToGrid_RoundTrip_Square
-          [PASS] GameManager.Tests.UtilityAdditionalTests.GridToInt_UniquePerCell_SquareMap
-          [PASS] GameManager.Tests.UtilityAdditionalTests.GridToWorld_PreservesXYSetsZToZero
-          [PASS] GameManager.Tests.UtilityAdditionalTests.GridToWorld_ZeroPosition_ReturnsOrigin
-          [PASS] GameManager.Tests.UtilityAdditionalTests.IsValidGridLocation_ExactSizeX_Invalid
-          [PASS] GameManager.Tests.UtilityAdditionalTests.IsValidGridLocation_ExactSizeY_Invalid
-          [PASS] GameManager.Tests.UtilityAdditionalTests.IsValidGridLocation_MaxCorner_Valid
-          [PASS] GameManager.Tests.UtilityAdditionalTests.IsValidGridLocation_NonSquareMap_ValidCorners
-          [PASS] GameManager.Tests.UtilityAdditionalTests.WorldToGrid_GridToWorld_RoundTrip
-          [PASS] GameManager.Tests.UtilityAdditionalTests.WorldToGrid_NegativeValues_TruncatesCorrectly
-          [PASS] GameManager.Tests.UtilityAdditionalTests.WorldToGrid_TruncatesDecimalPart
-          [PASS] GameManager.Tests.UtilityTests.ConvertDirection_AllEight_Correct
-          [PASS] GameManager.Tests.UtilityTests.ConvertDirection_LargeDelta_ClampsCorrectly
-          [PASS] GameManager.Tests.UtilityTests.ConvertDirection_LargeNegativeSteps_SW
-          [PASS] GameManager.Tests.UtilityTests.ConvertDirection_MatchesConstantsMap
-          [PASS] GameManager.Tests.UtilityTests.ConvertDirection_SamePosition_ReturnsNone
-          [PASS] GameManager.Tests.UtilityTests.GridToInt_Overload_EncodesCorrectly
-          [PASS] GameManager.Tests.UtilityTests.IntToGrid_Overload_DecodesCorrectly
-          [PASS] GameManager.Tests.UtilityTests.IsValidGridLocation_BoundaryValues
-          [PASS] GameManager.Tests.UtilityTests.SafeNormalize_Diagonal_ReturnsNormalized
-          [PASS] GameManager.Tests.UtilityTests.SafeNormalize_PureX_ReturnsUnitX
-          [PASS] GameManager.Tests.UtilityTests.SafeNormalize_PureY_ReturnsUnitY
-          [PASS] GameManager.Tests.UtilityTests.SafeNormalize_ZeroVector_ReturnsZero
+            [PASS] GameManager.Tests.PlayMode.AgentGoldTests.BothAgents_StartWithPositiveGold
+            [PASS] GameManager.Tests.PlayMode.AgentGoldTests.BuildBase_DeductsCorrectCost
+            [PASS] GameManager.Tests.PlayMode.AgentGoldTests.Gathering_MultipleTrips_GoldCompounds
+            [PASS] GameManager.Tests.PlayMode.AgentGoldTests.GatherRoundTrip_GoldIncreases
+            [PASS] GameManager.Tests.PlayMode.AgentGoldTests.InsufficientGold_BuildBase_Rejected
+            [PASS] GameManager.Tests.PlayMode.AgentGoldTests.InsufficientGold_TrainSoldier_Rejected
+            [FAIL] GameManager.Tests.PlayMode.AgentGoldTests.MultipleBuilds_DeductCumulativeCost
+                     First build deducts BASE cost
+                     Expected: -350
+                     But was:  150
+                   
+            [PASS] GameManager.Tests.PlayMode.AgentGoldTests.TrainSoldier_DeductsCorrectCost
+            [PASS] GameManager.Tests.PlayMode.AgentGoldTests.TrainWorker_DeductsCorrectCost
+            [PASS] GameManager.Tests.PlayMode.AgentUnitFilterTests.DestroyedUnit_NotInAgentFilter
+            [PASS] GameManager.Tests.PlayMode.AgentUnitFilterTests.GetUnitNbrsOfType_CountsMatchPerAgent
+            [PASS] GameManager.Tests.PlayMode.AgentUnitFilterTests.GetUnitNbrsOfType_FilterByAgent0_ExcludesAgent1Units
+            [PASS] GameManager.Tests.PlayMode.AgentUnitFilterTests.GetUnitNbrsOfType_MultipleTypes_FilteredCorrectly
+            [PASS] GameManager.Tests.PlayMode.AgentUnitFilterTests.GetUnitNbrsOfType_NoUnitsOfType_ReturnsEmpty
+            [PASS] GameManager.Tests.PlayMode.ArcherAttackTests.Archer_AttackRange_GreaterThanSoldier_AtRuntime
+            [PASS] GameManager.Tests.PlayMode.ArcherAttackTests.Archer_AttacksAdjacentEnemy_HealthDecreases
+            [PASS] GameManager.Tests.PlayMode.ArcherAttackTests.Archer_AttacksBuilding_DealsDamageOverTime
+            [FAIL] GameManager.Tests.PlayMode.ArcherAttackTests.Archer_AttacksFriendly_CommandRejected
+                     Archer should not attack friendly units
+                     Expected: not equal to ATTACK
+                     But was:  ATTACK
+                   
+            [PASS] GameManager.Tests.PlayMode.ArcherAttackTests.Archer_KillsEnemy_GoesIdle
+            [PASS] GameManager.Tests.PlayMode.ArcherAttackTests.Archer_WithinRange_AttacksWithoutMoving
+            [PASS] GameManager.Tests.PlayMode.ArcherAttackTests.ArcherAndSoldier_CombinedAttack_MoreDamage
+            [PASS] GameManager.Tests.PlayMode.ArcherAttackTests.ThreeArchers_SameTarget_DestroyFaster
+            [PASS] GameManager.Tests.PlayMode.ArcherEngageRangeTests.Archer_AttacksAtRange_SoldierCannotReach
+            [FAIL] GameManager.Tests.PlayMode.ArcherEngageRangeTests.Archer_CannotAttackFriendly
+                     Attacker should not enter ATTACK when targeting a friendly unit
+                     Expected: not equal to ATTACK
+                     But was:  ATTACK
+                   
+            [PASS] GameManager.Tests.PlayMode.ArcherEngageRangeTests.Archer_KillsWeakenedEnemyInRange
+            [PASS] GameManager.Tests.PlayMode.ArcherEngageRangeTests.ArcherAndSoldier_CombinedAttack_ReducesHealthFaster
+            [PASS] GameManager.Tests.PlayMode.ArcherEngageRangeTests.Runtime_ArcherRange_GreaterThanSoldierRange
+            [PASS] GameManager.Tests.PlayMode.BuildDependencyTests.AfterBase_WorkerCanBuildBarracks
+            [PASS] GameManager.Tests.PlayMode.BuildDependencyTests.AfterBase_WorkerCanBuildRefinery
+            [FAIL] GameManager.Tests.PlayMode.BuildDependencyTests.UnbuiltBase_DoesNotSatisfyDependency_BarracksRejected
+                     BARRACKS should not be buildable while BASE is still under construction
+                     Expected: not equal to BUILD
+                     But was:  BUILD
+                   
+            [FAIL] GameManager.Tests.PlayMode.BuildDependencyTests.WithoutBase_BuildBarracks_Rejected
+                     Building BARRACKS without BASE should be rejected
+                     Expected: not equal to BUILD
+                     But was:  BUILD
+                   
+            [FAIL] GameManager.Tests.PlayMode.BuildDependencyTests.WithoutBase_BuildRefinery_Rejected
+                     Building REFINERY without BASE should be rejected
+                     Expected: not equal to BUILD
+                     But was:  BUILD
+                   
+            [PASS] GameManager.Tests.PlayMode.BuildingCellStateTests.BuildingDestroyed_AreaBecomesRebuildable
+            [PASS] GameManager.Tests.PlayMode.BuildingCellStateTests.BuildingUnderConstruction_CellNotBuildable
+            [PASS] GameManager.Tests.PlayMode.BuildingCellStateTests.BuiltBase_FootprintNotBuildable
+            [PASS] GameManager.Tests.PlayMode.BuildingCellStateTests.TwoWorkersAtSamePos_SecondBuildRejected
+            [PASS] GameManager.Tests.PlayMode.BuildOccupiedCellTests.BuildAtExistingBuilding_Rejected
+            [PASS] GameManager.Tests.PlayMode.BuildOccupiedCellTests.BuildAtOccupiedCell_Rejected
+            [PASS] GameManager.Tests.PlayMode.BuildOccupiedCellTests.UnitMovesAway_CellBecomesBuildable
+            [FAIL] GameManager.Tests.PlayMode.BuildOccupiedCellTests.Worker_CannotBuildAtOwnPosition
+                     Worker should not be able to build at its own position
+                     Expected: not equal to BUILD
+                     But was:  BUILD
+                   
+            [PASS] GameManager.Tests.PlayMode.ConcurrentActionsTests.TwoWorkers_BuildDifferentStructures_BothComplete
+            [PASS] GameManager.Tests.PlayMode.ConcurrentActionsTests.Worker_BuildsWhileSoldier_Attacks_BothComplete
+            [PASS] GameManager.Tests.PlayMode.ConcurrentActionsTests.Worker_GathersWhileSoldier_Moves_BothComplete
+            [PASS] GameManager.Tests.PlayMode.GatherContinuationTests.AfterDeposit_WorkerCyclesBackToMine
+            [PASS] GameManager.Tests.PlayMode.GatherContinuationTests.Base_DestroyedMidSecondCycle_WorkerGoesIdle
+            [PASS] GameManager.Tests.PlayMode.GatherContinuationTests.Mine_DepletedDuringSecondCycle_WorkerGoesIdle
+            [PASS] GameManager.Tests.PlayMode.GatherContinuationTests.MultipleCycles_GoldMonotonicallyIncreases
+            [PASS] GameManager.Tests.PlayMode.GatherContinuationTests.TwoWorkers_SequentialStart_BothDeposit
+            [PASS] GameManager.Tests.PlayMode.MapDimensionTests.EmptyMap_CenterCellsBuildable
+            [PASS] GameManager.Tests.PlayMode.MapDimensionTests.MapManager_HeightIsPositive
+            [PASS] GameManager.Tests.PlayMode.MapDimensionTests.MapManager_WidthEqualsHeight
+            [PASS] GameManager.Tests.PlayMode.MapDimensionTests.MapManager_WidthIsPositive
+            [PASS] GameManager.Tests.PlayMode.MapDimensionTests.MapSize_ConsistentAcrossMultipleCalls
+            [PASS] GameManager.Tests.PlayMode.MapDimensionTests.MapSize_IsNotZero
+            [PASS] GameManager.Tests.PlayMode.MapDimensionTests.PlacedUnit_CellNotBuildable
+            [PASS] GameManager.Tests.PlayMode.MapReclaimTests.Barracks_DestroyedByCombat_CellsReclaimed
+            [PASS] GameManager.Tests.PlayMode.MapReclaimTests.Base_Destroyed_All9CellsReclaimed
+            [PASS] GameManager.Tests.PlayMode.MapReclaimTests.Base_Destroyed_AreaUsableForRebuild
+            [PASS] GameManager.Tests.PlayMode.MapReclaimTests.Base_Destroyed_FootprintBecomesWalkable
+            [PASS] GameManager.Tests.PlayMode.MapReclaimTests.Soldier_DestroyedByCombat_CellReclaimed
+            [PASS] GameManager.Tests.PlayMode.MapReclaimTests.Worker_Destroyed_CellBecomesBuildable
+            [PASS] GameManager.Tests.PlayMode.MineNaturalDepletionTests.AfterGather_MineHealth_Decreases
+            [PASS] GameManager.Tests.PlayMode.MineNaturalDepletionTests.LowHealthMine_WorkerDepositsBeforeIdle
+            [PASS] GameManager.Tests.PlayMode.MineNaturalDepletionTests.LowHealthMine_WorkerGathers_MineDepletesAndWorkerGoesIdle
+            [PASS] GameManager.Tests.PlayMode.MineNaturalDepletionTests.ZeroHealthMine_WorkerGoesIdleImmediately
+            [PASS] GameManager.Tests.PlayMode.MultiAgentTests.Agent0Soldier_AttacksAgent1Worker_HealthDecreases
+            [PASS] GameManager.Tests.PlayMode.MultiAgentTests.Agent1Soldier_AttacksAgent0Worker_HealthDecreases
+            [PASS] GameManager.Tests.PlayMode.MultiAgentTests.Agent1Units_HaveDifferentOwner
+            [PASS] GameManager.Tests.PlayMode.MultiAgentTests.BothAgents_GatherSameMine_BothGainGold
+            [PASS] GameManager.Tests.PlayMode.MultiAgentTests.GetUnitNbrsOfType_AgentFilter_ReturnsSeparate
+            [FAIL] GameManager.Tests.PlayMode.MultiAgentTests.SameAgent_ArcherAndSoldier_CannotAttackEachOther
+                     Archer should not attack a friendly soldier
+                     Expected: not equal to ATTACK
+                     But was:  ATTACK
+                   
+            [PASS] GameManager.Tests.PlayMode.SoldierChaseTests.Archer_ChasesDistantEnemy_DealsAtLeastOneDamage
+            [PASS] GameManager.Tests.PlayMode.SoldierChaseTests.Soldier_AfterKillingDistantEnemy_GoesIdle
+            [PASS] GameManager.Tests.PlayMode.SoldierChaseTests.Soldier_ChasesHealthyEnemy_DealsAtLeastOneDamage
+            [PASS] GameManager.Tests.PlayMode.SoldierChaseTests.Soldier_FarFromEnemy_PathfindsAndKills
+            [PASS] GameManager.Tests.PlayMode.SoldierGroupCombatTests.AllSoldiers_AfterGroupKill_ReturnToIdle
+            [PASS] GameManager.Tests.PlayMode.SoldierGroupCombatTests.SoldierAndArcher_AttackSameEnemy_EnemyDies
+            [PASS] GameManager.Tests.PlayMode.SoldierGroupCombatTests.ThreeSoldiers_VsThreeWeakenedEnemies_AllEnemiesDie
+            [PASS] GameManager.Tests.PlayMode.SoldierGroupCombatTests.TwoSoldiers_FocusOneEnemy_EnemyDies
+            [PASS] GameManager.Tests.PlayMode.ThreeWorkerDepositTests.ThreeWorkers_GatherSimultaneously_AccumulateTripleCapacity
+            [PASS] GameManager.Tests.PlayMode.ThreeWorkerDepositTests.ThreeWorkers_GoldNeverDecreases
+            [PASS] GameManager.Tests.PlayMode.ThreeWorkerDepositTests.ThreeWorkers_StaggeredStart_AllDeposit
+            [PASS] GameManager.Tests.PlayMode.TrainDurationTests.BothCombatUnits_TrainingTimesArePositive
+            [PASS] GameManager.Tests.PlayMode.TrainDurationTests.CreationTime_Soldier_IsPositive
+            [PASS] GameManager.Tests.PlayMode.TrainDurationTests.TrainArcher_CompletesWithinTimeBound
+            [PASS] GameManager.Tests.PlayMode.TrainDurationTests.TrainSoldier_CompletesWithinTimeBound
+            [PASS] GameManager.Tests.PlayMode.TrainDurationTests.TrainSoldier_TakesNonZeroTime
+            [PASS] GameManager.Tests.PlayMode.TrainDurationTests.TrainWorker_CompletesWithinTimeBound
+            [PASS] GameManager.Tests.PlayMode.TrainingBusyRejectTests.Barracks_AfterFirstTrainComplete_AcceptsSecondTrain
+            [PASS] GameManager.Tests.PlayMode.TrainingBusyRejectTests.Barracks_AlreadyTraining_SecondCommandRejected
+            [PASS] GameManager.Tests.PlayMode.TrainingBusyRejectTests.Base_AlreadyTraining_SecondCommandRejected
+            [PASS] GameManager.Tests.PlayMode.TrainingBusyRejectTests.UnbuiltBarracks_TrainRejected
+            [PASS] GameManager.Tests.PlayMode.TrainingFromBarracksTests.Barracks_TrainSoldierThenArcher_BothOnDistinctCells
+            [PASS] GameManager.Tests.PlayMode.TrainingFromBarracksTests.Barracks_TrainsWorker_Rejected
+            [PASS] GameManager.Tests.PlayMode.TrainingFromBarracksTests.BarracksTrainsArcher_ArcherAppearsAfterTimer
+            [PASS] GameManager.Tests.PlayMode.TrainingFromBarracksTests.BarracksTrainsSoldier_GoesIdleAfterCompletion
+            [PASS] GameManager.Tests.PlayMode.TrainingFromBarracksTests.BarracksTrainsSoldier_GoldDeductedAtStart
+            [PASS] GameManager.Tests.PlayMode.TrainingFromBarracksTests.BarracksTrainsSoldier_SoldierAppearsAfterTimer
+            [PASS] GameManager.Tests.PlayMode.TrainingFromBarracksTests.UnbuiltBarracks_TrainCommand_Rejected
+            [PASS] GameManager.Tests.PlayMode.UnitAttackTests.MultipleSoldiers_SameTarget_KillFaster
+            [PASS] GameManager.Tests.PlayMode.UnitAttackTests.Soldier_AfterKillingTarget_GoesIdle
+            [PASS] GameManager.Tests.PlayMode.UnitAttackTests.Soldier_AttacksEnemy_HealthDecreases
+            [FAIL] GameManager.Tests.PlayMode.UnitAttackTests.Soldier_AttacksFriendly_CommandRejected
+                     Soldier should not enter ATTACK state when targeting a friendly unit
+                     Expected: not equal to ATTACK
+                     But was:  ATTACK
+                   
+            [PASS] GameManager.Tests.PlayMode.UnitAttackTests.Soldier_AttacksHighHealthTarget_DealsDamageOverTime
+            [PASS] GameManager.Tests.PlayMode.UnitAttackTests.Soldier_KillsEnemy_CellBecomesBuildable
+            [PASS] GameManager.Tests.PlayMode.UnitAttackTests.Soldier_OutOfRange_MovesToTargetThenAttacks
+            [PASS] GameManager.Tests.PlayMode.UnitAttackTests.Worker_AttackCommand_Rejected
+            [PASS] GameManager.Tests.PlayMode.UnitBuildTests.BuildBase_GoldDeductedAtStart
+            [PASS] GameManager.Tests.PlayMode.UnitBuildTests.BuildingPlaced_FootprintCellsBecomeUnwalkable
+            [FAIL] GameManager.Tests.PlayMode.UnitBuildTests.BuildNearMapEdge_FitsWithinBounds
+                     3x3 area at (27,2) should be buildable within 30x30 map
+                     Expected: True
+                     But was:  False
+                   
+            [PASS] GameManager.Tests.PlayMode.UnitBuildTests.BuildOnOccupiedLocation_CommandRejectedGoldUnchanged
+            [PASS] GameManager.Tests.PlayMode.UnitBuildTests.BuildWithInsufficientGold_CommandRejected
+            [PASS] GameManager.Tests.PlayMode.UnitBuildTests.BuildWithNoPath_BuildingNotPlacedGoldUnchanged
+            [PASS] GameManager.Tests.PlayMode.UnitBuildTests.WorkerAdjacentToBuildSite_BuildsQuickly
+            [PASS] GameManager.Tests.PlayMode.UnitBuildTests.WorkerBuildsBase_IsBuiltTransitionsToTrue
+            [PASS] GameManager.Tests.PlayMode.UnitBuildTests.WorkerBuildsBase_WorkerGoesIdleAfterCompletion
+            [PASS] GameManager.Tests.PlayMode.UnitCapabilityTests.Archer_CannotBuild_CommandRejected
+            [PASS] GameManager.Tests.PlayMode.UnitCapabilityTests.Archer_CannotGather_CommandRejected
+            [PASS] GameManager.Tests.PlayMode.UnitCapabilityTests.Barracks_CannotAttack_CommandIgnored
+            [PASS] GameManager.Tests.PlayMode.UnitCapabilityTests.Base_CannotAttack_CommandIgnored
+            [PASS] GameManager.Tests.PlayMode.UnitCapabilityTests.Base_CannotMove_CommandRejected
+            [PASS] GameManager.Tests.PlayMode.UnitCapabilityTests.Mine_CannotMove_CommandRejected
+            [PASS] GameManager.Tests.PlayMode.UnitCapabilityTests.Soldier_CannotBuild_CommandRejected
+            [PASS] GameManager.Tests.PlayMode.UnitCapabilityTests.Soldier_CannotGather_CommandRejected
+            [PASS] GameManager.Tests.PlayMode.UnitCapabilityTests.Soldier_CannotTrain_CommandRejected
+            [PASS] GameManager.Tests.PlayMode.UnitCapabilityTests.Worker_CannotTrain_CommandRejected
+            [FAIL] GameManager.Tests.PlayMode.UnitDamageValuesTests.Archer_DamagePerHit_MatchesConstants
+                     Archer damage dealt (5) should be at least one attack (800)
+                     Expected: greater than or equal to 800.0f
+                     But was:  5.0f
+                   
+            [PASS] GameManager.Tests.PlayMode.UnitDamageValuesTests.Runtime_Archer_HasPositiveDamage
+            [PASS] GameManager.Tests.PlayMode.UnitDamageValuesTests.Runtime_Damage_HasAllUnitTypes
+            [PASS] GameManager.Tests.PlayMode.UnitDamageValuesTests.Runtime_NonCombatUnits_HaveZeroDamage
+            [PASS] GameManager.Tests.PlayMode.UnitDamageValuesTests.Runtime_Soldier_HasPositiveDamage
+            [FAIL] GameManager.Tests.PlayMode.UnitDamageValuesTests.Soldier_DamagePerHit_MatchesConstants
+                     Damage dealt (8) should be at least one attack's worth (960)
+                     Expected: greater than or equal to 960.0f
+                     But was:  8.0f
+                   
+            [PASS] GameManager.Tests.PlayMode.UnitDestructionTests.Attacker_TargetDestroyedExternally_GoesIdleNoCrash
+            [PASS] GameManager.Tests.PlayMode.UnitDestructionTests.Building_Destroyed_AllOccupiedCellsFreed
+            [PASS] GameManager.Tests.PlayMode.UnitDestructionTests.DestroyLastUnitOfType_QueryReturnsEmpty
+            [PASS] GameManager.Tests.PlayMode.UnitDestructionTests.ManyUnits_CreatedAndDestroyed_UnitManagerConsistent
+            [PASS] GameManager.Tests.PlayMode.UnitDestructionTests.Unit_HealthExactlyZero_TriggersDestruction
+            [PASS] GameManager.Tests.PlayMode.UnitDestructionTests.Unit_HealthLargeNegative_TriggersDestruction
+            [PASS] GameManager.Tests.PlayMode.UnitDestructionTests.Unit_HealthZero_DestroyedAndRemovedFromUnitManager
+            [PASS] GameManager.Tests.PlayMode.UnitDestructionTests.Worker_Destroyed_CellBecomesBuildable
+            [PASS] GameManager.Tests.PlayMode.UnitGatherTests.Gather_BaseDestroyedMidTrip_WorkerGoesIdle
+            [PASS] GameManager.Tests.PlayMode.UnitGatherTests.Gather_MineCloseToBase_GoldStillDeposited
+            [PASS] GameManager.Tests.PlayMode.UnitGatherTests.Gather_MineDestroyedMidTrip_WorkerGoesIdle
+            [PASS] GameManager.Tests.PlayMode.UnitGatherTests.Gather_MineFarFromBase_GatherCompletesEventually
+            [PASS] GameManager.Tests.PlayMode.UnitGatherTests.Gather_MineHealthDecreases_DuringMining
+            [PASS] GameManager.Tests.PlayMode.UnitGatherTests.Gather_MineLowHealth_WorkerGoesIdleAfterDepletion
+            [PASS] GameManager.Tests.PlayMode.UnitGatherTests.Gather_MultipleWorkersSameMine_AllDepositGold
+            [PASS] GameManager.Tests.PlayMode.UnitGatherTests.Gather_WorkerCompletesRoundTrip_AgentGoldIncreases
+            [PASS] GameManager.Tests.PlayMode.UnitGatherTests.Gather_WorkerContinuesAfterFirstDeposit_StillGathering
+            [PASS] GameManager.Tests.PlayMode.UnitIdleTransitionTests.Archer_AfterKill_GoesIdle
+            [PASS] GameManager.Tests.PlayMode.UnitIdleTransitionTests.Barracks_AfterTraining_GoesIdle
+            [PASS] GameManager.Tests.PlayMode.UnitIdleTransitionTests.Base_AfterTraining_GoesIdle
+            [PASS] GameManager.Tests.PlayMode.UnitIdleTransitionTests.FreshUnit_StartsIdle
+            [PASS] GameManager.Tests.PlayMode.UnitIdleTransitionTests.Soldier_AfterKill_GoesIdle
+            [PASS] GameManager.Tests.PlayMode.UnitIdleTransitionTests.Worker_AfterMove_GoesIdle
+            [PASS] GameManager.Tests.PlayMode.UnitIdleTransitionTests.Worker_MineDepletedDuringGather_GoesIdle
+            [PASS] GameManager.Tests.PlayMode.UnitInitialHealthTests.AllUnitTypes_SpawnWithPositiveHealth
+            [PASS] GameManager.Tests.PlayMode.UnitInitialHealthTests.Archer_SpawnsWithFullHealth
+            [PASS] GameManager.Tests.PlayMode.UnitInitialHealthTests.Barracks_SpawnsWithFullHealth
+            [PASS] GameManager.Tests.PlayMode.UnitInitialHealthTests.Base_HasMoreHealthThanWorker
+            [PASS] GameManager.Tests.PlayMode.UnitInitialHealthTests.Base_SpawnsWithFullHealth
+            [PASS] GameManager.Tests.PlayMode.UnitInitialHealthTests.Soldier_SpawnsWithFullHealth
+            [PASS] GameManager.Tests.PlayMode.UnitInitialHealthTests.Worker_SpawnsWithFullHealth
+            [PASS] GameManager.Tests.PlayMode.UnitInterruptTests.Soldier_AttackingThenMoveCommand_SwitchesToMove
+            [PASS] GameManager.Tests.PlayMode.UnitInterruptTests.Soldier_MovingThenAttackCommand_SwitchesToAttack
+            [FAIL] GameManager.Tests.PlayMode.UnitInterruptTests.Worker_BuildingThenMoveCommand_SwitchesToMove
+                     Worker should switch from BUILD to MOVE when move command is issued
+                     Expected: MOVE
+                     But was:  BUILD
+                   
+            [PASS] GameManager.Tests.PlayMode.UnitInterruptTests.Worker_GatheringThenBuildCommand_SwitchesToBuild
+            [PASS] GameManager.Tests.PlayMode.UnitManagerQueryTests.DestroyAllUnits_EmptiesUnitManager
+            [PASS] GameManager.Tests.PlayMode.UnitManagerQueryTests.GetAllUnits_CountMatchesPlacedUnits
+            [PASS] GameManager.Tests.PlayMode.UnitManagerQueryTests.GetAllUnits_IncludesBothAgents
+            [PASS] GameManager.Tests.PlayMode.UnitManagerQueryTests.GetUnit_AfterDestruction_ReturnsNull
+            [PASS] GameManager.Tests.PlayMode.UnitManagerQueryTests.GetUnit_ByUnitNbr_ReturnsCorrectUnit
+            [PASS] GameManager.Tests.PlayMode.UnitManagerQueryTests.GetUnit_InvalidNbr_ReturnsNull
+            [PASS] GameManager.Tests.PlayMode.UnitManagerQueryTests.GetUnitNbrsOfType_AfterDestruction_CountDecreases
+            [PASS] GameManager.Tests.PlayMode.UnitManagerQueryTests.GetUnitNbrsOfType_AgentFilter_OnlyThatAgent
+            [PASS] GameManager.Tests.PlayMode.UnitManagerQueryTests.GetUnitNbrsOfType_AllWorkers_ReturnsAll
+            [PASS] GameManager.Tests.PlayMode.UnitManagerQueryTests.GetUnitNbrsOfType_NoUnitsOfType_ReturnsEmpty
+            [PASS] GameManager.Tests.PlayMode.UnitMovementObstacleTests.Archer_OpenPath_CompletesMove
+            [PASS] GameManager.Tests.PlayMode.UnitMovementObstacleTests.Soldier_Move_CompletesAndGoesIdle
+            [PASS] GameManager.Tests.PlayMode.UnitMovementObstacleTests.Unit_CanMoveAgainAfterFirstMoveCompletes
+            [PASS] GameManager.Tests.PlayMode.UnitMovementObstacleTests.Worker_MoveCommand_EntersMoveState
+            [PASS] GameManager.Tests.PlayMode.UnitMovementObstacleTests.Worker_WithObstacle_CompletesMove
+            [PASS] GameManager.Tests.PlayMode.UnitMovementTests.MultipleWorkers_MovingSimultaneously_AllResolve
+            [PASS] GameManager.Tests.PlayMode.UnitMovementTests.Worker_AtMapEdge_MovesToInteriorTarget
+            [PASS] GameManager.Tests.PlayMode.UnitMovementTests.Worker_MoveCommand_ArrivesAtDestinationAndGoesIdle
+            [PASS] GameManager.Tests.PlayMode.UnitMovementTests.Worker_Movement_OriginalCellFreedAfterMove
+            [PASS] GameManager.Tests.PlayMode.UnitMovementTests.Worker_MovesToNearMapCorner_ArrivesSuccessfully
+            [PASS] GameManager.Tests.PlayMode.UnitMovementTests.Worker_MoveToSamePosition_StaysIdle
+            [PASS] GameManager.Tests.PlayMode.UnitMovementTests.Worker_MultiStepPath_ReachesFinalTarget
+            [PASS] GameManager.Tests.PlayMode.UnitMovementTests.Worker_OnUnwalkableStart_PathfindsOut
+            [PASS] GameManager.Tests.PlayMode.UnitMovementTests.Worker_PathBlockedMidTraversal_RepathsOrGoesIdle
+            [PASS] GameManager.Tests.PlayMode.UnitMovementTests.Worker_SurroundedByUnwalkable_GoesIdle
+            [PASS] GameManager.Tests.PlayMode.UnitSpawnPositionTests.TrainedArcher_AppearsInUnitManager
+            [PASS] GameManager.Tests.PlayMode.UnitSpawnPositionTests.TrainedSoldier_AppearsInUnitManager
+            [PASS] GameManager.Tests.PlayMode.UnitSpawnPositionTests.TrainedSoldier_OwnedByCorrectAgent
+            [PASS] GameManager.Tests.PlayMode.UnitSpawnPositionTests.TrainedWorker_AppearsInUnitManager
+            [PASS] GameManager.Tests.PlayMode.UnitSpawnPositionTests.TwoSequentialTrains_ProduceTwoNewUnits
+            [PASS] GameManager.Tests.PlayMode.UnitTrainingTests.BaseTrainsWorker_ActionIsTrainThenIdle
+            [PASS] GameManager.Tests.PlayMode.UnitTrainingTests.BaseTrainsWorker_NewWorkerAppearsAfterCreationTime
+            [PASS] GameManager.Tests.PlayMode.UnitTrainingTests.TrainAtMaxSpeed_CompletesNearlyInstantly
+            [PASS] GameManager.Tests.PlayMode.UnitTrainingTests.TrainedWorker_HasCorrectTypeAndOccupiesCell
+            [PASS] GameManager.Tests.PlayMode.UnitTrainingTests.TrainedWorker_SpawnsOutsideBuildingFootprint
+            [PASS] GameManager.Tests.PlayMode.UnitTrainingTests.TrainFiveWorkersSequentially_AllExistOnDistinctCells
+            [PASS] GameManager.Tests.PlayMode.UnitTrainingTests.TrainInvalidUnitType_CommandRejectedGoldUnchanged
+            [PASS] GameManager.Tests.PlayMode.UnitTrainingTests.TrainWhileAlreadyTraining_SecondCommandRejected
+            [PASS] GameManager.Tests.PlayMode.UnitTrainingTests.TrainWithAllNeighborsOccupied_StaysInTrain
+            [PASS] GameManager.Tests.PlayMode.WorkerBuildSequenceTests.TwoWorkers_BuildIndependentBases_BothStart
+            [PASS] GameManager.Tests.PlayMode.WorkerBuildSequenceTests.Worker_AfterBaseComplete_ReturnsToIdle
+            [PASS] GameManager.Tests.PlayMode.WorkerBuildSequenceTests.Worker_BuildsBase_ThenStartsBarracks
+            [PASS] GameManager.Tests.PlayMode.WorkerBuildSequenceTests.Worker_BuildsBase_ThenStartsRefinery
+            [PASS] GameManager.Tests.PlayMode.WorkerRefineryGatherTests.BuiltRefinery_HasCorrectHealth
+            [PASS] GameManager.Tests.PlayMode.WorkerRefineryGatherTests.BuiltRefinery_RemainsIntact
+            [PASS] GameManager.Tests.PlayMode.WorkerRefineryGatherTests.TwoWorkers_WithRefineryPresent_BothDeposit
+            [PASS] GameManager.Tests.PlayMode.WorkerRefineryGatherTests.Worker_GathersWithRefineryPresent_GoldIncreases
+            [PASS] GameManager.Tests.PlayMode.WorkerRefineryGatherTests.Worker_WithRefineryPresent_StaysInGatherCycle
