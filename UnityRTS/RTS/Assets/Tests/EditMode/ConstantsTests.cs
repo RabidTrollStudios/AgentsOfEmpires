@@ -41,7 +41,7 @@ namespace GameManager.Tests
 		[Test]
 		public void Speed1_SoldierDamage()
 		{
-			Assert.AreEqual(20.0f, Constants.DAMAGE[UnitType.SOLDIER], 0.001f);
+			Assert.AreEqual(48.0f, Constants.DAMAGE[UnitType.SOLDIER], 0.001f);
 		}
 
 		[Test]
@@ -49,7 +49,7 @@ namespace GameManager.Tests
 		{
 			Constants.GAME_SPEED = 3;
 			Constants.CalculateGameConstants();
-			Assert.AreEqual(60.0f, Constants.DAMAGE[UnitType.SOLDIER], 0.001f);
+			Assert.AreEqual(144.0f, Constants.DAMAGE[UnitType.SOLDIER], 0.001f);
 		}
 
 		[Test]

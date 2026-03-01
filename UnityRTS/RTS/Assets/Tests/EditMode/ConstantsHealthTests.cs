@@ -12,6 +12,13 @@ namespace GameManager.Tests
 	[TestFixture]
 	public class ConstantsHealthTests
 	{
+		[SetUp]
+		public void SetUp()
+		{
+			Constants.GAME_SPEED = 1;
+			Constants.CalculateGameConstants();
+		}
+
 		private static readonly UnitType[] AllUnitTypes = {
 			UnitType.MINE, UnitType.WORKER, UnitType.SOLDIER,
 			UnitType.ARCHER, UnitType.BASE, UnitType.BARRACKS, UnitType.REFINERY

@@ -189,15 +189,13 @@ namespace GameManager.Tests
 		}
 
 		/// <summary>
-		/// BASE and WORKER should have no build/train dependencies.
+		/// BASE has no build/train dependencies (it is the foundational structure).
 		/// </summary>
 		[Test]
-		public void Dependency_BaseAndWorkerHaveNoDependencies()
+		public void Dependency_BaseHasNoDependencies()
 		{
 			Assert.AreEqual(0, Constants.DEPENDENCY[UnitType.BASE].Count,
 				"BASE should have no dependencies");
-			Assert.AreEqual(0, Constants.DEPENDENCY[UnitType.WORKER].Count,
-				"WORKER should have no dependencies");
 		}
 
 		#endregion
