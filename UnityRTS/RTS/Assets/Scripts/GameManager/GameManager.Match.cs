@@ -63,20 +63,20 @@ namespace GameManager
 			// Randomly select one player to be instantiated first, for fairness
 			if (Random.Range(0, 2) == 0)
 			{
-				CreateAgent(Constants.HUMAN_ABBR, HumanDllName, Prefabs.HumanPlayerPrefab, unitManager.HumanUnitPrefabs, HumanDebuggerCanvas);
-				CreateAgent(Constants.ORC_ABBR, OrcDllName, Prefabs.OrcPlayerPrefab, unitManager.OrcUnitPrefabs, OrcDebuggerCanvas);
+				CreateAgent(Constants.HUMAN_ABBR, HumanDllName, Prefabs.HumanPlayerPrefab, unitManager.HumanUnitPrefabs, HumanDebuggerPanel);
+				CreateAgent(Constants.ORC_ABBR, OrcDllName, Prefabs.OrcPlayerPrefab, unitManager.OrcUnitPrefabs, OrcDebuggerPanel);
 			}
 			else
 			{
-				CreateAgent(Constants.ORC_ABBR, OrcDllName, Prefabs.OrcPlayerPrefab, unitManager.OrcUnitPrefabs, OrcDebuggerCanvas);
-				CreateAgent(Constants.HUMAN_ABBR, HumanDllName, Prefabs.HumanPlayerPrefab, unitManager.HumanUnitPrefabs, HumanDebuggerCanvas);
+				CreateAgent(Constants.ORC_ABBR, OrcDllName, Prefabs.OrcPlayerPrefab, unitManager.OrcUnitPrefabs, OrcDebuggerPanel);
+				CreateAgent(Constants.HUMAN_ABBR, HumanDllName, Prefabs.HumanPlayerPrefab, unitManager.HumanUnitPrefabs, HumanDebuggerPanel);
 			}
 
-			Prefabs.HumanLabelText.text = Constants.HUMAN_ABBR + " " + HumanDllName;
-			Prefabs.OrcLabelText.text = Constants.ORC_ABBR + " " + OrcDllName;
+			HumanCustomDebugText.text = Constants.HUMAN_ABBR + " " + HumanDllName;
+			OrcCustomDebugText.text = Constants.ORC_ABBR + " " + OrcDllName;
 
 			Prefabs.GameOverUI.GetComponentInChildren<Text>().text
-					= Prefabs.HumanLabelText.text + "\nvs\n" + Prefabs.OrcLabelText.text;
+					= HumanCustomDebugText.text + "\nvs\n" + OrcCustomDebugText.text;
 
 			foreach (GameObject agent in Agents.Values)
 			{
@@ -95,18 +95,18 @@ namespace GameManager
 		/// Instantiate an agent
 		/// </summary>
 		private void CreateAgent(string agentName, string agentDLLName,
-			GameObject playerPrefab, Dictionary<UnitType, GameObject> playerPrefabs, Canvas debuggerCanvas)
+			GameObject playerPrefab, Dictionary<UnitType, GameObject> playerPrefabs, GameObject debuggerPanel)
 		{
 			GameObject agentObject = Instantiate(playerPrefab);
 			agentObject.GetComponent<AgentController>().InitializeAgent(
 				agentLoader.LoadDLL(agentName, agentDLLName, this.gameObject),
-				agentName, agentDLLName, NbrOfAgents++, debuggerCanvas, agentLoader.PathToDLLs);
+				agentName, agentDLLName, NbrOfAgents++, debuggerPanel, agentLoader.PathToDLLs);
 			Agents.Add(agentObject.GetComponent<AgentController>().Agent.AgentNbr, agentObject);
 			unitManager.UnitPrefabs.Add(agentObject.GetComponent<AgentController>().Agent.AgentNbr, playerPrefabs);
 		}
 
 		private void RecreateAgent(string agentName, string agentDLLName, int agentNbr,
-			GameObject playerPrefab, Dictionary<UnitType, GameObject> playerPrefabs, Canvas debuggerCanvas)
+			GameObject playerPrefab, Dictionary<UnitType, GameObject> playerPrefabs, GameObject debuggerPanel)
 		{
 			Agents[agentNbr].GetComponent<AgentController>().Agent.CloseCommandLog();
 			Destroy(Agents[agentNbr].GetComponent<AgentController>().Agent.gameObject);
@@ -115,7 +115,7 @@ namespace GameManager
 			GameObject agentObject = Instantiate(playerPrefab);
 			agentObject.GetComponent<AgentController>().InitializeAgent(
 				agentLoader.LoadDLL(agentName, agentDLLName, this.gameObject),
-				agentName, agentDLLName, agentNbr, debuggerCanvas, agentLoader.PathToDLLs);
+				agentName, agentDLLName, agentNbr, debuggerPanel, agentLoader.PathToDLLs);
 			Agents[agentNbr] = agentObject;
 			unitManager.UnitPrefabs[agentNbr] = playerPrefabs;
 			agentObject.GetComponent<AgentController>().Agent.OpenCommandLog();
@@ -161,7 +161,7 @@ namespace GameManager
 			        int agentNbr = (Agents[0].GetComponent<AgentController>().Agent.AgentDLLName == HumanDllName) ? 0 : 1;
 			        HumanDllName = dllNames[Random.Range(0, dllNames.Count)];
 			        RecreateAgent(Constants.HUMAN_ABBR, HumanDllName, agentNbr, Prefabs.HumanPlayerPrefab, unitManager.HumanUnitPrefabs,
-				        HumanDebuggerCanvas);
+				        HumanDebuggerPanel);
 			        Agents[agentNbr].GetComponent<AgentController>().InitializeMatch();
 		        }
 		        else
@@ -169,12 +169,12 @@ namespace GameManager
 			        int agentNbr = (Agents[0].GetComponent<AgentController>().Agent.AgentDLLName == OrcDllName) ? 0 : 1;
 			        OrcDllName = dllNames[Random.Range(0, dllNames.Count)];
 			        RecreateAgent(Constants.ORC_ABBR, OrcDllName, agentNbr, Prefabs.OrcPlayerPrefab, unitManager.OrcUnitPrefabs,
-				        OrcDebuggerCanvas);
+				        OrcDebuggerPanel);
 			        Agents[agentNbr].GetComponent<AgentController>().InitializeMatch();
 		        }
 
-		        Prefabs.HumanLabelText.text = Constants.HUMAN_ABBR + " " + HumanDllName;
-		        Prefabs.OrcLabelText.text = Constants.ORC_ABBR + " " + OrcDllName;
+		        HumanCustomDebugText.text = Constants.HUMAN_ABBR + " " + HumanDllName;
+		        OrcCustomDebugText.text = Constants.ORC_ABBR + " " + OrcDllName;
 
 		        Prefabs.GameOverUI.GetComponentInChildren<Text>().text
 			        = Constants.HUMAN_ABBR + " " + HumanDllName + "\nvs\n" + Constants.ORC_ABBR + " " + OrcDllName;

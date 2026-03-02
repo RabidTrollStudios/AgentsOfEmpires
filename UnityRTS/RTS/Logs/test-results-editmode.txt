@@ -1,6 +1,6 @@
-=== EditMode Test Run: 2026-03-01 16:35:02 ===
-Result: Passed  |  Duration: 0.78s
-Passed: 262  Failed: 0  Skipped: 0
+=== EditMode Test Run: 2026-03-01 23:51:18 ===
+Result: Passed  |  Duration: 0.73s
+Passed: 271  Failed: 0  Skipped: 0
 
           [PASS] GameManager.Tests.AStarAvoidUnitsTests.AvoidUnits_AllNeighborsNonBuildable_Exhausted
           [PASS] GameManager.Tests.AStarAvoidUnitsTests.AvoidUnits_EndNotBuildable_ReturnsEndBlocked
@@ -108,26 +108,35 @@ Passed: 262  Failed: 0  Skipped: 0
           [PASS] GameManager.Tests.GameManagerUITests.DebugBinding1_Execute_TogglesHasUnitDebugging
           [PASS] GameManager.Tests.GameManagerUITests.DebugBinding3_Execute_TogglesHasMoveTint
           [PASS] GameManager.Tests.GameManagerUITests.DebugBinding4_Execute_TogglesHasGatherTint
-          [PASS] GameManager.Tests.GameManagerUITests.DebugBinding5_Execute_TogglesHasAttackTint
-          [PASS] GameManager.Tests.GameManagerUITests.DebugBinding6_Execute_TogglesHasPathTint
+          [PASS] GameManager.Tests.GameManagerUITests.DebugBinding5_Execute_TogglesHasBuildTint
+          [PASS] GameManager.Tests.GameManagerUITests.DebugBinding6_Execute_TogglesHasAttackTint
+          [PASS] GameManager.Tests.GameManagerUITests.DebugBinding7_Execute_TogglesHasPathTint
+          [PASS] GameManager.Tests.GameManagerUITests.DebugBinding8_Execute_TogglesHasTargetLineTint
           [PASS] GameManager.Tests.GameManagerUITests.GameSpeed_AboveOne_GuardAllowsDecrement
           [PASS] GameManager.Tests.GameManagerUITests.GameSpeed_AtMax_GuardPreventsIncrement
           [PASS] GameManager.Tests.GameManagerUITests.GameSpeed_AtOne_GuardPreventsDecrement
           [PASS] GameManager.Tests.GameManagerUITests.GameSpeed_BelowMax_GuardAllowsIncrement
-          [PASS] GameManager.Tests.GameManagerUITests.InitializeDebugToggles_PopulatesSevenBindings
+          [PASS] GameManager.Tests.GameManagerUITests.InitializeDebugToggles_PopulatesNineBindings
           [PASS] GameManager.Tests.GameManagerUITests.OnAgentToggleChanged_False_ClearsHasAgentDebugging
           [PASS] GameManager.Tests.GameManagerUITests.OnAgentToggleChanged_True_SetsHasAgentDebugging
           [PASS] GameManager.Tests.GameManagerUITests.OnAttackTintToggleChanged_False_ClearsHasAttackTint
           [PASS] GameManager.Tests.GameManagerUITests.OnAttackTintToggleChanged_True_SetsHasAttackTint
+          [PASS] GameManager.Tests.GameManagerUITests.OnBuildTintToggleChanged_False_ClearsHasBuildTint
+          [PASS] GameManager.Tests.GameManagerUITests.OnBuildTintToggleChanged_True_SetsHasBuildTint
           [PASS] GameManager.Tests.GameManagerUITests.OnGatherTintToggleChanged_False_ClearsHasGatherTint
           [PASS] GameManager.Tests.GameManagerUITests.OnGatherTintToggleChanged_True_SetsHasGatherTint
           [PASS] GameManager.Tests.GameManagerUITests.OnMoveTintToggleChanged_False_ClearsHasMoveTint
           [PASS] GameManager.Tests.GameManagerUITests.OnMoveTintToggleChanged_True_SetsHasMoveTint
           [PASS] GameManager.Tests.GameManagerUITests.OnPathTintToggleChanged_False_ClearsHasPathTint
           [PASS] GameManager.Tests.GameManagerUITests.OnPathTintToggleChanged_True_SetsHasPathTint
+          [PASS] GameManager.Tests.GameManagerUITests.OnTargetLineTintToggleChanged_False_ClearsHasTargetLineTint
+          [PASS] GameManager.Tests.GameManagerUITests.OnTargetLineTintToggleChanged_True_SetsHasTargetLineTint
           [PASS] GameManager.Tests.GameManagerUITests.OnUnitToggleChanged_False_ClearsHasUnitDebugging
           [PASS] GameManager.Tests.GameManagerUITests.OnUnitToggleChanged_True_SetsHasUnitDebugging
           [PASS] GameManager.Tests.GameManagerUITests.ProcessUserInput_NullBindings_DoesNotThrow
+          [PASS] GameManager.Tests.GameManagerUITests.UpdateCustomDebugUI_AgentDebuggingFalse_ClearsText
+          [PASS] GameManager.Tests.GameManagerUITests.UpdateCustomDebugUI_AgentDebuggingTrue_NoAgents_ClearsText
+          [PASS] GameManager.Tests.GameManagerUITests.UpdateCustomDebugUI_BothTextsNull_DoesNotThrow
           [PASS] GameManager.Tests.GraphBFSTests.AStar_NonUniform_StillFindsPath
           [PASS] GameManager.Tests.GraphBFSTests.BFS_NonUniform_ThrowsException
           [PASS] GameManager.Tests.GraphBFSTests.BFS_Uniform_DoesNotThrow

@@ -199,8 +199,7 @@ namespace GameManager.GameElements
 			GameManager.Instance.Map.SetAreaBuildability(UnitType, GridPosition, true);
 
 			// Hide the worker sprite
-			var sr = GetComponent<SpriteRenderer>();
-			if (sr != null) sr.enabled = false;
+			if (unitSprite != null) unitSprite.enabled = false;
 		}
 
 		/// <summary>
@@ -225,8 +224,7 @@ namespace GameManager.GameElements
 			GameManager.Instance.Map.SetAreaBuildability(UnitType, GridPosition, false);
 
 			// Show the worker sprite
-			var sr = GetComponent<SpriteRenderer>();
-			if (sr != null) sr.enabled = true;
+			if (unitSprite != null) unitSprite.enabled = true;
 		}
 
 		/// <summary>

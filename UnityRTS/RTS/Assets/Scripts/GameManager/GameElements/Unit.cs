@@ -155,9 +155,14 @@ namespace GameManager.GameElements
 		private LineRenderer targetLineRenderer;
 
 		// State indicator squares under unit
+		private SpriteRenderer unitSprite;
 		private SpriteRenderer attackIndicator;
 		private SpriteRenderer moveIndicator;
 		private SpriteRenderer gatherIndicator;
+		private SpriteRenderer buildIndicator;
+		private Color moveColor;
+		private Color actionColor;
+		private Color buildColor;
 		private static Sprite _squareSprite;
 
 		/// <summary>
@@ -364,6 +369,7 @@ namespace GameManager.GameElements
 		/// <param name="unitNbr">the unique number for this unit</param>
 		internal void Initialize(GameObject agent, Vector3Int gridPosition, UnitType unitType, int unitNbr)
 		{
+			unitSprite = GetComponent<SpriteRenderer>();
 			HasDebugging = GameManager.Instance.HasUnitDebugging;
 			Agent = agent;
 			UnitNbr = unitNbr;
@@ -409,12 +415,13 @@ namespace GameManager.GameElements
 			targetLineRenderer.sortingOrder = 11;
 			targetLineRenderer.positionCount = 0;
 
-			// Determine indicator colors by agent faction
+			// Determine indicator colors by agent faction (semi-transparent overlays)
 			bool isOrc = agent.GetComponent<AgentController>()?.Agent?.AgentName == Constants.ORC_ABBR;
-			Color moveColor = isOrc ? Color.cyan : Color.blue;
-			Color actionColor = isOrc ? Color.magenta : Color.red;
+			moveColor   = isOrc ? new Color(0f, 1f, 1f, 0.5f)      : new Color(0f, 0f, 1f, 0.5f);      // cyan / blue
+			actionColor = isOrc ? new Color(1f, 0f, 1f, 0.5f)      : new Color(1f, 0f, 0f, 0.5f);      // magenta / red
+			buildColor  = isOrc ? new Color(1f, 0.65f, 0f, 0.5f) : new Color(0.8f, 0.25f, 0f, 0.5f);  // light orange / dark orange
 
-			// Square indicators shown under units by state
+			// Square indicator overlays rendered ABOVE the unit sprite (sortingOrder 11 > unit's 10)
 			var attackObj = new GameObject("AttackIndicator") { layer = LayerMask.NameToLayer("Units") };
 			attackObj.transform.SetParent(transform);
 			attackObj.transform.localPosition = Vector3.zero;
@@ -423,7 +430,7 @@ namespace GameManager.GameElements
 			attackIndicator.sprite = GetSquareSprite();
 			attackIndicator.color = actionColor;
 			attackIndicator.sortingLayerName = "Agents";
-			attackIndicator.sortingOrder = 0;
+			attackIndicator.sortingOrder = 11;
 			attackIndicator.enabled = false;
 
 			var moveObj = new GameObject("MoveIndicator") { layer = LayerMask.NameToLayer("Units") };
@@ -434,7 +441,7 @@ namespace GameManager.GameElements
 			moveIndicator.sprite = GetSquareSprite();
 			moveIndicator.color = moveColor;
 			moveIndicator.sortingLayerName = "Agents";
-			moveIndicator.sortingOrder = 0;
+			moveIndicator.sortingOrder = 11;
 			moveIndicator.enabled = false;
 
 			var gatherObj = new GameObject("GatherIndicator") { layer = LayerMask.NameToLayer("Units") };
@@ -445,8 +452,19 @@ namespace GameManager.GameElements
 			gatherIndicator.sprite = GetSquareSprite();
 			gatherIndicator.color = actionColor;
 			gatherIndicator.sortingLayerName = "Agents";
-			gatherIndicator.sortingOrder = 0;
+			gatherIndicator.sortingOrder = 11;
 			gatherIndicator.enabled = false;
+
+			var buildObj = new GameObject("BuildIndicator") { layer = LayerMask.NameToLayer("Units") };
+			buildObj.transform.SetParent(transform);
+			buildObj.transform.localPosition = Vector3.zero;
+			buildObj.transform.localScale = new Vector3(0.9f, 0.9f, 1f);
+			buildIndicator = buildObj.AddComponent<SpriteRenderer>();
+			buildIndicator.sprite = GetSquareSprite();
+			buildIndicator.color = buildColor;
+			buildIndicator.sortingLayerName = "Agents";
+			buildIndicator.sortingOrder = 11;
+			buildIndicator.enabled = false;
 		}
 
 		#endregion

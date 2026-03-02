@@ -90,17 +90,9 @@ namespace Preloader
         /// </summary>
 		public Text TimerText;
         /// <summary>
-        /// Human label textbox
-        /// </summary>
-        public Text HumanLabelText;
-        /// <summary>
         /// Human score textbox
         /// </summary>
         public Text HumanScoreText;
-        /// <summary>
-        /// Orc label textbox
-        /// </summary>
-        public Text OrcLabelText;
         /// <summary>
         /// Orc Score textbox
         /// </summary>

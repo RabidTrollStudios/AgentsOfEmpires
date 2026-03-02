@@ -1,4 +1,6 @@
-﻿using System.Runtime.CompilerServices;
+﻿using System;
+using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using AgentSDK;
 using UnityEngine;
 using UnityEngine.UI;
@@ -9,7 +11,9 @@ namespace GameManager
 {
 	class AgentController : MonoBehaviour
 	{
-		private Canvas debuggerCanvas;
+		private GameObject debuggerPanel;
+		private Dictionary<string, Func<string>> _debugUpdaters;
+		private Text[] _debugTextAreas;
 
 		internal Agent Agent;
 
@@ -20,13 +24,13 @@ namespace GameManager
 		/// <param name="agentName"></param>
 		/// <param name="agentNbr"></param>
 		/// <param name="agentDLLName"></param>
-		/// <param name="debuggerCanvas"></param>
+		/// <param name="debuggerPanel"></param>
 		/// <param name="dllPath"></param>
-		internal void InitializeAgent(GameObject agent, string agentName, string agentDLLName, int agentNbr, Canvas debuggerCanvas, string dllPath)
+		internal void InitializeAgent(GameObject agent, string agentName, string agentDLLName, int agentNbr, GameObject debuggerPanel, string dllPath)
 		{
 			Agent = agent.GetComponent<Agent>();
             Agent.InitializeAgent(agentName, agentDLLName, agentNbr, dllPath);
-            this.debuggerCanvas = debuggerCanvas;
+            this.debuggerPanel = debuggerPanel;
 
             // Initialize adapters for SDK-based agents
             if (Agent is AgentBridge bridge)
@@ -36,6 +40,23 @@ namespace GameManager
                     GameManager.Instance.Map,
                     GameManager.Instance.Events);
             }
+
+            _debugUpdaters = new Dictionary<string, Func<string>>
+            {
+                ["Agent Name"]     = () => $"{Agent.AgentName} {Agent.AgentDLLName}",
+                ["Agent Nbr"]      = () => Agent.AgentNbr.ToString(),
+                ["Gold Value"]     = () => Agent.Gold.ToString(),
+                ["Workers Count"]  = () => Count(UnitType.WORKER),
+                ["Soldiers Count"] = () => Count(UnitType.SOLDIER),
+                ["Archers Count"]  = () => Count(UnitType.ARCHER),
+                ["Bases Count"]    = () => Count(UnitType.BASE),
+                ["Barracks Count"]  = () => Count(UnitType.BARRACKS),
+                ["Refinery Count"]  = () => Count(UnitType.REFINERY),
+                ["Custom Debug"]    = () => (Agent as AgentBridge)?.PlanningAgentDebugText ?? "",
+            };
+            _debugTextAreas = debuggerPanel != null
+                ? debuggerPanel.GetComponentsInChildren<Text>()
+                : System.Array.Empty<Text>();
         }
 
         /// <summary>
@@ -77,53 +98,18 @@ namespace GameManager
 			if (Agent == null)
 				return;
 
-			// If we've enabled debugging for the planning Agent, build the data
-			// You can modify these to display any data you want!  You can even
-			// modify the prefab to add more rows or columns!
-			if (GameManager.Instance.HasAgentDebugging)
-			{
-				debuggerCanvas.enabled = true;
+			if (debuggerPanel != null)
+			debuggerPanel.SetActive(GameManager.Instance.HasAgentDebugging);
 
-				// Update the UI
-				var debuggerTextAreas = debuggerCanvas.GetComponentsInChildren<Text>();
-				foreach (var textArea in debuggerTextAreas)
-				{
-					switch (textArea.name)
-					{
-						case "Agent Name":
-							textArea.text = Agent.AgentName + " " + Agent.AgentDLLName;
-							break;
-						case "Agent Nbr":
-							textArea.text = Agent.AgentNbr.ToString();
-							break;
-						case "Gold Value":
-							textArea.text = Agent.Gold.ToString();
-							break;
-						case "Workers Count":
-							textArea.text = GameManager.Instance.Units.GetUnitNbrsOfType(UnitType.WORKER, Agent.AgentNbr).Count.ToString();
-							break;
-						case "Soldiers Count":
-							textArea.text = GameManager.Instance.Units.GetUnitNbrsOfType(UnitType.SOLDIER, Agent.AgentNbr).Count.ToString();
-							break;
-						case "Archers Count":
-							textArea.text = GameManager.Instance.Units.GetUnitNbrsOfType(UnitType.ARCHER, Agent.AgentNbr).Count.ToString();
-							break;
-						case "Bases Count":
-							textArea.text = GameManager.Instance.Units.GetUnitNbrsOfType(UnitType.BASE, Agent.AgentNbr).Count.ToString();
-							break;
-						case "Barracks Count":
-							textArea.text = GameManager.Instance.Units.GetUnitNbrsOfType(UnitType.BARRACKS, Agent.AgentNbr).Count.ToString();
-							break;
-						case "Refinery Count":
-							textArea.text = GameManager.Instance.Units.GetUnitNbrsOfType(UnitType.REFINERY, Agent.AgentNbr).Count.ToString();
-							break;
-					}
-				}
-			}
-			else
-			{
-				debuggerCanvas.enabled = false;
-			}
+			if (!GameManager.Instance.HasAgentDebugging)
+				return;
+
+			foreach (var textArea in _debugTextAreas)
+				if (_debugUpdaters.TryGetValue(textArea.name, out var getValue))
+					textArea.text = getValue();
 		}
+
+		private string Count(UnitType type) =>
+			GameManager.Instance.Units.GetUnitNbrsOfType(type, Agent.AgentNbr).Count.ToString();
 	}
 }
