@@ -1,12 +1,23 @@
-=== EditMode Test Run: 2026-03-02 00:08:40 ===
-Result: Passed  |  Duration: 0.67s
-Passed: 276  Failed: 0  Skipped: 0
+=== EditMode Test Run: 2026-03-02 00:54:36 ===
+Result: Passed  |  Duration: 0.93s
+Passed: 287  Failed: 0  Skipped: 0
 
           [PASS] GameManager.Tests.AgentActionsAdapterTests.Attack_BothUnknownUnits_DoesNotThrow
           [PASS] GameManager.Tests.AgentActionsAdapterTests.Build_UnknownUnit_DoesNotThrow
           [PASS] GameManager.Tests.AgentActionsAdapterTests.Gather_AllUnknownUnits_DoesNotThrow
           [PASS] GameManager.Tests.AgentActionsAdapterTests.Move_UnknownUnit_DoesNotThrow
           [PASS] GameManager.Tests.AgentActionsAdapterTests.Train_UnknownBuilding_DoesNotThrow
+          [PASS] GameManager.Tests.AgentControllerTests.Update_AgentNull_DoesNotThrow
+          [PASS] GameManager.Tests.AgentLoaderTests.Constructor_StoresPathToDLLs
+          [PASS] GameManager.Tests.AgentLoaderTests.GetDLLNamesFromDir_EmptyDirectory_ReturnsEmptyList
+          [PASS] GameManager.Tests.AgentLoaderTests.GetDLLNamesFromDir_ExcludesMine
+          [PASS] GameManager.Tests.AgentLoaderTests.GetDLLNamesFromDir_MultipleMatchingFiles_ReturnsAllNames
+          [PASS] GameManager.Tests.AgentLoaderTests.GetDLLNamesFromDir_NonMatchingFilenames_AreIgnored
+          [PASS] GameManager.Tests.AgentLoaderTests.GetDLLNamesFromDir_OnlyMine_ReturnsEmptyList
+          [PASS] GameManager.Tests.AgentLoaderTests.GetDLLNamesFromDir_ReturnsNonNullList
+          [PASS] GameManager.Tests.AgentLoaderTests.GetDLLNamesFromDir_SingleMatchingFile_ExtractsDLLName
+          [PASS] GameManager.Tests.AgentLoaderTests.LoadDLL_InvalidFileContent_ThrowsBadImageFormatException
+          [PASS] GameManager.Tests.AgentLoaderTests.LoadDLL_MissingFile_ThrowsFileNotFoundException
           [PASS] GameManager.Tests.AStarAvoidUnitsTests.AvoidUnits_AllNeighborsNonBuildable_Exhausted
           [PASS] GameManager.Tests.AStarAvoidUnitsTests.AvoidUnits_EndNotBuildable_ReturnsEndBlocked
           [PASS] GameManager.Tests.AStarAvoidUnitsTests.AvoidUnits_NonBuildableInMiddle_PathGoesAround
