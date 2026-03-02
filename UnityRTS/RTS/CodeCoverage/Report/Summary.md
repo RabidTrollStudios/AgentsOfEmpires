@@ -1,34 +1,34 @@
 ﻿# Summary
 |||
 |:---|:---|
-| Generated on: | 3/1/2026 - 11:51:17 PM |
+| Generated on: | 3/2/2026 - 12:08:40 AM |
 | Parser: | MultiReportParser (4x OpenCoverParser) |
 | Assemblies: | 3 |
-| Classes: | 99 |
-| Files: | 100 |
-| Covered lines: | 6127 |
-| Uncovered lines: | 1647 |
-| Coverable lines: | 7774 |
-| Total lines: | 18075 |
-| Line coverage: | 78.8% (6127 of 7774) |
+| Classes: | 101 |
+| Files: | 102 |
+| Covered lines: | 6354 |
+| Uncovered lines: | 1505 |
+| Coverable lines: | 7859 |
+| Total lines: | 18302 |
+| Line coverage: | 80.8% (6354 of 7859) |
 | Covered branches: | 0 |
 | Total branches: | 0 |
-| Covered methods: | 796 |
-| Total methods: | 981 |
-| Method coverage: | 81.1% (796 of 981) |
+| Covered methods: | 829 |
+| Total methods: | 997 |
+| Method coverage: | 83.1% (829 of 997) |
 
 |**Name**|**Covered**|**Uncovered**|**Coverable**|**Total**|**Line coverage**|**Covered**|**Total**|**Branch coverage**|**Covered**|**Total**|**Method coverage**|
 |:---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
-|**GameManager**|**1443**|**1443**|**2886**|**6707**|**50%**|**0**|**0**|****|**242**|**399**|**60.6%**|
-|GameManager.Agent|25|164|189|426|13.2%|0|0||19|34|55.8%|
-|GameManager.AgentActionsAdapter|0|36|36|64|0%|0|0||0|7|0%|
+|**GameManager**|**1588**|**1298**|**2886**|**6707**|**55%**|**0**|**0**|****|**262**|**399**|**65.6%**|
+|GameManager.Agent|78|111|189|426|41.2%|0|0||27|34|79.4%|
+|GameManager.AgentActionsAdapter|36|0|36|64|100%|0|0||7|7|100%|
 |GameManager.AgentBridge|3|26|29|66|10.3%|0|0||1|8|12.5%|
 |GameManager.AgentController|0|43|43|115|0%|0|0||0|6|0%|
 |GameManager.AgentLoader|0|54|54|107|0%|0|0||0|4|0%|
 |GameManager.AssemblyLoader|0|11|11|41|0%|0|0||0|4|0%|
 |GameManager.CommandLogger|0|30|30|64|0%|0|0||0|5|0%|
 |GameManager.Constants|47|17|64|360|73.4%|0|0||4|21|19%|
-|GameManager.EventDispatcher|5|152|157|263|3.1%|0|0||1|6|16.6%|
+|GameManager.EventDispatcher|60|97|157|263|38.2%|0|0||5|6|83.3%|
 |GameManager.GameElements.AttackEventArgs|7|0|7|163|100%|0|0||5|5|100%|
 |GameManager.GameElements.BuildEventArgs|9|0|9|163|100%|0|0||7|7|100%|
 |GameManager.GameElements.CameraController|0|46|46|84|0%|0|0||0|2|0%|
@@ -38,7 +38,7 @@
 |GameManager.GameElements.TrainEventArgs|7|0|7|163|100%|0|0||5|5|100%|
 |GameManager.GameElements.Unit|698|179|877|1588|79.5%|0|0||71|81|87.6%|
 |GameManager.GameElements.Utility|46|2|48|126|95.8%|0|0||8|10|80%|
-|GameManager.GameManager|78|452|530|1103|14.7%|0|0||33|67|49.2%|
+|GameManager.GameManager|79|451|530|1103|14.9%|0|0||34|67|50.7%|
 |GameManager.GameStateAdapter|0|115|115|222|0%|0|0||0|23|0%|
 |GameManager.Graph.Edge[V]|11|6|17|30|64.7%|0|0||2|3|66.6%|
 |GameManager.Graph.Graph[T]|127|0|127|203|100%|0|0||13|13|100%|
@@ -48,7 +48,8 @@
 |GameManager.InfluenceTile|0|4|4|20|0%|0|0||0|2|0%|
 |GameManager.MapManager|170|80|250|428|68%|0|0||19|24|79.1%|
 |GameManager.UnitManager|52|15|67|170|77.6%|0|0||14|20|70%|
-|**GameManager.Tests.EditMode**|**1933**|**48**|**1981**|**4681**|**97.5%**|**0**|**0**|****|**304**|**311**|**97.7%**|
+|**GameManager.Tests.EditMode**|**1962**|**51**|**2013**|**4783**|**97.4%**|**0**|**0**|****|**311**|**321**|**96.8%**|
+|GameManager.Tests.AgentActionsAdapterTests|29|3|32|102|90.6%|0|0||7|10|70%|
 |GameManager.Tests.AssemblySetup|13|0|13|36|100%|0|0||2|2|100%|
 |GameManager.Tests.AStarAvoidUnitsTests|68|0|68|174|100%|0|0||6|6|100%|
 |GameManager.Tests.AStarOptimalityTests|69|0|69|177|100%|0|0||7|7|100%|
@@ -77,7 +78,8 @@
 |GameManager.Tests.TestCell|11|1|12|31|91.6%|0|0||6|7|85.7%|
 |GameManager.Tests.UtilityAdditionalTests|96|0|96|208|100%|0|0||17|17|100%|
 |GameManager.Tests.UtilityTests|70|0|70|126|100%|0|0||12|12|100%|
-|**GameManager.Tests.PlayMode**|**2751**|**156**|**2907**|**7767**|**94.6%**|**0**|**0**|****|**250**|**271**|**92.2%**|
+|**GameManager.Tests.PlayMode**|**2804**|**156**|**2960**|**7892**|**94.7%**|**0**|**0**|****|**256**|**277**|**92.4%**|
+|GameManager.Tests.PlayMode.AgentActionsAdapterTests|53|0|53|125|100%|0|0||6|6|100%|
 |GameManager.Tests.PlayMode.AgentGoldTests|92|4|96|238|95.8%|0|0||9|10|90%|
 |GameManager.Tests.PlayMode.AgentUnitFilterTests|59|0|59|172|100%|0|0||5|5|100%|
 |GameManager.Tests.PlayMode.ArcherAttackTests|80|0|80|206|100%|0|0||7|7|100%|
