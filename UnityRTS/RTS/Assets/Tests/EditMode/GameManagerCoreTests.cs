@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Reflection;
 using AgentSDK;
-using AgentSDK;
 using NUnit.Framework;
 using UnityEngine;
 

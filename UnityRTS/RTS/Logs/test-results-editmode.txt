@@ -1,6 +1,6 @@
-=== EditMode Test Run: 2026-03-02 01:16:58 ===
-Result: Passed  |  Duration: 0.83s
-Passed: 287  Failed: 0  Skipped: 0
+=== EditMode Test Run: 2026-03-02 01:55:16 ===
+Result: Passed  |  Duration: 1.03s
+Passed: 315  Failed: 0  Skipped: 0
 
           [PASS] GameManager.Tests.AgentActionsAdapterTests.Attack_BothUnknownUnits_DoesNotThrow
           [PASS] GameManager.Tests.AgentActionsAdapterTests.Build_UnknownUnit_DoesNotThrow
@@ -120,6 +120,34 @@ Passed: 287  Failed: 0  Skipped: 0
           [PASS] GameManager.Tests.DirectionMappingTests.Directions_DoesNotContainNone
           [PASS] GameManager.Tests.DirectionMappingTests.Directions_HasExactlyEightEntries
           [PASS] GameManager.Tests.DirectionMappingTests.OppositeDirections_SumToZero
+          [PASS] GameManager.Tests.GameManagerCoreTests.DetermineRoundsCompleted_AllZero_ReturnsZero
+          [PASS] GameManager.Tests.GameManagerCoreTests.DetermineRoundsCompleted_EmptyDictionary_ReturnsZero
+          [PASS] GameManager.Tests.GameManagerCoreTests.DetermineRoundsCompleted_SumsAllWins
+          [PASS] GameManager.Tests.GameManagerCoreTests.FindMirroredLocation_OriginWorker_ReturnsMapEdge
+          [PASS] GameManager.Tests.GameManagerCoreTests.FindMirroredLocation_Worker_MirrorsCorrectly
+          [PASS] GameManager.Tests.GameManagerCoreTests.GetAgent_ReturnsAgentForAgentNbr
+          [PASS] GameManager.Tests.GameManagerCoreTests.GetEnemyAgentNbrs_SingleAgent_ReturnsEmpty
+          [PASS] GameManager.Tests.GameManagerCoreTests.GetEnemyAgentNbrs_TwoAgents_Agent0_ReturnsAgent1
+          [PASS] GameManager.Tests.GameManagerCoreTests.GetEnemyAgentNbrs_TwoAgents_Agent1_ReturnsAgent0
+          [PASS] GameManager.Tests.GameManagerCoreTests.IsInCorner_Center_ReturnsFalse
+          [PASS] GameManager.Tests.GameManagerCoreTests.IsInCorner_LowerLeftCorner_ReturnsTrue
+          [PASS] GameManager.Tests.GameManagerCoreTests.IsInCorner_LowerRightCorner_ReturnsFalse
+          [PASS] GameManager.Tests.GameManagerCoreTests.IsInCorner_UpperLeftCorner_ReturnsFalse
+          [PASS] GameManager.Tests.GameManagerCoreTests.IsInCorner_UpperRightCorner_ReturnsTrue
+          [PASS] GameManager.Tests.GameManagerMatchTests.DeclareRoundWinner_HumanWins_IncrementsHumanScoreAndSetsShowingWinner
+          [PASS] GameManager.Tests.GameManagerMatchTests.DeclareRoundWinner_OrcWins_IncrementsOrcScoreAndSetsShowingWinner
+          [PASS] GameManager.Tests.GameManagerMatchTests.DisplayMultiAgentResults_Agent0IsHuman_UsesAgent0AsRepresentative
+          [PASS] GameManager.Tests.GameManagerMatchTests.DisplayMultiAgentResults_Agent0IsOrc_UsesAgent1AsRepresentative
+          [PASS] GameManager.Tests.GameManagerMatchTests.DisplaySingleAgentResults_Agent0IsOverallWinner_BannerContainsAgent0Name
+          [PASS] GameManager.Tests.GameManagerMatchTests.DisplaySingleAgentResults_Agent1IsOverallWinner_BannerContainsAgent1Name
+          [PASS] GameManager.Tests.GameManagerMatchTests.GetBuildableLocationNearCorner_OpenMap_ReturnsCornerPositionAtRadiusZero
+          [PASS] GameManager.Tests.GameManagerMatchTests.GetBuildableLocationNearCorner_OriginCellBlocked_SearchesOutwardAndReturnsValidCell
+          [PASS] GameManager.Tests.GameManagerMatchTests.GetRandomBuildableLocationExcludingCorners_NeverReturnsCornerLocation
+          [PASS] GameManager.Tests.GameManagerMatchTests.SetAllAgentsInactive_DeactivatesAllAgentGameObjects
+          [PASS] GameManager.Tests.GameManagerMatchTests.UpdateCustomDebugUI_AgentWithNullAgentField_SkipsWithoutChangingText
+          [PASS] GameManager.Tests.GameManagerMatchTests.UpdateCustomDebugUI_HumanAgent_WritesEmptyDisplayToHumanText
+          [PASS] GameManager.Tests.GameManagerMatchTests.UpdateCustomDebugUI_OrcAgent_WritesEmptyDisplayToOrcText
+          [PASS] GameManager.Tests.GameManagerMatchTests.UpdateTimerUI_SetsTimerTextAndSpeedText
           [PASS] GameManager.Tests.GameManagerUITests.DebugBinding0_Execute_TogglesHasAgentDebugging
           [PASS] GameManager.Tests.GameManagerUITests.DebugBinding1_Execute_TogglesHasUnitDebugging
           [PASS] GameManager.Tests.GameManagerUITests.DebugBinding3_Execute_TogglesHasMoveTint
