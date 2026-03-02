@@ -1,5 +1,5 @@
-=== EditMode Test Run: 2026-03-02 01:55:16 ===
-Result: Passed  |  Duration: 1.03s
+=== EditMode Test Run: 2026-03-02 02:20:48 ===
+Result: Passed  |  Duration: 1.01s
 Passed: 315  Failed: 0  Skipped: 0
 
           [PASS] GameManager.Tests.AgentActionsAdapterTests.Attack_BothUnknownUnits_DoesNotThrow
@@ -24,6 +24,16 @@ Passed: 315  Failed: 0  Skipped: 0
           [PASS] GameManager.Tests.AStarAvoidUnitsTests.DefaultMode_EndNotBuildable_ButWalkable_FindsPath
           [PASS] GameManager.Tests.AStarAvoidUnitsTests.DefaultMode_NonBuildableCellsTraversable_PathMayGoThrough
           [PASS] GameManager.Tests.AStarAvoidUnitsTests.OpenGrid_BothModes_SamePathLength
+          [PASS] GameManager.Tests.AStarCoreTests.AdjacentNodes_ReturnsOneStep
+          [PASS] GameManager.Tests.AStarCoreTests.DefaultCap_FindsPath
+          [PASS] GameManager.Tests.AStarCoreTests.DiagonalPath_ReturnsOneStep
+          [PASS] GameManager.Tests.AStarCoreTests.EndNodeBlocked_ReturnsEmpty
+          [PASS] GameManager.Tests.AStarCoreTests.ExpansionCap_ReturnsCap
+          [PASS] GameManager.Tests.AStarCoreTests.FullyEnclosed_ReturnsExhausted
+          [PASS] GameManager.Tests.AStarCoreTests.LongerPath_CorrectLength
+          [PASS] GameManager.Tests.AStarCoreTests.SameNode_ReturnsEmpty_SameNode
+          [PASS] GameManager.Tests.AStarCoreTests.StartBlocked_StillFindsPathThroughWalkableNeighbors
+          [PASS] GameManager.Tests.AStarCoreTests.WallChannel_PathGoesAround
           [PASS] GameManager.Tests.AStarOptimalityTests.LinearChain_ReturnsExactHopCount
           [PASS] GameManager.Tests.AStarOptimalityTests.LongLinearPath_AllStepsAreContiguous
           [PASS] GameManager.Tests.AStarOptimalityTests.MultipleSearches_EachFindsCorrectTarget
@@ -31,24 +41,14 @@ Passed: 315  Failed: 0  Skipped: 0
           [PASS] GameManager.Tests.AStarOptimalityTests.SecondSearch_AfterReset_FindsNewTarget
           [PASS] GameManager.Tests.AStarOptimalityTests.ShortDiagonalVsLongerOrtho_TakesFewerHops
           [PASS] GameManager.Tests.AStarOptimalityTests.WallDetour_PathLengthIsBoundedAbove
-          [PASS] GameManager.Tests.AStarSearchTests.AdjacentNodes_ReturnsOneStep
-          [PASS] GameManager.Tests.AStarSearchTests.DefaultCap_FindsPath
-          [PASS] GameManager.Tests.AStarSearchTests.DiagonalPath_ReturnsOneStep
-          [PASS] GameManager.Tests.AStarSearchTests.EndNodeBlocked_ReturnsEmpty
-          [PASS] GameManager.Tests.AStarSearchTests.ExpansionCap_ReturnsCap
-          [PASS] GameManager.Tests.AStarSearchTests.FindClosestNeighbor_NoEdges_ReturnsMinusOne
-          [PASS] GameManager.Tests.AStarSearchTests.FindClosestNeighbor_ReturnsNearest
-          [PASS] GameManager.Tests.AStarSearchTests.FullyEnclosed_ReturnsExhausted
-          [PASS] GameManager.Tests.AStarSearchTests.LargeGrid_100x100_CompletesQuickly
-          [PASS] GameManager.Tests.AStarSearchTests.LongerPath_CorrectLength
-          [PASS] GameManager.Tests.AStarSearchTests.PathDoesNotIncludeStart
-          [PASS] GameManager.Tests.AStarSearchTests.PathEndsAtTarget
-          [PASS] GameManager.Tests.AStarSearchTests.PathIsContiguous
-          [PASS] GameManager.Tests.AStarSearchTests.ResetSearch_ClearsAllNodes
-          [PASS] GameManager.Tests.AStarSearchTests.RunTwice_SecondSearchValid
-          [PASS] GameManager.Tests.AStarSearchTests.SameNode_ReturnsEmpty_SameNode
-          [PASS] GameManager.Tests.AStarSearchTests.StartBlocked_StillFindsPathThroughWalkableNeighbors
-          [PASS] GameManager.Tests.AStarSearchTests.WallChannel_PathGoesAround
+          [PASS] GameManager.Tests.AStarPathPropertiesTests.FindClosestNeighbor_NoEdges_ReturnsMinusOne
+          [PASS] GameManager.Tests.AStarPathPropertiesTests.FindClosestNeighbor_ReturnsNearest
+          [PASS] GameManager.Tests.AStarPathPropertiesTests.LargeGrid_100x100_CompletesQuickly
+          [PASS] GameManager.Tests.AStarPathPropertiesTests.PathDoesNotIncludeStart
+          [PASS] GameManager.Tests.AStarPathPropertiesTests.PathEndsAtTarget
+          [PASS] GameManager.Tests.AStarPathPropertiesTests.PathIsContiguous
+          [PASS] GameManager.Tests.AStarPathPropertiesTests.ResetSearch_ClearsAllNodes
+          [PASS] GameManager.Tests.AStarPathPropertiesTests.RunTwice_SecondSearchValid
           [PASS] GameManager.Tests.ConstantsAttackSizeTests.AttackRange_AllNonNegative
           [PASS] GameManager.Tests.ConstantsAttackSizeTests.AttackRange_CombatUnits_HavePositiveRange
           [PASS] GameManager.Tests.ConstantsAttackSizeTests.AttackRange_ConsistentWithCanAttack
@@ -134,53 +134,53 @@ Passed: 315  Failed: 0  Skipped: 0
           [PASS] GameManager.Tests.GameManagerCoreTests.IsInCorner_LowerRightCorner_ReturnsFalse
           [PASS] GameManager.Tests.GameManagerCoreTests.IsInCorner_UpperLeftCorner_ReturnsFalse
           [PASS] GameManager.Tests.GameManagerCoreTests.IsInCorner_UpperRightCorner_ReturnsTrue
-          [PASS] GameManager.Tests.GameManagerMatchTests.DeclareRoundWinner_HumanWins_IncrementsHumanScoreAndSetsShowingWinner
-          [PASS] GameManager.Tests.GameManagerMatchTests.DeclareRoundWinner_OrcWins_IncrementsOrcScoreAndSetsShowingWinner
-          [PASS] GameManager.Tests.GameManagerMatchTests.DisplayMultiAgentResults_Agent0IsHuman_UsesAgent0AsRepresentative
-          [PASS] GameManager.Tests.GameManagerMatchTests.DisplayMultiAgentResults_Agent0IsOrc_UsesAgent1AsRepresentative
-          [PASS] GameManager.Tests.GameManagerMatchTests.DisplaySingleAgentResults_Agent0IsOverallWinner_BannerContainsAgent0Name
-          [PASS] GameManager.Tests.GameManagerMatchTests.DisplaySingleAgentResults_Agent1IsOverallWinner_BannerContainsAgent1Name
-          [PASS] GameManager.Tests.GameManagerMatchTests.GetBuildableLocationNearCorner_OpenMap_ReturnsCornerPositionAtRadiusZero
-          [PASS] GameManager.Tests.GameManagerMatchTests.GetBuildableLocationNearCorner_OriginCellBlocked_SearchesOutwardAndReturnsValidCell
-          [PASS] GameManager.Tests.GameManagerMatchTests.GetRandomBuildableLocationExcludingCorners_NeverReturnsCornerLocation
-          [PASS] GameManager.Tests.GameManagerMatchTests.SetAllAgentsInactive_DeactivatesAllAgentGameObjects
-          [PASS] GameManager.Tests.GameManagerMatchTests.UpdateCustomDebugUI_AgentWithNullAgentField_SkipsWithoutChangingText
-          [PASS] GameManager.Tests.GameManagerMatchTests.UpdateCustomDebugUI_HumanAgent_WritesEmptyDisplayToHumanText
-          [PASS] GameManager.Tests.GameManagerMatchTests.UpdateCustomDebugUI_OrcAgent_WritesEmptyDisplayToOrcText
-          [PASS] GameManager.Tests.GameManagerMatchTests.UpdateTimerUI_SetsTimerTextAndSpeedText
-          [PASS] GameManager.Tests.GameManagerUITests.DebugBinding0_Execute_TogglesHasAgentDebugging
-          [PASS] GameManager.Tests.GameManagerUITests.DebugBinding1_Execute_TogglesHasUnitDebugging
-          [PASS] GameManager.Tests.GameManagerUITests.DebugBinding3_Execute_TogglesHasMoveTint
-          [PASS] GameManager.Tests.GameManagerUITests.DebugBinding4_Execute_TogglesHasGatherTint
-          [PASS] GameManager.Tests.GameManagerUITests.DebugBinding5_Execute_TogglesHasBuildTint
-          [PASS] GameManager.Tests.GameManagerUITests.DebugBinding6_Execute_TogglesHasAttackTint
-          [PASS] GameManager.Tests.GameManagerUITests.DebugBinding7_Execute_TogglesHasPathTint
-          [PASS] GameManager.Tests.GameManagerUITests.DebugBinding8_Execute_TogglesHasTargetLineTint
-          [PASS] GameManager.Tests.GameManagerUITests.GameSpeed_AboveOne_GuardAllowsDecrement
-          [PASS] GameManager.Tests.GameManagerUITests.GameSpeed_AtMax_GuardPreventsIncrement
-          [PASS] GameManager.Tests.GameManagerUITests.GameSpeed_AtOne_GuardPreventsDecrement
-          [PASS] GameManager.Tests.GameManagerUITests.GameSpeed_BelowMax_GuardAllowsIncrement
-          [PASS] GameManager.Tests.GameManagerUITests.InitializeDebugToggles_PopulatesNineBindings
-          [PASS] GameManager.Tests.GameManagerUITests.OnAgentToggleChanged_False_ClearsHasAgentDebugging
-          [PASS] GameManager.Tests.GameManagerUITests.OnAgentToggleChanged_True_SetsHasAgentDebugging
-          [PASS] GameManager.Tests.GameManagerUITests.OnAttackTintToggleChanged_False_ClearsHasAttackTint
-          [PASS] GameManager.Tests.GameManagerUITests.OnAttackTintToggleChanged_True_SetsHasAttackTint
-          [PASS] GameManager.Tests.GameManagerUITests.OnBuildTintToggleChanged_False_ClearsHasBuildTint
-          [PASS] GameManager.Tests.GameManagerUITests.OnBuildTintToggleChanged_True_SetsHasBuildTint
-          [PASS] GameManager.Tests.GameManagerUITests.OnGatherTintToggleChanged_False_ClearsHasGatherTint
-          [PASS] GameManager.Tests.GameManagerUITests.OnGatherTintToggleChanged_True_SetsHasGatherTint
-          [PASS] GameManager.Tests.GameManagerUITests.OnMoveTintToggleChanged_False_ClearsHasMoveTint
-          [PASS] GameManager.Tests.GameManagerUITests.OnMoveTintToggleChanged_True_SetsHasMoveTint
-          [PASS] GameManager.Tests.GameManagerUITests.OnPathTintToggleChanged_False_ClearsHasPathTint
-          [PASS] GameManager.Tests.GameManagerUITests.OnPathTintToggleChanged_True_SetsHasPathTint
-          [PASS] GameManager.Tests.GameManagerUITests.OnTargetLineTintToggleChanged_False_ClearsHasTargetLineTint
-          [PASS] GameManager.Tests.GameManagerUITests.OnTargetLineTintToggleChanged_True_SetsHasTargetLineTint
-          [PASS] GameManager.Tests.GameManagerUITests.OnUnitToggleChanged_False_ClearsHasUnitDebugging
-          [PASS] GameManager.Tests.GameManagerUITests.OnUnitToggleChanged_True_SetsHasUnitDebugging
-          [PASS] GameManager.Tests.GameManagerUITests.ProcessUserInput_NullBindings_DoesNotThrow
-          [PASS] GameManager.Tests.GameManagerUITests.UpdateCustomDebugUI_AgentDebuggingFalse_ClearsText
-          [PASS] GameManager.Tests.GameManagerUITests.UpdateCustomDebugUI_AgentDebuggingTrue_NoAgents_ClearsText
-          [PASS] GameManager.Tests.GameManagerUITests.UpdateCustomDebugUI_BothTextsNull_DoesNotThrow
+          [PASS] GameManager.Tests.GameManagerDebugBindingsTests.DebugBinding0_Execute_TogglesHasAgentDebugging
+          [PASS] GameManager.Tests.GameManagerDebugBindingsTests.DebugBinding1_Execute_TogglesHasUnitDebugging
+          [PASS] GameManager.Tests.GameManagerDebugBindingsTests.DebugBinding3_Execute_TogglesHasMoveTint
+          [PASS] GameManager.Tests.GameManagerDebugBindingsTests.DebugBinding4_Execute_TogglesHasGatherTint
+          [PASS] GameManager.Tests.GameManagerDebugBindingsTests.DebugBinding5_Execute_TogglesHasBuildTint
+          [PASS] GameManager.Tests.GameManagerDebugBindingsTests.DebugBinding6_Execute_TogglesHasAttackTint
+          [PASS] GameManager.Tests.GameManagerDebugBindingsTests.DebugBinding7_Execute_TogglesHasPathTint
+          [PASS] GameManager.Tests.GameManagerDebugBindingsTests.DebugBinding8_Execute_TogglesHasTargetLineTint
+          [PASS] GameManager.Tests.GameManagerDebugBindingsTests.InitializeDebugToggles_PopulatesNineBindings
+          [PASS] GameManager.Tests.GameManagerDebugBindingsTests.ProcessUserInput_NullBindings_DoesNotThrow
+          [PASS] GameManager.Tests.GameManagerResultsDisplayTests.DisplayMultiAgentResults_Agent0IsHuman_UsesAgent0AsRepresentative
+          [PASS] GameManager.Tests.GameManagerResultsDisplayTests.DisplayMultiAgentResults_Agent0IsOrc_UsesAgent1AsRepresentative
+          [PASS] GameManager.Tests.GameManagerResultsDisplayTests.DisplaySingleAgentResults_Agent0IsOverallWinner_BannerContainsAgent0Name
+          [PASS] GameManager.Tests.GameManagerResultsDisplayTests.DisplaySingleAgentResults_Agent1IsOverallWinner_BannerContainsAgent1Name
+          [PASS] GameManager.Tests.GameManagerResultsDisplayTests.UpdateCustomDebugUI_AgentWithNullAgentField_SkipsWithoutChangingText
+          [PASS] GameManager.Tests.GameManagerResultsDisplayTests.UpdateCustomDebugUI_HumanAgent_WritesEmptyDisplayToHumanText
+          [PASS] GameManager.Tests.GameManagerResultsDisplayTests.UpdateCustomDebugUI_OrcAgent_WritesEmptyDisplayToOrcText
+          [PASS] GameManager.Tests.GameManagerRoundLifecycleTests.DeclareRoundWinner_HumanWins_IncrementsHumanScoreAndSetsShowingWinner
+          [PASS] GameManager.Tests.GameManagerRoundLifecycleTests.DeclareRoundWinner_OrcWins_IncrementsOrcScoreAndSetsShowingWinner
+          [PASS] GameManager.Tests.GameManagerRoundLifecycleTests.SetAllAgentsInactive_DeactivatesAllAgentGameObjects
+          [PASS] GameManager.Tests.GameManagerRoundLifecycleTests.UpdateTimerUI_SetsTimerTextAndSpeedText
+          [PASS] GameManager.Tests.GameManagerSpawnLocationTests.GetBuildableLocationNearCorner_OpenMap_ReturnsCornerPositionAtRadiusZero
+          [PASS] GameManager.Tests.GameManagerSpawnLocationTests.GetBuildableLocationNearCorner_OriginCellBlocked_SearchesOutwardAndReturnsValidCell
+          [PASS] GameManager.Tests.GameManagerSpawnLocationTests.GetRandomBuildableLocationExcludingCorners_NeverReturnsCornerLocation
+          [PASS] GameManager.Tests.GameManagerSpeedTests.GameSpeed_AboveOne_GuardAllowsDecrement
+          [PASS] GameManager.Tests.GameManagerSpeedTests.GameSpeed_AtMax_GuardPreventsIncrement
+          [PASS] GameManager.Tests.GameManagerSpeedTests.GameSpeed_AtOne_GuardPreventsDecrement
+          [PASS] GameManager.Tests.GameManagerSpeedTests.GameSpeed_BelowMax_GuardAllowsIncrement
+          [PASS] GameManager.Tests.GameManagerSpeedTests.UpdateCustomDebugUI_AgentDebuggingFalse_ClearsText
+          [PASS] GameManager.Tests.GameManagerSpeedTests.UpdateCustomDebugUI_AgentDebuggingTrue_NoAgents_ClearsText
+          [PASS] GameManager.Tests.GameManagerSpeedTests.UpdateCustomDebugUI_BothTextsNull_DoesNotThrow
+          [PASS] GameManager.Tests.GameManagerToggleTests.OnAgentToggleChanged_False_ClearsHasAgentDebugging
+          [PASS] GameManager.Tests.GameManagerToggleTests.OnAgentToggleChanged_True_SetsHasAgentDebugging
+          [PASS] GameManager.Tests.GameManagerToggleTests.OnAttackTintToggleChanged_False_ClearsHasAttackTint
+          [PASS] GameManager.Tests.GameManagerToggleTests.OnAttackTintToggleChanged_True_SetsHasAttackTint
+          [PASS] GameManager.Tests.GameManagerToggleTests.OnBuildTintToggleChanged_False_ClearsHasBuildTint
+          [PASS] GameManager.Tests.GameManagerToggleTests.OnBuildTintToggleChanged_True_SetsHasBuildTint
+          [PASS] GameManager.Tests.GameManagerToggleTests.OnGatherTintToggleChanged_False_ClearsHasGatherTint
+          [PASS] GameManager.Tests.GameManagerToggleTests.OnGatherTintToggleChanged_True_SetsHasGatherTint
+          [PASS] GameManager.Tests.GameManagerToggleTests.OnMoveTintToggleChanged_False_ClearsHasMoveTint
+          [PASS] GameManager.Tests.GameManagerToggleTests.OnMoveTintToggleChanged_True_SetsHasMoveTint
+          [PASS] GameManager.Tests.GameManagerToggleTests.OnPathTintToggleChanged_False_ClearsHasPathTint
+          [PASS] GameManager.Tests.GameManagerToggleTests.OnPathTintToggleChanged_True_SetsHasPathTint
+          [PASS] GameManager.Tests.GameManagerToggleTests.OnTargetLineTintToggleChanged_False_ClearsHasTargetLineTint
+          [PASS] GameManager.Tests.GameManagerToggleTests.OnTargetLineTintToggleChanged_True_SetsHasTargetLineTint
+          [PASS] GameManager.Tests.GameManagerToggleTests.OnUnitToggleChanged_False_ClearsHasUnitDebugging
+          [PASS] GameManager.Tests.GameManagerToggleTests.OnUnitToggleChanged_True_SetsHasUnitDebugging
           [PASS] GameManager.Tests.GraphBFSTests.AStar_NonUniform_StillFindsPath
           [PASS] GameManager.Tests.GraphBFSTests.BFS_NonUniform_ThrowsException
           [PASS] GameManager.Tests.GraphBFSTests.BFS_Uniform_DoesNotThrow
