@@ -1,6 +1,6 @@
-=== PlayMode Test Run: 2026-03-02 01:19:23 ===
-Result: Passed  |  Duration: 36.87s
-Passed: 267  Failed: 0  Skipped: 0
+=== PlayMode Test Run: 2026-03-02 01:56:14 ===
+Result: Passed  |  Duration: 36.88s
+Passed: 270  Failed: 0  Skipped: 0
 
             [PASS] GameManager.Tests.PlayMode.AgentActionsAdapterTests.Attack_ValidUnits_DelegatesToAgentAttack
             [PASS] GameManager.Tests.PlayMode.AgentActionsAdapterTests.Build_ValidWorker_DelegatesToAgentBuild
@@ -57,6 +57,9 @@ Passed: 267  Failed: 0  Skipped: 0
             [PASS] GameManager.Tests.PlayMode.ConcurrentActionsTests.TwoWorkers_BuildDifferentStructures_BothComplete
             [PASS] GameManager.Tests.PlayMode.ConcurrentActionsTests.Worker_BuildsWhileSoldier_Attacks_BothComplete
             [PASS] GameManager.Tests.PlayMode.ConcurrentActionsTests.Worker_GathersWhileSoldier_Moves_BothComplete
+            [PASS] GameManager.Tests.PlayMode.GameManagerStateTests.Update_ShowingWinner_BannerExpired_AllRoundsComplete_DllNamesNull_TransitionsToFinished
+            [PASS] GameManager.Tests.PlayMode.GameManagerStateTests.Update_ShowingWinner_BannerExpired_RoundsNotComplete_TransitionsToRestarting
+            [PASS] GameManager.Tests.PlayMode.GameManagerStateTests.Update_ShowingWinner_BannerNotExpired_StateRemainsShowingWinner
             [PASS] GameManager.Tests.PlayMode.GameManagerWinConditionTests.DetermineRoundWinner_Agent0HasNoUnits_ReturnsAgent1
             [PASS] GameManager.Tests.PlayMode.GameManagerWinConditionTests.DetermineRoundWinner_Agent1HasNoUnits_ReturnsAgent0
             [PASS] GameManager.Tests.PlayMode.GameManagerWinConditionTests.DetermineRoundWinner_BothHaveUnits_ReturnsNull
