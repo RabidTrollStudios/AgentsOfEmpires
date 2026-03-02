@@ -1,6 +1,6 @@
-=== PlayMode Test Run: 2026-03-02 00:08:17 ===
-Result: Passed  |  Duration: 35.91s
-Passed: 216  Failed: 0  Skipped: 0
+=== PlayMode Test Run: 2026-03-02 00:34:11 ===
+Result: Passed  |  Duration: 35.93s
+Passed: 225  Failed: 0  Skipped: 0
 
             [PASS] GameManager.Tests.PlayMode.AgentActionsAdapterTests.Attack_ValidUnits_DelegatesToAgentAttack
             [PASS] GameManager.Tests.PlayMode.AgentActionsAdapterTests.Build_ValidWorker_DelegatesToAgentBuild
@@ -8,6 +8,15 @@ Passed: 216  Failed: 0  Skipped: 0
             [PASS] GameManager.Tests.PlayMode.AgentActionsAdapterTests.Log_DelegatesToAgentLog
             [PASS] GameManager.Tests.PlayMode.AgentActionsAdapterTests.Move_ValidUnit_DelegatesToAgentMove
             [PASS] GameManager.Tests.PlayMode.AgentActionsAdapterTests.Train_ValidBuilding_DelegatesToAgentTrain
+            [PASS] GameManager.Tests.PlayMode.AgentControllerTests.InitializeAgent_NullPanel_TextAreasIsEmpty
+            [PASS] GameManager.Tests.PlayMode.AgentControllerTests.InitializeAgent_PopulatesDebugUpdaters_WithTenKeys
+            [PASS] GameManager.Tests.PlayMode.AgentControllerTests.InitializeAgent_WithPanel_TextAreasMatchesPanelChildren
+            [PASS] GameManager.Tests.PlayMode.AgentControllerTests.InitializeMatch_DelegatesToAgent
+            [PASS] GameManager.Tests.PlayMode.AgentControllerTests.InitializeRound_DelegatesToAgent
+            [PASS] GameManager.Tests.PlayMode.AgentControllerTests.InitializeRound_SetsAgentGoldToStartingGold
+            [PASS] GameManager.Tests.PlayMode.AgentControllerTests.Learn_DelegatesToAgent
+            [PASS] GameManager.Tests.PlayMode.AgentControllerTests.Update_AgentPresent_DebuggingOff_DoesNotThrow
+            [PASS] GameManager.Tests.PlayMode.AgentControllerTests.Update_DebuggingOn_UpdatesMatchingTextArea
             [PASS] GameManager.Tests.PlayMode.AgentGoldTests.BothAgents_StartWithPositiveGold
             [PASS] GameManager.Tests.PlayMode.AgentGoldTests.BuildBase_DeductsCorrectCost
             [PASS] GameManager.Tests.PlayMode.AgentGoldTests.Gathering_MultipleTrips_GoldCompounds
