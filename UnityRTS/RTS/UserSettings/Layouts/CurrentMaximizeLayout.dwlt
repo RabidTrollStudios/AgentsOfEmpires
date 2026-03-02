@@ -25,7 +25,7 @@ MonoBehaviour:
   m_MinSize: {x: 300, y: 112}
   m_MaxSize: {x: 24288, y: 16192}
   vertical: 0
-  controlID: 28300
+  controlID: 28619
   draggingID: 0
 --- !u!114 &2
 MonoBehaviour:
@@ -203,6 +203,8 @@ MonoBehaviour:
       m_LastClickedID:
         m_Data: 0
       m_ExpandedIDs:
+      - m_Data: -1426118
+      - m_Data: -1394864
       - m_Data: -1291406
       - m_Data: -1187980
       - m_Data: -1156582
@@ -276,7 +278,7 @@ MonoBehaviour:
   m_MinSize: {x: 100, y: 112}
   m_MaxSize: {x: 8096, y: 16192}
   vertical: 1
-  controlID: 28301
+  controlID: 28620
   draggingID: 0
 --- !u!114 &6
 MonoBehaviour:
@@ -1048,7 +1050,7 @@ MonoBehaviour:
     m_OverlaysVisible: 1
     m_DynamicPanelBehavior: 0
   m_Spl:
-    ID: 28367
+    ID: 28686
     splitterInitialOffset: 0
     currentActiveSplitter: -1
     realSizes:
@@ -1075,7 +1077,7 @@ MonoBehaviour:
   m_TestListGUIs:
   - m_Window: {fileID: 8}
     runProgress:
-      RunGuid: 05364ef0-3f35-4ecc-8863-d0c628a0448f
+      RunGuid: e51d488c-456c-4730-9df5-a06ef656bfaa
       ExecutionSettings:
         m_TargetPlatform: 0
         m_HasTargetPlatform: 0
@@ -1110,8 +1112,8 @@ MonoBehaviour:
       uniqueId: '[RTS][suite]'
       name: RTS
       fullName: RTS
-      resultStatus: 0
-      duration: 0.3038015
+      resultStatus: 1
+      duration: 0.43775582
       messages: 
       output: 
       stacktrace: 
@@ -1122,12 +1124,12 @@ MonoBehaviour:
       categories: []
       parentId: 
       parentUniqueId: 
-    - id: 1305
+    - id: 1316
       uniqueId: '[GameManager.Tests.EditMode.dll][suite]'
       name: GameManager.Tests.EditMode.dll
       fullName: C:/Git/Warcrap/UnityRTS/RTS/Library/ScriptAssemblies/GameManager.Tests.EditMode.dll
-      resultStatus: 0
-      duration: 0.3038015
+      resultStatus: 1
+      duration: 0.43775582
       messages: 
       output: 
       stacktrace: 
@@ -1136,14 +1138,14 @@ MonoBehaviour:
       description: 
       isSuite: 1
       categories: []
-      parentId: 1000
+      parentId: 1322
       parentUniqueId: '[RTS][suite]'
-    - id: 1306
+    - id: 1317
       uniqueId: 'GameManager.Tests.EditMode.dll/[GameManager.Tests.EditMode][GameManager][suite]'
       name: GameManager
       fullName: GameManager
-      resultStatus: 0
-      duration: 0.3038015
+      resultStatus: 1
+      duration: 0.43775582
       messages: 
       output: 
       stacktrace: 
@@ -1152,14 +1154,14 @@ MonoBehaviour:
       description: 
       isSuite: 1
       categories: []
-      parentId: 1305
+      parentId: 1316
       parentUniqueId: '[GameManager.Tests.EditMode.dll][suite]'
-    - id: 1010
+    - id: 1021
       uniqueId: 'GameManager.Tests.EditMode.dll/GameManager/[GameManager.Tests.EditMode][GameManager.Tests.AssemblySetup][suite]'
       name: Tests
       fullName: GameManager.Tests.AssemblySetup
-      resultStatus: 0
-      duration: 0.3038015
+      resultStatus: 1
+      duration: 0.43775582
       messages: 
       output: 
       stacktrace: 
@@ -1168,14 +1170,14 @@ MonoBehaviour:
       description: 
       isSuite: 1
       categories: []
-      parentId: 1306
+      parentId: 1317
       parentUniqueId: 'GameManager.Tests.EditMode.dll/[GameManager.Tests.EditMode][GameManager][suite]'
     - id: 1002
       uniqueId: 'GameManager.Tests.EditMode.dll/GameManager/Tests/[GameManager.Tests.EditMode][GameManager.Tests.AgentActionsAdapterTests][suite]'
       name: AgentActionsAdapterTests
       fullName: GameManager.Tests.AgentActionsAdapterTests
       resultStatus: 1
-      duration: 0.0078593
+      duration: 0.0179836
       messages: 
       output: 
       stacktrace: 
@@ -1184,14 +1186,14 @@ MonoBehaviour:
       description: 
       isSuite: 1
       categories: []
-      parentId: 1010
+      parentId: 1021
       parentUniqueId: 'GameManager.Tests.EditMode.dll/GameManager/[GameManager.Tests.EditMode][GameManager.Tests.AssemblySetup][suite]'
     - id: 1007
       uniqueId: 'GameManager.Tests.EditMode.dll/GameManager/Tests/AgentActionsAdapterTests/[GameManager.Tests.EditMode][GameManager.Tests.AgentActionsAdapterTests.Attack_BothUnknownUnits_DoesNotThrow]'
       name: Attack_BothUnknownUnits_DoesNotThrow
       fullName: GameManager.Tests.AgentActionsAdapterTests.Attack_BothUnknownUnits_DoesNotThrow
       resultStatus: 1
-      duration: 0.0054766
+      duration: 0.0147745
       messages: 
       output: 
       stacktrace: 
@@ -1208,7 +1210,7 @@ MonoBehaviour:
       name: Build_UnknownUnit_DoesNotThrow
       fullName: GameManager.Tests.AgentActionsAdapterTests.Build_UnknownUnit_DoesNotThrow
       resultStatus: 1
-      duration: 0.0009171
+      duration: 0.0009405
       messages: 
       output: 
       stacktrace: 
@@ -1225,7 +1227,7 @@ MonoBehaviour:
       name: Gather_AllUnknownUnits_DoesNotThrow
       fullName: GameManager.Tests.AgentActionsAdapterTests.Gather_AllUnknownUnits_DoesNotThrow
       resultStatus: 1
-      duration: 0.0005364
+      duration: 0.0010361
       messages: 
       output: 
       stacktrace: 
@@ -1242,7 +1244,7 @@ MonoBehaviour:
       name: Move_UnknownUnit_DoesNotThrow
       fullName: GameManager.Tests.AgentActionsAdapterTests.Move_UnknownUnit_DoesNotThrow
       resultStatus: 1
-      duration: 0.0004715
+      duration: 0.0006777
       messages: 
       output: 
       stacktrace: 
@@ -1259,7 +1261,7 @@ MonoBehaviour:
       name: Train_UnknownBuilding_DoesNotThrow
       fullName: GameManager.Tests.AgentActionsAdapterTests.Train_UnknownBuilding_DoesNotThrow
       resultStatus: 1
-      duration: 0.0004577
+      duration: 0.0005548
       messages: 
       output: 
       stacktrace: 
@@ -1275,8 +1277,8 @@ MonoBehaviour:
       uniqueId: 'GameManager.Tests.EditMode.dll/GameManager/Tests/[GameManager.Tests.EditMode][GameManager.Tests.AgentControllerTests][suite]'
       name: AgentControllerTests
       fullName: GameManager.Tests.AgentControllerTests
-      resultStatus: 0
-      duration: 0
+      resultStatus: 1
+      duration: 0.0012589
       messages: 
       output: 
       stacktrace: 
@@ -1285,14 +1287,14 @@ MonoBehaviour:
       description: 
       isSuite: 1
       categories: []
-      parentId: 1010
+      parentId: 1021
       parentUniqueId: 'GameManager.Tests.EditMode.dll/GameManager/[GameManager.Tests.EditMode][GameManager.Tests.AssemblySetup][suite]'
     - id: 1009
       uniqueId: 'GameManager.Tests.EditMode.dll/GameManager/Tests/AgentControllerTests/[GameManager.Tests.EditMode][GameManager.Tests.AgentControllerTests.Update_AgentNull_DoesNotThrow]'
       name: Update_AgentNull_DoesNotThrow
       fullName: GameManager.Tests.AgentControllerTests.Update_AgentNull_DoesNotThrow
-      resultStatus: 0
-      duration: 0
+      resultStatus: 1
+      duration: 0.0012589
       messages: 
       output: 
       stacktrace: 
@@ -1304,12 +1306,12 @@ MonoBehaviour:
       - Uncategorized
       parentId: 1008
       parentUniqueId: 'GameManager.Tests.EditMode.dll/GameManager/Tests/[GameManager.Tests.EditMode][GameManager.Tests.AgentControllerTests][suite]'
-    - id: 1011
-      uniqueId: 'GameManager.Tests.EditMode.dll/GameManager/Tests/[GameManager.Tests.EditMode][GameManager.Tests.AStarAvoidUnitsTests][suite]'
-      name: AStarAvoidUnitsTests
-      fullName: GameManager.Tests.AStarAvoidUnitsTests
+    - id: 1010
+      uniqueId: 'GameManager.Tests.EditMode.dll/GameManager/Tests/[GameManager.Tests.EditMode][GameManager.Tests.AgentLoaderTests][suite]'
+      name: AgentLoaderTests
+      fullName: GameManager.Tests.AgentLoaderTests
       resultStatus: 1
-      duration: 0.0059734
+      duration: 0.0880621
       messages: 
       output: 
       stacktrace: 
@@ -1318,14 +1320,304 @@ MonoBehaviour:
       description: 
       isSuite: 1
       categories: []
-      parentId: 1010
+      parentId: 1021
+      parentUniqueId: 'GameManager.Tests.EditMode.dll/GameManager/[GameManager.Tests.EditMode][GameManager.Tests.AssemblySetup][suite]'
+    - id: 1282
+      uniqueId: 'GameManager.Tests.EditMode.dll/GameManager/Tests/AgentLoaderTests/[GameManager.Tests.EditMode][GameManager.Tests.AgentLoaderTests.Constructor_StoresPathToDLLs]'
+      name: Constructor_StoresPathToDLLs
+      fullName: GameManager.Tests.AgentLoaderTests.Constructor_StoresPathToDLLs
+      resultStatus: 1
+      duration: 0.0096655
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 0
+      categories:
+      - Uncategorized
+      parentId: 1281
+      parentUniqueId: 'GameManager.Tests.EditMode.dll/GameManager/Tests/[GameManager.Tests.EditMode][GameManager.Tests.AgentLoaderTests][suite]'
+    - id: 1284
+      uniqueId: 'GameManager.Tests.EditMode.dll/GameManager/Tests/AgentLoaderTests/[GameManager.Tests.EditMode][GameManager.Tests.AgentLoaderTests.GetDLLNamesFromDir_EmptyDirectory_ReturnsEmptyList]'
+      name: GetDLLNamesFromDir_EmptyDirectory_ReturnsEmptyList
+      fullName: GameManager.Tests.AgentLoaderTests.GetDLLNamesFromDir_EmptyDirectory_ReturnsEmptyList
+      resultStatus: 1
+      duration: 0.0087029
+      messages: 
+      output: '<color=cyan>NOTICE: Playing single round against all DLLs</color>
+
+        pathToDLLs:
+        C:\Users\Dana\AppData\Local\Temp\d89a10a7-9032-480d-9f02-e7b2acb2287d
+
+        files:
+        0
+
+        dllNames: 0
+
+'
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 0
+      categories:
+      - Uncategorized
+      parentId: 1281
+      parentUniqueId: 'GameManager.Tests.EditMode.dll/GameManager/Tests/[GameManager.Tests.EditMode][GameManager.Tests.AgentLoaderTests][suite]'
+    - id: 1287
+      uniqueId: 'GameManager.Tests.EditMode.dll/GameManager/Tests/AgentLoaderTests/[GameManager.Tests.EditMode][GameManager.Tests.AgentLoaderTests.GetDLLNamesFromDir_ExcludesMine]'
+      name: GetDLLNamesFromDir_ExcludesMine
+      fullName: GameManager.Tests.AgentLoaderTests.GetDLLNamesFromDir_ExcludesMine
+      resultStatus: 1
+      duration: 0.0139603
+      messages: 
+      output: '<color=cyan>NOTICE: Playing single round against all DLLs</color>
+
+        pathToDLLs:
+        C:\Users\Dana\AppData\Local\Temp\150b2386-eb7d-42a6-b0e7-6718c7b51075
+
+        files:
+        2
+
+        filename: C:\Users\Dana\AppData\Local\Temp\150b2386-eb7d-42a6-b0e7-6718c7b51075\PlanningAgent_Alpha.dll
+
+        filename:
+        C:\Users\Dana\AppData\Local\Temp\150b2386-eb7d-42a6-b0e7-6718c7b51075\PlanningAgent_Mine.dll
+
+        dllNames:
+        1
+
+'
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 0
+      categories:
+      - Uncategorized
+      parentId: 1281
+      parentUniqueId: 'GameManager.Tests.EditMode.dll/GameManager/Tests/[GameManager.Tests.EditMode][GameManager.Tests.AgentLoaderTests][suite]'
+    - id: 1286
+      uniqueId: 'GameManager.Tests.EditMode.dll/GameManager/Tests/AgentLoaderTests/[GameManager.Tests.EditMode][GameManager.Tests.AgentLoaderTests.GetDLLNamesFromDir_MultipleMatchingFiles_ReturnsAllNames]'
+      name: GetDLLNamesFromDir_MultipleMatchingFiles_ReturnsAllNames
+      fullName: GameManager.Tests.AgentLoaderTests.GetDLLNamesFromDir_MultipleMatchingFiles_ReturnsAllNames
+      resultStatus: 1
+      duration: 0.0108174
+      messages: 
+      output: '<color=cyan>NOTICE: Playing single round against all DLLs</color>
+
+        pathToDLLs:
+        C:\Users\Dana\AppData\Local\Temp\1c0dee0a-16a3-4d12-b080-ec8c2cfdf22a
+
+        files:
+        3
+
+        filename: C:\Users\Dana\AppData\Local\Temp\1c0dee0a-16a3-4d12-b080-ec8c2cfdf22a\PlanningAgent_Alpha.dll
+
+        filename:
+        C:\Users\Dana\AppData\Local\Temp\1c0dee0a-16a3-4d12-b080-ec8c2cfdf22a\PlanningAgent_Beta.dll
+
+        filename:
+        C:\Users\Dana\AppData\Local\Temp\1c0dee0a-16a3-4d12-b080-ec8c2cfdf22a\PlanningAgent_Gamma.dll
+
+        dllNames:
+        3
+
+'
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 0
+      categories:
+      - Uncategorized
+      parentId: 1281
+      parentUniqueId: 'GameManager.Tests.EditMode.dll/GameManager/Tests/[GameManager.Tests.EditMode][GameManager.Tests.AgentLoaderTests][suite]'
+    - id: 1288
+      uniqueId: 'GameManager.Tests.EditMode.dll/GameManager/Tests/AgentLoaderTests/[GameManager.Tests.EditMode][GameManager.Tests.AgentLoaderTests.GetDLLNamesFromDir_NonMatchingFilenames_AreIgnored]'
+      name: GetDLLNamesFromDir_NonMatchingFilenames_AreIgnored
+      fullName: GameManager.Tests.AgentLoaderTests.GetDLLNamesFromDir_NonMatchingFilenames_AreIgnored
+      resultStatus: 1
+      duration: 0.0090784
+      messages: 
+      output: '<color=cyan>NOTICE: Playing single round against all DLLs</color>
+
+        pathToDLLs:
+        C:\Users\Dana\AppData\Local\Temp\970389e4-e746-4aef-936e-3ca2f8427188
+
+        files:
+        3
+
+        filename: C:\Users\Dana\AppData\Local\Temp\970389e4-e746-4aef-936e-3ca2f8427188\PlanningAgent_Alpha.dll
+
+        filename:
+        C:\Users\Dana\AppData\Local\Temp\970389e4-e746-4aef-936e-3ca2f8427188\readme.txt
+
+        filename:
+        C:\Users\Dana\AppData\Local\Temp\970389e4-e746-4aef-936e-3ca2f8427188\SomeLib.dll
+
+        dllNames:
+        1
+
+'
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 0
+      categories:
+      - Uncategorized
+      parentId: 1281
+      parentUniqueId: 'GameManager.Tests.EditMode.dll/GameManager/Tests/[GameManager.Tests.EditMode][GameManager.Tests.AgentLoaderTests][suite]'
+    - id: 1289
+      uniqueId: 'GameManager.Tests.EditMode.dll/GameManager/Tests/AgentLoaderTests/[GameManager.Tests.EditMode][GameManager.Tests.AgentLoaderTests.GetDLLNamesFromDir_OnlyMine_ReturnsEmptyList]'
+      name: GetDLLNamesFromDir_OnlyMine_ReturnsEmptyList
+      fullName: GameManager.Tests.AgentLoaderTests.GetDLLNamesFromDir_OnlyMine_ReturnsEmptyList
+      resultStatus: 1
+      duration: 0.0077238
+      messages: 
+      output: '<color=cyan>NOTICE: Playing single round against all DLLs</color>
+
+        pathToDLLs:
+        C:\Users\Dana\AppData\Local\Temp\f4c3d457-e5fc-4112-8d95-abc1b0f36150
+
+        files:
+        1
+
+        filename: C:\Users\Dana\AppData\Local\Temp\f4c3d457-e5fc-4112-8d95-abc1b0f36150\PlanningAgent_Mine.dll
+
+        dllNames:
+        0
+
+'
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 0
+      categories:
+      - Uncategorized
+      parentId: 1281
+      parentUniqueId: 'GameManager.Tests.EditMode.dll/GameManager/Tests/[GameManager.Tests.EditMode][GameManager.Tests.AgentLoaderTests][suite]'
+    - id: 1283
+      uniqueId: 'GameManager.Tests.EditMode.dll/GameManager/Tests/AgentLoaderTests/[GameManager.Tests.EditMode][GameManager.Tests.AgentLoaderTests.GetDLLNamesFromDir_ReturnsNonNullList]'
+      name: GetDLLNamesFromDir_ReturnsNonNullList
+      fullName: GameManager.Tests.AgentLoaderTests.GetDLLNamesFromDir_ReturnsNonNullList
+      resultStatus: 1
+      duration: 0.0061802
+      messages: 
+      output: '<color=cyan>NOTICE: Playing single round against all DLLs</color>
+
+        pathToDLLs:
+        C:\Users\Dana\AppData\Local\Temp\cf133108-d901-4f4e-815e-e687dec0c96a
+
+        files:
+        0
+
+        dllNames: 0
+
+'
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 0
+      categories:
+      - Uncategorized
+      parentId: 1281
+      parentUniqueId: 'GameManager.Tests.EditMode.dll/GameManager/Tests/[GameManager.Tests.EditMode][GameManager.Tests.AgentLoaderTests][suite]'
+    - id: 1285
+      uniqueId: 'GameManager.Tests.EditMode.dll/GameManager/Tests/AgentLoaderTests/[GameManager.Tests.EditMode][GameManager.Tests.AgentLoaderTests.GetDLLNamesFromDir_SingleMatchingFile_ExtractsDLLName]'
+      name: GetDLLNamesFromDir_SingleMatchingFile_ExtractsDLLName
+      fullName: GameManager.Tests.AgentLoaderTests.GetDLLNamesFromDir_SingleMatchingFile_ExtractsDLLName
+      resultStatus: 1
+      duration: 0.0054448
+      messages: 
+      output: '<color=cyan>NOTICE: Playing single round against all DLLs</color>
+
+        pathToDLLs:
+        C:\Users\Dana\AppData\Local\Temp\d463491b-20bc-461d-a073-f7c0aeaaa6e0
+
+        files:
+        1
+
+        filename: C:\Users\Dana\AppData\Local\Temp\d463491b-20bc-461d-a073-f7c0aeaaa6e0\PlanningAgent_Alpha.dll
+
+        dllNames:
+        1
+
+'
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 0
+      categories:
+      - Uncategorized
+      parentId: 1281
+      parentUniqueId: 'GameManager.Tests.EditMode.dll/GameManager/Tests/[GameManager.Tests.EditMode][GameManager.Tests.AgentLoaderTests][suite]'
+    - id: 1291
+      uniqueId: 'GameManager.Tests.EditMode.dll/GameManager/Tests/AgentLoaderTests/[GameManager.Tests.EditMode][GameManager.Tests.AgentLoaderTests.LoadDLL_InvalidFileContent_ThrowsBadImageFormatException]'
+      name: LoadDLL_InvalidFileContent_ThrowsBadImageFormatException
+      fullName: GameManager.Tests.AgentLoaderTests.LoadDLL_InvalidFileContent_ThrowsBadImageFormatException
+      resultStatus: 1
+      duration: 0.012156
+      messages: 
+      output: 'Opening dll file: C:\Users\Dana\AppData\Local\Temp\3f645c51-7061-4e9d-ad15-b70559c91efe/PlanningAgent_Fake.dll
+
+'
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 0
+      categories:
+      - Uncategorized
+      parentId: 1281
+      parentUniqueId: 'GameManager.Tests.EditMode.dll/GameManager/Tests/[GameManager.Tests.EditMode][GameManager.Tests.AgentLoaderTests][suite]'
+    - id: 1290
+      uniqueId: 'GameManager.Tests.EditMode.dll/GameManager/Tests/AgentLoaderTests/[GameManager.Tests.EditMode][GameManager.Tests.AgentLoaderTests.LoadDLL_MissingFile_ThrowsFileNotFoundException]'
+      name: LoadDLL_MissingFile_ThrowsFileNotFoundException
+      fullName: GameManager.Tests.AgentLoaderTests.LoadDLL_MissingFile_ThrowsFileNotFoundException
+      resultStatus: 1
+      duration: 0.0043328
+      messages: 
+      output: 'Opening dll file: C:\Users\Dana\AppData\Local\Temp\4100cde7-4701-49ca-a68d-ba9bdb102c35/PlanningAgent_NonExistent.dll
+
+'
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 0
+      categories:
+      - Uncategorized
+      parentId: 1281
+      parentUniqueId: 'GameManager.Tests.EditMode.dll/GameManager/Tests/[GameManager.Tests.EditMode][GameManager.Tests.AgentLoaderTests][suite]'
+    - id: 1022
+      uniqueId: 'GameManager.Tests.EditMode.dll/GameManager/Tests/[GameManager.Tests.EditMode][GameManager.Tests.AStarAvoidUnitsTests][suite]'
+      name: AStarAvoidUnitsTests
+      fullName: GameManager.Tests.AStarAvoidUnitsTests
+      resultStatus: 1
+      duration: 0.017722001
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 1
+      categories: []
+      parentId: 1021
       parentUniqueId: 'GameManager.Tests.EditMode.dll/GameManager/[GameManager.Tests.EditMode][GameManager.Tests.AssemblySetup][suite]'
     - id: 1008
       uniqueId: 'GameManager.Tests.EditMode.dll/GameManager/Tests/AStarAvoidUnitsTests/[GameManager.Tests.EditMode][GameManager.Tests.AStarAvoidUnitsTests.AvoidUnits_AllNeighborsNonBuildable_Exhausted]'
       name: AvoidUnits_AllNeighborsNonBuildable_Exhausted
       fullName: GameManager.Tests.AStarAvoidUnitsTests.AvoidUnits_AllNeighborsNonBuildable_Exhausted
       resultStatus: 1
-      duration: 0.003738
+      duration: 0.0097764
       messages: 
       output: 
       stacktrace: 
@@ -1342,7 +1634,7 @@ MonoBehaviour:
       name: AvoidUnits_EndNotBuildable_ReturnsEndBlocked
       fullName: GameManager.Tests.AStarAvoidUnitsTests.AvoidUnits_EndNotBuildable_ReturnsEndBlocked
       resultStatus: 1
-      duration: 0.0004648
+      duration: 0.0006253
       messages: 
       output: 
       stacktrace: 
@@ -1359,7 +1651,7 @@ MonoBehaviour:
       name: AvoidUnits_NonBuildableInMiddle_PathGoesAround
       fullName: GameManager.Tests.AStarAvoidUnitsTests.AvoidUnits_NonBuildableInMiddle_PathGoesAround
       resultStatus: 1
-      duration: 0.0006835
+      duration: 0.004964
       messages: 
       output: 
       stacktrace: 
@@ -1376,7 +1668,7 @@ MonoBehaviour:
       name: DefaultMode_EndNotBuildable_ButWalkable_FindsPath
       fullName: GameManager.Tests.AStarAvoidUnitsTests.DefaultMode_EndNotBuildable_ButWalkable_FindsPath
       resultStatus: 1
-      duration: 0.000422
+      duration: 0.0014608
       messages: 
       output: 
       stacktrace: 
@@ -1393,7 +1685,7 @@ MonoBehaviour:
       name: DefaultMode_NonBuildableCellsTraversable_PathMayGoThrough
       fullName: GameManager.Tests.AStarAvoidUnitsTests.DefaultMode_NonBuildableCellsTraversable_PathMayGoThrough
       resultStatus: 1
-      duration: 0.0002936
+      duration: 0.0004789
       messages: 
       output: 
       stacktrace: 
@@ -1410,7 +1702,7 @@ MonoBehaviour:
       name: OpenGrid_BothModes_SamePathLength
       fullName: GameManager.Tests.AStarAvoidUnitsTests.OpenGrid_BothModes_SamePathLength
       resultStatus: 1
-      duration: 0.0003715
+      duration: 0.0004166
       messages: 
       output: 
       stacktrace: 
@@ -1422,12 +1714,12 @@ MonoBehaviour:
       - Uncategorized
       parentId: 1002
       parentUniqueId: 'GameManager.Tests.EditMode.dll/GameManager/Tests/[GameManager.Tests.EditMode][GameManager.Tests.AStarAvoidUnitsTests][suite]'
-    - id: 1018
+    - id: 1029
       uniqueId: 'GameManager.Tests.EditMode.dll/GameManager/Tests/[GameManager.Tests.EditMode][GameManager.Tests.AStarOptimalityTests][suite]'
       name: AStarOptimalityTests
       fullName: GameManager.Tests.AStarOptimalityTests
       resultStatus: 1
-      duration: 0.0037482
+      duration: 0.0045402
       messages: 
       output: 
       stacktrace: 
@@ -1436,14 +1728,14 @@ MonoBehaviour:
       description: 
       isSuite: 1
       categories: []
-      parentId: 1010
+      parentId: 1021
       parentUniqueId: 'GameManager.Tests.EditMode.dll/GameManager/[GameManager.Tests.EditMode][GameManager.Tests.AssemblySetup][suite]'
     - id: 1011
       uniqueId: 'GameManager.Tests.EditMode.dll/GameManager/Tests/AStarOptimalityTests/[GameManager.Tests.EditMode][GameManager.Tests.AStarOptimalityTests.LinearChain_ReturnsExactHopCount]'
       name: LinearChain_ReturnsExactHopCount
       fullName: GameManager.Tests.AStarOptimalityTests.LinearChain_ReturnsExactHopCount
       resultStatus: 1
-      duration: 0.0005407
+      duration: 0.0005629
       messages: 
       output: 
       stacktrace: 
@@ -1460,7 +1752,7 @@ MonoBehaviour:
       name: LongLinearPath_AllStepsAreContiguous
       fullName: GameManager.Tests.AStarOptimalityTests.LongLinearPath_AllStepsAreContiguous
       resultStatus: 1
-      duration: 0.0006194
+      duration: 0.0005376
       messages: 
       output: 
       stacktrace: 
@@ -1477,7 +1769,7 @@ MonoBehaviour:
       name: MultipleSearches_EachFindsCorrectTarget
       fullName: GameManager.Tests.AStarOptimalityTests.MultipleSearches_EachFindsCorrectTarget
       resultStatus: 1
-      duration: 0.0006447
+      duration: 0.0005585
       messages: 
       output: 
       stacktrace: 
@@ -1494,7 +1786,7 @@ MonoBehaviour:
       name: Path_DoesNotContainStartNode
       fullName: GameManager.Tests.AStarOptimalityTests.Path_DoesNotContainStartNode
       resultStatus: 1
-      duration: 0.0005588
+      duration: 0.0012331
       messages: 
       output: 
       stacktrace: 
@@ -1511,7 +1803,7 @@ MonoBehaviour:
       name: SecondSearch_AfterReset_FindsNewTarget
       fullName: GameManager.Tests.AStarOptimalityTests.SecondSearch_AfterReset_FindsNewTarget
       resultStatus: 1
-      duration: 0.0004121
+      duration: 0.0004929
       messages: 
       output: 
       stacktrace: 
@@ -1528,7 +1820,7 @@ MonoBehaviour:
       name: ShortDiagonalVsLongerOrtho_TakesFewerHops
       fullName: GameManager.Tests.AStarOptimalityTests.ShortDiagonalVsLongerOrtho_TakesFewerHops
       resultStatus: 1
-      duration: 0.0004094
+      duration: 0.0005445
       messages: 
       output: 
       stacktrace: 
@@ -1545,7 +1837,7 @@ MonoBehaviour:
       name: WallDetour_PathLengthIsBoundedAbove
       fullName: GameManager.Tests.AStarOptimalityTests.WallDetour_PathLengthIsBoundedAbove
       resultStatus: 1
-      duration: 0.0005631
+      duration: 0.0006107
       messages: 
       output: 
       stacktrace: 
@@ -1557,12 +1849,12 @@ MonoBehaviour:
       - Uncategorized
       parentId: 1009
       parentUniqueId: 'GameManager.Tests.EditMode.dll/GameManager/Tests/[GameManager.Tests.EditMode][GameManager.Tests.AStarOptimalityTests][suite]'
-    - id: 1026
+    - id: 1037
       uniqueId: 'GameManager.Tests.EditMode.dll/GameManager/Tests/[GameManager.Tests.EditMode][GameManager.Tests.AStarSearchTests][suite]'
       name: AStarSearchTests
       fullName: GameManager.Tests.AStarSearchTests
       resultStatus: 1
-      duration: 0.109701805
+      duration: 0.073224105
       messages: 
       output: 
       stacktrace: 
@@ -1571,14 +1863,14 @@ MonoBehaviour:
       description: 
       isSuite: 1
       categories: []
-      parentId: 1010
+      parentId: 1021
       parentUniqueId: 'GameManager.Tests.EditMode.dll/GameManager/[GameManager.Tests.EditMode][GameManager.Tests.AssemblySetup][suite]'
     - id: 1019
       uniqueId: 'GameManager.Tests.EditMode.dll/GameManager/Tests/AStarSearchTests/[GameManager.Tests.EditMode][GameManager.Tests.AStarSearchTests.AdjacentNodes_ReturnsOneStep]'
       name: AdjacentNodes_ReturnsOneStep
       fullName: GameManager.Tests.AStarSearchTests.AdjacentNodes_ReturnsOneStep
       resultStatus: 1
-      duration: 0.0004994
+      duration: 0.0008298
       messages: 
       output: 
       stacktrace: 
@@ -1595,7 +1887,7 @@ MonoBehaviour:
       name: DefaultCap_FindsPath
       fullName: GameManager.Tests.AStarSearchTests.DefaultCap_FindsPath
       resultStatus: 1
-      duration: 0.0008608
+      duration: 0.0012769
       messages: 
       output: 
       stacktrace: 
@@ -1612,7 +1904,7 @@ MonoBehaviour:
       name: DiagonalPath_ReturnsOneStep
       fullName: GameManager.Tests.AStarSearchTests.DiagonalPath_ReturnsOneStep
       resultStatus: 1
-      duration: 0.0004006
+      duration: 0.0006197
       messages: 
       output: 
       stacktrace: 
@@ -1629,7 +1921,7 @@ MonoBehaviour:
       name: EndNodeBlocked_ReturnsEmpty
       fullName: GameManager.Tests.AStarSearchTests.EndNodeBlocked_ReturnsEmpty
       resultStatus: 1
-      duration: 0.0003916
+      duration: 0.0005747
       messages: 
       output: 
       stacktrace: 
@@ -1646,7 +1938,7 @@ MonoBehaviour:
       name: ExpansionCap_ReturnsCap
       fullName: GameManager.Tests.AStarSearchTests.ExpansionCap_ReturnsCap
       resultStatus: 1
-      duration: 0.0006499
+      duration: 0.0008181
       messages: 
       output: 
       stacktrace: 
@@ -1663,7 +1955,7 @@ MonoBehaviour:
       name: FindClosestNeighbor_NoEdges_ReturnsMinusOne
       fullName: GameManager.Tests.AStarSearchTests.FindClosestNeighbor_NoEdges_ReturnsMinusOne
       resultStatus: 1
-      duration: 0.000559
+      duration: 0.00052
       messages: 
       output: 
       stacktrace: 
@@ -1680,7 +1972,7 @@ MonoBehaviour:
       name: FindClosestNeighbor_ReturnsNearest
       fullName: GameManager.Tests.AStarSearchTests.FindClosestNeighbor_ReturnsNearest
       resultStatus: 1
-      duration: 0.0003677
+      duration: 0.0003074
       messages: 
       output: 
       stacktrace: 
@@ -1697,7 +1989,7 @@ MonoBehaviour:
       name: FullyEnclosed_ReturnsExhausted
       fullName: GameManager.Tests.AStarSearchTests.FullyEnclosed_ReturnsExhausted
       resultStatus: 1
-      duration: 0.0004885
+      duration: 0.000484
       messages: 
       output: 
       stacktrace: 
@@ -1714,7 +2006,7 @@ MonoBehaviour:
       name: LargeGrid_100x100_CompletesQuickly
       fullName: GameManager.Tests.AStarSearchTests.LargeGrid_100x100_CompletesQuickly
       resultStatus: 1
-      duration: 0.0998627
+      duration: 0.0580587
       messages: 
       output: 
       stacktrace: 
@@ -1731,7 +2023,7 @@ MonoBehaviour:
       name: LongerPath_CorrectLength
       fullName: GameManager.Tests.AStarSearchTests.LongerPath_CorrectLength
       resultStatus: 1
-      duration: 0.0004508
+      duration: 0.0003912
       messages: 
       output: 
       stacktrace: 
@@ -1748,7 +2040,7 @@ MonoBehaviour:
       name: PathDoesNotIncludeStart
       fullName: GameManager.Tests.AStarSearchTests.PathDoesNotIncludeStart
       resultStatus: 1
-      duration: 0.0004686
+      duration: 0.0005834
       messages: 
       output: 
       stacktrace: 
@@ -1765,7 +2057,7 @@ MonoBehaviour:
       name: PathEndsAtTarget
       fullName: GameManager.Tests.AStarSearchTests.PathEndsAtTarget
       resultStatus: 1
-      duration: 0.0003611
+      duration: 0.0003601
       messages: 
       output: 
       stacktrace: 
@@ -1782,7 +2074,7 @@ MonoBehaviour:
       name: PathIsContiguous
       fullName: GameManager.Tests.AStarSearchTests.PathIsContiguous
       resultStatus: 1
-      duration: 0.001134
+      duration: 0.0010322
       messages: 
       output: 
       stacktrace: 
@@ -1799,7 +2091,7 @@ MonoBehaviour:
       name: ResetSearch_ClearsAllNodes
       fullName: GameManager.Tests.AStarSearchTests.ResetSearch_ClearsAllNodes
       resultStatus: 1
-      duration: 0.0010741
+      duration: 0.0016965
       messages: 
       output: 
       stacktrace: 
@@ -1816,7 +2108,7 @@ MonoBehaviour:
       name: RunTwice_SecondSearchValid
       fullName: GameManager.Tests.AStarSearchTests.RunTwice_SecondSearchValid
       resultStatus: 1
-      duration: 0.0004714
+      duration: 0.000588
       messages: 
       output: 
       stacktrace: 
@@ -1833,7 +2125,7 @@ MonoBehaviour:
       name: SameNode_ReturnsEmpty_SameNode
       fullName: GameManager.Tests.AStarSearchTests.SameNode_ReturnsEmpty_SameNode
       resultStatus: 1
-      duration: 0.0003574
+      duration: 0.0037925
       messages: 
       output: 
       stacktrace: 
@@ -1850,7 +2142,7 @@ MonoBehaviour:
       name: StartBlocked_StillFindsPathThroughWalkableNeighbors
       fullName: GameManager.Tests.AStarSearchTests.StartBlocked_StillFindsPathThroughWalkableNeighbors
       resultStatus: 1
-      duration: 0.0004801
+      duration: 0.0005177
       messages: 
       output: 
       stacktrace: 
@@ -1867,7 +2159,7 @@ MonoBehaviour:
       name: WallChannel_PathGoesAround
       fullName: GameManager.Tests.AStarSearchTests.WallChannel_PathGoesAround
       resultStatus: 1
-      duration: 0.0008241
+      duration: 0.0007732
       messages: 
       output: 
       stacktrace: 
@@ -1879,12 +2171,12 @@ MonoBehaviour:
       - Uncategorized
       parentId: 1017
       parentUniqueId: 'GameManager.Tests.EditMode.dll/GameManager/Tests/[GameManager.Tests.EditMode][GameManager.Tests.AStarSearchTests][suite]'
-    - id: 1045
+    - id: 1056
       uniqueId: 'GameManager.Tests.EditMode.dll/GameManager/Tests/[GameManager.Tests.EditMode][GameManager.Tests.ConstantsAttackSizeTests][suite]'
       name: ConstantsAttackSizeTests
       fullName: GameManager.Tests.ConstantsAttackSizeTests
       resultStatus: 1
-      duration: 0.0036807999
+      duration: 0.0251542
       messages: 
       output: 
       stacktrace: 
@@ -1893,14 +2185,14 @@ MonoBehaviour:
       description: 
       isSuite: 1
       categories: []
-      parentId: 1010
+      parentId: 1021
       parentUniqueId: 'GameManager.Tests.EditMode.dll/GameManager/[GameManager.Tests.EditMode][GameManager.Tests.AssemblySetup][suite]'
     - id: 1038
       uniqueId: 'GameManager.Tests.EditMode.dll/GameManager/Tests/ConstantsAttackSizeTests/[GameManager.Tests.EditMode][GameManager.Tests.ConstantsAttackSizeTests.AttackRange_AllNonNegative]'
       name: AttackRange_AllNonNegative
       fullName: GameManager.Tests.ConstantsAttackSizeTests.AttackRange_AllNonNegative
       resultStatus: 1
-      duration: 0.0006326
+      duration: 0.0182155
       messages: 
       output: 
       stacktrace: 
@@ -1917,7 +2209,7 @@ MonoBehaviour:
       name: AttackRange_CombatUnits_HavePositiveRange
       fullName: GameManager.Tests.ConstantsAttackSizeTests.AttackRange_CombatUnits_HavePositiveRange
       resultStatus: 1
-      duration: 0.0002237
+      duration: 0.0007355
       messages: 
       output: 
       stacktrace: 
@@ -1934,7 +2226,7 @@ MonoBehaviour:
       name: AttackRange_ConsistentWithCanAttack
       fullName: GameManager.Tests.ConstantsAttackSizeTests.AttackRange_ConsistentWithCanAttack
       resultStatus: 1
-      duration: 0.0003186
+      duration: 0.0011955
       messages: 
       output: 
       stacktrace: 
@@ -1951,7 +2243,7 @@ MonoBehaviour:
       name: AttackRange_HasAllSevenUnitTypes
       fullName: GameManager.Tests.ConstantsAttackSizeTests.AttackRange_HasAllSevenUnitTypes
       resultStatus: 1
-      duration: 0.0003601
+      duration: 0.0003085
       messages: 
       output: 
       stacktrace: 
@@ -1968,7 +2260,7 @@ MonoBehaviour:
       name: AttackRange_NonCombatUnits_HaveZeroRange
       fullName: GameManager.Tests.ConstantsAttackSizeTests.AttackRange_NonCombatUnits_HaveZeroRange
       resultStatus: 1
-      duration: 0.0003168
+      duration: 0.0003312
       messages: 
       output: 
       stacktrace: 
@@ -1985,7 +2277,7 @@ MonoBehaviour:
       name: UnitSize_AllNonNegativeDimensions
       fullName: GameManager.Tests.ConstantsAttackSizeTests.UnitSize_AllNonNegativeDimensions
       resultStatus: 1
-      duration: 0.0008166
+      duration: 0.0009117
       messages: 
       output: 
       stacktrace: 
@@ -2002,7 +2294,7 @@ MonoBehaviour:
       name: UnitSize_Buildings_LargerThanOneByOne
       fullName: GameManager.Tests.ConstantsAttackSizeTests.UnitSize_Buildings_LargerThanOneByOne
       resultStatus: 1
-      duration: 0.000316
+      duration: 0.0007552
       messages: 
       output: 
       stacktrace: 
@@ -2019,7 +2311,7 @@ MonoBehaviour:
       name: UnitSize_HasAllSevenUnitTypes
       fullName: GameManager.Tests.ConstantsAttackSizeTests.UnitSize_HasAllSevenUnitTypes
       resultStatus: 1
-      duration: 0.0003732
+      duration: 0.0003439
       messages: 
       output: 
       stacktrace: 
@@ -2036,7 +2328,7 @@ MonoBehaviour:
       name: UnitSize_MobileUnits_AreOneByOne
       fullName: GameManager.Tests.ConstantsAttackSizeTests.UnitSize_MobileUnits_AreOneByOne
       resultStatus: 1
-      duration: 0.0003232
+      duration: 0.0023572
       messages: 
       output: 
       stacktrace: 
@@ -2048,12 +2340,12 @@ MonoBehaviour:
       - Uncategorized
       parentId: 1036
       parentUniqueId: 'GameManager.Tests.EditMode.dll/GameManager/Tests/[GameManager.Tests.EditMode][GameManager.Tests.ConstantsAttackSizeTests][suite]'
-    - id: 1055
+    - id: 1066
       uniqueId: 'GameManager.Tests.EditMode.dll/GameManager/Tests/[GameManager.Tests.EditMode][GameManager.Tests.ConstantsCapabilityDictTests][suite]'
       name: ConstantsCapabilityDictTests
       fullName: GameManager.Tests.ConstantsCapabilityDictTests
       resultStatus: 1
-      duration: 0.0027629
+      duration: 0.0033654
       messages: 
       output: 
       stacktrace: 
@@ -2062,14 +2354,14 @@ MonoBehaviour:
       description: 
       isSuite: 1
       categories: []
-      parentId: 1010
+      parentId: 1021
       parentUniqueId: 'GameManager.Tests.EditMode.dll/GameManager/[GameManager.Tests.EditMode][GameManager.Tests.AssemblySetup][suite]'
     - id: 1050
       uniqueId: 'GameManager.Tests.EditMode.dll/GameManager/Tests/ConstantsCapabilityDictTests/[GameManager.Tests.EditMode][GameManager.Tests.ConstantsCapabilityDictTests.CanAttack_HasAllSevenUnitTypes]'
       name: CanAttack_HasAllSevenUnitTypes
       fullName: GameManager.Tests.ConstantsCapabilityDictTests.CanAttack_HasAllSevenUnitTypes
       resultStatus: 1
-      duration: 0.0005606
+      duration: 0.000831
       messages: 
       output: 
       stacktrace: 
@@ -2086,7 +2378,7 @@ MonoBehaviour:
       name: CanBuild_HasAllSevenUnitTypes
       fullName: GameManager.Tests.ConstantsCapabilityDictTests.CanBuild_HasAllSevenUnitTypes
       resultStatus: 1
-      duration: 0.0005044
+      duration: 0.0003352
       messages: 
       output: 
       stacktrace: 
@@ -2103,7 +2395,7 @@ MonoBehaviour:
       name: CanGather_HasAllSevenUnitTypes
       fullName: GameManager.Tests.ConstantsCapabilityDictTests.CanGather_HasAllSevenUnitTypes
       resultStatus: 1
-      duration: 0.0003485
+      duration: 0.0003518
       messages: 
       output: 
       stacktrace: 
@@ -2120,7 +2412,7 @@ MonoBehaviour:
       name: CanMove_HasAllSevenUnitTypes
       fullName: GameManager.Tests.ConstantsCapabilityDictTests.CanMove_HasAllSevenUnitTypes
       resultStatus: 1
-      duration: 0.000265
+      duration: 0.0004607
       messages: 
       output: 
       stacktrace: 
@@ -2137,7 +2429,7 @@ MonoBehaviour:
       name: CanTrain_HasAllSevenUnitTypes
       fullName: GameManager.Tests.ConstantsCapabilityDictTests.CanTrain_HasAllSevenUnitTypes
       resultStatus: 1
-      duration: 0.0003035
+      duration: 0.000545
       messages: 
       output: 
       stacktrace: 
@@ -2154,7 +2446,7 @@ MonoBehaviour:
       name: Immobile_AlsoCannotAttack
       fullName: GameManager.Tests.ConstantsCapabilityDictTests.Immobile_AlsoCannotAttack
       resultStatus: 1
-      duration: 0.0002401
+      duration: 0.0002413
       messages: 
       output: 
       stacktrace: 
@@ -2171,7 +2463,7 @@ MonoBehaviour:
       name: Immobile_AlsoCannotGather
       fullName: GameManager.Tests.ConstantsCapabilityDictTests.Immobile_AlsoCannotGather
       resultStatus: 1
-      duration: 0.0002979
+      duration: 0.0002511
       messages: 
       output: 
       stacktrace: 
@@ -2188,7 +2480,7 @@ MonoBehaviour:
       name: NoBuildAndTrainOverlap
       fullName: GameManager.Tests.ConstantsCapabilityDictTests.NoBuildAndTrainOverlap
       resultStatus: 1
-      duration: 0.0002429
+      duration: 0.0003493
       messages: 
       output: 
       stacktrace: 
@@ -2200,12 +2492,12 @@ MonoBehaviour:
       - Uncategorized
       parentId: 1046
       parentUniqueId: 'GameManager.Tests.EditMode.dll/GameManager/Tests/[GameManager.Tests.EditMode][GameManager.Tests.ConstantsCapabilityDictTests][suite]'
-    - id: 1064
+    - id: 1075
       uniqueId: 'GameManager.Tests.EditMode.dll/GameManager/Tests/[GameManager.Tests.EditMode][GameManager.Tests.ConstantsCapabilityTests][suite]'
       name: ConstantsCapabilityTests
       fullName: GameManager.Tests.ConstantsCapabilityTests
       resultStatus: 1
-      duration: 0.0057981
+      duration: 0.0061013
       messages: 
       output: 
       stacktrace: 
@@ -2214,14 +2506,14 @@ MonoBehaviour:
       description: 
       isSuite: 1
       categories: []
-      parentId: 1010
+      parentId: 1021
       parentUniqueId: 'GameManager.Tests.EditMode.dll/GameManager/[GameManager.Tests.EditMode][GameManager.Tests.AssemblySetup][suite]'
     - id: 1061
       uniqueId: 'GameManager.Tests.EditMode.dll/GameManager/Tests/ConstantsCapabilityTests/[GameManager.Tests.EditMode][GameManager.Tests.ConstantsCapabilityTests.AttackRange_ArcherGreaterThanSoldier]'
       name: AttackRange_ArcherGreaterThanSoldier
       fullName: GameManager.Tests.ConstantsCapabilityTests.AttackRange_ArcherGreaterThanSoldier
       resultStatus: 1
-      duration: 0.0003459
+      duration: 0.0004763
       messages: 
       output: 
       stacktrace: 
@@ -2238,7 +2530,7 @@ MonoBehaviour:
       name: CanAttack_OnlySoldierAndArcherAreTrue
       fullName: GameManager.Tests.ConstantsCapabilityTests.CanAttack_OnlySoldierAndArcherAreTrue
       resultStatus: 1
-      duration: 0.0003363
+      duration: 0.0005945
       messages: 
       output: 
       stacktrace: 
@@ -2255,7 +2547,7 @@ MonoBehaviour:
       name: CanBuild_OnlyWorkerIsTrue
       fullName: GameManager.Tests.ConstantsCapabilityTests.CanBuild_OnlyWorkerIsTrue
       resultStatus: 1
-      duration: 0.0002236
+      duration: 0.0002378
       messages: 
       output: 
       stacktrace: 
@@ -2272,7 +2564,7 @@ MonoBehaviour:
       name: CanGather_OnlyWorkerIsTrue
       fullName: GameManager.Tests.ConstantsCapabilityTests.CanGather_OnlyWorkerIsTrue
       resultStatus: 1
-      duration: 0.0003246
+      duration: 0.0002882
       messages: 
       output: 
       stacktrace: 
@@ -2289,7 +2581,7 @@ MonoBehaviour:
       name: CanMove_OnlyMobileUnitsAreTrue
       fullName: GameManager.Tests.ConstantsCapabilityTests.CanMove_OnlyMobileUnitsAreTrue
       resultStatus: 1
-      duration: 0.000336
+      duration: 0.0004074
       messages: 
       output: 
       stacktrace: 
@@ -2306,7 +2598,7 @@ MonoBehaviour:
       name: CanTrain_OnlyBaseAndBarracksAreTrue
       fullName: GameManager.Tests.ConstantsCapabilityTests.CanTrain_OnlyBaseAndBarracksAreTrue
       resultStatus: 1
-      duration: 0.0003182
+      duration: 0.0003867
       messages: 
       output: 
       stacktrace: 
@@ -2323,7 +2615,7 @@ MonoBehaviour:
       name: Dependency_BarracksDependsOnBase
       fullName: GameManager.Tests.ConstantsCapabilityTests.Dependency_BarracksDependsOnBase
       resultStatus: 1
-      duration: 0.00121
+      duration: 0.0011185
       messages: 
       output: 
       stacktrace: 
@@ -2340,7 +2632,7 @@ MonoBehaviour:
       name: Dependency_BaseHasNoDependencies
       fullName: GameManager.Tests.ConstantsCapabilityTests.Dependency_BaseHasNoDependencies
       resultStatus: 1
-      duration: 0.0002674
+      duration: 0.0002354
       messages: 
       output: 
       stacktrace: 
@@ -2357,7 +2649,7 @@ MonoBehaviour:
       name: Dependency_RefineryDependsOnBase
       fullName: GameManager.Tests.ConstantsCapabilityTests.Dependency_RefineryDependsOnBase
       resultStatus: 1
-      duration: 0.0002764
+      duration: 0.0001697
       messages: 
       output: 
       stacktrace: 
@@ -2374,7 +2666,7 @@ MonoBehaviour:
       name: TrainsMatrix_CorrectUnitTypes
       fullName: GameManager.Tests.ConstantsCapabilityTests.TrainsMatrix_CorrectUnitTypes
       resultStatus: 1
-      duration: 0.0005418
+      duration: 0.0003946
       messages: 
       output: 
       stacktrace: 
@@ -2391,7 +2683,7 @@ MonoBehaviour:
       name: TrainsMatrix_DoesNotContainWrongTypes
       fullName: GameManager.Tests.ConstantsCapabilityTests.TrainsMatrix_DoesNotContainWrongTypes
       resultStatus: 1
-      duration: 0.0002187
+      duration: 0.0007011
       messages: 
       output: 
       stacktrace: 
@@ -2408,7 +2700,7 @@ MonoBehaviour:
       name: UnitValue_CombatUnitsWorthMoreThanWorker
       fullName: GameManager.Tests.ConstantsCapabilityTests.UnitValue_CombatUnitsWorthMoreThanWorker
       resultStatus: 1
-      duration: 0.0008325
+      duration: 0.0005611
       messages: 
       output: 
       stacktrace: 
@@ -2425,7 +2717,7 @@ MonoBehaviour:
       name: UnitValue_MineIsZero
       fullName: GameManager.Tests.ConstantsCapabilityTests.UnitValue_MineIsZero
       resultStatus: 1
-      duration: 0.000258
+      duration: 0.000178
       messages: 
       output: 
       stacktrace: 
@@ -2442,7 +2734,7 @@ MonoBehaviour:
       name: WorkerBuilds_BaseBarracksRefinery
       fullName: GameManager.Tests.ConstantsCapabilityTests.WorkerBuilds_BaseBarracksRefinery
       resultStatus: 1
-      duration: 0.0003087
+      duration: 0.000352
       messages: 
       output: 
       stacktrace: 
@@ -2454,12 +2746,12 @@ MonoBehaviour:
       - Uncategorized
       parentId: 1055
       parentUniqueId: 'GameManager.Tests.EditMode.dll/GameManager/Tests/[GameManager.Tests.EditMode][GameManager.Tests.ConstantsCapabilityTests][suite]'
-    - id: 1079
+    - id: 1090
       uniqueId: 'GameManager.Tests.EditMode.dll/GameManager/Tests/[GameManager.Tests.EditMode][GameManager.Tests.ConstantsHealthTests][suite]'
       name: ConstantsHealthTests
       fullName: GameManager.Tests.ConstantsHealthTests
       resultStatus: 1
-      duration: 0.0023712
+      duration: 0.0057918
       messages: 
       output: 
       stacktrace: 
@@ -2468,14 +2760,14 @@ MonoBehaviour:
       description: 
       isSuite: 1
       categories: []
-      parentId: 1010
+      parentId: 1021
       parentUniqueId: 'GameManager.Tests.EditMode.dll/GameManager/[GameManager.Tests.EditMode][GameManager.Tests.AssemblySetup][suite]'
     - id: 1072
       uniqueId: 'GameManager.Tests.EditMode.dll/GameManager/Tests/ConstantsHealthTests/[GameManager.Tests.EditMode][GameManager.Tests.ConstantsHealthTests.Health_AllValuesPositive]'
       name: Health_AllValuesPositive
       fullName: GameManager.Tests.ConstantsHealthTests.Health_AllValuesPositive
       resultStatus: 1
-      duration: 0.0008046
+      duration: 0.0013533
       messages: 
       output: 
       stacktrace: 
@@ -2492,7 +2784,7 @@ MonoBehaviour:
       name: Health_BarracksGreaterThanWorker
       fullName: GameManager.Tests.ConstantsHealthTests.Health_BarracksGreaterThanWorker
       resultStatus: 1
-      duration: 0.0002771
+      duration: 0.0003644
       messages: 
       output: 
       stacktrace: 
@@ -2509,7 +2801,7 @@ MonoBehaviour:
       name: Health_BaseGreaterThanWorker
       fullName: GameManager.Tests.ConstantsHealthTests.Health_BaseGreaterThanWorker
       resultStatus: 1
-      duration: 0.0002178
+      duration: 0.000234
       messages: 
       output: 
       stacktrace: 
@@ -2526,7 +2818,7 @@ MonoBehaviour:
       name: Health_CombatUnitsGreaterThanWorker
       fullName: GameManager.Tests.ConstantsHealthTests.Health_CombatUnitsGreaterThanWorker
       resultStatus: 1
-      duration: 0.0002591
+      duration: 0.0002538
       messages: 
       output: 
       stacktrace: 
@@ -2543,7 +2835,7 @@ MonoBehaviour:
       name: Health_DictionaryIsNotNull
       fullName: GameManager.Tests.ConstantsHealthTests.Health_DictionaryIsNotNull
       resultStatus: 1
-      duration: 0.0002017
+      duration: 0.0024967
       messages: 
       output: 
       stacktrace: 
@@ -2560,7 +2852,7 @@ MonoBehaviour:
       name: Health_HasAllSevenUnitTypes
       fullName: GameManager.Tests.ConstantsHealthTests.Health_HasAllSevenUnitTypes
       resultStatus: 1
-      duration: 0.0003551
+      duration: 0.0005782
       messages: 
       output: 
       stacktrace: 
@@ -2577,7 +2869,7 @@ MonoBehaviour:
       name: Health_MineLargerThanCombatUnits
       fullName: GameManager.Tests.ConstantsHealthTests.Health_MineLargerThanCombatUnits
       resultStatus: 1
-      duration: 0.0002558
+      duration: 0.0005114
       messages: 
       output: 
       stacktrace: 
@@ -2589,12 +2881,12 @@ MonoBehaviour:
       - Uncategorized
       parentId: 1070
       parentUniqueId: 'GameManager.Tests.EditMode.dll/GameManager/Tests/[GameManager.Tests.EditMode][GameManager.Tests.ConstantsHealthTests][suite]'
-    - id: 1087
+    - id: 1098
       uniqueId: 'GameManager.Tests.EditMode.dll/GameManager/Tests/[GameManager.Tests.EditMode][GameManager.Tests.ConstantsTests][suite]'
       name: ConstantsTests
       fullName: GameManager.Tests.ConstantsTests
       resultStatus: 1
-      duration: 0.0039125
+      duration: 0.0051245
       messages: 
       output: 
       stacktrace: 
@@ -2603,14 +2895,14 @@ MonoBehaviour:
       description: 
       isSuite: 1
       categories: []
-      parentId: 1010
+      parentId: 1021
       parentUniqueId: 'GameManager.Tests.EditMode.dll/GameManager/[GameManager.Tests.EditMode][GameManager.Tests.AssemblySetup][suite]'
     - id: 1086
       uniqueId: 'GameManager.Tests.EditMode.dll/GameManager/Tests/ConstantsTests/[GameManager.Tests.EditMode][GameManager.Tests.ConstantsTests.CostDelegatedFromSDK]'
       name: CostDelegatedFromSDK
       fullName: GameManager.Tests.ConstantsTests.CostDelegatedFromSDK
       resultStatus: 1
-      duration: 0.0006134
+      duration: 0.0011418
       messages: 
       output: 
       stacktrace: 
@@ -2627,7 +2919,7 @@ MonoBehaviour:
       name: HealthMine_MatchesStartingGold
       fullName: GameManager.Tests.ConstantsTests.HealthMine_MatchesStartingGold
       resultStatus: 1
-      duration: 0.0003128
+      duration: 0.0007031
       messages: 
       output: 
       stacktrace: 
@@ -2644,7 +2936,7 @@ MonoBehaviour:
       name: ImmobileUnits_ZeroSpeed
       fullName: GameManager.Tests.ConstantsTests.ImmobileUnits_ZeroSpeed
       resultStatus: 1
-      duration: 0.000583
+      duration: 0.000943
       messages: 
       output: 
       stacktrace: 
@@ -2661,7 +2953,7 @@ MonoBehaviour:
       name: MaxSpeed_CreationTimeInverse
       fullName: GameManager.Tests.ConstantsTests.MaxSpeed_CreationTimeInverse
       resultStatus: 1
-      duration: 0.0003682
+      duration: 0.0004089
       messages: 
       output: 
       stacktrace: 
@@ -2678,7 +2970,7 @@ MonoBehaviour:
       name: NonCombatants_ZeroDamage
       fullName: GameManager.Tests.ConstantsTests.NonCombatants_ZeroDamage
       resultStatus: 1
-      duration: 0.0002975
+      duration: 0.0004463
       messages: 
       output: 
       stacktrace: 
@@ -2695,7 +2987,7 @@ MonoBehaviour:
       name: Speed1_SoldierDamage
       fullName: GameManager.Tests.ConstantsTests.Speed1_SoldierDamage
       resultStatus: 1
-      duration: 0.0003248
+      duration: 0.0003013
       messages: 
       output: 
       stacktrace: 
@@ -2712,7 +3004,7 @@ MonoBehaviour:
       name: Speed1_WorkerMovingSpeed
       fullName: GameManager.Tests.ConstantsTests.Speed1_WorkerMovingSpeed
       resultStatus: 1
-      duration: 0.0006805
+      duration: 0.0003164
       messages: 
       output: 
       stacktrace: 
@@ -2729,7 +3021,7 @@ MonoBehaviour:
       name: Speed3_SoldierDamageScales
       fullName: GameManager.Tests.ConstantsTests.Speed3_SoldierDamageScales
       resultStatus: 1
-      duration: 0.000234
+      duration: 0.0002734
       messages: 
       output: 
       stacktrace: 
@@ -2746,7 +3038,7 @@ MonoBehaviour:
       name: Speed5_WorkerMovingSpeedScales
       fullName: GameManager.Tests.ConstantsTests.Speed5_WorkerMovingSpeedScales
       resultStatus: 1
-      duration: 0.0002254
+      duration: 0.000317
       messages: 
       output: 
       stacktrace: 
@@ -2763,7 +3055,7 @@ MonoBehaviour:
       name: SpeedZero_CreationTimeIsExplicitInfinity
       fullName: GameManager.Tests.ConstantsTests.SpeedZero_CreationTimeIsExplicitInfinity
       resultStatus: 1
-      duration: 0.0002729
+      duration: 0.0002733
       messages: 
       output: 
       stacktrace: 
@@ -2775,12 +3067,12 @@ MonoBehaviour:
       - Uncategorized
       parentId: 1078
       parentUniqueId: 'GameManager.Tests.EditMode.dll/GameManager/Tests/[GameManager.Tests.EditMode][GameManager.Tests.ConstantsTests][suite]'
-    - id: 1098
+    - id: 1109
       uniqueId: 'GameManager.Tests.EditMode.dll/GameManager/Tests/[GameManager.Tests.EditMode][GameManager.Tests.ConstantsUnitValueTests][suite]'
       name: ConstantsUnitValueTests
       fullName: GameManager.Tests.ConstantsUnitValueTests
       resultStatus: 1
-      duration: 0.0031283
+      duration: 0.0030196
       messages: 
       output: 
       stacktrace: 
@@ -2789,14 +3081,14 @@ MonoBehaviour:
       description: 
       isSuite: 1
       categories: []
-      parentId: 1010
+      parentId: 1021
       parentUniqueId: 'GameManager.Tests.EditMode.dll/GameManager/[GameManager.Tests.EditMode][GameManager.Tests.AssemblySetup][suite]'
     - id: 1091
       uniqueId: 'GameManager.Tests.EditMode.dll/GameManager/Tests/ConstantsUnitValueTests/[GameManager.Tests.EditMode][GameManager.Tests.ConstantsUnitValueTests.UnitValue_AllNonNegative]'
       name: UnitValue_AllNonNegative
       fullName: GameManager.Tests.ConstantsUnitValueTests.UnitValue_AllNonNegative
       resultStatus: 1
-      duration: 0.0011034
+      duration: 0.0009568
       messages: 
       output: 
       stacktrace: 
@@ -2813,7 +3105,7 @@ MonoBehaviour:
       name: UnitValue_Archer_IsFive
       fullName: GameManager.Tests.ConstantsUnitValueTests.UnitValue_Archer_IsFive
       resultStatus: 1
-      duration: 0.0002492
+      duration: 0.0002166
       messages: 
       output: 
       stacktrace: 
@@ -2830,7 +3122,7 @@ MonoBehaviour:
       name: UnitValue_ArcherGreaterThanSoldier
       fullName: GameManager.Tests.ConstantsUnitValueTests.UnitValue_ArcherGreaterThanSoldier
       resultStatus: 1
-      duration: 0.0001938
+      duration: 0.0001629
       messages: 
       output: 
       stacktrace: 
@@ -2847,7 +3139,7 @@ MonoBehaviour:
       name: UnitValue_Barracks_IsThree
       fullName: GameManager.Tests.ConstantsUnitValueTests.UnitValue_Barracks_IsThree
       resultStatus: 1
-      duration: 0.0001685
+      duration: 0.0002161
       messages: 
       output: 
       stacktrace: 
@@ -2864,7 +3156,7 @@ MonoBehaviour:
       name: UnitValue_BarracksGreaterThanBase
       fullName: GameManager.Tests.ConstantsUnitValueTests.UnitValue_BarracksGreaterThanBase
       resultStatus: 1
-      duration: 0.0001829
+      duration: 0.000234
       messages: 
       output: 
       stacktrace: 
@@ -2881,7 +3173,7 @@ MonoBehaviour:
       name: UnitValue_Base_IsTwo
       fullName: GameManager.Tests.ConstantsUnitValueTests.UnitValue_Base_IsTwo
       resultStatus: 1
-      duration: 0.000152
+      duration: 0.0002319
       messages: 
       output: 
       stacktrace: 
@@ -2898,7 +3190,7 @@ MonoBehaviour:
       name: UnitValue_BaseGreaterThanWorker
       fullName: GameManager.Tests.ConstantsUnitValueTests.UnitValue_BaseGreaterThanWorker
       resultStatus: 1
-      duration: 0.0001613
+      duration: 0.0001699
       messages: 
       output: 
       stacktrace: 
@@ -2915,7 +3207,7 @@ MonoBehaviour:
       name: UnitValue_HasAllSevenUnitTypes
       fullName: GameManager.Tests.ConstantsUnitValueTests.UnitValue_HasAllSevenUnitTypes
       resultStatus: 1
-      duration: 0.0003049
+      duration: 0.0003454
       messages: 
       output: 
       stacktrace: 
@@ -2932,7 +3224,7 @@ MonoBehaviour:
       name: UnitValue_Mine_IsZero
       fullName: GameManager.Tests.ConstantsUnitValueTests.UnitValue_Mine_IsZero
       resultStatus: 1
-      duration: 0.0001952
+      duration: 0.0001472
       messages: 
       output: 
       stacktrace: 
@@ -2949,7 +3241,7 @@ MonoBehaviour:
       name: UnitValue_Soldier_IsFour
       fullName: GameManager.Tests.ConstantsUnitValueTests.UnitValue_Soldier_IsFour
       resultStatus: 1
-      duration: 0.0001596
+      duration: 0.0001477
       messages: 
       output: 
       stacktrace: 
@@ -2966,7 +3258,7 @@ MonoBehaviour:
       name: UnitValue_WorkerAndRefinery_AreOne
       fullName: GameManager.Tests.ConstantsUnitValueTests.UnitValue_WorkerAndRefinery_AreOne
       resultStatus: 1
-      duration: 0.0002575
+      duration: 0.0001911
       messages: 
       output: 
       stacktrace: 
@@ -2978,12 +3270,12 @@ MonoBehaviour:
       - Uncategorized
       parentId: 1089
       parentUniqueId: 'GameManager.Tests.EditMode.dll/GameManager/Tests/[GameManager.Tests.EditMode][GameManager.Tests.ConstantsUnitValueTests][suite]'
-    - id: 1110
+    - id: 1121
       uniqueId: 'GameManager.Tests.EditMode.dll/GameManager/Tests/[GameManager.Tests.EditMode][GameManager.Tests.DirectionMappingTests][suite]'
       name: DirectionMappingTests
       fullName: GameManager.Tests.DirectionMappingTests
       resultStatus: 1
-      duration: 0.0055988
+      duration: 0.0037489
       messages: 
       output: 
       stacktrace: 
@@ -2992,14 +3284,14 @@ MonoBehaviour:
       description: 
       isSuite: 1
       categories: []
-      parentId: 1010
+      parentId: 1021
       parentUniqueId: 'GameManager.Tests.EditMode.dll/GameManager/[GameManager.Tests.EditMode][GameManager.Tests.AssemblySetup][suite]'
     - id: 1107
       uniqueId: 'GameManager.Tests.EditMode.dll/GameManager/Tests/DirectionMappingTests/[GameManager.Tests.EditMode][GameManager.Tests.DirectionMappingTests.Direction_E_MapsToRight]'
       name: Direction_E_MapsToRight
       fullName: GameManager.Tests.DirectionMappingTests.Direction_E_MapsToRight
       resultStatus: 1
-      duration: 0.0021835
+      duration: 0.0009
       messages: 
       output: 
       stacktrace: 
@@ -3016,7 +3308,7 @@ MonoBehaviour:
       name: Direction_N_MapsToUp
       fullName: GameManager.Tests.DirectionMappingTests.Direction_N_MapsToUp
       resultStatus: 1
-      duration: 0.0003238
+      duration: 0.0002203
       messages: 
       output: 
       stacktrace: 
@@ -3033,7 +3325,7 @@ MonoBehaviour:
       name: Direction_NE_MapsToUpperRight
       fullName: GameManager.Tests.DirectionMappingTests.Direction_NE_MapsToUpperRight
       resultStatus: 1
-      duration: 0.0002715
+      duration: 0.0002209
       messages: 
       output: 
       stacktrace: 
@@ -3050,7 +3342,7 @@ MonoBehaviour:
       name: Direction_NW_MapsToUpperLeft
       fullName: GameManager.Tests.DirectionMappingTests.Direction_NW_MapsToUpperLeft
       resultStatus: 1
-      duration: 0.0002034
+      duration: 0.0002242
       messages: 
       output: 
       stacktrace: 
@@ -3067,7 +3359,7 @@ MonoBehaviour:
       name: Direction_S_MapsToDown
       fullName: GameManager.Tests.DirectionMappingTests.Direction_S_MapsToDown
       resultStatus: 1
-      duration: 0.0001887
+      duration: 0.0001689
       messages: 
       output: 
       stacktrace: 
@@ -3084,7 +3376,7 @@ MonoBehaviour:
       name: Direction_SE_MapsToLowerRight
       fullName: GameManager.Tests.DirectionMappingTests.Direction_SE_MapsToLowerRight
       resultStatus: 1
-      duration: 0.0002061
+      duration: 0.0003878
       messages: 
       output: 
       stacktrace: 
@@ -3101,7 +3393,7 @@ MonoBehaviour:
       name: Direction_SW_MapsToLowerLeft
       fullName: GameManager.Tests.DirectionMappingTests.Direction_SW_MapsToLowerLeft
       resultStatus: 1
-      duration: 0.0002441
+      duration: 0.0002349
       messages: 
       output: 
       stacktrace: 
@@ -3118,7 +3410,7 @@ MonoBehaviour:
       name: Direction_W_MapsToLeft
       fullName: GameManager.Tests.DirectionMappingTests.Direction_W_MapsToLeft
       resultStatus: 1
-      duration: 0.0002533
+      duration: 0.0002267
       messages: 
       output: 
       stacktrace: 
@@ -3135,7 +3427,7 @@ MonoBehaviour:
       name: Directions_ContainsAllEightDirections
       fullName: GameManager.Tests.DirectionMappingTests.Directions_ContainsAllEightDirections
       resultStatus: 1
-      duration: 0.0005176
+      duration: 0.0003341
       messages: 
       output: 
       stacktrace: 
@@ -3152,7 +3444,7 @@ MonoBehaviour:
       name: Directions_DoesNotContainNone
       fullName: GameManager.Tests.DirectionMappingTests.Directions_DoesNotContainNone
       resultStatus: 1
-      duration: 0.0002617
+      duration: 0.0001518
       messages: 
       output: 
       stacktrace: 
@@ -3169,7 +3461,7 @@ MonoBehaviour:
       name: Directions_HasExactlyEightEntries
       fullName: GameManager.Tests.DirectionMappingTests.Directions_HasExactlyEightEntries
       resultStatus: 1
-      duration: 0.0003927
+      duration: 0.0002056
       messages: 
       output: 
       stacktrace: 
@@ -3186,7 +3478,7 @@ MonoBehaviour:
       name: OppositeDirections_SumToZero
       fullName: GameManager.Tests.DirectionMappingTests.OppositeDirections_SumToZero
       resultStatus: 1
-      duration: 0.0005524
+      duration: 0.0004737
       messages: 
       output: 
       stacktrace: 
@@ -3198,12 +3490,12 @@ MonoBehaviour:
       - Uncategorized
       parentId: 1101
       parentUniqueId: 'GameManager.Tests.EditMode.dll/GameManager/Tests/[GameManager.Tests.EditMode][GameManager.Tests.DirectionMappingTests][suite]'
-    - id: 1123
+    - id: 1134
       uniqueId: 'GameManager.Tests.EditMode.dll/GameManager/Tests/[GameManager.Tests.EditMode][GameManager.Tests.GameManagerUITests][suite]'
       name: GameManagerUITests
       fullName: GameManager.Tests.GameManagerUITests
       resultStatus: 1
-      duration: 0.0154728
+      duration: 0.0154072
       messages: 
       output: 
       stacktrace: 
@@ -3212,14 +3504,14 @@ MonoBehaviour:
       description: 
       isSuite: 1
       categories: []
-      parentId: 1010
+      parentId: 1021
       parentUniqueId: 'GameManager.Tests.EditMode.dll/GameManager/[GameManager.Tests.EditMode][GameManager.Tests.AssemblySetup][suite]'
     - id: 1381
       uniqueId: 'GameManager.Tests.EditMode.dll/GameManager/Tests/GameManagerUITests/[GameManager.Tests.EditMode][GameManager.Tests.GameManagerUITests.DebugBinding0_Execute_TogglesHasAgentDebugging]'
       name: DebugBinding0_Execute_TogglesHasAgentDebugging
       fullName: GameManager.Tests.GameManagerUITests.DebugBinding0_Execute_TogglesHasAgentDebugging
       resultStatus: 1
-      duration: 0.0022798
+      duration: 0.0020039
       messages: 
       output: 
       stacktrace: 
@@ -3236,7 +3528,7 @@ MonoBehaviour:
       name: DebugBinding1_Execute_TogglesHasUnitDebugging
       fullName: GameManager.Tests.GameManagerUITests.DebugBinding1_Execute_TogglesHasUnitDebugging
       resultStatus: 1
-      duration: 0.0004537
+      duration: 0.0004977
       messages: 
       output: 
       stacktrace: 
@@ -3253,7 +3545,7 @@ MonoBehaviour:
       name: DebugBinding3_Execute_TogglesHasMoveTint
       fullName: GameManager.Tests.GameManagerUITests.DebugBinding3_Execute_TogglesHasMoveTint
       resultStatus: 1
-      duration: 0.000482
+      duration: 0.000399
       messages: 
       output: 
       stacktrace: 
@@ -3270,7 +3562,7 @@ MonoBehaviour:
       name: DebugBinding4_Execute_TogglesHasGatherTint
       fullName: GameManager.Tests.GameManagerUITests.DebugBinding4_Execute_TogglesHasGatherTint
       resultStatus: 1
-      duration: 0.0003919
+      duration: 0.0003894
       messages: 
       output: 
       stacktrace: 
@@ -3287,7 +3579,7 @@ MonoBehaviour:
       name: DebugBinding5_Execute_TogglesHasBuildTint
       fullName: GameManager.Tests.GameManagerUITests.DebugBinding5_Execute_TogglesHasBuildTint
       resultStatus: 1
-      duration: 0.0004149
+      duration: 0.0004253
       messages: 
       output: 
       stacktrace: 
@@ -3304,7 +3596,7 @@ MonoBehaviour:
       name: DebugBinding6_Execute_TogglesHasAttackTint
       fullName: GameManager.Tests.GameManagerUITests.DebugBinding6_Execute_TogglesHasAttackTint
       resultStatus: 1
-      duration: 0.0003748
+      duration: 0.0004495
       messages: 
       output: 
       stacktrace: 
@@ -3321,7 +3613,7 @@ MonoBehaviour:
       name: DebugBinding7_Execute_TogglesHasPathTint
       fullName: GameManager.Tests.GameManagerUITests.DebugBinding7_Execute_TogglesHasPathTint
       resultStatus: 1
-      duration: 0.0003969
+      duration: 0.0003859
       messages: 
       output: 
       stacktrace: 
@@ -3338,7 +3630,7 @@ MonoBehaviour:
       name: DebugBinding8_Execute_TogglesHasTargetLineTint
       fullName: GameManager.Tests.GameManagerUITests.DebugBinding8_Execute_TogglesHasTargetLineTint
       resultStatus: 1
-      duration: 0.0004116
+      duration: 0.000488
       messages: 
       output: 
       stacktrace: 
@@ -3355,7 +3647,7 @@ MonoBehaviour:
       name: GameSpeed_AboveOne_GuardAllowsDecrement
       fullName: GameManager.Tests.GameManagerUITests.GameSpeed_AboveOne_GuardAllowsDecrement
       resultStatus: 1
-      duration: 0.0002347
+      duration: 0.0002387
       messages: 
       output: 
       stacktrace: 
@@ -3372,7 +3664,7 @@ MonoBehaviour:
       name: GameSpeed_AtMax_GuardPreventsIncrement
       fullName: GameManager.Tests.GameManagerUITests.GameSpeed_AtMax_GuardPreventsIncrement
       resultStatus: 1
-      duration: 0.0002456
+      duration: 0.0002415
       messages: 
       output: 
       stacktrace: 
@@ -3389,7 +3681,7 @@ MonoBehaviour:
       name: GameSpeed_AtOne_GuardPreventsDecrement
       fullName: GameManager.Tests.GameManagerUITests.GameSpeed_AtOne_GuardPreventsDecrement
       resultStatus: 1
-      duration: 0.000263
+      duration: 0.0002354
       messages: 
       output: 
       stacktrace: 
@@ -3406,7 +3698,7 @@ MonoBehaviour:
       name: GameSpeed_BelowMax_GuardAllowsIncrement
       fullName: GameManager.Tests.GameManagerUITests.GameSpeed_BelowMax_GuardAllowsIncrement
       resultStatus: 1
-      duration: 0.0002395
+      duration: 0.0002269
       messages: 
       output: 
       stacktrace: 
@@ -3423,7 +3715,7 @@ MonoBehaviour:
       name: InitializeDebugToggles_PopulatesNineBindings
       fullName: GameManager.Tests.GameManagerUITests.InitializeDebugToggles_PopulatesNineBindings
       resultStatus: 1
-      duration: 0.0003315
+      duration: 0.0003052
       messages: 
       output: 
       stacktrace: 
@@ -3440,7 +3732,7 @@ MonoBehaviour:
       name: OnAgentToggleChanged_False_ClearsHasAgentDebugging
       fullName: GameManager.Tests.GameManagerUITests.OnAgentToggleChanged_False_ClearsHasAgentDebugging
       resultStatus: 1
-      duration: 0.0002939
+      duration: 0.0002702
       messages: 
       output: 
       stacktrace: 
@@ -3457,7 +3749,7 @@ MonoBehaviour:
       name: OnAgentToggleChanged_True_SetsHasAgentDebugging
       fullName: GameManager.Tests.GameManagerUITests.OnAgentToggleChanged_True_SetsHasAgentDebugging
       resultStatus: 1
-      duration: 0.0002274
+      duration: 0.0003012
       messages: 
       output: 
       stacktrace: 
@@ -3474,7 +3766,7 @@ MonoBehaviour:
       name: OnAttackTintToggleChanged_False_ClearsHasAttackTint
       fullName: GameManager.Tests.GameManagerUITests.OnAttackTintToggleChanged_False_ClearsHasAttackTint
       resultStatus: 1
-      duration: 0.0002261
+      duration: 0.0002564
       messages: 
       output: 
       stacktrace: 
@@ -3491,7 +3783,7 @@ MonoBehaviour:
       name: OnAttackTintToggleChanged_True_SetsHasAttackTint
       fullName: GameManager.Tests.GameManagerUITests.OnAttackTintToggleChanged_True_SetsHasAttackTint
       resultStatus: 1
-      duration: 0.0002143
+      duration: 0.0002318
       messages: 
       output: 
       stacktrace: 
@@ -3508,7 +3800,7 @@ MonoBehaviour:
       name: OnBuildTintToggleChanged_False_ClearsHasBuildTint
       fullName: GameManager.Tests.GameManagerUITests.OnBuildTintToggleChanged_False_ClearsHasBuildTint
       resultStatus: 1
-      duration: 0.0002308
+      duration: 0.0002499
       messages: 
       output: 
       stacktrace: 
@@ -3525,7 +3817,7 @@ MonoBehaviour:
       name: OnBuildTintToggleChanged_True_SetsHasBuildTint
       fullName: GameManager.Tests.GameManagerUITests.OnBuildTintToggleChanged_True_SetsHasBuildTint
       resultStatus: 1
-      duration: 0.0002381
+      duration: 0.0003342
       messages: 
       output: 
       stacktrace: 
@@ -3542,7 +3834,7 @@ MonoBehaviour:
       name: OnGatherTintToggleChanged_False_ClearsHasGatherTint
       fullName: GameManager.Tests.GameManagerUITests.OnGatherTintToggleChanged_False_ClearsHasGatherTint
       resultStatus: 1
-      duration: 0.0002039
+      duration: 0.0002127
       messages: 
       output: 
       stacktrace: 
@@ -3559,7 +3851,7 @@ MonoBehaviour:
       name: OnGatherTintToggleChanged_True_SetsHasGatherTint
       fullName: GameManager.Tests.GameManagerUITests.OnGatherTintToggleChanged_True_SetsHasGatherTint
       resultStatus: 1
-      duration: 0.0002021
+      duration: 0.0002094
       messages: 
       output: 
       stacktrace: 
@@ -3576,7 +3868,7 @@ MonoBehaviour:
       name: OnMoveTintToggleChanged_False_ClearsHasMoveTint
       fullName: GameManager.Tests.GameManagerUITests.OnMoveTintToggleChanged_False_ClearsHasMoveTint
       resultStatus: 1
-      duration: 0.0002161
+      duration: 0.0002057
       messages: 
       output: 
       stacktrace: 
@@ -3593,7 +3885,7 @@ MonoBehaviour:
       name: OnMoveTintToggleChanged_True_SetsHasMoveTint
       fullName: GameManager.Tests.GameManagerUITests.OnMoveTintToggleChanged_True_SetsHasMoveTint
       resultStatus: 1
-      duration: 0.0002173
+      duration: 0.0002162
       messages: 
       output: 
       stacktrace: 
@@ -3610,7 +3902,7 @@ MonoBehaviour:
       name: OnPathTintToggleChanged_False_ClearsHasPathTint
       fullName: GameManager.Tests.GameManagerUITests.OnPathTintToggleChanged_False_ClearsHasPathTint
       resultStatus: 1
-      duration: 0.0002176
+      duration: 0.0002167
       messages: 
       output: 
       stacktrace: 
@@ -3627,7 +3919,7 @@ MonoBehaviour:
       name: OnPathTintToggleChanged_True_SetsHasPathTint
       fullName: GameManager.Tests.GameManagerUITests.OnPathTintToggleChanged_True_SetsHasPathTint
       resultStatus: 1
-      duration: 0.000209
+      duration: 0.0002246
       messages: 
       output: 
       stacktrace: 
@@ -3644,7 +3936,7 @@ MonoBehaviour:
       name: OnTargetLineTintToggleChanged_False_ClearsHasTargetLineTint
       fullName: GameManager.Tests.GameManagerUITests.OnTargetLineTintToggleChanged_False_ClearsHasTargetLineTint
       resultStatus: 1
-      duration: 0.0002324
+      duration: 0.0002412
       messages: 
       output: 
       stacktrace: 
@@ -3661,7 +3953,7 @@ MonoBehaviour:
       name: OnTargetLineTintToggleChanged_True_SetsHasTargetLineTint
       fullName: GameManager.Tests.GameManagerUITests.OnTargetLineTintToggleChanged_True_SetsHasTargetLineTint
       resultStatus: 1
-      duration: 0.000258
+      duration: 0.0003545
       messages: 
       output: 
       stacktrace: 
@@ -3678,7 +3970,7 @@ MonoBehaviour:
       name: OnUnitToggleChanged_False_ClearsHasUnitDebugging
       fullName: GameManager.Tests.GameManagerUITests.OnUnitToggleChanged_False_ClearsHasUnitDebugging
       resultStatus: 1
-      duration: 0.0002236
+      duration: 0.0002172
       messages: 
       output: 
       stacktrace: 
@@ -3695,7 +3987,7 @@ MonoBehaviour:
       name: OnUnitToggleChanged_True_SetsHasUnitDebugging
       fullName: GameManager.Tests.GameManagerUITests.OnUnitToggleChanged_True_SetsHasUnitDebugging
       resultStatus: 1
-      duration: 0.0002021
+      duration: 0.000249
       messages: 
       output: 
       stacktrace: 
@@ -3712,7 +4004,7 @@ MonoBehaviour:
       name: ProcessUserInput_NullBindings_DoesNotThrow
       fullName: GameManager.Tests.GameManagerUITests.ProcessUserInput_NullBindings_DoesNotThrow
       resultStatus: 1
-      duration: 0.0006047
+      duration: 0.0007595
       messages: 
       output: 
       stacktrace: 
@@ -3729,7 +4021,7 @@ MonoBehaviour:
       name: UpdateCustomDebugUI_AgentDebuggingFalse_ClearsText
       fullName: GameManager.Tests.GameManagerUITests.UpdateCustomDebugUI_AgentDebuggingFalse_ClearsText
       resultStatus: 1
-      duration: 0.0029868
+      duration: 0.0032355
       messages: 
       output: 
       stacktrace: 
@@ -3746,7 +4038,7 @@ MonoBehaviour:
       name: UpdateCustomDebugUI_AgentDebuggingTrue_NoAgents_ClearsText
       fullName: GameManager.Tests.GameManagerUITests.UpdateCustomDebugUI_AgentDebuggingTrue_NoAgents_ClearsText
       resultStatus: 1
-      duration: 0.0013515
+      duration: 0.0007773
       messages: 
       output: 
       stacktrace: 
@@ -3763,7 +4055,7 @@ MonoBehaviour:
       name: UpdateCustomDebugUI_BothTextsNull_DoesNotThrow
       fullName: GameManager.Tests.GameManagerUITests.UpdateCustomDebugUI_BothTextsNull_DoesNotThrow
       resultStatus: 1
-      duration: 0.0003972
+      duration: 0.0003576
       messages: 
       output: 
       stacktrace: 
@@ -3775,12 +4067,12 @@ MonoBehaviour:
       - Uncategorized
       parentId: 1369
       parentUniqueId: 'GameManager.Tests.EditMode.dll/GameManager/Tests/[GameManager.Tests.EditMode][GameManager.Tests.GameManagerUITests][suite]'
-    - id: 1157
+    - id: 1168
       uniqueId: 'GameManager.Tests.EditMode.dll/GameManager/Tests/[GameManager.Tests.EditMode][GameManager.Tests.GraphBFSTests][suite]'
       name: GraphBFSTests
       fullName: GameManager.Tests.GraphBFSTests
       resultStatus: 1
-      duration: 0.0041022
+      duration: 0.0035995
       messages: 
       output: 
       stacktrace: 
@@ -3789,14 +4081,14 @@ MonoBehaviour:
       description: 
       isSuite: 1
       categories: []
-      parentId: 1010
+      parentId: 1021
       parentUniqueId: 'GameManager.Tests.EditMode.dll/GameManager/[GameManager.Tests.EditMode][GameManager.Tests.AssemblySetup][suite]'
     - id: 1116
       uniqueId: 'GameManager.Tests.EditMode.dll/GameManager/Tests/GraphBFSTests/[GameManager.Tests.EditMode][GameManager.Tests.GraphBFSTests.AStar_NonUniform_StillFindsPath]'
       name: AStar_NonUniform_StillFindsPath
       fullName: GameManager.Tests.GraphBFSTests.AStar_NonUniform_StillFindsPath
       resultStatus: 1
-      duration: 0.0007361
+      duration: 0.0007274
       messages: 
       output: 
       stacktrace: 
@@ -3813,7 +4105,7 @@ MonoBehaviour:
       name: BFS_NonUniform_ThrowsException
       fullName: GameManager.Tests.GraphBFSTests.BFS_NonUniform_ThrowsException
       resultStatus: 1
-      duration: 0.0020225
+      duration: 0.0011352
       messages: 
       output: 
       stacktrace: 
@@ -3830,7 +4122,7 @@ MonoBehaviour:
       name: BFS_Uniform_DoesNotThrow
       fullName: GameManager.Tests.GraphBFSTests.BFS_Uniform_DoesNotThrow
       resultStatus: 1
-      duration: 0.000537
+      duration: 0.0006237
       messages: 
       output: 
       stacktrace: 
@@ -3847,7 +4139,7 @@ MonoBehaviour:
       name: BFS_Uniform_ReturnsEmptyPath
       fullName: GameManager.Tests.GraphBFSTests.BFS_Uniform_ReturnsEmptyPath
       resultStatus: 1
-      duration: 0.0003633
+      duration: 0.0005201
       messages: 
       output: 
       stacktrace: 
@@ -3864,7 +4156,7 @@ MonoBehaviour:
       name: IsUniform_CanBeSetToTrue
       fullName: GameManager.Tests.GraphBFSTests.IsUniform_CanBeSetToTrue
       resultStatus: 1
-      duration: 0.0002386
+      duration: 0.000378
       messages: 
       output: 
       stacktrace: 
@@ -3881,7 +4173,7 @@ MonoBehaviour:
       name: IsUniform_DefaultIsFalse
       fullName: GameManager.Tests.GraphBFSTests.IsUniform_DefaultIsFalse
       resultStatus: 1
-      duration: 0.0002047
+      duration: 0.0002151
       messages: 
       output: 
       stacktrace: 
@@ -3893,12 +4185,12 @@ MonoBehaviour:
       - Uncategorized
       parentId: 1114
       parentUniqueId: 'GameManager.Tests.EditMode.dll/GameManager/Tests/[GameManager.Tests.EditMode][GameManager.Tests.GraphBFSTests][suite]'
-    - id: 1164
+    - id: 1175
       uniqueId: 'GameManager.Tests.EditMode.dll/GameManager/Tests/[GameManager.Tests.EditMode][GameManager.Tests.GraphEdgeTests][suite]'
       name: GraphEdgeTests
       fullName: GameManager.Tests.GraphEdgeTests
       resultStatus: 1
-      duration: 0.0035135
+      duration: 0.0035039
       messages: 
       output: 
       stacktrace: 
@@ -3907,14 +4199,14 @@ MonoBehaviour:
       description: 
       isSuite: 1
       categories: []
-      parentId: 1010
+      parentId: 1021
       parentUniqueId: 'GameManager.Tests.EditMode.dll/GameManager/[GameManager.Tests.EditMode][GameManager.Tests.AssemblySetup][suite]'
     - id: 1122
       uniqueId: 'GameManager.Tests.EditMode.dll/GameManager/Tests/GraphEdgeTests/[GameManager.Tests.EditMode][GameManager.Tests.GraphEdgeTests.Edge_Cost_StoredCorrectly]'
       name: Edge_Cost_StoredCorrectly
       fullName: GameManager.Tests.GraphEdgeTests.Edge_Cost_StoredCorrectly
       resultStatus: 1
-      duration: 0.0004487
+      duration: 0.0004992
       messages: 
       output: 
       stacktrace: 
@@ -3931,7 +4223,7 @@ MonoBehaviour:
       name: Edge_End_PointsToEndNode
       fullName: GameManager.Tests.GraphEdgeTests.Edge_End_PointsToEndNode
       resultStatus: 1
-      duration: 0.000547
+      duration: 0.0002944
       messages: 
       output: 
       stacktrace: 
@@ -3948,7 +4240,7 @@ MonoBehaviour:
       name: Edge_Start_PointsToStartNode
       fullName: GameManager.Tests.GraphEdgeTests.Edge_Start_PointsToStartNode
       resultStatus: 1
-      duration: 0.0002463
+      duration: 0.0002682
       messages: 
       output: 
       stacktrace: 
@@ -3965,7 +4257,7 @@ MonoBehaviour:
       name: GetNeighbor_CalledTwice_ReturnsSameResult
       fullName: GameManager.Tests.GraphEdgeTests.GetNeighbor_CalledTwice_ReturnsSameResult
       resultStatus: 1
-      duration: 0.0005137
+      duration: 0.0005344
       messages: 
       output: 
       stacktrace: 
@@ -3982,7 +4274,7 @@ MonoBehaviour:
       name: GetNeighbor_FromEnd_ReturnsStart
       fullName: GameManager.Tests.GraphEdgeTests.GetNeighbor_FromEnd_ReturnsStart
       resultStatus: 1
-      duration: 0.0002925
+      duration: 0.0003167
       messages: 
       output: 
       stacktrace: 
@@ -3999,7 +4291,7 @@ MonoBehaviour:
       name: GetNeighbor_FromStart_ReturnsEnd
       fullName: GameManager.Tests.GraphEdgeTests.GetNeighbor_FromStart_ReturnsEnd
       resultStatus: 1
-      duration: 0.0002574
+      duration: 0.0003154
       messages: 
       output: 
       stacktrace: 
@@ -4016,7 +4308,7 @@ MonoBehaviour:
       name: GetNeighbor_FromThirdNode_ReturnsStart
       fullName: GameManager.Tests.GraphEdgeTests.GetNeighbor_FromThirdNode_ReturnsStart
       resultStatus: 1
-      duration: 0.0002644
+      duration: 0.000301
       messages: 
       output: 
       stacktrace: 
@@ -4033,7 +4325,7 @@ MonoBehaviour:
       name: SharedEdge_SameObjectInBothNodes
       fullName: GameManager.Tests.GraphEdgeTests.SharedEdge_SameObjectInBothNodes
       resultStatus: 1
-      duration: 0.0002488
+      duration: 0.0002582
       messages: 
       output: 
       stacktrace: 
@@ -4050,7 +4342,7 @@ MonoBehaviour:
       name: TwoEdges_StoreSeparateCosts
       fullName: GameManager.Tests.GraphEdgeTests.TwoEdges_StoreSeparateCosts
       resultStatus: 1
-      duration: 0.0006947
+      duration: 0.0007164
       messages: 
       output: 
       stacktrace: 
@@ -4062,12 +4354,12 @@ MonoBehaviour:
       - Uncategorized
       parentId: 1121
       parentUniqueId: 'GameManager.Tests.EditMode.dll/GameManager/Tests/[GameManager.Tests.EditMode][GameManager.Tests.GraphEdgeTests][suite]'
-    - id: 1174
+    - id: 1185
       uniqueId: 'GameManager.Tests.EditMode.dll/GameManager/Tests/[GameManager.Tests.EditMode][GameManager.Tests.GraphNodeTests][suite]'
       name: GraphNodeTests
       fullName: GameManager.Tests.GraphNodeTests
       resultStatus: 1
-      duration: 0.0039604
+      duration: 0.004602
       messages: 
       output: 
       stacktrace: 
@@ -4076,14 +4368,14 @@ MonoBehaviour:
       description: 
       isSuite: 1
       categories: []
-      parentId: 1010
+      parentId: 1021
       parentUniqueId: 'GameManager.Tests.EditMode.dll/GameManager/[GameManager.Tests.EditMode][GameManager.Tests.AssemblySetup][suite]'
     - id: 1135
       uniqueId: 'GameManager.Tests.EditMode.dll/GameManager/Tests/GraphNodeTests/[GameManager.Tests.EditMode][GameManager.Tests.GraphNodeTests.Node_InitialBackPtr_IsNull]'
       name: Node_InitialBackPtr_IsNull
       fullName: GameManager.Tests.GraphNodeTests.Node_InitialBackPtr_IsNull
       resultStatus: 1
-      duration: 0.0003769
+      duration: 0.000577
       messages: 
       output: 
       stacktrace: 
@@ -4100,7 +4392,7 @@ MonoBehaviour:
       name: Node_InitialCost_IsMaxValue
       fullName: GameManager.Tests.GraphNodeTests.Node_InitialCost_IsMaxValue
       resultStatus: 1
-      duration: 0.0002884
+      duration: 0.0003234
       messages: 
       output: 
       stacktrace: 
@@ -4117,7 +4409,7 @@ MonoBehaviour:
       name: Node_InitialEdges_IsEmpty
       fullName: GameManager.Tests.GraphNodeTests.Node_InitialEdges_IsEmpty
       resultStatus: 1
-      duration: 0.000289
+      duration: 0.0003359
       messages: 
       output: 
       stacktrace: 
@@ -4134,7 +4426,7 @@ MonoBehaviour:
       name: Node_InitialPriorityNode_IsNull
       fullName: GameManager.Tests.GraphNodeTests.Node_InitialPriorityNode_IsNull
       resultStatus: 1
-      duration: 0.0002372
+      duration: 0.000266
       messages: 
       output: 
       stacktrace: 
@@ -4151,7 +4443,7 @@ MonoBehaviour:
       name: Node_Item_MatchesAddedCell
       fullName: GameManager.Tests.GraphNodeTests.Node_Item_MatchesAddedCell
       resultStatus: 1
-      duration: 0.0003187
+      duration: 0.0002993
       messages: 
       output: 
       stacktrace: 
@@ -4168,7 +4460,7 @@ MonoBehaviour:
       name: Node_Number_MatchesAddedValue
       fullName: GameManager.Tests.GraphNodeTests.Node_Number_MatchesAddedValue
       resultStatus: 1
-      duration: 0.0002324
+      duration: 0.0003392
       messages: 
       output: 
       stacktrace: 
@@ -4185,7 +4477,7 @@ MonoBehaviour:
       name: NodeCopyCtor_EdgesListIsEmpty
       fullName: GameManager.Tests.GraphNodeTests.NodeCopyCtor_EdgesListIsEmpty
       resultStatus: 1
-      duration: 0.000473
+      duration: 0.0005643
       messages: 
       output: 
       stacktrace: 
@@ -4202,7 +4494,7 @@ MonoBehaviour:
       name: NodeCopyCtor_PreservesItem
       fullName: GameManager.Tests.GraphNodeTests.NodeCopyCtor_PreservesItem
       resultStatus: 1
-      duration: 0.0002638
+      duration: 0.0003792
       messages: 
       output: 
       stacktrace: 
@@ -4219,7 +4511,7 @@ MonoBehaviour:
       name: NodeCopyCtor_PreservesNumber
       fullName: GameManager.Tests.GraphNodeTests.NodeCopyCtor_PreservesNumber
       resultStatus: 1
-      duration: 0.0002497
+      duration: 0.0002367
       messages: 
       output: 
       stacktrace: 
@@ -4236,7 +4528,7 @@ MonoBehaviour:
       name: ResetSearchVariables_ClearsBackPtr
       fullName: GameManager.Tests.GraphNodeTests.ResetSearchVariables_ClearsBackPtr
       resultStatus: 1
-      duration: 0.0004135
+      duration: 0.0004443
       messages: 
       output: 
       stacktrace: 
@@ -4253,7 +4545,7 @@ MonoBehaviour:
       name: ResetSearchVariables_ClearsPriorityNode
       fullName: GameManager.Tests.GraphNodeTests.ResetSearchVariables_ClearsPriorityNode
       resultStatus: 1
-      duration: 0.0004309
+      duration: 0.0003981
       messages: 
       output: 
       stacktrace: 
@@ -4270,7 +4562,7 @@ MonoBehaviour:
       name: ResetSearchVariables_RestoresCostToMaxValue
       fullName: GameManager.Tests.GraphNodeTests.ResetSearchVariables_RestoresCostToMaxValue
       resultStatus: 1
-      duration: 0.0003869
+      duration: 0.0004386
       messages: 
       output: 
       stacktrace: 
@@ -4282,12 +4574,12 @@ MonoBehaviour:
       - Uncategorized
       parentId: 1131
       parentUniqueId: 'GameManager.Tests.EditMode.dll/GameManager/Tests/[GameManager.Tests.EditMode][GameManager.Tests.GraphNodeTests][suite]'
-    - id: 1187
+    - id: 1198
       uniqueId: 'GameManager.Tests.EditMode.dll/GameManager/Tests/[GameManager.Tests.EditMode][GameManager.Tests.GraphStructureTests][suite]'
       name: GraphStructureTests
       fullName: GameManager.Tests.GraphStructureTests
       resultStatus: 1
-      duration: 0.0036813
+      duration: 0.0040384
       messages: 
       output: 
       stacktrace: 
@@ -4296,14 +4588,14 @@ MonoBehaviour:
       description: 
       isSuite: 1
       categories: []
-      parentId: 1010
+      parentId: 1021
       parentUniqueId: 'GameManager.Tests.EditMode.dll/GameManager/[GameManager.Tests.EditMode][GameManager.Tests.AssemblySetup][suite]'
     - id: 1153
       uniqueId: 'GameManager.Tests.EditMode.dll/GameManager/Tests/GraphStructureTests/[GameManager.Tests.EditMode][GameManager.Tests.GraphStructureTests.AddEdge_CostStoredCorrectly]'
       name: AddEdge_CostStoredCorrectly
       fullName: GameManager.Tests.GraphStructureTests.AddEdge_CostStoredCorrectly
       resultStatus: 1
-      duration: 0.0004144
+      duration: 0.0003967
       messages: 
       output: 
       stacktrace: 
@@ -4320,7 +4612,7 @@ MonoBehaviour:
       name: AddEdge_EdgeAppearsInEndNodeEdges
       fullName: GameManager.Tests.GraphStructureTests.AddEdge_EdgeAppearsInEndNodeEdges
       resultStatus: 1
-      duration: 0.0003151
+      duration: 0.0003388
       messages: 
       output: 
       stacktrace: 
@@ -4337,7 +4629,7 @@ MonoBehaviour:
       name: AddEdge_EdgeAppearsInStartNodeEdges
       fullName: GameManager.Tests.GraphStructureTests.AddEdge_EdgeAppearsInStartNodeEdges
       resultStatus: 1
-      duration: 0.0002656
+      duration: 0.0002873
       messages: 
       output: 
       stacktrace: 
@@ -4354,7 +4646,7 @@ MonoBehaviour:
       name: AddEdge_IncreasesGlobalEdgeCount
       fullName: GameManager.Tests.GraphStructureTests.AddEdge_IncreasesGlobalEdgeCount
       resultStatus: 1
-      duration: 0.0002561
+      duration: 0.0004074
       messages: 
       output: 
       stacktrace: 
@@ -4371,7 +4663,7 @@ MonoBehaviour:
       name: AddMultipleEdgesFromOneNode_AllInEdgeList
       fullName: GameManager.Tests.GraphStructureTests.AddMultipleEdgesFromOneNode_AllInEdgeList
       resultStatus: 1
-      duration: 0.0002816
+      duration: 0.0003319
       messages: 
       output: 
       stacktrace: 
@@ -4388,7 +4680,7 @@ MonoBehaviour:
       name: AddMultipleNodes_AllRetrievable
       fullName: GameManager.Tests.GraphStructureTests.AddMultipleNodes_AllRetrievable
       resultStatus: 1
-      duration: 0.0003888
+      duration: 0.0004285
       messages: 
       output: 
       stacktrace: 
@@ -4405,7 +4697,7 @@ MonoBehaviour:
       name: AddNode_NodeExistsInDict
       fullName: GameManager.Tests.GraphStructureTests.AddNode_NodeExistsInDict
       resultStatus: 1
-      duration: 0.0002245
+      duration: 0.0002519
       messages: 
       output: 
       stacktrace: 
@@ -4422,7 +4714,7 @@ MonoBehaviour:
       name: CopyConstructor_PreservesEdgeCount
       fullName: GameManager.Tests.GraphStructureTests.CopyConstructor_PreservesEdgeCount
       resultStatus: 1
-      duration: 0.000758
+      duration: 0.000849
       messages: 
       output: 
       stacktrace: 
@@ -4439,7 +4731,7 @@ MonoBehaviour:
       name: CopyConstructor_PreservesNodeCount
       fullName: GameManager.Tests.GraphStructureTests.CopyConstructor_PreservesNodeCount
       resultStatus: 1
-      duration: 0.00038
+      duration: 0.0003114
       messages: 
       output: 
       stacktrace: 
@@ -4456,7 +4748,7 @@ MonoBehaviour:
       name: EmptyGraph_HasNoNodesOrEdges
       fullName: GameManager.Tests.GraphStructureTests.EmptyGraph_HasNoNodesOrEdges
       resultStatus: 1
-      duration: 0.0001977
+      duration: 0.0002086
       messages: 
       output: 
       stacktrace: 
@@ -4473,7 +4765,7 @@ MonoBehaviour:
       name: IsolatedNode_HasNoEdges
       fullName: GameManager.Tests.GraphStructureTests.IsolatedNode_HasNoEdges
       resultStatus: 1
-      duration: 0.0001995
+      duration: 0.0002269
       messages: 
       output: 
       stacktrace: 
@@ -4485,12 +4777,12 @@ MonoBehaviour:
       - Uncategorized
       parentId: 1144
       parentUniqueId: 'GameManager.Tests.EditMode.dll/GameManager/Tests/[GameManager.Tests.EditMode][GameManager.Tests.GraphStructureTests][suite]'
-    - id: 1199
+    - id: 1210
       uniqueId: 'GameManager.Tests.EditMode.dll/GameManager/Tests/[GameManager.Tests.EditMode][GameManager.Tests.GridCellTests][suite]'
       name: GridCellTests
       fullName: GameManager.Tests.GridCellTests
       resultStatus: 1
-      duration: 0.0037158
+      duration: 0.0046423
       messages: 
       output: 
       stacktrace: 
@@ -4499,14 +4791,14 @@ MonoBehaviour:
       description: 
       isSuite: 1
       categories: []
-      parentId: 1010
+      parentId: 1021
       parentUniqueId: 'GameManager.Tests.EditMode.dll/GameManager/[GameManager.Tests.EditMode][GameManager.Tests.AssemblySetup][suite]'
     - id: 1157
       uniqueId: 'GameManager.Tests.EditMode.dll/GameManager/Tests/GridCellTests/[GameManager.Tests.EditMode][GameManager.Tests.GridCellTests.Constructor_DefaultsBothTrue]'
       name: Constructor_DefaultsBothTrue
       fullName: GameManager.Tests.GridCellTests.Constructor_DefaultsBothTrue
       resultStatus: 1
-      duration: 0.0012055
+      duration: 0.0018385
       messages: 
       output: 
       stacktrace: 
@@ -4523,7 +4815,7 @@ MonoBehaviour:
       name: Constructor_ZeroPosition_Works
       fullName: GameManager.Tests.GridCellTests.Constructor_ZeroPosition_Works
       resultStatus: 1
-      duration: 0.0006913
+      duration: 0.0006384
       messages: 
       output: 
       stacktrace: 
@@ -4540,7 +4832,7 @@ MonoBehaviour:
       name: GetPosition_ReturnsConstructorPosition
       fullName: GameManager.Tests.GridCellTests.GetPosition_ReturnsConstructorPosition
       resultStatus: 1
-      duration: 0.0003503
+      duration: 0.0003624
       messages: 
       output: 
       stacktrace: 
@@ -4557,7 +4849,7 @@ MonoBehaviour:
       name: IndependentState_NoCrossAffect
       fullName: GameManager.Tests.GridCellTests.IndependentState_NoCrossAffect
       resultStatus: 1
-      duration: 0.0003087
+      duration: 0.0004167
       messages: 
       output: 
       stacktrace: 
@@ -4574,7 +4866,7 @@ MonoBehaviour:
       name: SetBuildable_Toggle_RestoresState
       fullName: GameManager.Tests.GridCellTests.SetBuildable_Toggle_RestoresState
       resultStatus: 1
-      duration: 0.0002974
+      duration: 0.0002989
       messages: 
       output: 
       stacktrace: 
@@ -4591,7 +4883,7 @@ MonoBehaviour:
       name: SetBuildableFalse_WalkableUnchanged
       fullName: GameManager.Tests.GridCellTests.SetBuildableFalse_WalkableUnchanged
       resultStatus: 1
-      duration: 0.0002929
+      duration: 0.000263
       messages: 
       output: 
       stacktrace: 
@@ -4608,7 +4900,7 @@ MonoBehaviour:
       name: SetWalkable_Toggle_RestoresState
       fullName: GameManager.Tests.GridCellTests.SetWalkable_Toggle_RestoresState
       resultStatus: 1
-      duration: 0.000294
+      duration: 0.0002711
       messages: 
       output: 
       stacktrace: 
@@ -4625,7 +4917,7 @@ MonoBehaviour:
       name: SetWalkableFalse_BuildableUnchanged
       fullName: GameManager.Tests.GridCellTests.SetWalkableFalse_BuildableUnchanged
       resultStatus: 1
-      duration: 0.0002757
+      duration: 0.0005533
       messages: 
       output: 
       stacktrace: 
@@ -4637,12 +4929,12 @@ MonoBehaviour:
       - Uncategorized
       parentId: 1156
       parentUniqueId: 'GameManager.Tests.EditMode.dll/GameManager/Tests/[GameManager.Tests.EditMode][GameManager.Tests.GridCellTests][suite]'
-    - id: 1208
+    - id: 1219
       uniqueId: 'GameManager.Tests.EditMode.dll/GameManager/Tests/[GameManager.Tests.EditMode][GameManager.Tests.MapManagerGetPathTests][suite]'
       name: MapManagerGetPathTests
       fullName: GameManager.Tests.MapManagerGetPathTests
       resultStatus: 1
-      duration: 0.0361085
+      duration: 0.0484935
       messages: 
       output: 
       stacktrace: 
@@ -4651,14 +4943,14 @@ MonoBehaviour:
       description: 
       isSuite: 1
       categories: []
-      parentId: 1010
+      parentId: 1021
       parentUniqueId: 'GameManager.Tests.EditMode.dll/GameManager/[GameManager.Tests.EditMode][GameManager.Tests.AssemblySetup][suite]'
     - id: 1174
       uniqueId: 'GameManager.Tests.EditMode.dll/GameManager/Tests/MapManagerGetPathTests/[GameManager.Tests.EditMode][GameManager.Tests.MapManagerGetPathTests.GetBuildableGridPositionsNearUnit_AllNeighborsBlocked_ReturnsEmpty]'
       name: GetBuildableGridPositionsNearUnit_AllNeighborsBlocked_ReturnsEmpty
       fullName: GameManager.Tests.MapManagerGetPathTests.GetBuildableGridPositionsNearUnit_AllNeighborsBlocked_ReturnsEmpty
       resultStatus: 1
-      duration: 0.0063101
+      duration: 0.0121846
       messages: 
       output: 
       stacktrace: 
@@ -4675,7 +4967,7 @@ MonoBehaviour:
       name: GetBuildableGridPositionsNearUnit_OpenMap_ReturnsAllNeighbors
       fullName: GameManager.Tests.MapManagerGetPathTests.GetBuildableGridPositionsNearUnit_OpenMap_ReturnsAllNeighbors
       resultStatus: 1
-      duration: 0.0029765
+      duration: 0.003997
       messages: 
       output: 
       stacktrace: 
@@ -4692,7 +4984,7 @@ MonoBehaviour:
       name: GetPathBetweenGridPositions_AdjacentTarget_ReturnsOneStep
       fullName: GameManager.Tests.MapManagerGetPathTests.GetPathBetweenGridPositions_AdjacentTarget_ReturnsOneStep
       resultStatus: 1
-      duration: 0.0027728
+      duration: 0.0044832
       messages: 
       output: 
       stacktrace: 
@@ -4709,7 +5001,7 @@ MonoBehaviour:
       name: GetPathBetweenGridPositions_DoesNotIncludeStart
       fullName: GameManager.Tests.MapManagerGetPathTests.GetPathBetweenGridPositions_DoesNotIncludeStart
       resultStatus: 1
-      duration: 0.0027979
+      duration: 0.0031962
       messages: 
       output: 
       stacktrace: 
@@ -4726,7 +5018,7 @@ MonoBehaviour:
       name: GetPathBetweenGridPositions_FullDiagonal_FindsPath
       fullName: GameManager.Tests.MapManagerGetPathTests.GetPathBetweenGridPositions_FullDiagonal_FindsPath
       resultStatus: 1
-      duration: 0.0028736
+      duration: 0.0030303
       messages: 
       output: 
       stacktrace: 
@@ -4743,7 +5035,7 @@ MonoBehaviour:
       name: GetPathBetweenGridPositions_OpenGrid_ReturnsPathEndingAtTarget
       fullName: GameManager.Tests.MapManagerGetPathTests.GetPathBetweenGridPositions_OpenGrid_ReturnsPathEndingAtTarget
       resultStatus: 1
-      duration: 0.0026598
+      duration: 0.0029862
       messages: 
       output: 
       stacktrace: 
@@ -4760,7 +5052,7 @@ MonoBehaviour:
       name: GetPathBetweenGridPositions_SamePosition_ReturnsEmptyPath
       fullName: GameManager.Tests.MapManagerGetPathTests.GetPathBetweenGridPositions_SamePosition_ReturnsEmptyPath
       resultStatus: 1
-      duration: 0.0027531
+      duration: 0.0029635
       messages: 
       output: 
       stacktrace: 
@@ -4777,7 +5069,7 @@ MonoBehaviour:
       name: GetPathBetweenGridPositions_TargetEnclosed_ReturnsEmpty
       fullName: GameManager.Tests.MapManagerGetPathTests.GetPathBetweenGridPositions_TargetEnclosed_ReturnsEmpty
       resultStatus: 1
-      duration: 0.0070544
+      duration: 0.0085847
       messages: 
       output: 
       stacktrace: 
@@ -4794,7 +5086,7 @@ MonoBehaviour:
       name: GetPathBetweenGridPositions_WithWall_RouteGoesAround
       fullName: GameManager.Tests.MapManagerGetPathTests.GetPathBetweenGridPositions_WithWall_RouteGoesAround
       resultStatus: 1
-      duration: 0.0059103
+      duration: 0.0070678
       messages: 
       output: 
       stacktrace: 
@@ -4806,12 +5098,12 @@ MonoBehaviour:
       - Uncategorized
       parentId: 1165
       parentUniqueId: 'GameManager.Tests.EditMode.dll/GameManager/Tests/[GameManager.Tests.EditMode][GameManager.Tests.MapManagerGetPathTests][suite]'
-    - id: 1218
+    - id: 1229
       uniqueId: 'GameManager.Tests.EditMode.dll/GameManager/Tests/[GameManager.Tests.EditMode][GameManager.Tests.MapManagerNeighborTests][suite]'
       name: MapManagerNeighborTests
       fullName: GameManager.Tests.MapManagerNeighborTests
       resultStatus: 1
-      duration: 0.038348
+      duration: 0.0496504
       messages: 
       output: 
       stacktrace: 
@@ -4820,14 +5112,14 @@ MonoBehaviour:
       description: 
       isSuite: 1
       categories: []
-      parentId: 1010
+      parentId: 1021
       parentUniqueId: 'GameManager.Tests.EditMode.dll/GameManager/[GameManager.Tests.EditMode][GameManager.Tests.AssemblySetup][suite]'
     - id: 1183
       uniqueId: 'GameManager.Tests.EditMode.dll/GameManager/Tests/MapManagerNeighborTests/[GameManager.Tests.EditMode][GameManager.Tests.MapManagerNeighborTests.GetBuildableGridPositionsNearUnit_AllBlocked_ReturnsEmpty]'
       name: GetBuildableGridPositionsNearUnit_AllBlocked_ReturnsEmpty
       fullName: GameManager.Tests.MapManagerNeighborTests.GetBuildableGridPositionsNearUnit_AllBlocked_ReturnsEmpty
       resultStatus: 1
-      duration: 0.0030765
+      duration: 0.0044198
       messages: 
       output: 
       stacktrace: 
@@ -4844,7 +5136,7 @@ MonoBehaviour:
       name: GetBuildableGridPositionsNearUnit_OneBlocked_ReducedByOne
       fullName: GameManager.Tests.MapManagerNeighborTests.GetBuildableGridPositionsNearUnit_OneBlocked_ReducedByOne
       resultStatus: 1
-      duration: 0.0028055
+      duration: 0.0028769
       messages: 
       output: 
       stacktrace: 
@@ -4861,7 +5153,7 @@ MonoBehaviour:
       name: GetBuildableGridPositionsNearUnit_OpenMap_EqualsAll
       fullName: GameManager.Tests.MapManagerNeighborTests.GetBuildableGridPositionsNearUnit_OpenMap_EqualsAll
       resultStatus: 1
-      duration: 0.0027035
+      duration: 0.0027238
       messages: 
       output: 
       stacktrace: 
@@ -4878,7 +5170,7 @@ MonoBehaviour:
       name: GetGridPositionsNearUnit_Base_Interior_Returns20
       fullName: GameManager.Tests.MapManagerNeighborTests.GetGridPositionsNearUnit_Base_Interior_Returns20
       resultStatus: 1
-      duration: 0.0026196
+      duration: 0.0028234
       messages: 
       output: 
       stacktrace: 
@@ -4895,7 +5187,7 @@ MonoBehaviour:
       name: GetGridPositionsNearUnit_Base3x3_AtEdge_FewerNeighbors
       fullName: GameManager.Tests.MapManagerNeighborTests.GetGridPositionsNearUnit_Base3x3_AtEdge_FewerNeighbors
       resultStatus: 1
-      duration: 0.0026318
+      duration: 0.0028512
       messages: 
       output: 
       stacktrace: 
@@ -4912,7 +5204,7 @@ MonoBehaviour:
       name: GetGridPositionsNearUnit_NoneInsideFootprint
       fullName: GameManager.Tests.MapManagerNeighborTests.GetGridPositionsNearUnit_NoneInsideFootprint
       resultStatus: 1
-      duration: 0.0028223
+      duration: 0.0047381
       messages: 
       output: 
       stacktrace: 
@@ -4929,7 +5221,7 @@ MonoBehaviour:
       name: GetGridPositionsNearUnit_Worker_AtCorner_Returns3
       fullName: GameManager.Tests.MapManagerNeighborTests.GetGridPositionsNearUnit_Worker_AtCorner_Returns3
       resultStatus: 1
-      duration: 0.0025964
+      duration: 0.002831
       messages: 
       output: 
       stacktrace: 
@@ -4946,7 +5238,7 @@ MonoBehaviour:
       name: GetGridPositionsNearUnit_Worker_AtLeftEdge_Returns5
       fullName: GameManager.Tests.MapManagerNeighborTests.GetGridPositionsNearUnit_Worker_AtLeftEdge_Returns5
       resultStatus: 1
-      duration: 0.0025229
+      duration: 0.0026765
       messages: 
       output: 
       stacktrace: 
@@ -4963,7 +5255,7 @@ MonoBehaviour:
       name: GetPathToUnit_CallerAlreadyAdjacent_ShortPath
       fullName: GameManager.Tests.MapManagerNeighborTests.GetPathToUnit_CallerAlreadyAdjacent_ShortPath
       resultStatus: 1
-      duration: 0.0036035
+      duration: 0.0073483
       messages: 
       output: '<color=cyan>PATH_DIAG: (9, 10, 0)->(9, 10, 0) failed: same_node expansions=0</color>
 
@@ -4982,7 +5274,7 @@ MonoBehaviour:
       name: GetPathToUnit_OpenMap_FindsPath
       fullName: GameManager.Tests.MapManagerNeighborTests.GetPathToUnit_OpenMap_FindsPath
       resultStatus: 1
-      duration: 0.0027136
+      duration: 0.0030799
       messages: 
       output: 
       stacktrace: 
@@ -4999,7 +5291,7 @@ MonoBehaviour:
       name: IsNeighborOfUnit_AdjacentCell_ReturnsTrue
       fullName: GameManager.Tests.MapManagerNeighborTests.IsNeighborOfUnit_AdjacentCell_ReturnsTrue
       resultStatus: 1
-      duration: 0.002441
+      duration: 0.0035634
       messages: 
       output: 
       stacktrace: 
@@ -5016,7 +5308,7 @@ MonoBehaviour:
       name: IsNeighborOfUnit_Base_VariousSides_AllTrue
       fullName: GameManager.Tests.MapManagerNeighborTests.IsNeighborOfUnit_Base_VariousSides_AllTrue
       resultStatus: 1
-      duration: 0.0027654
+      duration: 0.0031546
       messages: 
       output: 
       stacktrace: 
@@ -5033,7 +5325,7 @@ MonoBehaviour:
       name: IsNeighborOfUnit_SameCell_ReturnsFalse
       fullName: GameManager.Tests.MapManagerNeighborTests.IsNeighborOfUnit_SameCell_ReturnsFalse
       resultStatus: 1
-      duration: 0.0025674
+      duration: 0.0033267
       messages: 
       output: 
       stacktrace: 
@@ -5050,7 +5342,7 @@ MonoBehaviour:
       name: IsNeighborOfUnit_TwoStepsAway_ReturnsFalse
       fullName: GameManager.Tests.MapManagerNeighborTests.IsNeighborOfUnit_TwoStepsAway_ReturnsFalse
       resultStatus: 1
-      duration: 0.0024786
+      duration: 0.0032368
       messages: 
       output: 
       stacktrace: 
@@ -5062,12 +5354,12 @@ MonoBehaviour:
       - Uncategorized
       parentId: 1175
       parentUniqueId: 'GameManager.Tests.EditMode.dll/GameManager/Tests/[GameManager.Tests.EditMode][GameManager.Tests.MapManagerNeighborTests][suite]'
-    - id: 1233
+    - id: 1244
       uniqueId: 'GameManager.Tests.EditMode.dll/GameManager/Tests/[GameManager.Tests.EditMode][GameManager.Tests.MapManagerTests][suite]'
       name: MapManagerTests
       fullName: GameManager.Tests.MapManagerTests
       resultStatus: 1
-      duration: 0.0155397
+      duration: 0.0166163
       messages: 
       output: 
       stacktrace: 
@@ -5076,14 +5368,14 @@ MonoBehaviour:
       description: 
       isSuite: 1
       categories: []
-      parentId: 1010
+      parentId: 1021
       parentUniqueId: 'GameManager.Tests.EditMode.dll/GameManager/[GameManager.Tests.EditMode][GameManager.Tests.AssemblySetup][suite]'
     - id: 1203
       uniqueId: 'GameManager.Tests.EditMode.dll/GameManager/Tests/MapManagerTests/[GameManager.Tests.EditMode][GameManager.Tests.MapManagerTests.GetGridPositionsNearUnit_Worker_Returns8]'
       name: GetGridPositionsNearUnit_Worker_Returns8
       fullName: GameManager.Tests.MapManagerTests.GetGridPositionsNearUnit_Worker_Returns8
       resultStatus: 1
-      duration: 0.0014032
+      duration: 0.0016553
       messages: 
       output: 
       stacktrace: 
@@ -5100,7 +5392,7 @@ MonoBehaviour:
       name: GetPathBetweenGridPositions_FindsPath
       fullName: GameManager.Tests.MapManagerTests.GetPathBetweenGridPositions_FindsPath
       resultStatus: 1
-      duration: 0.0011935
+      duration: 0.0013982
       messages: 
       output: 
       stacktrace: 
@@ -5117,7 +5409,7 @@ MonoBehaviour:
       name: IsAreaBuildable_AtMapEdge_Works
       fullName: GameManager.Tests.MapManagerTests.IsAreaBuildable_AtMapEdge_Works
       resultStatus: 1
-      duration: 0.0009662
+      duration: 0.0016291
       messages: 
       output: 
       stacktrace: 
@@ -5134,7 +5426,7 @@ MonoBehaviour:
       name: IsAreaBuildable_Base3x3_FullyOpen_True
       fullName: GameManager.Tests.MapManagerTests.IsAreaBuildable_Base3x3_FullyOpen_True
       resultStatus: 1
-      duration: 0.0009687
+      duration: 0.0010513
       messages: 
       output: 
       stacktrace: 
@@ -5151,7 +5443,7 @@ MonoBehaviour:
       name: IsAreaBuildable_Base3x3_PartiallyBlocked_False
       fullName: GameManager.Tests.MapManagerTests.IsAreaBuildable_Base3x3_PartiallyBlocked_False
       resultStatus: 1
-      duration: 0.0015582
+      duration: 0.0014225
       messages: 
       output: 
       stacktrace: 
@@ -5168,7 +5460,7 @@ MonoBehaviour:
       name: IsAreaBuildable_BaseOverlapsEdge_False
       fullName: GameManager.Tests.MapManagerTests.IsAreaBuildable_BaseOverlapsEdge_False
       resultStatus: 1
-      duration: 0.0008201
+      duration: 0.0008815
       messages: 
       output: 
       stacktrace: 
@@ -5185,7 +5477,7 @@ MonoBehaviour:
       name: IsAreaBuildable_OffMap_ReturnsFalse
       fullName: GameManager.Tests.MapManagerTests.IsAreaBuildable_OffMap_ReturnsFalse
       resultStatus: 1
-      duration: 0.0008199
+      duration: 0.0008614
       messages: 
       output: 
       stacktrace: 
@@ -5202,7 +5494,7 @@ MonoBehaviour:
       name: IsAreaBuildable_WorkerOnBlocked_False
       fullName: GameManager.Tests.MapManagerTests.IsAreaBuildable_WorkerOnBlocked_False
       resultStatus: 1
-      duration: 0.0016618
+      duration: 0.0014418
       messages: 
       output: 
       stacktrace: 
@@ -5219,7 +5511,7 @@ MonoBehaviour:
       name: IsAreaBuildable_WorkerOnOpen_True
       fullName: GameManager.Tests.MapManagerTests.IsAreaBuildable_WorkerOnOpen_True
       resultStatus: 1
-      duration: 0.0008135
+      duration: 0.0009066
       messages: 
       output: 
       stacktrace: 
@@ -5236,7 +5528,7 @@ MonoBehaviour:
       name: IsBoundedAreaBuildable_AdjacentWall_False
       fullName: GameManager.Tests.MapManagerTests.IsBoundedAreaBuildable_AdjacentWall_False
       resultStatus: 1
-      duration: 0.0020008
+      duration: 0.0016977
       messages: 
       output: 
       stacktrace: 
@@ -5253,7 +5545,7 @@ MonoBehaviour:
       name: IsBoundedAreaBuildable_Open_True
       fullName: GameManager.Tests.MapManagerTests.IsBoundedAreaBuildable_Open_True
       resultStatus: 1
-      duration: 0.0008271
+      duration: 0.000801
       messages: 
       output: 
       stacktrace: 
@@ -5270,7 +5562,7 @@ MonoBehaviour:
       name: SetAreaBuildability_Building_WalkableFalse
       fullName: GameManager.Tests.MapManagerTests.SetAreaBuildability_Building_WalkableFalse
       resultStatus: 1
-      duration: 0.0008391
+      duration: 0.0011829
       messages: 
       output: 
       stacktrace: 
@@ -5287,7 +5579,7 @@ MonoBehaviour:
       name: SetAreaBuildability_MobileUnit_WalkableStaysTrue
       fullName: GameManager.Tests.MapManagerTests.SetAreaBuildability_MobileUnit_WalkableStaysTrue
       resultStatus: 1
-      duration: 0.0008227
+      duration: 0.0008513
       messages: 
       output: 
       stacktrace: 
@@ -5304,7 +5596,7 @@ MonoBehaviour:
       name: SetAreaBuildability_Restore_BothTrue
       fullName: GameManager.Tests.MapManagerTests.SetAreaBuildability_Restore_BothTrue
       resultStatus: 1
-      duration: 0.0008449
+      duration: 0.0008357
       messages: 
       output: 
       stacktrace: 
@@ -5316,12 +5608,12 @@ MonoBehaviour:
       - Uncategorized
       parentId: 1190
       parentUniqueId: 'GameManager.Tests.EditMode.dll/GameManager/Tests/[GameManager.Tests.EditMode][GameManager.Tests.MapManagerTests][suite]'
-    - id: 1248
+    - id: 1259
       uniqueId: 'GameManager.Tests.EditMode.dll/GameManager/Tests/[GameManager.Tests.EditMode][GameManager.Tests.PriorityNodeTests][suite]'
       name: PriorityNodeTests
       fullName: GameManager.Tests.PriorityNodeTests
       resultStatus: 1
-      duration: 0.003258
+      duration: 0.0034139
       messages: 
       output: 
       stacktrace: 
@@ -5330,14 +5622,14 @@ MonoBehaviour:
       description: 
       isSuite: 1
       categories: []
-      parentId: 1010
+      parentId: 1021
       parentUniqueId: 'GameManager.Tests.EditMode.dll/GameManager/[GameManager.Tests.EditMode][GameManager.Tests.AssemblySetup][suite]'
     - id: 1216
       uniqueId: 'GameManager.Tests.EditMode.dll/GameManager/Tests/PriorityNodeTests/[GameManager.Tests.EditMode][GameManager.Tests.PriorityNodeTests.AfterEnqueue_IndexIsNonNegative]'
       name: AfterEnqueue_IndexIsNonNegative
       fullName: GameManager.Tests.PriorityNodeTests.AfterEnqueue_IndexIsNonNegative
       resultStatus: 1
-      duration: 0.0008843
+      duration: 0.000803
       messages: 
       output: 
       stacktrace: 
@@ -5354,7 +5646,7 @@ MonoBehaviour:
       name: CompareTo_EqualPriority_ReturnsZero
       fullName: GameManager.Tests.PriorityNodeTests.CompareTo_EqualPriority_ReturnsZero
       resultStatus: 1
-      duration: 0.0004043
+      duration: 0.0004285
       messages: 
       output: 
       stacktrace: 
@@ -5371,7 +5663,7 @@ MonoBehaviour:
       name: CompareTo_HigherPriority_ReturnsPositive
       fullName: GameManager.Tests.PriorityNodeTests.CompareTo_HigherPriority_ReturnsPositive
       resultStatus: 1
-      duration: 0.0001883
+      duration: 0.0002222
       messages: 
       output: 
       stacktrace: 
@@ -5388,7 +5680,7 @@ MonoBehaviour:
       name: CompareTo_LowerPriority_ReturnsNegative
       fullName: GameManager.Tests.PriorityNodeTests.CompareTo_LowerPriority_ReturnsNegative
       resultStatus: 1
-      duration: 0.0001718
+      duration: 0.0002121
       messages: 
       output: 
       stacktrace: 
@@ -5405,7 +5697,7 @@ MonoBehaviour:
       name: CompareTo_Null_ThrowsException
       fullName: GameManager.Tests.PriorityNodeTests.CompareTo_Null_ThrowsException
       resultStatus: 1
-      duration: 0.0003279
+      duration: 0.0003351
       messages: 
       output: 
       stacktrace: 
@@ -5422,7 +5714,7 @@ MonoBehaviour:
       name: LowestPriorityNode_HasIndexZero
       fullName: GameManager.Tests.PriorityNodeTests.LowestPriorityNode_HasIndexZero
       resultStatus: 1
-      duration: 0.0002234
+      duration: 0.000352
       messages: 
       output: 
       stacktrace: 
@@ -5439,7 +5731,7 @@ MonoBehaviour:
       name: PriorityNode_InitialIndex_IsMinusOne
       fullName: GameManager.Tests.PriorityNodeTests.PriorityNode_InitialIndex_IsMinusOne
       resultStatus: 1
-      duration: 0.0001661
+      duration: 0.0001623
       messages: 
       output: 
       stacktrace: 
@@ -5456,7 +5748,7 @@ MonoBehaviour:
       name: PriorityNode_StoresItem
       fullName: GameManager.Tests.PriorityNodeTests.PriorityNode_StoresItem
       resultStatus: 1
-      duration: 0.0001558
+      duration: 0.0001542
       messages: 
       output: 
       stacktrace: 
@@ -5473,7 +5765,7 @@ MonoBehaviour:
       name: PriorityNode_StoresPriority
       fullName: GameManager.Tests.PriorityNodeTests.PriorityNode_StoresPriority
       resultStatus: 1
-      duration: 0.0001492
+      duration: 0.0001565
       messages: 
       output: 
       stacktrace: 
@@ -5490,7 +5782,7 @@ MonoBehaviour:
       name: PriorityNodeCopyCtor_PreservesIndex
       fullName: GameManager.Tests.PriorityNodeTests.PriorityNodeCopyCtor_PreservesIndex
       resultStatus: 1
-      duration: 0.0002379
+      duration: 0.0002437
       messages: 
       output: 
       stacktrace: 
@@ -5507,7 +5799,7 @@ MonoBehaviour:
       name: PriorityNodeCopyCtor_PreservesItem
       fullName: GameManager.Tests.PriorityNodeTests.PriorityNodeCopyCtor_PreservesItem
       resultStatus: 1
-      duration: 0.0001889
+      duration: 0.0001737
       messages: 
       output: 
       stacktrace: 
@@ -5524,7 +5816,7 @@ MonoBehaviour:
       name: PriorityNodeCopyCtor_PreservesPriority
       fullName: GameManager.Tests.PriorityNodeTests.PriorityNodeCopyCtor_PreservesPriority
       resultStatus: 1
-      duration: 0.0001601
+      duration: 0.0001706
       messages: 
       output: 
       stacktrace: 
@@ -5536,12 +5828,12 @@ MonoBehaviour:
       - Uncategorized
       parentId: 1205
       parentUniqueId: 'GameManager.Tests.EditMode.dll/GameManager/Tests/[GameManager.Tests.EditMode][GameManager.Tests.PriorityNodeTests][suite]'
-    - id: 1261
+    - id: 1272
       uniqueId: 'GameManager.Tests.EditMode.dll/GameManager/Tests/[GameManager.Tests.EditMode][GameManager.Tests.PriorityQueueTests][suite]'
       name: PriorityQueueTests
       fullName: GameManager.Tests.PriorityQueueTests
       resultStatus: 1
-      duration: 0.012866
+      duration: 0.018669501
       messages: 
       output: 
       stacktrace: 
@@ -5550,14 +5842,14 @@ MonoBehaviour:
       description: 
       isSuite: 1
       categories: []
-      parentId: 1010
+      parentId: 1021
       parentUniqueId: 'GameManager.Tests.EditMode.dll/GameManager/[GameManager.Tests.EditMode][GameManager.Tests.AssemblySetup][suite]'
     - id: 1226
       uniqueId: 'GameManager.Tests.EditMode.dll/GameManager/Tests/PriorityQueueTests/[GameManager.Tests.EditMode][GameManager.Tests.PriorityQueueTests.ChangePriority_Decrease_MovesToFront]'
       name: ChangePriority_Decrease_MovesToFront
       fullName: GameManager.Tests.PriorityQueueTests.ChangePriority_Decrease_MovesToFront
       resultStatus: 1
-      duration: 0.0011208
+      duration: 0.0012752
       messages: 
       output: 
       stacktrace: 
@@ -5574,7 +5866,7 @@ MonoBehaviour:
       name: ChangePriority_Increase_MovesToBack
       fullName: GameManager.Tests.PriorityQueueTests.ChangePriority_Increase_MovesToBack
       resultStatus: 1
-      duration: 0.0004274
+      duration: 0.0004842
       messages: 
       output: 
       stacktrace: 
@@ -5591,7 +5883,7 @@ MonoBehaviour:
       name: ChangePriority_NeverEnqueued_NoEffect
       fullName: GameManager.Tests.PriorityQueueTests.ChangePriority_NeverEnqueued_NoEffect
       resultStatus: 1
-      duration: 0.0005474
+      duration: 0.0007082
       messages: 
       output: 
       stacktrace: 
@@ -5608,7 +5900,7 @@ MonoBehaviour:
       name: Clear_ResetsCount
       fullName: GameManager.Tests.PriorityQueueTests.Clear_ResetsCount
       resultStatus: 1
-      duration: 0.0002752
+      duration: 0.0003596
       messages: 
       output: 
       stacktrace: 
@@ -5625,7 +5917,7 @@ MonoBehaviour:
       name: Dequeue_AfterClear_ThrowsException
       fullName: GameManager.Tests.PriorityQueueTests.Dequeue_AfterClear_ThrowsException
       resultStatus: 1
-      duration: 0.0004094
+      duration: 0.0006034
       messages: 
       output: 
       stacktrace: 
@@ -5642,7 +5934,7 @@ MonoBehaviour:
       name: Dequeue_EmptyQueue_ThrowsException
       fullName: GameManager.Tests.PriorityQueueTests.Dequeue_EmptyQueue_ThrowsException
       resultStatus: 1
-      duration: 0.0003652
+      duration: 0.0004349
       messages: 
       output: 
       stacktrace: 
@@ -5659,7 +5951,7 @@ MonoBehaviour:
       name: Dequeue_MultipleItems_ReturnedInPriorityOrder
       fullName: GameManager.Tests.PriorityQueueTests.Dequeue_MultipleItems_ReturnedInPriorityOrder
       resultStatus: 1
-      duration: 0.0003345
+      duration: 0.0004694
       messages: 
       output: 
       stacktrace: 
@@ -5676,7 +5968,7 @@ MonoBehaviour:
       name: Dequeue_SingleItem_ReturnsIt
       fullName: GameManager.Tests.PriorityQueueTests.Dequeue_SingleItem_ReturnsIt
       resultStatus: 1
-      duration: 0.0002314
+      duration: 0.0003271
       messages: 
       output: 
       stacktrace: 
@@ -5693,7 +5985,7 @@ MonoBehaviour:
       name: Enqueue_DuplicatePriorities_AllItemsReturned
       fullName: GameManager.Tests.PriorityQueueTests.Enqueue_DuplicatePriorities_AllItemsReturned
       resultStatus: 1
-      duration: 0.0003813
+      duration: 0.0004192
       messages: 
       output: 
       stacktrace: 
@@ -5710,7 +6002,7 @@ MonoBehaviour:
       name: Enqueue_SingleItem_CountIsOne
       fullName: GameManager.Tests.PriorityQueueTests.Enqueue_SingleItem_CountIsOne
       resultStatus: 1
-      duration: 0.0001707
+      duration: 0.0002413
       messages: 
       output: 
       stacktrace: 
@@ -5727,7 +6019,7 @@ MonoBehaviour:
       name: Stress_InterleavedEnqueueDequeue_Ordering
       fullName: GameManager.Tests.PriorityQueueTests.Stress_InterleavedEnqueueDequeue_Ordering
       resultStatus: 1
-      duration: 0.0028737
+      duration: 0.0049498
       messages: 
       output: 
       stacktrace: 
@@ -5744,7 +6036,7 @@ MonoBehaviour:
       name: Stress_ThousandElements_HeapOrdering
       fullName: GameManager.Tests.PriorityQueueTests.Stress_ThousandElements_HeapOrdering
       resultStatus: 1
-      duration: 0.005729
+      duration: 0.0083972
       messages: 
       output: 
       stacktrace: 
@@ -5756,12 +6048,12 @@ MonoBehaviour:
       - Uncategorized
       parentId: 1218
       parentUniqueId: 'GameManager.Tests.EditMode.dll/GameManager/Tests/[GameManager.Tests.EditMode][GameManager.Tests.PriorityQueueTests][suite]'
-    - id: 1274
+    - id: 1285
       uniqueId: 'GameManager.Tests.EditMode.dll/GameManager/Tests/[GameManager.Tests.EditMode][GameManager.Tests.UtilityAdditionalTests][suite]'
       name: UtilityAdditionalTests
       fullName: GameManager.Tests.UtilityAdditionalTests
       resultStatus: 1
-      duration: 0.0052178
+      duration: 0.0048564
       messages: 
       output: 
       stacktrace: 
@@ -5770,14 +6062,14 @@ MonoBehaviour:
       description: 
       isSuite: 1
       categories: []
-      parentId: 1010
+      parentId: 1021
       parentUniqueId: 'GameManager.Tests.EditMode.dll/GameManager/[GameManager.Tests.EditMode][GameManager.Tests.AssemblySetup][suite]'
     - id: 1247
       uniqueId: 'GameManager.Tests.EditMode.dll/GameManager/Tests/UtilityAdditionalTests/[GameManager.Tests.EditMode][GameManager.Tests.UtilityAdditionalTests.ConvertPositionToDirection_LargeDeltaFromNonOrigin_NW]'
       name: ConvertPositionToDirection_LargeDeltaFromNonOrigin_NW
       fullName: GameManager.Tests.UtilityAdditionalTests.ConvertPositionToDirection_LargeDeltaFromNonOrigin_NW
       resultStatus: 1
-      duration: 0.0007715
+      duration: 0.0005597
       messages: 
       output: 
       stacktrace: 
@@ -5794,7 +6086,7 @@ MonoBehaviour:
       name: ConvertPositionToDirection_NonOriginStart_N
       fullName: GameManager.Tests.UtilityAdditionalTests.ConvertPositionToDirection_NonOriginStart_N
       resultStatus: 1
-      duration: 0.0003423
+      duration: 0.0002514
       messages: 
       output: 
       stacktrace: 
@@ -5811,7 +6103,7 @@ MonoBehaviour:
       name: ConvertPositionToDirection_NonOriginStart_SE
       fullName: GameManager.Tests.UtilityAdditionalTests.ConvertPositionToDirection_NonOriginStart_SE
       resultStatus: 1
-      duration: 0.0002395
+      duration: 0.000208
       messages: 
       output: 
       stacktrace: 
@@ -5828,7 +6120,7 @@ MonoBehaviour:
       name: ConvertPositionToDirection_NonOriginStart_W
       fullName: GameManager.Tests.UtilityAdditionalTests.ConvertPositionToDirection_NonOriginStart_W
       resultStatus: 1
-      duration: 0.0001846
+      duration: 0.0001941
       messages: 
       output: 
       stacktrace: 
@@ -5845,7 +6137,7 @@ MonoBehaviour:
       name: ConvertPositionToDirection_SamePositionNonOrigin_None
       fullName: GameManager.Tests.UtilityAdditionalTests.ConvertPositionToDirection_SamePositionNonOrigin_None
       resultStatus: 1
-      duration: 0.0001688
+      duration: 0.0001545
       messages: 
       output: 
       stacktrace: 
@@ -5862,7 +6154,7 @@ MonoBehaviour:
       name: GridToInt_IntToGrid_RoundTrip_NonSquare
       fullName: GameManager.Tests.UtilityAdditionalTests.GridToInt_IntToGrid_RoundTrip_NonSquare
       resultStatus: 1
-      duration: 0.0005185
+      duration: 0.0005034
       messages: 
       output: 
       stacktrace: 
@@ -5879,7 +6171,7 @@ MonoBehaviour:
       name: GridToInt_IntToGrid_RoundTrip_Square
       fullName: GameManager.Tests.UtilityAdditionalTests.GridToInt_IntToGrid_RoundTrip_Square
       resultStatus: 1
-      duration: 0.0006494
+      duration: 0.0004765
       messages: 
       output: 
       stacktrace: 
@@ -5896,7 +6188,7 @@ MonoBehaviour:
       name: GridToInt_UniquePerCell_SquareMap
       fullName: GameManager.Tests.UtilityAdditionalTests.GridToInt_UniquePerCell_SquareMap
       resultStatus: 1
-      duration: 0.0003514
+      duration: 0.000437
       messages: 
       output: 
       stacktrace: 
@@ -5913,7 +6205,7 @@ MonoBehaviour:
       name: GridToWorld_PreservesXYSetsZToZero
       fullName: GameManager.Tests.UtilityAdditionalTests.GridToWorld_PreservesXYSetsZToZero
       resultStatus: 1
-      duration: 0.0003128
+      duration: 0.0002457
       messages: 
       output: 
       stacktrace: 
@@ -5930,7 +6222,7 @@ MonoBehaviour:
       name: GridToWorld_ZeroPosition_ReturnsOrigin
       fullName: GameManager.Tests.UtilityAdditionalTests.GridToWorld_ZeroPosition_ReturnsOrigin
       resultStatus: 1
-      duration: 0.0002095
+      duration: 0.000178
       messages: 
       output: 
       stacktrace: 
@@ -5947,7 +6239,7 @@ MonoBehaviour:
       name: IsValidGridLocation_ExactSizeX_Invalid
       fullName: GameManager.Tests.UtilityAdditionalTests.IsValidGridLocation_ExactSizeX_Invalid
       resultStatus: 1
-      duration: 0.0001582
+      duration: 0.0001644
       messages: 
       output: 
       stacktrace: 
@@ -5964,7 +6256,7 @@ MonoBehaviour:
       name: IsValidGridLocation_ExactSizeY_Invalid
       fullName: GameManager.Tests.UtilityAdditionalTests.IsValidGridLocation_ExactSizeY_Invalid
       resultStatus: 1
-      duration: 0.0001397
+      duration: 0.0001664
       messages: 
       output: 
       stacktrace: 
@@ -5981,7 +6273,7 @@ MonoBehaviour:
       name: IsValidGridLocation_MaxCorner_Valid
       fullName: GameManager.Tests.UtilityAdditionalTests.IsValidGridLocation_MaxCorner_Valid
       resultStatus: 1
-      duration: 0.0002188
+      duration: 0.0001725
       messages: 
       output: 
       stacktrace: 
@@ -5998,7 +6290,7 @@ MonoBehaviour:
       name: IsValidGridLocation_NonSquareMap_ValidCorners
       fullName: GameManager.Tests.UtilityAdditionalTests.IsValidGridLocation_NonSquareMap_ValidCorners
       resultStatus: 1
-      duration: 0.0001957
+      duration: 0.0002618
       messages: 
       output: 
       stacktrace: 
@@ -6015,7 +6307,7 @@ MonoBehaviour:
       name: WorldToGrid_GridToWorld_RoundTrip
       fullName: GameManager.Tests.UtilityAdditionalTests.WorldToGrid_GridToWorld_RoundTrip
       resultStatus: 1
-      duration: 0.0003276
+      duration: 0.0003272
       messages: 
       output: 
       stacktrace: 
@@ -6032,7 +6324,7 @@ MonoBehaviour:
       name: WorldToGrid_NegativeValues_TruncatesCorrectly
       fullName: GameManager.Tests.UtilityAdditionalTests.WorldToGrid_NegativeValues_TruncatesCorrectly
       resultStatus: 1
-      duration: 0.0002432
+      duration: 0.0001971
       messages: 
       output: 
       stacktrace: 
@@ -6049,7 +6341,7 @@ MonoBehaviour:
       name: WorldToGrid_TruncatesDecimalPart
       fullName: GameManager.Tests.UtilityAdditionalTests.WorldToGrid_TruncatesDecimalPart
       resultStatus: 1
-      duration: 0.0001863
+      duration: 0.0003587
       messages: 
       output: 
       stacktrace: 
@@ -6061,12 +6353,12 @@ MonoBehaviour:
       - Uncategorized
       parentId: 1231
       parentUniqueId: 'GameManager.Tests.EditMode.dll/GameManager/Tests/[GameManager.Tests.EditMode][GameManager.Tests.UtilityAdditionalTests][suite]'
-    - id: 1292
+    - id: 1303
       uniqueId: 'GameManager.Tests.EditMode.dll/GameManager/Tests/[GameManager.Tests.EditMode][GameManager.Tests.UtilityTests][suite]'
       name: UtilityTests
       fullName: GameManager.Tests.UtilityTests
       resultStatus: 1
-      duration: 0.0034822
+      duration: 0.0051659
       messages: 
       output: 
       stacktrace: 
@@ -6075,14 +6367,14 @@ MonoBehaviour:
       description: 
       isSuite: 1
       categories: []
-      parentId: 1010
+      parentId: 1021
       parentUniqueId: 'GameManager.Tests.EditMode.dll/GameManager/[GameManager.Tests.EditMode][GameManager.Tests.AssemblySetup][suite]'
     - id: 1254
       uniqueId: 'GameManager.Tests.EditMode.dll/GameManager/Tests/UtilityTests/[GameManager.Tests.EditMode][GameManager.Tests.UtilityTests.ConvertDirection_AllEight_Correct]'
       name: ConvertDirection_AllEight_Correct
       fullName: GameManager.Tests.UtilityTests.ConvertDirection_AllEight_Correct
       resultStatus: 1
-      duration: 0.0005511
+      duration: 0.0006753
       messages: 
       output: 
       stacktrace: 
@@ -6099,7 +6391,7 @@ MonoBehaviour:
       name: ConvertDirection_LargeDelta_ClampsCorrectly
       fullName: GameManager.Tests.UtilityTests.ConvertDirection_LargeDelta_ClampsCorrectly
       resultStatus: 1
-      duration: 0.0002525
+      duration: 0.000212
       messages: 
       output: 
       stacktrace: 
@@ -6116,7 +6408,7 @@ MonoBehaviour:
       name: ConvertDirection_LargeNegativeSteps_SW
       fullName: GameManager.Tests.UtilityTests.ConvertDirection_LargeNegativeSteps_SW
       resultStatus: 1
-      duration: 0.00016
+      duration: 0.0001978
       messages: 
       output: 
       stacktrace: 
@@ -6133,7 +6425,7 @@ MonoBehaviour:
       name: ConvertDirection_MatchesConstantsMap
       fullName: GameManager.Tests.UtilityTests.ConvertDirection_MatchesConstantsMap
       resultStatus: 1
-      duration: 0.00079
+      duration: 0.0013658
       messages: 
       output: 
       stacktrace: 
@@ -6150,7 +6442,7 @@ MonoBehaviour:
       name: ConvertDirection_SamePosition_ReturnsNone
       fullName: GameManager.Tests.UtilityTests.ConvertDirection_SamePosition_ReturnsNone
       resultStatus: 1
-      duration: 0.0001975
+      duration: 0.0002757
       messages: 
       output: 
       stacktrace: 
@@ -6167,7 +6459,7 @@ MonoBehaviour:
       name: GridToInt_Overload_EncodesCorrectly
       fullName: GameManager.Tests.UtilityTests.GridToInt_Overload_EncodesCorrectly
       resultStatus: 1
-      duration: 0.0002234
+      duration: 0.0002745
       messages: 
       output: 
       stacktrace: 
@@ -6184,7 +6476,7 @@ MonoBehaviour:
       name: IntToGrid_Overload_DecodesCorrectly
       fullName: GameManager.Tests.UtilityTests.IntToGrid_Overload_DecodesCorrectly
       resultStatus: 1
-      duration: 0.0002111
+      duration: 0.000258
       messages: 
       output: 
       stacktrace: 
@@ -6201,7 +6493,7 @@ MonoBehaviour:
       name: IsValidGridLocation_BoundaryValues
       fullName: GameManager.Tests.UtilityTests.IsValidGridLocation_BoundaryValues
       resultStatus: 1
-      duration: 0.0002941
+      duration: 0.0003429
       messages: 
       output: 
       stacktrace: 
@@ -6218,7 +6510,7 @@ MonoBehaviour:
       name: SafeNormalize_Diagonal_ReturnsNormalized
       fullName: GameManager.Tests.UtilityTests.SafeNormalize_Diagonal_ReturnsNormalized
       resultStatus: 1
-      duration: 0.0001835
+      duration: 0.0008334
       messages: 
       output: 
       stacktrace: 
@@ -6235,7 +6527,7 @@ MonoBehaviour:
       name: SafeNormalize_PureX_ReturnsUnitX
       fullName: GameManager.Tests.UtilityTests.SafeNormalize_PureX_ReturnsUnitX
       resultStatus: 1
-      duration: 0.0001654
+      duration: 0.0003041
       messages: 
       output: 
       stacktrace: 
@@ -6252,7 +6544,7 @@ MonoBehaviour:
       name: SafeNormalize_PureY_ReturnsUnitY
       fullName: GameManager.Tests.UtilityTests.SafeNormalize_PureY_ReturnsUnitY
       resultStatus: 1
-      duration: 0.0001813
+      duration: 0.0002413
       messages: 
       output: 
       stacktrace: 
@@ -6269,7 +6561,7 @@ MonoBehaviour:
       name: SafeNormalize_ZeroVector_ReturnsZero
       fullName: GameManager.Tests.UtilityTests.SafeNormalize_ZeroVector_ReturnsZero
       resultStatus: 1
-      duration: 0.0002723
+      duration: 0.0001851
       messages: 
       output: 
       stacktrace: 
@@ -6281,7 +6573,7 @@ MonoBehaviour:
       - Uncategorized
       parentId: 1249
       parentUniqueId: 'GameManager.Tests.EditMode.dll/GameManager/Tests/[GameManager.Tests.EditMode][GameManager.Tests.UtilityTests][suite]'
-    m_ResultText: MapManagerGetPathTests (9 tests) (0.036s)
+    m_ResultText: MapManagerGetPathTests (9 tests) (0.048s)
     m_ResultStacktrace: 
     m_TestListState:
       scrollPos: {x: 0, y: 0}
@@ -6317,7 +6609,7 @@ MonoBehaviour:
     m_SelectedOption: 0
   - m_Window: {fileID: 8}
     runProgress:
-      RunGuid: 05364ef0-3f35-4ecc-8863-d0c628a0448f
+      RunGuid: e51d488c-456c-4730-9df5-a06ef656bfaa
       ExecutionSettings:
         m_TargetPlatform: 0
         m_HasTargetPlatform: 0
@@ -6348,7 +6640,7 @@ MonoBehaviour:
       CurrentStepName: Enter Play Mode
       CurrentStageName: 
     m_NewResultList:
-    - id: 1000
+    - id: 1323
       uniqueId: '[RTS][suite]'
       name: RTS
       fullName: RTS
@@ -6364,7 +6656,7 @@ MonoBehaviour:
       categories: []
       parentId: 
       parentUniqueId: 
-    - id: 1264
+    - id: 1622
       uniqueId: '[GameManager.Tests.PlayMode.dll][suite]'
       name: GameManager.Tests.PlayMode.dll
       fullName: C:/Git/Warcrap/UnityRTS/RTS/Library/ScriptAssemblies/GameManager.Tests.PlayMode.dll
@@ -6378,9 +6670,9 @@ MonoBehaviour:
       description: 
       isSuite: 1
       categories: []
-      parentId: 1000
+      parentId: 1323
       parentUniqueId: '[RTS][suite]'
-    - id: 1265
+    - id: 1623
       uniqueId: 'GameManager.Tests.PlayMode.dll/[GameManager][suite]'
       name: GameManager
       fullName: GameManager
@@ -6394,9 +6686,9 @@ MonoBehaviour:
       description: 
       isSuite: 1
       categories: []
-      parentId: 1264
+      parentId: 1622
       parentUniqueId: '[GameManager.Tests.PlayMode.dll][suite]'
-    - id: 1266
+    - id: 1624
       uniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/[Tests][suite]'
       name: Tests
       fullName: GameManager.Tests
@@ -6410,9 +6702,9 @@ MonoBehaviour:
       description: 
       isSuite: 1
       categories: []
-      parentId: 1265
+      parentId: 1623
       parentUniqueId: 'GameManager.Tests.PlayMode.dll/[GameManager][suite]'
-    - id: 1267
+    - id: 1625
       uniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode][suite]'
       name: PlayMode
       fullName: GameManager.Tests.PlayMode
@@ -6426,9 +6718,9 @@ MonoBehaviour:
       description: 
       isSuite: 1
       categories: []
-      parentId: 1266
+      parentId: 1624
       parentUniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/[Tests][suite]'
-    - id: 1001
+    - id: 1324
       uniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.AgentActionsAdapterTests][suite]'
       name: AgentActionsAdapterTests
       fullName: GameManager.Tests.PlayMode.AgentActionsAdapterTests
@@ -6442,7 +6734,7 @@ MonoBehaviour:
       description: 
       isSuite: 1
       categories: []
-      parentId: 1267
+      parentId: 1625
       parentUniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode][suite]'
     - id: 1315
       uniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/AgentActionsAdapterTests/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.AgentActionsAdapterTests.Attack_ValidUnits_DelegatesToAgentAttack]'
@@ -6576,7 +6868,7 @@ MonoBehaviour:
       - Uncategorized
       parentId: 1310
       parentUniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.AgentActionsAdapterTests][suite]'
-    - id: 1008
+    - id: 1331
       uniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.AgentControllerTests][suite]'
       name: AgentControllerTests
       fullName: GameManager.Tests.PlayMode.AgentControllerTests
@@ -6590,7 +6882,7 @@ MonoBehaviour:
       description: 
       isSuite: 1
       categories: []
-      parentId: 1267
+      parentId: 1625
       parentUniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode][suite]'
     - id: 1320
       uniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/AgentControllerTests/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.AgentControllerTests.InitializeAgent_NullPanel_TextAreasIsEmpty]'
@@ -6798,7 +7090,7 @@ MonoBehaviour:
       - Uncategorized
       parentId: 1319
       parentUniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.AgentControllerTests][suite]'
-    - id: 1018
+    - id: 1341
       uniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.AgentGoldTests][suite]'
       name: AgentGoldTests
       fullName: GameManager.Tests.PlayMode.AgentGoldTests
@@ -6812,7 +7104,7 @@ MonoBehaviour:
       description: 
       isSuite: 1
       categories: []
-      parentId: 1267
+      parentId: 1625
       parentUniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode][suite]'
     - id: 1270
       uniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/AgentGoldTests/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.AgentGoldTests.BothAgents_StartWithPositiveGold]'
@@ -7012,7 +7304,7 @@ MonoBehaviour:
       - Uncategorized
       parentId: 1269
       parentUniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.AgentGoldTests][suite]'
-    - id: 1028
+    - id: 1351
       uniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.AgentUnitFilterTests][suite]'
       name: AgentUnitFilterTests
       fullName: GameManager.Tests.PlayMode.AgentUnitFilterTests
@@ -7026,7 +7318,7 @@ MonoBehaviour:
       description: 
       isSuite: 1
       categories: []
-      parentId: 1267
+      parentId: 1625
       parentUniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode][suite]'
     - id: 1284
       uniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/AgentUnitFilterTests/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.AgentUnitFilterTests.DestroyedUnit_NotInAgentFilter]'
@@ -7138,7 +7430,7 @@ MonoBehaviour:
       - Uncategorized
       parentId: 1279
       parentUniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.AgentUnitFilterTests][suite]'
-    - id: 1034
+    - id: 1357
       uniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.ArcherAttackTests][suite]'
       name: ArcherAttackTests
       fullName: GameManager.Tests.PlayMode.ArcherAttackTests
@@ -7152,7 +7444,7 @@ MonoBehaviour:
       description: 
       isSuite: 1
       categories: []
-      parentId: 1267
+      parentId: 1625
       parentUniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode][suite]'
     - id: 1287
       uniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/ArcherAttackTests/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.ArcherAttackTests.Archer_AttackRange_GreaterThanSoldier_AtRuntime]'
@@ -7308,7 +7600,7 @@ MonoBehaviour:
       - Uncategorized
       parentId: 1285
       parentUniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.ArcherAttackTests][suite]'
-    - id: 1042
+    - id: 1365
       uniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.ArcherEngageRangeTests][suite]'
       name: ArcherEngageRangeTests
       fullName: GameManager.Tests.PlayMode.ArcherEngageRangeTests
@@ -7322,7 +7614,7 @@ MonoBehaviour:
       description: 
       isSuite: 1
       categories: []
-      parentId: 1267
+      parentId: 1625
       parentUniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode][suite]'
     - id: 1295
       uniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/ArcherEngageRangeTests/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.ArcherEngageRangeTests.Archer_AttacksAtRange_SoldierCannotReach]'
@@ -7412,7 +7704,7 @@ MonoBehaviour:
       - Uncategorized
       parentId: 1294
       parentUniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.ArcherEngageRangeTests][suite]'
-    - id: 1047
+    - id: 1370
       uniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.BuildDependencyTests][suite]'
       name: BuildDependencyTests
       fullName: GameManager.Tests.PlayMode.BuildDependencyTests
@@ -7426,7 +7718,7 @@ MonoBehaviour:
       description: 
       isSuite: 1
       categories: []
-      parentId: 1267
+      parentId: 1625
       parentUniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode][suite]'
     - id: 1301
       uniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/BuildDependencyTests/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.BuildDependencyTests.AfterBase_WorkerCanBuildBarracks]'
@@ -7478,7 +7770,7 @@ MonoBehaviour:
       - Uncategorized
       parentId: 1300
       parentUniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.BuildDependencyTests][suite]'
-    - id: 1050
+    - id: 1373
       uniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.BuildingCellStateTests][suite]'
       name: BuildingCellStateTests
       fullName: GameManager.Tests.PlayMode.BuildingCellStateTests
@@ -7492,7 +7784,7 @@ MonoBehaviour:
       description: 
       isSuite: 1
       categories: []
-      parentId: 1267
+      parentId: 1625
       parentUniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode][suite]'
     - id: 1309
       uniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/BuildingCellStateTests/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.BuildingCellStateTests.BuildingDestroyed_AreaBecomesRebuildable]'
@@ -7582,7 +7874,7 @@ MonoBehaviour:
       - Uncategorized
       parentId: 1306
       parentUniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.BuildingCellStateTests][suite]'
-    - id: 1055
+    - id: 1378
       uniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.BuildOccupiedCellTests][suite]'
       name: BuildOccupiedCellTests
       fullName: GameManager.Tests.PlayMode.BuildOccupiedCellTests
@@ -7596,7 +7888,7 @@ MonoBehaviour:
       description: 
       isSuite: 1
       categories: []
-      parentId: 1267
+      parentId: 1625
       parentUniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode][suite]'
     - id: 1313
       uniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/BuildOccupiedCellTests/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.BuildOccupiedCellTests.BuildAtExistingBuilding_Rejected]'
@@ -7664,7 +7956,7 @@ MonoBehaviour:
       - Uncategorized
       parentId: 1311
       parentUniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.BuildOccupiedCellTests][suite]'
-    - id: 1059
+    - id: 1382
       uniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.BuildResumeTests][suite]'
       name: BuildResumeTests
       fullName: GameManager.Tests.PlayMode.BuildResumeTests
@@ -7678,7 +7970,7 @@ MonoBehaviour:
       description: 
       isSuite: 1
       categories: []
-      parentId: 1267
+      parentId: 1625
       parentUniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode][suite]'
     - id: 1044
       uniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/BuildResumeTests/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.BuildResumeTests.AnotherWorker_CanResumeInterruptedBuild]'
@@ -7752,7 +8044,7 @@ MonoBehaviour:
       - Uncategorized
       parentId: 1042
       parentUniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.BuildResumeTests][suite]'
-    - id: 1063
+    - id: 1386
       uniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.ConcurrentActionsTests][suite]'
       name: ConcurrentActionsTests
       fullName: GameManager.Tests.PlayMode.ConcurrentActionsTests
@@ -7766,7 +8058,7 @@ MonoBehaviour:
       description: 
       isSuite: 1
       categories: []
-      parentId: 1267
+      parentId: 1625
       parentUniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode][suite]'
     - id: 1318
       uniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/ConcurrentActionsTests/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.ConcurrentActionsTests.TwoWorkers_BuildDifferentStructures_BothComplete]'
@@ -7842,7 +8134,7 @@ MonoBehaviour:
       - Uncategorized
       parentId: 1316
       parentUniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.ConcurrentActionsTests][suite]'
-    - id: 1067
+    - id: 1390
       uniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.GatherContinuationTests][suite]'
       name: GatherContinuationTests
       fullName: GameManager.Tests.PlayMode.GatherContinuationTests
@@ -7856,7 +8148,7 @@ MonoBehaviour:
       description: 
       isSuite: 1
       categories: []
-      parentId: 1267
+      parentId: 1625
       parentUniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode][suite]'
     - id: 1321
       uniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/GatherContinuationTests/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.GatherContinuationTests.AfterDeposit_WorkerCyclesBackToMine]'
@@ -7968,7 +8260,7 @@ MonoBehaviour:
       - Uncategorized
       parentId: 1320
       parentUniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.GatherContinuationTests][suite]'
-    - id: 1073
+    - id: 1396
       uniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.MapDimensionTests][suite]'
       name: MapDimensionTests
       fullName: GameManager.Tests.PlayMode.MapDimensionTests
@@ -7982,7 +8274,7 @@ MonoBehaviour:
       description: 
       isSuite: 1
       categories: []
-      parentId: 1267
+      parentId: 1625
       parentUniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode][suite]'
     - id: 1330
       uniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/MapDimensionTests/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.MapDimensionTests.EmptyMap_CenterCellsBuildable]'
@@ -8138,7 +8430,7 @@ MonoBehaviour:
       - Uncategorized
       parentId: 1326
       parentUniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.MapDimensionTests][suite]'
-    - id: 1081
+    - id: 1404
       uniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.MapReclaimTests][suite]'
       name: MapReclaimTests
       fullName: GameManager.Tests.PlayMode.MapReclaimTests
@@ -8152,7 +8444,7 @@ MonoBehaviour:
       description: 
       isSuite: 1
       categories: []
-      parentId: 1267
+      parentId: 1625
       parentUniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode][suite]'
     - id: 1336
       uniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/MapReclaimTests/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.MapReclaimTests.Barracks_DestroyedByCombat_CellsReclaimed]'
@@ -8286,7 +8578,7 @@ MonoBehaviour:
       - Uncategorized
       parentId: 1334
       parentUniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.MapReclaimTests][suite]'
-    - id: 1088
+    - id: 1411
       uniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.MineNaturalDepletionTests][suite]'
       name: MineNaturalDepletionTests
       fullName: GameManager.Tests.PlayMode.MineNaturalDepletionTests
@@ -8300,7 +8592,7 @@ MonoBehaviour:
       description: 
       isSuite: 1
       categories: []
-      parentId: 1267
+      parentId: 1625
       parentUniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode][suite]'
     - id: 1345
       uniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/MineNaturalDepletionTests/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.MineNaturalDepletionTests.AfterGather_MineHealth_Decreases]'
@@ -8390,7 +8682,7 @@ MonoBehaviour:
       - Uncategorized
       parentId: 1341
       parentUniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.MineNaturalDepletionTests][suite]'
-    - id: 1093
+    - id: 1416
       uniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.MultiAgentTests][suite]'
       name: MultiAgentTests
       fullName: GameManager.Tests.PlayMode.MultiAgentTests
@@ -8404,7 +8696,7 @@ MonoBehaviour:
       description: 
       isSuite: 1
       categories: []
-      parentId: 1267
+      parentId: 1625
       parentUniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode][suite]'
     - id: 1349
       uniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/MultiAgentTests/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.MultiAgentTests.Agent0Soldier_AttacksAgent1Worker_HealthDecreases]'
@@ -8516,7 +8808,7 @@ MonoBehaviour:
       - Uncategorized
       parentId: 1346
       parentUniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.MultiAgentTests][suite]'
-    - id: 1099
+    - id: 1422
       uniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.SoldierChaseTests][suite]'
       name: SoldierChaseTests
       fullName: GameManager.Tests.PlayMode.SoldierChaseTests
@@ -8530,7 +8822,7 @@ MonoBehaviour:
       description: 
       isSuite: 1
       categories: []
-      parentId: 1267
+      parentId: 1625
       parentUniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode][suite]'
     - id: 1357
       uniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/SoldierChaseTests/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.SoldierChaseTests.Archer_ChasesDistantEnemy_DealsAtLeastOneDamage]'
@@ -8620,7 +8912,7 @@ MonoBehaviour:
       - Uncategorized
       parentId: 1353
       parentUniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.SoldierChaseTests][suite]'
-    - id: 1104
+    - id: 1427
       uniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.SoldierGroupCombatTests][suite]'
       name: SoldierGroupCombatTests
       fullName: GameManager.Tests.PlayMode.SoldierGroupCombatTests
@@ -8634,7 +8926,7 @@ MonoBehaviour:
       description: 
       isSuite: 1
       categories: []
-      parentId: 1267
+      parentId: 1625
       parentUniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode][suite]'
     - id: 1362
       uniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/SoldierGroupCombatTests/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.SoldierGroupCombatTests.AllSoldiers_AfterGroupKill_ReturnToIdle]'
@@ -8724,7 +9016,7 @@ MonoBehaviour:
       - Uncategorized
       parentId: 1358
       parentUniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.SoldierGroupCombatTests][suite]'
-    - id: 1109
+    - id: 1432
       uniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.ThreeWorkerDepositTests][suite]'
       name: ThreeWorkerDepositTests
       fullName: GameManager.Tests.PlayMode.ThreeWorkerDepositTests
@@ -8738,7 +9030,7 @@ MonoBehaviour:
       description: 
       isSuite: 1
       categories: []
-      parentId: 1267
+      parentId: 1625
       parentUniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode][suite]'
     - id: 1364
       uniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/ThreeWorkerDepositTests/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.ThreeWorkerDepositTests.ThreeWorkers_GatherSimultaneously_AccumulateTripleCapacity]'
@@ -8806,7 +9098,7 @@ MonoBehaviour:
       - Uncategorized
       parentId: 1363
       parentUniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.ThreeWorkerDepositTests][suite]'
-    - id: 1113
+    - id: 1436
       uniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.TrainDurationTests][suite]'
       name: TrainDurationTests
       fullName: GameManager.Tests.PlayMode.TrainDurationTests
@@ -8820,7 +9112,7 @@ MonoBehaviour:
       description: 
       isSuite: 1
       categories: []
-      parentId: 1267
+      parentId: 1625
       parentUniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode][suite]'
     - id: 1373
       uniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/TrainDurationTests/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.TrainDurationTests.BothCombatUnits_TrainingTimesArePositive]'
@@ -8954,7 +9246,7 @@ MonoBehaviour:
       - Uncategorized
       parentId: 1367
       parentUniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.TrainDurationTests][suite]'
-    - id: 1120
+    - id: 1443
       uniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.TrainingBusyRejectTests][suite]'
       name: TrainingBusyRejectTests
       fullName: GameManager.Tests.PlayMode.TrainingBusyRejectTests
@@ -8968,7 +9260,7 @@ MonoBehaviour:
       description: 
       isSuite: 1
       categories: []
-      parentId: 1267
+      parentId: 1625
       parentUniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode][suite]'
     - id: 1377
       uniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/TrainingBusyRejectTests/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.TrainingBusyRejectTests.Barracks_AfterFirstTrainComplete_AcceptsSecondTrain]'
@@ -9058,7 +9350,7 @@ MonoBehaviour:
       - Uncategorized
       parentId: 1374
       parentUniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.TrainingBusyRejectTests][suite]'
-    - id: 1125
+    - id: 1448
       uniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.TrainingFromBarracksTests][suite]'
       name: TrainingFromBarracksTests
       fullName: GameManager.Tests.PlayMode.TrainingFromBarracksTests
@@ -9072,7 +9364,7 @@ MonoBehaviour:
       description: 
       isSuite: 1
       categories: []
-      parentId: 1267
+      parentId: 1625
       parentUniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode][suite]'
     - id: 1386
       uniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/TrainingFromBarracksTests/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.TrainingFromBarracksTests.Barracks_TrainSoldierThenArcher_BothOnDistinctCells]'
@@ -9228,7 +9520,7 @@ MonoBehaviour:
       - Uncategorized
       parentId: 1379
       parentUniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.TrainingFromBarracksTests][suite]'
-    - id: 1133
+    - id: 1456
       uniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.UnitAttackTests][suite]'
       name: UnitAttackTests
       fullName: GameManager.Tests.PlayMode.UnitAttackTests
@@ -9242,7 +9534,7 @@ MonoBehaviour:
       description: 
       isSuite: 1
       categories: []
-      parentId: 1267
+      parentId: 1625
       parentUniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode][suite]'
     - id: 1395
       uniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/UnitAttackTests/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.UnitAttackTests.MultipleSoldiers_SameTarget_KillFaster]'
@@ -9398,7 +9690,7 @@ MonoBehaviour:
       - Uncategorized
       parentId: 1387
       parentUniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.UnitAttackTests][suite]'
-    - id: 1141
+    - id: 1464
       uniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.UnitBuildTests][suite]'
       name: UnitBuildTests
       fullName: GameManager.Tests.PlayMode.UnitBuildTests
@@ -9412,7 +9704,7 @@ MonoBehaviour:
       description: 
       isSuite: 1
       categories: []
-      parentId: 1267
+      parentId: 1625
       parentUniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode][suite]'
     - id: 1400
       uniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/UnitBuildTests/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.UnitBuildTests.BuildBase_GoldDeductedAtStart]'
@@ -9687,7 +9979,7 @@ MonoBehaviour:
       - Uncategorized
       parentId: 1396
       parentUniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.UnitBuildTests][suite]'
-    - id: 1151
+    - id: 1474
       uniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.UnitCapabilityTests][suite]'
       name: UnitCapabilityTests
       fullName: GameManager.Tests.PlayMode.UnitCapabilityTests
@@ -9701,7 +9993,7 @@ MonoBehaviour:
       description: 
       isSuite: 1
       categories: []
-      parentId: 1267
+      parentId: 1625
       parentUniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode][suite]'
     - id: 1410
       uniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/UnitCapabilityTests/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.UnitCapabilityTests.Archer_CannotBuild_CommandRejected]'
@@ -9923,7 +10215,7 @@ MonoBehaviour:
       - Uncategorized
       parentId: 1406
       parentUniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.UnitCapabilityTests][suite]'
-    - id: 1162
+    - id: 1485
       uniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.UnitDamageValuesTests][suite]'
       name: UnitDamageValuesTests
       fullName: GameManager.Tests.PlayMode.UnitDamageValuesTests
@@ -9937,7 +10229,7 @@ MonoBehaviour:
       description: 
       isSuite: 1
       categories: []
-      parentId: 1267
+      parentId: 1625
       parentUniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode][suite]'
     - id: 1422
       uniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/UnitDamageValuesTests/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.UnitDamageValuesTests.Archer_DamagePerHit_MatchesConstants]'
@@ -10071,7 +10363,7 @@ MonoBehaviour:
       - Uncategorized
       parentId: 1417
       parentUniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.UnitDamageValuesTests][suite]'
-    - id: 1169
+    - id: 1492
       uniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.UnitDestructionTests][suite]'
       name: UnitDestructionTests
       fullName: GameManager.Tests.PlayMode.UnitDestructionTests
@@ -10085,7 +10377,7 @@ MonoBehaviour:
       description: 
       isSuite: 1
       categories: []
-      parentId: 1267
+      parentId: 1625
       parentUniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode][suite]'
     - id: 1431
       uniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/UnitDestructionTests/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.UnitDestructionTests.Attacker_TargetDestroyedExternally_GoesIdleNoCrash]'
@@ -10263,7 +10555,7 @@ MonoBehaviour:
       - Uncategorized
       parentId: 1424
       parentUniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.UnitDestructionTests][suite]'
-    - id: 1178
+    - id: 1501
       uniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.UnitGatherTests][suite]'
       name: UnitGatherTests
       fullName: GameManager.Tests.PlayMode.UnitGatherTests
@@ -10277,7 +10569,7 @@ MonoBehaviour:
       description: 
       isSuite: 1
       categories: []
-      parentId: 1267
+      parentId: 1625
       parentUniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode][suite]'
     - id: 1441
       uniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/UnitGatherTests/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.UnitGatherTests.Gather_BaseDestroyedMidTrip_WorkerGoesIdle]'
@@ -10477,7 +10769,7 @@ MonoBehaviour:
       - Uncategorized
       parentId: 1433
       parentUniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.UnitGatherTests][suite]'
-    - id: 1188
+    - id: 1511
       uniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.UnitIdleTransitionTests][suite]'
       name: UnitIdleTransitionTests
       fullName: GameManager.Tests.PlayMode.UnitIdleTransitionTests
@@ -10491,7 +10783,7 @@ MonoBehaviour:
       description: 
       isSuite: 1
       categories: []
-      parentId: 1267
+      parentId: 1625
       parentUniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode][suite]'
     - id: 1447
       uniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/UnitIdleTransitionTests/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.UnitIdleTransitionTests.Archer_AfterKill_GoesIdle]'
@@ -10647,7 +10939,7 @@ MonoBehaviour:
       - Uncategorized
       parentId: 1443
       parentUniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.UnitIdleTransitionTests][suite]'
-    - id: 1196
+    - id: 1519
       uniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.UnitInitialHealthTests][suite]'
       name: UnitInitialHealthTests
       fullName: GameManager.Tests.PlayMode.UnitInitialHealthTests
@@ -10661,7 +10953,7 @@ MonoBehaviour:
       description: 
       isSuite: 1
       categories: []
-      parentId: 1267
+      parentId: 1625
       parentUniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode][suite]'
     - id: 1457
       uniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/UnitInitialHealthTests/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.UnitInitialHealthTests.AllUnitTypes_SpawnWithPositiveHealth]'
@@ -10817,7 +11109,7 @@ MonoBehaviour:
       - Uncategorized
       parentId: 1451
       parentUniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.UnitInitialHealthTests][suite]'
-    - id: 1204
+    - id: 1527
       uniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.UnitInterruptTests][suite]'
       name: UnitInterruptTests
       fullName: GameManager.Tests.PlayMode.UnitInterruptTests
@@ -10831,7 +11123,7 @@ MonoBehaviour:
       description: 
       isSuite: 1
       categories: []
-      parentId: 1267
+      parentId: 1625
       parentUniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode][suite]'
     - id: 1461
       uniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/UnitInterruptTests/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.UnitInterruptTests.Soldier_AttackingThenMoveCommand_SwitchesToMove]'
@@ -10921,7 +11213,7 @@ MonoBehaviour:
       - Uncategorized
       parentId: 1459
       parentUniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.UnitInterruptTests][suite]'
-    - id: 1209
+    - id: 1532
       uniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.UnitManagerQueryTests][suite]'
       name: UnitManagerQueryTests
       fullName: GameManager.Tests.PlayMode.UnitManagerQueryTests
@@ -10935,7 +11227,7 @@ MonoBehaviour:
       description: 
       isSuite: 1
       categories: []
-      parentId: 1267
+      parentId: 1625
       parentUniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode][suite]'
     - id: 1474
       uniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/UnitManagerQueryTests/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.UnitManagerQueryTests.DestroyAllUnits_EmptiesUnitManager]'
@@ -11157,7 +11449,7 @@ MonoBehaviour:
       - Uncategorized
       parentId: 1464
       parentUniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.UnitManagerQueryTests][suite]'
-    - id: 1220
+    - id: 1543
       uniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.UnitMovementObstacleTests][suite]'
       name: UnitMovementObstacleTests
       fullName: GameManager.Tests.PlayMode.UnitMovementObstacleTests
@@ -11171,7 +11463,7 @@ MonoBehaviour:
       description: 
       isSuite: 1
       categories: []
-      parentId: 1267
+      parentId: 1625
       parentUniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode][suite]'
     - id: 1479
       uniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/UnitMovementObstacleTests/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.UnitMovementObstacleTests.Archer_OpenPath_CompletesMove]'
@@ -11283,7 +11575,7 @@ MonoBehaviour:
       - Uncategorized
       parentId: 1475
       parentUniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.UnitMovementObstacleTests][suite]'
-    - id: 1226
+    - id: 1549
       uniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.UnitMovementTests][suite]'
       name: UnitMovementTests
       fullName: GameManager.Tests.PlayMode.UnitMovementTests
@@ -11297,7 +11589,7 @@ MonoBehaviour:
       description: 
       isSuite: 1
       categories: []
-      parentId: 1267
+      parentId: 1625
       parentUniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode][suite]'
     - id: 1491
       uniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/UnitMovementTests/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.UnitMovementTests.MultipleWorkers_MovingSimultaneously_AllResolve]'
@@ -11546,7 +11838,7 @@ MonoBehaviour:
       - Uncategorized
       parentId: 1481
       parentUniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.UnitMovementTests][suite]'
-    - id: 1237
+    - id: 1560
       uniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.UnitSpawnPositionTests][suite]'
       name: UnitSpawnPositionTests
       fullName: GameManager.Tests.PlayMode.UnitSpawnPositionTests
@@ -11560,7 +11852,7 @@ MonoBehaviour:
       description: 
       isSuite: 1
       categories: []
-      parentId: 1267
+      parentId: 1625
       parentUniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode][suite]'
     - id: 1496
       uniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/UnitSpawnPositionTests/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.UnitSpawnPositionTests.TrainedArcher_AppearsInUnitManager]'
@@ -11672,7 +11964,7 @@ MonoBehaviour:
       - Uncategorized
       parentId: 1492
       parentUniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.UnitSpawnPositionTests][suite]'
-    - id: 1243
+    - id: 1566
       uniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.UnitTrainingTests][suite]'
       name: UnitTrainingTests
       fullName: GameManager.Tests.PlayMode.UnitTrainingTests
@@ -11686,7 +11978,7 @@ MonoBehaviour:
       description: 
       isSuite: 1
       categories: []
-      parentId: 1267
+      parentId: 1625
       parentUniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode][suite]'
     - id: 1500
       uniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/UnitTrainingTests/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.UnitTrainingTests.BaseTrainsWorker_ActionIsTrainThenIdle]'
@@ -11886,7 +12178,601 @@ MonoBehaviour:
       - Uncategorized
       parentId: 1498
       parentUniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.UnitTrainingTests][suite]'
-    - id: 1253
+    - id: 1576
+      uniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.UnitVisualizationTests][suite]'
+      name: UnitVisualizationTests
+      fullName: GameManager.Tests.PlayMode.UnitVisualizationTests
+      resultStatus: 0
+      duration: 0
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 1
+      categories: []
+      parentId: 1625
+      parentUniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode][suite]'
+    - id: 1580
+      uniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/UnitVisualizationTests/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.UnitVisualizationTests.CanBuildUnit_WorkerBase_ReturnsTrue]'
+      name: CanBuildUnit_WorkerBase_ReturnsTrue
+      fullName: GameManager.Tests.PlayMode.UnitVisualizationTests.CanBuildUnit_WorkerBase_ReturnsTrue
+      resultStatus: 0
+      duration: 0
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 0
+      categories:
+      - Uncategorized
+      parentId: 1576
+      parentUniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.UnitVisualizationTests][suite]'
+    - id: 1581
+      uniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/UnitVisualizationTests/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.UnitVisualizationTests.CanBuildUnit_WorkerSoldier_ReturnsFalse]'
+      name: CanBuildUnit_WorkerSoldier_ReturnsFalse
+      fullName: GameManager.Tests.PlayMode.UnitVisualizationTests.CanBuildUnit_WorkerSoldier_ReturnsFalse
+      resultStatus: 0
+      duration: 0
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 0
+      categories:
+      - Uncategorized
+      parentId: 1576
+      parentUniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.UnitVisualizationTests][suite]'
+    - id: 1578
+      uniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/UnitVisualizationTests/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.UnitVisualizationTests.CanTrainUnit_BarracksSoldier_ReturnsTrue]'
+      name: CanTrainUnit_BarracksSoldier_ReturnsTrue
+      fullName: GameManager.Tests.PlayMode.UnitVisualizationTests.CanTrainUnit_BarracksSoldier_ReturnsTrue
+      resultStatus: 0
+      duration: 0
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 0
+      categories:
+      - Uncategorized
+      parentId: 1576
+      parentUniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.UnitVisualizationTests][suite]'
+    - id: 1579
+      uniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/UnitVisualizationTests/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.UnitVisualizationTests.CanTrainUnit_BarracksWorker_ReturnsFalse]'
+      name: CanTrainUnit_BarracksWorker_ReturnsFalse
+      fullName: GameManager.Tests.PlayMode.UnitVisualizationTests.CanTrainUnit_BarracksWorker_ReturnsFalse
+      resultStatus: 0
+      duration: 0
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 0
+      categories:
+      - Uncategorized
+      parentId: 1576
+      parentUniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.UnitVisualizationTests][suite]'
+    - id: 1582
+      uniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/UnitVisualizationTests/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.UnitVisualizationTests.CenterGridPosition_1x1Unit_EqualsGridPosition]'
+      name: CenterGridPosition_1x1Unit_EqualsGridPosition
+      fullName: GameManager.Tests.PlayMode.UnitVisualizationTests.CenterGridPosition_1x1Unit_EqualsGridPosition
+      resultStatus: 0
+      duration: 0
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 0
+      categories:
+      - Uncategorized
+      parentId: 1576
+      parentUniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.UnitVisualizationTests][suite]'
+    - id: 1583
+      uniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/UnitVisualizationTests/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.UnitVisualizationTests.CenterGridPosition_3x3Building_IsOffsetByOne]'
+      name: CenterGridPosition_3x3Building_IsOffsetByOne
+      fullName: GameManager.Tests.PlayMode.UnitVisualizationTests.CenterGridPosition_3x3Building_IsOffsetByOne
+      resultStatus: 0
+      duration: 0
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 0
+      categories:
+      - Uncategorized
+      parentId: 1576
+      parentUniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.UnitVisualizationTests][suite]'
+    - id: 1577
+      uniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/UnitVisualizationTests/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.UnitVisualizationTests.ChangeColor_UpdatesColorProperty]'
+      name: ChangeColor_UpdatesColorProperty
+      fullName: GameManager.Tests.PlayMode.UnitVisualizationTests.ChangeColor_UpdatesColorProperty
+      resultStatus: 0
+      duration: 0
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 0
+      categories:
+      - Uncategorized
+      parentId: 1576
+      parentUniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.UnitVisualizationTests][suite]'
+    - id: 1586
+      uniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/UnitVisualizationTests/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.UnitVisualizationTests.LateUpdate_AttackTintOff_AttackIndicatorDisabled]'
+      name: LateUpdate_AttackTintOff_AttackIndicatorDisabled
+      fullName: GameManager.Tests.PlayMode.UnitVisualizationTests.LateUpdate_AttackTintOff_AttackIndicatorDisabled
+      resultStatus: 0
+      duration: 0
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 0
+      categories:
+      - Uncategorized
+      parentId: 1576
+      parentUniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.UnitVisualizationTests][suite]'
+    - id: 1585
+      uniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/UnitVisualizationTests/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.UnitVisualizationTests.LateUpdate_AttackTintOn_AttackIndicatorEnabled]'
+      name: LateUpdate_AttackTintOn_AttackIndicatorEnabled
+      fullName: GameManager.Tests.PlayMode.UnitVisualizationTests.LateUpdate_AttackTintOn_AttackIndicatorEnabled
+      resultStatus: 0
+      duration: 0
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 0
+      categories:
+      - Uncategorized
+      parentId: 1576
+      parentUniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.UnitVisualizationTests][suite]'
+    - id: 1589
+      uniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/UnitVisualizationTests/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.UnitVisualizationTests.LateUpdate_BuildTintOn_BuildIndicatorEnabled]'
+      name: LateUpdate_BuildTintOn_BuildIndicatorEnabled
+      fullName: GameManager.Tests.PlayMode.UnitVisualizationTests.LateUpdate_BuildTintOn_BuildIndicatorEnabled
+      resultStatus: 0
+      duration: 0
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 0
+      categories:
+      - Uncategorized
+      parentId: 1576
+      parentUniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.UnitVisualizationTests][suite]'
+    - id: 1588
+      uniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/UnitVisualizationTests/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.UnitVisualizationTests.LateUpdate_GatherTintOn_GatherIndicatorEnabled]'
+      name: LateUpdate_GatherTintOn_GatherIndicatorEnabled
+      fullName: GameManager.Tests.PlayMode.UnitVisualizationTests.LateUpdate_GatherTintOn_GatherIndicatorEnabled
+      resultStatus: 0
+      duration: 0
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 0
+      categories:
+      - Uncategorized
+      parentId: 1576
+      parentUniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.UnitVisualizationTests][suite]'
+    - id: 1584
+      uniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/UnitVisualizationTests/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.UnitVisualizationTests.LateUpdate_IdleUnit_AllIndicatorsDisabled]'
+      name: LateUpdate_IdleUnit_AllIndicatorsDisabled
+      fullName: GameManager.Tests.PlayMode.UnitVisualizationTests.LateUpdate_IdleUnit_AllIndicatorsDisabled
+      resultStatus: 0
+      duration: 0
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 0
+      categories:
+      - Uncategorized
+      parentId: 1576
+      parentUniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.UnitVisualizationTests][suite]'
+    - id: 1590
+      uniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/UnitVisualizationTests/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.UnitVisualizationTests.LateUpdate_InsideMine_AllIndicatorsHidden]'
+      name: LateUpdate_InsideMine_AllIndicatorsHidden
+      fullName: GameManager.Tests.PlayMode.UnitVisualizationTests.LateUpdate_InsideMine_AllIndicatorsHidden
+      resultStatus: 0
+      duration: 0
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 0
+      categories:
+      - Uncategorized
+      parentId: 1576
+      parentUniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.UnitVisualizationTests][suite]'
+    - id: 1587
+      uniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/UnitVisualizationTests/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.UnitVisualizationTests.LateUpdate_MoveTintOn_MoveIndicatorEnabled]'
+      name: LateUpdate_MoveTintOn_MoveIndicatorEnabled
+      fullName: GameManager.Tests.PlayMode.UnitVisualizationTests.LateUpdate_MoveTintOn_MoveIndicatorEnabled
+      resultStatus: 0
+      duration: 0
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 0
+      categories:
+      - Uncategorized
+      parentId: 1576
+      parentUniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.UnitVisualizationTests][suite]'
+    - id: 1610
+      uniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/UnitVisualizationTests/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.UnitVisualizationTests.MapVelocityToDirection_DiagonalVelocity_DoesNotThrow]'
+      name: MapVelocityToDirection_DiagonalVelocity_DoesNotThrow
+      fullName: GameManager.Tests.PlayMode.UnitVisualizationTests.MapVelocityToDirection_DiagonalVelocity_DoesNotThrow
+      resultStatus: 0
+      duration: 0
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 0
+      categories:
+      - Uncategorized
+      parentId: 1576
+      parentUniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.UnitVisualizationTests][suite]'
+    - id: 1608
+      uniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/UnitVisualizationTests/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.UnitVisualizationTests.MapVelocityToDirection_NullAnimator_DoesNotThrow]'
+      name: MapVelocityToDirection_NullAnimator_DoesNotThrow
+      fullName: GameManager.Tests.PlayMode.UnitVisualizationTests.MapVelocityToDirection_NullAnimator_DoesNotThrow
+      resultStatus: 0
+      duration: 0
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 0
+      categories:
+      - Uncategorized
+      parentId: 1576
+      parentUniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.UnitVisualizationTests][suite]'
+    - id: 1609
+      uniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/UnitVisualizationTests/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.UnitVisualizationTests.MapVelocityToDirection_SouthVelocity_DoesNotThrow]'
+      name: MapVelocityToDirection_SouthVelocity_DoesNotThrow
+      fullName: GameManager.Tests.PlayMode.UnitVisualizationTests.MapVelocityToDirection_SouthVelocity_DoesNotThrow
+      resultStatus: 0
+      duration: 0
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 0
+      categories:
+      - Uncategorized
+      parentId: 1576
+      parentUniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.UnitVisualizationTests][suite]'
+    - id: 1591
+      uniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/UnitVisualizationTests/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.UnitVisualizationTests.Update_DebuggingOff_CanvasDisabled]'
+      name: Update_DebuggingOff_CanvasDisabled
+      fullName: GameManager.Tests.PlayMode.UnitVisualizationTests.Update_DebuggingOff_CanvasDisabled
+      resultStatus: 0
+      duration: 0
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 0
+      categories:
+      - Uncategorized
+      parentId: 1576
+      parentUniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.UnitVisualizationTests][suite]'
+    - id: 1595
+      uniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/UnitVisualizationTests/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.UnitVisualizationTests.Update_DebuggingOn_Attack_StateVariableShowsDamage]'
+      name: Update_DebuggingOn_Attack_StateVariableShowsDamage
+      fullName: GameManager.Tests.PlayMode.UnitVisualizationTests.Update_DebuggingOn_Attack_StateVariableShowsDamage
+      resultStatus: 0
+      duration: 0
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 0
+      categories:
+      - Uncategorized
+      parentId: 1576
+      parentUniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.UnitVisualizationTests][suite]'
+    - id: 1596
+      uniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/UnitVisualizationTests/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.UnitVisualizationTests.Update_DebuggingOn_Build_StateVariableShowsTaskTime]'
+      name: Update_DebuggingOn_Build_StateVariableShowsTaskTime
+      fullName: GameManager.Tests.PlayMode.UnitVisualizationTests.Update_DebuggingOn_Build_StateVariableShowsTaskTime
+      resultStatus: 0
+      duration: 0
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 0
+      categories:
+      - Uncategorized
+      parentId: 1576
+      parentUniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.UnitVisualizationTests][suite]'
+    - id: 1592
+      uniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/UnitVisualizationTests/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.UnitVisualizationTests.Update_DebuggingOn_CanvasEnabled]'
+      name: Update_DebuggingOn_CanvasEnabled
+      fullName: GameManager.Tests.PlayMode.UnitVisualizationTests.Update_DebuggingOn_CanvasEnabled
+      resultStatus: 0
+      duration: 0
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 0
+      categories:
+      - Uncategorized
+      parentId: 1576
+      parentUniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.UnitVisualizationTests][suite]'
+    - id: 1597
+      uniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/UnitVisualizationTests/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.UnitVisualizationTests.Update_DebuggingOn_Gather_StateVariableShowsGold]'
+      name: Update_DebuggingOn_Gather_StateVariableShowsGold
+      fullName: GameManager.Tests.PlayMode.UnitVisualizationTests.Update_DebuggingOn_Gather_StateVariableShowsGold
+      resultStatus: 0
+      duration: 0
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 0
+      categories:
+      - Uncategorized
+      parentId: 1576
+      parentUniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.UnitVisualizationTests][suite]'
+    - id: 1600
+      uniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/UnitVisualizationTests/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.UnitVisualizationTests.Update_DebuggingOn_HealthValue_ShowsHealth]'
+      name: Update_DebuggingOn_HealthValue_ShowsHealth
+      fullName: GameManager.Tests.PlayMode.UnitVisualizationTests.Update_DebuggingOn_HealthValue_ShowsHealth
+      resultStatus: 0
+      duration: 0
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 0
+      categories:
+      - Uncategorized
+      parentId: 1576
+      parentUniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.UnitVisualizationTests][suite]'
+    - id: 1593
+      uniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/UnitVisualizationTests/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.UnitVisualizationTests.Update_DebuggingOn_Idle_StateVariableEmpty]'
+      name: Update_DebuggingOn_Idle_StateVariableEmpty
+      fullName: GameManager.Tests.PlayMode.UnitVisualizationTests.Update_DebuggingOn_Idle_StateVariableEmpty
+      resultStatus: 0
+      duration: 0
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 0
+      categories:
+      - Uncategorized
+      parentId: 1576
+      parentUniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.UnitVisualizationTests][suite]'
+    - id: 1594
+      uniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/UnitVisualizationTests/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.UnitVisualizationTests.Update_DebuggingOn_Move_StateVariableShowsPathCount]'
+      name: Update_DebuggingOn_Move_StateVariableShowsPathCount
+      fullName: GameManager.Tests.PlayMode.UnitVisualizationTests.Update_DebuggingOn_Move_StateVariableShowsPathCount
+      resultStatus: 0
+      duration: 0
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 0
+      categories:
+      - Uncategorized
+      parentId: 1576
+      parentUniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.UnitVisualizationTests][suite]'
+    - id: 1598
+      uniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/UnitVisualizationTests/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.UnitVisualizationTests.Update_DebuggingOn_Train_StateVariableShowsTaskTime]'
+      name: Update_DebuggingOn_Train_StateVariableShowsTaskTime
+      fullName: GameManager.Tests.PlayMode.UnitVisualizationTests.Update_DebuggingOn_Train_StateVariableShowsTaskTime
+      resultStatus: 0
+      duration: 0
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 0
+      categories:
+      - Uncategorized
+      parentId: 1576
+      parentUniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.UnitVisualizationTests][suite]'
+    - id: 1599
+      uniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/UnitVisualizationTests/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.UnitVisualizationTests.Update_DebuggingOn_UnitNumber_ShowsUnitNbr]'
+      name: Update_DebuggingOn_UnitNumber_ShowsUnitNbr
+      fullName: GameManager.Tests.PlayMode.UnitVisualizationTests.Update_DebuggingOn_UnitNumber_ShowsUnitNbr
+      resultStatus: 0
+      duration: 0
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 0
+      categories:
+      - Uncategorized
+      parentId: 1576
+      parentUniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.UnitVisualizationTests][suite]'
+    - id: 1601
+      uniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/UnitVisualizationTests/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.UnitVisualizationTests.Update_HasPathTintOff_PathLineRendererEmpty]'
+      name: Update_HasPathTintOff_PathLineRendererEmpty
+      fullName: GameManager.Tests.PlayMode.UnitVisualizationTests.Update_HasPathTintOff_PathLineRendererEmpty
+      resultStatus: 0
+      duration: 0
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 0
+      categories:
+      - Uncategorized
+      parentId: 1576
+      parentUniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.UnitVisualizationTests][suite]'
+    - id: 1604
+      uniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/UnitVisualizationTests/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.UnitVisualizationTests.Update_HasPathTintOn_AttackTintOff_AttackPathHidden]'
+      name: Update_HasPathTintOn_AttackTintOff_AttackPathHidden
+      fullName: GameManager.Tests.PlayMode.UnitVisualizationTests.Update_HasPathTintOn_AttackTintOff_AttackPathHidden
+      resultStatus: 0
+      duration: 0
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 0
+      categories:
+      - Uncategorized
+      parentId: 1576
+      parentUniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.UnitVisualizationTests][suite]'
+    - id: 1602
+      uniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/UnitVisualizationTests/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.UnitVisualizationTests.Update_HasPathTintOn_EmptyPath_LineRendererEmpty]'
+      name: Update_HasPathTintOn_EmptyPath_LineRendererEmpty
+      fullName: GameManager.Tests.PlayMode.UnitVisualizationTests.Update_HasPathTintOn_EmptyPath_LineRendererEmpty
+      resultStatus: 0
+      duration: 0
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 0
+      categories:
+      - Uncategorized
+      parentId: 1576
+      parentUniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.UnitVisualizationTests][suite]'
+    - id: 1603
+      uniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/UnitVisualizationTests/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.UnitVisualizationTests.Update_HasPathTintOn_WithPath_LineRendererHasPositions]'
+      name: Update_HasPathTintOn_WithPath_LineRendererHasPositions
+      fullName: GameManager.Tests.PlayMode.UnitVisualizationTests.Update_HasPathTintOn_WithPath_LineRendererHasPositions
+      resultStatus: 0
+      duration: 0
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 0
+      categories:
+      - Uncategorized
+      parentId: 1576
+      parentUniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.UnitVisualizationTests][suite]'
+    - id: 1605
+      uniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/UnitVisualizationTests/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.UnitVisualizationTests.Update_HasTargetLineTintOff_TargetLineHidden]'
+      name: Update_HasTargetLineTintOff_TargetLineHidden
+      fullName: GameManager.Tests.PlayMode.UnitVisualizationTests.Update_HasTargetLineTintOff_TargetLineHidden
+      resultStatus: 0
+      duration: 0
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 0
+      categories:
+      - Uncategorized
+      parentId: 1576
+      parentUniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.UnitVisualizationTests][suite]'
+    - id: 1607
+      uniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/UnitVisualizationTests/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.UnitVisualizationTests.Update_HasTargetLineTintOn_Attacking_TargetLineVisible]'
+      name: Update_HasTargetLineTintOn_Attacking_TargetLineVisible
+      fullName: GameManager.Tests.PlayMode.UnitVisualizationTests.Update_HasTargetLineTintOn_Attacking_TargetLineVisible
+      resultStatus: 0
+      duration: 0
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 0
+      categories:
+      - Uncategorized
+      parentId: 1576
+      parentUniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.UnitVisualizationTests][suite]'
+    - id: 1606
+      uniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/UnitVisualizationTests/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.UnitVisualizationTests.Update_HasTargetLineTintOn_NotAttacking_TargetLineHidden]'
+      name: Update_HasTargetLineTintOn_NotAttacking_TargetLineHidden
+      fullName: GameManager.Tests.PlayMode.UnitVisualizationTests.Update_HasTargetLineTintOn_NotAttacking_TargetLineHidden
+      resultStatus: 0
+      duration: 0
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 0
+      categories:
+      - Uncategorized
+      parentId: 1576
+      parentUniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.UnitVisualizationTests][suite]'
+    - id: 1611
       uniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.WorkerBuildSequenceTests][suite]'
       name: WorkerBuildSequenceTests
       fullName: GameManager.Tests.PlayMode.WorkerBuildSequenceTests
@@ -11900,7 +12786,7 @@ MonoBehaviour:
       description: 
       isSuite: 1
       categories: []
-      parentId: 1267
+      parentId: 1625
       parentUniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode][suite]'
     - id: 1512
       uniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/WorkerBuildSequenceTests/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.WorkerBuildSequenceTests.TwoWorkers_BuildIndependentBases_BothStart]'
@@ -11999,7 +12885,7 @@ MonoBehaviour:
       - Uncategorized
       parentId: 1508
       parentUniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.WorkerBuildSequenceTests][suite]'
-    - id: 1258
+    - id: 1616
       uniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.WorkerRefineryGatherTests][suite]'
       name: WorkerRefineryGatherTests
       fullName: GameManager.Tests.PlayMode.WorkerRefineryGatherTests
@@ -12013,7 +12899,7 @@ MonoBehaviour:
       description: 
       isSuite: 1
       categories: []
-      parentId: 1267
+      parentId: 1625
       parentUniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode][suite]'
     - id: 1517
       uniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/WorkerRefineryGatherTests/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.WorkerRefineryGatherTests.BuiltRefinery_HasCorrectHealth]'
@@ -12125,7 +13011,7 @@ MonoBehaviour:
       - Uncategorized
       parentId: 1513
       parentUniqueId: 'GameManager.Tests.PlayMode.dll/GameManager/Tests/PlayMode/[GameManager.Tests.PlayMode][GameManager.Tests.PlayMode.WorkerRefineryGatherTests][suite]'
-    m_ResultText: 'BuildNearMapEdge_FitsWithinBounds (0.279s)
+    m_ResultText: 'BuildNearMapEdge_FitsWithinBounds (0.281s)
 
       ---
 
@@ -12171,7 +13057,7 @@ MonoBehaviour:
     m_SelectedOption: 0
   - m_Window: {fileID: 8}
     runProgress:
-      RunGuid: 05364ef0-3f35-4ecc-8863-d0c628a0448f
+      RunGuid: e51d488c-456c-4730-9df5-a06ef656bfaa
       ExecutionSettings:
         m_TargetPlatform: 0
         m_HasTargetPlatform: 0
