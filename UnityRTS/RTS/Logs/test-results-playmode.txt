@@ -1,6 +1,6 @@
-=== PlayMode Test Run: 2026-03-02 00:55:30 ===
-Result: Passed  |  Duration: 36.54s
-Passed: 259  Failed: 0  Skipped: 0
+=== PlayMode Test Run: 2026-03-02 01:19:23 ===
+Result: Passed  |  Duration: 36.87s
+Passed: 267  Failed: 0  Skipped: 0
 
             [PASS] GameManager.Tests.PlayMode.AgentActionsAdapterTests.Attack_ValidUnits_DelegatesToAgentAttack
             [PASS] GameManager.Tests.PlayMode.AgentActionsAdapterTests.Build_ValidWorker_DelegatesToAgentBuild
@@ -57,6 +57,14 @@ Passed: 259  Failed: 0  Skipped: 0
             [PASS] GameManager.Tests.PlayMode.ConcurrentActionsTests.TwoWorkers_BuildDifferentStructures_BothComplete
             [PASS] GameManager.Tests.PlayMode.ConcurrentActionsTests.Worker_BuildsWhileSoldier_Attacks_BothComplete
             [PASS] GameManager.Tests.PlayMode.ConcurrentActionsTests.Worker_GathersWhileSoldier_Moves_BothComplete
+            [PASS] GameManager.Tests.PlayMode.GameManagerWinConditionTests.DetermineRoundWinner_Agent0HasNoUnits_ReturnsAgent1
+            [PASS] GameManager.Tests.PlayMode.GameManagerWinConditionTests.DetermineRoundWinner_Agent1HasNoUnits_ReturnsAgent0
+            [PASS] GameManager.Tests.PlayMode.GameManagerWinConditionTests.DetermineRoundWinner_BothHaveUnits_ReturnsNull
+            [PASS] GameManager.Tests.PlayMode.GameManagerWinConditionTests.DetermineRoundWinner_NeitherHasUnits_ReturnsNull
+            [PASS] GameManager.Tests.PlayMode.GameManagerWinConditionTests.DetermineRoundWinner_Timeout_Agent0HigherScore_ReturnsAgent0
+            [PASS] GameManager.Tests.PlayMode.GameManagerWinConditionTests.DetermineRoundWinner_Timeout_Agent1HigherScore_ReturnsAgent1
+            [PASS] GameManager.Tests.PlayMode.GameManagerWinConditionTests.DetermineRoundWinner_Timeout_EqualScore_Agent0MoreGold_ReturnsAgent0
+            [PASS] GameManager.Tests.PlayMode.GameManagerWinConditionTests.DetermineRoundWinner_Timeout_EqualScore_Agent1MoreGold_ReturnsAgent1
             [PASS] GameManager.Tests.PlayMode.GatherContinuationTests.AfterDeposit_WorkerCyclesBackToMine
             [PASS] GameManager.Tests.PlayMode.GatherContinuationTests.Base_DestroyedMidSecondCycle_WorkerGoesIdle
             [PASS] GameManager.Tests.PlayMode.GatherContinuationTests.Mine_DepletedDuringSecondCycle_WorkerGoesIdle
