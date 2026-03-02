@@ -1,6 +1,6 @@
-=== PlayMode Test Run: 2026-03-01 17:02:11 ===
-Result: Failed  |  Duration: 34.27s
-Passed: 209  Failed: 1  Skipped: 0
+=== PlayMode Test Run: 2026-03-01 23:50:13 ===
+Result: Passed  |  Duration: 34.71s
+Passed: 210  Failed: 0  Skipped: 0
 
             [PASS] GameManager.Tests.PlayMode.AgentGoldTests.BothAgents_StartWithPositiveGold
             [PASS] GameManager.Tests.PlayMode.AgentGoldTests.BuildBase_DeductsCorrectCost
@@ -106,11 +106,7 @@ Passed: 209  Failed: 1  Skipped: 0
             [PASS] GameManager.Tests.PlayMode.UnitAttackTests.Worker_AttackCommand_Rejected
             [PASS] GameManager.Tests.PlayMode.UnitBuildTests.BuildBase_GoldDeductedAtStart
             [PASS] GameManager.Tests.PlayMode.UnitBuildTests.BuildingPlaced_FootprintCellsBecomeUnwalkable
-            [FAIL] GameManager.Tests.PlayMode.UnitBuildTests.BuildNearMapEdge_FitsWithinBounds
-                     4x4 area at (25,2) should be buildable within 30x30 map
-                     Expected: True
-                     But was:  False
-                   
+            [PASS] GameManager.Tests.PlayMode.UnitBuildTests.BuildNearMapEdge_FitsWithinBounds
             [PASS] GameManager.Tests.PlayMode.UnitBuildTests.BuildOnOccupiedLocation_CommandRejectedGoldUnchanged
             [PASS] GameManager.Tests.PlayMode.UnitBuildTests.BuildWithInsufficientGold_CommandRejected
             [PASS] GameManager.Tests.PlayMode.UnitBuildTests.BuildWithNoPath_BuildingNotPlacedGoldUnchanged

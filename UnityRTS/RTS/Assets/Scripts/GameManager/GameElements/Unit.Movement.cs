@@ -95,34 +95,23 @@ namespace GameManager.GameElements
 		private void UpdateStateColor()
 		{
 			bool showAttack = CurrentAction == UnitAction.ATTACK && GameManager.Instance.HasAttackTint;
-			bool showMove = CurrentAction == UnitAction.MOVE && GameManager.Instance.HasMoveTint;
+			bool showMove   = CurrentAction == UnitAction.MOVE   && GameManager.Instance.HasMoveTint;
 			bool showGather = CurrentAction == UnitAction.GATHER && GameManager.Instance.HasGatherTint;
+			bool showBuild  = CurrentAction == UnitAction.BUILD  && GameManager.Instance.HasBuildTint;
 
 			// Don't show indicators when the worker is hidden inside a mine
 			if (isInsideMine)
 			{
 				showAttack = false;
-				showMove = false;
+				showMove   = false;
 				showGather = false;
+				showBuild  = false;
 			}
-
-			bool anyIndicator = showAttack || showMove || showGather;
 
 			if (attackIndicator != null) attackIndicator.enabled = showAttack;
-			if (moveIndicator != null) moveIndicator.enabled = showMove;
+			if (moveIndicator   != null) moveIndicator.enabled   = showMove;
 			if (gatherIndicator != null) gatherIndicator.enabled = showGather;
-
-			// Fade the root unit sprite to 50% alpha when an indicator is active.
-			// Only modify the root SpriteRenderer to avoid interfering with
-			// Animator-controlled child renderers.
-			float alpha = anyIndicator ? 0.5f : 1f;
-			var rootSr = GetComponent<SpriteRenderer>();
-			if (rootSr != null && rootSr.enabled)
-			{
-				var c = rootSr.color;
-				if (System.Math.Abs(c.a - alpha) > 0.01f)
-					rootSr.color = new Color(c.r, c.g, c.b, alpha);
-			}
+			if (buildIndicator  != null) buildIndicator.enabled  = showBuild;
 		}
 
 		/// <summary>
@@ -362,7 +351,7 @@ namespace GameManager.GameElements
 			if (forceImmediate || pathUpdateCounter > cooldown)
 			{
 				pathUpdateCounter = 0;
-				path = GameManager.Instance.Map.GetPathToUnit(GridPosition, targetUnitType, targetGridPos, avoidUnits);
+				path = GameManager.Instance.Map.GetPathToUnit(gridPosition, targetUnitType, targetGridPos, avoidUnits);
 
 				if (path.Count == 0)
 				{
@@ -395,7 +384,12 @@ namespace GameManager.GameElements
 		{
 			if (pathLineRenderer == null) return;
 
-			if (!GameManager.Instance.HasPathTint)
+			// The pursuit path for attacking units is gated by HasAttackTint so the
+			// Attack Tint checkbox hides all attack visuals (indicator, target line, path).
+			bool show = GameManager.Instance.HasPathTint
+			         && (CurrentAction != UnitAction.ATTACK || GameManager.Instance.HasAttackTint);
+
+			if (!show)
 			{
 				pathLineRenderer.positionCount = 0;
 				return;
@@ -418,21 +412,22 @@ namespace GameManager.GameElements
 		}
 
 		/// <summary>
-		/// Draw a red line from this unit to its attack target when attack tint is enabled.
+		/// Draw a red line from this unit to its attack target when target line tint is enabled.
 		/// </summary>
 		private void UpdateTargetVisualization()
 		{
 			if (targetLineRenderer == null) return;
 
-			if (!GameManager.Instance.HasAttackTint
-				|| CurrentAction != UnitAction.ATTACK
-				|| AttackUnit == null)
-			{
-				targetLineRenderer.positionCount = 0;
-				return;
-			}
+			bool showLine = GameManager.Instance.HasTargetLineTint
+			             && CurrentAction == UnitAction.ATTACK
+			             && AttackUnit != null;
 
-			Vector3 targetPos = (Vector3)AttackUnit.GetComponent<Unit>().CenterGridPosition + new Vector3(0.5f, 0.5f, 0);
+			// Deactivate/activate the child GameObject — stronger than toggling
+			// the component, ensures no residual rendering in any Unity render path.
+			targetLineRenderer.gameObject.SetActive(showLine);
+			if (!showLine) return;
+
+			Vector3 targetPos = (Vector3)AttackUnit.CenterGridPosition + new Vector3(0.5f, 0.5f, 0);
 			targetLineRenderer.positionCount = 2;
 			targetLineRenderer.SetPosition(0, WorldPosition);
 			targetLineRenderer.SetPosition(1, targetPos);

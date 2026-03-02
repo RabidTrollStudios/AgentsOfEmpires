@@ -92,28 +92,30 @@ namespace GameManager
 		[Header("Prefabs")]
 		[SerializeField] private PrefabLoader Prefabs;
 
-		/// <summary>
-		/// Human Debugger Canvas
-		/// </summary>
-		[SerializeField] private Canvas HumanDebuggerCanvas;
-
-		/// <summary>
-		/// Orc Debugger Canvas
-		/// </summary>
-		[SerializeField] private Canvas OrcDebuggerCanvas;
-
-		[Header("Custom Debug")]
-		[SerializeField] private Text HumanCustomDebugText;
-		[SerializeField] private Text OrcCustomDebugText;
-
 		[Header("Debug Toggles")]
 		[SerializeField] private Toggle AgentToggle;
 		[SerializeField] private Toggle UnitToggle;
 		[SerializeField] private Toggle InfluenceToggle;
 		[SerializeField] private Toggle MoveTintToggle;
 		[SerializeField] private Toggle GatherTintToggle;
+		[SerializeField] private Toggle BuildTintToggle;
 		[SerializeField] private Toggle AttackTintToggle;
 		[SerializeField] private Toggle PathTintToggle;
+		[SerializeField] private Toggle TargetLineTintToggle;
+
+		[Header("Debug Info")]
+		/// <summary>
+		/// Human Debugger Panel
+		/// </summary>
+		[SerializeField] private GameObject HumanDebuggerPanel;
+
+		/// <summary>
+		/// Orc Debugger Panel
+		/// </summary>
+		[SerializeField] private GameObject OrcDebuggerPanel;
+
+		[SerializeField] private Text HumanCustomDebugText;
+		[SerializeField] private Text OrcCustomDebugText;
 
 		#endregion
 
@@ -168,6 +170,16 @@ namespace GameManager
 		/// Shows unit path lines when enabled
 		/// </summary>
 		public bool HasPathTint { get; private set; }
+
+		/// <summary>
+		/// Tints BUILD-state workers orange when enabled
+		/// </summary>
+		public bool HasBuildTint { get; private set; }
+
+		/// <summary>
+		/// Shows the red attacker-to-target line when enabled
+		/// </summary>
+		public bool HasTargetLineTint { get; private set; }
 
 		#endregion
 

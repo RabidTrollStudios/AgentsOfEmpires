@@ -1,5 +1,5 @@
-using AgentSDK;
 using System;
+using AgentSDK;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -30,6 +30,8 @@ namespace GameManager
 			HasGatherTint = true;
 			HasAttackTint = true;
 			HasPathTint = true;
+			HasBuildTint = true;
+			HasTargetLineTint = true;
 
 			if (AgentToggle != null)
 			{
@@ -66,7 +68,16 @@ namespace GameManager
 				PathTintToggle.onValueChanged.AddListener(OnPathTintToggleChanged);
 				PathTintToggle.isOn = true;
 			}
-
+			if (BuildTintToggle != null)
+			{
+				BuildTintToggle.onValueChanged.AddListener(OnBuildTintToggleChanged);
+				BuildTintToggle.isOn = true;
+			}
+			if (TargetLineTintToggle != null)
+			{
+				TargetLineTintToggle.onValueChanged.AddListener(OnTargetLineTintToggleChanged);
+				TargetLineTintToggle.isOn = true;
+			}
 			_debugBindings = new (KeyCode, KeyCode, Action)[]
 			{
 				(KeyCode.Alpha1, KeyCode.Keypad1, () => { HasAgentDebugging = !HasAgentDebugging; if (AgentToggle != null) AgentToggle.isOn = HasAgentDebugging; }),
@@ -74,8 +85,10 @@ namespace GameManager
 				(KeyCode.Alpha3, KeyCode.Keypad3, () => { bool v = !mapManager.InfluenceMap.gameObject.activeSelf; mapManager.InfluenceMap.gameObject.SetActive(v); if (InfluenceToggle != null) InfluenceToggle.isOn = v; }),
 				(KeyCode.Alpha4, KeyCode.Keypad4, () => { HasMoveTint = !HasMoveTint; if (MoveTintToggle != null) MoveTintToggle.isOn = HasMoveTint; }),
 				(KeyCode.Alpha5, KeyCode.Keypad5, () => { HasGatherTint = !HasGatherTint; if (GatherTintToggle != null) GatherTintToggle.isOn = HasGatherTint; }),
-				(KeyCode.Alpha6, KeyCode.Keypad6, () => { HasAttackTint = !HasAttackTint; if (AttackTintToggle != null) AttackTintToggle.isOn = HasAttackTint; }),
-				(KeyCode.Alpha7, KeyCode.Keypad7, () => { HasPathTint = !HasPathTint; if (PathTintToggle != null) PathTintToggle.isOn = HasPathTint; }),
+				(KeyCode.Alpha6, KeyCode.Keypad6, () => { HasBuildTint = !HasBuildTint; if (BuildTintToggle != null) BuildTintToggle.isOn = HasBuildTint; }),
+				(KeyCode.Alpha7, KeyCode.Keypad7, () => { HasAttackTint = !HasAttackTint; if (AttackTintToggle != null) AttackTintToggle.isOn = HasAttackTint; }),
+				(KeyCode.Alpha8, KeyCode.Keypad8, () => { HasPathTint = !HasPathTint; if (PathTintToggle != null) PathTintToggle.isOn = HasPathTint; }),
+				(KeyCode.Alpha9, KeyCode.Keypad9, () => { HasTargetLineTint = !HasTargetLineTint; if (TargetLineTintToggle != null) TargetLineTintToggle.isOn = HasTargetLineTint; }),
 			};
 		}
 
@@ -86,6 +99,8 @@ namespace GameManager
 		public void OnGatherTintToggleChanged(bool val) { HasGatherTint = val; }
 		public void OnAttackTintToggleChanged(bool val) { HasAttackTint = val; }
 		public void OnPathTintToggleChanged(bool val) { HasPathTint = val; }
+		public void OnBuildTintToggleChanged(bool val) { HasBuildTint = val; }
+		public void OnTargetLineTintToggleChanged(bool val) { HasTargetLineTint = val; }
 
 		private static bool IsKeyDown(KeyCode main, KeyCode numpad)
 			=> Input.GetKeyDown(main) || Input.GetKeyDown(numpad);
@@ -202,11 +217,6 @@ namespace GameManager
 	                  " of " + TotalNbrOfRounds + " rounds!";
         }
 
-		/// <summary>
-		/// Update the Custom Debug text overlays with agent debug info.
-		/// Routes each agent's PlanningAgentDebugText to the correct panel
-		/// (Human or Orc) based on AgentName.
-		/// </summary>
 		private void UpdateCustomDebugUI()
 		{
 			if (HumanCustomDebugText == null && OrcCustomDebugText == null) return;

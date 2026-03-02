@@ -19,8 +19,8 @@ namespace GameManager
 			if (gameState == GameState.PLAYING)
 			{
 				UpdateTimerUI();
-				UpdateCustomDebugUI();
 				ProcessUserInput();
+				UpdateCustomDebugUI();
 
 				roundWinner = DetermineRoundWinner();
 				if (roundWinner != null)

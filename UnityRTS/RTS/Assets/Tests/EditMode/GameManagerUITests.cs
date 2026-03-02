@@ -2,6 +2,8 @@ using System;
 using System.Reflection;
 using AgentSDK;
 using NUnit.Framework;
+using UnityEngine;
+using UnityEngine.UI;
 
 namespace GameManager.Tests
 {
@@ -57,6 +59,11 @@ namespace GameManager.Tests
 			// Named tuple fields are stored as Item1/Item2/Item3 at runtime
 			return (Action)binding.GetType().GetField("Item3").GetValue(binding);
 		}
+
+		private void SetPrivateField(string fieldName, object value) =>
+			typeof(GameManager)
+				.GetField(fieldName, BindingFlags.NonPublic | BindingFlags.Instance)
+				.SetValue(gm, value);
 
 		// ── Toggle Callback: HasAgentDebugging ───────────────────────────────────
 
@@ -160,22 +167,58 @@ namespace GameManager.Tests
 			Assert.IsFalse(gm.HasPathTint);
 		}
 
+		// ── Toggle Callback: HasBuildTint ─────────────────────────────────────────
+
+		[Test]
+		public void OnBuildTintToggleChanged_True_SetsHasBuildTint()
+		{
+			gm.OnBuildTintToggleChanged(true);
+			Assert.IsTrue(gm.HasBuildTint);
+		}
+
+		[Test]
+		public void OnBuildTintToggleChanged_False_ClearsHasBuildTint()
+		{
+			gm.OnBuildTintToggleChanged(true);
+			gm.OnBuildTintToggleChanged(false);
+			Assert.IsFalse(gm.HasBuildTint);
+		}
+
+		// ── Toggle Callback: HasTargetLineTint ───────────────────────────────────
+
+		[Test]
+		public void OnTargetLineTintToggleChanged_True_SetsHasTargetLineTint()
+		{
+			gm.OnTargetLineTintToggleChanged(true);
+			Assert.IsTrue(gm.HasTargetLineTint);
+		}
+
+		[Test]
+		public void OnTargetLineTintToggleChanged_False_ClearsHasTargetLineTint()
+		{
+			gm.OnTargetLineTintToggleChanged(true);
+			gm.OnTargetLineTintToggleChanged(false);
+			Assert.IsFalse(gm.HasTargetLineTint);
+		}
+
 		// ── _debugBindings Structure ─────────────────────────────────────────────
 
 		[Test]
-		public void InitializeDebugToggles_PopulatesSevenBindings()
+		public void InitializeDebugToggles_PopulatesNineBindings()
 		{
 			var field = typeof(GameManager).GetField(
 				"_debugBindings", BindingFlags.NonPublic | BindingFlags.Instance);
 			var bindings = field.GetValue(gm) as Array;
 
 			Assert.IsNotNull(bindings, "_debugBindings should not be null after InitializeDebugToggles");
-			Assert.AreEqual(7, bindings.Length, "There should be exactly 7 key bindings");
+			Assert.AreEqual(9, bindings.Length, "There should be exactly 9 key bindings");
 		}
 
 		// ── _debugBindings Execute Actions ───────────────────────────────────────
 		// Binding 2 toggles the InfluenceMap GameObject and requires mapManager
 		// (null in EditMode) — it is intentionally skipped here.
+		// Key layout: 1=Agent, 2=Unit, 3=Influence, 4=Move, 5=Gather,
+		//             6=Build, 7=Attack, 8=Path, 9=TargetLine
 
 		[Test]
 		public void DebugBinding0_Execute_TogglesHasAgentDebugging()
@@ -218,23 +261,103 @@ namespace GameManager.Tests
 		}
 
 		[Test]
-		public void DebugBinding5_Execute_TogglesHasAttackTint()
+		public void DebugBinding5_Execute_TogglesHasBuildTint()
+		{
+			gm.OnBuildTintToggleChanged(true);
+			GetBindingExecute(5)();
+			Assert.IsFalse(gm.HasBuildTint, "First execute should flip HasBuildTint to false");
+			GetBindingExecute(5)();
+			Assert.IsTrue(gm.HasBuildTint, "Second execute should restore HasBuildTint to true");
+		}
+
+		[Test]
+		public void DebugBinding6_Execute_TogglesHasAttackTint()
 		{
 			gm.OnAttackTintToggleChanged(true);
-			GetBindingExecute(5)();
+			GetBindingExecute(6)();
 			Assert.IsFalse(gm.HasAttackTint, "First execute should flip HasAttackTint to false");
-			GetBindingExecute(5)();
+			GetBindingExecute(6)();
 			Assert.IsTrue(gm.HasAttackTint, "Second execute should restore HasAttackTint to true");
 		}
 
 		[Test]
-		public void DebugBinding6_Execute_TogglesHasPathTint()
+		public void DebugBinding7_Execute_TogglesHasPathTint()
 		{
 			gm.OnPathTintToggleChanged(true);
-			GetBindingExecute(6)();
+			GetBindingExecute(7)();
 			Assert.IsFalse(gm.HasPathTint, "First execute should flip HasPathTint to false");
-			GetBindingExecute(6)();
+			GetBindingExecute(7)();
 			Assert.IsTrue(gm.HasPathTint, "Second execute should restore HasPathTint to true");
+		}
+
+		[Test]
+		public void DebugBinding8_Execute_TogglesHasTargetLineTint()
+		{
+			gm.OnTargetLineTintToggleChanged(true);
+			GetBindingExecute(8)();
+			Assert.IsFalse(gm.HasTargetLineTint, "First execute should flip HasTargetLineTint to false");
+			GetBindingExecute(8)();
+			Assert.IsTrue(gm.HasTargetLineTint, "Second execute should restore HasTargetLineTint to true");
+		}
+
+		// ── UpdateCustomDebugUI ───────────────────────────────────────────────────
+
+		[Test]
+		public void UpdateCustomDebugUI_BothTextsNull_DoesNotThrow()
+		{
+			SetPrivateField("HumanCustomDebugText", null);
+			SetPrivateField("OrcCustomDebugText", null);
+			Assert.DoesNotThrow(() => InvokePrivate("UpdateCustomDebugUI"),
+				"UpdateCustomDebugUI must not throw when both text fields are null");
+		}
+
+		[Test]
+		public void UpdateCustomDebugUI_AgentDebuggingFalse_ClearsText()
+		{
+			var go1 = new GameObject("HumanTextGO");
+			var humanText = go1.AddComponent<Text>();
+			var go2 = new GameObject("OrcTextGO");
+			var orcText = go2.AddComponent<Text>();
+			humanText.text = "some agent data";
+			orcText.text = "some agent data";
+			SetPrivateField("HumanCustomDebugText", humanText);
+			SetPrivateField("OrcCustomDebugText", orcText);
+
+			gm.OnAgentToggleChanged(false);
+			InvokePrivate("UpdateCustomDebugUI");
+
+			Assert.AreEqual("", humanText.text, "HumanCustomDebugText should be cleared when debugging is off");
+			Assert.AreEqual("", orcText.text, "OrcCustomDebugText should be cleared when debugging is off");
+
+			SetPrivateField("HumanCustomDebugText", null);
+			SetPrivateField("OrcCustomDebugText", null);
+			UnityEngine.Object.DestroyImmediate(go1);
+			UnityEngine.Object.DestroyImmediate(go2);
+		}
+
+		[Test]
+		public void UpdateCustomDebugUI_AgentDebuggingTrue_NoAgents_ClearsText()
+		{
+			// Agents is null in EditMode (initialized only in InitializeMatch, never called here)
+			var go1 = new GameObject("HumanTextGO");
+			var humanText = go1.AddComponent<Text>();
+			var go2 = new GameObject("OrcTextGO");
+			var orcText = go2.AddComponent<Text>();
+			humanText.text = "some agent data";
+			orcText.text = "some agent data";
+			SetPrivateField("HumanCustomDebugText", humanText);
+			SetPrivateField("OrcCustomDebugText", orcText);
+
+			gm.OnAgentToggleChanged(true);
+			InvokePrivate("UpdateCustomDebugUI");
+
+			Assert.AreEqual("", humanText.text, "HumanCustomDebugText should be cleared with no agents present");
+			Assert.AreEqual("", orcText.text, "OrcCustomDebugText should be cleared with no agents present");
+
+			SetPrivateField("HumanCustomDebugText", null);
+			SetPrivateField("OrcCustomDebugText", null);
+			UnityEngine.Object.DestroyImmediate(go1);
+			UnityEngine.Object.DestroyImmediate(go2);
 		}
 
 		// ── ProcessUserInput Null Guard ──────────────────────────────────────────

@@ -155,21 +155,21 @@ namespace GameManager.Tests.PlayMode
 		// ------------------------------------------------------------------
 
 		/// <summary>
-		/// Build a 4x4 BASE near the map edge at position (25, 2). The
-		/// footprint x=[25,28], y=[2,(-1)] — x fits within the 30x30 map bounds.
+		/// Build a 4x4 BASE near the map edge at position (25, 4). The
+		/// footprint x=[25,28], y=[4,1] — both x and y fit within the 30x30 map bounds.
 		/// </summary>
 		[UnityTest]
 		public IEnumerator BuildNearMapEdge_FitsWithinBounds()
 		{
-			Vector3Int workerPos = new Vector3Int(24, 2, 0);
-			Vector3Int buildPos = new Vector3Int(25, 2, 0);
+			Vector3Int workerPos = new Vector3Int(24, 4, 0);
+			Vector3Int buildPos = new Vector3Int(25, 4, 0);
 			Unit worker = PlaceUnit(UnitType.WORKER, workerPos);
 
 			// Verify the area is buildable before issuing the command
 			// Exclude the worker's own cell (same as StartBuilding does)
 			var exclusion = new HashSet<Vector3Int> { workerPos };
 			Assert.IsTrue(ctx.MapManager.IsAreaBuildable(UnitType.BASE, buildPos, exclusion),
-				"4x4 area at (25,2) should be buildable within 30x30 map");
+				"4x4 area at (25,4) should be buildable within 30x30 map");
 
 			worker.StartBuilding(new BuildEventArgs(worker, buildPos, UnitType.BASE));
 
