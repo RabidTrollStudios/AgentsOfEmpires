@@ -4,7 +4,7 @@ using AgentSDK;
 namespace PlanningAgent
 {
     /// <summary>
-    /// [HARD] Economic powerhouse: races to 10 workers + refinery (2x mining),
+    /// [HARD] Economic powerhouse: races to 10 workers,
     /// then builds barracks and floods soldiers. Outproduces most opponents.
     /// </summary>
     public class PlanningAgent : PlanningAgentBase
@@ -32,8 +32,6 @@ namespace PlanningAgent
 
             if (myBarracks.Count == 0 && HasBuiltUnit(myBases, state))
                 BuildStructure(UnitType.BARRACKS, state, actions);
-            else if (myRefineries.Count == 0 && HasBuiltUnit(myBases, state) && HasBuiltUnit(myBarracks, state))
-                BuildStructure(UnitType.REFINERY, state, actions);
 
             GatherWithIdleWorkers(state, actions);
 
@@ -217,7 +215,7 @@ namespace PlanningAgent
                 int? bestTarget = null;
                 float bestDist = float.MaxValue;
                 foreach (UnitType ut in new[] { UnitType.SOLDIER, UnitType.ARCHER, UnitType.WORKER,
-                                                UnitType.BASE, UnitType.BARRACKS, UnitType.REFINERY })
+                                                UnitType.BASE, UnitType.BARRACKS })
                 {
                     var enemies = state.GetEnemyUnits(ut);
                     foreach (int enemyNbr in enemies)
@@ -246,7 +244,7 @@ namespace PlanningAgent
             int? bestTarget = null;
             float bestDist = float.MaxValue;
             foreach (UnitType ut in new[] { UnitType.SOLDIER, UnitType.ARCHER, UnitType.WORKER,
-                                            UnitType.BASE, UnitType.BARRACKS, UnitType.REFINERY })
+                                            UnitType.BASE, UnitType.BARRACKS })
             {
                 var enemies = state.GetEnemyUnits(ut);
                 foreach (int enemyNbr in enemies)

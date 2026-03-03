@@ -44,7 +44,7 @@ namespace GameManager.Tests.PlayMode
 		#region Non-Combat Units Have Zero Damage
 
 		/// <summary>
-		/// At runtime, WORKER, MINE, BASE, BARRACKS, and REFINERY all have zero damage.
+		/// At runtime, WORKER, MINE, BASE, and BARRACKS all have zero damage.
 		/// </summary>
 		[UnityTest]
 		public IEnumerator Runtime_NonCombatUnits_HaveZeroDamage()
@@ -53,7 +53,6 @@ namespace GameManager.Tests.PlayMode
 			Assert.AreEqual(0f, Constants.DAMAGE[UnitType.MINE], 0.001f, "MINE damage");
 			Assert.AreEqual(0f, Constants.DAMAGE[UnitType.BASE], 0.001f, "BASE damage");
 			Assert.AreEqual(0f, Constants.DAMAGE[UnitType.BARRACKS], 0.001f, "BARRACKS damage");
-			Assert.AreEqual(0f, Constants.DAMAGE[UnitType.REFINERY], 0.001f, "REFINERY damage");
 
 			yield return null;
 		}
@@ -117,13 +116,13 @@ namespace GameManager.Tests.PlayMode
 		#region DAMAGE Dictionary Completeness
 
 		/// <summary>
-		/// At runtime, DAMAGE dictionary contains entries for all 7 unit types.
+		/// At runtime, DAMAGE dictionary contains entries for all 6 unit types.
 		/// </summary>
 		[UnityTest]
 		public IEnumerator Runtime_Damage_HasAllUnitTypes()
 		{
-			Assert.AreEqual(7, Constants.DAMAGE.Count,
-				"DAMAGE dictionary should have 7 entries at runtime");
+			Assert.AreEqual(6, Constants.DAMAGE.Count,
+				"DAMAGE dictionary should have 6 entries at runtime");
 			yield return null;
 		}
 

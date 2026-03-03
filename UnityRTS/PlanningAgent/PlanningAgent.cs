@@ -14,7 +14,6 @@ namespace PlanningAgent
         private const int WORKERS_PER_BASE = 8;
         private const int MAX_NBR_BASES = 2;
         private const int MAX_NBR_BARRACKS = 5;
-        private const int MAX_NBR_REFINERIES = 2;
         private const int MAX_NBR_SOLDIERS = 40;
         private const int MAX_NBR_ARCHERS = 10;
 
@@ -39,16 +38,15 @@ namespace PlanningAgent
         private const int MIN_SOLDIERS = 2, MAX_SOLDIERS = 3;
         private const int MIN_ARCHERS = 4, MAX_ARCHERS = 5;
         private const int MIN_BASES = 6, MAX_BASES = 7;
-        private const int MIN_REFINERIES = 8, MAX_REFINERIES = 9;
-        private const int MIN_BARRACKS = 10, MAX_BARRACKS = 11;
+        private const int MIN_BARRACKS = 8, MAX_BARRACKS = 9;
 
         private static readonly int[,] stateThresholds = new int[,]
         {
-        //                                    Workers     Soldiers    Archers     Bases       Refineries  Barracks
-        //                                    min  max    min  max    min  max    min  max    min  max    min  max
-            /* BaseBuilding */ {               0,   6,     0,   0,     0,   0,     0,   1,     0,   0,     0,   1  },
-            /* ArmyBuilding */ {               6,   8,     0,   5,     0,   5,     1,   1,     0,   0,     1,   1  },
-            /* Attacking     */ {              1, int.MaxValue, 1, int.MaxValue, 1, int.MaxValue, 1, int.MaxValue, 0, int.MaxValue, 1, int.MaxValue }
+        //                                    Workers     Soldiers    Archers     Bases       Barracks
+        //                                    min  max    min  max    min  max    min  max    min  max
+            /* BaseBuilding */ {               0,   6,     0,   0,     0,   0,     0,   1,     0,   1  },
+            /* ArmyBuilding */ {               6,   8,     0,   5,     0,   5,     1,   1,     1,   1  },
+            /* Attacking     */ {              1, int.MaxValue, 1, int.MaxValue, 1, int.MaxValue, 1, int.MaxValue, 1, int.MaxValue }
         };
 
         private Position unitToBuildAroundPos = Position.Zero;
@@ -71,7 +69,6 @@ namespace PlanningAgent
                 mySoldiers.Count < stateThresholds[s, MIN_SOLDIERS] ||
                 myArchers.Count < stateThresholds[s, MIN_ARCHERS] ||
                 myBases.Count < stateThresholds[s, MIN_BASES] ||
-                myRefineries.Count < stateThresholds[s, MIN_REFINERIES] ||
                 myBarracks.Count < stateThresholds[s, MIN_BARRACKS])
             {
                 return -1;
@@ -82,7 +79,6 @@ namespace PlanningAgent
                 mySoldiers.Count >= stateThresholds[s, MAX_SOLDIERS] &&
                 myArchers.Count >= stateThresholds[s, MAX_ARCHERS] &&
                 myBases.Count >= stateThresholds[s, MAX_BASES] &&
-                myRefineries.Count >= stateThresholds[s, MAX_REFINERIES] &&
                 myBarracks.Count >= stateThresholds[s, MAX_BARRACKS])
             {
                 return 1;
@@ -335,12 +331,6 @@ namespace PlanningAgent
                 if (info.HasValue && Position.Distance(info.Value.CenterPosition, enemyPos) <= radius)
                     return true;
             }
-            foreach (int unit in myRefineries)
-            {
-                UnitInfo? info = state.GetUnit(unit);
-                if (info.HasValue && Position.Distance(info.Value.CenterPosition, enemyPos) <= radius)
-                    return true;
-            }
             foreach (int unit in myWorkers)
             {
                 UnitInfo? info = state.GetUnit(unit);
@@ -366,7 +356,6 @@ namespace PlanningAgent
             var enemyBuildings = new List<int>();
             enemyBuildings.AddRange(enemyBases);
             enemyBuildings.AddRange(enemyBarracks);
-            enemyBuildings.AddRange(enemyRefineries);
 
             float archerRange = GameConstants.ATTACK_RANGE[UnitType.ARCHER];
 
@@ -749,15 +738,6 @@ namespace PlanningAgent
                         actions.Train(baseNbr, UnitType.WORKER);
                     }
                 }
-            }
-
-            // Build refinery once we have 2 barracks
-            if (HasBuiltUnit(myBases, state) && myBarracks.Count >= 2
-                && myRefineries.Count < MAX_NBR_REFINERIES
-                && state.MyGold >= GameConstants.COST[UnitType.REFINERY]
-                && (myRefineries.Count == 0 || state.MyGold < 500))
-            {
-                BuildBuilding(UnitType.REFINERY, state, actions);
             }
 
             // Keep training attack units with remaining funds

@@ -54,68 +54,6 @@ namespace PlanningAgent.Tests
 
         #endregion
 
-        #region Economy: Refinery Impact
-
-        [Fact]
-        public void RefineryImpact()
-        {
-            var sb = new StringBuilder();
-            sb.AppendLine("=== ECONOMY: Refinery Impact (5 workers) ===");
-            sb.AppendLine("  Tick | No Refinery | With Refinery | Delta");
-            sb.AppendLine("  -----+-------------+---------------+------");
-
-            // Run without refinery
-            var gameNoRef = new SimGameBuilder()
-                .WithMapSize(30, 30)
-                .WithGold(0, 1000)
-                .WithGold(1, 0)
-                .WithUnit(0, UnitType.WORKER, new Position(5, 5))
-                .WithMine(new Position(10, 5), health: 50000)
-                .WithAgent(0, new PureEconomyAgent(5))
-                .WithAgent(1, new DoNothingAgent())
-                .Build();
-
-            // Run with refinery
-            var gameRef = new SimGameBuilder()
-                .WithMapSize(30, 30)
-                .WithGold(0, 1000)
-                .WithGold(1, 0)
-                .WithUnit(0, UnitType.WORKER, new Position(5, 5))
-                .WithMine(new Position(10, 5), health: 50000)
-                .WithAgent(0, new RefineryEconomyAgent(5))
-                .WithAgent(1, new DoNothingAgent())
-                .Build();
-
-            gameNoRef.InitializeMatch();
-            gameNoRef.InitializeRound();
-            gameRef.InitializeMatch();
-            gameRef.InitializeRound();
-
-            int startNoRef = gameNoRef.GetGold(0);
-            int startRef = gameRef.GetGold(0);
-
-            foreach (int checkpoint in new[] { 250, 500, 750, 1000, 1500, 2000, 3000 })
-            {
-                int ticksToRun = checkpoint - gameNoRef.CurrentTick;
-                if (ticksToRun > 0)
-                {
-                    gameNoRef.Run(ticksToRun);
-                    gameRef.Run(ticksToRun);
-                }
-
-                int goldNoRef = gameNoRef.GetGold(0) - startNoRef;
-                int goldWithRef = gameRef.GetGold(0) - startRef;
-                int delta = goldWithRef - goldNoRef;
-
-                sb.AppendLine($"  {checkpoint,4} | {goldNoRef,11} | {goldWithRef,13} | {delta,5}");
-            }
-
-            _output.WriteLine(sb.ToString());
-            _output.WriteLine($"  Refinery cost: {GameConstants.COST[UnitType.REFINERY]}g + Barracks: {GameConstants.COST[UnitType.BARRACKS]}g = {GameConstants.COST[UnitType.REFINERY] + GameConstants.COST[UnitType.BARRACKS]}g total infrastructure");
-        }
-
-        #endregion
-
         #region Economy: Build Timeline
 
         [Fact]
@@ -225,7 +163,7 @@ namespace PlanningAgent.Tests
             sb.AppendLine();
             sb.AppendLine("  Building  | Cost | HP   | Build Time Mult | Train Time (Sol/Arc)");
             sb.AppendLine("  ----------+------+------+-----------------+---------------------");
-            foreach (UnitType ut in new[] { UnitType.BASE, UnitType.BARRACKS, UnitType.REFINERY })
+            foreach (UnitType ut in new[] { UnitType.BASE, UnitType.BARRACKS })
             {
                 float cost = GameConstants.COST[ut];
                 float hp = GameConstants.HEALTH[ut];
@@ -239,7 +177,7 @@ namespace PlanningAgent.Tests
             }
 
             sb.AppendLine();
-            sb.AppendLine($"  Worker cost: {GameConstants.COST[UnitType.WORKER]}g  |  Mining capacity: {GameConstants.MINING_CAPACITY[UnitType.WORKER]}g/trip  |  Refinery boost: {GameConstants.MINING_BOOST}x");
+            sb.AppendLine($"  Worker cost: {GameConstants.COST[UnitType.WORKER]}g  |  Mining capacity: {GameConstants.MINING_CAPACITY[UnitType.WORKER]}g/trip");
 
             _output.WriteLine(sb.ToString());
         }

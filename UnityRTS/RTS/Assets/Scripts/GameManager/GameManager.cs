@@ -281,7 +281,7 @@ namespace GameManager
 				{ UnitType.ARCHER, Prefabs.OrcAxethrowerPrefab },
 				{ UnitType.BASE, Prefabs.OrcBasePrefab },
 				{ UnitType.BARRACKS, Prefabs.OrcBarracksPrefab },
-				{ UnitType.REFINERY, Prefabs.OrcRefineryPrefab },
+				{ UnitType.ARCHERY, Prefabs.OrcArcheryPrefab },
 			};
 
 			unitManager.HumanUnitPrefabs = new Dictionary<UnitType, GameObject>()
@@ -292,7 +292,7 @@ namespace GameManager
 				{ UnitType.ARCHER, Prefabs.HumanArcherPrefab },
 				{ UnitType.BASE, Prefabs.HumanBasePrefab },
 				{ UnitType.BARRACKS, Prefabs.HumanBarracksPrefab },
-				{ UnitType.REFINERY, Prefabs.HumanRefineryPrefab },
+				{ UnitType.ARCHERY, Prefabs.HumanArcheryPrefab },
 			};
 
 			InitializeMatch();

@@ -382,6 +382,12 @@ namespace GameManager.GameElements
 			if (Constants.BUILDS[UnitType.WORKER].Contains(UnitType))
 			{
 				IsBuilt = false;
+				if (unitSprite != null)
+				{
+					var c = unitSprite.color;
+					c.a = 0.3f;
+					unitSprite.color = c;
+				}
 			}
 			else
 			{

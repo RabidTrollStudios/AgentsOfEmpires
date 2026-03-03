@@ -51,7 +51,7 @@ namespace GameManager
                 ["Archers Count"]  = () => Count(UnitType.ARCHER),
                 ["Bases Count"]    = () => Count(UnitType.BASE),
                 ["Barracks Count"]  = () => Count(UnitType.BARRACKS),
-                ["Refinery Count"]  = () => Count(UnitType.REFINERY),
+                ["Archery Count"]   = () => Count(UnitType.ARCHERY),
                 ["Custom Debug"]    = () => (Agent as AgentBridge)?.PlanningAgentDebugText ?? "",
             };
             _debugTextAreas = debuggerPanel != null

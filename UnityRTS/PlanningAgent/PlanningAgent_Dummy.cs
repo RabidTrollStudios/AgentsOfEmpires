@@ -86,11 +86,6 @@ namespace PlanningAgent
                         {
                             actions.Attack(troopNbr, enemyBarracks[rng.Next(0, enemyBarracks.Count)]);
                         }
-                        // If there are refineries to attack
-                        else if (enemyRefineries.Count > 0)
-                        {
-                            actions.Attack(troopNbr, enemyRefineries[rng.Next(0, enemyRefineries.Count)]);
-                        }
                     }
                 }
             }
@@ -159,12 +154,6 @@ namespace PlanningAgent
             if (myBarracks.Count == 0 && HasBuiltUnit(myBases, state))
             {
                 BuildBuilding(UnitType.BARRACKS, state, actions);
-            }
-
-            // If we don't have any refineries, build a refinery (requires built base + barracks)
-            if (myRefineries.Count == 0 && HasBuiltUnit(myBases, state) && HasBuiltUnit(myBarracks, state))
-            {
-                BuildBuilding(UnitType.REFINERY, state, actions);
             }
 
             // For any troops, attack the enemy

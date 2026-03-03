@@ -15,7 +15,7 @@ namespace GameManager.Tests
 	{
 		private static readonly UnitType[] AllUnitTypes = {
 			UnitType.MINE, UnitType.WORKER, UnitType.SOLDIER,
-			UnitType.ARCHER, UnitType.BASE, UnitType.BARRACKS, UnitType.REFINERY
+			UnitType.ARCHER, UnitType.BASE, UnitType.BARRACKS, UnitType.ARCHERY
 		};
 
 		#region CAN_MOVE Completeness

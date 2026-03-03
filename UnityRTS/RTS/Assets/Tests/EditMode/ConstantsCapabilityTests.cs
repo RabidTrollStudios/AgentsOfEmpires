@@ -27,7 +27,7 @@ namespace GameManager.Tests
 
 			Assert.IsFalse(Constants.CAN_MOVE[UnitType.BASE],     "BASE should not be able to move");
 			Assert.IsFalse(Constants.CAN_MOVE[UnitType.BARRACKS], "BARRACKS should not be able to move");
-			Assert.IsFalse(Constants.CAN_MOVE[UnitType.REFINERY], "REFINERY should not be able to move");
+			Assert.IsFalse(Constants.CAN_MOVE[UnitType.ARCHERY],  "ARCHERY should not be able to move");
 			Assert.IsFalse(Constants.CAN_MOVE[UnitType.MINE],     "MINE should not be able to move");
 		}
 
@@ -47,21 +47,21 @@ namespace GameManager.Tests
 			Assert.IsFalse(Constants.CAN_BUILD[UnitType.ARCHER],   "ARCHER should not be able to build");
 			Assert.IsFalse(Constants.CAN_BUILD[UnitType.BASE],     "BASE should not be able to build");
 			Assert.IsFalse(Constants.CAN_BUILD[UnitType.BARRACKS], "BARRACKS should not be able to build");
-			Assert.IsFalse(Constants.CAN_BUILD[UnitType.REFINERY], "REFINERY should not be able to build");
+			Assert.IsFalse(Constants.CAN_BUILD[UnitType.ARCHERY],  "ARCHERY should not be able to build");
 			Assert.IsFalse(Constants.CAN_BUILD[UnitType.MINE],     "MINE should not be able to build");
 		}
 
 		/// <summary>
-		/// WORKER should be able to build BASE, BARRACKS, and REFINERY.
+		/// WORKER should be able to build BASE, BARRACKS, and ARCHERY.
 		/// </summary>
 		[Test]
-		public void WorkerBuilds_BaseBarracksRefinery()
+		public void WorkerBuilds_BaseBarracksArchery()
 		{
 			var builds = Constants.BUILDS[UnitType.WORKER];
 
 			Assert.Contains(UnitType.BASE,     builds, "WORKER should build BASE");
 			Assert.Contains(UnitType.BARRACKS, builds, "WORKER should build BARRACKS");
-			Assert.Contains(UnitType.REFINERY, builds, "WORKER should build REFINERY");
+			Assert.Contains(UnitType.ARCHERY,  builds, "WORKER should build ARCHERY");
 		}
 
 		#endregion
@@ -80,7 +80,7 @@ namespace GameManager.Tests
 			Assert.IsFalse(Constants.CAN_GATHER[UnitType.ARCHER],   "ARCHER should not gather");
 			Assert.IsFalse(Constants.CAN_GATHER[UnitType.BASE],     "BASE should not gather");
 			Assert.IsFalse(Constants.CAN_GATHER[UnitType.BARRACKS], "BARRACKS should not gather");
-			Assert.IsFalse(Constants.CAN_GATHER[UnitType.REFINERY], "REFINERY should not gather");
+			Assert.IsFalse(Constants.CAN_GATHER[UnitType.ARCHERY],  "ARCHERY should not gather");
 			Assert.IsFalse(Constants.CAN_GATHER[UnitType.MINE],     "MINE should not gather");
 		}
 
@@ -100,7 +100,7 @@ namespace GameManager.Tests
 			Assert.IsFalse(Constants.CAN_ATTACK[UnitType.WORKER],   "WORKER should not attack");
 			Assert.IsFalse(Constants.CAN_ATTACK[UnitType.BASE],     "BASE should not attack");
 			Assert.IsFalse(Constants.CAN_ATTACK[UnitType.BARRACKS], "BARRACKS should not attack");
-			Assert.IsFalse(Constants.CAN_ATTACK[UnitType.REFINERY], "REFINERY should not attack");
+			Assert.IsFalse(Constants.CAN_ATTACK[UnitType.ARCHERY],  "ARCHERY should not attack");
 			Assert.IsFalse(Constants.CAN_ATTACK[UnitType.MINE],     "MINE should not attack");
 		}
 
@@ -131,7 +131,7 @@ namespace GameManager.Tests
 			Assert.IsFalse(Constants.CAN_TRAIN[UnitType.WORKER],   "WORKER should not train");
 			Assert.IsFalse(Constants.CAN_TRAIN[UnitType.SOLDIER],  "SOLDIER should not train");
 			Assert.IsFalse(Constants.CAN_TRAIN[UnitType.ARCHER],   "ARCHER should not train");
-			Assert.IsFalse(Constants.CAN_TRAIN[UnitType.REFINERY], "REFINERY should not train");
+			Assert.IsFalse(Constants.CAN_TRAIN[UnitType.ARCHERY],  "ARCHERY should not train");
 			Assert.IsFalse(Constants.CAN_TRAIN[UnitType.MINE],     "MINE should not train");
 		}
 
@@ -176,16 +176,6 @@ namespace GameManager.Tests
 		{
 			Assert.Contains(UnitType.BASE, Constants.DEPENDENCY[UnitType.BARRACKS],
 				"BARRACKS should require BASE as a dependency");
-		}
-
-		/// <summary>
-		/// REFINERY should depend on BASE.
-		/// </summary>
-		[Test]
-		public void Dependency_RefineryDependsOnBase()
-		{
-			Assert.Contains(UnitType.BASE, Constants.DEPENDENCY[UnitType.REFINERY],
-				"REFINERY should require BASE as a dependency");
 		}
 
 		/// <summary>

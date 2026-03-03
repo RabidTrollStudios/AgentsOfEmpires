@@ -4,8 +4,8 @@ using AgentSDK;
 namespace PlanningAgent
 {
     /// <summary>
-    /// [MEDIUM] Greedy economy: 8 workers, builds refinery for 2x mining,
-    /// then masses soldiers. Waits for 12+ soldiers before attacking.
+    /// [MEDIUM] Greedy economy: 8 workers, then masses soldiers.
+    /// Waits for 12+ soldiers before attacking.
     /// Uses a hybrid state machine (army-level FSM + per-soldier FSM) without
     /// kiting, engaging, or gang-up mechanics. Soldiers rally before attacking
     /// and fight anything in their face.
@@ -95,8 +95,6 @@ namespace PlanningAgent
 
             if (myBarracks.Count == 0 && HasBuiltUnit(myBases, state))
                 BuildStructure(UnitType.BARRACKS, state, actions);
-            else if (myRefineries.Count == 0 && HasBuiltUnit(myBases, state) && HasBuiltUnit(myBarracks, state))
-                BuildStructure(UnitType.REFINERY, state, actions);
 
             GatherWithIdleWorkers(state, actions);
             TrainSoldiers(state, actions);
@@ -326,7 +324,7 @@ namespace PlanningAgent
             float bestDist = float.MaxValue;
 
             foreach (UnitType ut in new[] { UnitType.SOLDIER, UnitType.ARCHER, UnitType.WORKER,
-                                            UnitType.BASE, UnitType.BARRACKS, UnitType.REFINERY })
+                                            UnitType.BASE, UnitType.BARRACKS, UnitType.ARCHERY })
             {
                 foreach (int enemyNbr in state.GetEnemyUnits(ut))
                 {
@@ -347,7 +345,7 @@ namespace PlanningAgent
             {
                 bestDist = float.MaxValue;
                 foreach (UnitType ut in new[] { UnitType.SOLDIER, UnitType.ARCHER, UnitType.WORKER,
-                                                UnitType.BASE, UnitType.BARRACKS, UnitType.REFINERY })
+                                                UnitType.BASE, UnitType.BARRACKS, UnitType.ARCHERY })
                 {
                     foreach (int enemyNbr in state.GetEnemyUnits(ut))
                     {
@@ -607,7 +605,7 @@ namespace PlanningAgent
                     }
                 }
             }
-            else if ((type == UnitType.BARRACKS || type == UnitType.REFINERY) && mainBaseNbr >= 0)
+            else if (type == UnitType.BARRACKS && mainBaseNbr >= 0)
             {
                 var baseInfo = state.GetUnit(mainBaseNbr);
                 if (baseInfo.HasValue)
@@ -732,7 +730,7 @@ namespace PlanningAgent
             int bestEnemy = -1;
 
             foreach (UnitType ut in new[] { UnitType.SOLDIER, UnitType.ARCHER, UnitType.WORKER,
-                                             UnitType.BASE, UnitType.BARRACKS, UnitType.REFINERY })
+                                             UnitType.BASE, UnitType.BARRACKS, UnitType.ARCHERY })
             {
                 foreach (int enemyNbr in state.GetEnemyUnits(ut))
                 {
@@ -768,7 +766,7 @@ namespace PlanningAgent
             float bestBuildingDist = float.MaxValue;
 
             foreach (UnitType ut in new[] { UnitType.SOLDIER, UnitType.ARCHER, UnitType.WORKER,
-                                            UnitType.BASE, UnitType.BARRACKS, UnitType.REFINERY })
+                                            UnitType.BASE, UnitType.BARRACKS, UnitType.ARCHERY })
             {
                 bool isCombat = ut == UnitType.SOLDIER || ut == UnitType.ARCHER;
                 bool isWorker = ut == UnitType.WORKER;

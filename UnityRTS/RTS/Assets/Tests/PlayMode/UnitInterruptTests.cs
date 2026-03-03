@@ -121,8 +121,7 @@ namespace GameManager.Tests.PlayMode
 			// Wait a few frames for gather to be in progress
 			yield return WaitFrames(5);
 
-			// Interrupt with build command — BASE already exists so build REFINERY?
-			// Simpler: just interrupt with a move
+			// Interrupt with a move command
 			worker.StartMoving(new MoveEventArgs(worker, UnitType.WORKER, new Vector3Int(15, 15, 0)));
 
 			Assert.AreEqual(UnitAction.MOVE, worker.CurrentAction,

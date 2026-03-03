@@ -9,9 +9,6 @@
             Game balance constants. These are the authoritative values used by the game engine.
             </summary>
         </member>
-        <member name="F:AgentSDK.GameConstants.MINING_BOOST">
-            <summary>Gold mining boost multiplier when a refinery is built</summary>
-        </member>
         <member name="F:AgentSDK.GameConstants.SCALAR_COST">
             <summary>Base cost scalar (all costs are multiples of this)</summary>
         </member>
@@ -127,7 +124,7 @@
             </summary>
             <param name="unitNbr">The worker unit that will build</param>
             <param name="target">Where to place the structure</param>
-            <param name="unitType">Type of structure to build (BASE, BARRACKS, or REFINERY)</param>
+            <param name="unitType">Type of structure to build (BASE, BARRACKS, or ARCHERY)</param>
         </member>
         <member name="M:AgentSDK.IAgentActions.Gather(System.Int32,System.Int32,System.Int32)">
             <summary>
@@ -329,8 +326,8 @@
         <member name="F:AgentSDK.PlanningAgentBase.myBarracks">
             <summary>Your barracks</summary>
         </member>
-        <member name="F:AgentSDK.PlanningAgentBase.myRefineries">
-            <summary>Your refineries</summary>
+        <member name="F:AgentSDK.PlanningAgentBase.myArchery">
+            <summary>Your archeries</summary>
         </member>
         <member name="F:AgentSDK.PlanningAgentBase.enemyWorkers">
             <summary>Enemy workers</summary>
@@ -347,8 +344,8 @@
         <member name="F:AgentSDK.PlanningAgentBase.enemyBarracks">
             <summary>Enemy barracks</summary>
         </member>
-        <member name="F:AgentSDK.PlanningAgentBase.enemyRefineries">
-            <summary>Enemy refineries</summary>
+        <member name="F:AgentSDK.PlanningAgentBase.enemyArchery">
+            <summary>Enemy archeries</summary>
         </member>
         <member name="F:AgentSDK.PlanningAgentBase.buildPositions">
             <summary>Pre-computed valid build positions for 3x3 structures</summary>
@@ -515,10 +512,10 @@
             <summary>Main base structure - trains workers</summary>
         </member>
         <member name="F:AgentSDK.UnitType.BARRACKS">
-            <summary>Military structure - trains soldiers and archers</summary>
+            <summary>Military structure - trains soldiers</summary>
         </member>
-        <member name="F:AgentSDK.UnitType.REFINERY">
-            <summary>Economic structure - boosts mining speed</summary>
+        <member name="F:AgentSDK.UnitType.ARCHERY">
+            <summary>Ranged military structure - trains archers</summary>
         </member>
     </members>
 </doc>

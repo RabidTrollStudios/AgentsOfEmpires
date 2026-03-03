@@ -118,7 +118,7 @@ namespace PlanningAgent.Tests
         private int? FindAnyEnemy(IGameState state)
         {
             foreach (UnitType ut in new[] { UnitType.SOLDIER, UnitType.ARCHER, UnitType.WORKER,
-                                            UnitType.BASE, UnitType.BARRACKS, UnitType.REFINERY })
+                                            UnitType.BASE, UnitType.BARRACKS })
             {
                 var enemies = state.GetEnemyUnits(ut);
                 if (enemies.Count > 0) return enemies[0];

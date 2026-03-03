@@ -15,9 +15,9 @@ namespace AgentSDK
         ARCHER,
         /// <summary>Main base structure - trains workers</summary>
         BASE,
-        /// <summary>Military structure - trains soldiers and archers</summary>
+        /// <summary>Military structure - trains soldiers</summary>
         BARRACKS,
-        /// <summary>Economic structure - boosts mining speed</summary>
-        REFINERY,
+        /// <summary>Ranged military structure - trains archers</summary>
+        ARCHERY,
     }
 }

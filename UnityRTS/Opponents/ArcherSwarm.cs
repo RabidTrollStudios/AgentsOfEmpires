@@ -16,9 +16,9 @@ namespace PlanningAgent
         /// <summary>Army-level strategy phase.</summary>
         private enum ArmyPhase
         {
-            /// <summary>No barracks yet — building infrastructure.</summary>
+            /// <summary>No archery yet — building infrastructure.</summary>
             ECONOMY,
-            /// <summary>Barracks built, accumulating archers at rally.</summary>
+            /// <summary>Archery built, accumulating archers at rally.</summary>
             RALLYING,
             /// <summary>Army ready — rally then attack with idle archers at rally.</summary>
             ATTACKING,
@@ -92,8 +92,8 @@ namespace PlanningAgent
 
             TrainWorkers(state, actions);
 
-            if (myBarracks.Count == 0 && HasBuiltUnit(myBases, state))
-                BuildStructure(UnitType.BARRACKS, state, actions);
+            if (myArchery.Count == 0 && HasBuiltUnit(myBases, state))
+                BuildStructure(UnitType.ARCHERY, state, actions);
 
             GatherWithIdleWorkers(state, actions);
             TrainArchers(state, actions);
@@ -155,7 +155,7 @@ namespace PlanningAgent
                 return;
             }
 
-            if (myBarracks.Count > 0 && HasBuiltUnit(myBarracks, state))
+            if (myArchery.Count > 0 && HasBuiltUnit(myArchery, state))
             {
                 _armyPhase = ArmyPhase.RALLYING;
                 return;
@@ -323,7 +323,7 @@ namespace PlanningAgent
             float bestDist = float.MaxValue;
 
             foreach (UnitType ut in new[] { UnitType.SOLDIER, UnitType.ARCHER, UnitType.WORKER,
-                                            UnitType.BASE, UnitType.BARRACKS, UnitType.REFINERY })
+                                            UnitType.BASE, UnitType.BARRACKS, UnitType.ARCHERY })
             {
                 foreach (int enemyNbr in state.GetEnemyUnits(ut))
                 {
@@ -344,7 +344,7 @@ namespace PlanningAgent
             {
                 bestDist = float.MaxValue;
                 foreach (UnitType ut in new[] { UnitType.SOLDIER, UnitType.ARCHER, UnitType.WORKER,
-                                                UnitType.BASE, UnitType.BARRACKS, UnitType.REFINERY })
+                                                UnitType.BASE, UnitType.BARRACKS, UnitType.ARCHERY })
                 {
                     foreach (int enemyNbr in state.GetEnemyUnits(ut))
                     {
@@ -480,14 +480,14 @@ namespace PlanningAgent
 
         private void TrainArchers(IGameState state, IAgentActions actions)
         {
-            foreach (int barracksNbr in myBarracks)
+            foreach (int archeryNbr in myArchery)
             {
-                var info = state.GetUnit(barracksNbr);
+                var info = state.GetUnit(archeryNbr);
                 if (info.HasValue && info.Value.IsBuilt
                     && info.Value.CurrentAction == UnitAction.IDLE
                     && state.MyGold >= GameConstants.COST[UnitType.ARCHER])
                 {
-                    actions.Train(barracksNbr, UnitType.ARCHER);
+                    actions.Train(archeryNbr, UnitType.ARCHER);
                 }
             }
         }
@@ -604,7 +604,7 @@ namespace PlanningAgent
                     }
                 }
             }
-            else if (type == UnitType.BARRACKS && mainBaseNbr >= 0)
+            else if (type == UnitType.ARCHERY && mainBaseNbr >= 0)
             {
                 var baseInfo = state.GetUnit(mainBaseNbr);
                 if (baseInfo.HasValue)
@@ -636,15 +636,15 @@ namespace PlanningAgent
         }
 
         /// <summary>
-        /// Computes a rally point RALLY_DISTANCE path-steps from the barracks along the
+        /// Computes a rally point RALLY_DISTANCE path-steps from the archery along the
         /// navigable route toward the map center. Picks the first position where a 4x4
         /// area is fully buildable. Cached after first successful computation.
         /// </summary>
         private Position ComputeRallyPoint(IGameState state)
         {
             if (_rallyPoint.X >= 0) return _rallyPoint;
-            if (myBarracks.Count == 0) return new Position(-1, -1);
-            var info = state.GetUnit(myBarracks[0]);
+            if (myArchery.Count == 0) return new Position(-1, -1);
+            var info = state.GetUnit(myArchery[0]);
             if (!info.HasValue) return new Position(-1, -1);
 
             Position barracks = info.Value.GridPosition;
@@ -729,7 +729,7 @@ namespace PlanningAgent
             int bestEnemy = -1;
 
             foreach (UnitType ut in new[] { UnitType.SOLDIER, UnitType.ARCHER, UnitType.WORKER,
-                                             UnitType.BASE, UnitType.BARRACKS, UnitType.REFINERY })
+                                             UnitType.BASE, UnitType.BARRACKS, UnitType.ARCHERY })
             {
                 foreach (int enemyNbr in state.GetEnemyUnits(ut))
                 {
@@ -765,7 +765,7 @@ namespace PlanningAgent
             float bestBuildingDist = float.MaxValue;
 
             foreach (UnitType ut in new[] { UnitType.SOLDIER, UnitType.ARCHER, UnitType.WORKER,
-                                            UnitType.BASE, UnitType.BARRACKS, UnitType.REFINERY })
+                                            UnitType.BASE, UnitType.BARRACKS, UnitType.ARCHERY })
             {
                 bool isCombat = ut == UnitType.SOLDIER || ut == UnitType.ARCHER;
                 bool isWorker = ut == UnitType.WORKER;

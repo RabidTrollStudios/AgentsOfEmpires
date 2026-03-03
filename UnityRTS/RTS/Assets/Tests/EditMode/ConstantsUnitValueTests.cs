@@ -27,7 +27,7 @@ namespace GameManager.Tests
 			Assert.IsTrue(Constants.UNIT_VALUE.ContainsKey(UnitType.ARCHER));
 			Assert.IsTrue(Constants.UNIT_VALUE.ContainsKey(UnitType.BASE));
 			Assert.IsTrue(Constants.UNIT_VALUE.ContainsKey(UnitType.BARRACKS));
-			Assert.IsTrue(Constants.UNIT_VALUE.ContainsKey(UnitType.REFINERY));
+			Assert.IsTrue(Constants.UNIT_VALUE.ContainsKey(UnitType.ARCHERY));
 		}
 
 		/// <summary>
@@ -88,15 +88,23 @@ namespace GameManager.Tests
 		}
 
 		/// <summary>
-		/// WORKER and REFINERY share unit value 1.
+		/// WORKER has unit value 1.
 		/// </summary>
 		[Test]
-		public void UnitValue_WorkerAndRefinery_AreOne()
+		public void UnitValue_Worker_IsOne()
 		{
 			Assert.AreEqual(1, Constants.UNIT_VALUE[UnitType.WORKER],
 				"WORKER should have UNIT_VALUE = 1");
-			Assert.AreEqual(1, Constants.UNIT_VALUE[UnitType.REFINERY],
-				"REFINERY should have UNIT_VALUE = 1");
+		}
+
+		/// <summary>
+		/// ARCHERY has unit value 3 (same as BARRACKS).
+		/// </summary>
+		[Test]
+		public void UnitValue_Archery_IsThree()
+		{
+			Assert.AreEqual(3, Constants.UNIT_VALUE[UnitType.ARCHERY],
+				"ARCHERY should have UNIT_VALUE = 3");
 		}
 
 		/// <summary>

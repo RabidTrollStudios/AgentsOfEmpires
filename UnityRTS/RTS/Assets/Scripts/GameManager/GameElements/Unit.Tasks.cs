@@ -152,11 +152,30 @@ namespace GameManager.GameElements
 				var buildUnit = currentBuilding.GetComponent<Unit>();
 				buildUnit.BuildProgress += Time.deltaTime;
 
+				// Lerp building opacity from 30% to 80% based on progress
+				var buildSprite = currentBuilding.GetComponent<SpriteRenderer>();
+				if (buildSprite != null)
+				{
+					float progress = Mathf.Clamp01(buildUnit.BuildProgress / Constants.CREATION_TIME[taskUnitType]);
+					var c = buildSprite.color;
+					c.a = 0.3f + progress * 0.5f;
+					buildSprite.color = c;
+				}
+
 				// if we're building a unit and we have finished the task
 				if (buildUnit.BuildProgress >= Constants.CREATION_TIME[taskUnitType])
 				{
 					buildUnit.IsBuilt = true;
-					currentBuilding.GetComponent<Animator>().SetBool("IsBuilt", buildUnit.IsBuilt);
+					// Set full opacity on completion
+					if (buildSprite != null)
+					{
+						var c = buildSprite.color;
+						c.a = 1.0f;
+						buildSprite.color = c;
+					}
+					var buildAnimator = currentBuilding.GetComponent<Animator>();
+					if (buildAnimator != null)
+						buildAnimator.SetBool("IsBuilt", buildUnit.IsBuilt);
 					path.Clear();
 					CurrentAction = UnitAction.IDLE;
 					currentBuilding = null;
@@ -284,9 +303,7 @@ namespace GameManager.GameElements
 				else if (MineUnit.GetComponent<Unit>().Health > 0)
 				{
 					taskTime += Time.deltaTime;
-					minedGold += Time.deltaTime
-								 * (MiningSpeed + (MiningSpeed * Constants.MINING_BOOST
-												   * GameManager.Instance.Units.GetUnitNbrsOfType(UnitType.REFINERY, Agent.GetComponent<AgentController>().Agent.AgentNbr).Count));
+					minedGold += Time.deltaTime * MiningSpeed;
 					if (minedGold >= 1)
 					{
 						MineUnit.GetComponent<Unit>().Health -= (int)minedGold;

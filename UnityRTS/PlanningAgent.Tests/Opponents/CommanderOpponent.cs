@@ -4,10 +4,10 @@ using AgentSDK;
 namespace PlanningAgent.Tests
 {
     /// <summary>
-    /// [HARD] Smart targeting with strong macro. 6 workers, builds refinery,
+    /// [HARD] Smart targeting with strong macro. 6 workers,
     /// trains mostly soldiers + some archers. Prioritizes killing enemy
     /// workers first (cripple economy), then bases, then military.
-    /// Attacks with 4+ troops — doesn't wait as long as the turtle.
+    /// Attacks with 4+ troops -- does not wait as long as the turtle.
     /// Strategy to beat: protect workers, match economy, bring a bigger army.
     /// </summary>
     public class CommanderOpponent : PlanningAgentBase
@@ -27,11 +27,9 @@ namespace PlanningAgent.Tests
             TrainWorkers(state, actions, MAX_WORKERS);
             GatherWithIdleWorkers(state, actions);
 
-            // Build order: barracks -> refinery
+            // Build barracks
             if (myBarracks.Count == 0 && HasBuiltUnit(myBases, state))
                 BuildStructure(UnitType.BARRACKS, state, actions);
-            else if (myRefineries.Count == 0 && HasBuiltUnit(myBases, state) && HasBuiltUnit(myBarracks, state))
-                BuildStructure(UnitType.REFINERY, state, actions);
 
             // Train: 2 soldiers then 1 archer, repeat
             foreach (int barracksNbr in myBarracks)
@@ -76,9 +74,9 @@ namespace PlanningAgent.Tests
 
         private int? FindPriorityTarget(IGameState state)
         {
-            // Priority: workers > bases > barracks > archers > soldiers > refineries
+            // Priority: workers > bases > barracks > archers > soldiers
             foreach (UnitType ut in new[] { UnitType.WORKER, UnitType.BASE, UnitType.BARRACKS,
-                                            UnitType.ARCHER, UnitType.SOLDIER, UnitType.REFINERY })
+                                            UnitType.ARCHER, UnitType.SOLDIER })
             {
                 var enemies = state.GetEnemyUnits(ut);
                 if (enemies.Count > 0) return enemies[0];

@@ -204,7 +204,7 @@ namespace GameManager
         // Grid positions use top-left corner convention (IsAreaBuildable extends +X and -Y).
         // World center of a unit = (topLeft.x + size.x/2, topLeft.y - size.y/2 + 1)
         //   1x1  workers/troops:          world center = grid + (0.5, 0.5)  =>  valid grid [1, 71] x [1, 40]
-        //   3x3  mine/barracks/refinery:  world center = grid + (1.5,-0.5)  =>  valid top-left [1, 69] x [3, 40]
+        //   3x3  mine/barracks/archery:   world center = grid + (1.5,-0.5)  =>  valid top-left [1, 69] x [3, 40]
         //   4x4  base:                    world center = grid + (2, -1)      =>  valid top-left [1, 68] x [4, 40]
 
         // Worker spawn corners - use BASE buildability so there's room to build a base at spawn

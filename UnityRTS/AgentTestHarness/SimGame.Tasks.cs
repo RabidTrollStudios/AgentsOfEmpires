@@ -195,13 +195,7 @@ namespace AgentTestHarness
 
             // Arrived adjacent to mine — start mining
             worker.GatherPhase = GatherPhase.MINING;
-            // Apply per-agent refinery boost: rate = base * (1 + MINING_BOOST * refineryCount)
-            int refineryCount = 0;
-            foreach (var u in Units.Values)
-                if (u.OwnerAgentNbr == worker.OwnerAgentNbr && u.UnitType == UnitType.REFINERY && u.IsBuilt)
-                    refineryCount++;
-            float effectiveSpeed = miningSpeed * (1f + GameConstants.MINING_BOOST * refineryCount);
-            float miningTime = effectiveSpeed > 0 ? miningCapacity / effectiveSpeed : 1f;
+            float miningTime = miningSpeed > 0 ? miningCapacity / miningSpeed : 1f;
             worker.MiningTimer = miningTime;
         }
 

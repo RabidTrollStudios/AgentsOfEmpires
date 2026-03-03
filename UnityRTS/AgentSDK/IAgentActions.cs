@@ -20,7 +20,7 @@ namespace AgentSDK
         /// </summary>
         /// <param name="unitNbr">The worker unit that will build</param>
         /// <param name="target">Where to place the structure</param>
-        /// <param name="unitType">Type of structure to build (BASE, BARRACKS, or REFINERY)</param>
+        /// <param name="unitType">Type of structure to build (BASE, BARRACKS, or ARCHERY)</param>
         void Build(int unitNbr, Position target, UnitType unitType);
 
         /// <summary>

@@ -88,39 +88,6 @@ namespace GameManager.Tests.PlayMode
 
 		#endregion
 
-		#region Sequential Build: BASE then REFINERY
-
-		/// <summary>
-		/// Worker builds BASE to completion, then builds REFINERY (which depends on BASE).
-		/// Both builds succeed in sequence.
-		/// </summary>
-		[UnityTest]
-		public IEnumerator Worker_BuildsBase_ThenStartsRefinery()
-		{
-			Agent agent = GetAgent0();
-			agent.Gold = (int)(Constants.COST[UnitType.BASE] + Constants.COST[UnitType.REFINERY] + 10);
-
-			Vector3Int basePos = new Vector3Int(10, 10, 0);
-			Vector3Int refineryPos = new Vector3Int(15, 10, 0);
-			Vector3Int workerPos = new Vector3Int(9, 10, 0);
-
-			Unit worker = PlaceUnit(UnitType.WORKER, workerPos);
-			worker.StartBuilding(new BuildEventArgs(worker, basePos, UnitType.BASE));
-
-			Unit builtBase = BuildingTestHelper.FindNewestUnitOfType(ctx, UnitType.BASE);
-			yield return BuildingTestHelper.WaitForConstruction(worker, builtBase,
-				timeoutSeconds: 30f);
-
-			Assert.IsTrue(builtBase.IsBuilt, "BASE must be complete before REFINERY can be built");
-
-			worker.StartBuilding(new BuildEventArgs(worker, refineryPos, UnitType.REFINERY));
-
-			Assert.AreEqual(UnitAction.BUILD, worker.CurrentAction,
-				"Worker should enter BUILD for REFINERY after completing BASE");
-		}
-
-		#endregion
-
 		#region Two Workers: Independent Structures
 
 		/// <summary>
