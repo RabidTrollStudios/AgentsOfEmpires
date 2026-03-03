@@ -14,7 +14,7 @@ namespace GameManager.Tests
 	{
 		private static readonly UnitType[] AllUnitTypes = {
 			UnitType.MINE, UnitType.WORKER, UnitType.SOLDIER,
-			UnitType.ARCHER, UnitType.BASE, UnitType.BARRACKS, UnitType.REFINERY
+			UnitType.ARCHER, UnitType.BASE, UnitType.BARRACKS, UnitType.ARCHERY
 		};
 
 		#region ATTACK_RANGE Completeness
@@ -71,8 +71,8 @@ namespace GameManager.Tests
 				"BASE should have zero attack range");
 			Assert.AreEqual(0f, Constants.ATTACK_RANGE[UnitType.BARRACKS], 0.001f,
 				"BARRACKS should have zero attack range");
-			Assert.AreEqual(0f, Constants.ATTACK_RANGE[UnitType.REFINERY], 0.001f,
-				"REFINERY should have zero attack range");
+			Assert.AreEqual(0f, Constants.ATTACK_RANGE[UnitType.ARCHERY], 0.001f,
+				"ARCHERY should have zero attack range");
 		}
 
 		/// <summary>
@@ -129,18 +129,18 @@ namespace GameManager.Tests
 		}
 
 		/// <summary>
-		/// Building types (BASE, BARRACKS, REFINERY) have a size greater than 1×1.
+		/// Building types (BASE, BARRACKS, ARCHERY) have a size greater than 1x1.
 		/// </summary>
 		[Test]
 		public void UnitSize_Buildings_LargerThanOneByOne()
 		{
 			int baseArea = Constants.UNIT_SIZE[UnitType.BASE].x * Constants.UNIT_SIZE[UnitType.BASE].y;
 			int barracksArea = Constants.UNIT_SIZE[UnitType.BARRACKS].x * Constants.UNIT_SIZE[UnitType.BARRACKS].y;
-			int refineryArea = Constants.UNIT_SIZE[UnitType.REFINERY].x * Constants.UNIT_SIZE[UnitType.REFINERY].y;
+			int archeryArea = Constants.UNIT_SIZE[UnitType.ARCHERY].x * Constants.UNIT_SIZE[UnitType.ARCHERY].y;
 
 			Assert.Greater(baseArea, 1, "BASE footprint should span more than 1 cell");
 			Assert.Greater(barracksArea, 1, "BARRACKS footprint should span more than 1 cell");
-			Assert.Greater(refineryArea, 1, "REFINERY footprint should span more than 1 cell");
+			Assert.Greater(archeryArea, 1, "ARCHERY footprint should span more than 1 cell");
 		}
 
 		/// <summary>

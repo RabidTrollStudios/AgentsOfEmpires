@@ -58,7 +58,7 @@ namespace GameManager.Tests
 			Assert.AreEqual(0.0f, Constants.MOVING_SPEED[UnitType.MINE]);
 			Assert.AreEqual(0.0f, Constants.MOVING_SPEED[UnitType.BASE]);
 			Assert.AreEqual(0.0f, Constants.MOVING_SPEED[UnitType.BARRACKS]);
-			Assert.AreEqual(0.0f, Constants.MOVING_SPEED[UnitType.REFINERY]);
+			Assert.AreEqual(0.0f, Constants.MOVING_SPEED[UnitType.ARCHERY]);
 		}
 
 		[Test]
@@ -68,7 +68,7 @@ namespace GameManager.Tests
 			Assert.AreEqual(0.0f, Constants.DAMAGE[UnitType.WORKER]);
 			Assert.AreEqual(0.0f, Constants.DAMAGE[UnitType.BASE]);
 			Assert.AreEqual(0.0f, Constants.DAMAGE[UnitType.BARRACKS]);
-			Assert.AreEqual(0.0f, Constants.DAMAGE[UnitType.REFINERY]);
+			Assert.AreEqual(0.0f, Constants.DAMAGE[UnitType.ARCHERY]);
 		}
 
 		[Test]

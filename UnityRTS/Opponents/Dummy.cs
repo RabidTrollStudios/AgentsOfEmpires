@@ -70,11 +70,6 @@ namespace GameManager
         private List<int> myBarracks { get; set; }
 
         /// <summary>
-        /// List of all of my refineries
-        /// </summary>
-        private List<int> myRefineries { get; set; }
-
-        /// <summary>
         /// List of the enemy's workers
         /// </summary>
         private List<int> enemyWorkers { get; set; }
@@ -100,11 +95,6 @@ namespace GameManager
         private List<int> enemyBarracks { get; set; }
 
         /// <summary>
-        /// List of the enemy's refineries
-        /// </summary>
-        private List<int> enemyRefineries { get; set; }
-
-        /// <summary>
         /// List of the possible build positions for a 3x3 unit
         /// </summary>
         private List<Vector3Int> buildPositions { get; set; }
@@ -114,7 +104,7 @@ namespace GameManager
         /// <summary>
         /// Finds all of the possible build locations for a specific UnitType.
         /// Currently, all structures are 3x3, so these positions can be reused
-        /// for all structures (Base, Barracks, Refinery)
+        /// for all structures (Base, Barracks)
         /// Run this once at the beginning of the game and have a list of
         /// locations that you can use to reduce later computation.  When you
         /// need a location for a build-site, simply pull one off of this list,
@@ -242,18 +232,6 @@ namespace GameManager
                             Build(unit, toBuild, UnitType.BARRACKS);
                         }
                     }
-                    // If we have enough gold and need a refinery, build a refinery
-                    else if (Gold >= Constants.COST[UnitType.REFINERY]
-                             && myRefineries.Count < 1)
-                    {
-                        // Find the closest build position to this worker's position and build
-                        // the refinery there
-                        Vector3Int toBuild = FindClosestBuildPosition(unit.GridPosition, UnitType.REFINERY);
-                        if (toBuild != Vector3Int.zero)
-                        {
-                            Build(unit, toBuild, UnitType.REFINERY);
-                        }
-                    }
                     // Otherwise, just mine
                     else if (mainBaseNbr >= 0 && mainMineNbr >= 0)
                     {
@@ -365,12 +343,6 @@ namespace GameManager
                         Attack(soldierUnit, GameManager.Instance.GetUnit(
                             enemyBarracks[UnityEngine.Random.Range(0, enemyBarracks.Count)]));
                     }
-                    // If there are enemy refineries, randomly select one and attack it
-                    else if (enemyRefineries.Count > 0)
-                    {
-                        Attack(soldierUnit, GameManager.Instance.GetUnit(
-                            enemyRefineries[UnityEngine.Random.Range(0, enemyRefineries.Count)]));
-                    }
                 }
             }
         }
@@ -416,12 +388,6 @@ namespace GameManager
                     {
                         Attack(archerUnit, GameManager.Instance.GetUnit(
                             enemyBarracks[UnityEngine.Random.Range(0, enemyBarracks.Count)]));
-                    }
-                    // If there are enemy refineries, randomly select one and attack it
-                    else if (enemyRefineries.Count > 0)
-                    {
-                        Attack(archerUnit, GameManager.Instance.GetUnit(
-                            enemyRefineries[UnityEngine.Random.Range(0, enemyRefineries.Count)]));
                     }
                 }
             }
@@ -475,14 +441,12 @@ namespace GameManager
             myArchers = new List<int>();
             myBases = new List<int>();
             myBarracks = new List<int>();
-            myRefineries = new List<int>();
 
             enemyWorkers = new List<int>();
             enemySoldiers = new List<int>();
             enemyArchers = new List<int>();
             enemyBases = new List<int>();
             enemyBarracks = new List<int>();
-            enemyRefineries = new List<int>();
         }
 
         /// <summary>
@@ -500,7 +464,6 @@ namespace GameManager
             myArchers = GameManager.Instance.GetUnitNbrsOfType(UnitType.ARCHER, AgentNbr);
             myBarracks = GameManager.Instance.GetUnitNbrsOfType(UnitType.BARRACKS, AgentNbr);
             myBases = GameManager.Instance.GetUnitNbrsOfType(UnitType.BASE, AgentNbr);
-            myRefineries = GameManager.Instance.GetUnitNbrsOfType(UnitType.REFINERY, AgentNbr);
 
             // Update the enemy agents & unitNbrs
             List<int> enemyAgentNbrs = GameManager.Instance.GetEnemyAgentNbrs(AgentNbr);
@@ -512,7 +475,6 @@ namespace GameManager
                 enemyArchers = GameManager.Instance.GetUnitNbrsOfType(UnitType.ARCHER, enemyAgentNbr);
                 enemyBarracks = GameManager.Instance.GetUnitNbrsOfType(UnitType.BARRACKS, enemyAgentNbr);
                 enemyBases = GameManager.Instance.GetUnitNbrsOfType(UnitType.BASE, enemyAgentNbr);
-                enemyRefineries = GameManager.Instance.GetUnitNbrsOfType(UnitType.REFINERY, enemyAgentNbr);
             }
         }
 

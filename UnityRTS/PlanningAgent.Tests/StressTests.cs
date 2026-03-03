@@ -65,7 +65,7 @@ namespace PlanningAgent.Tests
             // After 2000 ticks the agent should have built an army
             int totalUnits = 0;
             foreach (UnitType ut in new[] { UnitType.WORKER, UnitType.SOLDIER, UnitType.ARCHER,
-                                            UnitType.BASE, UnitType.BARRACKS, UnitType.REFINERY })
+                                            UnitType.BASE, UnitType.BARRACKS })
             {
                 totalUnits += game.GetUnitsByType(0, ut).Count;
             }

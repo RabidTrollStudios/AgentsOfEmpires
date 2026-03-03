@@ -36,8 +36,8 @@ namespace AgentSDK
         protected List<int> myBases;
         /// <summary>Your barracks</summary>
         protected List<int> myBarracks;
-        /// <summary>Your refineries</summary>
-        protected List<int> myRefineries;
+        /// <summary>Your archeries</summary>
+        protected List<int> myArchery;
 
         /// <summary>Enemy workers</summary>
         protected List<int> enemyWorkers;
@@ -49,8 +49,8 @@ namespace AgentSDK
         protected List<int> enemyBases;
         /// <summary>Enemy barracks</summary>
         protected List<int> enemyBarracks;
-        /// <summary>Enemy refineries</summary>
-        protected List<int> enemyRefineries;
+        /// <summary>Enemy archeries</summary>
+        protected List<int> enemyArchery;
 
         /// <summary>Pre-computed valid build positions for 3x3 structures</summary>
         protected List<Position> buildPositions;
@@ -86,14 +86,14 @@ namespace AgentSDK
             myArchers = new List<int>();
             myBases = new List<int>();
             myBarracks = new List<int>();
-            myRefineries = new List<int>();
+            myArchery = new List<int>();
 
             enemyWorkers = new List<int>();
             enemySoldiers = new List<int>();
             enemyArchers = new List<int>();
             enemyBases = new List<int>();
             enemyBarracks = new List<int>();
-            enemyRefineries = new List<int>();
+            enemyArchery = new List<int>();
         }
 
         /// <summary>
@@ -138,16 +138,15 @@ namespace AgentSDK
             mySoldiers = new List<int>(state.GetMyUnits(UnitType.SOLDIER));
             myArchers = new List<int>(state.GetMyUnits(UnitType.ARCHER));
             myBarracks = new List<int>(state.GetMyUnits(UnitType.BARRACKS));
+            myArchery = new List<int>(state.GetMyUnits(UnitType.ARCHERY));
             myBases = new List<int>(state.GetMyUnits(UnitType.BASE));
-            myRefineries = new List<int>(state.GetMyUnits(UnitType.REFINERY));
-
             enemyAgentNbr = state.EnemyAgentNbr;
             enemyWorkers = new List<int>(state.GetEnemyUnits(UnitType.WORKER));
             enemySoldiers = new List<int>(state.GetEnemyUnits(UnitType.SOLDIER));
             enemyArchers = new List<int>(state.GetEnemyUnits(UnitType.ARCHER));
             enemyBarracks = new List<int>(state.GetEnemyUnits(UnitType.BARRACKS));
+            enemyArchery = new List<int>(state.GetEnemyUnits(UnitType.ARCHERY));
             enemyBases = new List<int>(state.GetEnemyUnits(UnitType.BASE));
-            enemyRefineries = new List<int>(state.GetEnemyUnits(UnitType.REFINERY));
         }
     }
 }

@@ -71,8 +71,7 @@ namespace AgentTestHarness
             foreach (var kvp in GameConstants.BASE_DAMAGE)
                 damage[kvp.Key] = kvp.Value * scalarDamage;
 
-            float miningBoost = GameConstants.MINING_BOOST;
-            miningSpeed = gs * miningBoost * 20f; // gold per second
+            miningSpeed = gs * 20f; // gold per second
             miningCapacity = GameConstants.MINING_CAPACITY[UnitType.WORKER];
         }
 

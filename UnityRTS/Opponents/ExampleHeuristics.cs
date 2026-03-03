@@ -21,7 +21,6 @@ namespace GameManager
         private enum HeuristicTasks {
             BASE_BUILDING,
             BARRACKS_BUILDING,
-            REFINERY_BUILDING,
             ATTACKING,
             TRAIN_ARCHER,
             TRAIN_SOLDIER,
@@ -51,14 +50,12 @@ namespace GameManager
 		public List<int> myArchers { get; set; }
 		public List<int> myBases { get; set; }
 		public List<int> myBarracks { get; set; }
-		public List<int> myRefineries { get; set; }
 
 		public List<int> enemyWorkers { get; set; }
 		public List<int> enemySoldiers { get; set; }
 		public List<int> enemyArchers { get; set; }
 		public List<int> enemyBases { get; set; }
 		public List<int> enemyBarracks { get; set; }
-		public List<int> enemyRefineries { get; set; }
         public List<int> enemyUnits { get; set; }
         public List<int> enemyBuildings { get; set; }
 
@@ -76,7 +73,7 @@ namespace GameManager
 		/// <summary>
 		/// Finds all of the possible build locations for a specific UnitType.
 		/// Currently, all structures are 3x3, so these positions can be reused
-		/// for all structures (Base, Barracks, Refinery)
+		/// for all structures (Base, Barracks)
 		/// Run this once at the beginning of the game and have a list of
 		/// locations that you can use to reduce later computation.  When you
 		/// need a location for a build-site, simply pull one off of this list,
@@ -170,16 +167,6 @@ namespace GameManager
                 heuristics[HeuristicTasks.BARRACKS_BUILDING] = 0;
             }
 
-            // 4: Build a Refinery
-            if (Gold > Constants.COST[UnitType.REFINERY])
-            {
-                heuristics[HeuristicTasks.REFINERY_BUILDING] = 1;
-            }
-            else
-            {
-                heuristics[HeuristicTasks.REFINERY_BUILDING] = 0;
-            }
-
             // 5: Train a Worker
             if (Gold >= Constants.COST[UnitType.WORKER])
             {
@@ -263,17 +250,6 @@ namespace GameManager
 		//				if (toBuild != Vector3Int.zero)
 		//				{
 		//					Build(unit, toBuild, UnitType.BARRACKS);
-		//				}
-		//			}
-		//			// If we have enough gold and need a refinery, build a refinery
-		//			else if (maxIndex == 4)
-		//			{
-  //                      // Find the best build position for a refinery and build
-  //                      // the refinery there
-  //                      Vector3Int toBuild = FindBestBuildPosition(UnitType.REFINERY);
-		//				if (toBuild != Vector3Int.zero)
-		//				{
-		//					Build(unit, toBuild, UnitType.REFINERY);
 		//				}
 		//			}
 		//			// Otherwise, just mine
@@ -410,14 +386,12 @@ namespace GameManager
 			myArchers = new List<int>();
 			myBases = new List<int>();
 			myBarracks = new List<int>();
-			myRefineries = new List<int>();
 
 			enemyWorkers = new List<int>();
 			enemySoldiers = new List<int>();
 			enemyArchers = new List<int>();
 			enemyBases = new List<int>();
 			enemyBarracks = new List<int>();
-			enemyRefineries = new List<int>();
             enemyUnits = new List<int>();
             enemyBuildings = new List<int>();
 
@@ -450,7 +424,6 @@ namespace GameManager
 			myArchers = GameManager.Instance.GetUnitNbrsOfType(UnitType.ARCHER, AgentNbr);
 			myBarracks = GameManager.Instance.GetUnitNbrsOfType(UnitType.BARRACKS, AgentNbr);
 			myBases = GameManager.Instance.GetUnitNbrsOfType(UnitType.BASE, AgentNbr);
-			myRefineries = GameManager.Instance.GetUnitNbrsOfType(UnitType.REFINERY, AgentNbr);
 
 			// Update the enemy agents & unitNbrs
 			List<int> enemyAgentNbrs = GameManager.Instance.GetEnemyAgentNbrs(AgentNbr);
@@ -462,13 +435,11 @@ namespace GameManager
 				enemyArchers = GameManager.Instance.GetUnitNbrsOfType(UnitType.ARCHER, enemyAgentNbr);
 				enemyBarracks = GameManager.Instance.GetUnitNbrsOfType(UnitType.BARRACKS, enemyAgentNbr);
 				enemyBases = GameManager.Instance.GetUnitNbrsOfType(UnitType.BASE, enemyAgentNbr);
-				enemyRefineries = GameManager.Instance.GetUnitNbrsOfType(UnitType.REFINERY, enemyAgentNbr);
 
                 enemyUnits.AddRange(enemySoldiers);
                 enemyUnits.AddRange(enemyArchers);
                 enemyBuildings.AddRange(enemyBases);
                 enemyBuildings.AddRange(enemyBarracks);
-                enemyBuildings.AddRange(enemyRefineries);
             }
         }
 

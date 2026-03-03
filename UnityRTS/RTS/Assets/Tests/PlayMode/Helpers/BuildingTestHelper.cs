@@ -50,18 +50,6 @@ namespace GameManager.Tests.PlayMode
 		}
 
 		/// <summary>
-		/// Place a REFINERY at the given position and immediately mark it as built.
-		/// </summary>
-		public static Unit PlaceBuiltRefinery(PlayModeTestContext ctx, Vector3Int position,
-			GameObject agentGo = null)
-		{
-			agentGo = agentGo ?? ctx.Agent0Go;
-			Unit refinery = PlayModeTestHelper.PlaceUnit(ctx, agentGo, UnitType.REFINERY, position);
-			refinery.IsBuilt = true;
-			return refinery;
-		}
-
-		/// <summary>
 		/// Assert that the given area is buildable for the specified unit type.
 		/// </summary>
 		public static void AssertAreaBuildable(PlayModeTestContext ctx, UnitType unitType,

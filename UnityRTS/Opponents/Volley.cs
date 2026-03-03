@@ -329,7 +329,7 @@ namespace PlanningAgent
                 int closestEnemyNbr = -1;
 
                 foreach (UnitType ut in new[] { UnitType.ARCHER, UnitType.WORKER,
-                                                 UnitType.BASE, UnitType.BARRACKS, UnitType.REFINERY })
+                                                 UnitType.BASE, UnitType.BARRACKS })
                 {
                     foreach (int enemyNbr in state.GetEnemyUnits(ut))
                     {
@@ -930,7 +930,7 @@ namespace PlanningAgent
             int bestEnemy = -1;
 
             foreach (UnitType ut in new[] { UnitType.SOLDIER, UnitType.ARCHER, UnitType.WORKER,
-                                             UnitType.BASE, UnitType.BARRACKS, UnitType.REFINERY })
+                                             UnitType.BASE, UnitType.BARRACKS })
             {
                 float range = GameConstants.EffectiveAttackRange(attackerType, ut);
                 foreach (int enemyNbr in state.GetEnemyUnits(ut))
@@ -959,7 +959,7 @@ namespace PlanningAgent
             int bestEnemy = -1;
 
             foreach (UnitType ut in new[] { UnitType.SOLDIER, UnitType.ARCHER, UnitType.WORKER,
-                                             UnitType.BASE, UnitType.BARRACKS, UnitType.REFINERY })
+                                             UnitType.BASE, UnitType.BARRACKS })
             {
                 foreach (int enemyNbr in state.GetEnemyUnits(ut))
                 {
@@ -993,7 +993,7 @@ namespace PlanningAgent
             float bestBuildingDist = float.MaxValue;
 
             foreach (UnitType ut in new[] { UnitType.SOLDIER, UnitType.ARCHER, UnitType.WORKER,
-                                            UnitType.BASE, UnitType.BARRACKS, UnitType.REFINERY })
+                                            UnitType.BASE, UnitType.BARRACKS })
             {
                 bool isCombat = ut == UnitType.SOLDIER || ut == UnitType.ARCHER;
                 bool isWorker = ut == UnitType.WORKER;

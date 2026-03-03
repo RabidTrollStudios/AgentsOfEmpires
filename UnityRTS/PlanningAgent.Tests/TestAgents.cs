@@ -288,7 +288,7 @@ namespace PlanningAgent.Tests
             // Find any enemy unit
             int? targetNbr = null;
             foreach (UnitType ut in new[] { UnitType.SOLDIER, UnitType.ARCHER, UnitType.WORKER,
-                                            UnitType.BASE, UnitType.BARRACKS, UnitType.REFINERY })
+                                            UnitType.BASE, UnitType.BARRACKS })
             {
                 var enemies = state.GetEnemyUnits(ut);
                 if (enemies.Count > 0) { targetNbr = enemies[0]; break; }
@@ -384,7 +384,7 @@ namespace PlanningAgent.Tests
         {
             int? target = null;
             foreach (UnitType ut in new[] { UnitType.SOLDIER, UnitType.ARCHER, UnitType.WORKER,
-                                            UnitType.BASE, UnitType.BARRACKS, UnitType.REFINERY })
+                                            UnitType.BASE, UnitType.BARRACKS })
             {
                 var enemies = state.GetEnemyUnits(ut);
                 if (enemies.Count > 0) { target = enemies[0]; break; }

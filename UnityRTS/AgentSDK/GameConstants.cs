@@ -8,9 +8,6 @@ namespace AgentSDK
     /// </summary>
     public static class GameConstants
     {
-        /// <summary>Gold mining boost multiplier when a refinery is built</summary>
-        public static readonly float MINING_BOOST = 2.0f;
-
         /// <summary>Base cost scalar (all costs are multiples of this)</summary>
         public static readonly float SCALAR_COST = 50f;
 
@@ -30,7 +27,7 @@ namespace AgentSDK
                 { UnitType.ARCHER,      80f },
                 { UnitType.BASE,        SCALAR_COST * 10 },
                 { UnitType.BARRACKS,    SCALAR_COST * 8 },
-                { UnitType.REFINERY,    SCALAR_COST * 6 },
+                { UnitType.ARCHERY,     SCALAR_COST * 7 },
             });
 
         /// <summary>
@@ -47,7 +44,7 @@ namespace AgentSDK
                 { UnitType.ARCHER,      800.0f },
                 { UnitType.BASE,        4000.0f },
                 { UnitType.BARRACKS,    2000.0f },
-                { UnitType.REFINERY,    2000.0f },
+                { UnitType.ARCHERY,     2000.0f },
             });
 
         /// <summary>
@@ -62,7 +59,7 @@ namespace AgentSDK
                 { UnitType.ARCHER,      0.0f },
                 { UnitType.BASE,        0.0f },
                 { UnitType.BARRACKS,    0.0f },
-                { UnitType.REFINERY,    0.0f },
+                { UnitType.ARCHERY,     0.0f },
             });
 
         /// <summary>
@@ -77,7 +74,7 @@ namespace AgentSDK
                 { UnitType.ARCHER,      40f },
                 { UnitType.BASE,        0f },
                 { UnitType.BARRACKS,    0f },
-                { UnitType.REFINERY,    0f },
+                { UnitType.ARCHERY,     0f },
             });
 
         /// <summary>
@@ -92,7 +89,7 @@ namespace AgentSDK
                 { UnitType.ARCHER,      4f },
                 { UnitType.BASE,        10f },
                 { UnitType.BARRACKS,    20f },
-                { UnitType.REFINERY,    15f },
+                { UnitType.ARCHERY,     18f },
             });
 
         /// <summary>
@@ -107,7 +104,7 @@ namespace AgentSDK
                 { UnitType.ARCHER,      9.0f },
                 { UnitType.BASE,        0.0f },
                 { UnitType.BARRACKS,    0.0f },
-                { UnitType.REFINERY,    0.0f },
+                { UnitType.ARCHERY,     0.0f },
             });
 
         /// <summary>
@@ -123,7 +120,7 @@ namespace AgentSDK
                 { UnitType.ARCHER,      1.0f },
                 { UnitType.BASE,        0.0f },
                 { UnitType.BARRACKS,    0.0f },
-                { UnitType.REFINERY,    0.0f },
+                { UnitType.ARCHERY,     0.0f },
             });
 
         /// <summary>
@@ -136,9 +133,9 @@ namespace AgentSDK
                 { UnitType.WORKER,      new Position(1, 1) },
                 { UnitType.SOLDIER,     new Position(1, 1) },
                 { UnitType.ARCHER,      new Position(1, 1) },
-                { UnitType.BASE,        new Position(4, 4) },
+                { UnitType.BASE,        new Position(6, 4) },
                 { UnitType.BARRACKS,    new Position(3, 3) },
-                { UnitType.REFINERY,    new Position(3, 3) },
+                { UnitType.ARCHERY,     new Position(3, 3) },
             });
 
         /// <summary>
@@ -150,10 +147,10 @@ namespace AgentSDK
                 { UnitType.MINE,        new List<UnitType>() },
                 { UnitType.WORKER,      new List<UnitType>() { UnitType.BASE } },
                 { UnitType.SOLDIER,     new List<UnitType>() { UnitType.BARRACKS } },
-                { UnitType.ARCHER,      new List<UnitType>() { UnitType.BARRACKS } },
+                { UnitType.ARCHER,      new List<UnitType>() { UnitType.ARCHERY } },
                 { UnitType.BASE,        new List<UnitType>() },
                 { UnitType.BARRACKS,    new List<UnitType>() { UnitType.BASE } },
-                { UnitType.REFINERY,    new List<UnitType>() { UnitType.BASE, UnitType.BARRACKS } },
+                { UnitType.ARCHERY,     new List<UnitType>() { UnitType.BASE } },
             });
 
         /// <summary>
@@ -163,12 +160,12 @@ namespace AgentSDK
             new ReadOnlyDictionary<UnitType, IReadOnlyList<UnitType>>(new Dictionary<UnitType, IReadOnlyList<UnitType>>()
             {
                 { UnitType.MINE,        new List<UnitType>() },
-                { UnitType.WORKER,      new List<UnitType>() { UnitType.BASE, UnitType.BARRACKS, UnitType.REFINERY } },
+                { UnitType.WORKER,      new List<UnitType>() { UnitType.BASE, UnitType.BARRACKS, UnitType.ARCHERY } },
                 { UnitType.SOLDIER,     new List<UnitType>() },
                 { UnitType.ARCHER,      new List<UnitType>() },
                 { UnitType.BASE,        new List<UnitType>() },
                 { UnitType.BARRACKS,    new List<UnitType>() },
-                { UnitType.REFINERY,    new List<UnitType>() },
+                { UnitType.ARCHERY,     new List<UnitType>() },
             });
 
         /// <summary>
@@ -182,8 +179,8 @@ namespace AgentSDK
                 { UnitType.SOLDIER,     new List<UnitType>() },
                 { UnitType.ARCHER,      new List<UnitType>() },
                 { UnitType.BASE,        new List<UnitType>() { UnitType.WORKER } },
-                { UnitType.BARRACKS,    new List<UnitType>() { UnitType.SOLDIER, UnitType.ARCHER } },
-                { UnitType.REFINERY,    new List<UnitType>() },
+                { UnitType.BARRACKS,    new List<UnitType>() { UnitType.SOLDIER } },
+                { UnitType.ARCHERY,     new List<UnitType>() { UnitType.ARCHER } },
             });
 
         /// <summary>Which unit types can move</summary>
@@ -192,7 +189,7 @@ namespace AgentSDK
             {
                 { UnitType.MINE, false }, { UnitType.WORKER, true }, { UnitType.SOLDIER, true },
                 { UnitType.ARCHER, true }, { UnitType.BASE, false }, { UnitType.BARRACKS, false },
-                { UnitType.REFINERY, false },
+                { UnitType.ARCHERY, false },
             });
 
         /// <summary>Which unit types can build structures</summary>
@@ -201,7 +198,7 @@ namespace AgentSDK
             {
                 { UnitType.MINE, false }, { UnitType.WORKER, true }, { UnitType.SOLDIER, false },
                 { UnitType.ARCHER, false }, { UnitType.BASE, false }, { UnitType.BARRACKS, false },
-                { UnitType.REFINERY, false },
+                { UnitType.ARCHERY, false },
             });
 
         /// <summary>Which unit types can train units</summary>
@@ -210,7 +207,7 @@ namespace AgentSDK
             {
                 { UnitType.MINE, false }, { UnitType.WORKER, false }, { UnitType.SOLDIER, false },
                 { UnitType.ARCHER, false }, { UnitType.BASE, true }, { UnitType.BARRACKS, true },
-                { UnitType.REFINERY, false },
+                { UnitType.ARCHERY, true },
             });
 
         /// <summary>Which unit types can attack</summary>
@@ -219,7 +216,7 @@ namespace AgentSDK
             {
                 { UnitType.MINE, false }, { UnitType.WORKER, false }, { UnitType.SOLDIER, true },
                 { UnitType.ARCHER, true }, { UnitType.BASE, false }, { UnitType.BARRACKS, false },
-                { UnitType.REFINERY, false },
+                { UnitType.ARCHERY, false },
             });
 
         /// <summary>Which unit types can gather resources</summary>
@@ -228,7 +225,7 @@ namespace AgentSDK
             {
                 { UnitType.MINE, false }, { UnitType.WORKER, true }, { UnitType.SOLDIER, false },
                 { UnitType.ARCHER, false }, { UnitType.BASE, false }, { UnitType.BARRACKS, false },
-                { UnitType.REFINERY, false },
+                { UnitType.ARCHERY, false },
             });
 
         /// <summary>

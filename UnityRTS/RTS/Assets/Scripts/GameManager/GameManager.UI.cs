@@ -26,11 +26,11 @@ namespace GameManager
 		{
 			HasAgentDebugging = true;
 			HasUnitDebugging = true;
-			HasMoveTint = true;
-			HasGatherTint = true;
-			HasAttackTint = true;
+			HasMoveTint = false;
+			HasGatherTint = false;
+			HasAttackTint = false;
 			HasPathTint = true;
-			HasBuildTint = true;
+			HasBuildTint = false;
 			HasTargetLineTint = true;
 
 			if (AgentToggle != null)
@@ -51,17 +51,17 @@ namespace GameManager
 			if (MoveTintToggle != null)
 			{
 				MoveTintToggle.onValueChanged.AddListener(OnMoveTintToggleChanged);
-				MoveTintToggle.isOn = true;
+				MoveTintToggle.isOn = false;
 			}
 			if (GatherTintToggle != null)
 			{
 				GatherTintToggle.onValueChanged.AddListener(OnGatherTintToggleChanged);
-				GatherTintToggle.isOn = true;
+				GatherTintToggle.isOn = false;
 			}
 			if (AttackTintToggle != null)
 			{
 				AttackTintToggle.onValueChanged.AddListener(OnAttackTintToggleChanged);
-				AttackTintToggle.isOn = true;
+				AttackTintToggle.isOn = false;
 			}
 			if (PathTintToggle != null)
 			{
@@ -71,7 +71,7 @@ namespace GameManager
 			if (BuildTintToggle != null)
 			{
 				BuildTintToggle.onValueChanged.AddListener(OnBuildTintToggleChanged);
-				BuildTintToggle.isOn = true;
+				BuildTintToggle.isOn = false;
 			}
 			if (TargetLineTintToggle != null)
 			{

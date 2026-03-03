@@ -47,9 +47,9 @@ namespace Preloader
         /// </summary>
 		public GameObject HumanBarracksPrefab;
         /// <summary>
-        /// Human Refinery Prefab
+        /// Human Archery Prefab
         /// </summary>
-		public GameObject HumanRefineryPrefab;
+		public GameObject HumanArcheryPrefab;
 
 		/// <summary>
         /// Orc Peon prefab
@@ -72,9 +72,9 @@ namespace Preloader
         /// </summary>
 		public GameObject OrcBarracksPrefab;
         /// <summary>
-        /// Orc Refinery Prefab
+        /// Orc Archery Prefab
         /// </summary>
-		public GameObject OrcRefineryPrefab;
+		public GameObject OrcArcheryPrefab;
 
 		/// <summary>
         /// Mine Prefab

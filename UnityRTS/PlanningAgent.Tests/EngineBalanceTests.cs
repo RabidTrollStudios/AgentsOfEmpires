@@ -59,7 +59,7 @@ namespace PlanningAgent.Tests
                 int? best = null;
 
                 foreach (UnitType ut in new[] { UnitType.SOLDIER, UnitType.ARCHER, UnitType.WORKER,
-                                                UnitType.BASE, UnitType.BARRACKS, UnitType.REFINERY })
+                                                UnitType.BASE, UnitType.BARRACKS })
                 {
                     foreach (int enemyNbr in state.GetEnemyUnits(ut))
                     {
@@ -106,7 +106,7 @@ namespace PlanningAgent.Tests
                 int? best = null;
 
                 foreach (UnitType ut in new[] { UnitType.SOLDIER, UnitType.ARCHER, UnitType.WORKER,
-                                                UnitType.BASE, UnitType.BARRACKS, UnitType.REFINERY })
+                                                UnitType.BASE, UnitType.BARRACKS })
                 {
                     foreach (int enemyNbr in state.GetEnemyUnits(ut))
                     {
@@ -190,101 +190,6 @@ namespace PlanningAgent.Tests
         }
 
         /// <summary>
-        /// Economy agent that also builds barracks + refinery. Used to measure
-        /// refinery's 2x mining boost relative to its cost.
-        /// </summary>
-        private class RefineryEconomyAgent : PlanningAgentBase
-        {
-            private readonly int _maxWorkers;
-            private int _builderNbr;
-            public RefineryEconomyAgent(int maxWorkers) { _maxWorkers = maxWorkers; }
-
-            public override void InitializeMatch() { }
-
-            public override void Update(IGameState state, IAgentActions actions)
-            {
-                UpdateGameState(state);
-                mainBaseNbr = myBases.Count > 0 ? myBases[0] : -1;
-                mainMineNbr = mines.Count > 0 ? mines[0] : -1;
-                _builderNbr = -1;
-
-                // Build base if none exists
-                if (myBases.Count == 0)
-                {
-                    foreach (int worker in myWorkers)
-                    {
-                        var info = state.GetUnit(worker);
-                        if (info.HasValue && info.Value.CurrentAction == UnitAction.IDLE
-                            && state.MyGold >= GameConstants.COST[UnitType.BASE])
-                        {
-                            foreach (Position pos in buildPositions)
-                            {
-                                if (state.IsBoundedAreaBuildable(UnitType.BASE, pos))
-                                {
-                                    actions.Build(worker, pos, UnitType.BASE);
-                                    return;
-                                }
-                            }
-                        }
-                    }
-                    return;
-                }
-
-                // Train workers
-                foreach (int baseNbr in myBases)
-                {
-                    var info = state.GetUnit(baseNbr);
-                    if (info.HasValue && info.Value.IsBuilt
-                        && info.Value.CurrentAction == UnitAction.IDLE
-                        && state.MyGold >= GameConstants.COST[UnitType.WORKER]
-                        && myWorkers.Count < _maxWorkers)
-                    {
-                        actions.Train(baseNbr, UnitType.WORKER);
-                    }
-                }
-
-                // Build barracks then refinery
-                if (myBarracks.Count == 0 && HasBuiltUnit(myBases, state))
-                    BuildAny(UnitType.BARRACKS, state, actions);
-                else if (myRefineries.Count == 0 && HasBuiltUnit(myBases, state) && HasBuiltUnit(myBarracks, state))
-                    BuildAny(UnitType.REFINERY, state, actions);
-
-                // Gather (skip builder to avoid overwriting build command)
-                if (mainBaseNbr < 0 || mainMineNbr < 0) return;
-                var mineInfo = state.GetUnit(mainMineNbr);
-                if (!mineInfo.HasValue || mineInfo.Value.Health <= 0) return;
-
-                foreach (int worker in myWorkers)
-                {
-                    if (worker == _builderNbr) continue;
-                    var info = state.GetUnit(worker);
-                    if (info.HasValue && info.Value.CurrentAction == UnitAction.IDLE)
-                        actions.Gather(worker, mainMineNbr, mainBaseNbr);
-                }
-            }
-
-            private void BuildAny(UnitType type, IGameState state, IAgentActions actions)
-            {
-                foreach (int worker in myWorkers)
-                {
-                    var info = state.GetUnit(worker);
-                    if (info.HasValue && info.Value.CurrentAction == UnitAction.IDLE
-                        && state.MyGold >= GameConstants.COST[type])
-                    {
-                        foreach (Position pos in buildPositions)
-                        {
-                            if (state.IsBoundedAreaBuildable(type, pos))
-                            {
-                                actions.Build(worker, pos, type);
-                                _builderNbr = worker;
-                                return;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
         /// <summary>
         /// Builds base, barracks, trains N workers, then trains a single unit type.
         /// Used for build timeline measurements.
@@ -412,7 +317,7 @@ namespace PlanningAgent.Tests
         {
             int count = 0;
             foreach (UnitType ut in new[] { UnitType.WORKER, UnitType.SOLDIER, UnitType.ARCHER,
-                                            UnitType.BASE, UnitType.BARRACKS, UnitType.REFINERY })
+                                            UnitType.BASE, UnitType.BARRACKS })
             {
                 count += game.GetUnitsByType(agent, ut).Count;
             }
@@ -424,7 +329,7 @@ namespace PlanningAgent.Tests
             float totalHp = 0;
             float totalMaxHp = 0;
             foreach (UnitType ut in new[] { UnitType.WORKER, UnitType.SOLDIER, UnitType.ARCHER,
-                                            UnitType.BASE, UnitType.BARRACKS, UnitType.REFINERY })
+                                            UnitType.BASE, UnitType.BARRACKS })
             {
                 foreach (var unit in game.GetUnitsByType(agent, ut))
                 {

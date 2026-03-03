@@ -4,7 +4,7 @@ using AgentSDK;
 namespace PlanningAgent.Tests
 {
     /// <summary>
-    /// [HARD] Economic powerhouse: races to 10 workers + refinery (2x mining),
+    /// [HARD] Economic powerhouse: races to 10 workers,
     /// then builds barracks and floods soldiers. Outproduces most opponents.
     /// Strategy to beat: early aggression before the boom kicks in, or match
     /// the economy and fight with better unit composition.
@@ -25,11 +25,9 @@ namespace PlanningAgent.Tests
             TrainWorkers(state, actions, MAX_WORKERS);
             GatherWithIdleWorkers(state, actions);
 
-            // Build order: barracks first (for dependency), then refinery
+            // Build barracks
             if (myBarracks.Count == 0 && HasBuiltUnit(myBases, state))
                 BuildStructure(UnitType.BARRACKS, state, actions);
-            else if (myRefineries.Count == 0 && HasBuiltUnit(myBases, state) && HasBuiltUnit(myBarracks, state))
-                BuildStructure(UnitType.REFINERY, state, actions);
 
             // Flood soldiers (cheap and effective)
             foreach (int barracksNbr in myBarracks)
@@ -112,7 +110,7 @@ namespace PlanningAgent.Tests
         private int? FindAnyEnemy(IGameState state)
         {
             foreach (UnitType ut in new[] { UnitType.SOLDIER, UnitType.ARCHER, UnitType.WORKER,
-                                            UnitType.BASE, UnitType.BARRACKS, UnitType.REFINERY })
+                                            UnitType.BASE, UnitType.BARRACKS })
             {
                 var enemies = state.GetEnemyUnits(ut);
                 if (enemies.Count > 0) return enemies[0];

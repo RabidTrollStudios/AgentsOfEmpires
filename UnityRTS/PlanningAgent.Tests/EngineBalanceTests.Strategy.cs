@@ -141,7 +141,7 @@ namespace PlanningAgent.Tests
             {
                 int? best = null;
                 foreach (UnitType ut in new[] { UnitType.SOLDIER, UnitType.ARCHER, UnitType.WORKER,
-                                                UnitType.BASE, UnitType.BARRACKS, UnitType.REFINERY })
+                                                UnitType.BASE, UnitType.BARRACKS })
                 {
                     foreach (int enemyNbr in state.GetEnemyUnits(ut))
                     {
@@ -155,7 +155,7 @@ namespace PlanningAgent.Tests
         }
 
         /// <summary>
-        /// Greedy economy agent: trains many workers, builds refinery, delays military.
+        /// Greedy economy agent: trains many workers, delays military.
         /// Used to test whether eco-boom is punishable by rushes.
         /// </summary>
         private class GreedyEconomyAgent : PlanningAgentBase
@@ -215,11 +215,9 @@ namespace PlanningAgent.Tests
                     }
                 }
 
-                // Build barracks then refinery
+                // Build barracks
                 if (myBarracks.Count == 0 && HasBuiltUnit(myBases, state))
                     BuildStructure(UnitType.BARRACKS, state, actions);
-                else if (myRefineries.Count == 0 && HasBuiltUnit(myBases, state) && HasBuiltUnit(myBarracks, state))
-                    BuildStructure(UnitType.REFINERY, state, actions);
 
                 // Train soldiers once workers are saturated
                 if (myWorkers.Count >= _maxWorkers)
@@ -293,7 +291,7 @@ namespace PlanningAgent.Tests
             private int? FindAnyEnemy(IGameState state)
             {
                 foreach (UnitType ut in new[] { UnitType.SOLDIER, UnitType.ARCHER, UnitType.WORKER,
-                                                UnitType.BASE, UnitType.BARRACKS, UnitType.REFINERY })
+                                                UnitType.BASE, UnitType.BARRACKS })
                 {
                     foreach (int enemyNbr in state.GetEnemyUnits(ut))
                         return enemyNbr;
@@ -656,7 +654,7 @@ namespace PlanningAgent.Tests
                 (solCount: 2, arcCount: 3, label: "2S + 3A Mix"),
             };
 
-            foreach (UnitType buildingType in new[] { UnitType.BASE, UnitType.BARRACKS, UnitType.REFINERY })
+            foreach (UnitType buildingType in new[] { UnitType.BASE, UnitType.BARRACKS })
             {
                 foreach (var cfg in attackConfigs)
                 {

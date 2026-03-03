@@ -4,7 +4,7 @@ using AgentSDK;
 namespace PlanningAgent
 {
     /// <summary>
-    /// [HARD] Smart targeting with strong macro. 6 workers, builds refinery,
+    /// [HARD] Smart targeting with strong macro. 6 workers,
     /// trains mostly soldiers + some archers. Prioritizes killing enemy
     /// workers first (cripple economy), then bases, then military.
     /// </summary>
@@ -34,8 +34,6 @@ namespace PlanningAgent
 
             if (myBarracks.Count == 0 && HasBuiltUnit(myBases, state))
                 BuildStructure(UnitType.BARRACKS, state, actions);
-            else if (myRefineries.Count == 0 && HasBuiltUnit(myBases, state) && HasBuiltUnit(myBarracks, state))
-                BuildStructure(UnitType.REFINERY, state, actions);
 
             GatherWithIdleWorkers(state, actions);
 
@@ -228,7 +226,7 @@ namespace PlanningAgent
                 int? bestTarget = null;
                 float bestDist = float.MaxValue;
                 foreach (UnitType ut in new[] { UnitType.SOLDIER, UnitType.ARCHER, UnitType.WORKER,
-                                                UnitType.BASE, UnitType.BARRACKS, UnitType.REFINERY })
+                                                UnitType.BASE, UnitType.BARRACKS })
                 {
                     var enemies = state.GetEnemyUnits(ut);
                     foreach (int enemyNbr in enemies)
@@ -257,7 +255,7 @@ namespace PlanningAgent
             int? bestTarget = null;
             float bestDist = float.MaxValue;
             foreach (UnitType ut in new[] { UnitType.SOLDIER, UnitType.ARCHER, UnitType.WORKER,
-                                            UnitType.BASE, UnitType.BARRACKS, UnitType.REFINERY })
+                                            UnitType.BASE, UnitType.BARRACKS })
             {
                 var enemies = state.GetEnemyUnits(ut);
                 foreach (int enemyNbr in enemies)

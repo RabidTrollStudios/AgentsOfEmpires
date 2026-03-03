@@ -4,8 +4,8 @@ using AgentSDK;
 namespace PlanningAgent.Tests
 {
     /// <summary>
-    /// [MEDIUM] Greedy economy: 8 workers, builds refinery for 2x mining,
-    /// then masses soldiers. Waits for 8+ soldiers before attacking.
+    /// [MEDIUM] Greedy economy: 8 workers, masses soldiers.
+    /// Waits for 8+ soldiers before attacking.
     /// Very slow start, but the army is huge if you let it build up.
     /// Strategy to beat: rush before the turtle masses up, or out-economy it.
     /// </summary>
@@ -25,11 +25,9 @@ namespace PlanningAgent.Tests
             TrainWorkers(state, actions, MAX_WORKERS);
             GatherWithIdleWorkers(state, actions);
 
-            // Build order: barracks -> refinery -> mass soldiers
+            // Build barracks, then mass soldiers
             if (myBarracks.Count == 0 && HasBuiltUnit(myBases, state))
                 BuildStructure(UnitType.BARRACKS, state, actions);
-            else if (myRefineries.Count == 0 && HasBuiltUnit(myBases, state) && HasBuiltUnit(myBarracks, state))
-                BuildStructure(UnitType.REFINERY, state, actions);
 
             // Train soldiers
             foreach (int barracksNbr in myBarracks)
@@ -113,7 +111,7 @@ namespace PlanningAgent.Tests
         private int? FindAnyEnemy(IGameState state)
         {
             foreach (UnitType ut in new[] { UnitType.SOLDIER, UnitType.ARCHER, UnitType.WORKER,
-                                            UnitType.BASE, UnitType.BARRACKS, UnitType.REFINERY })
+                                            UnitType.BASE, UnitType.BARRACKS })
             {
                 var enemies = state.GetEnemyUnits(ut);
                 if (enemies.Count > 0) return enemies[0];

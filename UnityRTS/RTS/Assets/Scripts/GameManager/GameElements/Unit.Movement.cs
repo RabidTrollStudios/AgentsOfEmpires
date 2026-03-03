@@ -11,6 +11,10 @@ namespace GameManager.GameElements
 {
 	public partial class Unit
 	{
+		private bool facingRight = true;
+		private bool useAttack2 = false;
+		private float lastAttackNormTime = 0f;
+
 		#region Update Methods
 
 		/// <summary>
@@ -24,6 +28,7 @@ namespace GameManager.GameElements
 			pathUpdateCounter++;
 			HasDebugging = GameManager.Instance.HasUnitDebugging;
 
+			UpdateAnimation();
 			UpdateDebuggingInfo();
 			UpdatePathVisualization();
 			UpdateTargetVisualization();
@@ -115,26 +120,101 @@ namespace GameManager.GameElements
 		}
 
 		/// <summary>
-		/// Map the current velocity to the direction the unit is moving
-		/// South is 0, directions are counter-clockwise
+		/// Drive the animator's "State" integer parameter based on the unit's
+		/// current action and sub-phase so the correct TinySwords animation plays.
+		///
+		/// Worker (Pawn) states:  0=Idle, 1=Run, 2=RunGold, 3=InteractHammer
+		/// Soldier (Warrior) states: 0=Idle, 1=Run, 2=Attack1, 3=Attack2, 4=Guard
 		/// </summary>
-		/// <returns></returns>
-		private void MapVelocityToDirection()
+		private void UpdateAnimation()
 		{
 			if (animator == null)
 				return;
 
-			// TODO: Keep working on this to flesh out all the directions, this math seems wrong....
-			// If south
-			if (Math.Abs(velocity.x - 0) < .1f && Math.Abs(velocity.y - 1) < .1f)
+			int state = 0; // default: Idle
+
+			if (UnitType == UnitType.SOLDIER)
 			{
-				animator.SetInteger("Direction", 0);
+				switch (CurrentAction)
+				{
+					case UnitAction.MOVE:
+						if (path.Count > 0)
+							state = 1; // Run
+						else
+							state = 4; // Guard (arrived at rally point)
+						break;
+
+					case UnitAction.ATTACK:
+						if (path.Count > 0)
+						{
+							state = 1; // Run (chasing)
+							lastAttackNormTime = 0f;
+						}
+						else
+						{
+							state = useAttack2 ? 3 : 2;
+							// Alternate attack animation only after the clip completes one loop
+							var info = animator.GetCurrentAnimatorStateInfo(0);
+							if (lastAttackNormTime < 1.0f && info.normalizedTime >= 1.0f)
+								useAttack2 = !useAttack2;
+							// Reset tracking when normalizedTime drops (new state entered)
+							lastAttackNormTime = info.normalizedTime < lastAttackNormTime
+								? 0f : info.normalizedTime;
+						}
+						break;
+				}
 			}
-			else if (Math.Abs(velocity.x - 0) > .1f && Math.Abs(velocity.y - 1) < .1f)
+			else // WORKER
 			{
-				animator.SetInteger("Direction", 0);
+				switch (CurrentAction)
+				{
+					case UnitAction.MOVE:
+						if (path.Count > 0)
+							state = 1;
+						break;
+
+					case UnitAction.BUILD:
+						if (buildPhase == BuildPhase.TO_POSITION && path.Count > 0)
+							state = 1; // walking to the build site
+						else if (buildPhase == BuildPhase.BUILDING)
+							state = 3; // swinging the hammer
+						break;
+
+					case UnitAction.GATHER:
+						if (gatherPhase == GatherPhase.TO_BASE && path.Count > 0)
+							state = 2; // carrying gold home
+						else if (path.Count > 0)
+							state = 1; // walking to mine or leaving mine
+						break;
+
+					case UnitAction.ATTACK:
+						if (path.Count > 0)
+							state = 1;
+						break;
+				}
 			}
 
+			// Flip sprite to face the direction of horizontal movement.
+			// Sprite faces right by default; flipX mirrors it to face left.
+			if (velocity.x > 0.05f)
+				facingRight = true;
+			else if (velocity.x < -0.05f)
+				facingRight = false;
+
+			// Face toward attack target when stationary in attack range
+			if (CurrentAction == UnitAction.ATTACK && AttackUnit != null && path.Count == 0)
+			{
+				float dx = AttackUnit.CenterGridPosition.x - CenterGridPosition.x;
+				if (dx > 0.01f)
+					facingRight = true;
+				else if (dx < -0.01f)
+					facingRight = false;
+			}
+
+			if (unitSprite != null)
+				unitSprite.flipX = !facingRight;
+
+			animator.SetInteger("State", state);
 		}
 
 		internal void FixedUpdate()

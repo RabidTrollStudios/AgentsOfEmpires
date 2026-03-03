@@ -112,11 +112,6 @@ namespace GameManager
 		#region Static Arrays
 
 		/// <summary>
-		/// Gold mining boost for refineries
-		/// </summary>
-		public static readonly float MINING_BOOST = GameConstants.MINING_BOOST;
-
-		/// <summary>
 		/// Initial damage associated with each unit
 		/// </summary>
 		public static Dictionary<UnitType, float> DAMAGE;
@@ -197,7 +192,7 @@ namespace GameManager
 		/// Base move speed factor applied to GAME_SPEED to get worker speed.
 		/// Worker speed = GAME_SPEED * BASE_MOVE_SPEED.
 		/// </summary>
-		private const float BASE_MOVE_SPEED = 0.1f;
+		private const float BASE_MOVE_SPEED = 0.05f;
 
 		/// <summary>Soldier moves at 2.25x worker speed (slower, armored).</summary>
 		private const float SOLDIER_SPEED_MULTIPLIER = 2.25f;
@@ -281,7 +276,7 @@ namespace GameManager
 			{ UnitType.ARCHER,      5 },
 			{ UnitType.BASE,        2 },
 			{ UnitType.BARRACKS,    3 },
-			{ UnitType.REFINERY,    1 },
+			{ UnitType.ARCHERY,     3 },
 		};
 
         /// <summary>
@@ -302,19 +297,19 @@ namespace GameManager
 		        { UnitType.ARCHER,      SCALAR_MOVING_SPEED * ARCHER_SPEED_MULTIPLIER },
 		        { UnitType.BASE,        0.0f },
 		        { UnitType.BARRACKS,    0.0f },
-		        { UnitType.REFINERY,    0.0f },
+		        { UnitType.ARCHERY,     0.0f },
 	        };
 
 	        SCALAR_MINING_SPEED = GAME_SPEED;
 	        MINING_SPEED = new Dictionary<UnitType, float>()
 	        {
 		        { UnitType.MINE,        0.0f},
-		        { UnitType.WORKER,      SCALAR_MINING_SPEED * MINING_BOOST * 20.0f},
+		        { UnitType.WORKER,      SCALAR_MINING_SPEED * 20.0f},
 		        { UnitType.SOLDIER,     0.0f },
 		        { UnitType.ARCHER,      0.0f },
 		        { UnitType.BASE,        0.0f },
 		        { UnitType.BARRACKS,    0.0f },
-		        { UnitType.REFINERY,    0.0f},
+		        { UnitType.ARCHERY,     0.0f },
 	        };
 
 	        COST = new Dictionary<UnitType, float>(GameConstants.COST);

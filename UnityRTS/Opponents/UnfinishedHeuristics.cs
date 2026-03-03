@@ -1,7 +1,7 @@
 ﻿// -territoryMap: generates influence based on proximety to own structures and mines using linear falloff, bases have higher intensity
 // -enemyMap: generates influence based on proximety to enemy structures using linear falloff, bases have higher intensity
 // -Functions for ideal build positions and unit positions subtract territoryMap influence from enemyMap influence for decision making
-// -Workers use influence to determine where to build bases and refineries
+// -Workers use influence to determine where to build bases
 // -Soldiers and archers use influence to prioritize which enemy unit to attack first
 
 using System.Collections.Generic;
@@ -39,14 +39,12 @@ namespace GameManager
 		public List<int> myArchers { get; set; }
 		public List<int> myBases { get; set; }
 		public List<int> myBarracks { get; set; }
-		public List<int> myRefineries { get; set; }
 
 		public List<int> enemyWorkers { get; set; }
 		public List<int> enemySoldiers { get; set; }
 		public List<int> enemyArchers { get; set; }
 		public List<int> enemyBases { get; set; }
 		public List<int> enemyBarracks { get; set; }
-		public List<int> enemyRefineries { get; set; }
 
 		public List<Vector3Int> buildPositions { get; set; }
 
@@ -62,7 +60,7 @@ namespace GameManager
 		/// <summary>
 		/// Finds all of the possible build locations for a specific UnitType.
 		/// Currently, all structures are 3x3, so these positions can be reused
-		/// for all structures (Base, Barracks, Refinery)
+		/// for all structures (Base, Barracks)
 		/// Run this once at the beginning of the game and have a list of
 		/// locations that you can use to reduce later computation.  When you
 		/// need a location for a build-site, simply pull one off of this list,
@@ -243,16 +241,11 @@ namespace GameManager
 								  * (myBarracks.Count + ((mySoldiers.Count + myArchers.Count) / 10))) + Gold + 1);
 
 			// Gather
-			heuristics[count++] = (Constants.COST[UnitType.BASE] + Constants.COST[UnitType.BARRACKS] + Constants.COST[UnitType.REFINERY])
-								  / (Gold + Constants.COST[UnitType.BASE] + Constants.COST[UnitType.BARRACKS] + Constants.COST[UnitType.REFINERY]);
+			heuristics[count++] = (Constants.COST[UnitType.BASE] + Constants.COST[UnitType.BARRACKS])
+								  / (Gold + Constants.COST[UnitType.BASE] + Constants.COST[UnitType.BARRACKS]);
 
 			// Move
 			heuristics[count++] = 0;
-
-			// Build a Refinery
-			heuristics[count++] = Mathf.Clamp01(Gold / Constants.COST[UnitType.REFINERY])
-								  * (Gold * (myWorkers.Count + mySoldiers.Count + myArchers.Count))
-								  / ((Constants.COST[UnitType.REFINERY] * 20) + Gold + 1);
 
 			// Train a Worker
 			heuristics[count++] = Mathf.Clamp01(myBases.Count) * Mathf.Clamp01(Gold / Constants.COST[UnitType.WORKER])
@@ -288,7 +281,7 @@ namespace GameManager
 					float total = 0;
 					if (Utility.IsValidGridLocation(gridPosition))
 					{
-						if (myBases.Count + myBarracks.Count + myRefineries.Count + mines.Count > 0)
+						if (myBases.Count + myBarracks.Count + mines.Count > 0)
 						{
 							foreach (int unitID in myBases)
 							{
@@ -300,17 +293,12 @@ namespace GameManager
 								Unit unit = GameManager.Instance.GetUnit(unitID);
 								total += 2 / (Vector3.Distance(gridPosition, unit.GridPosition) - 1);
 							}
-							foreach (int unitID in myRefineries)
-							{
-								Unit unit = GameManager.Instance.GetUnit(unitID);
-								total += 1 / (Vector3.Distance(gridPosition, unit.GridPosition) - 1);
-							}
 							foreach (int mineID in mines)
 							{
 								Unit mine = GameManager.Instance.GetUnit(mineID);
 								total += 2 / (Vector3.Distance(gridPosition, mine.GridPosition) - 1);
 							}
-							total /= (myBases.Count * 3) + (myBarracks.Count * 2) + myRefineries.Count + (mines.Count * 2);
+							total /= (myBases.Count * 3) + (myBarracks.Count * 2) + (mines.Count * 2);
 						}
 					}
 					else
@@ -335,7 +323,7 @@ namespace GameManager
 					float total = 0;
 					if (Utility.IsValidGridLocation(gridPosition))
 					{
-						if (enemyBases.Count + enemyBarracks.Count + enemyRefineries.Count > 0)
+						if (enemyBases.Count + enemyBarracks.Count > 0)
 						{
 							foreach (int unitID in enemyBases)
 							{
@@ -347,12 +335,7 @@ namespace GameManager
 								Unit unit = GameManager.Instance.GetUnit(unitID);
 								total += 2 / (Vector3.Distance(gridPosition, unit.GridPosition) - 1);
 							}
-							foreach (int unitID in enemyRefineries)
-							{
-								Unit unit = GameManager.Instance.GetUnit(unitID);
-								total += 1 / (Vector3.Distance(gridPosition, unit.GridPosition) - 1);
-							}
-							total /= (enemyBases.Count * 3) + (enemyBarracks.Count * 2) + enemyRefineries.Count;
+							total /= (enemyBases.Count * 3) + (enemyBarracks.Count * 2);
 						}
 					}
 					else
@@ -408,17 +391,6 @@ namespace GameManager
 						if (toBuild != Vector3Int.zero)
 						{
 							Build(unit, toBuild, UnitType.BARRACKS);
-						}
-					}
-					// If we have enough gold and need a refinery, build a refinery
-					else if (maxIndex == 4)
-					{
-						// Find the best build position for a refinery and build
-						// the refinery there
-						Vector3Int toBuild = FindBestBuildPosition(UnitType.REFINERY);
-						if (toBuild != Vector3Int.zero)
-						{
-							Build(unit, toBuild, UnitType.REFINERY);
 						}
 					}
 					// Otherwise, just mine
@@ -533,12 +505,6 @@ namespace GameManager
 						Attack(soldierUnit, GameManager.Instance.GetUnit(
 							FindBestPlacedUnit(enemyBarracks)));
 					}
-					// If there are enemy refineries, find the one in the best position to be attacked and attack it
-					else if (enemyRefineries.Count > 0 && !tooClose)
-					{
-						Attack(soldierUnit, GameManager.Instance.GetUnit(
-							FindBestPlacedUnit(enemyRefineries)));
-					}
 				}
 			}
 		}
@@ -584,12 +550,6 @@ namespace GameManager
 					{
 						Attack(archerUnit, GameManager.Instance.GetUnit(
 							FindBestPlacedUnit(enemyBarracks)));
-					}
-					// If there are enemy refineries, find the one in the best position to be attacked and attack it
-					else if (enemyRefineries.Count > 0)
-					{
-						Attack(archerUnit, GameManager.Instance.GetUnit(
-							FindBestPlacedUnit(enemyRefineries)));
 					}
 				}
 			}
@@ -645,18 +605,16 @@ namespace GameManager
 			myArchers = new List<int>();
 			myBases = new List<int>();
 			myBarracks = new List<int>();
-			myRefineries = new List<int>();
 
 			enemyWorkers = new List<int>();
 			enemySoldiers = new List<int>();
 			enemyArchers = new List<int>();
 			enemyBases = new List<int>();
 			enemyBarracks = new List<int>();
-			enemyRefineries = new List<int>();
 
 			// Initialize the list of heuristics
 			heuristics = new List<float>();
-			for (int i = 0; i < 9; i++)
+			for (int i = 0; i < 8; i++)
 			{
 				heuristics.Add(0.0f);
 			}
@@ -693,7 +651,6 @@ namespace GameManager
 			myArchers = GameManager.Instance.GetUnitNbrsOfType(UnitType.ARCHER, AgentNbr);
 			myBarracks = GameManager.Instance.GetUnitNbrsOfType(UnitType.BARRACKS, AgentNbr);
 			myBases = GameManager.Instance.GetUnitNbrsOfType(UnitType.BASE, AgentNbr);
-			myRefineries = GameManager.Instance.GetUnitNbrsOfType(UnitType.REFINERY, AgentNbr);
 
 			// Update the enemy agents & unitNbrs
 			List<int> enemyAgentNbrs = GameManager.Instance.GetEnemyAgentNbrs(AgentNbr);
@@ -705,7 +662,6 @@ namespace GameManager
 				enemyArchers = GameManager.Instance.GetUnitNbrsOfType(UnitType.ARCHER, enemyAgentNbr);
 				enemyBarracks = GameManager.Instance.GetUnitNbrsOfType(UnitType.BARRACKS, enemyAgentNbr);
 				enemyBases = GameManager.Instance.GetUnitNbrsOfType(UnitType.BASE, enemyAgentNbr);
-				enemyRefineries = GameManager.Instance.GetUnitNbrsOfType(UnitType.REFINERY, enemyAgentNbr);
 			}
 		}
 
@@ -757,14 +713,12 @@ namespace GameManager
 			myArchers = new List<int>();
 			myBases = new List<int>();
 			myBarracks = new List<int>();
-			myRefineries = new List<int>();
 
 			enemyWorkers = new List<int>();
 			enemySoldiers = new List<int>();
 			enemyArchers = new List<int>();
 			enemyBases = new List<int>();
 			enemyBarracks = new List<int>();
-			enemyRefineries = new List<int>();
 		}
 
 

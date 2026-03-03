@@ -9,8 +9,8 @@ namespace GameManager.Tests.PlayMode
 {
 	/// <summary>
 	/// Play Mode tests for gather continuation and cycle behavior:
-	/// worker cycling back to mine after deposit, handling mine depletion
-	/// mid-cycle, and refinery boost on gold collection.
+	/// worker cycling back to mine after deposit and handling mine depletion
+	/// mid-cycle.
 	/// </summary>
 	[TestFixture]
 	public class GatherContinuationTests : PlayModeTestBase
@@ -20,13 +20,6 @@ namespace GameManager.Tests.PlayMode
 			Unit baseUnit = PlaceUnit(UnitType.BASE, position);
 			baseUnit.IsBuilt = true;
 			return baseUnit;
-		}
-
-		private Unit PlaceBuiltRefinery(Vector3Int position)
-		{
-			Unit refinery = PlaceUnit(UnitType.REFINERY, position);
-			refinery.IsBuilt = true;
-			return refinery;
 		}
 
 		#region Happy Path – Cycle Continuation
