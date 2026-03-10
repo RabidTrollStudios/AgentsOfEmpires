@@ -24,13 +24,13 @@ namespace GameManager.Tests.PlayMode
 		public IEnumerator Barracks_AlreadyTraining_SecondCommandRejected()
 		{
 			Agent agent = GetAgent0();
-			agent.Gold = (int)(Constants.COST[UnitType.SOLDIER] * 4);
+			agent.Gold = (int)(Constants.COST[UnitType.WARRIOR] * 4);
 
 			Unit barracks = PlaceUnit(UnitType.BARRACKS, new Vector3Int(10, 10, 0));
 			barracks.IsBuilt = true;
 
 			// Start first training
-			barracks.StartTraining(new TrainEventArgs(barracks, UnitType.SOLDIER));
+			barracks.StartTraining(new TrainEventArgs(barracks, UnitType.WARRIOR));
 			Assert.AreEqual(UnitAction.TRAIN, barracks.CurrentAction,
 				"BARRACKS should enter TRAIN state for first command");
 
@@ -58,18 +58,18 @@ namespace GameManager.Tests.PlayMode
 		public IEnumerator Base_AlreadyTraining_SecondCommandRejected()
 		{
 			Agent agent = GetAgent0();
-			agent.Gold = (int)(Constants.COST[UnitType.WORKER] * 4);
+			agent.Gold = (int)(Constants.COST[UnitType.PAWN] * 4);
 
 			Unit baseUnit = PlaceUnit(UnitType.BASE, new Vector3Int(10, 10, 0));
 			baseUnit.IsBuilt = true;
 
-			baseUnit.StartTraining(new TrainEventArgs(baseUnit, UnitType.WORKER));
+			baseUnit.StartTraining(new TrainEventArgs(baseUnit, UnitType.PAWN));
 			Assert.AreEqual(UnitAction.TRAIN, baseUnit.CurrentAction);
 
 			int goldAfterFirstTrain = agent.Gold;
 
 			// Second train command while busy
-			baseUnit.StartTraining(new TrainEventArgs(baseUnit, UnitType.WORKER));
+			baseUnit.StartTraining(new TrainEventArgs(baseUnit, UnitType.PAWN));
 
 			Assert.AreEqual(UnitAction.TRAIN, baseUnit.CurrentAction,
 				"BASE should remain TRAIN, not start a second training");
@@ -91,12 +91,12 @@ namespace GameManager.Tests.PlayMode
 		public IEnumerator Barracks_AfterFirstTrainComplete_AcceptsSecondTrain()
 		{
 			Agent agent = GetAgent0();
-			agent.Gold = (int)(Constants.COST[UnitType.SOLDIER] * 4);
+			agent.Gold = (int)(Constants.COST[UnitType.WARRIOR] * 4);
 
 			Unit barracks = PlaceUnit(UnitType.BARRACKS, new Vector3Int(10, 10, 0));
 			barracks.IsBuilt = true;
 
-			barracks.StartTraining(new TrainEventArgs(barracks, UnitType.SOLDIER));
+			barracks.StartTraining(new TrainEventArgs(barracks, UnitType.WARRIOR));
 			Assert.AreEqual(UnitAction.TRAIN, barracks.CurrentAction);
 
 			// Wait for first training to complete
@@ -107,7 +107,7 @@ namespace GameManager.Tests.PlayMode
 
 			// Now issue second train command
 			int goldBeforeSecond = agent.Gold;
-			barracks.StartTraining(new TrainEventArgs(barracks, UnitType.SOLDIER));
+			barracks.StartTraining(new TrainEventArgs(barracks, UnitType.WARRIOR));
 
 			Assert.AreEqual(UnitAction.TRAIN, barracks.CurrentAction,
 				"BARRACKS should accept second train command after first training completes");
@@ -131,7 +131,7 @@ namespace GameManager.Tests.PlayMode
 			Unit barracks = PlaceUnit(UnitType.BARRACKS, new Vector3Int(10, 10, 0));
 			// Do NOT set IsBuilt = true
 
-			barracks.StartTraining(new TrainEventArgs(barracks, UnitType.SOLDIER));
+			barracks.StartTraining(new TrainEventArgs(barracks, UnitType.WARRIOR));
 
 			Assert.AreNotEqual(UnitAction.TRAIN, barracks.CurrentAction,
 				"Unbuilt BARRACKS should not start training");

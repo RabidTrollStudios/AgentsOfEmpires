@@ -11,7 +11,7 @@ namespace PlanningAgent.Tests
 
         /// <summary>
         /// Rushes military ASAP: builds barracks immediately, trains one unit type,
-        /// attacks with all military when threshold reached. Minimal economy (2 workers).
+        /// attacks with all military when threshold reached. Minimal economy (2 pawns).
         /// </summary>
         private class RushAgent : PlanningAgentBase
         {
@@ -36,9 +36,9 @@ namespace PlanningAgent.Tests
                 // Build base if none exists
                 if (myBases.Count == 0)
                 {
-                    foreach (int worker in myWorkers)
+                    foreach (int pawn in myPawns)
                     {
-                        var info = state.GetUnit(worker);
+                        var info = state.GetUnit(pawn);
                         if (info.HasValue && info.Value.CurrentAction == UnitAction.IDLE
                             && state.MyGold >= GameConstants.COST[UnitType.BASE])
                         {
@@ -46,7 +46,7 @@ namespace PlanningAgent.Tests
                             {
                                 if (state.IsBoundedAreaBuildable(UnitType.BASE, pos))
                                 {
-                                    actions.Build(worker, pos, UnitType.BASE);
+                                    actions.Build(pawn, pos, UnitType.BASE);
                                     return;
                                 }
                             }
@@ -57,25 +57,25 @@ namespace PlanningAgent.Tests
 
                 int builderNbr = -1;
 
-                // Train up to 2 workers
+                // Train up to 2 pawns
                 foreach (int baseNbr in myBases)
                 {
                     var info = state.GetUnit(baseNbr);
                     if (info.HasValue && info.Value.IsBuilt
                         && info.Value.CurrentAction == UnitAction.IDLE
-                        && state.MyGold >= GameConstants.COST[UnitType.WORKER]
-                        && myWorkers.Count < 2)
+                        && state.MyGold >= GameConstants.COST[UnitType.PAWN]
+                        && myPawns.Count < 2)
                     {
-                        actions.Train(baseNbr, UnitType.WORKER);
+                        actions.Train(baseNbr, UnitType.PAWN);
                     }
                 }
 
                 // Build barracks ASAP
                 if (myBarracks.Count == 0 && HasBuiltUnit(myBases, state))
                 {
-                    foreach (int worker in myWorkers)
+                    foreach (int pawn in myPawns)
                     {
-                        var info = state.GetUnit(worker);
+                        var info = state.GetUnit(pawn);
                         if (info.HasValue && info.Value.CurrentAction == UnitAction.IDLE
                             && state.MyGold >= GameConstants.COST[UnitType.BARRACKS])
                         {
@@ -83,8 +83,8 @@ namespace PlanningAgent.Tests
                             {
                                 if (state.IsBoundedAreaBuildable(UnitType.BARRACKS, pos))
                                 {
-                                    actions.Build(worker, pos, UnitType.BARRACKS);
-                                    builderNbr = worker;
+                                    actions.Build(pawn, pos, UnitType.BARRACKS);
+                                    builderNbr = pawn;
                                     break;
                                 }
                             }
@@ -106,7 +106,7 @@ namespace PlanningAgent.Tests
                 }
 
                 // Attack when threshold reached
-                var military = _trainType == UnitType.SOLDIER ? mySoldiers : myArchers;
+                var military = _trainType == UnitType.WARRIOR ? myWarriors : myArchers;
                 if (military.Count >= _attackThreshold)
                     _attacking = true;
 
@@ -124,15 +124,15 @@ namespace PlanningAgent.Tests
                     }
                 }
 
-                // Gather with non-builder workers
+                // Gather with non-builder pawns
                 if (mainBaseNbr >= 0 && mainMineNbr >= 0)
                 {
-                    foreach (int worker in myWorkers)
+                    foreach (int pawn in myPawns)
                     {
-                        if (worker == builderNbr) continue;
-                        var info = state.GetUnit(worker);
+                        if (pawn == builderNbr) continue;
+                        var info = state.GetUnit(pawn);
                         if (info.HasValue && info.Value.CurrentAction == UnitAction.IDLE)
-                            actions.Gather(worker, mainMineNbr, mainBaseNbr);
+                            actions.Gather(pawn, mainMineNbr, mainBaseNbr);
                     }
                 }
             }
@@ -140,7 +140,7 @@ namespace PlanningAgent.Tests
             private int? FindClosestEnemy(IGameState state)
             {
                 int? best = null;
-                foreach (UnitType ut in new[] { UnitType.SOLDIER, UnitType.ARCHER, UnitType.WORKER,
+                foreach (UnitType ut in new[] { UnitType.WARRIOR, UnitType.ARCHER, UnitType.PAWN,
                                                 UnitType.BASE, UnitType.BARRACKS })
                 {
                     foreach (int enemyNbr in state.GetEnemyUnits(ut))
@@ -155,19 +155,19 @@ namespace PlanningAgent.Tests
         }
 
         /// <summary>
-        /// Greedy economy agent: trains many workers, delays military.
+        /// Greedy economy agent: trains many pawns, delays military.
         /// Used to test whether eco-boom is punishable by rushes.
         /// </summary>
         private class GreedyEconomyAgent : PlanningAgentBase
         {
-            private readonly int _maxWorkers;
+            private readonly int _maxPawns;
             private readonly int _militaryThreshold;
             private int _builderNbr;
             private bool _attacking;
 
-            public GreedyEconomyAgent(int maxWorkers, int militaryThreshold)
+            public GreedyEconomyAgent(int maxPawns, int militaryThreshold)
             {
-                _maxWorkers = maxWorkers;
+                _maxPawns = maxPawns;
                 _militaryThreshold = militaryThreshold;
             }
 
@@ -183,9 +183,9 @@ namespace PlanningAgent.Tests
                 // Build base if none exists
                 if (myBases.Count == 0)
                 {
-                    foreach (int worker in myWorkers)
+                    foreach (int pawn in myPawns)
                     {
-                        var info = state.GetUnit(worker);
+                        var info = state.GetUnit(pawn);
                         if (info.HasValue && info.Value.CurrentAction == UnitAction.IDLE
                             && state.MyGold >= GameConstants.COST[UnitType.BASE])
                         {
@@ -193,7 +193,7 @@ namespace PlanningAgent.Tests
                             {
                                 if (state.IsBoundedAreaBuildable(UnitType.BASE, pos))
                                 {
-                                    actions.Build(worker, pos, UnitType.BASE);
+                                    actions.Build(pawn, pos, UnitType.BASE);
                                     return;
                                 }
                             }
@@ -202,16 +202,16 @@ namespace PlanningAgent.Tests
                     return;
                 }
 
-                // Train workers up to cap
+                // Train pawns up to cap
                 foreach (int baseNbr in myBases)
                 {
                     var info = state.GetUnit(baseNbr);
                     if (info.HasValue && info.Value.IsBuilt
                         && info.Value.CurrentAction == UnitAction.IDLE
-                        && state.MyGold >= GameConstants.COST[UnitType.WORKER]
-                        && myWorkers.Count < _maxWorkers)
+                        && state.MyGold >= GameConstants.COST[UnitType.PAWN]
+                        && myPawns.Count < _maxPawns)
                     {
-                        actions.Train(baseNbr, UnitType.WORKER);
+                        actions.Train(baseNbr, UnitType.PAWN);
                     }
                 }
 
@@ -219,28 +219,28 @@ namespace PlanningAgent.Tests
                 if (myBarracks.Count == 0 && HasBuiltUnit(myBases, state))
                     BuildStructure(UnitType.BARRACKS, state, actions);
 
-                // Train soldiers once workers are saturated
-                if (myWorkers.Count >= _maxWorkers)
+                // Train warriors once pawns are saturated
+                if (myPawns.Count >= _maxPawns)
                 {
                     foreach (int barracksNbr in myBarracks)
                     {
                         var info = state.GetUnit(barracksNbr);
                         if (info.HasValue && info.Value.IsBuilt
                             && info.Value.CurrentAction == UnitAction.IDLE
-                            && state.MyGold >= GameConstants.COST[UnitType.SOLDIER])
+                            && state.MyGold >= GameConstants.COST[UnitType.WARRIOR])
                         {
-                            actions.Train(barracksNbr, UnitType.SOLDIER);
+                            actions.Train(barracksNbr, UnitType.WARRIOR);
                         }
                     }
                 }
 
                 // Attack when military threshold reached
-                if (mySoldiers.Count + myArchers.Count >= _militaryThreshold)
+                if (myWarriors.Count + myArchers.Count >= _militaryThreshold)
                     _attacking = true;
 
                 if (_attacking)
                 {
-                    foreach (var unitList in new[] { mySoldiers, myArchers })
+                    foreach (var unitList in new[] { myWarriors, myArchers })
                     {
                         foreach (int unitNbr in unitList)
                         {
@@ -257,21 +257,21 @@ namespace PlanningAgent.Tests
                 // Gather
                 if (mainBaseNbr >= 0 && mainMineNbr >= 0)
                 {
-                    foreach (int worker in myWorkers)
+                    foreach (int pawn in myPawns)
                     {
-                        if (worker == _builderNbr) continue;
-                        var info = state.GetUnit(worker);
+                        if (pawn == _builderNbr) continue;
+                        var info = state.GetUnit(pawn);
                         if (info.HasValue && info.Value.CurrentAction == UnitAction.IDLE)
-                            actions.Gather(worker, mainMineNbr, mainBaseNbr);
+                            actions.Gather(pawn, mainMineNbr, mainBaseNbr);
                     }
                 }
             }
 
             private void BuildStructure(UnitType type, IGameState state, IAgentActions actions)
             {
-                foreach (int worker in myWorkers)
+                foreach (int pawn in myPawns)
                 {
-                    var info = state.GetUnit(worker);
+                    var info = state.GetUnit(pawn);
                     if (info.HasValue && info.Value.CurrentAction == UnitAction.IDLE
                         && state.MyGold >= GameConstants.COST[type])
                     {
@@ -279,8 +279,8 @@ namespace PlanningAgent.Tests
                         {
                             if (state.IsBoundedAreaBuildable(type, pos))
                             {
-                                actions.Build(worker, pos, type);
-                                _builderNbr = worker;
+                                actions.Build(pawn, pos, type);
+                                _builderNbr = pawn;
                                 return;
                             }
                         }
@@ -290,7 +290,7 @@ namespace PlanningAgent.Tests
 
             private int? FindAnyEnemy(IGameState state)
             {
-                foreach (UnitType ut in new[] { UnitType.SOLDIER, UnitType.ARCHER, UnitType.WORKER,
+                foreach (UnitType ut in new[] { UnitType.WARRIOR, UnitType.ARCHER, UnitType.PAWN,
                                                 UnitType.BASE, UnitType.BARRACKS })
                 {
                     foreach (int enemyNbr in state.GetEnemyUnits(ut))
@@ -301,8 +301,8 @@ namespace PlanningAgent.Tests
         }
 
         /// <summary>
-        /// Simple agent that just gathers with all workers. Used for mine depletion tests
-        /// where workers are pre-placed and we want no training/building overhead.
+        /// Simple agent that just gathers with all pawns. Used for mine depletion tests
+        /// where pawns are pre-placed and we want no training/building overhead.
         /// </summary>
         private class PureGatherAgent : PlanningAgentBase
         {
@@ -317,9 +317,9 @@ namespace PlanningAgent.Tests
                 // Build base if none exists
                 if (myBases.Count == 0)
                 {
-                    foreach (int worker in myWorkers)
+                    foreach (int pawn in myPawns)
                     {
-                        var info = state.GetUnit(worker);
+                        var info = state.GetUnit(pawn);
                         if (info.HasValue && info.Value.CurrentAction == UnitAction.IDLE
                             && state.MyGold >= GameConstants.COST[UnitType.BASE])
                         {
@@ -327,7 +327,7 @@ namespace PlanningAgent.Tests
                             {
                                 if (state.IsBoundedAreaBuildable(UnitType.BASE, pos))
                                 {
-                                    actions.Build(worker, pos, UnitType.BASE);
+                                    actions.Build(pawn, pos, UnitType.BASE);
                                     return;
                                 }
                             }
@@ -340,11 +340,11 @@ namespace PlanningAgent.Tests
                 var mineInfo = state.GetUnit(mainMineNbr);
                 if (!mineInfo.HasValue || mineInfo.Value.Health <= 0) return;
 
-                foreach (int worker in myWorkers)
+                foreach (int pawn in myPawns)
                 {
-                    var info = state.GetUnit(worker);
+                    var info = state.GetUnit(pawn);
                     if (info.HasValue && info.Value.CurrentAction == UnitAction.IDLE)
-                        actions.Gather(worker, mainMineNbr, mainBaseNbr);
+                        actions.Gather(pawn, mainMineNbr, mainBaseNbr);
                 }
             }
         }
@@ -354,31 +354,31 @@ namespace PlanningAgent.Tests
         #region Mixed Army Compositions
 
         [Fact]
-        public void MixedArmy_VsPureSoldiers()
+        public void MixedArmy_VsPureWarriors()
         {
             var sb = new StringBuilder();
-            sb.AppendLine("=== MIXED ARMY vs PURE SOLDIERS (Focus Fire, Equal Gold) ===");
-            sb.AppendLine("  Gold | Mix (Sol+Arc)    | Pure Soldiers | Winner | Survivors | HP%    | Ticks");
+            sb.AppendLine("=== MIXED ARMY vs PURE WARRIORS (Focus Fire, Equal Gold) ===");
+            sb.AppendLine("  Gold | Mix (Sol+Arc)    | Pure Warriors | Winner | Survivors | HP%    | Ticks");
             sb.AppendLine("  -----+------------------+---------------+--------+-----------+--------+------");
 
             foreach (int gold in new[] { 400, 600, 800, 1000, 1200, 1600 })
             {
-                // Mixed: split gold roughly 50/50 between soldiers and archers
-                int mixSoldiers = (gold / 2) / (int)GameConstants.COST[UnitType.SOLDIER];
+                // Mixed: split gold roughly 50/50 between warriors and archers
+                int mixWarriors = (gold / 2) / (int)GameConstants.COST[UnitType.WARRIOR];
                 int mixArchers = (gold / 2) / (int)GameConstants.COST[UnitType.ARCHER];
-                int pureSoldiers = gold / (int)GameConstants.COST[UnitType.SOLDIER];
+                int pureWarriors = gold / (int)GameConstants.COST[UnitType.WARRIOR];
 
                 var result = RunCombatWithAgents(
-                    agent0SoldierCount: mixSoldiers, agent0ArcherCount: mixArchers,
-                    agent1SoldierCount: pureSoldiers, agent1ArcherCount: 0,
+                    agent0WarriorCount: mixWarriors, agent0ArcherCount: mixArchers,
+                    agent1WarriorCount: pureWarriors, agent1ArcherCount: 0,
                     new FocusFireAgent(), new FocusFireAgent());
 
                 string winner = result.WinnerAgent == 0 ? "Mixed" :
-                                result.WinnerAgent == 1 ? "Soldier" : "Draw";
+                                result.WinnerAgent == 1 ? "Warrior" : "Draw";
                 int survivors = result.WinnerAgent == 0 ? result.Agent0Units : result.Agent1Units;
                 float hpPct = result.WinnerAgent == 0 ? result.Agent0HpPercent : result.Agent1HpPercent;
 
-                sb.AppendLine($"  {gold,4} | {mixSoldiers}S + {mixArchers}A ({mixSoldiers * 100 + mixArchers * 80}g) | {pureSoldiers,13} | {winner,-6} | {survivors,9} | {hpPct,5:F1}% | {result.TicksElapsed}");
+                sb.AppendLine($"  {gold,4} | {mixWarriors}S + {mixArchers}A ({mixWarriors * 100 + mixArchers * 80}g) | {pureWarriors,13} | {winner,-6} | {survivors,9} | {hpPct,5:F1}% | {result.TicksElapsed}");
             }
 
             _output.WriteLine(sb.ToString());
@@ -394,13 +394,13 @@ namespace PlanningAgent.Tests
 
             foreach (int gold in new[] { 400, 600, 800, 1000, 1200, 1600 })
             {
-                int mixSoldiers = (gold / 2) / (int)GameConstants.COST[UnitType.SOLDIER];
+                int mixWarriors = (gold / 2) / (int)GameConstants.COST[UnitType.WARRIOR];
                 int mixArchers = (gold / 2) / (int)GameConstants.COST[UnitType.ARCHER];
                 int pureArchers = gold / (int)GameConstants.COST[UnitType.ARCHER];
 
                 var result = RunCombatWithAgents(
-                    agent0SoldierCount: mixSoldiers, agent0ArcherCount: mixArchers,
-                    agent1SoldierCount: 0, agent1ArcherCount: pureArchers,
+                    agent0WarriorCount: mixWarriors, agent0ArcherCount: mixArchers,
+                    agent1WarriorCount: 0, agent1ArcherCount: pureArchers,
                     new FocusFireAgent(), new FocusFireAgent());
 
                 string winner = result.WinnerAgent == 0 ? "Mixed" :
@@ -408,7 +408,7 @@ namespace PlanningAgent.Tests
                 int survivors = result.WinnerAgent == 0 ? result.Agent0Units : result.Agent1Units;
                 float hpPct = result.WinnerAgent == 0 ? result.Agent0HpPercent : result.Agent1HpPercent;
 
-                sb.AppendLine($"  {gold,4} | {mixSoldiers}S + {mixArchers}A ({mixSoldiers * 100 + mixArchers * 80}g) | {pureArchers,12} | {winner,-6} | {survivors,9} | {hpPct,5:F1}% | {result.TicksElapsed}");
+                sb.AppendLine($"  {gold,4} | {mixWarriors}S + {mixArchers}A ({mixWarriors * 100 + mixArchers * 80}g) | {pureArchers,12} | {winner,-6} | {survivors,9} | {hpPct,5:F1}% | {result.TicksElapsed}");
             }
 
             _output.WriteLine(sb.ToString());
@@ -418,23 +418,23 @@ namespace PlanningAgent.Tests
         public void MixedArmy_OptimalRatio()
         {
             var sb = new StringBuilder();
-            sb.AppendLine("=== MIXED ARMY OPTIMAL RATIO: 1000g budget, vary soldier:archer split ===");
-            sb.AppendLine("  vs 10 Pure Soldiers (1000g):");
-            sb.AppendLine("  Soldiers | Archers | Gold Used | Winner | Survivors | HP%    | Ticks");
+            sb.AppendLine("=== MIXED ARMY OPTIMAL RATIO: 1000g budget, vary warrior:archer split ===");
+            sb.AppendLine("  vs 10 Pure Warriors (1000g):");
+            sb.AppendLine("  Warriors | Archers | Gold Used | Winner | Survivors | HP%    | Ticks");
             sb.AppendLine("  ---------+---------+-----------+--------+-----------+--------+------");
 
-            // Test various ratios against pure soldiers
+            // Test various ratios against pure warriors
             var ratios = new[] { (10, 0), (8, 2), (6, 5), (5, 6), (4, 7), (2, 10), (0, 12) };
             foreach (var (sol, arc) in ratios)
             {
-                int goldUsed = sol * (int)GameConstants.COST[UnitType.SOLDIER] + arc * (int)GameConstants.COST[UnitType.ARCHER];
+                int goldUsed = sol * (int)GameConstants.COST[UnitType.WARRIOR] + arc * (int)GameConstants.COST[UnitType.ARCHER];
                 var result = RunCombatWithAgents(
-                    agent0SoldierCount: sol, agent0ArcherCount: arc,
-                    agent1SoldierCount: 10, agent1ArcherCount: 0,
+                    agent0WarriorCount: sol, agent0ArcherCount: arc,
+                    agent1WarriorCount: 10, agent1ArcherCount: 0,
                     new FocusFireAgent(), new FocusFireAgent());
 
                 string winner = result.WinnerAgent == 0 ? "Mix" :
-                                result.WinnerAgent == 1 ? "Soldier" : "Draw";
+                                result.WinnerAgent == 1 ? "Warrior" : "Draw";
                 int survivors = result.WinnerAgent == 0 ? result.Agent0Units : result.Agent1Units;
                 float hpPct = result.WinnerAgent == 0 ? result.Agent0HpPercent : result.Agent1HpPercent;
 
@@ -443,15 +443,15 @@ namespace PlanningAgent.Tests
 
             sb.AppendLine();
             sb.AppendLine("  vs 12 Pure Archers (960g):");
-            sb.AppendLine("  Soldiers | Archers | Gold Used | Winner | Survivors | HP%    | Ticks");
+            sb.AppendLine("  Warriors | Archers | Gold Used | Winner | Survivors | HP%    | Ticks");
             sb.AppendLine("  ---------+---------+-----------+--------+-----------+--------+------");
 
             foreach (var (sol, arc) in ratios)
             {
-                int goldUsed = sol * (int)GameConstants.COST[UnitType.SOLDIER] + arc * (int)GameConstants.COST[UnitType.ARCHER];
+                int goldUsed = sol * (int)GameConstants.COST[UnitType.WARRIOR] + arc * (int)GameConstants.COST[UnitType.ARCHER];
                 var result = RunCombatWithAgents(
-                    agent0SoldierCount: sol, agent0ArcherCount: arc,
-                    agent1SoldierCount: 0, agent1ArcherCount: 12,
+                    agent0WarriorCount: sol, agent0ArcherCount: arc,
+                    agent1WarriorCount: 0, agent1ArcherCount: 12,
                     new FocusFireAgent(), new FocusFireAgent());
 
                 string winner = result.WinnerAgent == 0 ? "Mix" :
@@ -470,12 +470,12 @@ namespace PlanningAgent.Tests
         #region Rush Timing
 
         [Fact]
-        public void RushTiming_SoldierRushVsEconomy()
+        public void RushTiming_WarriorRushVsEconomy()
         {
             var sb = new StringBuilder();
-            sb.AppendLine("=== RUSH TIMING: Soldier Rush (2-worker) vs Greedy Economy ===");
-            sb.AppendLine("  Testing rush with attack thresholds of 2, 3, 4 soldiers");
-            sb.AppendLine("  vs eco-boom with 5 workers (delays military)");
+            sb.AppendLine("=== RUSH TIMING: Warrior Rush (2-pawn) vs Greedy Economy ===");
+            sb.AppendLine("  Testing rush with attack thresholds of 2, 3, 4 warriors");
+            sb.AppendLine("  vs eco-boom with 5 pawns (delays military)");
             sb.AppendLine();
 
             foreach (int rushThreshold in new[] { 2, 3, 4 })
@@ -485,12 +485,12 @@ namespace PlanningAgent.Tests
                     .WithGold(0, 1000)
                     .WithGold(1, 1000)
                     // Agent 0: rusher
-                    .WithUnit(0, UnitType.WORKER, new Position(2, 5))
+                    .WithUnit(0, UnitType.PAWN, new Position(2, 5))
                     .WithMine(new Position(8, 5), health: 50000)
                     // Agent 1: eco player on the other side
-                    .WithUnit(1, UnitType.WORKER, new Position(30, 5))
+                    .WithUnit(1, UnitType.PAWN, new Position(30, 5))
                     .WithMine(new Position(24, 5), health: 50000)
-                    .WithAgent(0, new RushAgent(UnitType.SOLDIER, rushThreshold))
+                    .WithAgent(0, new RushAgent(UnitType.WARRIOR, rushThreshold))
                     .WithAgent(1, new GreedyEconomyAgent(5, 3))
                     .Build();
 
@@ -504,20 +504,20 @@ namespace PlanningAgent.Tests
 
                 int base0 = game.GetUnitsByType(0, UnitType.BASE).Count;
                 int base1 = game.GetUnitsByType(1, UnitType.BASE).Count;
-                int sol0 = game.GetUnitsByType(0, UnitType.SOLDIER).Count;
-                int sol1 = game.GetUnitsByType(1, UnitType.SOLDIER).Count;
+                int sol0 = game.GetUnitsByType(0, UnitType.WARRIOR).Count;
+                int sol1 = game.GetUnitsByType(1, UnitType.WARRIOR).Count;
                 int arc1 = game.GetUnitsByType(1, UnitType.ARCHER).Count;
-                int workers0 = game.GetUnitsByType(0, UnitType.WORKER).Count;
-                int workers1 = game.GetUnitsByType(1, UnitType.WORKER).Count;
+                int pawns0 = game.GetUnitsByType(0, UnitType.PAWN).Count;
+                int pawns1 = game.GetUnitsByType(1, UnitType.PAWN).Count;
 
                 int total0 = CountAllUnits(game, 0);
                 int total1 = CountAllUnits(game, 1);
                 string winner = total0 == 0 ? "Eco" : total1 == 0 ? "Rush" : "Timeout";
 
-                sb.AppendLine($"  Rush@{rushThreshold} soldiers:");
+                sb.AppendLine($"  Rush@{rushThreshold} warriors:");
                 sb.AppendLine($"    Result: {winner} wins @ tick {game.CurrentTick}");
-                sb.AppendLine($"    Rusher:  {sol0} soldiers, {workers0} workers, base={base0}, gold={game.GetGold(0)}");
-                sb.AppendLine($"    Eco:     {sol1} soldiers, {arc1} archers, {workers1} workers, base={base1}, gold={game.GetGold(1)}");
+                sb.AppendLine($"    Rusher:  {sol0} warriors, {pawns0} pawns, base={base0}, gold={game.GetGold(0)}");
+                sb.AppendLine($"    Eco:     {sol1} warriors, {arc1} archers, {pawns1} pawns, base={base1}, gold={game.GetGold(1)}");
                 sb.AppendLine();
             }
 
@@ -528,7 +528,7 @@ namespace PlanningAgent.Tests
         public void RushTiming_ArcherRushVsEconomy()
         {
             var sb = new StringBuilder();
-            sb.AppendLine("=== RUSH TIMING: Archer Rush (2-worker) vs Greedy Economy ===");
+            sb.AppendLine("=== RUSH TIMING: Archer Rush (2-pawn) vs Greedy Economy ===");
             sb.AppendLine();
 
             foreach (int rushThreshold in new[] { 2, 3, 4 })
@@ -537,9 +537,9 @@ namespace PlanningAgent.Tests
                     .WithMapSize(40, 30)
                     .WithGold(0, 1000)
                     .WithGold(1, 1000)
-                    .WithUnit(0, UnitType.WORKER, new Position(2, 5))
+                    .WithUnit(0, UnitType.PAWN, new Position(2, 5))
                     .WithMine(new Position(8, 5), health: 50000)
-                    .WithUnit(1, UnitType.WORKER, new Position(30, 5))
+                    .WithUnit(1, UnitType.PAWN, new Position(30, 5))
                     .WithMine(new Position(24, 5), health: 50000)
                     .WithAgent(0, new RushAgent(UnitType.ARCHER, rushThreshold))
                     .WithAgent(1, new GreedyEconomyAgent(5, 3))
@@ -555,10 +555,10 @@ namespace PlanningAgent.Tests
                 int base0 = game.GetUnitsByType(0, UnitType.BASE).Count;
                 int base1 = game.GetUnitsByType(1, UnitType.BASE).Count;
                 int arc0 = game.GetUnitsByType(0, UnitType.ARCHER).Count;
-                int sol1 = game.GetUnitsByType(1, UnitType.SOLDIER).Count;
+                int sol1 = game.GetUnitsByType(1, UnitType.WARRIOR).Count;
                 int arc1 = game.GetUnitsByType(1, UnitType.ARCHER).Count;
-                int workers0 = game.GetUnitsByType(0, UnitType.WORKER).Count;
-                int workers1 = game.GetUnitsByType(1, UnitType.WORKER).Count;
+                int pawns0 = game.GetUnitsByType(0, UnitType.PAWN).Count;
+                int pawns1 = game.GetUnitsByType(1, UnitType.PAWN).Count;
 
                 int total0 = CountAllUnits(game, 0);
                 int total1 = CountAllUnits(game, 1);
@@ -566,8 +566,8 @@ namespace PlanningAgent.Tests
 
                 sb.AppendLine($"  Rush@{rushThreshold} archers:");
                 sb.AppendLine($"    Result: {winner} wins @ tick {game.CurrentTick}");
-                sb.AppendLine($"    Rusher:  {arc0} archers, {workers0} workers, base={base0}, gold={game.GetGold(0)}");
-                sb.AppendLine($"    Eco:     {sol1} soldiers, {arc1} archers, {workers1} workers, base={base1}, gold={game.GetGold(1)}");
+                sb.AppendLine($"    Rusher:  {arc0} archers, {pawns0} pawns, base={base0}, gold={game.GetGold(0)}");
+                sb.AppendLine($"    Eco:     {sol1} warriors, {arc1} archers, {pawns1} pawns, base={base1}, gold={game.GetGold(1)}");
                 sb.AppendLine();
             }
 
@@ -579,27 +579,27 @@ namespace PlanningAgent.Tests
         #region Economy vs Military Tradeoff
 
         [Fact]
-        public void EcoVsMilitary_WorkerCountImpact()
+        public void EcoVsMilitary_PawnCountImpact()
         {
             var sb = new StringBuilder();
-            sb.AppendLine("=== ECONOMY vs MILITARY: Varying eco worker count vs 2-worker soldier rush ===");
-            sb.AppendLine("  Eco invests in workers before military; rusher goes straight to barracks");
+            sb.AppendLine("=== ECONOMY vs MILITARY: Varying eco pawn count vs 2-pawn warrior rush ===");
+            sb.AppendLine("  Eco invests in pawns before military; rusher goes straight to barracks");
             sb.AppendLine();
 
-            foreach (int ecoWorkers in new[] { 3, 5, 8 })
+            foreach (int ecoPawns in new[] { 3, 5, 8 })
             {
                 var game = new SimGameBuilder()
                     .WithMapSize(40, 30)
                     .WithGold(0, 1000)
                     .WithGold(1, 1000)
                     // Rusher (agent 0)
-                    .WithUnit(0, UnitType.WORKER, new Position(2, 5))
+                    .WithUnit(0, UnitType.PAWN, new Position(2, 5))
                     .WithMine(new Position(8, 5), health: 50000)
                     // Eco player (agent 1)
-                    .WithUnit(1, UnitType.WORKER, new Position(30, 5))
+                    .WithUnit(1, UnitType.PAWN, new Position(30, 5))
                     .WithMine(new Position(24, 5), health: 50000)
-                    .WithAgent(0, new RushAgent(UnitType.SOLDIER, 3))
-                    .WithAgent(1, new GreedyEconomyAgent(ecoWorkers, 3))
+                    .WithAgent(0, new RushAgent(UnitType.WARRIOR, 3))
+                    .WithAgent(1, new GreedyEconomyAgent(ecoPawns, 3))
                     .Build();
 
                 game.InitializeMatch();
@@ -611,18 +611,18 @@ namespace PlanningAgent.Tests
 
                 int base0 = game.GetUnitsByType(0, UnitType.BASE).Count;
                 int base1 = game.GetUnitsByType(1, UnitType.BASE).Count;
-                int sol0 = game.GetUnitsByType(0, UnitType.SOLDIER).Count;
-                int sol1 = game.GetUnitsByType(1, UnitType.SOLDIER).Count;
-                int workers1 = game.GetUnitsByType(1, UnitType.WORKER).Count;
+                int sol0 = game.GetUnitsByType(0, UnitType.WARRIOR).Count;
+                int sol1 = game.GetUnitsByType(1, UnitType.WARRIOR).Count;
+                int pawns1 = game.GetUnitsByType(1, UnitType.PAWN).Count;
 
                 int total0 = CountAllUnits(game, 0);
                 int total1 = CountAllUnits(game, 1);
                 string winner = total0 == 0 ? "Eco" : total1 == 0 ? "Rush" : "Timeout";
 
-                sb.AppendLine($"  Eco with {ecoWorkers} workers vs 3-soldier rush:");
+                sb.AppendLine($"  Eco with {ecoPawns} pawns vs 3-warrior rush:");
                 sb.AppendLine($"    Result: {winner} wins @ tick {game.CurrentTick}");
-                sb.AppendLine($"    Rusher:  {sol0} soldiers, base={base0}, gold={game.GetGold(0)}");
-                sb.AppendLine($"    Eco:     {sol1} soldiers, {workers1} workers, base={base1}, gold={game.GetGold(1)}");
+                sb.AppendLine($"    Rusher:  {sol0} warriors, base={base0}, gold={game.GetGold(0)}");
+                sb.AppendLine($"    Eco:     {sol1} warriors, {pawns1} pawns, base={base1}, gold={game.GetGold(1)}");
                 sb.AppendLine();
             }
 
@@ -643,10 +643,10 @@ namespace PlanningAgent.Tests
 
             var attackConfigs = new[]
             {
-                (solCount: 1, arcCount: 0, label: "1 Soldier"),
-                (solCount: 2, arcCount: 0, label: "2 Soldiers"),
-                (solCount: 3, arcCount: 0, label: "3 Soldiers"),
-                (solCount: 5, arcCount: 0, label: "5 Soldiers"),
+                (solCount: 1, arcCount: 0, label: "1 Warrior"),
+                (solCount: 2, arcCount: 0, label: "2 Warriors"),
+                (solCount: 3, arcCount: 0, label: "3 Warriors"),
+                (solCount: 5, arcCount: 0, label: "5 Warriors"),
                 (solCount: 0, arcCount: 1, label: "1 Archer"),
                 (solCount: 0, arcCount: 2, label: "2 Archers"),
                 (solCount: 0, arcCount: 3, label: "3 Archers"),
@@ -670,7 +670,7 @@ namespace PlanningAgent.Tests
 
                     // Place attackers adjacent to building
                     for (int i = 0; i < cfg.solCount; i++)
-                        builder.WithUnit(0, UnitType.SOLDIER, new Position(12, 13 + i));
+                        builder.WithUnit(0, UnitType.WARRIOR, new Position(12, 13 + i));
                     for (int i = 0; i < cfg.arcCount; i++)
                         builder.WithUnit(0, UnitType.ARCHER, new Position(10, 13 + i));
 
@@ -697,16 +697,16 @@ namespace PlanningAgent.Tests
         #region Mine Depletion
 
         [Fact]
-        public void MineDepletion_TimingByWorkerCount()
+        public void MineDepletion_TimingByPawnCount()
         {
             var sb = new StringBuilder();
-            sb.AppendLine("=== MINE DEPLETION: Time to exhaust mine by worker count ===");
-            sb.AppendLine("  Workers | Mine HP | Depletion Tick | Seconds | Gold Collected | Gold/tick");
+            sb.AppendLine("=== MINE DEPLETION: Time to exhaust mine by pawn count ===");
+            sb.AppendLine("  Pawns | Mine HP | Depletion Tick | Seconds | Gold Collected | Gold/tick");
             sb.AppendLine("  --------+---------+----------------+---------+----------------+----------");
 
             foreach (int mineHp in new[] { 2000, 5000 })
             {
-                foreach (int workerCount in new[] { 1, 2, 3, 5, 8 })
+                foreach (int pawnCount in new[] { 1, 2, 3, 5, 8 })
                 {
                     var builder = new SimGameBuilder()
                         .WithMapSize(30, 30)
@@ -716,9 +716,9 @@ namespace PlanningAgent.Tests
                         .WithAgent(0, new PureGatherAgent())
                         .WithAgent(1, new DoNothingAgent());
 
-                    // Pre-place workers (skip training delay)
-                    for (int i = 0; i < workerCount; i++)
-                        builder.WithUnit(0, UnitType.WORKER, new Position(7, 5 + i));
+                    // Pre-place pawns (skip training delay)
+                    for (int i = 0; i < pawnCount; i++)
+                        builder.WithUnit(0, UnitType.PAWN, new Position(7, 5 + i));
 
                     var game = builder.Build();
                     game.InitializeMatch();
@@ -739,7 +739,7 @@ namespace PlanningAgent.Tests
                     int goldCollected = game.GetGold(0);
                     float goldPerTick = depletionTick > 0 ? (float)goldCollected / depletionTick : 0;
 
-                    sb.AppendLine($"  {workerCount,7} | {mineHp,7} | {depletionTick,14} | {seconds,7:F1} | {goldCollected,14} | {goldPerTick,8:F2}");
+                    sb.AppendLine($"  {pawnCount,7} | {mineHp,7} | {depletionTick,14} | {seconds,7:F1} | {goldCollected,14} | {goldPerTick,8:F2}");
                 }
                 sb.AppendLine();
             }
@@ -749,71 +749,71 @@ namespace PlanningAgent.Tests
 
         #endregion
 
-        #region Worker Harassment
+        #region Pawn Harassment
 
         [Fact]
-        public void WorkerHarassment_SoldierVsWorkers()
+        public void PawnHarassment_WarriorVsPawns()
         {
             var sb = new StringBuilder();
-            sb.AppendLine("=== WORKER HARASSMENT: Soldiers raiding workers ===");
-            sb.AppendLine("  Soldiers | Workers | Workers Killed | Ticks | Soldiers Surviving");
+            sb.AppendLine("=== PAWN HARASSMENT: Warriors raiding pawns ===");
+            sb.AppendLine("  Warriors | Pawns | Pawns Killed | Ticks | Warriors Surviving");
             sb.AppendLine("  ---------+---------+----------------+-------+-------------------");
 
-            foreach (int soldierCount in new[] { 1, 2, 3 })
+            foreach (int warriorCount in new[] { 1, 2, 3 })
             {
-                foreach (int workerCount in new[] { 3, 5, 8 })
+                foreach (int pawnCount in new[] { 3, 5, 8 })
                 {
                     var builder = new SimGameBuilder()
                         .WithMapSize(30, 30)
                         .WithGold(0, 0)
                         .WithGold(1, 0)
                         .WithAgent(0, new AttackClosestAgent())
-                        .WithAgent(1, new DoNothingAgent());  // Workers don't fight back
+                        .WithAgent(1, new DoNothingAgent());  // Pawns don't fight back
 
-                    // Soldiers at one side
-                    for (int i = 0; i < soldierCount; i++)
-                        builder.WithUnit(0, UnitType.SOLDIER, new Position(5, 13 + i));
+                    // Warriors at one side
+                    for (int i = 0; i < warriorCount; i++)
+                        builder.WithUnit(0, UnitType.WARRIOR, new Position(5, 13 + i));
 
-                    // Workers clustered near a mine
-                    for (int i = 0; i < workerCount; i++)
-                        builder.WithUnit(1, UnitType.WORKER, new Position(15, 12 + i));
+                    // Pawns clustered near a mine
+                    for (int i = 0; i < pawnCount; i++)
+                        builder.WithUnit(1, UnitType.PAWN, new Position(15, 12 + i));
 
                     var game = builder.Build();
                     game.InitializeMatch();
                     game.InitializeRound();
 
-                    game.RunUntil(g => g.GetUnitsByType(1, UnitType.WORKER).Count == 0, 2000);
+                    game.RunUntil(g => g.GetUnitsByType(1, UnitType.PAWN).Count == 0, 2000);
 
-                    int workersLeft = game.GetUnitsByType(1, UnitType.WORKER).Count;
-                    int workersKilled = workerCount - workersLeft;
-                    int soldiersLeft = game.GetUnitsByType(0, UnitType.SOLDIER).Count;
+                    int pawnsLeft = game.GetUnitsByType(1, UnitType.PAWN).Count;
+                    int pawnsKilled = pawnCount - pawnsLeft;
+                    int warriorsLeft = game.GetUnitsByType(0, UnitType.WARRIOR).Count;
 
-                    sb.AppendLine($"  {soldierCount,8} | {workerCount,7} | {workersKilled,14} | {game.CurrentTick,5} | {soldiersLeft,18}");
+                    sb.AppendLine($"  {warriorCount,8} | {pawnCount,7} | {pawnsKilled,14} | {game.CurrentTick,5} | {warriorsLeft,18}");
                 }
             }
 
             sb.AppendLine();
             sb.AppendLine("  === GOLD COST ANALYSIS ===");
-            float soldierCost = GameConstants.COST[UnitType.SOLDIER];
-            float workerCost = GameConstants.COST[UnitType.WORKER];
-            sb.AppendLine($"  1 Soldier ({soldierCost}g) kills workers ({workerCost}g each):");
-            sb.AppendLine($"  - Break even at {soldierCost / workerCost:F0} workers killed");
-            sb.AppendLine($"  - Plus lost mining time while workers are dead");
+            float warriorCost = GameConstants.COST[UnitType.WARRIOR];
+            float pawnCost = GameConstants.COST[UnitType.PAWN];
+            sb.AppendLine($"  1 Warrior ({warriorCost}g) kills pawns ({pawnCost}g each):");
+            sb.AppendLine($"  - Break even at {warriorCost / pawnCost:F0} pawns killed");
+            sb.AppendLine($"  - Plus lost mining time while pawns are dead");
 
             _output.WriteLine(sb.ToString());
         }
 
         [Fact]
-        public void WorkerHarassment_ArcherVsWorkers()
+        public void PawnHarassment_ArcherVsPawns()
         {
             var sb = new StringBuilder();
-            sb.AppendLine("=== WORKER HARASSMENT: Archers raiding workers ===");
-            sb.AppendLine("  Archers | Workers | Workers Killed | Ticks | Archers Surviving");
+            sb.AppendLine("=== PAWN HARASSMENT: Archers raiding pawns ===");
+            sb.AppendLine("  Archers | Pawns | Pawns Killed | Ticks | Archers Surviving");
             sb.AppendLine("  --------+---------+----------------+-------+------------------");
 
             foreach (int archerCount in new[] { 1, 2, 3 })
             {
-                foreach (int workerCount in new[] { 3, 5, 8 })
+                foreach (int pawnCount in new[] { 3, 5, 8 })
                 {
                     var builder = new SimGameBuilder()
                         .WithMapSize(30, 30)
@@ -825,20 +825,20 @@ namespace PlanningAgent.Tests
                     for (int i = 0; i < archerCount; i++)
                         builder.WithUnit(0, UnitType.ARCHER, new Position(5, 13 + i));
 
-                    for (int i = 0; i < workerCount; i++)
-                        builder.WithUnit(1, UnitType.WORKER, new Position(15, 12 + i));
+                    for (int i = 0; i < pawnCount; i++)
+                        builder.WithUnit(1, UnitType.PAWN, new Position(15, 12 + i));
 
                     var game = builder.Build();
                     game.InitializeMatch();
                     game.InitializeRound();
 
-                    game.RunUntil(g => g.GetUnitsByType(1, UnitType.WORKER).Count == 0, 2000);
+                    game.RunUntil(g => g.GetUnitsByType(1, UnitType.PAWN).Count == 0, 2000);
 
-                    int workersLeft = game.GetUnitsByType(1, UnitType.WORKER).Count;
-                    int workersKilled = workerCount - workersLeft;
+                    int pawnsLeft = game.GetUnitsByType(1, UnitType.PAWN).Count;
+                    int pawnsKilled = pawnCount - pawnsLeft;
                     int archersLeft = game.GetUnitsByType(0, UnitType.ARCHER).Count;
 
-                    sb.AppendLine($"  {archerCount,7} | {workerCount,7} | {workersKilled,14} | {game.CurrentTick,5} | {archersLeft,17}");
+                    sb.AppendLine($"  {archerCount,7} | {pawnCount,7} | {pawnsKilled,14} | {game.CurrentTick,5} | {archersLeft,17}");
                 }
             }
 

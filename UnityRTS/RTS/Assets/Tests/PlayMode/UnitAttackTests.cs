@@ -8,7 +8,7 @@ using UnityEngine.TestTools;
 namespace GameManager.Tests.PlayMode
 {
 	/// <summary>
-	/// Play Mode tests for SOLDIER melee attack behavior.
+	/// Play Mode tests for WARRIOR melee attack behavior.
 	/// Covers: health reduction, target death and cell release,
 	/// attacker returning to IDLE, out-of-range movement before attack,
 	/// and attacking an already-dead target.
@@ -19,79 +19,79 @@ namespace GameManager.Tests.PlayMode
 		#region Happy Path
 
 		/// <summary>
-		/// A soldier attacks an enemy worker and reduces its health over time.
+		/// A warrior attacks an enemy pawn and reduces its health over time.
 		/// </summary>
 		[UnityTest]
-		public IEnumerator Soldier_AttacksEnemy_HealthDecreases()
+		public IEnumerator Warrior_AttacksEnemy_HealthDecreases()
 		{
-			Unit soldier = PlaceUnit(UnitType.SOLDIER, new Vector3Int(10, 10, 0));
-			Unit enemy = PlaceUnit(UnitType.WORKER, new Vector3Int(11, 10, 0), ctx.Agent1Go);
+			Unit warrior = PlaceUnit(UnitType.WARRIOR, new Vector3Int(10, 10, 0));
+			Unit enemy = PlaceUnit(UnitType.PAWN, new Vector3Int(11, 10, 0), ctx.Agent1Go);
 
 			float initialHealth = enemy.Health;
-			soldier.StartAttacking(new AttackEventArgs(soldier, enemy));
+			warrior.StartAttacking(new AttackEventArgs(warrior, enemy));
 
-			Assert.AreEqual(UnitAction.ATTACK, soldier.CurrentAction,
-				"Soldier should enter ATTACK state after StartAttacking");
+			Assert.AreEqual(UnitAction.ATTACK, warrior.CurrentAction,
+				"Warrior should enter ATTACK state after StartAttacking");
 
 			// Wait until enemy health decreases
 			yield return WaitUntil(
 				() => enemy == null || enemy.Health < initialHealth,
 				timeoutSeconds: 10f,
-				failMessage: "Enemy health did not decrease after soldier attack");
+				failMessage: "Enemy health did not decrease after warrior attack");
 
 			if (enemy != null)
 				Assert.Less(enemy.Health, initialHealth,
-					"Enemy health should drop as soldier attacks");
+					"Enemy health should drop as warrior attacks");
 		}
 
 		/// <summary>
-		/// A soldier kills an enemy unit; the cell the enemy occupied becomes buildable again.
+		/// A warrior kills an enemy unit; the cell the enemy occupied becomes buildable again.
 		/// </summary>
 		[UnityTest]
-		public IEnumerator Soldier_KillsEnemy_CellBecomesBuildable()
+		public IEnumerator Warrior_KillsEnemy_CellBecomesBuildable()
 		{
 			var enemyPos = new Vector3Int(11, 10, 0);
-			Unit soldier = PlaceUnit(UnitType.SOLDIER, new Vector3Int(10, 10, 0));
-			Unit enemy = PlaceUnit(UnitType.WORKER, enemyPos, ctx.Agent1Go);
+			Unit warrior = PlaceUnit(UnitType.WARRIOR, new Vector3Int(10, 10, 0));
+			Unit enemy = PlaceUnit(UnitType.PAWN, enemyPos, ctx.Agent1Go);
 			int enemyNbr = enemy.UnitNbr;
 
 			// Mark enemy as very fragile
 			enemy.Health = 1f;
 
-			soldier.StartAttacking(new AttackEventArgs(soldier, enemy));
+			warrior.StartAttacking(new AttackEventArgs(warrior, enemy));
 
 			// Wait until the enemy is removed from UnitManager
 			yield return WaitUntil(
 				() => ctx.UnitManager.GetUnit(enemyNbr) == null,
 				timeoutSeconds: 10f,
-				failMessage: "Enemy was not destroyed after soldier attack");
+				failMessage: "Enemy was not destroyed after warrior attack");
 
 			// Allow one frame for Object.Destroy
 			yield return null;
 
 			Assert.IsTrue(ctx.MapManager.IsGridPositionBuildable(enemyPos),
-				"Cell should be buildable after enemy worker is destroyed");
+				"Cell should be buildable after enemy pawn is destroyed");
 		}
 
 		/// <summary>
-		/// Soldier goes IDLE after the target is killed.
+		/// Warrior goes IDLE after the target is killed.
 		/// </summary>
 		[UnityTest]
-		public IEnumerator Soldier_AfterKillingTarget_GoesIdle()
+		public IEnumerator Warrior_AfterKillingTarget_GoesIdle()
 		{
-			Unit soldier = PlaceUnit(UnitType.SOLDIER, new Vector3Int(10, 10, 0));
-			Unit enemy = PlaceUnit(UnitType.WORKER, new Vector3Int(11, 10, 0), ctx.Agent1Go);
+			Unit warrior = PlaceUnit(UnitType.WARRIOR, new Vector3Int(10, 10, 0));
+			Unit enemy = PlaceUnit(UnitType.PAWN, new Vector3Int(11, 10, 0), ctx.Agent1Go);
 			enemy.Health = 1f;
 
-			soldier.StartAttacking(new AttackEventArgs(soldier, enemy));
+			warrior.StartAttacking(new AttackEventArgs(warrior, enemy));
 
 			yield return WaitUntil(
-				() => soldier.CurrentAction == UnitAction.IDLE,
+				() => warrior.CurrentAction == UnitAction.IDLE,
 				timeoutSeconds: 15f,
-				failMessage: "Soldier did not go IDLE after killing its target");
+				failMessage: "Warrior did not go IDLE after killing its target");
 
-			Assert.AreEqual(UnitAction.IDLE, soldier.CurrentAction,
-				"Soldier should be IDLE once target is dead");
+			Assert.AreEqual(UnitAction.IDLE, warrior.CurrentAction,
+				"Warrior should be IDLE once target is dead");
 		}
 
 		#endregion
@@ -99,53 +99,53 @@ namespace GameManager.Tests.PlayMode
 		#region Boundary
 
 		/// <summary>
-		/// A soldier placed out of melee range first moves toward the target,
+		/// A warrior placed out of melee range first moves toward the target,
 		/// then attacks once in range.
 		/// </summary>
 		[UnityTest]
-		public IEnumerator Soldier_OutOfRange_MovesToTargetThenAttacks()
+		public IEnumerator Warrior_OutOfRange_MovesToTargetThenAttacks()
 		{
-			// Soldier at (5,5), enemy at (15,15) — well beyond SOLDIER attack range
-			Unit soldier = PlaceUnit(UnitType.SOLDIER, new Vector3Int(5, 5, 0));
-			Unit enemy = PlaceUnit(UnitType.WORKER, new Vector3Int(15, 15, 0), ctx.Agent1Go);
+			// Warrior at (5,5), enemy at (15,15) — well beyond WARRIOR attack range
+			Unit warrior = PlaceUnit(UnitType.WARRIOR, new Vector3Int(5, 5, 0));
+			Unit enemy = PlaceUnit(UnitType.PAWN, new Vector3Int(15, 15, 0), ctx.Agent1Go);
 			float initialHealth = enemy.Health;
 
-			soldier.StartAttacking(new AttackEventArgs(soldier, enemy));
+			warrior.StartAttacking(new AttackEventArgs(warrior, enemy));
 
-			// Soldier should first move (not immediately deal damage)
-			Assert.AreEqual(UnitAction.ATTACK, soldier.CurrentAction);
+			// Warrior should first move (not immediately deal damage)
+			Assert.AreEqual(UnitAction.ATTACK, warrior.CurrentAction);
 
 			// Wait until health decreases (attack landed)
 			yield return WaitUntil(
 				() => enemy == null || enemy.Health < initialHealth,
 				timeoutSeconds: 30f,
-				failMessage: "Soldier never reached or attacked out-of-range enemy");
+				failMessage: "Warrior never reached or attacked out-of-range enemy");
 
 			if (enemy != null)
 				Assert.Less(enemy.Health, initialHealth,
-					"Enemy health should drop once soldier is in range");
+					"Enemy health should drop once warrior is in range");
 		}
 
 		/// <summary>
-		/// A soldier attacking a unit with very high health still deals incremental damage.
+		/// A warrior attacking a unit with very high health still deals incremental damage.
 		/// </summary>
 		[UnityTest]
-		public IEnumerator Soldier_AttacksHighHealthTarget_DealsDamageOverTime()
+		public IEnumerator Warrior_AttacksHighHealthTarget_DealsDamageOverTime()
 		{
-			Unit soldier = PlaceUnit(UnitType.SOLDIER, new Vector3Int(10, 10, 0));
+			Unit warrior = PlaceUnit(UnitType.WARRIOR, new Vector3Int(10, 10, 0));
 			Unit enemy = PlaceUnit(UnitType.BASE, new Vector3Int(11, 10, 0), ctx.Agent1Go);
 
 			float initialHealth = enemy.Health;
-			soldier.StartAttacking(new AttackEventArgs(soldier, enemy));
+			warrior.StartAttacking(new AttackEventArgs(warrior, enemy));
 
 			// Wait for at least some damage
 			yield return WaitUntil(
 				() => enemy.Health < initialHealth,
 				timeoutSeconds: 15f,
-				failMessage: "Soldier did not damage a high-health building");
+				failMessage: "Warrior did not damage a high-health building");
 
 			Assert.Less(enemy.Health, initialHealth,
-				"Soldier should chip away at a high-health building over time");
+				"Warrior should chip away at a high-health building over time");
 		}
 
 		#endregion
@@ -153,21 +153,21 @@ namespace GameManager.Tests.PlayMode
 		#region Error
 
 		/// <summary>
-		/// A non-combatant unit (WORKER) cannot attack; the command is rejected.
+		/// A non-combatant unit (PAWN) cannot attack; the command is rejected.
 		/// </summary>
 		[UnityTest]
-		public IEnumerator Worker_AttackCommand_Rejected()
+		public IEnumerator Pawn_AttackCommand_Rejected()
 		{
-			Unit worker = PlaceUnit(UnitType.WORKER, new Vector3Int(10, 10, 0));
-			Unit enemy = PlaceUnit(UnitType.WORKER, new Vector3Int(11, 10, 0), ctx.Agent1Go);
+			Unit pawn = PlaceUnit(UnitType.PAWN, new Vector3Int(10, 10, 0));
+			Unit enemy = PlaceUnit(UnitType.PAWN, new Vector3Int(11, 10, 0), ctx.Agent1Go);
 			float healthBefore = enemy.Health;
 
-			worker.StartAttacking(new AttackEventArgs(worker, enemy));
+			pawn.StartAttacking(new AttackEventArgs(pawn, enemy));
 
-			Assert.AreNotEqual(UnitAction.ATTACK, worker.CurrentAction,
-				"WORKER should not be able to attack");
+			Assert.AreNotEqual(UnitAction.ATTACK, pawn.CurrentAction,
+				"PAWN should not be able to attack");
 			Assert.AreEqual(healthBefore, enemy.Health,
-				"Enemy health should not change when worker tries to attack");
+				"Enemy health should not change when pawn tries to attack");
 
 			yield return null;
 		}
@@ -177,19 +177,19 @@ namespace GameManager.Tests.PlayMode
 		#region Stress
 
 		/// <summary>
-		/// Multiple soldiers attacking the same target simultaneously should kill it faster.
+		/// Multiple warriors attacking the same target simultaneously should kill it faster.
 		/// </summary>
 		[UnityTest]
-		public IEnumerator MultipleSoldiers_SameTarget_KillFaster()
+		public IEnumerator MultipleWarriors_SameTarget_KillFaster()
 		{
 			var enemyPos = new Vector3Int(15, 10, 0);
 			Unit enemy = PlaceUnit(UnitType.BASE, enemyPos, ctx.Agent1Go);
 			int enemyNbr = enemy.UnitNbr;
 
-			// Three soldiers surrounding the enemy building
-			Unit s1 = PlaceUnit(UnitType.SOLDIER, new Vector3Int(14, 10, 0));
-			Unit s2 = PlaceUnit(UnitType.SOLDIER, new Vector3Int(14, 9, 0));
-			Unit s3 = PlaceUnit(UnitType.SOLDIER, new Vector3Int(14, 11, 0));
+			// Three warriors surrounding the enemy building
+			Unit s1 = PlaceUnit(UnitType.WARRIOR, new Vector3Int(14, 10, 0));
+			Unit s2 = PlaceUnit(UnitType.WARRIOR, new Vector3Int(14, 9, 0));
+			Unit s3 = PlaceUnit(UnitType.WARRIOR, new Vector3Int(14, 11, 0));
 
 			s1.StartAttacking(new AttackEventArgs(s1, enemy));
 			s2.StartAttacking(new AttackEventArgs(s2, enemy));
@@ -204,12 +204,12 @@ namespace GameManager.Tests.PlayMode
 			yield return WaitUntil(
 				() => ctx.UnitManager.GetUnit(enemyNbr) == null,
 				timeoutSeconds: 30f,
-				failMessage: "Three soldiers could not destroy the enemy building");
+				failMessage: "Three warriors could not destroy the enemy building");
 
 			yield return null;
 
 			Assert.IsNull(ctx.UnitManager.GetUnit(enemyNbr),
-				"Enemy BASE should be destroyed by three soldiers");
+				"Enemy BASE should be destroyed by three warriors");
 		}
 
 		#endregion

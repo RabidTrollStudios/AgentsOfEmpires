@@ -71,15 +71,15 @@ namespace GameManager.Tests.PlayMode
 
 		/// <summary>
 		/// Wait until the given unit's IsBuilt property becomes true,
-		/// ticking the building worker each frame.
+		/// ticking the building pawn each frame.
 		/// </summary>
-		public static IEnumerator WaitForConstruction(Unit worker, Unit building,
+		public static IEnumerator WaitForConstruction(Unit pawn, Unit building,
 			float timeoutSeconds = 15f)
 		{
 			float elapsed = 0f;
 			while (!building.IsBuilt)
 			{
-				Tick(worker);
+				Tick(pawn);
 				elapsed += Time.deltaTime;
 				if (elapsed > timeoutSeconds)
 				{
@@ -112,19 +112,19 @@ namespace GameManager.Tests.PlayMode
 		}
 
 		/// <summary>
-		/// Issue a build command and assert it was accepted (worker enters BUILD state).
+		/// Issue a build command and assert it was accepted (pawn enters BUILD state).
 		/// Also asserts gold was deducted.
 		/// </summary>
-		public static void StartBuildAndAssert(Unit worker, Vector3Int buildPos,
+		public static void StartBuildAndAssert(Unit pawn, Vector3Int buildPos,
 			UnitType buildingType, Agent agent)
 		{
 			int goldBefore = agent.Gold;
 			int cost = (int)Constants.COST[buildingType];
 
-			worker.StartBuilding(new BuildEventArgs(worker, buildPos, buildingType));
+			pawn.StartBuilding(new BuildEventArgs(pawn, buildPos, buildingType));
 
-			Assert.AreEqual(UnitAction.BUILD, worker.CurrentAction,
-				$"Worker should enter BUILD state when building {buildingType}");
+			Assert.AreEqual(UnitAction.BUILD, pawn.CurrentAction,
+				$"Pawn should enter BUILD state when building {buildingType}");
 			Assert.AreEqual(goldBefore - cost, agent.Gold,
 				$"Gold should be deducted by {cost} when building {buildingType}");
 		}

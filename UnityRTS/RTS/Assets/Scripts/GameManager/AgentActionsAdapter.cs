@@ -32,13 +32,13 @@ namespace GameManager
             agent.Build(unit, new Vector3Int(target.X, target.Y, 0), unitType);
         }
 
-        public void Gather(int workerNbr, int mineNbr, int baseNbr)
+        public void Gather(int pawnNbr, int mineNbr, int baseNbr)
         {
-            var worker = unitManager.GetUnit(workerNbr);
+            var pawn = unitManager.GetUnit(pawnNbr);
             var mine = unitManager.GetUnit(mineNbr);
             var baseUnit = unitManager.GetUnit(baseNbr);
-            if (worker == null || mine == null || baseUnit == null) return;
-            agent.Gather(worker, mine, baseUnit);
+            if (pawn == null || mine == null || baseUnit == null) return;
+            agent.Gather(pawn, mine, baseUnit);
         }
 
         public void Train(int buildingNbr, AgentSDK.UnitType unitType)
@@ -54,6 +54,14 @@ namespace GameManager
             var target = unitManager.GetUnit(targetNbr);
             if (unit == null || target == null) return;
             agent.Attack(unit, target);
+        }
+
+        public void Repair(int pawnNbr, int buildingNbr)
+        {
+            var pawn = unitManager.GetUnit(pawnNbr);
+            var building = unitManager.GetUnit(buildingNbr);
+            if (pawn == null || building == null) return;
+            agent.Repair(pawn, building);
         }
 
         public void Log(string message)

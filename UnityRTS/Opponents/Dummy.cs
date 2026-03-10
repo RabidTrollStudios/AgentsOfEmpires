@@ -13,9 +13,9 @@ namespace GameManager
     {
         private const int MAX_NBR_ARCHERS = 0;
         private const float MAX_ARCHER_MULTIPLIER = 1.5f;
-        private const int MAX_NBR_SOLDIERS = 10;
-        private const float MAX_SOLDIER_MULTIPLIER = 1.5f;
-        private const int MAX_NBR_WORKERS = 10;
+        private const int MAX_NBR_WARRIORS = 10;
+        private const float MAX_WARRIOR_MULTIPLIER = 1.5f;
+        private const int MAX_NBR_PAWNS = 10;
 
         #region Private Data
 
@@ -45,14 +45,14 @@ namespace GameManager
         private List<int> mines { get; set; }
 
         /// <summary>
-        /// List of all of my workers
+        /// List of all of my pawns
         /// </summary>
-        private List<int> myWorkers { get; set; }
+        private List<int> myPawns { get; set; }
 
         /// <summary>
-        /// List of all of my soldiers
+        /// List of all of my warriors
         /// </summary>
-        private List<int> mySoldiers { get; set; }
+        private List<int> myWarriors { get; set; }
 
         /// <summary>
         /// List of all of my archers
@@ -70,14 +70,14 @@ namespace GameManager
         private List<int> myBarracks { get; set; }
 
         /// <summary>
-        /// List of the enemy's workers
+        /// List of the enemy's pawns
         /// </summary>
-        private List<int> enemyWorkers { get; set; }
+        private List<int> enemyPawns { get; set; }
 
         /// <summary>
-        /// List of the enemy's soldiers
+        /// List of the enemy's warriors
         /// </summary>
-        private List<int> enemySoldiers { get; set; }
+        private List<int> enemyWarriors { get; set; }
 
         /// <summary>
         /// List of enemy's archers
@@ -99,7 +99,7 @@ namespace GameManager
         /// </summary>
         private List<Vector3Int> buildPositions { get; set; }
 
-        private bool lastFighterWasSoldier = false;
+        private bool lastFighterWasWarrior = false;
 
         /// <summary>
         /// Finds all of the possible build locations for a specific UnitType.
@@ -170,7 +170,7 @@ namespace GameManager
 
         /// <summary>
         /// Find the closest unit to the gridPosition out of a list of units.
-        /// Use this method to find the enemy soldier closest to your archer,
+        /// Use this method to find the enemy warrior closest to your archer,
         /// or the closest base to a mine, or the closest mine to a base, etc.
         /// </summary>
         /// <param name="gridPosition">position of an agent or base</param>
@@ -196,14 +196,14 @@ namespace GameManager
             return closestUnitNbr;
         }
 
-        // Stupid method to process the workers
-        public void ProcessWorkers()
+        // Stupid method to process the pawns
+        public void ProcessPawns()
         {
-            // For each worker
-            foreach (int worker in myWorkers)
+            // For each pawn
+            foreach (int pawn in myPawns)
             {
                 // Grab the unit we need for this function
-                Unit unit = GameManager.Instance.GetUnit(worker);
+                Unit unit = GameManager.Instance.GetUnit(pawn);
 
                 // Make sure this unit actually exists and is idle
                 if (unit != null && unit.CurrentAction == UnitAction.IDLE)
@@ -212,7 +212,7 @@ namespace GameManager
                     if (Gold >= Constants.COST[UnitType.BASE]
                         && myBases.Count < 1)
                     {
-                        // Find the closest build position to this worker's position (DUMB) and 
+                        // Find the closest build position to this pawn's position (DUMB) and 
                         // build the base there
                         Vector3Int toBuild = FindClosestBuildPosition(unit.GridPosition, UnitType.BASE);
                         if (toBuild != Vector3Int.zero)
@@ -224,7 +224,7 @@ namespace GameManager
                     else if (Gold >= Constants.COST[UnitType.BARRACKS]
                              && myBarracks.Count < 1)
                     {
-                        // Find the closest build position to this worker's position and build
+                        // Find the closest build position to this pawn's position and build
                         // the barracks there
                         Vector3Int toBuild = FindClosestBuildPosition(unit.GridPosition, UnitType.BARRACKS);
                         if (toBuild != Vector3Int.zero)
@@ -250,18 +250,18 @@ namespace GameManager
         // Process the bases
         public void ProcessBases()
         {
-            // For each base, determine if it should train a worker
+            // For each base, determine if it should train a pawn
             foreach (int baseNbr in myBases)
             {
                 // Get the base unit
                 Unit baseUnit = GameManager.Instance.GetUnit(baseNbr);
 
-                // If the base exists, is idle, we need a worker, and we have gold
+                // If the base exists, is idle, we need a pawn, and we have gold
                 if (baseUnit != null && baseUnit.IsBuilt
-                                     && baseUnit.CurrentAction == UnitAction.IDLE && myWorkers.Count < MAX_NBR_WORKERS
-                                     && Gold >= Constants.COST[UnitType.WORKER])
+                                     && baseUnit.CurrentAction == UnitAction.IDLE && myPawns.Count < MAX_NBR_PAWNS
+                                     && Gold >= Constants.COST[UnitType.PAWN])
                 {
-                    Train(baseUnit, UnitType.WORKER);
+                    Train(baseUnit, UnitType.PAWN);
                 }
             }
         }
@@ -269,78 +269,78 @@ namespace GameManager
         // Process the barracks
         public void ProcessBarracks()
         {
-            // For each barracks, determine if it should train a soldier or an archer
+            // For each barracks, determine if it should train a warrior or an archer
             foreach (int barracksNbr in myBarracks)
             {
                 // Get the barracks
                 Unit barracksUnit = GameManager.Instance.GetUnit(barracksNbr);
 
-                // If this barracks still exists, is idle, we need soldiers, and have gold
-                if (!lastFighterWasSoldier && barracksUnit != null && barracksUnit.IsBuilt
+                // If this barracks still exists, is idle, we need warriors, and have gold
+                if (!lastFighterWasWarrior && barracksUnit != null && barracksUnit.IsBuilt
                     && barracksUnit.CurrentAction == UnitAction.IDLE
-                    && (mySoldiers.Count < MAX_NBR_SOLDIERS
-                        || mySoldiers.Count <= enemySoldiers.Count * MAX_SOLDIER_MULTIPLIER)
-                    && Gold >= Constants.COST[UnitType.SOLDIER])
+                    && (myWarriors.Count < MAX_NBR_WARRIORS
+                        || myWarriors.Count <= enemyWarriors.Count * MAX_WARRIOR_MULTIPLIER)
+                    && Gold >= Constants.COST[UnitType.WARRIOR])
                 {
-                    Train(barracksUnit, UnitType.SOLDIER);
-                    lastFighterWasSoldier = !lastFighterWasSoldier;
+                    Train(barracksUnit, UnitType.WARRIOR);
+                    lastFighterWasWarrior = !lastFighterWasWarrior;
                 }
                 // If this barracks still exists, is idle, we need archers, and have gold
-                else if (lastFighterWasSoldier && barracksUnit != null && barracksUnit.IsBuilt
+                else if (lastFighterWasWarrior && barracksUnit != null && barracksUnit.IsBuilt
                          && barracksUnit.CurrentAction == UnitAction.IDLE
                          && (myArchers.Count < MAX_NBR_ARCHERS
                              || myArchers.Count <= enemyArchers.Count * MAX_ARCHER_MULTIPLIER)
                          && Gold >= Constants.COST[UnitType.ARCHER])
                 {
                     Train(barracksUnit, UnitType.ARCHER);
-                    lastFighterWasSoldier = !lastFighterWasSoldier;
+                    lastFighterWasWarrior = !lastFighterWasWarrior;
                 }
             }
         }
 
-        // Process the soldiers - this method is naive and stupid!
-        // Soldiers randomly select a unit to attack (you should probably
+        // Process the warriors - this method is naive and stupid!
+        // Warriors randomly select a unit to attack (you should probably
         // attack the "closest" unit) but they do prioritize somewhat strategically
-        // by attacking offensive units before structures or workers.
-        public void ProcessSoldiers()
+        // by attacking offensive units before structures or pawns.
+        public void ProcessWarriors()
         {
-            // For each soldier, determine what they should attack
-            foreach (int soldierNbr in mySoldiers)
+            // For each warrior, determine what they should attack
+            foreach (int warriorNbr in myWarriors)
             {
-                // Get this soldier
-                Unit soldierUnit = GameManager.Instance.GetUnit(soldierNbr);
+                // Get this warrior
+                Unit warriorUnit = GameManager.Instance.GetUnit(warriorNbr);
 
-                // If this soldier still exists and is idle
-                if (soldierUnit != null && soldierUnit.CurrentAction == UnitAction.IDLE)
+                // If this warrior still exists and is idle
+                if (warriorUnit != null && warriorUnit.CurrentAction == UnitAction.IDLE)
                 {
-                    // If there are enemy soldiers, randomly select one and attack it
-                    if (enemySoldiers.Count > 0)
+                    // If there are enemy warriors, randomly select one and attack it
+                    if (enemyWarriors.Count > 0)
                     {
-                        Attack(soldierUnit, GameManager.Instance.GetUnit(
-                            enemySoldiers[UnityEngine.Random.Range(0, enemySoldiers.Count)]));
+                        Attack(warriorUnit, GameManager.Instance.GetUnit(
+                            enemyWarriors[UnityEngine.Random.Range(0, enemyWarriors.Count)]));
                     }
                     // If there are enemy archers, randomly select one and attack it
                     else if (enemyArchers.Count > 0)
                     {
-                        Attack(soldierUnit, GameManager.Instance.GetUnit(
+                        Attack(warriorUnit, GameManager.Instance.GetUnit(
                             enemyArchers[UnityEngine.Random.Range(0, enemyArchers.Count)]));
                     }
-                    // If there are enemy workers, randomly select one and attack it
-                    else if (enemyWorkers.Count > 0)
+                    // If there are enemy pawns, randomly select one and attack it
+                    else if (enemyPawns.Count > 0)
                     {
-                        Attack(soldierUnit, GameManager.Instance.GetUnit(
-                            enemyWorkers[UnityEngine.Random.Range(0, enemyWorkers.Count)]));
+                        Attack(warriorUnit, GameManager.Instance.GetUnit(
+                            enemyPawns[UnityEngine.Random.Range(0, enemyPawns.Count)]));
                     }
                     // If there are enemy bases, randomly select one and attack it
                     else if (enemyBases.Count > 0)
                     {
-                        Attack(soldierUnit, GameManager.Instance.GetUnit(
+                        Attack(warriorUnit, GameManager.Instance.GetUnit(
                             enemyBases[UnityEngine.Random.Range(0, enemyBases.Count)]));
                     }
                     // If there are enemy barracks, randomly select one and attack it
                     else if (enemyBarracks.Count > 0)
                     {
-                        Attack(soldierUnit, GameManager.Instance.GetUnit(
+                        Attack(warriorUnit, GameManager.Instance.GetUnit(
                             enemyBarracks[UnityEngine.Random.Range(0, enemyBarracks.Count)]));
                     }
                 }
@@ -350,7 +350,7 @@ namespace GameManager
         // Process archers
         public void ProcessArchers()
         {
-            // For each soldier, determine what they should attack
+            // For each warrior, determine what they should attack
             foreach (int archerNbr in myArchers)
             {
                 // Get the unit
@@ -359,11 +359,11 @@ namespace GameManager
                 // If the archer still exists and is idle
                 if (archerUnit != null && archerUnit.CurrentAction == UnitAction.IDLE)
                 {
-                    // If there are enemy soldiers, randomly select one and attack it
-                    if (enemySoldiers.Count > 0)
+                    // If there are enemy warriors, randomly select one and attack it
+                    if (enemyWarriors.Count > 0)
                     {
                         Attack(archerUnit, GameManager.Instance.GetUnit(
-                            enemySoldiers[UnityEngine.Random.Range(0, enemySoldiers.Count)]));
+                            enemyWarriors[UnityEngine.Random.Range(0, enemyWarriors.Count)]));
                     }
                     // If there are enemy archers, randomly select one and attack it
                     else if (enemyArchers.Count > 0)
@@ -371,11 +371,11 @@ namespace GameManager
                         Attack(archerUnit, GameManager.Instance.GetUnit(
                             enemyArchers[UnityEngine.Random.Range(0, enemyArchers.Count)]));
                     }
-                    // If there are enemy workers, randomly select one and attack it
-                    else if (enemyWorkers.Count > 0)
+                    // If there are enemy pawns, randomly select one and attack it
+                    else if (enemyPawns.Count > 0)
                     {
                         Attack(archerUnit, GameManager.Instance.GetUnit(
-                            enemyWorkers[UnityEngine.Random.Range(0, enemyWorkers.Count)]));
+                            enemyPawns[UnityEngine.Random.Range(0, enemyPawns.Count)]));
                     }
                     // If there are enemy bases, randomly select one and attack it
                     else if (enemyBases.Count > 0)
@@ -423,7 +423,7 @@ namespace GameManager
         {
             Debug.Log("PlanningAgent::InitializeRound");
 
-            lastFighterWasSoldier = false;
+            lastFighterWasWarrior = false;
 
             buildPositions = new List<Vector3Int>();
 
@@ -436,14 +436,14 @@ namespace GameManager
             // Initialize all of the unit lists
             mines = new List<int>();
 
-            myWorkers = new List<int>();
-            mySoldiers = new List<int>();
+            myPawns = new List<int>();
+            myWarriors = new List<int>();
             myArchers = new List<int>();
             myBases = new List<int>();
             myBarracks = new List<int>();
 
-            enemyWorkers = new List<int>();
-            enemySoldiers = new List<int>();
+            enemyPawns = new List<int>();
+            enemyWarriors = new List<int>();
             enemyArchers = new List<int>();
             enemyBases = new List<int>();
             enemyBarracks = new List<int>();
@@ -459,8 +459,8 @@ namespace GameManager
             mines = GameManager.Instance.GetUnitNbrsOfType(UnitType.MINE);
 
             // Update all of my unitNbrs
-            myWorkers = GameManager.Instance.GetUnitNbrsOfType(UnitType.WORKER, AgentNbr);
-            mySoldiers = GameManager.Instance.GetUnitNbrsOfType(UnitType.SOLDIER, AgentNbr);
+            myPawns = GameManager.Instance.GetUnitNbrsOfType(UnitType.PAWN, AgentNbr);
+            myWarriors = GameManager.Instance.GetUnitNbrsOfType(UnitType.WARRIOR, AgentNbr);
             myArchers = GameManager.Instance.GetUnitNbrsOfType(UnitType.ARCHER, AgentNbr);
             myBarracks = GameManager.Instance.GetUnitNbrsOfType(UnitType.BARRACKS, AgentNbr);
             myBases = GameManager.Instance.GetUnitNbrsOfType(UnitType.BASE, AgentNbr);
@@ -470,8 +470,8 @@ namespace GameManager
             if (enemyAgentNbrs.Any())
             {
                 enemyAgentNbr = enemyAgentNbrs[0];
-                enemyWorkers = GameManager.Instance.GetUnitNbrsOfType(UnitType.WORKER, enemyAgentNbr);
-                enemySoldiers = GameManager.Instance.GetUnitNbrsOfType(UnitType.SOLDIER, enemyAgentNbr);
+                enemyPawns = GameManager.Instance.GetUnitNbrsOfType(UnitType.PAWN, enemyAgentNbr);
+                enemyWarriors = GameManager.Instance.GetUnitNbrsOfType(UnitType.WARRIOR, enemyAgentNbr);
                 enemyArchers = GameManager.Instance.GetUnitNbrsOfType(UnitType.ARCHER, enemyAgentNbr);
                 enemyBarracks = GameManager.Instance.GetUnitNbrsOfType(UnitType.BARRACKS, enemyAgentNbr);
                 enemyBases = GameManager.Instance.GetUnitNbrsOfType(UnitType.BASE, enemyAgentNbr);
@@ -502,9 +502,9 @@ namespace GameManager
 
             // Process all of the units, prioritize building new structures over
             // training units in terms of spending gold
-            ProcessWorkers();
+            ProcessPawns();
 
-            ProcessSoldiers();
+            ProcessWarriors();
 
             ProcessArchers();
 

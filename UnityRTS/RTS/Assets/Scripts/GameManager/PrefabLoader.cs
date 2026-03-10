@@ -1,10 +1,11 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.Tilemaps;
 using UnityEngine.UI;
 
@@ -18,68 +19,134 @@ namespace Preloader
 		#region Prefabs
 
 		/// <summary>
-        /// Human Player Prefab
+        /// Blue Player Prefab
         /// </summary>
-		public GameObject HumanPlayerPrefab;
+		[FormerlySerializedAs("HumanPlayerPrefab")]
+		public GameObject BluePlayerPrefab;
         /// <summary>
-        /// Orc Player Prefab
+        /// Red Player Prefab
         /// </summary>
-		public GameObject OrcPlayerPrefab;
+		[FormerlySerializedAs("OrcPlayerPrefab")]
+		public GameObject RedPlayerPrefab;
 
 		/// <summary>
-        /// Human Peasant Prefab
+        /// Blue Pawn Prefab
         /// </summary>
-		public GameObject HumanPeasantPrefab;
+		[FormerlySerializedAs("HumanPeasantPrefab")]
+		[FormerlySerializedAs("HumanPawnPrefab")]
+		public GameObject BluePawnPrefab;
         /// <summary>
-        /// Human Footman Prefab
+        /// Blue Warrior Prefab
         /// </summary>
-		public GameObject HumanFootmanPrefab;
+		[FormerlySerializedAs("HumanFootmanPrefab")]
+		[FormerlySerializedAs("BlueFootmanPrefab")]
+		public GameObject BlueWarriorPrefab;
         /// <summary>
-        /// Human Archer Prefab
+        /// Blue Archer Prefab
         /// </summary>
-		public GameObject HumanArcherPrefab;
+		[FormerlySerializedAs("HumanArcherPrefab")]
+		public GameObject BlueArcherPrefab;
         /// <summary>
-        /// Human Base Prefab
+        /// Blue Base Prefab
         /// </summary>
-		public GameObject HumanBasePrefab;
+		[FormerlySerializedAs("HumanBasePrefab")]
+		public GameObject BlueBasePrefab;
         /// <summary>
-        /// Human Barracks Prefab
+        /// Blue Barracks Prefab
         /// </summary>
-		public GameObject HumanBarracksPrefab;
+		[FormerlySerializedAs("HumanBarracksPrefab")]
+		public GameObject BlueBarracksPrefab;
         /// <summary>
-        /// Human Archery Prefab
+        /// Blue Archery Prefab
         /// </summary>
-		public GameObject HumanArcheryPrefab;
+		[FormerlySerializedAs("HumanArcheryPrefab")]
+		public GameObject BlueArcheryPrefab;
 
 		/// <summary>
-        /// Orc Peon prefab
+        /// Red Pawn prefab
         /// </summary>
-		public GameObject OrcPeonPrefab;
+		[FormerlySerializedAs("OrcPeonPrefab")]
+		[FormerlySerializedAs("OrcPawnPrefab")]
+		public GameObject RedPawnPrefab;
         /// <summary>
-        /// Orc Grunt Prefab
+        /// Red Warrior Prefab
         /// </summary>
-		public GameObject OrcGruntPrefab;
+		[FormerlySerializedAs("OrcGruntPrefab")]
+		[FormerlySerializedAs("RedGruntPrefab")]
+		public GameObject RedWarriorPrefab;
         /// <summary>
-        /// Orc Axethrower Prefab
+        /// Red Archer Prefab
         /// </summary>
-		public GameObject OrcAxethrowerPrefab;
+		[FormerlySerializedAs("OrcAxethrowerPrefab")]
+		[FormerlySerializedAs("RedAxethrowerPrefab")]
+		public GameObject RedArcherPrefab;
         /// <summary>
-        /// Orc Base Prefab
+        /// Red Base Prefab
         /// </summary>
-		public GameObject OrcBasePrefab;
+		[FormerlySerializedAs("OrcBasePrefab")]
+		public GameObject RedBasePrefab;
         /// <summary>
-        /// Orc Barracks Prefab
+        /// Red Barracks Prefab
         /// </summary>
-		public GameObject OrcBarracksPrefab;
+		[FormerlySerializedAs("OrcBarracksPrefab")]
+		public GameObject RedBarracksPrefab;
         /// <summary>
-        /// Orc Archery Prefab
+        /// Red Archery Prefab
         /// </summary>
-		public GameObject OrcArcheryPrefab;
+		[FormerlySerializedAs("OrcArcheryPrefab")]
+		public GameObject RedArcheryPrefab;
 
 		/// <summary>
         /// Mine Prefab
         /// </summary>
 		public GameObject MinePrefab;
+
+		/// <summary>
+		/// Arrow sprite for archer projectiles
+		/// </summary>
+		public Sprite ArrowSprite;
+
+		/// <summary>
+		/// Fire animator controller for flaming arrow effect
+		/// </summary>
+		public RuntimeAnimatorController FireAnimatorController;
+
+		/// <summary>
+		/// Explosion animator controller for arrow impact effect
+		/// </summary>
+		public RuntimeAnimatorController ExplosionAnimatorController;
+
+		/// <summary>
+		/// Fire animator controllers for building impact fires (fire_01, fire_02, fire_03)
+		/// </summary>
+		public RuntimeAnimatorController Fire1AnimatorController;
+		public RuntimeAnimatorController Fire2AnimatorController;
+		public RuntimeAnimatorController Fire3AnimatorController;
+
+		/// <summary>
+		/// Dust 2 animator controller for unit death effect
+		/// </summary>
+		public RuntimeAnimatorController Dust2AnimatorController;
+
+		/// <summary>
+		/// Gold resource sprite for mining nugget effect
+		/// </summary>
+		public Sprite GoldResourceSprite;
+
+		/// <summary>
+		/// Small bar base sprite (health bar frame)
+		/// </summary>
+		public Sprite SmallBarBase;
+
+		/// <summary>
+		/// Small bar fill sprite (health bar fill)
+		/// </summary>
+		public Sprite SmallBarFill;
+
+		/// <summary>
+		/// Big bar base sprite (building health bar frame)
+		/// </summary>
+		public Sprite BigBarBase;
 
 		/// <summary>
         /// Speed Textbox
@@ -90,13 +157,15 @@ namespace Preloader
         /// </summary>
 		public Text TimerText;
         /// <summary>
-        /// Human score textbox
+        /// Blue score textbox
         /// </summary>
-        public Text HumanScoreText;
+		[FormerlySerializedAs("HumanScoreText")]
+        public Text BlueScoreText;
         /// <summary>
-        /// Orc Score textbox
+        /// Red Score textbox
         /// </summary>
-        public Text OrcScoreText;
+		[FormerlySerializedAs("OrcScoreText")]
+        public Text RedScoreText;
         /// <summary>
         /// Game Over UI
         /// </summary>

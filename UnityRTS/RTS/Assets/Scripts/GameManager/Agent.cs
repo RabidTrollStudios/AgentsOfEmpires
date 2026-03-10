@@ -103,7 +103,7 @@ namespace GameManager
 		/// InitializeAgent the agent's identity, this is called once at the
 		/// beginning of the entire game
 		/// </summary>
-		/// <param name="agentName">agent's human/orc name</param>
+		/// <param name="agentName">agent's blue/red name</param>
 		/// <param name="agentNbr">agent's unique number</param>
 		/// <param name="dllName">agent's dll name</param>
 		/// <param name="dllPath"></param>

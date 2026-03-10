@@ -26,45 +26,45 @@ namespace GameManager.Tests.PlayMode
 		#region Happy Path
 
 		/// <summary>
-		/// After building a BASE, a worker can then build a BARRACKS.
+		/// After building a BASE, a pawn can then build a BARRACKS.
 		/// </summary>
 		[UnityTest]
-		public IEnumerator AfterBase_WorkerCanBuildBarracks()
+		public IEnumerator AfterBase_PawnCanBuildBarracks()
 		{
 			// Place and complete a BASE
-			Vector3Int workerPos = new Vector3Int(9, 10, 0);
+			Vector3Int pawnPos = new Vector3Int(9, 10, 0);
 			Vector3Int basePos = new Vector3Int(10, 10, 0);
-			Unit worker = PlaceUnit(UnitType.WORKER, workerPos);
+			Unit pawn = PlaceUnit(UnitType.PAWN, pawnPos);
 
-			worker.StartBuilding(new BuildEventArgs(worker, basePos, UnitType.BASE));
-			Assert.AreEqual(UnitAction.BUILD, worker.CurrentAction,
-				"Worker should start building BASE");
+			pawn.StartBuilding(new BuildEventArgs(pawn, basePos, UnitType.BASE));
+			Assert.AreEqual(UnitAction.BUILD, pawn.CurrentAction,
+				"Pawn should start building BASE");
 
 			// Wait for BASE to complete
 			Unit baseUnit = null;
 			yield return WaitUntil(() =>
 			{
-				TickUnit(worker);
+				TickUnit(pawn);
 				baseUnit = ctx.UnitManager.GetAllUnits().Values
 					.Select(go => go.GetComponent<Unit>())
 					.FirstOrDefault(u => u.UnitType == UnitType.BASE);
 				return baseUnit != null && baseUnit.IsBuilt;
 			}, timeoutSeconds: 10f, failMessage: "BASE did not complete");
 
-			// Worker is now idle; try building BARRACKS
+			// Pawn is now idle; try building BARRACKS
 			yield return WaitUntil(
-				() => worker.CurrentAction == UnitAction.IDLE,
+				() => pawn.CurrentAction == UnitAction.IDLE,
 				timeoutSeconds: 5f,
-				failMessage: "Worker did not go IDLE after building BASE");
+				failMessage: "Pawn did not go IDLE after building BASE");
 
 			Vector3Int barracksPos = new Vector3Int(10, 5, 0);
 			Agent agent = GetAgent0();
 			int goldBefore = agent.Gold;
 
-			worker.StartBuilding(new BuildEventArgs(worker, barracksPos, UnitType.BARRACKS));
+			pawn.StartBuilding(new BuildEventArgs(pawn, barracksPos, UnitType.BARRACKS));
 
-			Assert.AreEqual(UnitAction.BUILD, worker.CurrentAction,
-				"Worker should be able to build BARRACKS after BASE is complete");
+			Assert.AreEqual(UnitAction.BUILD, pawn.CurrentAction,
+				"Pawn should be able to build BARRACKS after BASE is complete");
 			Assert.Less(agent.Gold, goldBefore,
 				"Gold should be deducted when BARRACKS build is accepted");
 		}

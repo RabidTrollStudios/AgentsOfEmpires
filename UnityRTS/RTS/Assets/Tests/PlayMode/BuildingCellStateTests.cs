@@ -17,21 +17,21 @@ namespace GameManager.Tests.PlayMode
 		#region Cells Occupied During Construction
 
 		/// <summary>
-		/// When a worker starts building a BASE, the target area is no longer
+		/// When a pawn starts building a BASE, the target area is no longer
 		/// buildable for another structure (the cell is reserved).
 		/// </summary>
 		[UnityTest]
 		public IEnumerator BuildingUnderConstruction_CellNotBuildable()
 		{
 			Vector3Int buildPos = new Vector3Int(10, 10, 0);
-			Unit worker = PlaceUnit(UnitType.WORKER, new Vector3Int(9, 10, 0));
+			Unit pawn = PlaceUnit(UnitType.PAWN, new Vector3Int(9, 10, 0));
 
 			// Before build: area should be buildable
 			BuildingTestHelper.AssertAreaBuildable(ctx, UnitType.BASE, buildPos,
 				"Area should be buildable before any building is placed");
 
-			worker.StartBuilding(new BuildEventArgs(worker, buildPos, UnitType.BASE));
-			Assert.AreEqual(UnitAction.BUILD, worker.CurrentAction);
+			pawn.StartBuilding(new BuildEventArgs(pawn, buildPos, UnitType.BASE));
+			Assert.AreEqual(UnitAction.BUILD, pawn.CurrentAction);
 
 			// After issuing build command: area should NOT be buildable for another BASE
 			yield return WaitFrames(2);
@@ -41,21 +41,21 @@ namespace GameManager.Tests.PlayMode
 		}
 
 		/// <summary>
-		/// A worker that has started building occupies the target area, preventing
-		/// a second worker from issuing the same build command.
+		/// A pawn that has started building occupies the target area, preventing
+		/// a second pawn from issuing the same build command.
 		/// </summary>
 		[UnityTest]
-		public IEnumerator TwoWorkersAtSamePos_SecondBuildRejected()
+		public IEnumerator TwoPawnsAtSamePos_SecondBuildRejected()
 		{
 			Vector3Int buildPos = new Vector3Int(10, 10, 0);
 			Agent agent = GetAgent0();
 			agent.Gold = (int)(Constants.COST[UnitType.BASE] * 3);
 
-			Unit w1 = PlaceUnit(UnitType.WORKER, new Vector3Int(9, 10, 0));
-			Unit w2 = PlaceUnit(UnitType.WORKER, new Vector3Int(9, 11, 0));
+			Unit w1 = PlaceUnit(UnitType.PAWN, new Vector3Int(9, 10, 0));
+			Unit w2 = PlaceUnit(UnitType.PAWN, new Vector3Int(9, 11, 0));
 
 			w1.StartBuilding(new BuildEventArgs(w1, buildPos, UnitType.BASE));
-			Assert.AreEqual(UnitAction.BUILD, w1.CurrentAction, "Worker 1 should be building");
+			Assert.AreEqual(UnitAction.BUILD, w1.CurrentAction, "Pawn 1 should be building");
 
 			yield return WaitFrames(2);
 
@@ -64,7 +64,7 @@ namespace GameManager.Tests.PlayMode
 
 			// Second build at same position should be rejected
 			Assert.AreNotEqual(UnitAction.BUILD, w2.CurrentAction,
-				"Second worker should NOT be able to build at an already-occupied position");
+				"Second pawn should NOT be able to build at an already-occupied position");
 			Assert.AreEqual(goldBeforeSecond, agent.Gold,
 				"Gold should not be deducted for the rejected second build");
 		}

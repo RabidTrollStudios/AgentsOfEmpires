@@ -10,7 +10,7 @@ namespace GameManager.Tests.PlayMode
 	/// <summary>
 	/// PlayMode tests for gather error handling and stress scenarios:
 	/// mine destroyed mid-trip, base destroyed mid-trip,
-	/// and multiple workers on the same mine.
+	/// and multiple pawns on the same mine.
 	/// </summary>
 	[TestFixture]
 	public class UnitGatherErrorTests : PlayModeTestBase
@@ -24,19 +24,19 @@ namespace GameManager.Tests.PlayMode
 			return baseUnit;
 		}
 
-		private void StartGathering(Unit worker, Unit mine, Unit baseUnit) =>
-			worker.StartGathering(new GatherEventArgs(worker, mine, baseUnit));
+		private void StartGathering(Unit pawn, Unit mine, Unit baseUnit) =>
+			pawn.StartGathering(new GatherEventArgs(pawn, mine, baseUnit));
 
 		// ── Error handling ─────────────────────────────────────────────────────
 
 		[UnityTest]
-		public IEnumerator Gather_MineDestroyedMidTrip_WorkerGoesIdle()
+		public IEnumerator Gather_MineDestroyedMidTrip_PawnGoesIdle()
 		{
 			Unit baseUnit = PlaceBuiltBase(new Vector3Int(5, 5, 0));
 			Unit mine     = PlaceUnit(UnitType.MINE,   new Vector3Int(15, 5, 0));
-			Unit worker   = PlaceUnit(UnitType.WORKER, new Vector3Int(8,  5, 0));
+			Unit pawn   = PlaceUnit(UnitType.PAWN, new Vector3Int(8,  5, 0));
 
-			StartGathering(worker, mine, baseUnit);
+			StartGathering(pawn, mine, baseUnit);
 
 			yield return WaitFrames(30);
 
@@ -44,79 +44,79 @@ namespace GameManager.Tests.PlayMode
 			mine.Health = 0;
 
 			yield return WaitUntil(
-				() => worker.CurrentAction == UnitAction.IDLE,
+				() => pawn.CurrentAction == UnitAction.IDLE,
 				15f,
-				"Worker did not go IDLE after mine was destroyed mid-trip");
+				"Pawn did not go IDLE after mine was destroyed mid-trip");
 
-			Assert.AreEqual(UnitAction.IDLE, worker.CurrentAction,
-				"Worker should be IDLE when the mine is destroyed during gathering");
+			Assert.AreEqual(UnitAction.IDLE, pawn.CurrentAction,
+				"Pawn should be IDLE when the mine is destroyed during gathering");
 		}
 
 		[UnityTest]
-		public IEnumerator Gather_BaseDestroyedMidTrip_WorkerGoesIdle()
+		public IEnumerator Gather_BaseDestroyedMidTrip_PawnGoesIdle()
 		{
 			Unit baseUnit = PlaceBuiltBase(new Vector3Int(5, 5, 0));
 			Unit mine     = PlaceUnit(UnitType.MINE,   new Vector3Int(10, 5, 0));
-			Unit worker   = PlaceUnit(UnitType.WORKER, new Vector3Int(9,  5, 0));
+			Unit pawn   = PlaceUnit(UnitType.PAWN, new Vector3Int(9,  5, 0));
 
-			StartGathering(worker, mine, baseUnit);
+			StartGathering(pawn, mine, baseUnit);
 
 			// Wait until mining starts (mine health drops)
 			float initialMineHealth = mine.Health;
 			yield return WaitUntil(
 				() => mine.Health < initialMineHealth,
 				15f,
-				"Worker did not start mining");
+				"Pawn did not start mining");
 
 			// Kill the base
 			baseUnit.Health = 0;
 
 			yield return WaitUntil(
-				() => worker.CurrentAction == UnitAction.IDLE,
+				() => pawn.CurrentAction == UnitAction.IDLE,
 				30f,
-				"Worker did not go IDLE after base was destroyed during gathering");
+				"Pawn did not go IDLE after base was destroyed during gathering");
 
-			Assert.AreEqual(UnitAction.IDLE, worker.CurrentAction,
-				"Worker should be IDLE when the base is destroyed during a gather trip");
+			Assert.AreEqual(UnitAction.IDLE, pawn.CurrentAction,
+				"Pawn should be IDLE when the base is destroyed during a gather trip");
 		}
 
 		// ── Stress ────────────────────────────────────────────────────────────
 
 		[UnityTest]
-		public IEnumerator Gather_MultipleWorkersSameMine_AllDepositGold()
+		public IEnumerator Gather_MultiplePawnsSameMine_AllDepositGold()
 		{
 			Unit baseUnit = PlaceBuiltBase(new Vector3Int(5, 5, 0));
 			Unit mine     = PlaceUnit(UnitType.MINE, new Vector3Int(15, 5, 0));
 
-			Unit[] workers = new Unit[5];
-			workers[0] = PlaceUnit(UnitType.WORKER, new Vector3Int(9,  4, 0));
-			workers[1] = PlaceUnit(UnitType.WORKER, new Vector3Int(9,  6, 0));
-			workers[2] = PlaceUnit(UnitType.WORKER, new Vector3Int(10, 4, 0));
-			workers[3] = PlaceUnit(UnitType.WORKER, new Vector3Int(11, 4, 0));
-			workers[4] = PlaceUnit(UnitType.WORKER, new Vector3Int(11, 6, 0));
+			Unit[] pawns = new Unit[5];
+			pawns[0] = PlaceUnit(UnitType.PAWN, new Vector3Int(9,  4, 0));
+			pawns[1] = PlaceUnit(UnitType.PAWN, new Vector3Int(9,  6, 0));
+			pawns[2] = PlaceUnit(UnitType.PAWN, new Vector3Int(10, 4, 0));
+			pawns[3] = PlaceUnit(UnitType.PAWN, new Vector3Int(11, 4, 0));
+			pawns[4] = PlaceUnit(UnitType.PAWN, new Vector3Int(11, 6, 0));
 
 			Agent agent = GetAgent0();
 			int initialGold = agent.Gold;
 
-			foreach (Unit worker in workers)
-				StartGathering(worker, mine, baseUnit);
+			foreach (Unit pawn in pawns)
+				StartGathering(pawn, mine, baseUnit);
 
-			// MiningCapacity for WORKER = 10 * 10 = 100 gold per trip; 5 workers collectively exceed that
+			// MiningCapacity for PAWN = 10 * 10 = 100 gold per trip; 5 pawns collectively exceed that
 			yield return WaitUntil(
 				() => agent.Gold >= initialGold + 100,
 				60f,
-				"Multiple workers did not deposit enough gold from the same mine");
+				"Multiple pawns did not deposit enough gold from the same mine");
 
 			Assert.GreaterOrEqual(agent.Gold, initialGold + 100,
-				"Agent gold should increase by at least one worker's capacity with 5 workers gathering");
+				"Agent gold should increase by at least one pawn's capacity with 5 pawns gathering");
 
 			int gatheringCount = 0;
-			foreach (Unit worker in workers)
-				if (worker != null && worker.CurrentAction == UnitAction.GATHER)
+			foreach (Unit pawn in pawns)
+				if (pawn != null && pawn.CurrentAction == UnitAction.GATHER)
 					gatheringCount++;
 
 			Assert.Greater(gatheringCount, 0,
-				"At least some workers should still be gathering after the first deposits");
+				"At least some pawns should still be gathering after the first deposits");
 		}
 	}
 }

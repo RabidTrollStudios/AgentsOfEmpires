@@ -15,21 +15,21 @@ namespace GameManager.Tests.PlayMode
 	public static class GatherTestHelper
 	{
 		/// <summary>
-		/// Set up a standard gather scenario: place a built BASE, a MINE, and a WORKER.
+		/// Set up a standard gather scenario: place a built BASE, a MINE, and a PAWN.
 		/// Does NOT start gathering — caller decides when to issue the command.
 		/// </summary>
-		/// <returns>Tuple of (worker, mine, baseUnit).</returns>
-		public static (Unit worker, Unit mine, Unit baseUnit) SetupBasicGather(
+		/// <returns>Tuple of (pawn, mine, baseUnit).</returns>
+		public static (Unit pawn, Unit mine, Unit baseUnit) SetupBasicGather(
 			PlayModeTestContext ctx,
 			Vector3Int basePos,
 			Vector3Int minePos,
-			Vector3Int workerPos)
+			Vector3Int pawnPos)
 		{
 			Unit baseUnit = PlayModeTestHelper.PlaceUnit(ctx, ctx.Agent0Go, UnitType.BASE, basePos);
 			baseUnit.IsBuilt = true;
 			Unit mine = PlayModeTestHelper.PlaceUnit(ctx, ctx.Agent0Go, UnitType.MINE, minePos);
-			Unit worker = PlayModeTestHelper.PlaceUnit(ctx, ctx.Agent0Go, UnitType.WORKER, workerPos);
-			return (worker, mine, baseUnit);
+			Unit pawn = PlayModeTestHelper.PlaceUnit(ctx, ctx.Agent0Go, UnitType.PAWN, pawnPos);
+			return (pawn, mine, baseUnit);
 		}
 
 		/// <summary>
@@ -99,12 +99,12 @@ namespace GameManager.Tests.PlayMode
 		}
 
 		/// <summary>
-		/// Assert that the worker is still in GATHER state (continuing to mine, not stuck).
+		/// Assert that the pawn is still in GATHER state (continuing to mine, not stuck).
 		/// </summary>
-		public static void AssertWorkerStillGathering(Unit worker)
+		public static void AssertPawnStillGathering(Unit pawn)
 		{
-			Assert.AreEqual(UnitAction.GATHER, worker.CurrentAction,
-				"Worker should remain in GATHER state while mine is alive");
+			Assert.AreEqual(UnitAction.GATHER, pawn.CurrentAction,
+				"Pawn should remain in GATHER state while mine is alive");
 		}
 	}
 }

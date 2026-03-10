@@ -43,32 +43,32 @@ namespace GameManager.Tests
 		}
 
 		/// <summary>
-		/// A 1x1 WORKER at a map corner (0,0) should only have 3 valid neighbors
+		/// A 1x1 PAWN at a map corner (0,0) should only have 3 valid neighbors
 		/// (those that lie within the map bounds).
 		/// </summary>
 		[Test]
-		public void GetGridPositionsNearUnit_Worker_AtCorner_Returns3()
+		public void GetGridPositionsNearUnit_Pawn_AtCorner_Returns3()
 		{
-			// WORKER is 1x1. At (0,0) only (1,0), (0,1), (1,1) neighbors are valid.
+			// PAWN is 1x1. At (0,0) only (1,0), (0,1), (1,1) neighbors are valid.
 			// But the perimeter ring is: top row [(-1,1),(0,1),(1,1)], bottom row [(-1,-1),(0,-1),(1,-1)],
 			// left col [(-1,0)] and right col [(1,0)].
 			// Valid ones: (0,1),(1,1),(1,0) = 3
-			var positions = manager.GetGridPositionsNearUnit(UnitType.WORKER, new Vector3Int(0, 0, 0));
+			var positions = manager.GetGridPositionsNearUnit(UnitType.PAWN, new Vector3Int(0, 0, 0));
 			Assert.AreEqual(3, positions.Count,
-				"WORKER at corner (0,0) should have 3 valid neighbors");
+				"PAWN at corner (0,0) should have 3 valid neighbors");
 		}
 
 		/// <summary>
-		/// A 1x1 WORKER at a map edge (0,5) — against the left wall.
+		/// A 1x1 PAWN at a map edge (0,5) — against the left wall.
 		/// Expected neighbors: (0,6),(1,6) from top; (0,4),(1,4) from bottom; (1,5) from right.
 		/// = 5 valid neighbors.
 		/// </summary>
 		[Test]
-		public void GetGridPositionsNearUnit_Worker_AtLeftEdge_Returns5()
+		public void GetGridPositionsNearUnit_Pawn_AtLeftEdge_Returns5()
 		{
-			var positions = manager.GetGridPositionsNearUnit(UnitType.WORKER, new Vector3Int(0, 5, 0));
+			var positions = manager.GetGridPositionsNearUnit(UnitType.PAWN, new Vector3Int(0, 5, 0));
 			Assert.AreEqual(5, positions.Count,
-				"WORKER at left edge (0,5) should have 5 valid neighbors");
+				"PAWN at left edge (0,5) should have 5 valid neighbors");
 		}
 
 		/// <summary>
@@ -163,15 +163,15 @@ namespace GameManager.Tests
 		#region IsNeighborOfUnit
 
 		/// <summary>
-		/// A cell immediately adjacent to a 1x1 WORKER is a neighbor.
+		/// A cell immediately adjacent to a 1x1 PAWN is a neighbor.
 		/// </summary>
 		[Test]
 		public void IsNeighborOfUnit_AdjacentCell_ReturnsTrue()
 		{
 			var unitPos = new Vector3Int(10, 10, 0);
 			var adjacent = new Vector3Int(10, 11, 0); // directly north
-			Assert.IsTrue(manager.IsNeighborOfUnit(adjacent, UnitType.WORKER, unitPos),
-				"Cell directly north of WORKER should be a neighbor");
+			Assert.IsTrue(manager.IsNeighborOfUnit(adjacent, UnitType.PAWN, unitPos),
+				"Cell directly north of PAWN should be a neighbor");
 		}
 
 		/// <summary>
@@ -182,8 +182,8 @@ namespace GameManager.Tests
 		{
 			var unitPos = new Vector3Int(10, 10, 0);
 			var farCell = new Vector3Int(10, 12, 0); // two cells north
-			Assert.IsFalse(manager.IsNeighborOfUnit(farCell, UnitType.WORKER, unitPos),
-				"Cell two steps away should not be a neighbor of a 1x1 WORKER");
+			Assert.IsFalse(manager.IsNeighborOfUnit(farCell, UnitType.PAWN, unitPos),
+				"Cell two steps away should not be a neighbor of a 1x1 PAWN");
 		}
 
 		/// <summary>
@@ -193,7 +193,7 @@ namespace GameManager.Tests
 		public void IsNeighborOfUnit_SameCell_ReturnsFalse()
 		{
 			var unitPos = new Vector3Int(10, 10, 0);
-			Assert.IsFalse(manager.IsNeighborOfUnit(unitPos, UnitType.WORKER, unitPos),
+			Assert.IsFalse(manager.IsNeighborOfUnit(unitPos, UnitType.PAWN, unitPos),
 				"The unit's own cell should not be reported as a neighbor");
 		}
 

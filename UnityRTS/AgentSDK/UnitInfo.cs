@@ -45,7 +45,7 @@ namespace AgentSDK
         /// <summary>
         /// Center cell of this unit's footprint.
         /// Use this for distance calculations instead of GridPosition, which is the top-left corner.
-        /// For 1x1 units (soldiers, archers, workers) this equals GridPosition.
+        /// For 1x1 units (warriors, archers, pawns) this equals GridPosition.
         /// For 3x3 structures (bases, barracks, mines, refineries) this is GridPosition+(1,-1).
         /// </summary>
         public Position CenterPosition
@@ -57,6 +57,7 @@ namespace AgentSDK
             }
         }
 
+        /// <summary>Create a new UnitInfo snapshot</summary>
         public UnitInfo(int unitNbr, UnitType unitType, Position gridPosition,
             float health, bool isBuilt, UnitAction currentAction,
             bool canMove, bool canBuild, bool canTrain, bool canAttack,

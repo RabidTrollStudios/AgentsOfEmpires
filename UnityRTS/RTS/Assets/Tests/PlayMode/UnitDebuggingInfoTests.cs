@@ -43,7 +43,7 @@ namespace GameManager.Tests.PlayMode
 		public IEnumerator Update_DebuggingOff_CanvasDisabled()
 		{
 			// HasUnitDebugging is false by default in PlayModeTestBase
-			var unit = PlaceUnit(UnitType.WORKER, new Vector3Int(5, 5, 0));
+			var unit = PlaceUnit(UnitType.PAWN, new Vector3Int(5, 5, 0));
 
 			unit.Update();
 
@@ -56,7 +56,7 @@ namespace GameManager.Tests.PlayMode
 		public IEnumerator Update_DebuggingOn_CanvasEnabled()
 		{
 			EnableUnitDebugging();
-			var unit = PlaceUnit(UnitType.WORKER, new Vector3Int(5, 5, 0));
+			var unit = PlaceUnit(UnitType.PAWN, new Vector3Int(5, 5, 0));
 
 			unit.Update();
 
@@ -71,7 +71,7 @@ namespace GameManager.Tests.PlayMode
 		public IEnumerator Update_DebuggingOn_Idle_StateVariableEmpty()
 		{
 			EnableUnitDebugging();
-			var unit = PlaceUnit(UnitType.WORKER, new Vector3Int(5, 5, 0));
+			var unit = PlaceUnit(UnitType.PAWN, new Vector3Int(5, 5, 0));
 			unit.CurrentAction = UnitAction.IDLE;
 
 			unit.Update();
@@ -85,7 +85,7 @@ namespace GameManager.Tests.PlayMode
 		public IEnumerator Update_DebuggingOn_Move_StateVariableShowsPathCount()
 		{
 			EnableUnitDebugging();
-			var unit = PlaceUnit(UnitType.WORKER, new Vector3Int(5, 5, 0));
+			var unit = PlaceUnit(UnitType.PAWN, new Vector3Int(5, 5, 0));
 			unit.CurrentAction = UnitAction.MOVE;
 			// path is empty by default, so path.Count = 0
 
@@ -100,7 +100,7 @@ namespace GameManager.Tests.PlayMode
 		public IEnumerator Update_DebuggingOn_Attack_StateVariableShowsDamage()
 		{
 			EnableUnitDebugging();
-			var unit = PlaceUnit(UnitType.SOLDIER, new Vector3Int(5, 5, 0));
+			var unit = PlaceUnit(UnitType.WARRIOR, new Vector3Int(5, 5, 0));
 			unit.CurrentAction = UnitAction.ATTACK;
 			// totalDamage defaults to 0.0f
 
@@ -115,7 +115,7 @@ namespace GameManager.Tests.PlayMode
 		public IEnumerator Update_DebuggingOn_Build_StateVariableShowsTaskTime()
 		{
 			EnableUnitDebugging();
-			var unit = PlaceUnit(UnitType.WORKER, new Vector3Int(5, 5, 0));
+			var unit = PlaceUnit(UnitType.PAWN, new Vector3Int(5, 5, 0));
 			unit.CurrentAction = UnitAction.BUILD;
 			// taskTime defaults to 0.0f
 
@@ -130,7 +130,7 @@ namespace GameManager.Tests.PlayMode
 		public IEnumerator Update_DebuggingOn_Gather_StateVariableShowsGold()
 		{
 			EnableUnitDebugging();
-			var unit = PlaceUnit(UnitType.WORKER, new Vector3Int(5, 5, 0));
+			var unit = PlaceUnit(UnitType.PAWN, new Vector3Int(5, 5, 0));
 			unit.CurrentAction = UnitAction.GATHER;
 			// totalGold defaults to 0
 
@@ -163,7 +163,7 @@ namespace GameManager.Tests.PlayMode
 		public IEnumerator Update_DebuggingOn_UnitNumber_ShowsUnitNbr()
 		{
 			EnableUnitDebugging();
-			var unit = PlaceUnit(UnitType.WORKER, new Vector3Int(5, 5, 0));
+			var unit = PlaceUnit(UnitType.PAWN, new Vector3Int(5, 5, 0));
 
 			unit.Update();
 
@@ -176,7 +176,7 @@ namespace GameManager.Tests.PlayMode
 		public IEnumerator Update_DebuggingOn_HealthValue_ShowsHealth()
 		{
 			EnableUnitDebugging();
-			var unit = PlaceUnit(UnitType.WORKER, new Vector3Int(5, 5, 0));
+			var unit = PlaceUnit(UnitType.PAWN, new Vector3Int(5, 5, 0));
 
 			unit.Update();
 

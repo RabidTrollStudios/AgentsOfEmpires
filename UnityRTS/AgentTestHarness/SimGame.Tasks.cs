@@ -121,28 +121,28 @@ namespace AgentTestHarness
 
         #region Building
 
-        private void AdvanceBuild(SimUnit worker)
+        private void AdvanceBuild(SimUnit pawn)
         {
             // Phase 1: walk to build site
-            if (worker.Path != null && worker.PathIndex < worker.Path.Count)
+            if (pawn.Path != null && pawn.PathIndex < pawn.Path.Count)
             {
-                MoveUnitOneStep(worker);
+                MoveUnitOneStep(pawn);
                 // Keep action as BUILD even after step
-                worker.CurrentAction = UnitAction.BUILD;
+                pawn.CurrentAction = UnitAction.BUILD;
                 return;
             }
 
             // Phase 2: count down build timer
-            worker.BuildTimer -= Config.TickDuration;
+            pawn.BuildTimer -= Config.TickDuration;
 
-            if (worker.BuildTimer <= 0f)
+            if (pawn.BuildTimer <= 0f)
             {
                 // Mark building as built
                 foreach (var u in Units.Values)
                 {
-                    if (u.UnitType == worker.BuildTarget
-                        && u.GridPosition == worker.BuildSite
-                        && u.OwnerAgentNbr == worker.OwnerAgentNbr
+                    if (u.UnitType == pawn.BuildTarget
+                        && u.GridPosition == pawn.BuildSite
+                        && u.OwnerAgentNbr == pawn.OwnerAgentNbr
                         && !u.IsBuilt)
                     {
                         u.IsBuilt = true;
@@ -150,8 +150,8 @@ namespace AgentTestHarness
                     }
                 }
 
-                worker.CurrentAction = UnitAction.IDLE;
-                worker.Path = null;
+                pawn.CurrentAction = UnitAction.IDLE;
+                pawn.Path = null;
             }
         }
 
@@ -159,112 +159,112 @@ namespace AgentTestHarness
 
         #region Gathering
 
-        private void AdvanceGather(SimUnit worker)
+        private void AdvanceGather(SimUnit pawn)
         {
-            switch (worker.GatherPhase)
+            switch (pawn.GatherPhase)
             {
                 case GatherPhase.TO_MINE:
-                    AdvanceGatherToMine(worker);
+                    AdvanceGatherToMine(pawn);
                     break;
                 case GatherPhase.MINING:
-                    AdvanceGatherMining(worker);
+                    AdvanceGatherMining(pawn);
                     break;
                 case GatherPhase.TO_BASE:
-                    AdvanceGatherToBase(worker);
+                    AdvanceGatherToBase(pawn);
                     break;
             }
         }
 
-        private void AdvanceGatherToMine(SimUnit worker)
+        private void AdvanceGatherToMine(SimUnit pawn)
         {
             // If mine was destroyed, go idle
-            if (!Units.TryGetValue(worker.GatherMineNbr, out var mine))
+            if (!Units.TryGetValue(pawn.GatherMineNbr, out var mine))
             {
-                worker.CurrentAction = UnitAction.IDLE;
-                worker.Path = null;
+                pawn.CurrentAction = UnitAction.IDLE;
+                pawn.Path = null;
                 return;
             }
 
             // Walk toward the mine
-            if (worker.Path != null && worker.PathIndex < worker.Path.Count)
+            if (pawn.Path != null && pawn.PathIndex < pawn.Path.Count)
             {
-                MoveUnitOneStep(worker);
-                worker.CurrentAction = UnitAction.GATHER;
+                MoveUnitOneStep(pawn);
+                pawn.CurrentAction = UnitAction.GATHER;
                 return;
             }
 
             // Arrived adjacent to mine — start mining
-            worker.GatherPhase = GatherPhase.MINING;
+            pawn.GatherPhase = GatherPhase.MINING;
             float miningTime = miningSpeed > 0 ? miningCapacity / miningSpeed : 1f;
-            worker.MiningTimer = miningTime;
+            pawn.MiningTimer = miningTime;
         }
 
-        private void AdvanceGatherMining(SimUnit worker)
+        private void AdvanceGatherMining(SimUnit pawn)
         {
-            if (!Units.TryGetValue(worker.GatherMineNbr, out var mine))
+            if (!Units.TryGetValue(pawn.GatherMineNbr, out var mine))
             {
-                worker.CurrentAction = UnitAction.IDLE;
+                pawn.CurrentAction = UnitAction.IDLE;
                 return;
             }
 
-            worker.MiningTimer -= Config.TickDuration;
+            pawn.MiningTimer -= Config.TickDuration;
 
-            if (worker.MiningTimer <= 0f)
+            if (pawn.MiningTimer <= 0f)
             {
                 // Deduct gold from mine
                 float goldMined = Math.Min(miningCapacity, mine.Health);
                 mine.Health -= goldMined;
 
                 // Path to base
-                if (!Units.TryGetValue(worker.GatherBaseNbr, out var baseUnit))
+                if (!Units.TryGetValue(pawn.GatherBaseNbr, out var baseUnit))
                 {
-                    worker.CurrentAction = UnitAction.IDLE;
+                    pawn.CurrentAction = UnitAction.IDLE;
                     return;
                 }
 
-                var path = Map.FindPathToUnit(worker.GridPosition, UnitType.BASE, baseUnit.GridPosition);
-                worker.GatherPhase = GatherPhase.TO_BASE;
-                worker.Path = path;
-                worker.PathIndex = 0;
+                var path = Map.FindPathToUnit(pawn.GridPosition, UnitType.BASE, baseUnit.GridPosition);
+                pawn.GatherPhase = GatherPhase.TO_BASE;
+                pawn.Path = path;
+                pawn.PathIndex = 0;
 
                 // Store gold carried as a small temporary value on the mining timer
-                worker.MiningTimer = goldMined;
+                pawn.MiningTimer = goldMined;
             }
         }
 
-        private void AdvanceGatherToBase(SimUnit worker)
+        private void AdvanceGatherToBase(SimUnit pawn)
         {
             // If base was destroyed, go idle
-            if (!Units.TryGetValue(worker.GatherBaseNbr, out var baseUnit))
+            if (!Units.TryGetValue(pawn.GatherBaseNbr, out var baseUnit))
             {
-                worker.CurrentAction = UnitAction.IDLE;
-                worker.Path = null;
+                pawn.CurrentAction = UnitAction.IDLE;
+                pawn.Path = null;
                 return;
             }
 
             // Walk toward the base
-            if (worker.Path != null && worker.PathIndex < worker.Path.Count)
+            if (pawn.Path != null && pawn.PathIndex < pawn.Path.Count)
             {
-                MoveUnitOneStep(worker);
-                worker.CurrentAction = UnitAction.GATHER;
+                MoveUnitOneStep(pawn);
+                pawn.CurrentAction = UnitAction.GATHER;
                 return;
             }
 
             // Arrived at base — deposit gold
-            float goldCarried = worker.MiningTimer;
-            Gold[worker.OwnerAgentNbr] += (int)goldCarried;
+            float goldCarried = pawn.MiningTimer;
+            Gold[pawn.OwnerAgentNbr] += (int)goldCarried;
 
             // Cycle back to mine
-            if (!Units.TryGetValue(worker.GatherMineNbr, out var mine) || mine.Health <= 0)
+            if (!Units.TryGetValue(pawn.GatherMineNbr, out var mine) || mine.Health <= 0)
             {
-                worker.CurrentAction = UnitAction.IDLE;
+                pawn.CurrentAction = UnitAction.IDLE;
                 return;
             }
 
-            var path = Map.FindPathToUnit(worker.GridPosition, UnitType.MINE, mine.GridPosition);
-            worker.GatherPhase = GatherPhase.TO_MINE;
-            worker.Path = path;
-            worker.PathIndex = 0;
+            var path = Map.FindPathToUnit(pawn.GridPosition, UnitType.MINE, mine.GridPosition);
+            pawn.GatherPhase = GatherPhase.TO_MINE;
+            pawn.Path = path;
+            pawn.PathIndex = 0;
         }
 
         #endregion

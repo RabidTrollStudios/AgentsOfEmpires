@@ -63,7 +63,7 @@ namespace GameManager.Tests.PlayMode
 				ctx.MapManager.MapSize.x / 2,
 				ctx.MapManager.MapSize.y / 2, 0);
 
-			Assert.IsTrue(ctx.MapManager.IsAreaBuildable(UnitType.WORKER, center),
+			Assert.IsTrue(ctx.MapManager.IsAreaBuildable(UnitType.PAWN, center),
 				"Center cell of an empty map should be buildable");
 			yield return null;
 		}
@@ -75,11 +75,11 @@ namespace GameManager.Tests.PlayMode
 		public IEnumerator PlacedUnit_CellNotBuildable()
 		{
 			Vector3Int pos = new Vector3Int(5, 5, 0);
-			PlaceUnit(UnitType.WORKER, pos);
+			PlaceUnit(UnitType.PAWN, pos);
 
 			yield return WaitFrames(1);
 
-			Assert.IsFalse(ctx.MapManager.IsAreaBuildable(UnitType.WORKER, pos),
+			Assert.IsFalse(ctx.MapManager.IsAreaBuildable(UnitType.PAWN, pos),
 				"Cell occupied by a unit should not be buildable");
 		}
 

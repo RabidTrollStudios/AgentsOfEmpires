@@ -13,7 +13,7 @@ namespace PlanningAgent
     /// </summary>
     public class PlanningAgent : PlanningAgentBase
     {
-        private const int MAX_NBR_WORKERS = 20;
+        private const int MAX_NBR_PAWNS = 20;
 
         private Random rng = new Random();
 
@@ -24,22 +24,22 @@ namespace PlanningAgent
         /// </summary>
         public void BuildBuilding(UnitType unitType, IGameState state, IAgentActions actions)
         {
-            // For each worker
-            foreach (int worker in myWorkers)
+            // For each pawn
+            foreach (int pawn in myPawns)
             {
                 // Get the unit info
-                UnitInfo? unitInfo = state.GetUnit(worker);
+                UnitInfo? unitInfo = state.GetUnit(pawn);
 
                 // Make sure this unit actually exists and we have enough gold
                 if (unitInfo.HasValue && state.MyGold >= GameConstants.COST[unitType])
                 {
-                    // Find the closest build position to this worker's position (DUMB) and
+                    // Find the closest build position to this pawn's position (DUMB) and
                     // build the base there
                     foreach (Position toBuild in buildPositions)
                     {
                         if (state.IsBoundedAreaBuildable(unitType, toBuild))
                         {
-                            actions.Build(worker, toBuild, unitType);
+                            actions.Build(pawn, toBuild, unitType);
                             return;
                         }
                     }
@@ -66,15 +66,15 @@ namespace PlanningAgent
                         {
                             actions.Attack(troopNbr, enemyArchers[rng.Next(0, enemyArchers.Count)]);
                         }
-                        // If there are soldiers to attack
-                        else if (enemySoldiers.Count > 0)
+                        // If there are warriors to attack
+                        else if (enemyWarriors.Count > 0)
                         {
-                            actions.Attack(troopNbr, enemySoldiers[rng.Next(0, enemySoldiers.Count)]);
+                            actions.Attack(troopNbr, enemyWarriors[rng.Next(0, enemyWarriors.Count)]);
                         }
-                        // If there are workers to attack
-                        else if (enemyWorkers.Count > 0)
+                        // If there are pawns to attack
+                        else if (enemyPawns.Count > 0)
                         {
-                            actions.Attack(troopNbr, enemyWorkers[rng.Next(0, enemyWorkers.Count)]);
+                            actions.Attack(troopNbr, enemyPawns[rng.Next(0, enemyPawns.Count)]);
                         }
                         // If there are bases to attack
                         else if (enemyBases.Count > 0)
@@ -157,10 +157,10 @@ namespace PlanningAgent
             }
 
             // For any troops, attack the enemy
-            AttackEnemy(mySoldiers, state, actions);
+            AttackEnemy(myWarriors, state, actions);
             AttackEnemy(myArchers, state, actions);
 
-            // For each barracks, determine if it should train a soldier or an archer
+            // For each barracks, determine if it should train a warrior or an archer
             foreach (int barracksNbr in myBarracks)
             {
                 UnitInfo? barracksInfo = state.GetUnit(barracksNbr);
@@ -173,30 +173,30 @@ namespace PlanningAgent
                 }
                 if (barracksInfo.HasValue && barracksInfo.Value.IsBuilt
                     && barracksInfo.Value.CurrentAction == UnitAction.IDLE
-                    && state.MyGold >= GameConstants.COST[UnitType.SOLDIER])
+                    && state.MyGold >= GameConstants.COST[UnitType.WARRIOR])
                 {
-                    actions.Train(barracksNbr, UnitType.SOLDIER);
+                    actions.Train(barracksNbr, UnitType.WARRIOR);
                 }
             }
 
-            // For each base, determine if it should train a worker
+            // For each base, determine if it should train a pawn
             foreach (int baseNbr in myBases)
             {
                 UnitInfo? baseInfo = state.GetUnit(baseNbr);
 
                 if (baseInfo.HasValue && baseInfo.Value.IsBuilt
                                      && baseInfo.Value.CurrentAction == UnitAction.IDLE
-                                     && state.MyGold >= GameConstants.COST[UnitType.WORKER]
-                                     && myWorkers.Count < MAX_NBR_WORKERS)
+                                     && state.MyGold >= GameConstants.COST[UnitType.PAWN]
+                                     && myPawns.Count < MAX_NBR_PAWNS)
                 {
-                    actions.Train(baseNbr, UnitType.WORKER);
+                    actions.Train(baseNbr, UnitType.PAWN);
                 }
             }
 
-            // For each worker
-            foreach (int worker in myWorkers)
+            // For each pawn
+            foreach (int pawn in myPawns)
             {
-                UnitInfo? unitInfo = state.GetUnit(worker);
+                UnitInfo? unitInfo = state.GetUnit(pawn);
 
                 if (unitInfo.HasValue && unitInfo.Value.CurrentAction == UnitAction.IDLE && mainBaseNbr >= 0 && mainMineNbr >= 0)
                 {
@@ -204,7 +204,7 @@ namespace PlanningAgent
                     UnitInfo? baseInfo = state.GetUnit(mainBaseNbr);
                     if (mineInfo.HasValue && baseInfo.HasValue && mineInfo.Value.Health > 0)
                     {
-                        actions.Gather(worker, mainMineNbr, mainBaseNbr);
+                        actions.Gather(pawn, mainMineNbr, mainBaseNbr);
                     }
                 }
             }

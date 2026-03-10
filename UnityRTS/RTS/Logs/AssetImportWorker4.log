@@ -1,11 +1,11 @@
 [Licensing::Module] Trying to connect to existing licensing client channel...
 Built from '6000.3/respin/6000.3.5f1-a1ec4b2f2d19' branch; Version is '6000.3.5f2 (3fa8bc678cb0) revision 4171964'; Using compiler version '194234433'; Build Type 'Release'
 OS: 'Windows 11  (10.0.26200) Professional' Language: 'en' Physical Memory: 32469 MB
+[Licensing::IpcConnector] Successfully connected to: "LicenseClient-Dana" at "2026-03-10T05:01:19.9334461Z"
 BatchMode: 1, IsHumanControllingUs: 0, StartBugReporterOnCrash: 0, Is64bit: 1
-[Licensing::IpcConnector] Successfully connected to: "LicenseClient-Dana" at "2026-03-03T01:53:03.2773003Z"
 System  architecture: x64
 Process architecture: x64
-Date: 2026-03-03T01:53:03Z
+Date: 2026-03-10T05:01:19Z
 
 COMMAND LINE ARGUMENTS:
 C:\Program Files\Unity\Hub\Editor\6000.3.5f2\Editor\Unity.exe
@@ -19,7 +19,7 @@ C:/Git/Warcrap/UnityRTS/RTS
 -logFile
 Logs/AssetImportWorker4.log
 -srvPort
-53001
+57257
 -licensingIpc
 LicenseClient-Dana
 -job-worker-count
@@ -67,14 +67,14 @@ C:/Git/Warcrap/UnityRTS/RTS
     "memorysetup-job-temp-allocator-block-size-background=1048576"
     "memorysetup-job-temp-allocator-reduction-small-platforms=262144"
     "memorysetup-temp-allocator-size-cloud-worker=32768"
-Player connection [41588]  Target information:
+Player connection [588504]  Target information:
 
-Player connection [41588]  * "[IP] 192.168.100.6 [Port] 0 [Flags] 2 [Guid] 3476822846 [EditorId] 3476822846 [Version] 1048832 [Id] WindowsEditor(7,MSI-Laptop) [Debug] 1 [PackageName] WindowsEditor [ProjectName] Editor" 
+Player connection [588504]  * "[IP] 192.168.100.6 [Port] 0 [Flags] 2 [Guid] 2781448892 [EditorId] 2781448892 [Version] 1048832 [Id] WindowsEditor(7,MSI-Laptop) [Debug] 1 [PackageName] WindowsEditor [ProjectName] Editor" 
 
-Player connection [41588]  * "[IP] 172.27.192.1 [Port] 0 [Flags] 2 [Guid] 3476822846 [EditorId] 3476822846 [Version] 1048832 [Id] WindowsEditor(7,MSI-Laptop) [Debug] 1 [PackageName] WindowsEditor [ProjectName] Editor" 
+Player connection [588504]  * "[IP] 172.19.112.1 [Port] 0 [Flags] 2 [Guid] 2781448892 [EditorId] 2781448892 [Version] 1048832 [Id] WindowsEditor(7,MSI-Laptop) [Debug] 1 [PackageName] WindowsEditor [ProjectName] Editor" 
 
-Player connection [41588] Host joined multi-casting on [225.0.0.222:54997]...
-Player connection [41588] Host joined alternative multi-casting on [225.0.0.222:34997]...
+Unable to join player connection multicast group (err: 10013).
+Player connection [588504] Host joined alternative multi-casting on [225.0.0.222:34997]...
 JobSystem: Creating JobQueue using job-worker-count value 7
 Input System module state changed to: Initialized.
 [Physics::Module] Initialized fallback backend.
@@ -86,7 +86,7 @@ Library Redirect Path: Library/
 [Physics::Module] SDK Version: 4.1.2
 [Physics::Module] Integration Version: 1.0.0
 [Physics::Module] Threading Mode: Multi-Threaded
-Refreshing native plugins compatible for Editor in 3.32 ms, found 0 plugins.
+Refreshing native plugins compatible for Editor in 6.89 ms, found 1 plugins.
 Preloading 0 native plugins for Editor in 0.00 ms.
 Initialize engine version: 6000.3.5f2 (3fa8bc678cb0)
 [Subsystems] Discovering subsystems at path C:/Program Files/Unity/Hub/Editor/6000.3.5f2/Editor/Data/Resources/UnitySubsystems
@@ -102,7 +102,7 @@ Initialize mono
 Mono path[0] = 'C:/Program Files/Unity/Hub/Editor/6000.3.5f2/Editor/Data/Managed'
 Mono path[1] = 'C:/Program Files/Unity/Hub/Editor/6000.3.5f2/Editor/Data/MonoBleedingEdge/lib/mono/unityjit-win32'
 Mono config path = 'C:/Program Files/Unity/Hub/Editor/6000.3.5f2/Editor/Data/MonoBleedingEdge/etc'
-Using monoOptions --debugger-agent=transport=dt_socket,embedding=1,server=y,suspend=n,address=127.0.0.1:56884
+Using monoOptions --debugger-agent=transport=dt_socket,embedding=1,server=y,suspend=n,address=127.0.0.1:56872
 Begin MonoManager ReloadAssembly
 Registering precompiled unity dll's ...
 Register platform support module: C:/Program Files/Unity/Hub/Editor/6000.3.5f2/Editor/Data/PlaybackEngines/MacStandaloneSupport/UnityEditor.OSXStandalone.Extensions.dll
@@ -110,14 +110,14 @@ Register platform support module: C:/Program Files/Unity/Hub/Editor/6000.3.5f2/E
 [Licensing::Module] Licensing is not yet initialized.
 [Licensing::Client] Handshaking with LicensingClient:
   Version:                 1.17.4+4293ba1
-  Session Id:              7fe66e0fe40e4f7292ca570c21384b84
-  Correlation Id:          4f1dda7af5fb160cfbee9ab4037ce3e2
-  External correlation Id: 6187641814371494969
+  Session Id:              29a65cd24dba4b43b4a5d8cceb707298
+  Correlation Id:          ca0b38ba7cefd58a876881845c08cb06
+  External correlation Id: 6883187553454556679
   Machine Id:              BAGb8nebUhhiBVw0Z6q4fvTS/FM=
-[Licensing::Module] Successfully connected to LicensingClient on channel: "LicenseClient-Dana" (connect: 0.00s, validation: 0.00s, handshake: 2.65s)
-[Licensing::IpcConnector] Successfully connected to: "LicenseClient-Dana-notifications" at "2026-03-03T01:53:05.9241735Z"
-[Licensing::Module] Licensing Background thread has ended after 2.65s
-[Licensing::Module] Licensing is initialized (took 1.67s).
+[Licensing::Module] Successfully connected to LicensingClient on channel: "LicenseClient-Dana" (connect: 0.00s, validation: 0.00s, handshake: 3.65s)
+[Licensing::IpcConnector] Successfully connected to: "LicenseClient-Dana-notifications" at "2026-03-10T05:01:23.584423Z"
+[Licensing::Module] Licensing Background thread has ended after 3.65s
+[Licensing::Module] Licensing is initialized (took 0.10s).
 [Licensing::Client] Successfully resolved entitlement details
 [Licensing::Module] License group:
   Id: F4-ATU6-VSZ8-RZS2-73JK-XXXX
@@ -142,46 +142,46 @@ Register platform support module: C:/Program Files/Unity/Hub/Editor/6000.3.5f2/E
   Type: Assigned
   Expiration: Unlimited
 Register platform support module: C:/Program Files/Unity/Hub/Editor/6000.3.5f2/Editor/Data/PlaybackEngines/iOSSupport/UnityEditor.iOS.Extensions.dll
-Registered in 1.676578 seconds.
-- Loaded All Assemblies, in  2.199 seconds
+Registered in 0.116732 seconds.
+- Loaded All Assemblies, in  0.872 seconds
 [usbmuxd] Start listen thread
 [usbmuxd] Listen thread started
 Native extension for iOS target not found
 Native extension for Android target not found
-Android Extension - Scanning For ADB Devices 515 ms
+Android Extension - Scanning For ADB Devices 511 ms
 Native extension for WindowsStandalone target not found
 Native extension for OSXStandalone target not found
 ScheduleIndexationOnStartup MainProcess:False IndexOnStartup:True
 Mono: successfully reloaded assembly
-- Finished resetting the current domain, in  1.137 seconds
-Domain Reload Profiling: 3332ms
-	BeginReloadAssembly (191ms)
+- Finished resetting the current domain, in  1.166 seconds
+Domain Reload Profiling: 2032ms
+	BeginReloadAssembly (296ms)
 		ExecutionOrderSort (0ms)
 		DisableScriptedObjects (0ms)
 		BackupInstance (0ms)
 		ReleaseScriptingObjects (0ms)
-		CreateAndSetChildDomain (1ms)
-	RebuildCommonClasses (54ms)
-	RebuildNativeTypeToScriptingClass (15ms)
-	initialDomainReloadingComplete (1728ms)
-	LoadAllAssembliesAndSetupDomain (207ms)
-		LoadAssemblies (188ms)
+		CreateAndSetChildDomain (2ms)
+	RebuildCommonClasses (78ms)
+	RebuildNativeTypeToScriptingClass (26ms)
+	initialDomainReloadingComplete (197ms)
+	LoadAllAssembliesAndSetupDomain (268ms)
+		LoadAssemblies (288ms)
 		RebuildTransferFunctionScriptingTraits (0ms)
-		AnalyzeDomain (201ms)
-			TypeCache.Refresh (199ms)
-				TypeCache.ScanAssembly (181ms)
+		AnalyzeDomain (261ms)
+			TypeCache.Refresh (258ms)
+				TypeCache.ScanAssembly (234ms)
 			BuildScriptInfoCaches (0ms)
 			ResolveRequiredComponents (1ms)
-	FinalizeReload (1137ms)
+	FinalizeReload (1167ms)
 		ReleaseScriptCaches (0ms)
 		RebuildScriptCaches (0ms)
-		SetupLoadedEditorAssemblies (1089ms)
+		SetupLoadedEditorAssemblies (1108ms)
 			LogAssemblyErrors (0ms)
-			InitializePlatformSupportModulesInManaged (627ms)
+			InitializePlatformSupportModulesInManaged (655ms)
 			SetLoadedEditorAssemblies (7ms)
-			BeforeProcessingInitializeOnLoad (132ms)
-			ProcessInitializeOnLoadAttributes (217ms)
-			ProcessInitializeOnLoadMethodAttributes (106ms)
+			BeforeProcessingInitializeOnLoad (133ms)
+			ProcessInitializeOnLoadAttributes (206ms)
+			ProcessInitializeOnLoadMethodAttributes (107ms)
 			AfterProcessingInitializeOnLoad (0ms)
 			EditorAssembliesLoaded (0ms)
 		ExecutionOrderSort2 (0ms)
@@ -202,8 +202,8 @@ Begin MonoManager ReloadAssembly
   Type: Assigned
   Expiration: Unlimited
 Symbol file LoadedFromMemory is not a mono symbol file
-- Loaded All Assemblies, in  0.957 seconds
-Refreshing native plugins compatible for Editor in 5.65 ms, found 0 plugins.
+- Loaded All Assemblies, in  1.139 seconds
+Refreshing native plugins compatible for Editor in 5.67 ms, found 1 plugins.
 Native extension for iOS target not found
 Native extension for Android target not found
 Native extension for WindowsStandalone target not found
@@ -216,76 +216,46 @@ Package Manager log level set to [2]
 [Package Manager] Cannot connect to Unity Package Manager local server
 ScheduleIndexationOnStartup MainProcess:False IndexOnStartup:True
 Mono: successfully reloaded assembly
-- Finished resetting the current domain, in  0.976 seconds
-Domain Reload Profiling: 1927ms
-	BeginReloadAssembly (283ms)
+- Finished resetting the current domain, in  0.842 seconds
+Domain Reload Profiling: 1970ms
+	BeginReloadAssembly (290ms)
 		ExecutionOrderSort (0ms)
 		DisableScriptedObjects (8ms)
 		BackupInstance (0ms)
 		ReleaseScriptingObjects (0ms)
-		CreateAndSetChildDomain (47ms)
-	RebuildCommonClasses (55ms)
+		CreateAndSetChildDomain (54ms)
+	RebuildCommonClasses (53ms)
 	RebuildNativeTypeToScriptingClass (17ms)
-	initialDomainReloadingComplete (47ms)
-	LoadAllAssembliesAndSetupDomain (549ms)
-		LoadAssemblies (519ms)
+	initialDomainReloadingComplete (59ms)
+	LoadAllAssembliesAndSetupDomain (709ms)
+		LoadAssemblies (610ms)
 		RebuildTransferFunctionScriptingTraits (0ms)
-		AnalyzeDomain (202ms)
-			TypeCache.Refresh (163ms)
-				TypeCache.ScanAssembly (142ms)
-			BuildScriptInfoCaches (32ms)
-			ResolveRequiredComponents (3ms)
-	FinalizeReload (977ms)
+		AnalyzeDomain (249ms)
+			TypeCache.Refresh (190ms)
+				TypeCache.ScanAssembly (166ms)
+			BuildScriptInfoCaches (51ms)
+			ResolveRequiredComponents (4ms)
+	FinalizeReload (842ms)
 		ReleaseScriptCaches (0ms)
 		RebuildScriptCaches (0ms)
-		SetupLoadedEditorAssemblies (784ms)
+		SetupLoadedEditorAssemblies (693ms)
 			LogAssemblyErrors (0ms)
-			InitializePlatformSupportModulesInManaged (27ms)
-			SetLoadedEditorAssemblies (8ms)
-			BeforeProcessingInitializeOnLoad (337ms)
-			ProcessInitializeOnLoadAttributes (278ms)
-			ProcessInitializeOnLoadMethodAttributes (117ms)
-			AfterProcessingInitializeOnLoad (16ms)
-			EditorAssembliesLoaded (0ms)
+			InitializePlatformSupportModulesInManaged (19ms)
+			SetLoadedEditorAssemblies (9ms)
+			BeforeProcessingInitializeOnLoad (303ms)
+			ProcessInitializeOnLoadAttributes (244ms)
+			ProcessInitializeOnLoadMethodAttributes (104ms)
+			AfterProcessingInitializeOnLoad (13ms)
+			EditorAssembliesLoaded (1ms)
 		ExecutionOrderSort2 (0ms)
-		AwakeInstancesAfterBackupRestoration (18ms)
-Launched and connected shader compiler UnityShaderCompiler.exe after 0.03 seconds
-Refreshing native plugins compatible for Editor in 4.93 ms, found 0 plugins.
+		AwakeInstancesAfterBackupRestoration (8ms)
+Launched and connected shader compiler UnityShaderCompiler.exe after 0.02 seconds
+Refreshing native plugins compatible for Editor in 4.95 ms, found 1 plugins.
 Preloading 0 native plugins for Editor in 0.00 ms.
 Unloading 0 Unused Serialized files (Serialized files now loaded: 0)
-Unloading 2198 unused Assets / (0.6 MB). Loaded Objects now: 2786.
-Memory consumption went from 82.2 MB to 81.6 MB.
-Total: 7.747400 ms (FindLiveObjects: 0.306600 ms CreateObjectMapping: 0.153700 ms MarkObjects: 6.561000 ms  DeleteObjects: 0.724500 ms)
-
-========================================================================
-Received Import Request.
-  Time since last request: 9815.879944 seconds.
-  path: Assets/Tiny Swords/Pawn and Resources/Gold/Gold Stones/Gold Stone 6_Highlight.png
-  artifactKey: Guid(0f1173621a70147e5994e744dee798d3) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Tiny Swords/Pawn and Resources/Gold/Gold Stones/Gold Stone 6_Highlight.png using Guid(0f1173621a70147e5994e744dee798d3) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter)[Licensing::Client] Successfully resolved entitlement details
-[Licensing::Module] License group:
-  Id: F4-ATU6-VSZ8-RZS2-73JK-XXXX
-  Product: Unity Personal
-  Type: ULF
-  Expiration: Unlimited
-[Licensing::Module] License group:
-  Id: 1374479331469-UnityPersXXXX
-  Product: Unity Personal
-  Type: Assigned
-  Expiration: Unlimited
-[Licensing::Client] Successfully resolved entitlement details
-[Licensing::Module] License group:
-  Id: F4-ATU6-VSZ8-RZS2-73JK-XXXX
-  Product: Unity Personal
-  Type: ULF
-  Expiration: Unlimited
-[Licensing::Module] License group:
-  Id: 1374479331469-UnityPersXXXX
-  Product: Unity Personal
-  Type: Assigned
-  Expiration: Unlimited
- -> (artifact id: 'c668f3b5588ad16c1b0369b27193f1a2') in 0.1827777 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 8
+Unloading 3258 unused Assets / (1.0 MB). Loaded Objects now: 3842.
+Memory consumption went from 92.9 MB to 91.9 MB.
+Total: 7.023700 ms (FindLiveObjects: 0.332500 ms CreateObjectMapping: 0.239600 ms MarkObjects: 5.592000 ms  DeleteObjects: 0.858600 ms)
 
 ========================================================================
 Received Prepare
@@ -302,8 +272,8 @@ Begin MonoManager ReloadAssembly
   Type: Assigned
   Expiration: Unlimited
 Symbol file LoadedFromMemory is not a mono symbol file
-- Loaded All Assemblies, in  1.010 seconds
-Refreshing native plugins compatible for Editor in 5.71 ms, found 0 plugins.
+- Loaded All Assemblies, in  1.095 seconds
+Refreshing native plugins compatible for Editor in 5.40 ms, found 1 plugins.
 Native extension for iOS target not found
 Native extension for Android target not found
 Native extension for WindowsStandalone target not found
@@ -313,54 +283,308 @@ Native extension for OSXStandalone target not found
 [Package Manager] Cannot connect to Unity Package Manager local server
 ScheduleIndexationOnStartup MainProcess:False IndexOnStartup:True
 Mono: successfully reloaded assembly
-- Finished resetting the current domain, in  0.936 seconds
-Domain Reload Profiling: 1940ms
-	BeginReloadAssembly (338ms)
+- Finished resetting the current domain, in  1.005 seconds
+Domain Reload Profiling: 2093ms
+	BeginReloadAssembly (364ms)
 		ExecutionOrderSort (0ms)
-		DisableScriptedObjects (9ms)
+		DisableScriptedObjects (34ms)
 		BackupInstance (0ms)
 		ReleaseScriptingObjects (0ms)
-		CreateAndSetChildDomain (61ms)
-	RebuildCommonClasses (76ms)
-	RebuildNativeTypeToScriptingClass (21ms)
-	initialDomainReloadingComplete (45ms)
-	LoadAllAssembliesAndSetupDomain (523ms)
-		LoadAssemblies (570ms)
+		CreateAndSetChildDomain (103ms)
+	RebuildCommonClasses (54ms)
+	RebuildNativeTypeToScriptingClass (18ms)
+	initialDomainReloadingComplete (43ms)
+	LoadAllAssembliesAndSetupDomain (607ms)
+		LoadAssemblies (550ms)
 		RebuildTransferFunctionScriptingTraits (0ms)
-		AnalyzeDomain (141ms)
-			TypeCache.Refresh (10ms)
-				TypeCache.ScanAssembly (0ms)
-			BuildScriptInfoCaches (123ms)
-			ResolveRequiredComponents (3ms)
-	FinalizeReload (937ms)
+		AnalyzeDomain (190ms)
+			TypeCache.Refresh (15ms)
+				TypeCache.ScanAssembly (4ms)
+			BuildScriptInfoCaches (163ms)
+			ResolveRequiredComponents (7ms)
+	FinalizeReload (1006ms)
 		ReleaseScriptCaches (0ms)
 		RebuildScriptCaches (0ms)
-		SetupLoadedEditorAssemblies (755ms)
+		SetupLoadedEditorAssemblies (820ms)
 			LogAssemblyErrors (0ms)
-			InitializePlatformSupportModulesInManaged (28ms)
-			SetLoadedEditorAssemblies (10ms)
-			BeforeProcessingInitializeOnLoad (303ms)
-			ProcessInitializeOnLoadAttributes (300ms)
-			ProcessInitializeOnLoadMethodAttributes (102ms)
-			AfterProcessingInitializeOnLoad (13ms)
-			EditorAssembliesLoaded (0ms)
+			InitializePlatformSupportModulesInManaged (18ms)
+			SetLoadedEditorAssemblies (9ms)
+			BeforeProcessingInitializeOnLoad (313ms)
+			ProcessInitializeOnLoadAttributes (324ms)
+			ProcessInitializeOnLoadMethodAttributes (140ms)
+			AfterProcessingInitializeOnLoad (17ms)
+			EditorAssembliesLoaded (1ms)
 		ExecutionOrderSort2 (0ms)
-		AwakeInstancesAfterBackupRestoration (11ms)
-Refreshing native plugins compatible for Editor in 4.53 ms, found 0 plugins.
+		AwakeInstancesAfterBackupRestoration (12ms)
+Refreshing native plugins compatible for Editor in 5.01 ms, found 1 plugins.
 Preloading 0 native plugins for Editor in 0.00 ms.
 Unloading 0 Unused Serialized files (Serialized files now loaded: 0)
-Unloading 2196 unused Assets / (0.5 MB). Loaded Objects now: 2796.
-Memory consumption went from 83.0 MB to 82.5 MB.
-Total: 8.891500 ms (FindLiveObjects: 0.269900 ms CreateObjectMapping: 0.147300 ms MarkObjects: 7.789100 ms  DeleteObjects: 0.683800 ms)
+Unloading 3256 unused Assets / (0.9 MB). Loaded Objects now: 3847.
+Memory consumption went from 92.4 MB to 91.5 MB.
+Total: 7.355100 ms (FindLiveObjects: 0.364100 ms CreateObjectMapping: 0.352600 ms MarkObjects: 5.697900 ms  DeleteObjects: 0.939200 ms)
+
+Prepare: number of updated asset objects reloaded= 0
+========================================================================
+Received Prepare
+Begin MonoManager ReloadAssembly
+Symbol file LoadedFromMemory is not a mono symbol file
+- Loaded All Assemblies, in  1.009 seconds
+Refreshing native plugins compatible for Editor in 5.60 ms, found 1 plugins.
+Native extension for iOS target not found
+Native extension for Android target not found
+Native extension for WindowsStandalone target not found
+Native extension for OSXStandalone target not found
+[Package Manager] Failed to launch server process. Reason: Unity was launched with the -noUpm command-line argument
+[Package Manager] Unable to send message (not connected to server process).
+[Package Manager] Cannot connect to Unity Package Manager local server
+ScheduleIndexationOnStartup MainProcess:False IndexOnStartup:True
+Mono: successfully reloaded assembly
+- Finished resetting the current domain, in  0.908 seconds
+Domain Reload Profiling: 1910ms
+	BeginReloadAssembly (286ms)
+		ExecutionOrderSort (0ms)
+		DisableScriptedObjects (23ms)
+		BackupInstance (0ms)
+		ReleaseScriptingObjects (0ms)
+		CreateAndSetChildDomain (58ms)
+	RebuildCommonClasses (47ms)
+	RebuildNativeTypeToScriptingClass (19ms)
+	initialDomainReloadingComplete (41ms)
+	LoadAllAssembliesAndSetupDomain (608ms)
+		LoadAssemblies (566ms)
+		RebuildTransferFunctionScriptingTraits (0ms)
+		AnalyzeDomain (177ms)
+			TypeCache.Refresh (10ms)
+				TypeCache.ScanAssembly (0ms)
+			BuildScriptInfoCaches (159ms)
+			ResolveRequiredComponents (4ms)
+	FinalizeReload (909ms)
+		ReleaseScriptCaches (0ms)
+		RebuildScriptCaches (0ms)
+		SetupLoadedEditorAssemblies (747ms)
+			LogAssemblyErrors (0ms)
+			InitializePlatformSupportModulesInManaged (17ms)
+			SetLoadedEditorAssemblies (8ms)
+			BeforeProcessingInitializeOnLoad (325ms)
+			ProcessInitializeOnLoadAttributes (262ms)
+			ProcessInitializeOnLoadMethodAttributes (125ms)
+			AfterProcessingInitializeOnLoad (10ms)
+			EditorAssembliesLoaded (0ms)
+		ExecutionOrderSort2 (0ms)
+		AwakeInstancesAfterBackupRestoration (7ms)
+Refreshing native plugins compatible for Editor in 8.17 ms, found 1 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Unloading 0 Unused Serialized files (Serialized files now loaded: 0)
+Unloading 3256 unused Assets / (0.7 MB). Loaded Objects now: 3851.
+Memory consumption went from 92.4 MB to 91.7 MB.
+Total: 10.035600 ms (FindLiveObjects: 0.480500 ms CreateObjectMapping: 0.348900 ms MarkObjects: 8.211800 ms  DeleteObjects: 0.993100 ms)
+
+Prepare: number of updated asset objects reloaded= 0
+========================================================================
+Received Prepare
+Begin MonoManager ReloadAssembly
+[Licensing::Client] Successfully resolved entitlement details
+[Licensing::Module] License group:
+  Id: F4-ATU6-VSZ8-RZS2-73JK-XXXX
+  Product: Unity Personal
+  Type: ULF
+  Expiration: Unlimited
+[Licensing::Module] License group:
+  Id: 1374479331469-UnityPersXXXX
+  Product: Unity Personal
+  Type: Assigned
+  Expiration: Unlimited
+Symbol file LoadedFromMemory is not a mono symbol file
+- Loaded All Assemblies, in  1.021 seconds
+Refreshing native plugins compatible for Editor in 4.21 ms, found 1 plugins.
+Native extension for iOS target not found
+Native extension for Android target not found
+Native extension for WindowsStandalone target not found
+Native extension for OSXStandalone target not found
+[Package Manager] Failed to launch server process. Reason: Unity was launched with the -noUpm command-line argument
+[Package Manager] Unable to send message (not connected to server process).
+[Package Manager] Cannot connect to Unity Package Manager local server
+ScheduleIndexationOnStartup MainProcess:False IndexOnStartup:True
+Mono: successfully reloaded assembly
+- Finished resetting the current domain, in  0.698 seconds
+Domain Reload Profiling: 1713ms
+	BeginReloadAssembly (360ms)
+		ExecutionOrderSort (0ms)
+		DisableScriptedObjects (23ms)
+		BackupInstance (0ms)
+		ReleaseScriptingObjects (0ms)
+		CreateAndSetChildDomain (108ms)
+	RebuildCommonClasses (57ms)
+	RebuildNativeTypeToScriptingClass (19ms)
+	initialDomainReloadingComplete (41ms)
+	LoadAllAssembliesAndSetupDomain (537ms)
+		LoadAssemblies (515ms)
+		RebuildTransferFunctionScriptingTraits (0ms)
+		AnalyzeDomain (162ms)
+			TypeCache.Refresh (14ms)
+				TypeCache.ScanAssembly (3ms)
+			BuildScriptInfoCaches (140ms)
+			ResolveRequiredComponents (3ms)
+	FinalizeReload (699ms)
+		ReleaseScriptCaches (0ms)
+		RebuildScriptCaches (0ms)
+		SetupLoadedEditorAssemblies (555ms)
+			LogAssemblyErrors (0ms)
+			InitializePlatformSupportModulesInManaged (14ms)
+			SetLoadedEditorAssemblies (7ms)
+			BeforeProcessingInitializeOnLoad (215ms)
+			ProcessInitializeOnLoadAttributes (215ms)
+			ProcessInitializeOnLoadMethodAttributes (94ms)
+			AfterProcessingInitializeOnLoad (9ms)
+			EditorAssembliesLoaded (0ms)
+		ExecutionOrderSort2 (0ms)
+		AwakeInstancesAfterBackupRestoration (7ms)
+Refreshing native plugins compatible for Editor in 4.59 ms, found 1 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Unloading 0 Unused Serialized files (Serialized files now loaded: 0)
+Unloading 3256 unused Assets / (0.8 MB). Loaded Objects now: 3855.
+Memory consumption went from 92.4 MB to 91.6 MB.
+Total: 6.451600 ms (FindLiveObjects: 0.426400 ms CreateObjectMapping: 0.247300 ms MarkObjects: 4.913700 ms  DeleteObjects: 0.862100 ms)
 
 Prepare: number of updated asset objects reloaded= 0
 ========================================================================
 Received Import Request.
-  Time since last request: 28.300267 seconds.
-  path: Assets/Tiny Swords/Scenes/Demo Pawn and Resources.unity
-  artifactKey: Guid(356c3d8d74a40494195f85258dd25cfe) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Tiny Swords/Scenes/Demo Pawn and Resources.unity using Guid(356c3d8d74a40494195f85258dd25cfe) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: 'e2f3015b323259ba6ec1359d7bdea67f') in 0.0033663 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 0
+  Time since last request: 206613.485894 seconds.
+  path: Assets/Prefabs/Blue Units/Blue Archer.prefab
+  artifactKey: Guid(2f59e4fafd34b8c4bab7d051021e8517) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Prefabs/Blue Units/Blue Archer.prefab using Guid(2f59e4fafd34b8c4bab7d051021e8517) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '27a33176e25b66672e4bec15a1155ff7') in 0.1007866 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 38
+
+========================================================================
+Received Prepare
+Begin MonoManager ReloadAssembly
+Symbol file LoadedFromMemory is not a mono symbol file
+- Loaded All Assemblies, in  0.996 seconds
+Refreshing native plugins compatible for Editor in 5.40 ms, found 1 plugins.
+Native extension for iOS target not found
+Native extension for Android target not found
+Native extension for WindowsStandalone target not found
+Native extension for OSXStandalone target not found
+[Package Manager] Failed to launch server process. Reason: Unity was launched with the -noUpm command-line argument
+[Package Manager] Unable to send message (not connected to server process).
+[Package Manager] Cannot connect to Unity Package Manager local server
+ScheduleIndexationOnStartup MainProcess:False IndexOnStartup:True
+Mono: successfully reloaded assembly
+- Finished resetting the current domain, in  1.104 seconds
+Domain Reload Profiling: 2094ms
+	BeginReloadAssembly (292ms)
+		ExecutionOrderSort (0ms)
+		DisableScriptedObjects (19ms)
+		BackupInstance (0ms)
+		ReleaseScriptingObjects (0ms)
+		CreateAndSetChildDomain (66ms)
+	RebuildCommonClasses (49ms)
+	RebuildNativeTypeToScriptingClass (17ms)
+	initialDomainReloadingComplete (41ms)
+	LoadAllAssembliesAndSetupDomain (590ms)
+		LoadAssemblies (560ms)
+		RebuildTransferFunctionScriptingTraits (0ms)
+		AnalyzeDomain (167ms)
+			TypeCache.Refresh (8ms)
+				TypeCache.ScanAssembly (0ms)
+			BuildScriptInfoCaches (152ms)
+			ResolveRequiredComponents (4ms)
+	FinalizeReload (1105ms)
+		ReleaseScriptCaches (0ms)
+		RebuildScriptCaches (0ms)
+		SetupLoadedEditorAssemblies (900ms)
+			LogAssemblyErrors (0ms)
+			InitializePlatformSupportModulesInManaged (29ms)
+			SetLoadedEditorAssemblies (13ms)
+			BeforeProcessingInitializeOnLoad (432ms)
+			ProcessInitializeOnLoadAttributes (253ms)
+			ProcessInitializeOnLoadMethodAttributes (161ms)
+			AfterProcessingInitializeOnLoad (12ms)
+			EditorAssembliesLoaded (1ms)
+		ExecutionOrderSort2 (0ms)
+		AwakeInstancesAfterBackupRestoration (10ms)
+Refreshing native plugins compatible for Editor in 6.41 ms, found 1 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Unloading 0 Unused Serialized files (Serialized files now loaded: 0)
+Unloading 3256 unused Assets / (0.8 MB). Loaded Objects now: 3868.
+Memory consumption went from 93.5 MB to 92.8 MB.
+Total: 7.297400 ms (FindLiveObjects: 0.375100 ms CreateObjectMapping: 0.266500 ms MarkObjects: 5.752500 ms  DeleteObjects: 0.901800 ms)
+
+Prepare: number of updated asset objects reloaded= 0
+========================================================================
+Received Prepare
+Begin MonoManager ReloadAssembly
+[Licensing::Client] Successfully resolved entitlement details
+[Licensing::Module] License group:
+  Id: F4-ATU6-VSZ8-RZS2-73JK-XXXX
+  Product: Unity Personal
+  Type: ULF
+  Expiration: Unlimited
+[Licensing::Module] License group:
+  Id: 1374479331469-UnityPersXXXX
+  Product: Unity Personal
+  Type: Assigned
+  Expiration: Unlimited
+Symbol file LoadedFromMemory is not a mono symbol file
+- Loaded All Assemblies, in  1.229 seconds
+Refreshing native plugins compatible for Editor in 8.97 ms, found 1 plugins.
+Native extension for iOS target not found
+Native extension for Android target not found
+Native extension for WindowsStandalone target not found
+Native extension for OSXStandalone target not found
+[Package Manager] Failed to launch server process. Reason: Unity was launched with the -noUpm command-line argument
+[Package Manager] Unable to send message (not connected to server process).
+[Package Manager] Cannot connect to Unity Package Manager local server
+ScheduleIndexationOnStartup MainProcess:False IndexOnStartup:True
+Mono: successfully reloaded assembly
+- Finished resetting the current domain, in  1.083 seconds
+Domain Reload Profiling: 2302ms
+	BeginReloadAssembly (350ms)
+		ExecutionOrderSort (0ms)
+		DisableScriptedObjects (24ms)
+		BackupInstance (0ms)
+		ReleaseScriptingObjects (0ms)
+		CreateAndSetChildDomain (65ms)
+	RebuildCommonClasses (75ms)
+	RebuildNativeTypeToScriptingClass (21ms)
+	initialDomainReloadingComplete (66ms)
+	LoadAllAssembliesAndSetupDomain (706ms)
+		LoadAssemblies (702ms)
+		RebuildTransferFunctionScriptingTraits (0ms)
+		AnalyzeDomain (186ms)
+			TypeCache.Refresh (10ms)
+				TypeCache.ScanAssembly (0ms)
+			BuildScriptInfoCaches (167ms)
+			ResolveRequiredComponents (4ms)
+	FinalizeReload (1084ms)
+		ReleaseScriptCaches (0ms)
+		RebuildScriptCaches (0ms)
+		SetupLoadedEditorAssemblies (885ms)
+			LogAssemblyErrors (0ms)
+			InitializePlatformSupportModulesInManaged (20ms)
+			SetLoadedEditorAssemblies (9ms)
+			BeforeProcessingInitializeOnLoad (331ms)
+			ProcessInitializeOnLoadAttributes (349ms)
+			ProcessInitializeOnLoadMethodAttributes (156ms)
+			AfterProcessingInitializeOnLoad (18ms)
+			EditorAssembliesLoaded (1ms)
+		ExecutionOrderSort2 (0ms)
+		AwakeInstancesAfterBackupRestoration (12ms)
+Refreshing native plugins compatible for Editor in 8.32 ms, found 1 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Unloading 0 Unused Serialized files (Serialized files now loaded: 0)
+Unloading 3256 unused Assets / (0.8 MB). Loaded Objects now: 3872.
+Memory consumption went from 93.5 MB to 92.7 MB.
+Total: 14.311200 ms (FindLiveObjects: 0.791100 ms CreateObjectMapping: 0.652600 ms MarkObjects: 11.360200 ms  DeleteObjects: 1.505200 ms)
+
+Prepare: number of updated asset objects reloaded= 0
+========================================================================
+Received Import Request.
+  Time since last request: 46771.720115 seconds.
+  path: Assets/Tiny Swords/Terrain/Tileset/Palette/Terrain Palette.prefab
+  artifactKey: Guid(f5ac994577ed80246ab446a64f1936ec) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Tiny Swords/Terrain/Tileset/Palette/Terrain Palette.prefab using Guid(f5ac994577ed80246ab446a64f1936ec) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '5f4058034f28e3e4fadd97cce9e6b63a') in 0.1334956 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 92
 
 ========================================================================
 Received Prepare
@@ -377,8 +601,8 @@ Begin MonoManager ReloadAssembly
   Type: Assigned
   Expiration: Unlimited
 Symbol file LoadedFromMemory is not a mono symbol file
-- Loaded All Assemblies, in  0.992 seconds
-Refreshing native plugins compatible for Editor in 7.02 ms, found 0 plugins.
+- Loaded All Assemblies, in  1.090 seconds
+Refreshing native plugins compatible for Editor in 5.95 ms, found 1 plugins.
 Native extension for iOS target not found
 Native extension for Android target not found
 Native extension for WindowsStandalone target not found
@@ -388,78 +612,740 @@ Native extension for OSXStandalone target not found
 [Package Manager] Cannot connect to Unity Package Manager local server
 ScheduleIndexationOnStartup MainProcess:False IndexOnStartup:True
 Mono: successfully reloaded assembly
-- Finished resetting the current domain, in  0.843 seconds
-Domain Reload Profiling: 1827ms
-	BeginReloadAssembly (301ms)
+- Finished resetting the current domain, in  1.076 seconds
+Domain Reload Profiling: 2159ms
+	BeginReloadAssembly (307ms)
 		ExecutionOrderSort (0ms)
-		DisableScriptedObjects (14ms)
+		DisableScriptedObjects (20ms)
 		BackupInstance (0ms)
 		ReleaseScriptingObjects (0ms)
 		CreateAndSetChildDomain (60ms)
-	RebuildCommonClasses (55ms)
-	RebuildNativeTypeToScriptingClass (18ms)
-	initialDomainReloadingComplete (41ms)
-	LoadAllAssembliesAndSetupDomain (568ms)
-		LoadAssemblies (555ms)
+	RebuildCommonClasses (58ms)
+	RebuildNativeTypeToScriptingClass (24ms)
+	initialDomainReloadingComplete (49ms)
+	LoadAllAssembliesAndSetupDomain (644ms)
+		LoadAssemblies (626ms)
 		RebuildTransferFunctionScriptingTraits (0ms)
 		AnalyzeDomain (173ms)
-			TypeCache.Refresh (10ms)
+			TypeCache.Refresh (8ms)
 				TypeCache.ScanAssembly (0ms)
-			BuildScriptInfoCaches (154ms)
-			ResolveRequiredComponents (5ms)
-	FinalizeReload (844ms)
+			BuildScriptInfoCaches (155ms)
+			ResolveRequiredComponents (4ms)
+	FinalizeReload (1077ms)
 		ReleaseScriptCaches (0ms)
 		RebuildScriptCaches (0ms)
-		SetupLoadedEditorAssemblies (660ms)
+		SetupLoadedEditorAssemblies (863ms)
 			LogAssemblyErrors (0ms)
 			InitializePlatformSupportModulesInManaged (21ms)
-			SetLoadedEditorAssemblies (6ms)
-			BeforeProcessingInitializeOnLoad (242ms)
-			ProcessInitializeOnLoadAttributes (264ms)
-			ProcessInitializeOnLoadMethodAttributes (111ms)
-			AfterProcessingInitializeOnLoad (14ms)
-			EditorAssembliesLoaded (0ms)
+			SetLoadedEditorAssemblies (10ms)
+			BeforeProcessingInitializeOnLoad (375ms)
+			ProcessInitializeOnLoadAttributes (283ms)
+			ProcessInitializeOnLoadMethodAttributes (153ms)
+			AfterProcessingInitializeOnLoad (20ms)
+			EditorAssembliesLoaded (2ms)
 		ExecutionOrderSort2 (0ms)
-		AwakeInstancesAfterBackupRestoration (14ms)
-Refreshing native plugins compatible for Editor in 10.63 ms, found 0 plugins.
+		AwakeInstancesAfterBackupRestoration (16ms)
+Refreshing native plugins compatible for Editor in 4.99 ms, found 1 plugins.
 Preloading 0 native plugins for Editor in 0.00 ms.
 Unloading 0 Unused Serialized files (Serialized files now loaded: 0)
-Unloading 2196 unused Assets / (357.9 KB). Loaded Objects now: 2798.
-Memory consumption went from 83.1 MB to 82.7 MB.
-Total: 15.627600 ms (FindLiveObjects: 0.673600 ms CreateObjectMapping: 0.393000 ms MarkObjects: 13.500700 ms  DeleteObjects: 1.057800 ms)
+Unloading 3256 unused Assets / (0.8 MB). Loaded Objects now: 3876.
+Memory consumption went from 93.6 MB to 92.7 MB.
+Total: 7.535200 ms (FindLiveObjects: 0.384800 ms CreateObjectMapping: 0.218500 ms MarkObjects: 5.938600 ms  DeleteObjects: 0.992000 ms)
 
 Prepare: number of updated asset objects reloaded= 0
 ========================================================================
 Received Import Request.
-  Time since last request: 97.393649 seconds.
-  path: Assets/Tiny Swords/Buildings/Black Buildings/Archery.png
-  artifactKey: Guid(5bdc3e2b64c8049f4a66e1061f28dd70) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Tiny Swords/Buildings/Black Buildings/Archery.png using Guid(5bdc3e2b64c8049f4a66e1061f28dd70) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '7350feaa271e6b9737609ffebb864792') in 0.1101856 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 3
+  Time since last request: 285.756290 seconds.
+  path: Assets/Scripts/GameManager/MapManager.cs
+  artifactKey: Guid(48033e5b22d65c94696557114a8134cf) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e)
+Start importing Assets/Scripts/GameManager/MapManager.cs using Guid(48033e5b22d65c94696557114a8134cf) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e) (ScriptedImporter) -> (artifact id: '5bd95f7a2bcba19fb0d41e4af017d252') in 0.1930091 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 0
 
 ========================================================================
 Received Import Request.
-  Time since last request: 0.000705 seconds.
-  path: Assets/Tiny Swords/Buildings/Black Buildings/House1.png
-  artifactKey: Guid(8e0b9a78c772b411fbc9b82e02303336) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Tiny Swords/Buildings/Black Buildings/House1.png using Guid(8e0b9a78c772b411fbc9b82e02303336) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: 'd5c2a64ed011f2b2b362f0fe7de5797e') in 0.014771 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 3
+  Time since last request: 0.000848 seconds.
+  path: Assets/Tiny Swords/Pawn and Resources/Pawn/Blue Pawn/Pawn_Run Pickaxe.png
+  artifactKey: Guid(0e4bc3f71c0ef41b7871c381f88b2c86) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e)
+Start importing Assets/Tiny Swords/Pawn and Resources/Pawn/Blue Pawn/Pawn_Run Pickaxe.png using Guid(0e4bc3f71c0ef41b7871c381f88b2c86) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e) (ScriptedImporter)[Licensing::Client] Successfully resolved entitlement details
+[Licensing::Module] License group:
+  Id: F4-ATU6-VSZ8-RZS2-73JK-XXXX
+  Product: Unity Personal
+  Type: ULF
+  Expiration: Unlimited
+[Licensing::Module] License group:
+  Id: 1374479331469-UnityPersXXXX
+  Product: Unity Personal
+  Type: Assigned
+  Expiration: Unlimited
+[Licensing::Client] Successfully resolved entitlement details
+[Licensing::Module] License group:
+  Id: F4-ATU6-VSZ8-RZS2-73JK-XXXX
+  Product: Unity Personal
+  Type: ULF
+  Expiration: Unlimited
+[Licensing::Module] License group:
+  Id: 1374479331469-UnityPersXXXX
+  Product: Unity Personal
+  Type: Assigned
+  Expiration: Unlimited
+ -> (artifact id: '9e0cc5627fa2753179a7e0bb920905b8') in 0.142217 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 8
 
 ========================================================================
 Received Import Request.
-  Time since last request: 0.000744 seconds.
-  path: Assets/Tiny Swords/Buildings/Black Buildings/Monastery.png
-  artifactKey: Guid(d8438425f07ba4e019d15b79cb6ce389) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Tiny Swords/Buildings/Black Buildings/Monastery.png using Guid(d8438425f07ba4e019d15b79cb6ce389) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '22dc92f0423d33420d20063a7194cbbf') in 0.0135461 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 3
+  Time since last request: 0.000402 seconds.
+  path: Assets/Tiny Swords/Pawn and Resources/Pawn/Red Pawn/Pawn_Run.png
+  artifactKey: Guid(28b0ba1422b0a45b1835fe581069df6c) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e)
+Start importing Assets/Tiny Swords/Pawn and Resources/Pawn/Red Pawn/Pawn_Run.png using Guid(28b0ba1422b0a45b1835fe581069df6c) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e) (ScriptedImporter) -> (artifact id: '15701b5e7264275d49fa6a5744eaf29b') in 0.0427229 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 8
 
 ========================================================================
 Received Import Request.
-  Time since last request: 0.000520 seconds.
-  path: Assets/Tiny Swords/Buildings/Black Buildings/House2.png
-  artifactKey: Guid(cb445ff62c7c14026925f63218d44e2a) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Tiny Swords/Buildings/Black Buildings/House2.png using Guid(cb445ff62c7c14026925f63218d44e2a) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: 'bb05f2edf43b67dd4c3bfbdfdfeb9c0a') in 0.0148127 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 3
+  Time since last request: 0.000911 seconds.
+  path: Assets/Tiny Swords/Units/Black Units/Archer/Archer_Shoot.png
+  artifactKey: Guid(51acd452e6cca4a11815bb117abc35b3) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e)
+Start importing Assets/Tiny Swords/Units/Black Units/Archer/Archer_Shoot.png using Guid(51acd452e6cca4a11815bb117abc35b3) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e) (ScriptedImporter) -> (artifact id: '673ec2f007dcb7d8bc68238de974681d') in 0.0445369 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 10
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000623 seconds.
+  path: Assets/Tiny Swords/Units/Purple Units/Warrior/Warrior_Run.png
+  artifactKey: Guid(20181a9aff07341728fa8dec79be0b68) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e)
+Start importing Assets/Tiny Swords/Units/Purple Units/Warrior/Warrior_Run.png using Guid(20181a9aff07341728fa8dec79be0b68) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e) (ScriptedImporter) -> (artifact id: '22458a62fe6c6a4612a02b28c9d82dae') in 0.0500053 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 8
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000032 seconds.
+  path: Assets/Tiny Swords/Pawn and Resources/Pawn/Red Pawn/Pawn_Idle Hammer.png
+  artifactKey: Guid(5272445d48eea4581b6a4f0c1dc3331e) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e)
+Start importing Assets/Tiny Swords/Pawn and Resources/Pawn/Red Pawn/Pawn_Idle Hammer.png using Guid(5272445d48eea4581b6a4f0c1dc3331e) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e) (ScriptedImporter) -> (artifact id: '53b5e5082bb2300a64f65846724af5e4') in 0.0559394 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 10
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000683 seconds.
+  path: Assets/Tiny Swords/Units/Purple Units/Warrior/Warrior_Idle.png
+  artifactKey: Guid(0505cf46dcd784e559fa26016d355ac0) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e)
+Start importing Assets/Tiny Swords/Units/Purple Units/Warrior/Warrior_Idle.png using Guid(0505cf46dcd784e559fa26016d355ac0) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e) (ScriptedImporter) -> (artifact id: '519409cdbd9cb314aeed5d52cd49d1fb') in 0.0479051 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 10
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000434 seconds.
+  path: Assets/Tiny Swords/Pawn and Resources/Pawn/Black Pawn/Pawn_Run Wood.png
+  artifactKey: Guid(8ffb803d3370c405fb9bf64e047d9912) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e)
+Start importing Assets/Tiny Swords/Pawn and Resources/Pawn/Black Pawn/Pawn_Run Wood.png using Guid(8ffb803d3370c405fb9bf64e047d9912) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e) (ScriptedImporter) -> (artifact id: '159686c7de662986bd3f2df8c69389dc') in 0.0499265 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 8
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000780 seconds.
+  path: Assets/Tiny Swords/Pawn and Resources/Pawn/Blue Pawn/Pawn_Idle Pickaxe.png
+  artifactKey: Guid(89cdb6d504f254ad3909459b83e98a6b) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e)
+Start importing Assets/Tiny Swords/Pawn and Resources/Pawn/Blue Pawn/Pawn_Idle Pickaxe.png using Guid(89cdb6d504f254ad3909459b83e98a6b) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e) (ScriptedImporter) -> (artifact id: 'c328b5d8257dbb6faef1bd1e61a2b604') in 0.0470964 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 10
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.001009 seconds.
+  path: Assets/Tiny Swords/Units/Black Units/Archer/Archer_Idle.png
+  artifactKey: Guid(2a0fcb2f11a4d496d9d10417bc8e1ab1) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e)
+Start importing Assets/Tiny Swords/Units/Black Units/Archer/Archer_Idle.png using Guid(2a0fcb2f11a4d496d9d10417bc8e1ab1) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e) (ScriptedImporter) -> (artifact id: '2a63965b0790204c642d315caa0e3526') in 0.0411513 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 8
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000576 seconds.
+  path: Assets/Tiny Swords/Pawn and Resources/Pawn/Black Pawn/Pawn_Idle Knife.png
+  artifactKey: Guid(a842e4425a7dd4231be1e2a7342cadcb) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e)
+Start importing Assets/Tiny Swords/Pawn and Resources/Pawn/Black Pawn/Pawn_Idle Knife.png using Guid(a842e4425a7dd4231be1e2a7342cadcb) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e) (ScriptedImporter) -> (artifact id: '92697e4e50b72d3cbc1cb7c2f611e00a') in 0.0486321 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 10
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000499 seconds.
+  path: Assets/Tiny Swords/Pawn and Resources/Pawn/Black Pawn/Pawn_Interact Axe.png
+  artifactKey: Guid(c878335cd40734eedbf12e637fabf091) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e)
+Start importing Assets/Tiny Swords/Pawn and Resources/Pawn/Black Pawn/Pawn_Interact Axe.png using Guid(c878335cd40734eedbf12e637fabf091) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e) (ScriptedImporter) -> (artifact id: 'c1ce943bbf7f4cdd3cbb74b3cb278c34') in 0.0450061 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 8
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000641 seconds.
+  path: Assets/Tiny Swords/Pawn and Resources/Pawn/Black Pawn/Pawn_Run Pickaxe.png
+  artifactKey: Guid(d1b3157511998438b97e42771d635a40) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e)
+Start importing Assets/Tiny Swords/Pawn and Resources/Pawn/Black Pawn/Pawn_Run Pickaxe.png using Guid(d1b3157511998438b97e42771d635a40) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e) (ScriptedImporter) -> (artifact id: 'c38610d50ab89e144778385bf03ece49') in 0.0427509 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 8
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000800 seconds.
+  path: Assets/Tiny Swords/Pawn and Resources/Pawn/Black Pawn/Pawn_Idle Gold.png
+  artifactKey: Guid(c91d2d16286434f24b180b7c390d2fb6) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e)
+Start importing Assets/Tiny Swords/Pawn and Resources/Pawn/Black Pawn/Pawn_Idle Gold.png using Guid(c91d2d16286434f24b180b7c390d2fb6) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e) (ScriptedImporter) -> (artifact id: '94ce2a4046230d00e04f123b8864d731') in 0.0502025 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 10
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000899 seconds.
+  path: Assets/Tiny Swords/Units/Black Units/Warrior/Warrior_Attack2.png
+  artifactKey: Guid(44645e4f57549432fa7df8fe5fd7a0b1) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e)
+Start importing Assets/Tiny Swords/Units/Black Units/Warrior/Warrior_Attack2.png using Guid(44645e4f57549432fa7df8fe5fd7a0b1) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e) (ScriptedImporter) -> (artifact id: '81dad7440d1815a31759ae8c8b62d194') in 0.0397696 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 6
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000876 seconds.
+  path: Assets/Tiny Swords/Pawn and Resources/Pawn/Black Pawn/Pawn_Run Gold.png
+  artifactKey: Guid(64201d99f895043c684ceb4c9bc0a06f) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e)
+Start importing Assets/Tiny Swords/Pawn and Resources/Pawn/Black Pawn/Pawn_Run Gold.png using Guid(64201d99f895043c684ceb4c9bc0a06f) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e) (ScriptedImporter) -> (artifact id: '831e097d1a611800d2223c1d73211d50') in 0.0434151 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 8
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000638 seconds.
+  path: Assets/Tiny Swords/Units/Yellow Units/Warrior/Warrior_Run.png
+  artifactKey: Guid(dd4ec486caa454bfa9dfada1aadf9075) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e)
+Start importing Assets/Tiny Swords/Units/Yellow Units/Warrior/Warrior_Run.png using Guid(dd4ec486caa454bfa9dfada1aadf9075) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e) (ScriptedImporter) -> (artifact id: '56f04b5f7185be0a388bfdd9ae13181e') in 0.0470879 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 8
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000895 seconds.
+  path: Assets/Tiny Swords/Units/Yellow Units/Archer/Archer_Run.png
+  artifactKey: Guid(fc62820cc7ad24c0cb66e68c748a07e8) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e)
+Start importing Assets/Tiny Swords/Units/Yellow Units/Archer/Archer_Run.png using Guid(fc62820cc7ad24c0cb66e68c748a07e8) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e) (ScriptedImporter) -> (artifact id: 'c596af6d4af68689c44ee72292b47ef4') in 0.0527144 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 6
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000767 seconds.
+  path: Assets/Tiny Swords/Pawn and Resources/Pawn/Blue Pawn/Pawn_Run Meat.png
+  artifactKey: Guid(e9a634202eade4771bc4e747ccb45200) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e)
+Start importing Assets/Tiny Swords/Pawn and Resources/Pawn/Blue Pawn/Pawn_Run Meat.png using Guid(e9a634202eade4771bc4e747ccb45200) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e) (ScriptedImporter) -> (artifact id: 'b255e0f0eb2d9f1c3de55cea3183317b') in 0.055665 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 8
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000625 seconds.
+  path: Assets/Tiny Swords/Pawn and Resources/Pawn/Black Pawn/Pawn_Run.png
+  artifactKey: Guid(7514ecbdd73eb4d33b74f661658ff0fe) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e)
+Start importing Assets/Tiny Swords/Pawn and Resources/Pawn/Black Pawn/Pawn_Run.png using Guid(7514ecbdd73eb4d33b74f661658ff0fe) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e) (ScriptedImporter) -> (artifact id: '6ef88672b01b777a5904f638b15da88d') in 0.0563479 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 8
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000507 seconds.
+  path: Assets/Tiny Swords/Pawn and Resources/Pawn/Red Pawn/Pawn_Run Wood.png
+  artifactKey: Guid(817dcbc25466f40f084c993ed456fc87) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e)
+Start importing Assets/Tiny Swords/Pawn and Resources/Pawn/Red Pawn/Pawn_Run Wood.png using Guid(817dcbc25466f40f084c993ed456fc87) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e) (ScriptedImporter) -> (artifact id: '49331b9cf284ad7103badb45d59a033a') in 0.0458964 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 8
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000186 seconds.
+  path: Assets/Tiny Swords/Pawn and Resources/Pawn/Purple Pawn/Pawn_Idle Wood.png
+  artifactKey: Guid(3cb158f3342a043a183b2b1248c5e8ac) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e)
+Start importing Assets/Tiny Swords/Pawn and Resources/Pawn/Purple Pawn/Pawn_Idle Wood.png using Guid(3cb158f3342a043a183b2b1248c5e8ac) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e) (ScriptedImporter) -> (artifact id: '6c8905a2e5baf7a7666592638e35c3d6') in 0.0696673 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 10
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000428 seconds.
+  path: Assets/Tiny Swords/Pawn and Resources/Pawn/Yellow Pawn/Pawn_Run Pickaxe.png
+  artifactKey: Guid(404bb60d6c36248b4baea0aef4ccc9d8) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e)
+Start importing Assets/Tiny Swords/Pawn and Resources/Pawn/Yellow Pawn/Pawn_Run Pickaxe.png using Guid(404bb60d6c36248b4baea0aef4ccc9d8) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e) (ScriptedImporter) -> (artifact id: '162890ae5d9d1fc85f64cab9b137a064') in 0.0499462 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 8
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000201 seconds.
+  path: Assets/Tiny Swords/Pawn and Resources/Pawn/Yellow Pawn/Pawn_Idle Gold.png
+  artifactKey: Guid(d7d9cef10ac6c43629e75ee6b6368344) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e)
+Start importing Assets/Tiny Swords/Pawn and Resources/Pawn/Yellow Pawn/Pawn_Idle Gold.png using Guid(d7d9cef10ac6c43629e75ee6b6368344) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e) (ScriptedImporter) -> (artifact id: '8c4585e0cca800615a0c6d4f8fb48329') in 0.069409 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 10
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000429 seconds.
+  path: Assets/Tiny Swords/Pawn and Resources/Pawn/Purple Pawn/Pawn_Interact Hammer.png
+  artifactKey: Guid(907fb00d55ca84126a528ef0438e3f82) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e)
+Start importing Assets/Tiny Swords/Pawn and Resources/Pawn/Purple Pawn/Pawn_Interact Hammer.png using Guid(907fb00d55ca84126a528ef0438e3f82) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e) (ScriptedImporter) -> (artifact id: '424b0c0dc2a9d12bfce8325fb5def13c') in 0.0420036 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000034 seconds.
+  path: Assets/Tiny Swords/Pawn and Resources/Pawn/Purple Pawn/Pawn_Run Gold.png
+  artifactKey: Guid(a20057530a34347b3921eb017bf55328) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e)
+Start importing Assets/Tiny Swords/Pawn and Resources/Pawn/Purple Pawn/Pawn_Run Gold.png using Guid(a20057530a34347b3921eb017bf55328) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e) (ScriptedImporter) -> (artifact id: 'a302e7d72f3cac486ceba2271ce83a15') in 0.0494768 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 8
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000665 seconds.
+  path: Assets/Tiny Swords/Units/Purple Units/Warrior/Warrior_Guard.png
+  artifactKey: Guid(75208c2bfba6f4cdfafb875e643d06f7) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e)
+Start importing Assets/Tiny Swords/Units/Purple Units/Warrior/Warrior_Guard.png using Guid(75208c2bfba6f4cdfafb875e643d06f7) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e) (ScriptedImporter) -> (artifact id: '6350080a378279427f75747f16183a1d') in 0.055203 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 8
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000501 seconds.
+  path: Assets/Tiny Swords/Pawn and Resources/Pawn/Purple Pawn/Pawn_Run Meat.png
+  artifactKey: Guid(3bd7ac689c92a45569e3a254f1a4f37a) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e)
+Start importing Assets/Tiny Swords/Pawn and Resources/Pawn/Purple Pawn/Pawn_Run Meat.png using Guid(3bd7ac689c92a45569e3a254f1a4f37a) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e) (ScriptedImporter) -> (artifact id: '1d31d6f438a91d914096029482180662') in 0.0534513 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 8
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000408 seconds.
+  path: Assets/Tiny Swords/Pawn and Resources/Pawn/Red Pawn/Pawn_Idle Wood.png
+  artifactKey: Guid(03c23c57817d24c54ab9aa7ac40df536) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e)
+Start importing Assets/Tiny Swords/Pawn and Resources/Pawn/Red Pawn/Pawn_Idle Wood.png using Guid(03c23c57817d24c54ab9aa7ac40df536) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e) (ScriptedImporter) -> (artifact id: '4d6b3699f74d1ee0024416a13c0f6fc3') in 0.0761223 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 10
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000039 seconds.
+  path: Assets/Tiny Swords/Units/Black Units/Warrior/Warrior_Guard.png
+  artifactKey: Guid(cbf102d5a4ce248988ccf3b53090d379) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e)
+Start importing Assets/Tiny Swords/Units/Black Units/Warrior/Warrior_Guard.png using Guid(cbf102d5a4ce248988ccf3b53090d379) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e) (ScriptedImporter) -> (artifact id: '8680c20a82700954a20eb63a16c8e774') in 0.0557481 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 8
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000851 seconds.
+  path: Assets/Tiny Swords/Units/Blue Units/Archer/Archer_Idle.png
+  artifactKey: Guid(72c22f22ea5e4488390ba536cd5ab98d) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e)
+Start importing Assets/Tiny Swords/Units/Blue Units/Archer/Archer_Idle.png using Guid(72c22f22ea5e4488390ba536cd5ab98d) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e) (ScriptedImporter) -> (artifact id: 'afbd34623dd894678da4b32c9912e707') in 0.0533777 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 8
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000585 seconds.
+  path: Assets/Tiny Swords/Pawn and Resources/Pawn/Red Pawn/Pawn_Interact Knife.png
+  artifactKey: Guid(09c74e86e5505454b8c3b8ac249b11dd) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e)
+Start importing Assets/Tiny Swords/Pawn and Resources/Pawn/Red Pawn/Pawn_Interact Knife.png using Guid(09c74e86e5505454b8c3b8ac249b11dd) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e) (ScriptedImporter) -> (artifact id: '6213fb7b59d4148caeeeddd2475c08c2') in 0.0391224 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 6
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000673 seconds.
+  path: Assets/Tiny Swords/Units/Blue Units/Archer/Archer_Run.png
+  artifactKey: Guid(a2db8ff0b36884d3680f752d33764b12) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e)
+Start importing Assets/Tiny Swords/Units/Blue Units/Archer/Archer_Run.png using Guid(a2db8ff0b36884d3680f752d33764b12) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e) (ScriptedImporter) -> (artifact id: 'cd7d50ffc4dc5456609b785f5740ce8e') in 0.0397414 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 6
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000628 seconds.
+  path: Assets/Tiny Swords/Pawn and Resources/Pawn/Yellow Pawn/Pawn_Run Hammer.png
+  artifactKey: Guid(6440252f67cd44e66b820f7b5d2d4e89) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e)
+Start importing Assets/Tiny Swords/Pawn and Resources/Pawn/Yellow Pawn/Pawn_Run Hammer.png using Guid(6440252f67cd44e66b820f7b5d2d4e89) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e) (ScriptedImporter) -> (artifact id: '3fc810cba7f2a3941ed0a2824d4d3a9b') in 0.0466227 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 8
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000689 seconds.
+  path: Assets/Tiny Swords/Pawn and Resources/Pawn/Blue Pawn/Pawn_Interact Axe.png
+  artifactKey: Guid(0df49cd343f6c45efaa2c0194f0c502f) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e)
+Start importing Assets/Tiny Swords/Pawn and Resources/Pawn/Blue Pawn/Pawn_Interact Axe.png using Guid(0df49cd343f6c45efaa2c0194f0c502f) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e) (ScriptedImporter) -> (artifact id: 'feca8a6957c005d9471941923ec3896b') in 0.0491216 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 8
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000851 seconds.
+  path: Assets/Tiny Swords/Units/Blue Units/Warrior/Warrior_Attack1.png
+  artifactKey: Guid(7476f60a6f46a4dd0a8657b2d8780e3e) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e)
+Start importing Assets/Tiny Swords/Units/Blue Units/Warrior/Warrior_Attack1.png using Guid(7476f60a6f46a4dd0a8657b2d8780e3e) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e) (ScriptedImporter) -> (artifact id: '0c3fd0a7393dffe01ead2dc1243b2430') in 0.0386515 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 6
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000553 seconds.
+  path: Assets/Tiny Swords/Pawn and Resources/Pawn/Blue Pawn/Pawn_Idle Gold.png
+  artifactKey: Guid(0ded4e71abe454e3ba6fe73f74f24e0b) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e)
+Start importing Assets/Tiny Swords/Pawn and Resources/Pawn/Blue Pawn/Pawn_Idle Gold.png using Guid(0ded4e71abe454e3ba6fe73f74f24e0b) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e) (ScriptedImporter) -> (artifact id: 'd50a90fbbabca7ef46398294f49ce85e') in 0.05355 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 10
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.001194 seconds.
+  path: Assets/Tiny Swords/Pawn and Resources/Pawn/Blue Pawn/Pawn_Idle Hammer.png
+  artifactKey: Guid(1a7a89a06ac8b4cfe9d873208bffe54d) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e)
+Start importing Assets/Tiny Swords/Pawn and Resources/Pawn/Blue Pawn/Pawn_Idle Hammer.png using Guid(1a7a89a06ac8b4cfe9d873208bffe54d) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e) (ScriptedImporter) -> (artifact id: 'c1723fd6dc1a2b1e1dec6b257da5c6cc') in 0.0445413 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 10
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000479 seconds.
+  path: Assets/Prefabs/Blue Units/Blue Archer.prefab
+  artifactKey: Guid(2f59e4fafd34b8c4bab7d051021e8517) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e)
+Start importing Assets/Prefabs/Blue Units/Blue Archer.prefab using Guid(2f59e4fafd34b8c4bab7d051021e8517) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e) (ScriptedImporter) -> (artifact id: '83ede5eb22d93d7686f582376dcc6b14') in 0.0807243 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 19
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000486 seconds.
+  path: Assets/Prefabs/Red Units/Red Barracks.prefab
+  artifactKey: Guid(a9fab9d2dc99c7541853c163bea64043) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e)
+Start importing Assets/Prefabs/Red Units/Red Barracks.prefab using Guid(a9fab9d2dc99c7541853c163bea64043) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e) (ScriptedImporter) -> (artifact id: '8c3372071023d4c5d861522c026dc1fb') in 0.0284364 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 16
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000688 seconds.
+  path: Assets/Tiny Swords/Terrain/Tileset/Palette/Tree1 Tile.asset
+  artifactKey: Guid(dff12236d340901f68ba93170f440fd0) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e)
+Start importing Assets/Tiny Swords/Terrain/Tileset/Palette/Tree1 Tile.asset using Guid(dff12236d340901f68ba93170f440fd0) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e) (ScriptedImporter) -> (artifact id: '4ca61b59f38689e2e04babbbf15be4ff') in 0.0354143 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 9
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.001026 seconds.
+  path: Assets/Tiny Swords/Units/Blue Units/Warrior/Warrior_Run.png
+  artifactKey: Guid(d68bc01307d42455d93569208f8296bc) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e)
+Start importing Assets/Tiny Swords/Units/Blue Units/Warrior/Warrior_Run.png using Guid(d68bc01307d42455d93569208f8296bc) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e) (ScriptedImporter) -> (artifact id: 'b481958e97515234844d6280edf38710') in 0.0509495 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 8
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000702 seconds.
+  path: Assets/Prefabs/Blue Units/Blue Warrior.prefab
+  artifactKey: Guid(3d8ba2f08f8aeae41af069faadc1af02) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e)
+Start importing Assets/Prefabs/Blue Units/Blue Warrior.prefab using Guid(3d8ba2f08f8aeae41af069faadc1af02) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e) (ScriptedImporter) -> (artifact id: '38fed4a0e45923ed3dc63d32e8146d8f') in 0.0312285 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 25
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000454 seconds.
+  path: Assets/Tiny Swords/Pawn and Resources/Pawn/Red Pawn/Pawn_Interact Pickaxe.png
+  artifactKey: Guid(cfb27002b85fd4e33ba75364da384f0b) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e)
+Start importing Assets/Tiny Swords/Pawn and Resources/Pawn/Red Pawn/Pawn_Interact Pickaxe.png using Guid(cfb27002b85fd4e33ba75364da384f0b) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e) (ScriptedImporter) -> (artifact id: '4e62961746488df9cf079465486234ac') in 0.0413941 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 8
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000730 seconds.
+  path: Assets/Tiny Swords/Pawn and Resources/Pawn/Black Pawn/Pawn_Idle Hammer.png
+  artifactKey: Guid(a23df2a1bf8d048148ee28e5d15b9cc6) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e)
+Start importing Assets/Tiny Swords/Pawn and Resources/Pawn/Black Pawn/Pawn_Idle Hammer.png using Guid(a23df2a1bf8d048148ee28e5d15b9cc6) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e) (ScriptedImporter) -> (artifact id: '0e1d6477148a4216c49a5c76e3116ed4') in 0.0532096 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 10
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.001048 seconds.
+  path: Assets/Tiny Swords/Units/Purple Units/Archer/Archer_Idle.png
+  artifactKey: Guid(abc79d95ca2994e20b019ba42fccbcb9) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e)
+Start importing Assets/Tiny Swords/Units/Purple Units/Archer/Archer_Idle.png using Guid(abc79d95ca2994e20b019ba42fccbcb9) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e) (ScriptedImporter) -> (artifact id: '7ea1dbe97fb6abf4412e059d7940f7ff') in 0.0474317 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 8
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000531 seconds.
+  path: Assets/Tiny Swords/Pawn and Resources/Pawn/Yellow Pawn/Pawn_Run Meat.png
+  artifactKey: Guid(e991f7763d0a143a2b4fc9c2a7d76c04) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e)
+Start importing Assets/Tiny Swords/Pawn and Resources/Pawn/Yellow Pawn/Pawn_Run Meat.png using Guid(e991f7763d0a143a2b4fc9c2a7d76c04) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e) (ScriptedImporter) -> (artifact id: '7462bad426ddab41704fda7cf6cae66e') in 0.0454916 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 8
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000528 seconds.
+  path: Assets/Tiny Swords/Pawn and Resources/Pawn/Purple Pawn/Pawn_Run Pickaxe.png
+  artifactKey: Guid(5fd7ecdab2b614994ae44695ec0c6244) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e)
+Start importing Assets/Tiny Swords/Pawn and Resources/Pawn/Purple Pawn/Pawn_Run Pickaxe.png using Guid(5fd7ecdab2b614994ae44695ec0c6244) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e) (ScriptedImporter) -> (artifact id: '0d51919edd854a25a6a566198aa2fb82') in 0.0472927 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 8
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000427 seconds.
+  path: Assets/Tiny Swords/Units/Red Units/Archer/Archer_Shoot.png
+  artifactKey: Guid(750bc14c1e537452486c5efb15da4654) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e)
+Start importing Assets/Tiny Swords/Units/Red Units/Archer/Archer_Shoot.png using Guid(750bc14c1e537452486c5efb15da4654) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e) (ScriptedImporter) -> (artifact id: '724b4b152b3d3d3d53b529438a1509b7') in 0.0511499 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 10
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000573 seconds.
+  path: Assets/Prefabs/Red Units/Red Archer.prefab
+  artifactKey: Guid(2757c80e3cd3d8d43badd0a17b6b7c14) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e)
+Start importing Assets/Prefabs/Red Units/Red Archer.prefab using Guid(2757c80e3cd3d8d43badd0a17b6b7c14) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e) (ScriptedImporter) -> (artifact id: '6f4acba698f5acf827c35c2229aa6738') in 0.025288 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 19
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000386 seconds.
+  path: Assets/Tiny Swords/Pawn and Resources/Pawn/Blue Pawn/Pawn_Interact Hammer.png
+  artifactKey: Guid(8114b621d8ab44ee7bea7dd71516c390) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e)
+Start importing Assets/Tiny Swords/Pawn and Resources/Pawn/Blue Pawn/Pawn_Interact Hammer.png using Guid(8114b621d8ab44ee7bea7dd71516c390) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e) (ScriptedImporter) -> (artifact id: '760a0d8b75b6596bbed4937a28766a3e') in 0.0316974 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000407 seconds.
+  path: Assets/Tiny Swords/Pawn and Resources/Pawn/Purple Pawn/Pawn_Idle Pickaxe.png
+  artifactKey: Guid(2491b61b22bbe4a2dae80695d13a71ad) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e)
+Start importing Assets/Tiny Swords/Pawn and Resources/Pawn/Purple Pawn/Pawn_Idle Pickaxe.png using Guid(2491b61b22bbe4a2dae80695d13a71ad) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e) (ScriptedImporter) -> (artifact id: '1e06791a2d1244df42b32b21e53e9e4c') in 0.0471651 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 10
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000847 seconds.
+  path: Assets/Tiny Swords/Pawn and Resources/Pawn/Yellow Pawn/Pawn_Idle Knife.png
+  artifactKey: Guid(e482f3fc4efec40bd8940070f8025553) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e)
+Start importing Assets/Tiny Swords/Pawn and Resources/Pawn/Yellow Pawn/Pawn_Idle Knife.png using Guid(e482f3fc4efec40bd8940070f8025553) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e) (ScriptedImporter) -> (artifact id: 'd5f7379c2a705311cbc0e8648bc00286') in 0.0449083 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 10
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000575 seconds.
+  path: Assets/Tiny Swords/Pawn and Resources/Pawn/Red Pawn/Pawn_Run Gold.png
+  artifactKey: Guid(b1b999869bbf5427993e83da90af50b3) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e)
+Start importing Assets/Tiny Swords/Pawn and Resources/Pawn/Red Pawn/Pawn_Run Gold.png using Guid(b1b999869bbf5427993e83da90af50b3) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e) (ScriptedImporter) -> (artifact id: '8bdba4627cf4c1301daf213efff99b73') in 0.0408154 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 8
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000537 seconds.
+  path: Assets/Tiny Swords/Pawn and Resources/Pawn/Yellow Pawn/Pawn_Idle Hammer.png
+  artifactKey: Guid(5160dd189b14b4498bc50b91a85fdd32) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e)
+Start importing Assets/Tiny Swords/Pawn and Resources/Pawn/Yellow Pawn/Pawn_Idle Hammer.png using Guid(5160dd189b14b4498bc50b91a85fdd32) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e) (ScriptedImporter) -> (artifact id: '684f8fa751b4857aadd43f66f2fb8977') in 0.0462805 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 10
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000439 seconds.
+  path: Assets/Tiny Swords/Units/Yellow Units/Warrior/Warrior_Guard.png
+  artifactKey: Guid(5c87cae473436431aa358519284c5f02) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e)
+Start importing Assets/Tiny Swords/Units/Yellow Units/Warrior/Warrior_Guard.png using Guid(5c87cae473436431aa358519284c5f02) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e) (ScriptedImporter) -> (artifact id: '29ded2bf308f5452c3e390e54846a77a') in 0.0478098 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 8
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000612 seconds.
+  path: Assets/Tiny Swords/Pawn and Resources/Pawn/Yellow Pawn/Pawn_Idle Meat.png
+  artifactKey: Guid(ab3a0a80488f04734b6495be8d659b4e) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e)
+Start importing Assets/Tiny Swords/Pawn and Resources/Pawn/Yellow Pawn/Pawn_Idle Meat.png using Guid(ab3a0a80488f04734b6495be8d659b4e) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e) (ScriptedImporter) -> (artifact id: '1c46ee80cc548c00bd0933c990bd4852') in 0.047647 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 10
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000645 seconds.
+  path: Assets/Tiny Swords/Pawn and Resources/Pawn/Black Pawn/Pawn_Idle.png
+  artifactKey: Guid(f06e2727e33304d9d86114733c00ba84) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e)
+Start importing Assets/Tiny Swords/Pawn and Resources/Pawn/Black Pawn/Pawn_Idle.png using Guid(f06e2727e33304d9d86114733c00ba84) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e) (ScriptedImporter) -> (artifact id: '5b4c6ca1706082261625b05b02ec7e99') in 0.0494798 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 10
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000618 seconds.
+  path: Assets/Tiny Swords/Pawn and Resources/Pawn/Yellow Pawn/Pawn_Idle Axe.png
+  artifactKey: Guid(5de611b44c93b4b96a2780fc86a02e3f) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e)
+Start importing Assets/Tiny Swords/Pawn and Resources/Pawn/Yellow Pawn/Pawn_Idle Axe.png using Guid(5de611b44c93b4b96a2780fc86a02e3f) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e) (ScriptedImporter) -> (artifact id: '9dd166a178a62b318ad9baf50bcf8067') in 0.0507937 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 10
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000789 seconds.
+  path: Assets/Prefabs/Blue Units/Blue Barracks.prefab
+  artifactKey: Guid(b260646cd5cbd154d86cce0afb809ba4) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e)
+Start importing Assets/Prefabs/Blue Units/Blue Barracks.prefab using Guid(b260646cd5cbd154d86cce0afb809ba4) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e) (ScriptedImporter) -> (artifact id: 'a150918d66b7e2ac74c3921e8e34d96c') in 0.0241434 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 16
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000375 seconds.
+  path: Assets/Scripts/GameManager/GameElements/ArrowProjectile.cs
+  artifactKey: Guid(b2d50b5fccd129040be31ffb055bfc15) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e)
+Start importing Assets/Scripts/GameManager/GameElements/ArrowProjectile.cs using Guid(b2d50b5fccd129040be31ffb055bfc15) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e) (ScriptedImporter) -> (artifact id: '79ab9dd140e2c6209e870d87039069da') in 0.0094983 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 0
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.001050 seconds.
+  path: Assets/Tiny Swords/Units/Yellow Units/Warrior/Warrior_Attack1.png
+  artifactKey: Guid(f14d034ef5d7140fd97bc02541c6db83) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e)
+Start importing Assets/Tiny Swords/Units/Yellow Units/Warrior/Warrior_Attack1.png using Guid(f14d034ef5d7140fd97bc02541c6db83) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e) (ScriptedImporter) -> (artifact id: '16f2ace8fda282ab859e51e77bcabd07') in 0.0433152 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 6
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000534 seconds.
+  path: Assets/Tiny Swords/Pawn and Resources/Pawn/Blue Pawn/Pawn_Run Hammer.png
+  artifactKey: Guid(67c795b079b314b10b09a0860addf4e6) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e)
+Start importing Assets/Tiny Swords/Pawn and Resources/Pawn/Blue Pawn/Pawn_Run Hammer.png using Guid(67c795b079b314b10b09a0860addf4e6) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e) (ScriptedImporter) -> (artifact id: 'd5d69c2d9841d9f5766f8f4b7b205ef4') in 0.0451306 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 8
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000611 seconds.
+  path: Assets/Tiny Swords/Pawn and Resources/Pawn/Purple Pawn/Pawn_Run Wood.png
+  artifactKey: Guid(5aff873f3a107444494d95e2dcffcf84) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e)
+Start importing Assets/Tiny Swords/Pawn and Resources/Pawn/Purple Pawn/Pawn_Run Wood.png using Guid(5aff873f3a107444494d95e2dcffcf84) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e) (ScriptedImporter) -> (artifact id: 'a4a9f25a5b03ff35c38040d78852d18b') in 0.0462228 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 8
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000544 seconds.
+  path: Assets/Tiny Swords/Pawn and Resources/Pawn/Purple Pawn/Pawn_Run.png
+  artifactKey: Guid(47abf0a3d512f49cb8592dcabe9aaa7f) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e)
+Start importing Assets/Tiny Swords/Pawn and Resources/Pawn/Purple Pawn/Pawn_Run.png using Guid(47abf0a3d512f49cb8592dcabe9aaa7f) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e) (ScriptedImporter) -> (artifact id: 'c4d96051e1a77ee08fb29bd320191187') in 0.048541 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 8
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000846 seconds.
+  path: Assets/Tiny Swords/Pawn and Resources/Pawn/Purple Pawn/Pawn_Idle Axe.png
+  artifactKey: Guid(e59673954632d42be855cc6c1c61d9a9) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e)
+Start importing Assets/Tiny Swords/Pawn and Resources/Pawn/Purple Pawn/Pawn_Idle Axe.png using Guid(e59673954632d42be855cc6c1c61d9a9) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e) (ScriptedImporter) -> (artifact id: '56bdec3a2c2c64a40eecc51ebd17858e') in 0.0514377 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 10
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000589 seconds.
+  path: Assets/Tiny Swords/Units/Black Units/Warrior/Warrior_Attack1.png
+  artifactKey: Guid(c1796ce8a90214f58b9162c2f91d3ea0) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e)
+Start importing Assets/Tiny Swords/Units/Black Units/Warrior/Warrior_Attack1.png using Guid(c1796ce8a90214f58b9162c2f91d3ea0) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e) (ScriptedImporter) -> (artifact id: 'd3e96355e501f30c8326568808d9ae46') in 0.0353073 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 6
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000772 seconds.
+  path: Assets/Scripts/GameManager/UnitManager.cs
+  artifactKey: Guid(9bd9f0eb6c0801344b6bf24bbebef72c) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e)
+Start importing Assets/Scripts/GameManager/UnitManager.cs using Guid(9bd9f0eb6c0801344b6bf24bbebef72c) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e) (ScriptedImporter) -> (artifact id: 'ff9414848ae637e81ccfba6047c0c2d2') in 0.0101649 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 0
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000754 seconds.
+  path: Assets/Tiny Swords/Pawn and Resources/Pawn/Red Pawn/Pawn_Interact Hammer.png
+  artifactKey: Guid(62b10a597c36e4cc4b6645f9515ea289) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e)
+Start importing Assets/Tiny Swords/Pawn and Resources/Pawn/Red Pawn/Pawn_Interact Hammer.png using Guid(62b10a597c36e4cc4b6645f9515ea289) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e) (ScriptedImporter) -> (artifact id: 'd22ef0e635d020c6ad0635125b9dd7ee') in 0.0310936 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000636 seconds.
+  path: Assets/Tiny Swords/Units/Purple Units/Warrior/Warrior_Attack2.png
+  artifactKey: Guid(9ffe9610632af4403b873bf67762494c) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e)
+Start importing Assets/Tiny Swords/Units/Purple Units/Warrior/Warrior_Attack2.png using Guid(9ffe9610632af4403b873bf67762494c) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e) (ScriptedImporter) -> (artifact id: '15b5fb707932ee2ca738bf51b7a2d5cd') in 0.0382416 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 6
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000921 seconds.
+  path: Assets/Tiny Swords/Units/Blue Units/Warrior/Warrior_Attack2.png
+  artifactKey: Guid(1a4bb483943d54c1d99bfdddf89fcb3a) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e)
+Start importing Assets/Tiny Swords/Units/Blue Units/Warrior/Warrior_Attack2.png using Guid(1a4bb483943d54c1d99bfdddf89fcb3a) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e) (ScriptedImporter) -> (artifact id: 'a52bc053aefe21fd9d08d344da7af079') in 0.0474117 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 6
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000910 seconds.
+  path: Assets/Tiny Swords/Pawn and Resources/Pawn/Blue Pawn/Pawn_Run.png
+  artifactKey: Guid(4f48e4ab7a963447da8d6a57e0d3fb72) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e)
+Start importing Assets/Tiny Swords/Pawn and Resources/Pawn/Blue Pawn/Pawn_Run.png using Guid(4f48e4ab7a963447da8d6a57e0d3fb72) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e) (ScriptedImporter) -> (artifact id: 'ee586577cf48440022833c7ad82beaeb') in 0.0506397 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 8
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000339 seconds.
+  path: Assets/Scripts/GameManager/GameElements/Unit.cs
+  artifactKey: Guid(83b813118a8e844439977d8289419e38) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e)
+Start importing Assets/Scripts/GameManager/GameElements/Unit.cs using Guid(83b813118a8e844439977d8289419e38) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e) (ScriptedImporter) -> (artifact id: '7df7fb7d6238ff5ea4c6623d90e8421a') in 0.0080416 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 0
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.001010 seconds.
+  path: Assets/Prefabs/Blue Units/Blue Archery.prefab
+  artifactKey: Guid(a7b8c9d0e1f2a3b4c5d6a7b8c9d0e1f2) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e)
+Start importing Assets/Prefabs/Blue Units/Blue Archery.prefab using Guid(a7b8c9d0e1f2a3b4c5d6a7b8c9d0e1f2) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e) (ScriptedImporter) -> (artifact id: '6b3bb3f9e99e3252e1d1c81a151b5a8e') in 0.0231372 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 16
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000251 seconds.
+  path: Assets/Prefabs/Red Units/Red Archery.prefab
+  artifactKey: Guid(b8c9d0e1f2a3b4c5d6a7b8c9d0e1f2a3) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e)
+Start importing Assets/Prefabs/Red Units/Red Archery.prefab using Guid(b8c9d0e1f2a3b4c5d6a7b8c9d0e1f2a3) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e) (ScriptedImporter) -> (artifact id: '9b17d1bf42b705eb7eb3af9fc4a30158') in 0.0266991 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 16
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000513 seconds.
+  path: Assets/Scripts/GameManager/GameElements/Unit.Tasks.cs
+  artifactKey: Guid(a53227c5613b16c49be9de6b72bbce37) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e)
+Start importing Assets/Scripts/GameManager/GameElements/Unit.Tasks.cs using Guid(a53227c5613b16c49be9de6b72bbce37) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e) (ScriptedImporter) -> (artifact id: '47bd972ec4d8c05ad438b6245d35273f') in 0.0063837 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 0
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000755 seconds.
+  path: Assets/Tiny Swords/Units/Purple Units/Archer/Archer_Run.png
+  artifactKey: Guid(2b767ed1c68e84da88b60934ba086f98) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e)
+Start importing Assets/Tiny Swords/Units/Purple Units/Archer/Archer_Run.png using Guid(2b767ed1c68e84da88b60934ba086f98) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e) (ScriptedImporter) -> (artifact id: '7e4a0c700137bc961cad54c8d189da95') in 0.0353329 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 6
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000767 seconds.
+  path: Assets/Tiny Swords/Units/Blue Units/Warrior/Warrior_Idle.png
+  artifactKey: Guid(63555c658eb534f48acbb1ba682fbec3) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e)
+Start importing Assets/Tiny Swords/Units/Blue Units/Warrior/Warrior_Idle.png using Guid(63555c658eb534f48acbb1ba682fbec3) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e) (ScriptedImporter) -> (artifact id: '82ec3c3c7056a35cb386aa132877a29d') in 0.0545627 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 10
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.001006 seconds.
+  path: Assets/Tiny Swords/Pawn and Resources/Pawn/Red Pawn/Pawn_Run Pickaxe.png
+  artifactKey: Guid(7e9f144d518ba45739c96e55ef815583) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e)
+Start importing Assets/Tiny Swords/Pawn and Resources/Pawn/Red Pawn/Pawn_Run Pickaxe.png using Guid(7e9f144d518ba45739c96e55ef815583) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e) (ScriptedImporter) -> (artifact id: '547c3c83b76f98330a8df599373845db') in 0.0482256 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 8
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000728 seconds.
+  path: Assets/Tiny Swords/Pawn and Resources/Pawn/Red Pawn/Pawn_Idle Knife.png
+  artifactKey: Guid(79b85fdc3c2b4480489331754e6b0090) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e)
+Start importing Assets/Tiny Swords/Pawn and Resources/Pawn/Red Pawn/Pawn_Idle Knife.png using Guid(79b85fdc3c2b4480489331754e6b0090) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e) (ScriptedImporter) -> (artifact id: '54630f6345d6126a36b34cd3b7b6d6b2') in 0.0563035 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 10
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000532 seconds.
+  path: Assets/Tiny Swords/Pawn and Resources/Pawn/Purple Pawn/Pawn_Idle.png
+  artifactKey: Guid(422c36b1ad215469382a665e4c38d854) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e)
+Start importing Assets/Tiny Swords/Pawn and Resources/Pawn/Purple Pawn/Pawn_Idle.png using Guid(422c36b1ad215469382a665e4c38d854) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e) (ScriptedImporter) -> (artifact id: 'e6593a29078e59fd80743db14a2263a6') in 0.0575485 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 10
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000459 seconds.
+  path: Assets/Tiny Swords/Pawn and Resources/Pawn/Blue Pawn/Pawn_Run Gold.png
+  artifactKey: Guid(7252edec0f69847718a6bca076e76130) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e)
+Start importing Assets/Tiny Swords/Pawn and Resources/Pawn/Blue Pawn/Pawn_Run Gold.png using Guid(7252edec0f69847718a6bca076e76130) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e) (ScriptedImporter) -> (artifact id: 'a0fb8b52c0af7189958b17cf7943dfd6') in 0.0436102 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 8
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000489 seconds.
+  path: Assets/Prefabs/Blue Units/Blue Base.prefab
+  artifactKey: Guid(ac223115f735f2a4a93843909f2756ed) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e)
+Start importing Assets/Prefabs/Blue Units/Blue Base.prefab using Guid(ac223115f735f2a4a93843909f2756ed) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e) (ScriptedImporter) -> (artifact id: '531253b09561415f6eb52a61d5cdc0e5') in 0.0272153 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 16
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000407 seconds.
+  path: Assets/Tiny Swords/Pawn and Resources/Pawn/Yellow Pawn/Pawn_Interact Pickaxe.png
+  artifactKey: Guid(2674591ac0c9f4735aeffe765a3761fa) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e)
+Start importing Assets/Tiny Swords/Pawn and Resources/Pawn/Yellow Pawn/Pawn_Interact Pickaxe.png using Guid(2674591ac0c9f4735aeffe765a3761fa) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e) (ScriptedImporter) -> (artifact id: 'c36b614bd35d7f63786d5ff3320dd78e') in 0.0561276 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 8
 
 Editor requested this worker to shutdown with reason: Scaling down because of idle timeout
 AssetImportWorker is now disconnected from the server

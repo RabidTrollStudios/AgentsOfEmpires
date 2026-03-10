@@ -73,7 +73,7 @@ namespace GameManager.Tests.PlayMode
 		{
 			var (agentGo, _, controller) = CreateFreshController();
 
-			controller.InitializeAgent(agentGo, "Human", "TestDLL", 0, null, ".");
+			controller.InitializeAgent(agentGo, "Blue", "TestDLL", 0, null, ".");
 
 			var textAreas = GetPrivateField<Text[]>(controller, "_debugTextAreas");
 			Assert.AreEqual(0, textAreas.Length,
@@ -87,7 +87,7 @@ namespace GameManager.Tests.PlayMode
 		{
 			var (agentGo, _, controller) = CreateFreshController();
 
-			controller.InitializeAgent(agentGo, "Human", "TestDLL", 0, null, ".");
+			controller.InitializeAgent(agentGo, "Blue", "TestDLL", 0, null, ".");
 
 			var updaters = GetPrivateField<Dictionary<string, Func<string>>>(
 				controller, "_debugUpdaters");
@@ -111,7 +111,7 @@ namespace GameManager.Tests.PlayMode
 				child.AddComponent<Text>();
 			}
 
-			controller.InitializeAgent(agentGo, "Human", "TestDLL", 0, panelGo, ".");
+			controller.InitializeAgent(agentGo, "Blue", "TestDLL", 0, panelGo, ".");
 
 			var textAreas = GetPrivateField<Text[]>(controller, "_debugTextAreas");
 			Assert.AreEqual(2, textAreas.Length,
@@ -210,13 +210,13 @@ namespace GameManager.Tests.PlayMode
 			textGo.transform.SetParent(panelGo.transform);
 			var textArea = textGo.AddComponent<Text>();
 
-			controller.InitializeAgent(agentGo, "Human", "TestDLL", 0, panelGo, ".");
+			controller.InitializeAgent(agentGo, "Blue", "TestDLL", 0, panelGo, ".");
 			SetHasAgentDebugging(true);
 			controller.enabled = true;
 
 			controller.Update();
 
-			Assert.AreEqual("Human TestDLL", textArea.text,
+			Assert.AreEqual("Blue TestDLL", textArea.text,
 				"Update with debugging on should write AgentName + AgentDLLName to the matching Text");
 
 			yield return null;

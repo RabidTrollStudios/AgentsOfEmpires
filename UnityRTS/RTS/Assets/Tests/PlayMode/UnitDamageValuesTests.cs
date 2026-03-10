@@ -18,13 +18,13 @@ namespace GameManager.Tests.PlayMode
 		#region Combat Units Have Positive Damage
 
 		/// <summary>
-		/// At runtime, SOLDIER has positive damage.
+		/// At runtime, WARRIOR has positive damage.
 		/// </summary>
 		[UnityTest]
-		public IEnumerator Runtime_Soldier_HasPositiveDamage()
+		public IEnumerator Runtime_Warrior_HasPositiveDamage()
 		{
-			Assert.Greater(Constants.DAMAGE[UnitType.SOLDIER], 0f,
-				"SOLDIER damage should be positive at runtime");
+			Assert.Greater(Constants.DAMAGE[UnitType.WARRIOR], 0f,
+				"WARRIOR damage should be positive at runtime");
 			yield return null;
 		}
 
@@ -44,12 +44,12 @@ namespace GameManager.Tests.PlayMode
 		#region Non-Combat Units Have Zero Damage
 
 		/// <summary>
-		/// At runtime, WORKER, MINE, BASE, and BARRACKS all have zero damage.
+		/// At runtime, PAWN, MINE, BASE, and BARRACKS all have zero damage.
 		/// </summary>
 		[UnityTest]
 		public IEnumerator Runtime_NonCombatUnits_HaveZeroDamage()
 		{
-			Assert.AreEqual(0f, Constants.DAMAGE[UnitType.WORKER], 0.001f, "WORKER damage");
+			Assert.AreEqual(0f, Constants.DAMAGE[UnitType.PAWN], 0.001f, "PAWN damage");
 			Assert.AreEqual(0f, Constants.DAMAGE[UnitType.MINE], 0.001f, "MINE damage");
 			Assert.AreEqual(0f, Constants.DAMAGE[UnitType.BASE], 0.001f, "BASE damage");
 			Assert.AreEqual(0f, Constants.DAMAGE[UnitType.BARRACKS], 0.001f, "BARRACKS damage");
@@ -62,29 +62,29 @@ namespace GameManager.Tests.PlayMode
 		#region Damage Verified by Actual Attack
 
 		/// <summary>
-		/// A SOLDIER's damage per hit matches what is applied to the target.
-		/// After one attack cycle, target health decreases by exactly DAMAGE[SOLDIER].
+		/// A WARRIOR's damage per hit matches what is applied to the target.
+		/// After one attack cycle, target health decreases by exactly DAMAGE[WARRIOR].
 		/// </summary>
 		[UnityTest]
-		public IEnumerator Soldier_DamagePerHit_MatchesConstants()
+		public IEnumerator Warrior_DamagePerHit_MatchesConstants()
 		{
-			Unit soldier = PlaceUnit(UnitType.SOLDIER, new Vector3Int(8, 10, 0));
-			Unit enemy = PlaceUnit(UnitType.SOLDIER, new Vector3Int(9, 10, 0), ctx.Agent1Go);
+			Unit warrior = PlaceUnit(UnitType.WARRIOR, new Vector3Int(8, 10, 0));
+			Unit enemy = PlaceUnit(UnitType.WARRIOR, new Vector3Int(9, 10, 0), ctx.Agent1Go);
 
 			float initialHealth = enemy.Health;
-			float expectedDamage = Constants.DAMAGE[UnitType.SOLDIER];
+			float expectedDamage = Constants.DAMAGE[UnitType.WARRIOR];
 
-			soldier.StartAttacking(new AttackEventArgs(soldier, enemy));
+			warrior.StartAttacking(new AttackEventArgs(warrior, enemy));
 
 			// Wait for at least one hit
 			yield return WaitUntil(
 				() => enemy.Health < initialHealth,
 				timeoutSeconds: 15f,
-				failMessage: "Soldier did not deal any damage");
+				failMessage: "Warrior did not deal any damage");
 
 			float actualDamage = initialHealth - enemy.Health;
 			Assert.Greater(actualDamage, 0f,
-				$"Soldier should have dealt positive damage (dealt {actualDamage}, constant is {expectedDamage})");
+				$"Warrior should have dealt positive damage (dealt {actualDamage}, constant is {expectedDamage})");
 		}
 
 		/// <summary>
@@ -94,7 +94,7 @@ namespace GameManager.Tests.PlayMode
 		public IEnumerator Archer_DamagePerHit_MatchesConstants()
 		{
 			Unit archer = PlaceUnit(UnitType.ARCHER, new Vector3Int(6, 10, 0));
-			Unit enemy = PlaceUnit(UnitType.SOLDIER, new Vector3Int(8, 10, 0), ctx.Agent1Go);
+			Unit enemy = PlaceUnit(UnitType.WARRIOR, new Vector3Int(8, 10, 0), ctx.Agent1Go);
 
 			float initialHealth = enemy.Health;
 			float expectedDamage = Constants.DAMAGE[UnitType.ARCHER];

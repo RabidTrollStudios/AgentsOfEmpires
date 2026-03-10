@@ -5,14 +5,14 @@ namespace PlanningAgent.Tests
 {
     /// <summary>
     /// [MEDIUM] Builds a solid economy, then masses archers. Attacks with 6+.
-    /// Archers have 4.0 range vs soldier 1.5 — a wall of archers can
-    /// outrange melee units. But each archer only does 3 DPS, so soldiers
+    /// Archers have 4.0 range vs warrior 1.5 — a wall of archers can
+    /// outrange melee units. But each archer only does 3 DPS, so warriors
     /// that close the gap will win.
-    /// Strategy to beat: soldiers with good economy, or rush before 6 archers.
+    /// Strategy to beat: warriors with good economy, or rush before 6 archers.
     /// </summary>
     public class ArcherSwarmOpponent : PlanningAgentBase
     {
-        private const int MAX_WORKERS = 5;
+        private const int MAX_PAWNS = 5;
         private const int ATTACK_THRESHOLD = 6;
 
         public override void InitializeMatch() { }
@@ -23,8 +23,8 @@ namespace PlanningAgent.Tests
             mainMineNbr = mines.Count > 0 ? mines[0] : -1;
             mainBaseNbr = myBases.Count > 0 ? myBases[0] : -1;
 
-            TrainWorkers(state, actions, MAX_WORKERS);
-            GatherWithIdleWorkers(state, actions);
+            TrainPawns(state, actions, MAX_PAWNS);
+            GatherWithIdlePawns(state, actions);
 
             if (myBarracks.Count == 0 && HasBuiltUnit(myBases, state))
                 BuildStructure(UnitType.BARRACKS, state, actions);
@@ -45,40 +45,40 @@ namespace PlanningAgent.Tests
                 AttackWithUnits(myArchers, state, actions);
         }
 
-        private void TrainWorkers(IGameState state, IAgentActions actions, int max)
+        private void TrainPawns(IGameState state, IAgentActions actions, int max)
         {
             foreach (int baseNbr in myBases)
             {
                 var info = state.GetUnit(baseNbr);
                 if (info.HasValue && info.Value.IsBuilt
                     && info.Value.CurrentAction == UnitAction.IDLE
-                    && state.MyGold >= GameConstants.COST[UnitType.WORKER]
-                    && myWorkers.Count < max)
+                    && state.MyGold >= GameConstants.COST[UnitType.PAWN]
+                    && myPawns.Count < max)
                 {
-                    actions.Train(baseNbr, UnitType.WORKER);
+                    actions.Train(baseNbr, UnitType.PAWN);
                 }
             }
         }
 
-        private void GatherWithIdleWorkers(IGameState state, IAgentActions actions)
+        private void GatherWithIdlePawns(IGameState state, IAgentActions actions)
         {
             if (mainBaseNbr < 0 || mainMineNbr < 0) return;
             var mineInfo = state.GetUnit(mainMineNbr);
             if (!mineInfo.HasValue || mineInfo.Value.Health <= 0) return;
 
-            foreach (int worker in myWorkers)
+            foreach (int pawn in myPawns)
             {
-                var info = state.GetUnit(worker);
+                var info = state.GetUnit(pawn);
                 if (info.HasValue && info.Value.CurrentAction == UnitAction.IDLE)
-                    actions.Gather(worker, mainMineNbr, mainBaseNbr);
+                    actions.Gather(pawn, mainMineNbr, mainBaseNbr);
             }
         }
 
         private void BuildStructure(UnitType type, IGameState state, IAgentActions actions)
         {
-            foreach (int worker in myWorkers)
+            foreach (int pawn in myPawns)
             {
-                var info = state.GetUnit(worker);
+                var info = state.GetUnit(pawn);
                 if (info.HasValue && info.Value.CurrentAction == UnitAction.IDLE
                     && state.MyGold >= GameConstants.COST[type])
                 {
@@ -86,7 +86,7 @@ namespace PlanningAgent.Tests
                     {
                         if (state.IsBoundedAreaBuildable(type, pos))
                         {
-                            actions.Build(worker, pos, type);
+                            actions.Build(pawn, pos, type);
                             return;
                         }
                     }
@@ -109,7 +109,7 @@ namespace PlanningAgent.Tests
 
         private int? FindAnyEnemy(IGameState state)
         {
-            foreach (UnitType ut in new[] { UnitType.SOLDIER, UnitType.ARCHER, UnitType.WORKER,
+            foreach (UnitType ut in new[] { UnitType.WARRIOR, UnitType.ARCHER, UnitType.PAWN,
                                             UnitType.BASE, UnitType.BARRACKS })
             {
                 var enemies = state.GetEnemyUnits(ut);

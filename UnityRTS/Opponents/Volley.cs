@@ -4,7 +4,7 @@ using AgentSDK;
 namespace PlanningAgent
 {
     /// <summary>
-    /// [MEDIUM] Balanced economy (5 workers), then masses archers.
+    /// [MEDIUM] Balanced economy (5 pawns), then masses archers.
     /// Waits for 16 archers before attacking. Uses a hybrid state machine:
     /// - Army-level FSM (ArmyPhase) determines overall strategy
     /// - Per-archer FSM (ArcherTactic) determines individual behavior
@@ -32,11 +32,11 @@ namespace PlanningAgent
         {
             /// <summary>Moving to or holding at rally point.</summary>
             RALLYING,
-            /// <summary>Stepping back from a soldier that is too close.</summary>
+            /// <summary>Stepping back from a warrior that is too close.</summary>
             KITING,
-            /// <summary>Attacking a soldier from safe range (stationary fire).</summary>
+            /// <summary>Attacking a warrior from safe range (stationary fire).</summary>
             ENGAGING,
-            /// <summary>Reacting to a non-soldier enemy within aggro range.</summary>
+            /// <summary>Reacting to a non-warrior enemy within aggro range.</summary>
             DEFENDING,
             /// <summary>Attacking priority targets during attack/mop-up phase.</summary>
             ASSAULTING
@@ -46,7 +46,7 @@ namespace PlanningAgent
 
         #region Constants
 
-        private const int MAX_WORKERS = 5;
+        private const int MAX_PAWNS = 5;
         private const int ATTACK_THRESHOLD = 16;
         private const float RALLY_DISTANCE = 10f;
         private const float AGGRO_RANGE = 10f;
@@ -101,12 +101,12 @@ namespace PlanningAgent
                 return;
             }
 
-            TrainWorkers(state, actions);
+            TrainPawns(state, actions);
 
             if (myBarracks.Count == 0 && HasBuiltUnit(myBases, state))
                 BuildStructure(UnitType.BARRACKS, state, actions);
 
-            GatherWithIdleWorkers(state, actions);
+            GatherWithIdlePawns(state, actions);
             TrainArchers(state, actions);
 
             // ---- Phase 2: Evaluate army phase ----
@@ -164,10 +164,10 @@ namespace PlanningAgent
         /// </summary>
         private void UpdateArmyPhase(IGameState state)
         {
-            int enemyCombat = enemySoldiers.Count + enemyArchers.Count;
+            int enemyCombat = enemyWarriors.Count + enemyArchers.Count;
 
             // MOPPING_UP: overwhelming advantage — requires full army to prevent
-            // early archers from rushing buildings before enemy soldiers spawn
+            // early archers from rushing buildings before enemy warriors spawn
             if (myArchers.Count >= ATTACK_THRESHOLD
                 && (enemyCombat == 0 || myArchers.Count >= 4 * enemyCombat))
             {
@@ -199,13 +199,13 @@ namespace PlanningAgent
 
         /// <summary>
         /// For each living archer, determine its tactical state for this tick.
-        /// Soldier threat handling (KITING/ENGAGING) is phase-independent so
-        /// archers always kite when a soldier gets close, regardless of army phase.
-        /// Phase-specific logic handles non-soldier threats and rally/assault decisions.
+        /// Warrior threat handling (KITING/ENGAGING) is phase-independent so
+        /// archers always kite when a warrior gets close, regardless of army phase.
+        /// Phase-specific logic handles non-warrior threats and rally/assault decisions.
         /// </summary>
         private void EvaluateArcherTactics(IGameState state, Position rallyPoint)
         {
-            float archerRange = GameConstants.EffectiveAttackRange(UnitType.ARCHER, UnitType.SOLDIER);
+            float archerRange = GameConstants.EffectiveAttackRange(UnitType.ARCHER, UnitType.WARRIOR);
 
             foreach (int archerNbr in myArchers)
             {
@@ -225,56 +225,56 @@ namespace PlanningAgent
 
                 Position myPos = info.Value.CenterPosition;
 
-                // ---- Soldier threat evaluation (all phases) ----
-                float closestSoldierDist = float.MaxValue;
-                int closestSoldierNbr = -1;
+                // ---- Warrior threat evaluation (all phases) ----
+                float closestWarriorDist = float.MaxValue;
+                int closestWarriorNbr = -1;
 
-                foreach (int enemyNbr in state.GetEnemyUnits(UnitType.SOLDIER))
+                foreach (int enemyNbr in state.GetEnemyUnits(UnitType.WARRIOR))
                 {
                     var enemyInfo = state.GetUnit(enemyNbr);
                     if (!enemyInfo.HasValue) continue;
                     float dist = Position.Distance(myPos, enemyInfo.Value.CenterPosition);
-                    if (dist < AGGRO_RANGE && dist < closestSoldierDist)
+                    if (dist < AGGRO_RANGE && dist < closestWarriorDist)
                     {
-                        closestSoldierDist = dist;
-                        closestSoldierNbr = enemyNbr;
+                        closestWarriorDist = dist;
+                        closestWarriorNbr = enemyNbr;
                     }
                 }
 
-                // KITING — soldier dangerously close
-                if (closestSoldierNbr >= 0 && closestSoldierDist <= RETREAT_DIST)
+                // KITING — warrior dangerously close
+                if (closestWarriorNbr >= 0 && closestWarriorDist <= RETREAT_DIST)
                 {
                     _archerTactics[archerNbr] = ArcherTactic.KITING;
-                    _archerThreatTarget[archerNbr] = closestSoldierNbr;
+                    _archerThreatTarget[archerNbr] = closestWarriorNbr;
                     continue;
                 }
 
-                // ENGAGING — soldier within attack range, archer can fire
-                if (closestSoldierNbr >= 0 && closestSoldierDist <= archerRange
+                // ENGAGING — warrior within attack range, archer can fire
+                if (closestWarriorNbr >= 0 && closestWarriorDist <= archerRange
                     && curAction == UnitAction.IDLE)
                 {
                     _archerTactics[archerNbr] = ArcherTactic.ENGAGING;
-                    _archerThreatTarget[archerNbr] = closestSoldierNbr;
+                    _archerThreatTarget[archerNbr] = closestWarriorNbr;
                     continue;
                 }
 
-                // Hold — soldier within attack range and archer mid-action
+                // Hold — warrior within attack range and archer mid-action
                 // (kiting, chasing, or attacking from range). Keep current tactic.
-                if (closestSoldierNbr >= 0 && closestSoldierDist <= archerRange
+                if (closestWarriorNbr >= 0 && closestWarriorDist <= archerRange
                     && (curAction == UnitAction.MOVE || curAction == UnitAction.ATTACK))
                 {
                     if (!_archerTactics.ContainsKey(archerNbr))
                         _archerTactics[archerNbr] = curAction == UnitAction.ATTACK
                             ? ArcherTactic.ENGAGING : ArcherTactic.RALLYING;
-                    _archerThreatTarget[archerNbr] = closestSoldierNbr;
+                    _archerThreatTarget[archerNbr] = closestWarriorNbr;
                     continue;
                 }
 
-                // ---- Phase-specific non-soldier evaluation ----
+                // ---- Phase-specific non-warrior evaluation ----
 
                 if (_armyPhase == ArmyPhase.ECONOMY || _armyPhase == ArmyPhase.RALLYING)
                 {
-                    // Already attacking a non-soldier — hold
+                    // Already attacking a non-warrior — hold
                     if (curAction == UnitAction.ATTACK)
                     {
                         if (!_archerTactics.ContainsKey(archerNbr))
@@ -295,7 +295,7 @@ namespace PlanningAgent
                         }
                     }
 
-                    // Non-soldier enemy within defend radius
+                    // Non-warrior enemy within defend radius
                     if (curAction == UnitAction.IDLE || curAction == UnitAction.MOVE)
                     {
                         int nearEnemy = FindEnemyInRadius(myPos, DEFEND_RADIUS, state);
@@ -314,21 +314,21 @@ namespace PlanningAgent
 
                 // ---- ATTACKING / MOPPING_UP ----
 
-                // Hold — soldier within AGGRO_RANGE and archer mid-action
-                if (closestSoldierNbr >= 0 && (curAction == UnitAction.MOVE || curAction == UnitAction.ATTACK))
+                // Hold — warrior within AGGRO_RANGE and archer mid-action
+                if (closestWarriorNbr >= 0 && (curAction == UnitAction.MOVE || curAction == UnitAction.ATTACK))
                 {
                     if (!_archerTactics.ContainsKey(archerNbr))
                         _archerTactics[archerNbr] = curAction == UnitAction.ATTACK
                             ? ArcherTactic.ENGAGING : ArcherTactic.RALLYING;
-                    _archerThreatTarget[archerNbr] = closestSoldierNbr;
+                    _archerThreatTarget[archerNbr] = closestWarriorNbr;
                     continue;
                 }
 
-                // Find closest non-soldier enemy within AGGRO_RANGE
+                // Find closest non-warrior enemy within AGGRO_RANGE
                 float closestEnemyDist = float.MaxValue;
                 int closestEnemyNbr = -1;
 
-                foreach (UnitType ut in new[] { UnitType.ARCHER, UnitType.WORKER,
+                foreach (UnitType ut in new[] { UnitType.ARCHER, UnitType.PAWN,
                                                  UnitType.BASE, UnitType.BARRACKS })
                 {
                     foreach (int enemyNbr in state.GetEnemyUnits(ut))
@@ -344,7 +344,7 @@ namespace PlanningAgent
                     }
                 }
 
-                // DEFENDING — non-soldier enemy nearby
+                // DEFENDING — non-warrior enemy nearby
                 if (closestEnemyNbr >= 0
                     && (curAction == UnitAction.IDLE || curAction == UnitAction.MOVE))
                 {
@@ -419,9 +419,9 @@ namespace PlanningAgent
         }
 
         /// <summary>
-        /// Step back from nearest soldier. Find best adjacent buildable cell away from
+        /// Step back from nearest warrior. Find best adjacent buildable cell away from
         /// threat using dot-product scoring. If direct retreat fails (score too low or
-        /// no buildable cell), circle laterally around the soldier to find an escape route.
+        /// no buildable cell), circle laterally around the warrior to find an escape route.
         /// </summary>
         private void ExecuteKiting(int archerNbr, IGameState state, IAgentActions actions)
         {
@@ -498,7 +498,7 @@ namespace PlanningAgent
         }
 
         /// <summary>
-        /// Attack the soldier from current position. Only fires if IDLE — if already
+        /// Attack the warrior from current position. Only fires if IDLE — if already
         /// attacking from range, the engine handles it and we don't interfere.
         /// </summary>
         private void ExecuteEngaging(int archerNbr, IGameState state, IAgentActions actions)
@@ -515,7 +515,7 @@ namespace PlanningAgent
         }
 
         /// <summary>
-        /// Attack closest non-soldier enemy within aggro range. Skips soldiers beyond
+        /// Attack closest non-warrior enemy within aggro range. Skips warriors beyond
         /// effective attack range to prevent pursuit into melee. Uses target spreading.
         /// </summary>
         private void ExecuteDefending(int archerNbr, IGameState state, IAgentActions actions,
@@ -532,10 +532,10 @@ namespace PlanningAgent
                 var threatInfo = state.GetUnit(threatNbr);
                 if (threatInfo.HasValue && threatInfo.Value.Health > 0)
                 {
-                    // Don't chase soldiers — only engage them from within attack range
-                    if (threatInfo.Value.UnitType == UnitType.SOLDIER)
+                    // Don't chase warriors — only engage them from within attack range
+                    if (threatInfo.Value.UnitType == UnitType.WARRIOR)
                     {
-                        float range = GameConstants.EffectiveAttackRange(UnitType.ARCHER, UnitType.SOLDIER);
+                        float range = GameConstants.EffectiveAttackRange(UnitType.ARCHER, UnitType.WARRIOR);
                         float dist = Position.Distance(info.Value.CenterPosition, threatInfo.Value.CenterPosition);
                         if (dist > range) return;
                     }
@@ -551,7 +551,7 @@ namespace PlanningAgent
         }
 
         /// <summary>
-        /// Attack closest enemy with priority: combat > worker > building.
+        /// Attack closest enemy with priority: combat > pawn > building.
         /// Only acts on IDLE archers. Uses target spreading so archers don't all
         /// pile on the same enemy.
         /// </summary>
@@ -638,7 +638,7 @@ namespace PlanningAgent
             var sb = new System.Text.StringBuilder();
             sb.Append("Phase: ").AppendLine(_armyPhase.ToString());
             sb.Append("Gold: ").AppendLine(state.MyGold.ToString());
-            sb.Append("Workers: ").Append(myWorkers.Count)
+            sb.Append("Pawns: ").Append(myPawns.Count)
               .Append("  Archers: ").AppendLine(myArchers.Count.ToString());
             sb.Append("  Rally: ").Append(rallying)
               .Append("  Kite: ").Append(kiting)
@@ -653,17 +653,17 @@ namespace PlanningAgent
 
         #region Economy Helpers (unchanged)
 
-        private void TrainWorkers(IGameState state, IAgentActions actions)
+        private void TrainPawns(IGameState state, IAgentActions actions)
         {
             foreach (int baseNbr in myBases)
             {
                 var info = state.GetUnit(baseNbr);
                 if (info.HasValue && info.Value.IsBuilt
                     && info.Value.CurrentAction == UnitAction.IDLE
-                    && state.MyGold >= GameConstants.COST[UnitType.WORKER]
-                    && myWorkers.Count < MAX_WORKERS)
+                    && state.MyGold >= GameConstants.COST[UnitType.PAWN]
+                    && myPawns.Count < MAX_PAWNS)
                 {
-                    actions.Train(baseNbr, UnitType.WORKER);
+                    actions.Train(baseNbr, UnitType.PAWN);
                 }
             }
         }
@@ -682,28 +682,28 @@ namespace PlanningAgent
             }
         }
 
-        private void GatherWithIdleWorkers(IGameState state, IAgentActions actions)
+        private void GatherWithIdlePawns(IGameState state, IAgentActions actions)
         {
             if (mainBaseNbr < 0 || mainMineNbr < 0) return;
             var mineInfo = state.GetUnit(mainMineNbr);
             if (!mineInfo.HasValue || mineInfo.Value.Health <= 0) return;
 
-            foreach (int worker in myWorkers)
+            foreach (int pawn in myPawns)
             {
-                var info = state.GetUnit(worker);
+                var info = state.GetUnit(pawn);
                 if (info.HasValue && info.Value.CurrentAction == UnitAction.IDLE)
-                    actions.Gather(worker, mainMineNbr, mainBaseNbr);
+                    actions.Gather(pawn, mainMineNbr, mainBaseNbr);
             }
         }
 
         private int FindClosestMine(IGameState state)
         {
             if (mines.Count == 0) return -1;
-            if (myWorkers.Count == 0) return mines[0];
-            var workerInfo = state.GetUnit(myWorkers[0]);
-            if (!workerInfo.HasValue) return mines[0];
+            if (myPawns.Count == 0) return mines[0];
+            var pawnInfo = state.GetUnit(myPawns[0]);
+            if (!pawnInfo.HasValue) return mines[0];
 
-            Position workerPos = workerInfo.Value.GridPosition;
+            Position pawnPos = pawnInfo.Value.GridPosition;
             int bestMine = -1;
             int bestPathLen = int.MaxValue;
             foreach (int mineNbr in mines)
@@ -711,7 +711,7 @@ namespace PlanningAgent
                 var mineInfo = state.GetUnit(mineNbr);
                 if (mineInfo.HasValue && mineInfo.Value.Health > 0)
                 {
-                    int pathLen = state.GetPathToUnit(workerPos, UnitType.MINE, mineInfo.Value.GridPosition).Count;
+                    int pathLen = state.GetPathToUnit(pawnPos, UnitType.MINE, mineInfo.Value.GridPosition).Count;
                     if (pathLen > 0 && pathLen < bestPathLen)
                     {
                         bestPathLen = pathLen;
@@ -728,7 +728,7 @@ namespace PlanningAgent
                     var mineInfo = state.GetUnit(mineNbr);
                     if (mineInfo.HasValue && mineInfo.Value.Health > 0)
                     {
-                        float dist = Position.Distance(workerPos, mineInfo.Value.CenterPosition);
+                        float dist = Position.Distance(pawnPos, mineInfo.Value.CenterPosition);
                         if (dist < bestDist)
                         {
                             bestDist = dist;
@@ -747,16 +747,16 @@ namespace PlanningAgent
 
         private void BuildStructure(UnitType type, IGameState state, IAgentActions actions)
         {
-            foreach (int worker in myWorkers)
+            foreach (int pawn in myPawns)
             {
-                var info = state.GetUnit(worker);
+                var info = state.GetUnit(pawn);
                 if (info.HasValue && info.Value.CurrentAction == UnitAction.IDLE
                     && state.MyGold >= GameConstants.COST[type])
                 {
                     Position buildPos = FindBestBuildPosition(type, state);
                     if (buildPos.X >= 0)
                     {
-                        actions.Build(worker, buildPos, type);
+                        actions.Build(pawn, buildPos, type);
                         return;
                     }
                 }
@@ -929,7 +929,7 @@ namespace PlanningAgent
             float bestDist = float.MaxValue;
             int bestEnemy = -1;
 
-            foreach (UnitType ut in new[] { UnitType.SOLDIER, UnitType.ARCHER, UnitType.WORKER,
+            foreach (UnitType ut in new[] { UnitType.WARRIOR, UnitType.ARCHER, UnitType.PAWN,
                                              UnitType.BASE, UnitType.BARRACKS })
             {
                 float range = GameConstants.EffectiveAttackRange(attackerType, ut);
@@ -958,7 +958,7 @@ namespace PlanningAgent
             float bestDist = float.MaxValue;
             int bestEnemy = -1;
 
-            foreach (UnitType ut in new[] { UnitType.SOLDIER, UnitType.ARCHER, UnitType.WORKER,
+            foreach (UnitType ut in new[] { UnitType.WARRIOR, UnitType.ARCHER, UnitType.PAWN,
                                              UnitType.BASE, UnitType.BARRACKS })
             {
                 foreach (int enemyNbr in state.GetEnemyUnits(ut))
@@ -984,19 +984,19 @@ namespace PlanningAgent
             if (!attackerInfo.HasValue) return null;
             Position attackerPos = attackerInfo.Value.GridPosition;
 
-            // Priority: combat units > workers > buildings
+            // Priority: combat units > pawns > buildings
             int? bestCombat = null;
             float bestCombatDist = float.MaxValue;
-            int? bestWorker = null;
-            float bestWorkerDist = float.MaxValue;
+            int? bestPawn = null;
+            float bestPawnDist = float.MaxValue;
             int? bestBuilding = null;
             float bestBuildingDist = float.MaxValue;
 
-            foreach (UnitType ut in new[] { UnitType.SOLDIER, UnitType.ARCHER, UnitType.WORKER,
+            foreach (UnitType ut in new[] { UnitType.WARRIOR, UnitType.ARCHER, UnitType.PAWN,
                                             UnitType.BASE, UnitType.BARRACKS })
             {
-                bool isCombat = ut == UnitType.SOLDIER || ut == UnitType.ARCHER;
-                bool isWorker = ut == UnitType.WORKER;
+                bool isCombat = ut == UnitType.WARRIOR || ut == UnitType.ARCHER;
+                bool isPawn = ut == UnitType.PAWN;
                 var enemies = state.GetEnemyUnits(ut);
                 foreach (int enemyNbr in enemies)
                 {
@@ -1009,11 +1009,11 @@ namespace PlanningAgent
                     if (!enemyInfo.HasValue) continue;
                     float dist = Position.Distance(attackerPos, enemyInfo.Value.CenterPosition);
                     if (isCombat && dist < bestCombatDist) { bestCombatDist = dist; bestCombat = enemyNbr; }
-                    else if (isWorker && dist < bestWorkerDist) { bestWorkerDist = dist; bestWorker = enemyNbr; }
-                    else if (!isCombat && !isWorker && dist < bestBuildingDist) { bestBuildingDist = dist; bestBuilding = enemyNbr; }
+                    else if (isPawn && dist < bestPawnDist) { bestPawnDist = dist; bestPawn = enemyNbr; }
+                    else if (!isCombat && !isPawn && dist < bestBuildingDist) { bestBuildingDist = dist; bestBuilding = enemyNbr; }
                 }
             }
-            return bestCombat ?? bestWorker ?? bestBuilding;
+            return bestCombat ?? bestPawn ?? bestBuilding;
         }
 
         #endregion

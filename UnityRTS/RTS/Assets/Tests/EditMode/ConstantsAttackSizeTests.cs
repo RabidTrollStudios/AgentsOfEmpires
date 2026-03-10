@@ -13,7 +13,7 @@ namespace GameManager.Tests
 	public class ConstantsAttackSizeTests
 	{
 		private static readonly UnitType[] AllUnitTypes = {
-			UnitType.MINE, UnitType.WORKER, UnitType.SOLDIER,
+			UnitType.MINE, UnitType.PAWN, UnitType.WARRIOR,
 			UnitType.ARCHER, UnitType.BASE, UnitType.BARRACKS, UnitType.ARCHERY
 		};
 
@@ -46,13 +46,13 @@ namespace GameManager.Tests
 		}
 
 		/// <summary>
-		/// SOLDIER and ARCHER (CAN_ATTACK=true) should have strictly positive range.
+		/// WARRIOR and ARCHER (CAN_ATTACK=true) should have strictly positive range.
 		/// </summary>
 		[Test]
 		public void AttackRange_CombatUnits_HavePositiveRange()
 		{
-			Assert.Greater(Constants.ATTACK_RANGE[UnitType.SOLDIER], 0f,
-				"SOLDIER should have positive attack range");
+			Assert.Greater(Constants.ATTACK_RANGE[UnitType.WARRIOR], 0f,
+				"WARRIOR should have positive attack range");
 			Assert.Greater(Constants.ATTACK_RANGE[UnitType.ARCHER], 0f,
 				"ARCHER should have positive attack range");
 		}
@@ -63,8 +63,8 @@ namespace GameManager.Tests
 		[Test]
 		public void AttackRange_NonCombatUnits_HaveZeroRange()
 		{
-			Assert.AreEqual(0f, Constants.ATTACK_RANGE[UnitType.WORKER], 0.001f,
-				"WORKER should have zero attack range");
+			Assert.AreEqual(0f, Constants.ATTACK_RANGE[UnitType.PAWN], 0.001f,
+				"PAWN should have zero attack range");
 			Assert.AreEqual(0f, Constants.ATTACK_RANGE[UnitType.MINE], 0.001f,
 				"MINE should have zero attack range");
 			Assert.AreEqual(0f, Constants.ATTACK_RANGE[UnitType.BASE], 0.001f,
@@ -144,15 +144,15 @@ namespace GameManager.Tests
 		}
 
 		/// <summary>
-		/// Mobile units (WORKER, SOLDIER, ARCHER) occupy a 1×1 footprint.
+		/// Mobile units (PAWN, WARRIOR, ARCHER) occupy a 1×1 footprint.
 		/// </summary>
 		[Test]
 		public void UnitSize_MobileUnits_AreOneByOne()
 		{
-			Assert.AreEqual(new Vector3Int(1, 1, 0), Constants.UNIT_SIZE[UnitType.WORKER],
-				"WORKER should have 1x1 footprint");
-			Assert.AreEqual(new Vector3Int(1, 1, 0), Constants.UNIT_SIZE[UnitType.SOLDIER],
-				"SOLDIER should have 1x1 footprint");
+			Assert.AreEqual(new Vector3Int(1, 1, 0), Constants.UNIT_SIZE[UnitType.PAWN],
+				"PAWN should have 1x1 footprint");
+			Assert.AreEqual(new Vector3Int(1, 1, 0), Constants.UNIT_SIZE[UnitType.WARRIOR],
+				"WARRIOR should have 1x1 footprint");
 			Assert.AreEqual(new Vector3Int(1, 1, 0), Constants.UNIT_SIZE[UnitType.ARCHER],
 				"ARCHER should have 1x1 footprint");
 		}

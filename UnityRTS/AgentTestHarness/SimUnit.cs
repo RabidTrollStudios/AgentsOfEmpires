@@ -35,7 +35,7 @@ namespace AgentTestHarness
         internal float TrainTimer;
         internal UnitType TrainTarget;
 
-        // Building state — worker walks to site, then counts down build timer
+        // Building state — pawn walks to site, then counts down build timer
         internal float BuildTimer;
         internal UnitType BuildTarget;
         internal Position BuildSite;

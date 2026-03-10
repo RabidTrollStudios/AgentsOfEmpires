@@ -21,18 +21,18 @@ namespace GameManager.Tests.PlayMode
 		public IEnumerator Unit_HealthZero_DestroyedAndRemovedFromUnitManager()
 		{
 			var pos = new Vector3Int(10, 10, 0);
-			Unit worker = PlaceUnit(UnitType.WORKER, pos);
-			int unitNbr = worker.UnitNbr;
+			Unit pawn = PlaceUnit(UnitType.PAWN, pos);
+			int unitNbr = pawn.UnitNbr;
 
 			Assert.IsNotNull(ctx.UnitManager.GetUnit(unitNbr),
 				"Unit should exist in UnitManager before destruction");
 
 			// Set health to zero to trigger destruction
-			worker.Health = 0;
+			pawn.Health = 0;
 
 			// Unit.Update() checks Health <= 0 and calls DestroyUnit.
 			// We need to call Update manually since GameManager.enabled is false.
-			worker.Update();
+			pawn.Update();
 
 			// Yield a frame so Object.Destroy is processed
 			yield return null;
@@ -42,24 +42,24 @@ namespace GameManager.Tests.PlayMode
 		}
 
 		/// <summary>
-		/// When a worker is destroyed, its occupied cell should become buildable again.
+		/// When a pawn is destroyed, its occupied cell should become buildable again.
 		/// </summary>
 		[UnityTest]
-		public IEnumerator Worker_Destroyed_CellBecomesBuildable()
+		public IEnumerator Pawn_Destroyed_CellBecomesBuildable()
 		{
 			var pos = new Vector3Int(12, 12, 0);
-			Unit worker = PlaceUnit(UnitType.WORKER, pos);
+			Unit pawn = PlaceUnit(UnitType.PAWN, pos);
 
 			Assert.IsFalse(ctx.MapManager.IsGridPositionBuildable(pos),
-				"Cell should not be buildable while worker is alive on it");
+				"Cell should not be buildable while pawn is alive on it");
 
-			worker.Health = 0;
-			worker.Update();
+			pawn.Health = 0;
+			pawn.Update();
 
 			yield return null;
 
 			Assert.IsTrue(ctx.MapManager.IsGridPositionBuildable(pos),
-				"Cell should be buildable after worker is destroyed");
+				"Cell should be buildable after pawn is destroyed");
 		}
 
 		/// <summary>
@@ -113,11 +113,11 @@ namespace GameManager.Tests.PlayMode
 		public IEnumerator Unit_HealthExactlyZero_TriggersDestruction()
 		{
 			var pos = new Vector3Int(8, 8, 0);
-			Unit worker = PlaceUnit(UnitType.WORKER, pos);
-			int unitNbr = worker.UnitNbr;
+			Unit pawn = PlaceUnit(UnitType.PAWN, pos);
+			int unitNbr = pawn.UnitNbr;
 
-			worker.Health = 0f;
-			worker.Update();
+			pawn.Health = 0f;
+			pawn.Update();
 
 			yield return null;
 
@@ -133,11 +133,11 @@ namespace GameManager.Tests.PlayMode
 		public IEnumerator Unit_HealthLargeNegative_TriggersDestruction()
 		{
 			var pos = new Vector3Int(8, 8, 0);
-			Unit worker = PlaceUnit(UnitType.WORKER, pos);
-			int unitNbr = worker.UnitNbr;
+			Unit pawn = PlaceUnit(UnitType.PAWN, pos);
+			int unitNbr = pawn.UnitNbr;
 
-			worker.Health = -1000f;
-			worker.Update();
+			pawn.Health = -1000f;
+			pawn.Update();
 
 			yield return null;
 
@@ -153,24 +153,24 @@ namespace GameManager.Tests.PlayMode
 		public IEnumerator DestroyLastUnitOfType_QueryReturnsEmpty()
 		{
 			var pos = new Vector3Int(14, 14, 0);
-			Unit soldier = PlaceUnit(UnitType.SOLDIER, pos);
-			int unitNbr = soldier.UnitNbr;
+			Unit warrior = PlaceUnit(UnitType.WARRIOR, pos);
+			int unitNbr = warrior.UnitNbr;
 
-			// Verify the soldier is registered
-			List<int> soldiersBefore = ctx.UnitManager.GetUnitNbrsOfType(UnitType.SOLDIER);
-			Assert.AreEqual(1, soldiersBefore.Count,
-				"There should be exactly one SOLDIER before destruction");
+			// Verify the warrior is registered
+			List<int> warriorsBefore = ctx.UnitManager.GetUnitNbrsOfType(UnitType.WARRIOR);
+			Assert.AreEqual(1, warriorsBefore.Count,
+				"There should be exactly one WARRIOR before destruction");
 
-			soldier.Health = 0;
-			soldier.Update();
+			warrior.Health = 0;
+			warrior.Update();
 
 			yield return null;
 
-			List<int> soldiersAfter = ctx.UnitManager.GetUnitNbrsOfType(UnitType.SOLDIER);
-			Assert.AreEqual(0, soldiersAfter.Count,
-				"There should be no SOLDIERs after the last one is destroyed");
+			List<int> warriorsAfter = ctx.UnitManager.GetUnitNbrsOfType(UnitType.WARRIOR);
+			Assert.AreEqual(0, warriorsAfter.Count,
+				"There should be no WARRIORs after the last one is destroyed");
 			Assert.IsNull(ctx.UnitManager.GetUnit(unitNbr),
-				"GetUnit should return null for the destroyed soldier");
+				"GetUnit should return null for the destroyed warrior");
 		}
 
 		#endregion
@@ -184,11 +184,11 @@ namespace GameManager.Tests.PlayMode
 		[UnityTest]
 		public IEnumerator Attacker_TargetDestroyedExternally_GoesIdleNoCrash()
 		{
-			// Place an attacker (soldier owned by agent 0) and a target (worker owned by agent 1)
+			// Place an attacker (warrior owned by agent 0) and a target (pawn owned by agent 1)
 			var attackerPos = new Vector3Int(10, 10, 0);
 			var targetPos = new Vector3Int(12, 10, 0);
-			Unit attacker = PlaceUnit(UnitType.SOLDIER, attackerPos);
-			Unit target = PlaceUnit(UnitType.WORKER, targetPos, ctx.Agent1Go);
+			Unit attacker = PlaceUnit(UnitType.WARRIOR, attackerPos);
+			Unit target = PlaceUnit(UnitType.PAWN, targetPos, ctx.Agent1Go);
 
 			// Start attacking
 			attacker.StartAttacking(new AttackEventArgs(attacker, target));
@@ -233,8 +233,8 @@ namespace GameManager.Tests.PlayMode
 			{
 				var pos = new Vector3Int(1 + i, 1 + i, 0);
 				positions.Add(pos);
-				Unit worker = PlaceUnit(UnitType.WORKER, pos);
-				unitNbrs.Add(worker.UnitNbr);
+				Unit pawn = PlaceUnit(UnitType.PAWN, pos);
+				unitNbrs.Add(pawn.UnitNbr);
 			}
 
 			// Verify all units exist
@@ -273,10 +273,10 @@ namespace GameManager.Tests.PlayMode
 					$"Cell {pos} should be buildable after unit destruction");
 			}
 
-			// UnitManager should report zero workers
-			List<int> remainingWorkers = ctx.UnitManager.GetUnitNbrsOfType(UnitType.WORKER);
-			Assert.AreEqual(0, remainingWorkers.Count,
-				"UnitManager should have zero WORKERs after all are destroyed");
+			// UnitManager should report zero pawns
+			List<int> remainingPawns = ctx.UnitManager.GetUnitNbrsOfType(UnitType.PAWN);
+			Assert.AreEqual(0, remainingPawns.Count,
+				"UnitManager should have zero PAWNs after all are destroyed");
 		}
 
 		#endregion

@@ -15,17 +15,17 @@ namespace GameManager.Tests
 		}
 
 		[Test]
-		public void Speed1_WorkerMovingSpeed()
+		public void Speed1_PawnMovingSpeed()
 		{
-			Assert.AreEqual(0.1f, Constants.MOVING_SPEED[UnitType.WORKER], 0.001f);
+			Assert.AreEqual(0.1f, Constants.MOVING_SPEED[UnitType.PAWN], 0.001f);
 		}
 
 		[Test]
-		public void Speed5_WorkerMovingSpeedScales()
+		public void Speed5_PawnMovingSpeedScales()
 		{
 			Constants.GAME_SPEED = 5;
 			Constants.CalculateGameConstants();
-			Assert.AreEqual(0.5f, Constants.MOVING_SPEED[UnitType.WORKER], 0.001f);
+			Assert.AreEqual(0.5f, Constants.MOVING_SPEED[UnitType.PAWN], 0.001f);
 		}
 
 		[Test]
@@ -33,23 +33,23 @@ namespace GameManager.Tests
 		{
 			Constants.GAME_SPEED = 30;
 			Constants.CalculateGameConstants();
-			// SCALAR_CREATION_TIME = 1/30, WORKER creation = SCALAR * 2
+			// SCALAR_CREATION_TIME = 1/30, PAWN creation = SCALAR * 2
 			float expected = (1f / 30f) * 2f;
-			Assert.AreEqual(expected, Constants.CREATION_TIME[UnitType.WORKER], 0.001f);
+			Assert.AreEqual(expected, Constants.CREATION_TIME[UnitType.PAWN], 0.001f);
 		}
 
 		[Test]
-		public void Speed1_SoldierDamage()
+		public void Speed1_WarriorDamage()
 		{
-			Assert.AreEqual(48.0f, Constants.DAMAGE[UnitType.SOLDIER], 0.001f);
+			Assert.AreEqual(48.0f, Constants.DAMAGE[UnitType.WARRIOR], 0.001f);
 		}
 
 		[Test]
-		public void Speed3_SoldierDamageScales()
+		public void Speed3_WarriorDamageScales()
 		{
 			Constants.GAME_SPEED = 3;
 			Constants.CalculateGameConstants();
-			Assert.AreEqual(144.0f, Constants.DAMAGE[UnitType.SOLDIER], 0.001f);
+			Assert.AreEqual(144.0f, Constants.DAMAGE[UnitType.WARRIOR], 0.001f);
 		}
 
 		[Test]
@@ -65,7 +65,7 @@ namespace GameManager.Tests
 		public void NonCombatants_ZeroDamage()
 		{
 			Assert.AreEqual(0.0f, Constants.DAMAGE[UnitType.MINE]);
-			Assert.AreEqual(0.0f, Constants.DAMAGE[UnitType.WORKER]);
+			Assert.AreEqual(0.0f, Constants.DAMAGE[UnitType.PAWN]);
 			Assert.AreEqual(0.0f, Constants.DAMAGE[UnitType.BASE]);
 			Assert.AreEqual(0.0f, Constants.DAMAGE[UnitType.BARRACKS]);
 			Assert.AreEqual(0.0f, Constants.DAMAGE[UnitType.ARCHERY]);
@@ -95,7 +95,7 @@ namespace GameManager.Tests
 			// GAME_SPEED=0 is an intentional pause — creation times are explicitly set to Infinity
 			Constants.GAME_SPEED = 0;
 			Constants.CalculateGameConstants();
-			Assert.AreEqual(float.PositiveInfinity, Constants.CREATION_TIME[UnitType.WORKER]);
+			Assert.AreEqual(float.PositiveInfinity, Constants.CREATION_TIME[UnitType.PAWN]);
 		}
 	}
 }

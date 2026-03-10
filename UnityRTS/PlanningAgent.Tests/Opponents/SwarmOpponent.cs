@@ -4,8 +4,8 @@ using AgentSDK;
 namespace PlanningAgent.Tests
 {
     /// <summary>
-    /// [HARD] Relentless aggression: builds 4 workers for economy, gets a
-    /// barracks, then constantly produces soldiers and attacks immediately.
+    /// [HARD] Relentless aggression: builds 4 pawns for economy, gets a
+    /// barracks, then constantly produces warriors and attacks immediately.
     /// Never waits to mass up — sends troops the moment they're idle.
     /// Keeps pressure on at all times, forcing the opponent to always defend.
     /// Strategy to beat: strong economy + defenders to weather the waves,
@@ -13,7 +13,7 @@ namespace PlanningAgent.Tests
     /// </summary>
     public class SwarmOpponent : PlanningAgentBase
     {
-        private const int MAX_WORKERS = 4;
+        private const int MAX_PAWNS = 4;
 
         public override void InitializeMatch() { }
 
@@ -23,62 +23,62 @@ namespace PlanningAgent.Tests
             mainMineNbr = mines.Count > 0 ? mines[0] : -1;
             mainBaseNbr = myBases.Count > 0 ? myBases[0] : -1;
 
-            TrainWorkers(state, actions, MAX_WORKERS);
-            GatherWithIdleWorkers(state, actions);
+            TrainPawns(state, actions, MAX_PAWNS);
+            GatherWithIdlePawns(state, actions);
 
             if (myBarracks.Count == 0 && HasBuiltUnit(myBases, state))
                 BuildStructure(UnitType.BARRACKS, state, actions);
 
-            // Constantly train soldiers
+            // Constantly train warriors
             foreach (int barracksNbr in myBarracks)
             {
                 var info = state.GetUnit(barracksNbr);
                 if (info.HasValue && info.Value.IsBuilt
                     && info.Value.CurrentAction == UnitAction.IDLE
-                    && state.MyGold >= GameConstants.COST[UnitType.SOLDIER])
+                    && state.MyGold >= GameConstants.COST[UnitType.WARRIOR])
                 {
-                    actions.Train(barracksNbr, UnitType.SOLDIER);
+                    actions.Train(barracksNbr, UnitType.WARRIOR);
                 }
             }
 
-            // Attack immediately — don't wait, just send every idle soldier
-            AttackWithUnits(mySoldiers, state, actions);
+            // Attack immediately — don't wait, just send every idle warrior
+            AttackWithUnits(myWarriors, state, actions);
         }
 
-        private void TrainWorkers(IGameState state, IAgentActions actions, int max)
+        private void TrainPawns(IGameState state, IAgentActions actions, int max)
         {
             foreach (int baseNbr in myBases)
             {
                 var info = state.GetUnit(baseNbr);
                 if (info.HasValue && info.Value.IsBuilt
                     && info.Value.CurrentAction == UnitAction.IDLE
-                    && state.MyGold >= GameConstants.COST[UnitType.WORKER]
-                    && myWorkers.Count < max)
+                    && state.MyGold >= GameConstants.COST[UnitType.PAWN]
+                    && myPawns.Count < max)
                 {
-                    actions.Train(baseNbr, UnitType.WORKER);
+                    actions.Train(baseNbr, UnitType.PAWN);
                 }
             }
         }
 
-        private void GatherWithIdleWorkers(IGameState state, IAgentActions actions)
+        private void GatherWithIdlePawns(IGameState state, IAgentActions actions)
         {
             if (mainBaseNbr < 0 || mainMineNbr < 0) return;
             var mineInfo = state.GetUnit(mainMineNbr);
             if (!mineInfo.HasValue || mineInfo.Value.Health <= 0) return;
 
-            foreach (int worker in myWorkers)
+            foreach (int pawn in myPawns)
             {
-                var info = state.GetUnit(worker);
+                var info = state.GetUnit(pawn);
                 if (info.HasValue && info.Value.CurrentAction == UnitAction.IDLE)
-                    actions.Gather(worker, mainMineNbr, mainBaseNbr);
+                    actions.Gather(pawn, mainMineNbr, mainBaseNbr);
             }
         }
 
         private void BuildStructure(UnitType type, IGameState state, IAgentActions actions)
         {
-            foreach (int worker in myWorkers)
+            foreach (int pawn in myPawns)
             {
-                var info = state.GetUnit(worker);
+                var info = state.GetUnit(pawn);
                 if (info.HasValue && info.Value.CurrentAction == UnitAction.IDLE
                     && state.MyGold >= GameConstants.COST[type])
                 {
@@ -86,7 +86,7 @@ namespace PlanningAgent.Tests
                     {
                         if (state.IsBoundedAreaBuildable(type, pos))
                         {
-                            actions.Build(worker, pos, type);
+                            actions.Build(pawn, pos, type);
                             return;
                         }
                     }
@@ -109,7 +109,7 @@ namespace PlanningAgent.Tests
 
         private int? FindAnyEnemy(IGameState state)
         {
-            foreach (UnitType ut in new[] { UnitType.SOLDIER, UnitType.ARCHER, UnitType.WORKER,
+            foreach (UnitType ut in new[] { UnitType.WARRIOR, UnitType.ARCHER, UnitType.PAWN,
                                             UnitType.BASE, UnitType.BARRACKS })
             {
                 var enemies = state.GetEnemyUnits(ut);

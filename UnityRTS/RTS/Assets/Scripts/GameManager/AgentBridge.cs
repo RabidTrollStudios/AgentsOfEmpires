@@ -54,7 +54,7 @@ namespace GameManager
 
         public override void Update()
         {
-            if (planningAgent == null) return;
+            if (planningAgent == null || !GameManager.Instance.IsPlaying) return;
             planningAgent.Update(gameState, actions);
         }
 
