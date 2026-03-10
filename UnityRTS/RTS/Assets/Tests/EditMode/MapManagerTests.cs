@@ -24,16 +24,16 @@ namespace GameManager.Tests
 		}
 
 		[Test]
-		public void IsAreaBuildable_WorkerOnOpen_True()
+		public void IsAreaBuildable_PawnOnOpen_True()
 		{
-			Assert.IsTrue(manager.IsAreaBuildable(UnitType.WORKER, new Vector3Int(5, 5, 0)));
+			Assert.IsTrue(manager.IsAreaBuildable(UnitType.PAWN, new Vector3Int(5, 5, 0)));
 		}
 
 		[Test]
-		public void IsAreaBuildable_WorkerOnBlocked_False()
+		public void IsAreaBuildable_PawnOnBlocked_False()
 		{
 			var (mgr, go) = MapManagerTestHelper.Build(10, 10, new (int, int)[] { (5, 5) });
-			Assert.IsFalse(mgr.IsAreaBuildable(UnitType.WORKER, new Vector3Int(5, 5, 0)));
+			Assert.IsFalse(mgr.IsAreaBuildable(UnitType.PAWN, new Vector3Int(5, 5, 0)));
 			Object.DestroyImmediate(go);
 		}
 
@@ -57,15 +57,15 @@ namespace GameManager.Tests
 		[Test]
 		public void IsAreaBuildable_AtMapEdge_Works()
 		{
-			// Worker at (0,0) — should be valid and buildable on a 10x10 map
-			Assert.IsTrue(manager.IsAreaBuildable(UnitType.WORKER, new Vector3Int(0, 0, 0)));
+			// Pawn at (0,0) — should be valid and buildable on a 10x10 map
+			Assert.IsTrue(manager.IsAreaBuildable(UnitType.PAWN, new Vector3Int(0, 0, 0)));
 		}
 
 		[Test]
 		public void IsAreaBuildable_OffMap_ReturnsFalse()
 		{
 			// Position (-1, 0) is out of bounds
-			Assert.IsFalse(manager.IsAreaBuildable(UnitType.WORKER, new Vector3Int(-1, 0, 0)));
+			Assert.IsFalse(manager.IsAreaBuildable(UnitType.PAWN, new Vector3Int(-1, 0, 0)));
 		}
 
 		[Test]
@@ -78,8 +78,8 @@ namespace GameManager.Tests
 		[Test]
 		public void IsBoundedAreaBuildable_Open_True()
 		{
-			// Worker at center of 10x10 — buffer zone all clear
-			Assert.IsTrue(manager.IsBoundedAreaBuildable(UnitType.WORKER, new Vector3Int(5, 5, 0)));
+			// Pawn at center of 10x10 — buffer zone all clear
+			Assert.IsTrue(manager.IsBoundedAreaBuildable(UnitType.PAWN, new Vector3Int(5, 5, 0)));
 		}
 
 		[Test]
@@ -87,15 +87,15 @@ namespace GameManager.Tests
 		{
 			// Block (4, 5) which is one cell to the left of (5, 5), in the boundary zone
 			var (mgr, go) = MapManagerTestHelper.Build(10, 10, new (int, int)[] { (4, 5) });
-			Assert.IsFalse(mgr.IsBoundedAreaBuildable(UnitType.WORKER, new Vector3Int(5, 5, 0)));
+			Assert.IsFalse(mgr.IsBoundedAreaBuildable(UnitType.PAWN, new Vector3Int(5, 5, 0)));
 			Object.DestroyImmediate(go);
 		}
 
 		[Test]
 		public void SetAreaBuildability_MobileUnit_WalkableStaysTrue()
 		{
-			// Soldier is mobile — setting buildable to false should keep walkable true
-			manager.SetAreaBuildability(UnitType.SOLDIER, new Vector3Int(5, 5, 0), false);
+			// Warrior is mobile — setting buildable to false should keep walkable true
+			manager.SetAreaBuildability(UnitType.WARRIOR, new Vector3Int(5, 5, 0), false);
 			Assert.IsFalse(manager.IsGridPositionBuildable(new Vector3Int(5, 5, 0)));
 			Assert.IsTrue(manager.IsGridPositionWalkable(new Vector3Int(5, 5, 0)));
 		}
@@ -120,10 +120,10 @@ namespace GameManager.Tests
 		}
 
 		[Test]
-		public void GetGridPositionsNearUnit_Worker_Returns8()
+		public void GetGridPositionsNearUnit_Pawn_Returns8()
 		{
-			// Worker is 1x1, so 8 perimeter cells around (5,5)
-			var positions = manager.GetGridPositionsNearUnit(UnitType.WORKER, new Vector3Int(5, 5, 0));
+			// Pawn is 1x1, so 8 perimeter cells around (5,5)
+			var positions = manager.GetGridPositionsNearUnit(UnitType.PAWN, new Vector3Int(5, 5, 0));
 			Assert.AreEqual(8, positions.Count);
 		}
 

@@ -19,7 +19,7 @@ namespace PlanningAgent.Tests
         {
             var game = new SimGameBuilder()
                 .WithMapSize(30, 30)
-                .WithUnit(0, UnitType.SOLDIER, new Position(5, 5))
+                .WithUnit(0, UnitType.WARRIOR, new Position(5, 5))
                 .WithAgent(0, new AttackUnitNbrAgent(9999))
                 .Build();
 
@@ -27,10 +27,10 @@ namespace PlanningAgent.Tests
             game.InitializeRound();
             game.Run(100);
 
-            // Should not crash, soldier should still be idle
-            var soldiers = game.GetUnitsByType(0, UnitType.SOLDIER);
-            Assert.Single(soldiers);
-            Assert.Equal(UnitAction.IDLE, soldiers[0].CurrentAction);
+            // Should not crash, warrior should still be idle
+            var warriors = game.GetUnitsByType(0, UnitType.WARRIOR);
+            Assert.Single(warriors);
+            Assert.Equal(UnitAction.IDLE, warriors[0].CurrentAction);
         }
 
         [Fact]
@@ -40,7 +40,7 @@ namespace PlanningAgent.Tests
                 .WithMapSize(30, 30)
                 .WithGold(0, 0)
                 .WithUnit(0, UnitType.BASE, new Position(5, 5), isBuilt: true)
-                .WithUnit(0, UnitType.WORKER, new Position(8, 5))
+                .WithUnit(0, UnitType.PAWN, new Position(8, 5))
                 .WithMine(new Position(12, 5), health: 1) // Will deplete almost immediately
                 .WithAgent(0, new GatherAgent())
                 .Build();
@@ -49,8 +49,8 @@ namespace PlanningAgent.Tests
             game.InitializeRound();
             game.Run(2000);
 
-            // Worker should survive even after mine is destroyed
-            Assert.Single(game.GetUnitsByType(0, UnitType.WORKER));
+            // Pawn should survive even after mine is destroyed
+            Assert.Single(game.GetUnitsByType(0, UnitType.PAWN));
         }
 
         // ------------------------------------------------------------------
@@ -58,42 +58,42 @@ namespace PlanningAgent.Tests
         // ------------------------------------------------------------------
 
         [Fact]
-        public void TrainFromBarracks_WorkerType_Rejected()
+        public void TrainFromBarracks_PawnType_Rejected()
         {
-            // Barracks can't train workers — only BASE can
+            // Barracks can't train pawns — only BASE can
             var game = new SimGameBuilder()
                 .WithMapSize(30, 30)
                 .WithGold(0, 5000)
                 .WithUnit(0, UnitType.BARRACKS, new Position(5, 5), isBuilt: true)
-                .WithAgent(0, new TrainFromBarracksAgent(UnitType.WORKER))
+                .WithAgent(0, new TrainFromBarracksAgent(UnitType.PAWN))
                 .Build();
 
             game.InitializeMatch();
             game.InitializeRound();
             game.Run(500);
 
-            // Should not have trained any workers from barracks
-            Assert.Empty(game.GetUnitsByType(0, UnitType.WORKER));
+            // Should not have trained any pawns from barracks
+            Assert.Empty(game.GetUnitsByType(0, UnitType.PAWN));
         }
 
         [Fact]
-        public void AttackWithWorker_Rejected()
+        public void AttackWithPawn_Rejected()
         {
             var game = new SimGameBuilder()
                 .WithMapSize(30, 30)
-                .WithUnit(0, UnitType.WORKER, new Position(5, 5))
-                .WithUnit(1, UnitType.WORKER, new Position(7, 5))
-                .WithAgent(0, new WorkerAttackAgent())
+                .WithUnit(0, UnitType.PAWN, new Position(5, 5))
+                .WithUnit(1, UnitType.PAWN, new Position(7, 5))
+                .WithAgent(0, new PawnAttackAgent())
                 .Build();
 
             game.InitializeMatch();
             game.InitializeRound();
             game.Run(200);
 
-            // Enemy worker should be unharmed (workers can't attack)
-            var enemyWorkers = game.GetUnitsByType(1, UnitType.WORKER);
-            Assert.Single(enemyWorkers);
-            Assert.Equal(GameConstants.HEALTH[UnitType.WORKER], enemyWorkers[0].Health);
+            // Enemy pawn should be unharmed (pawns can't attack)
+            var enemyPawns = game.GetUnitsByType(1, UnitType.PAWN);
+            Assert.Single(enemyPawns);
+            Assert.Equal(GameConstants.HEALTH[UnitType.PAWN], enemyPawns[0].Health);
         }
 
         // ------------------------------------------------------------------
@@ -105,19 +105,19 @@ namespace PlanningAgent.Tests
         {
             var game = new SimGameBuilder()
                 .WithMapSize(30, 30)
-                .WithUnit(0, UnitType.SOLDIER, new Position(5, 5))
-                .WithUnit(0, UnitType.WORKER, new Position(7, 5))
-                .WithAgent(0, new AttackOwnWorkerAgent())
+                .WithUnit(0, UnitType.WARRIOR, new Position(5, 5))
+                .WithUnit(0, UnitType.PAWN, new Position(7, 5))
+                .WithAgent(0, new AttackOwnPawnAgent())
                 .Build();
 
             game.InitializeMatch();
             game.InitializeRound();
             game.Run(200);
 
-            // Own worker should be unharmed
-            var workers = game.GetUnitsByType(0, UnitType.WORKER);
-            Assert.Single(workers);
-            Assert.Equal(GameConstants.HEALTH[UnitType.WORKER], workers[0].Health);
+            // Own pawn should be unharmed
+            var pawns = game.GetUnitsByType(0, UnitType.PAWN);
+            Assert.Single(pawns);
+            Assert.Equal(GameConstants.HEALTH[UnitType.PAWN], pawns[0].Health);
         }
 
         // ------------------------------------------------------------------
@@ -129,7 +129,7 @@ namespace PlanningAgent.Tests
         {
             var game = new SimGameBuilder()
                 .WithMapSize(30, 30)
-                .WithGold(0, 200) // Enough for 4 workers (50 each)
+                .WithGold(0, 200) // Enough for 4 pawns (50 each)
                 .WithUnit(0, UnitType.BASE, new Position(5, 5), isBuilt: true)
                 .WithAgent(0, new SpamTrainAgent()) // Sends train every tick
                 .Build();
@@ -146,8 +146,8 @@ namespace PlanningAgent.Tests
             Assert.Equal(UnitAction.TRAIN, bases[0].CurrentAction);
 
             // Gold should have been deducted exactly once
-            int workerCost = (int)GameConstants.COST[UnitType.WORKER];
-            Assert.Equal(200 - workerCost, game.GetGold(0));
+            int pawnCost = (int)GameConstants.COST[UnitType.PAWN];
+            Assert.Equal(200 - pawnCost, game.GetGold(0));
         }
 
         // ------------------------------------------------------------------
@@ -188,10 +188,10 @@ namespace PlanningAgent.Tests
         public void Update(IGameState state, IAgentActions actions)
         {
             if (tried) return;
-            var soldiers = state.GetMyUnits(UnitType.SOLDIER);
-            if (soldiers.Count > 0)
+            var warriors = state.GetMyUnits(UnitType.WARRIOR);
+            if (warriors.Count > 0)
             {
-                actions.Attack(soldiers[0], targetNbr);
+                actions.Attack(warriors[0], targetNbr);
                 tried = true;
             }
         }

@@ -46,12 +46,12 @@ namespace GameManager
                 ["Agent Name"]     = () => $"{Agent.AgentName} {Agent.AgentDLLName}",
                 ["Agent Nbr"]      = () => Agent.AgentNbr.ToString(),
                 ["Gold Value"]     = () => Agent.Gold.ToString(),
-                ["Workers Count"]  = () => Count(UnitType.WORKER),
-                ["Soldiers Count"] = () => Count(UnitType.SOLDIER),
+                ["Pawns Count"]  = () => Count(UnitType.PAWN),
+                ["Warriors Count"] = () => Count(UnitType.WARRIOR),
                 ["Archers Count"]  = () => Count(UnitType.ARCHER),
                 ["Bases Count"]    = () => Count(UnitType.BASE),
                 ["Barracks Count"]  = () => Count(UnitType.BARRACKS),
-                ["Archery Count"]   = () => Count(UnitType.ARCHERY),
+                ["Archeries Count"]   = () => Count(UnitType.ARCHERY),
                 ["Custom Debug"]    = () => (Agent as AgentBridge)?.PlanningAgentDebugText ?? "",
             };
             _debugTextAreas = debuggerPanel != null

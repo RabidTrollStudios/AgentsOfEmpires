@@ -5,12 +5,12 @@ namespace PlanningAgent.Tests
 {
     /// <summary>
     /// [EASY] Builds barracks and trains only archers. Attacks with 2+.
-    /// Archers cost 200g but deal only 3 DPS — soldiers (100g, 20 DPS) destroy them.
-    /// Strategy to beat: train a few soldiers.
+    /// Archers cost 200g but deal only 3 DPS — warriors (100g, 20 DPS) destroy them.
+    /// Strategy to beat: train a few warriors.
     /// </summary>
     public class ArcherOnlyOpponent : PlanningAgentBase
     {
-        private const int MAX_WORKERS = 3;
+        private const int MAX_PAWNS = 3;
 
         public override void InitializeMatch() { }
 
@@ -21,8 +21,8 @@ namespace PlanningAgent.Tests
             mainBaseNbr = myBases.Count > 0 ? myBases[0] : -1;
 
             // Minimal economy
-            TrainWorkers(state, actions, MAX_WORKERS);
-            GatherWithIdleWorkers(state, actions);
+            TrainPawns(state, actions, MAX_PAWNS);
+            GatherWithIdlePawns(state, actions);
 
             // Build barracks if we don't have one
             if (myBarracks.Count == 0 && HasBuiltUnit(myBases, state))
@@ -45,40 +45,40 @@ namespace PlanningAgent.Tests
                 AttackWithUnits(myArchers, state, actions);
         }
 
-        private void TrainWorkers(IGameState state, IAgentActions actions, int max)
+        private void TrainPawns(IGameState state, IAgentActions actions, int max)
         {
             foreach (int baseNbr in myBases)
             {
                 var info = state.GetUnit(baseNbr);
                 if (info.HasValue && info.Value.IsBuilt
                     && info.Value.CurrentAction == UnitAction.IDLE
-                    && state.MyGold >= GameConstants.COST[UnitType.WORKER]
-                    && myWorkers.Count < max)
+                    && state.MyGold >= GameConstants.COST[UnitType.PAWN]
+                    && myPawns.Count < max)
                 {
-                    actions.Train(baseNbr, UnitType.WORKER);
+                    actions.Train(baseNbr, UnitType.PAWN);
                 }
             }
         }
 
-        private void GatherWithIdleWorkers(IGameState state, IAgentActions actions)
+        private void GatherWithIdlePawns(IGameState state, IAgentActions actions)
         {
             if (mainBaseNbr < 0 || mainMineNbr < 0) return;
             var mineInfo = state.GetUnit(mainMineNbr);
             if (!mineInfo.HasValue || mineInfo.Value.Health <= 0) return;
 
-            foreach (int worker in myWorkers)
+            foreach (int pawn in myPawns)
             {
-                var info = state.GetUnit(worker);
+                var info = state.GetUnit(pawn);
                 if (info.HasValue && info.Value.CurrentAction == UnitAction.IDLE)
-                    actions.Gather(worker, mainMineNbr, mainBaseNbr);
+                    actions.Gather(pawn, mainMineNbr, mainBaseNbr);
             }
         }
 
         private void BuildStructure(UnitType type, IGameState state, IAgentActions actions)
         {
-            foreach (int worker in myWorkers)
+            foreach (int pawn in myPawns)
             {
-                var info = state.GetUnit(worker);
+                var info = state.GetUnit(pawn);
                 if (info.HasValue && info.Value.CurrentAction == UnitAction.IDLE
                     && state.MyGold >= GameConstants.COST[type])
                 {
@@ -86,7 +86,7 @@ namespace PlanningAgent.Tests
                     {
                         if (state.IsBoundedAreaBuildable(type, pos))
                         {
-                            actions.Build(worker, pos, type);
+                            actions.Build(pawn, pos, type);
                             return;
                         }
                     }
@@ -109,7 +109,7 @@ namespace PlanningAgent.Tests
 
         private int? FindAnyEnemy(IGameState state)
         {
-            foreach (UnitType ut in new[] { UnitType.SOLDIER, UnitType.ARCHER, UnitType.WORKER,
+            foreach (UnitType ut in new[] { UnitType.WARRIOR, UnitType.ARCHER, UnitType.PAWN,
                                             UnitType.BASE, UnitType.BARRACKS })
             {
                 var enemies = state.GetEnemyUnits(ut);

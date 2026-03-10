@@ -17,7 +17,7 @@ namespace GameManager
     ///</summary> 
     public class PlanningAgent : Agent
     {
-        private const int MAX_NBR_WORKERS = 20;
+        private const int MAX_NBR_PAWNS = 20;
 
         #region Private Data
 
@@ -47,14 +47,14 @@ namespace GameManager
         private List<int> mines { get; set; }
 
         /// <summary>
-        /// List of all of my workers
+        /// List of all of my pawns
         /// </summary>
-        private List<int> myWorkers { get; set; }
+        private List<int> myPawns { get; set; }
 
         /// <summary>
-        /// List of all of my soldiers
+        /// List of all of my warriors
         /// </summary>
-        private List<int> mySoldiers { get; set; }
+        private List<int> myWarriors { get; set; }
 
         /// <summary>
         /// List of all of my archers
@@ -72,14 +72,14 @@ namespace GameManager
         private List<int> myBarracks { get; set; }
 
         /// <summary>
-        /// List of the enemy's workers
+        /// List of the enemy's pawns
         /// </summary>
-        private List<int> enemyWorkers { get; set; }
+        private List<int> enemyPawns { get; set; }
 
         /// <summary>
-        /// List of the enemy's soldiers
+        /// List of the enemy's warriors
         /// </summary>
-        private List<int> enemySoldiers { get; set; }
+        private List<int> enemyWarriors { get; set; }
 
         /// <summary>
         /// List of enemy's archers
@@ -142,16 +142,16 @@ namespace GameManager
         /// <param name="unitType"></param>
         public void BuildBuilding(UnitType unitType)
         {
-            // For each worker
-            foreach (int worker in myWorkers)
+            // For each pawn
+            foreach (int pawn in myPawns)
             {
                 // Grab the unit we need for this function
-                Unit unit = GameManager.Instance.GetUnit(worker);
+                Unit unit = GameManager.Instance.GetUnit(pawn);
 
                 // Make sure this unit actually exists and we have enough gold
                 if (unit != null && Gold >= Constants.COST[unitType])
                 {
-                    // Find the closest build position to this worker's position (DUMB) and 
+                    // Find the closest build position to this pawn's position (DUMB) and 
                     // build the base there
                     foreach (Vector3Int toBuild in buildPositions)
                     {
@@ -185,15 +185,15 @@ namespace GameManager
                         {
                             Attack(troopUnit, GameManager.Instance.GetUnit(enemyArchers[UnityEngine.Random.Range(0, enemyArchers.Count)]));
                         }
-                        // If there are soldiers to attack
-                        else if (enemySoldiers.Count > 0)
+                        // If there are warriors to attack
+                        else if (enemyWarriors.Count > 0)
                         {
-                            Attack(troopUnit, GameManager.Instance.GetUnit(enemySoldiers[UnityEngine.Random.Range(0, enemySoldiers.Count)]));
+                            Attack(troopUnit, GameManager.Instance.GetUnit(enemyWarriors[UnityEngine.Random.Range(0, enemyWarriors.Count)]));
                         }
-                        // If there are workers to attack
-                        else if (enemyWorkers.Count > 0)
+                        // If there are pawns to attack
+                        else if (enemyPawns.Count > 0)
                         {
-                            Attack(troopUnit, GameManager.Instance.GetUnit(enemyWorkers[UnityEngine.Random.Range(0, enemyWorkers.Count)]));
+                            Attack(troopUnit, GameManager.Instance.GetUnit(enemyPawns[UnityEngine.Random.Range(0, enemyPawns.Count)]));
                         }
                         // If there are bases to attack
                         else if (enemyBases.Count > 0)
@@ -279,14 +279,14 @@ namespace GameManager
             // Initialize all of the unit lists
             mines = new List<int>();
 
-            myWorkers = new List<int>();
-            mySoldiers = new List<int>();
+            myPawns = new List<int>();
+            myWarriors = new List<int>();
             myArchers = new List<int>();
             myBases = new List<int>();
             myBarracks = new List<int>();
 
-            enemyWorkers = new List<int>();
-            enemySoldiers = new List<int>();
+            enemyPawns = new List<int>();
+            enemyWarriors = new List<int>();
             enemyArchers = new List<int>();
             enemyBases = new List<int>();
             enemyBarracks = new List<int>();
@@ -302,8 +302,8 @@ namespace GameManager
             mines = GameManager.Instance.GetUnitNbrsOfType(UnitType.MINE);
 
             // Update all of my unitNbrs
-            myWorkers = GameManager.Instance.GetUnitNbrsOfType(UnitType.WORKER, AgentNbr);
-            mySoldiers = GameManager.Instance.GetUnitNbrsOfType(UnitType.SOLDIER, AgentNbr);
+            myPawns = GameManager.Instance.GetUnitNbrsOfType(UnitType.PAWN, AgentNbr);
+            myWarriors = GameManager.Instance.GetUnitNbrsOfType(UnitType.WARRIOR, AgentNbr);
             myArchers = GameManager.Instance.GetUnitNbrsOfType(UnitType.ARCHER, AgentNbr);
             myBarracks = GameManager.Instance.GetUnitNbrsOfType(UnitType.BARRACKS, AgentNbr);
             myBases = GameManager.Instance.GetUnitNbrsOfType(UnitType.BASE, AgentNbr);
@@ -313,8 +313,8 @@ namespace GameManager
             if (enemyAgentNbrs.Any())
             {
                 enemyAgentNbr = enemyAgentNbrs[0];
-                enemyWorkers = GameManager.Instance.GetUnitNbrsOfType(UnitType.WORKER, enemyAgentNbr);
-                enemySoldiers = GameManager.Instance.GetUnitNbrsOfType(UnitType.SOLDIER, enemyAgentNbr);
+                enemyPawns = GameManager.Instance.GetUnitNbrsOfType(UnitType.PAWN, enemyAgentNbr);
+                enemyWarriors = GameManager.Instance.GetUnitNbrsOfType(UnitType.WARRIOR, enemyAgentNbr);
                 enemyArchers = GameManager.Instance.GetUnitNbrsOfType(UnitType.ARCHER, enemyAgentNbr);
                 enemyBarracks = GameManager.Instance.GetUnitNbrsOfType(UnitType.BARRACKS, enemyAgentNbr);
                 enemyBases = GameManager.Instance.GetUnitNbrsOfType(UnitType.BASE, enemyAgentNbr);
@@ -361,10 +361,10 @@ namespace GameManager
             }
 
             // For any troops, attack the enemy
-            AttackEnemy(mySoldiers);
+            AttackEnemy(myWarriors);
             AttackEnemy(myArchers);
 
-            // For each barracks, determine if it should train a soldier or an archer
+            // For each barracks, determine if it should train a warrior or an archer
             foreach (int barracksNbr in myBarracks)
             {
                 // Get the barracks
@@ -377,36 +377,36 @@ namespace GameManager
                 {
                     Train(barracksUnit, UnitType.ARCHER);
                 }
-                // If this barracks still exists, is idle, we need soldiers, and have gold
+                // If this barracks still exists, is idle, we need warriors, and have gold
                 if (barracksUnit != null && barracksUnit.IsBuilt
                     && barracksUnit.CurrentAction == UnitAction.IDLE
-                    && Gold >= Constants.COST[UnitType.SOLDIER])
+                    && Gold >= Constants.COST[UnitType.WARRIOR])
                 {
-                    Train(barracksUnit, UnitType.SOLDIER);
+                    Train(barracksUnit, UnitType.WARRIOR);
                 }
             }
 
-            // For each base, determine if it should train a worker
+            // For each base, determine if it should train a pawn
             foreach (int baseNbr in myBases)
             {
                 // Get the base unit
                 Unit baseUnit = GameManager.Instance.GetUnit(baseNbr);
 
-                // If the base exists, is idle, we need a worker, and we have gold
+                // If the base exists, is idle, we need a pawn, and we have gold
                 if (baseUnit != null && baseUnit.IsBuilt
                                      && baseUnit.CurrentAction == UnitAction.IDLE
-                                     && Gold >= Constants.COST[UnitType.WORKER]
-                                     && myWorkers.Count < MAX_NBR_WORKERS)
+                                     && Gold >= Constants.COST[UnitType.PAWN]
+                                     && myPawns.Count < MAX_NBR_PAWNS)
                 {
-                    Train(baseUnit, UnitType.WORKER);
+                    Train(baseUnit, UnitType.PAWN);
                 }
             }
 
-            // For each worker
-            foreach (int worker in myWorkers)
+            // For each pawn
+            foreach (int pawn in myPawns)
             {
                 // Grab the unit we need for this function
-                Unit unit = GameManager.Instance.GetUnit(worker);
+                Unit unit = GameManager.Instance.GetUnit(pawn);
 
                 // Make sure this unit actually exists and is idle
                 if (unit != null && unit.CurrentAction == UnitAction.IDLE && mainBaseNbr >= 0 && mainMineNbr >= 0)

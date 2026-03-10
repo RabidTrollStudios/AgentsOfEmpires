@@ -122,8 +122,8 @@ namespace GameManager.Tests.PlayMode
 			// DetermineRoundsCompleted sums AgentWins: 0 + 0 = 0 != TotalNbrOfRounds (3)
 			SetProp("AgentWins", new Dictionary<string, int>
 			{
-				{ Constants.HUMAN_ABBR, 0 },
-				{ Constants.ORC_ABBR,   0 }
+				{ Constants.BLUE_ABBR, 0 },
+				{ Constants.RED_ABBR,   0 }
 			});
 			GM.TotalNbrOfRounds = 3;
 
@@ -151,8 +151,8 @@ namespace GameManager.Tests.PlayMode
 			// sum = 1 == TotalNbrOfRounds (1) → FINISHED path
 			SetProp("AgentWins", new Dictionary<string, int>
 			{
-				{ Constants.HUMAN_ABBR, 1 },
-				{ Constants.ORC_ABBR,   0 }
+				{ Constants.BLUE_ABBR, 1 },
+				{ Constants.RED_ABBR,   0 }
 			});
 			GM.TotalNbrOfRounds = 1;
 

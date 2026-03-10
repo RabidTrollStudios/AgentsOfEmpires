@@ -101,11 +101,11 @@ namespace AgentTestHarness
             });
         }
 
-        public void Gather(int workerNbr, int mineNbr, int baseNbr)
+        public void Gather(int pawnNbr, int mineNbr, int baseNbr)
         {
-            if (!game.Units.TryGetValue(workerNbr, out var worker)) return;
-            if (worker.OwnerAgentNbr != agentNbr) return;
-            if (!GameConstants.CAN_GATHER[worker.UnitType]) return;
+            if (!game.Units.TryGetValue(pawnNbr, out var pawn)) return;
+            if (pawn.OwnerAgentNbr != agentNbr) return;
+            if (!GameConstants.CAN_GATHER[pawn.UnitType]) return;
 
             if (!game.Units.TryGetValue(mineNbr, out var mine)) return;
             if (mine.UnitType != UnitType.MINE) return;
@@ -117,7 +117,7 @@ namespace AgentTestHarness
             PendingCommands.Add(new SimCommand
             {
                 Type = CommandType.Gather,
-                UnitNbr = workerNbr,
+                UnitNbr = pawnNbr,
                 MineNbr = mineNbr,
                 BaseNbr = baseNbr
             });

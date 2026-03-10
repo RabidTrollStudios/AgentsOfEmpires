@@ -11,8 +11,8 @@ namespace GameManager.Tests.PlayMode
 {
 	/// <summary>
 	/// PlayMode tests for the unit build happy path and boundary conditions:
-	/// IsBuilt transition, footprint walkability, worker state, gold deduction,
-	/// near-edge builds, and adjacent-worker builds.
+	/// IsBuilt transition, footprint walkability, pawn state, gold deduction,
+	/// near-edge builds, and adjacent-pawn builds.
 	/// </summary>
 	[TestFixture]
 	public class UnitBuildHappyPathTests : PlayModeTestBase
@@ -31,10 +31,10 @@ namespace GameManager.Tests.PlayMode
 		/// At GAME_SPEED=20: CREATION_TIME[BASE] = (1/20)*10 = 0.5 s
 		/// </summary>
 		[UnityTest]
-		public IEnumerator WorkerBuildsBase_IsBuiltTransitionsToTrue()
+		public IEnumerator PawnBuildsBase_IsBuiltTransitionsToTrue()
 		{
-			Unit worker = PlaceUnit(UnitType.WORKER, new Vector3Int(9, 10, 0));
-			worker.StartBuilding(new BuildEventArgs(worker, new Vector3Int(10, 10, 0), UnitType.BASE));
+			Unit pawn = PlaceUnit(UnitType.PAWN, new Vector3Int(9, 10, 0));
+			pawn.StartBuilding(new BuildEventArgs(pawn, new Vector3Int(10, 10, 0), UnitType.BASE));
 
 			Unit building = ctx.UnitManager.GetAllUnits().Values
 				.Select(go => go.GetComponent<Unit>())
@@ -45,7 +45,7 @@ namespace GameManager.Tests.PlayMode
 
 			yield return WaitUntil(() =>
 			{
-				TickUnit(worker);
+				TickUnit(pawn);
 				return building.IsBuilt;
 			}, timeoutSeconds: 10f, failMessage: "Building never became IsBuilt=true");
 
@@ -56,8 +56,8 @@ namespace GameManager.Tests.PlayMode
 		public IEnumerator BuildingPlaced_FootprintCellsBecomeUnwalkable()
 		{
 			Vector3Int buildPos = new Vector3Int(10, 10, 0);
-			Unit worker = PlaceUnit(UnitType.WORKER, new Vector3Int(9, 10, 0));
-			worker.StartBuilding(new BuildEventArgs(worker, buildPos, UnitType.BASE));
+			Unit pawn = PlaceUnit(UnitType.PAWN, new Vector3Int(9, 10, 0));
+			pawn.StartBuilding(new BuildEventArgs(pawn, buildPos, UnitType.BASE));
 
 			yield return null;
 
@@ -76,21 +76,21 @@ namespace GameManager.Tests.PlayMode
 		}
 
 		[UnityTest]
-		public IEnumerator WorkerBuildsBase_WorkerGoesIdleAfterCompletion()
+		public IEnumerator PawnBuildsBase_PawnGoesIdleAfterCompletion()
 		{
-			Unit worker = PlaceUnit(UnitType.WORKER, new Vector3Int(9, 10, 0));
-			worker.StartBuilding(new BuildEventArgs(worker, new Vector3Int(10, 10, 0), UnitType.BASE));
+			Unit pawn = PlaceUnit(UnitType.PAWN, new Vector3Int(9, 10, 0));
+			pawn.StartBuilding(new BuildEventArgs(pawn, new Vector3Int(10, 10, 0), UnitType.BASE));
 
-			Assert.AreEqual(UnitAction.BUILD, worker.CurrentAction,
-				"Worker should be in BUILD action after StartBuilding");
+			Assert.AreEqual(UnitAction.BUILD, pawn.CurrentAction,
+				"Pawn should be in BUILD action after StartBuilding");
 
 			yield return WaitUntil(() =>
 			{
-				TickUnit(worker);
-				return worker.CurrentAction == UnitAction.IDLE;
-			}, timeoutSeconds: 10f, failMessage: "Worker never returned to IDLE after building");
+				TickUnit(pawn);
+				return pawn.CurrentAction == UnitAction.IDLE;
+			}, timeoutSeconds: 10f, failMessage: "Pawn never returned to IDLE after building");
 
-			Assert.AreEqual(UnitAction.IDLE, worker.CurrentAction);
+			Assert.AreEqual(UnitAction.IDLE, pawn.CurrentAction);
 		}
 
 		/// <summary>
@@ -100,13 +100,13 @@ namespace GameManager.Tests.PlayMode
 		[UnityTest]
 		public IEnumerator BuildBase_GoldDeductedAtStart()
 		{
-			Unit worker = PlaceUnit(UnitType.WORKER, new Vector3Int(9, 10, 0));
+			Unit pawn = PlaceUnit(UnitType.PAWN, new Vector3Int(9, 10, 0));
 			Agent agent = GetAgent0();
 
 			int goldBefore = agent.Gold;
 			int baseCost   = (int)Constants.COST[UnitType.BASE];
 
-			worker.StartBuilding(new BuildEventArgs(worker, new Vector3Int(10, 10, 0), UnitType.BASE));
+			pawn.StartBuilding(new BuildEventArgs(pawn, new Vector3Int(10, 10, 0), UnitType.BASE));
 
 			Assert.AreEqual(goldBefore - baseCost, agent.Gold,
 				"Gold should be deducted at build start, not at completion");
@@ -124,23 +124,23 @@ namespace GameManager.Tests.PlayMode
 		[UnityTest]
 		public IEnumerator BuildNearMapEdge_FitsWithinBounds()
 		{
-			Vector3Int workerPos = new Vector3Int(24, 4, 0);
+			Vector3Int pawnPos = new Vector3Int(24, 4, 0);
 			Vector3Int buildPos  = new Vector3Int(25, 4, 0);
-			Unit worker = PlaceUnit(UnitType.WORKER, workerPos);
+			Unit pawn = PlaceUnit(UnitType.PAWN, pawnPos);
 
-			var exclusion = new HashSet<Vector3Int> { workerPos };
+			var exclusion = new HashSet<Vector3Int> { pawnPos };
 			Assert.IsTrue(ctx.MapManager.IsAreaBuildable(UnitType.BASE, buildPos, exclusion),
 				"4x4 area at (25,4) should be buildable within 30x30 map");
 
-			worker.StartBuilding(new BuildEventArgs(worker, buildPos, UnitType.BASE));
+			pawn.StartBuilding(new BuildEventArgs(pawn, buildPos, UnitType.BASE));
 
-			Assert.AreEqual(UnitAction.BUILD, worker.CurrentAction,
-				"Worker should accept build command near map edge");
+			Assert.AreEqual(UnitAction.BUILD, pawn.CurrentAction,
+				"Pawn should accept build command near map edge");
 
 			yield return WaitUntil(() =>
 			{
-				TickUnit(worker);
-				return worker.CurrentAction == UnitAction.IDLE;
+				TickUnit(pawn);
+				return pawn.CurrentAction == UnitAction.IDLE;
 			}, timeoutSeconds: 10f, failMessage: "Build near map edge did not complete");
 
 			Unit building = ctx.UnitManager.GetAllUnits().Values
@@ -152,18 +152,18 @@ namespace GameManager.Tests.PlayMode
 		}
 
 		[UnityTest]
-		public IEnumerator WorkerAdjacentToBuildSite_BuildsQuickly()
+		public IEnumerator PawnAdjacentToBuildSite_BuildsQuickly()
 		{
-			Unit worker = PlaceUnit(UnitType.WORKER, new Vector3Int(9, 10, 0));
-			worker.StartBuilding(new BuildEventArgs(worker, new Vector3Int(10, 10, 0), UnitType.BASE));
+			Unit pawn = PlaceUnit(UnitType.PAWN, new Vector3Int(9, 10, 0));
+			pawn.StartBuilding(new BuildEventArgs(pawn, new Vector3Int(10, 10, 0), UnitType.BASE));
 
-			Assert.AreEqual(UnitAction.BUILD, worker.CurrentAction);
+			Assert.AreEqual(UnitAction.BUILD, pawn.CurrentAction);
 
 			yield return WaitUntil(() =>
 			{
-				TickUnit(worker);
-				return worker.CurrentAction == UnitAction.IDLE;
-			}, timeoutSeconds: 5f, failMessage: "Adjacent worker did not finish building quickly");
+				TickUnit(pawn);
+				return pawn.CurrentAction == UnitAction.IDLE;
+			}, timeoutSeconds: 5f, failMessage: "Adjacent pawn did not finish building quickly");
 
 			Unit building = ctx.UnitManager.GetAllUnits().Values
 				.Select(go => go.GetComponent<Unit>())

@@ -15,28 +15,28 @@ namespace AgentSDK
         void Move(int unitNbr, Position target);
 
         /// <summary>
-        /// Send a worker to build a structure at a target position.
+        /// Send a pawn to build a structure at a target position.
         /// Requires sufficient gold and all dependencies met.
         /// </summary>
-        /// <param name="unitNbr">The worker unit that will build</param>
+        /// <param name="unitNbr">The pawn unit that will build</param>
         /// <param name="target">Where to place the structure</param>
         /// <param name="unitType">Type of structure to build (BASE, BARRACKS, or ARCHERY)</param>
         void Build(int unitNbr, Position target, UnitType unitType);
 
         /// <summary>
-        /// Send a worker to gather gold from a mine and return it to a base.
+        /// Send a pawn to gather gold from a mine and return it to a base.
         /// </summary>
-        /// <param name="workerNbr">The worker unit</param>
+        /// <param name="pawnNbr">The pawn unit</param>
         /// <param name="mineNbr">The gold mine to gather from</param>
         /// <param name="baseNbr">The base to return gold to</param>
-        void Gather(int workerNbr, int mineNbr, int baseNbr);
+        void Gather(int pawnNbr, int mineNbr, int baseNbr);
 
         /// <summary>
         /// Train a new unit at a structure.
         /// Requires sufficient gold and the structure must be fully built.
         /// </summary>
         /// <param name="buildingNbr">The structure that will train (BASE or BARRACKS)</param>
-        /// <param name="unitType">Type of unit to train (WORKER, SOLDIER, or ARCHER)</param>
+        /// <param name="unitType">Type of unit to train (PAWN, WARRIOR, or ARCHER)</param>
         void Train(int buildingNbr, UnitType unitType);
 
         /// <summary>
@@ -46,6 +46,14 @@ namespace AgentSDK
         /// <param name="unitNbr">Your attacking unit</param>
         /// <param name="targetNbr">The enemy unit to attack</param>
         void Attack(int unitNbr, int targetNbr);
+
+        /// <summary>
+        /// Send a pawn to repair a damaged friendly building.
+        /// The building must belong to the same agent and have less than full health.
+        /// </summary>
+        /// <param name="pawnNbr">The pawn unit that will repair</param>
+        /// <param name="buildingNbr">The building to repair</param>
+        void Repair(int pawnNbr, int buildingNbr);
 
         /// <summary>
         /// Log a message to your agent's CSV output file.

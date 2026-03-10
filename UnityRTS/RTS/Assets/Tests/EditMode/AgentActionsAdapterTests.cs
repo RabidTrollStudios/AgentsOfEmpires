@@ -84,7 +84,7 @@ namespace GameManager.Tests
 		public void Train_UnknownBuilding_DoesNotThrow()
 		{
 			Assert.DoesNotThrow(
-				() => adapter.Train(999, UnitType.SOLDIER),
+				() => adapter.Train(999, UnitType.WARRIOR),
 				"Train with an unknown building ID should return early without throwing");
 		}
 

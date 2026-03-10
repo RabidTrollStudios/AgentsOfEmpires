@@ -56,7 +56,7 @@ namespace GameManager.Tests
 			SetField("mapManager", mapManager);
 
 			// On a fully open map at radius 0 the corner cell itself is buildable and valid.
-			var result = Invoke<Vector3Int>("GetBuildableLocationNearCorner", 1, 1, UnitType.WORKER);
+			var result = Invoke<Vector3Int>("GetBuildableLocationNearCorner", 1, 1, UnitType.PAWN);
 
 			Assert.AreEqual(new Vector3Int(1, 1, 0), result,
 				"Should return the corner position directly when the map is fully open");
@@ -71,7 +71,7 @@ namespace GameManager.Tests
 			createdObjects.Add(tilemapGo);
 			SetField("mapManager", mapManager);
 
-			var result = Invoke<Vector3Int>("GetBuildableLocationNearCorner", 1, 1, UnitType.WORKER);
+			var result = Invoke<Vector3Int>("GetBuildableLocationNearCorner", 1, 1, UnitType.PAWN);
 
 			Assert.AreNotEqual(new Vector3Int(1, 1, 0), result,
 				"Should not return the blocked cell");
@@ -91,7 +91,7 @@ namespace GameManager.Tests
 			for (int i = 0; i < 5; i++)
 			{
 				var result = Invoke<Vector3Int>(
-					"GetRandomBuildableLocationExcludingCorners", UnitType.WORKER);
+					"GetRandomBuildableLocationExcludingCorners", UnitType.PAWN);
 
 				bool inLowerLeftCorner  = result.x < 5 && result.y < 5;
 				bool inUpperRightCorner = result.x >= 25 && result.y >= 25;

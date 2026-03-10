@@ -28,9 +28,9 @@ namespace PlanningAgent.Tests
             game.InitializeRound();
             game.Run(100);
 
-            // Should not have trained any workers with 0 gold
+            // Should not have trained any pawns with 0 gold
             Assert.Single(game.GetUnitsByType(0, UnitType.BASE));
-            Assert.Empty(game.GetUnitsByType(0, UnitType.WORKER));
+            Assert.Empty(game.GetUnitsByType(0, UnitType.PAWN));
             Assert.Equal(0, game.GetGold(0));
         }
 
@@ -41,7 +41,7 @@ namespace PlanningAgent.Tests
                 .WithMapSize(30, 30)
                 .WithGold(0, 0)
                 .WithUnit(0, UnitType.BASE, new Position(5, 5), isBuilt: true)
-                .WithUnit(0, UnitType.WORKER, new Position(8, 5))
+                .WithUnit(0, UnitType.PAWN, new Position(8, 5))
                 .WithAgent(0, new BuildOnceAgent(UnitType.BARRACKS, new Position(15, 15)))
                 .Build();
 
@@ -58,13 +58,13 @@ namespace PlanningAgent.Tests
         // ------------------------------------------------------------------
 
         [Fact]
-        public void MineDepleted_WorkerSurvivesAndGoesIdle()
+        public void MineDepleted_PawnSurvivesAndGoesIdle()
         {
             var game = new SimGameBuilder()
                 .WithMapSize(30, 30)
                 .WithGold(0, 0)
                 .WithUnit(0, UnitType.BASE, new Position(5, 5), isBuilt: true)
-                .WithUnit(0, UnitType.WORKER, new Position(8, 5))
+                .WithUnit(0, UnitType.PAWN, new Position(8, 5))
                 .WithMine(new Position(12, 5), health: 10) // Tiny mine
                 .WithAgent(0, new GatherAgent())
                 .Build();
@@ -75,8 +75,8 @@ namespace PlanningAgent.Tests
 
             // Mine should be gone
             Assert.Empty(game.GetUnitsByType(-1, UnitType.MINE));
-            // Worker should survive
-            Assert.Single(game.GetUnitsByType(0, UnitType.WORKER));
+            // Pawn should survive
+            Assert.Single(game.GetUnitsByType(0, UnitType.PAWN));
         }
 
         [Fact]
@@ -86,7 +86,7 @@ namespace PlanningAgent.Tests
                 .WithMapSize(30, 30)
                 .WithGold(0, 0)
                 .WithUnit(0, UnitType.BASE, new Position(5, 5), isBuilt: true)
-                .WithUnit(0, UnitType.WORKER, new Position(8, 5))
+                .WithUnit(0, UnitType.PAWN, new Position(8, 5))
                 .WithMine(new Position(12, 5), health: 50)
                 .WithAgent(0, new GatherAgent())
                 .Build();
@@ -112,7 +112,7 @@ namespace PlanningAgent.Tests
         [Fact]
         public void InsufficientGold_PartialTrainBatch()
         {
-            // Only enough gold for 1 worker (50g), not 2
+            // Only enough gold for 1 pawn (50g), not 2
             var game = new SimGameBuilder()
                 .WithMapSize(30, 30)
                 .WithGold(0, 60)
@@ -124,9 +124,9 @@ namespace PlanningAgent.Tests
             game.InitializeRound();
 
             bool trained = game.RunUntil(g =>
-                g.GetUnitsByType(0, UnitType.WORKER).Count >= 1, 500);
+                g.GetUnitsByType(0, UnitType.PAWN).Count >= 1, 500);
 
-            Assert.True(trained, "Should train exactly 1 worker with 60 gold");
+            Assert.True(trained, "Should train exactly 1 pawn with 60 gold");
 
             // Gold should be nearly depleted (50 spent)
             Assert.True(game.GetGold(0) < 50,
@@ -162,7 +162,7 @@ namespace PlanningAgent.Tests
                 .WithMapSize(30, 30)
                 .WithGold(0, 0)
                 .WithUnit(0, UnitType.BASE, new Position(5, 5), isBuilt: true)
-                .WithUnit(0, UnitType.WORKER, new Position(8, 5))
+                .WithUnit(0, UnitType.PAWN, new Position(8, 5))
                 .WithMine(new Position(12, 5), health: 50000)
                 .WithAgent(0, new GatherAgent())
                 .Build();

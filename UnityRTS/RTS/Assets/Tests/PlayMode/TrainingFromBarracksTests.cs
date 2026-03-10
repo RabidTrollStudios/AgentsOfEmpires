@@ -10,7 +10,7 @@ namespace GameManager.Tests.PlayMode
 {
 	/// <summary>
 	/// Play Mode tests for BARRACKS training behavior.
-	/// Verifies that BARRACKS trains SOLDIER and ARCHER (not WORKER),
+	/// Verifies that BARRACKS trains WARRIOR and ARCHER (not PAWN),
 	/// that gold is deducted at train start, and that sequential training works.
 	/// </summary>
 	[TestFixture]
@@ -31,24 +31,24 @@ namespace GameManager.Tests.PlayMode
 		#region Happy Path
 
 		/// <summary>
-		/// A built BARRACKS trains a SOLDIER. After training completes,
-		/// a SOLDIER appears in UnitManager.
+		/// A built BARRACKS trains a WARRIOR. After training completes,
+		/// a WARRIOR appears in UnitManager.
 		/// </summary>
 		[UnityTest]
-		public IEnumerator BarracksTrainsSoldier_SoldierAppearsAfterTimer()
+		public IEnumerator BarracksTrainsWarrior_WarriorAppearsAfterTimer()
 		{
 			Unit barracks = PlaceBuiltBarracks(new Vector3Int(10, 10, 0));
 			int unitsBefore = ctx.UnitManager.GetAllUnits().Count;
 
-			barracks.StartTraining(new TrainEventArgs(barracks, UnitType.SOLDIER));
+			barracks.StartTraining(new TrainEventArgs(barracks, UnitType.WARRIOR));
 			Assert.AreEqual(UnitAction.TRAIN, barracks.CurrentAction,
-				"Barracks should enter TRAIN state for SOLDIER");
+				"Barracks should enter TRAIN state for WARRIOR");
 
 			yield return WaitUntil(() =>
 			{
 				TickUnit(barracks);
 				return ctx.UnitManager.GetAllUnits().Count > unitsBefore;
-			}, timeoutSeconds: 10f, failMessage: "SOLDIER never appeared after BARRACKS training");
+			}, timeoutSeconds: 10f, failMessage: "WARRIOR never appeared after BARRACKS training");
 
 			// Find the new unit
 			Unit newUnit = ctx.UnitManager.GetAllUnits().Values
@@ -56,8 +56,8 @@ namespace GameManager.Tests.PlayMode
 				.OrderByDescending(u => u.UnitNbr)
 				.First();
 
-			Assert.AreEqual(UnitType.SOLDIER, newUnit.UnitType,
-				"BARRACKS should produce a SOLDIER");
+			Assert.AreEqual(UnitType.WARRIOR, newUnit.UnitType,
+				"BARRACKS should produce a WARRIOR");
 		}
 
 		/// <summary>
@@ -90,19 +90,19 @@ namespace GameManager.Tests.PlayMode
 		}
 
 		/// <summary>
-		/// Gold is deducted immediately when BARRACKS starts training a SOLDIER.
+		/// Gold is deducted immediately when BARRACKS starts training a WARRIOR.
 		/// </summary>
 		[UnityTest]
-		public IEnumerator BarracksTrainsSoldier_GoldDeductedAtStart()
+		public IEnumerator BarracksTrainsWarrior_GoldDeductedAtStart()
 		{
 			Unit barracks = PlaceBuiltBarracks(new Vector3Int(10, 10, 0));
 			Agent agent = GetAgent0();
 			int goldBefore = agent.Gold;
-			int soldierCost = (int)Constants.COST[UnitType.SOLDIER];
+			int warriorCost = (int)Constants.COST[UnitType.WARRIOR];
 
-			barracks.StartTraining(new TrainEventArgs(barracks, UnitType.SOLDIER));
+			barracks.StartTraining(new TrainEventArgs(barracks, UnitType.WARRIOR));
 
-			Assert.AreEqual(goldBefore - soldierCost, agent.Gold,
+			Assert.AreEqual(goldBefore - warriorCost, agent.Gold,
 				"Gold should be deducted immediately when BARRACKS starts training");
 
 			yield return null;
@@ -112,10 +112,10 @@ namespace GameManager.Tests.PlayMode
 		/// BARRACKS goes IDLE after training completes.
 		/// </summary>
 		[UnityTest]
-		public IEnumerator BarracksTrainsSoldier_GoesIdleAfterCompletion()
+		public IEnumerator BarracksTrainsWarrior_GoesIdleAfterCompletion()
 		{
 			Unit barracks = PlaceBuiltBarracks(new Vector3Int(10, 10, 0));
-			barracks.StartTraining(new TrainEventArgs(barracks, UnitType.SOLDIER));
+			barracks.StartTraining(new TrainEventArgs(barracks, UnitType.WARRIOR));
 
 			yield return WaitUntil(() =>
 			{
@@ -132,19 +132,19 @@ namespace GameManager.Tests.PlayMode
 		#region Error
 
 		/// <summary>
-		/// BARRACKS cannot train WORKER (only BASE can). Command is rejected, gold unchanged.
+		/// BARRACKS cannot train PAWN (only BASE can). Command is rejected, gold unchanged.
 		/// </summary>
 		[UnityTest]
-		public IEnumerator Barracks_TrainsWorker_Rejected()
+		public IEnumerator Barracks_TrainsPawn_Rejected()
 		{
 			Unit barracks = PlaceBuiltBarracks(new Vector3Int(10, 10, 0));
 			Agent agent = GetAgent0();
 			int goldBefore = agent.Gold;
 
-			barracks.StartTraining(new TrainEventArgs(barracks, UnitType.WORKER));
+			barracks.StartTraining(new TrainEventArgs(barracks, UnitType.PAWN));
 
 			Assert.AreEqual(UnitAction.IDLE, barracks.CurrentAction,
-				"BARRACKS should not be able to train WORKER");
+				"BARRACKS should not be able to train PAWN");
 			Assert.AreEqual(goldBefore, agent.Gold,
 				"Gold should not be deducted for rejected training");
 
@@ -163,7 +163,7 @@ namespace GameManager.Tests.PlayMode
 			Agent agent = GetAgent0();
 			int goldBefore = agent.Gold;
 
-			barracks.StartTraining(new TrainEventArgs(barracks, UnitType.SOLDIER));
+			barracks.StartTraining(new TrainEventArgs(barracks, UnitType.WARRIOR));
 
 			Assert.AreEqual(UnitAction.IDLE, barracks.CurrentAction,
 				"Unbuilt BARRACKS should not accept train commands");
@@ -174,26 +174,26 @@ namespace GameManager.Tests.PlayMode
 		}
 
 		/// <summary>
-		/// BARRACKS training sequentially: train SOLDIER then ARCHER. Both appear on distinct cells.
+		/// BARRACKS training sequentially: train WARRIOR then ARCHER. Both appear on distinct cells.
 		/// </summary>
 		[UnityTest]
-		public IEnumerator Barracks_TrainSoldierThenArcher_BothOnDistinctCells()
+		public IEnumerator Barracks_TrainWarriorThenArcher_BothOnDistinctCells()
 		{
 			Unit barracks = PlaceBuiltBarracks(new Vector3Int(10, 10, 0));
 
-			// Train SOLDIER
-			barracks.StartTraining(new TrainEventArgs(barracks, UnitType.SOLDIER));
+			// Train WARRIOR
+			barracks.StartTraining(new TrainEventArgs(barracks, UnitType.WARRIOR));
 			int countBefore = ctx.UnitManager.GetAllUnits().Count;
 
 			yield return WaitUntil(() =>
 			{
 				TickUnit(barracks);
 				return barracks.CurrentAction == UnitAction.IDLE;
-			}, timeoutSeconds: 10f, failMessage: "SOLDIER training did not complete");
+			}, timeoutSeconds: 10f, failMessage: "WARRIOR training did not complete");
 
-			int countAfterSoldier = ctx.UnitManager.GetAllUnits().Count;
-			Assert.AreEqual(countBefore + 1, countAfterSoldier,
-				"One SOLDIER should have been created");
+			int countAfterWarrior = ctx.UnitManager.GetAllUnits().Count;
+			Assert.AreEqual(countBefore + 1, countAfterWarrior,
+				"One WARRIOR should have been created");
 
 			// Train ARCHER
 			barracks.StartTraining(new TrainEventArgs(barracks, UnitType.ARCHER));
@@ -206,20 +206,20 @@ namespace GameManager.Tests.PlayMode
 
 			int countAfterArcher = ctx.UnitManager.GetAllUnits().Count;
 			Assert.AreEqual(countBefore + 2, countAfterArcher,
-				"One ARCHER should have been created after SOLDIER");
+				"One ARCHER should have been created after WARRIOR");
 
 			// Both on distinct cells
-			var soldier = ctx.UnitManager.GetAllUnits().Values
+			var warrior = ctx.UnitManager.GetAllUnits().Values
 				.Select(go => go.GetComponent<Unit>())
-				.FirstOrDefault(u => u.UnitType == UnitType.SOLDIER);
+				.FirstOrDefault(u => u.UnitType == UnitType.WARRIOR);
 			var archer = ctx.UnitManager.GetAllUnits().Values
 				.Select(go => go.GetComponent<Unit>())
 				.FirstOrDefault(u => u.UnitType == UnitType.ARCHER);
 
-			Assert.IsNotNull(soldier);
+			Assert.IsNotNull(warrior);
 			Assert.IsNotNull(archer);
-			Assert.AreNotEqual(soldier.GridPosition, archer.GridPosition,
-				"SOLDIER and ARCHER should occupy distinct grid cells");
+			Assert.AreNotEqual(warrior.GridPosition, archer.GridPosition,
+				"WARRIOR and ARCHER should occupy distinct grid cells");
 		}
 
 		#endregion

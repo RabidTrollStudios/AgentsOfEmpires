@@ -70,9 +70,9 @@ namespace GameManager
 				CmdLog?.LogCommand("BUILD", $"{unit.UnitType}#{unit.UnitNbr} at {unit.GridPosition} -> {unitType} at {target}", "FAILED: target not on map");
 				return;
 			}
-			// Exclude the building worker's cell - the worker will move to a neighbor before building
-			var workerExclusion = new HashSet<Vector3Int> { unit.GridPosition };
-			if (!GameManager.Instance.Map.IsAreaBuildable(unitType, target, workerExclusion))
+			// Exclude the building pawn's cell - the pawn will move to a neighbor before building
+			var pawnExclusion = new HashSet<Vector3Int> { unit.GridPosition };
+			if (!GameManager.Instance.Map.IsAreaBuildable(unitType, target, pawnExclusion))
 			{
 				CmdLog?.LogCommand("BUILD", $"{unit.UnitType}#{unit.UnitNbr} at {unit.GridPosition} -> {unitType} at {target}", $"FAILED: area not buildable at {target}");
 				return;
@@ -133,7 +133,7 @@ namespace GameManager
 				return;
 			}
 
-			CmdLog?.LogCommand("GATHER", $"worker#{unit.UnitNbr} at {unit.GridPosition} -> mine#{resource.UnitNbr} at {resource.GridPosition}, base#{baseUnit.UnitNbr} at {baseUnit.GridPosition}", "SUCCESS (dispatched)");
+			CmdLog?.LogCommand("GATHER", $"pawn#{unit.UnitNbr} at {unit.GridPosition} -> mine#{resource.UnitNbr} at {resource.GridPosition}, base#{baseUnit.UnitNbr} at {baseUnit.GridPosition}", "SUCCESS (dispatched)");
 			GameManager.Instance.Events.GatherEventHandler(this, new GatherEventArgs(unit, resource, baseUnit));
 		}
 
@@ -205,6 +205,49 @@ namespace GameManager
 
 			CmdLog?.LogCommand("ATTACK", $"{unit.UnitType}#{unit.UnitNbr} at {unit.GridPosition} -> {target.UnitType}#{target.UnitNbr} at {target.GridPosition}", "SUCCESS (dispatched)");
 			GameManager.Instance.Events.AttackEventHandler(this, new AttackEventArgs(unit, target));
+		}
+
+		/// <summary>
+		/// Command to send a pawn to repair a damaged friendly building
+		/// </summary>
+		/// <param name="unit">the pawn unit that will repair</param>
+		/// <param name="building">the building to repair</param>
+		public void Repair(Unit unit, Unit building)
+		{
+			if (unit == null)
+			{
+				CmdLog?.LogCommand("REPAIR", "unit=null", "FAILED: unit is null");
+				return;
+			}
+			if (building == null)
+			{
+				CmdLog?.LogCommand("REPAIR", $"{unit.UnitType}#{unit.UnitNbr}", "FAILED: building is null");
+				return;
+			}
+			if (!unit.CanBuild)
+			{
+				CmdLog?.LogCommand("REPAIR", $"{unit.UnitType}#{unit.UnitNbr} -> {building.UnitType}#{building.UnitNbr}", "FAILED: unit can't repair");
+				return;
+			}
+			if (building.CanMove || building.UnitType == UnitType.MINE)
+			{
+				CmdLog?.LogCommand("REPAIR", $"{unit.UnitType}#{unit.UnitNbr} -> {building.UnitType}#{building.UnitNbr}", "FAILED: target is not a building");
+				return;
+			}
+			if (!building.IsBuilt)
+			{
+				CmdLog?.LogCommand("REPAIR", $"{unit.UnitType}#{unit.UnitNbr} -> {building.UnitType}#{building.UnitNbr}", "FAILED: building not finished");
+				return;
+			}
+			if (unit.Agent.GetComponent<AgentController>().Agent.AgentNbr
+				!= building.Agent.GetComponent<AgentController>().Agent.AgentNbr)
+			{
+				CmdLog?.LogCommand("REPAIR", $"{unit.UnitType}#{unit.UnitNbr} -> {building.UnitType}#{building.UnitNbr}", "FAILED: not your building");
+				return;
+			}
+
+			CmdLog?.LogCommand("REPAIR", $"pawn#{unit.UnitNbr} at {unit.GridPosition} -> {building.UnitType}#{building.UnitNbr} at {building.GridPosition}", "SUCCESS (dispatched)");
+			GameManager.Instance.Events.RepairEventHandler(this, new RepairEventArgs(unit, building));
 		}
 
 		#endregion

@@ -38,7 +38,7 @@ namespace AgentTestHarness
         internal float scalarCreationTime;
         internal Dictionary<UnitType, float> creationTime;
         internal Dictionary<UnitType, float> damage;
-        internal float miningSpeed; // gold per second for WORKER
+        internal float miningSpeed; // gold per second for PAWN
         internal float miningCapacity; // gold per trip
 
         internal SimGame(SimConfig config, SimMap map)
@@ -72,7 +72,7 @@ namespace AgentTestHarness
                 damage[kvp.Key] = kvp.Value * scalarDamage;
 
             miningSpeed = gs * 20f; // gold per second
-            miningCapacity = GameConstants.MINING_CAPACITY[UnitType.WORKER];
+            miningCapacity = GameConstants.MINING_CAPACITY[UnitType.PAWN];
         }
 
         #region Agent Setup

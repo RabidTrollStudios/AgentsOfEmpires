@@ -16,7 +16,14 @@ namespace GameManager
 		/// </summary>
 		internal void Update()
         {
-			if (gameState == GameState.PLAYING)
+			if (gameState == GameState.INTRO)
+			{
+				// Wait for the intro banner to disappear before starting gameplay.
+				// For rounds without an intro banner, transition immediately.
+				if (!Prefabs.GameOverUI.GetComponent<Canvas>().enabled)
+					gameState = GameState.PLAYING;
+			}
+			else if (gameState == GameState.PLAYING)
 			{
 				UpdateTimerUI();
 				ProcessUserInput();

@@ -16,6 +16,8 @@ namespace AgentSDK
         /// <summary>Gathering resources</summary>
         GATHER,
         /// <summary>Attacking a target</summary>
-        ATTACK
+        ATTACK,
+        /// <summary>Repairing a damaged building</summary>
+        REPAIR
     }
 }

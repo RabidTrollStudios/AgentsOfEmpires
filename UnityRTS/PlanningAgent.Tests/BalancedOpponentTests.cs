@@ -23,9 +23,9 @@ namespace PlanningAgent.Tests
             game.InitializeRound();
             game.Run(2000);
 
-            int soldiers = game.GetUnitsByType(1, UnitType.SOLDIER).Count;
+            int warriors = game.GetUnitsByType(1, UnitType.WARRIOR).Count;
             int archers = game.GetUnitsByType(1, UnitType.ARCHER).Count;
-            Assert.True(soldiers + archers > 0,
+            Assert.True(warriors + archers > 0,
                 "Balanced should have trained some troops");
         }
     }

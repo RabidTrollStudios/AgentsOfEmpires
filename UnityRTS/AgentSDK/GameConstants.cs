@@ -22,8 +22,8 @@ namespace AgentSDK
             new ReadOnlyDictionary<UnitType, float>(new Dictionary<UnitType, float>()
             {
                 { UnitType.MINE,        0.0f },
-                { UnitType.WORKER,      SCALAR_COST },
-                { UnitType.SOLDIER,     SCALAR_COST * 2 },
+                { UnitType.PAWN,      SCALAR_COST },
+                { UnitType.WARRIOR,     SCALAR_COST * 2 },
                 { UnitType.ARCHER,      80f },
                 { UnitType.BASE,        SCALAR_COST * 10 },
                 { UnitType.BARRACKS,    SCALAR_COST * 8 },
@@ -39,23 +39,23 @@ namespace AgentSDK
             new ReadOnlyDictionary<UnitType, float>(new Dictionary<UnitType, float>()
             {
                 { UnitType.MINE,        0.0f },
-                { UnitType.WORKER,      200.0f },
-                { UnitType.SOLDIER,     1200.0f },
+                { UnitType.PAWN,      200.0f },
+                { UnitType.WARRIOR,     1200.0f },
                 { UnitType.ARCHER,      800.0f },
-                { UnitType.BASE,        4000.0f },
-                { UnitType.BARRACKS,    2000.0f },
-                { UnitType.ARCHERY,     2000.0f },
+                { UnitType.BASE,        8000.0f },
+                { UnitType.BARRACKS,    4000.0f },
+                { UnitType.ARCHERY,     4000.0f },
             });
 
         /// <summary>
-        /// How much gold a worker can carry per mining trip
+        /// How much gold a pawn can carry per mining trip
         /// </summary>
         public static readonly ReadOnlyDictionary<UnitType, float> MINING_CAPACITY =
             new ReadOnlyDictionary<UnitType, float>(new Dictionary<UnitType, float>()
             {
                 { UnitType.MINE,        0.0f },
-                { UnitType.WORKER,      SCALAR_MINING_CAPACITY * 5.0f },
-                { UnitType.SOLDIER,     0.0f },
+                { UnitType.PAWN,      SCALAR_MINING_CAPACITY * 5.0f },
+                { UnitType.WARRIOR,     0.0f },
                 { UnitType.ARCHER,      0.0f },
                 { UnitType.BASE,        0.0f },
                 { UnitType.BARRACKS,    0.0f },
@@ -69,8 +69,8 @@ namespace AgentSDK
             new ReadOnlyDictionary<UnitType, float>(new Dictionary<UnitType, float>()
             {
                 { UnitType.MINE,        0f },
-                { UnitType.WORKER,      0f },
-                { UnitType.SOLDIER,     48f },
+                { UnitType.PAWN,      0f },
+                { UnitType.WARRIOR,     48f },
                 { UnitType.ARCHER,      40f },
                 { UnitType.BASE,        0f },
                 { UnitType.BARRACKS,    0f },
@@ -84,8 +84,8 @@ namespace AgentSDK
             new ReadOnlyDictionary<UnitType, float>(new Dictionary<UnitType, float>()
             {
                 { UnitType.MINE,        0f },
-                { UnitType.WORKER,      2f },
-                { UnitType.SOLDIER,     6f },
+                { UnitType.PAWN,      2f },
+                { UnitType.WARRIOR,     6f },
                 { UnitType.ARCHER,      4f },
                 { UnitType.BASE,        10f },
                 { UnitType.BARRACKS,    20f },
@@ -99,8 +99,8 @@ namespace AgentSDK
             new ReadOnlyDictionary<UnitType, float>(new Dictionary<UnitType, float>()
             {
                 { UnitType.MINE,        0.0f },
-                { UnitType.WORKER,      0.0f },
-                { UnitType.SOLDIER,     1.0f },
+                { UnitType.PAWN,      0.0f },
+                { UnitType.WARRIOR,     1.0f },
                 { UnitType.ARCHER,      9.0f },
                 { UnitType.BASE,        0.0f },
                 { UnitType.BARRACKS,    0.0f },
@@ -109,14 +109,14 @@ namespace AgentSDK
 
         /// <summary>
         /// Movement speed multiplier for each unit type (1.0 = baseline).
-        /// Soldiers are slower (armored/heavy), archers are faster (light).
+        /// Warriors are slower (armored/heavy), archers are faster (light).
         /// </summary>
         public static readonly ReadOnlyDictionary<UnitType, float> MOVEMENT_SPEED =
             new ReadOnlyDictionary<UnitType, float>(new Dictionary<UnitType, float>()
             {
                 { UnitType.MINE,        0.0f },
-                { UnitType.WORKER,      1.0f },
-                { UnitType.SOLDIER,     0.75f },
+                { UnitType.PAWN,      1.0f },
+                { UnitType.WARRIOR,     0.75f },
                 { UnitType.ARCHER,      1.0f },
                 { UnitType.BASE,        0.0f },
                 { UnitType.BARRACKS,    0.0f },
@@ -130,8 +130,8 @@ namespace AgentSDK
             new ReadOnlyDictionary<UnitType, Position>(new Dictionary<UnitType, Position>()
             {
                 { UnitType.MINE,        new Position(3, 3) },
-                { UnitType.WORKER,      new Position(1, 1) },
-                { UnitType.SOLDIER,     new Position(1, 1) },
+                { UnitType.PAWN,      new Position(1, 1) },
+                { UnitType.WARRIOR,     new Position(1, 1) },
                 { UnitType.ARCHER,      new Position(1, 1) },
                 { UnitType.BASE,        new Position(6, 4) },
                 { UnitType.BARRACKS,    new Position(3, 3) },
@@ -145,8 +145,8 @@ namespace AgentSDK
             new ReadOnlyDictionary<UnitType, IReadOnlyList<UnitType>>(new Dictionary<UnitType, IReadOnlyList<UnitType>>()
             {
                 { UnitType.MINE,        new List<UnitType>() },
-                { UnitType.WORKER,      new List<UnitType>() { UnitType.BASE } },
-                { UnitType.SOLDIER,     new List<UnitType>() { UnitType.BARRACKS } },
+                { UnitType.PAWN,      new List<UnitType>() { UnitType.BASE } },
+                { UnitType.WARRIOR,     new List<UnitType>() { UnitType.BARRACKS } },
                 { UnitType.ARCHER,      new List<UnitType>() { UnitType.ARCHERY } },
                 { UnitType.BASE,        new List<UnitType>() },
                 { UnitType.BARRACKS,    new List<UnitType>() { UnitType.BASE } },
@@ -160,8 +160,8 @@ namespace AgentSDK
             new ReadOnlyDictionary<UnitType, IReadOnlyList<UnitType>>(new Dictionary<UnitType, IReadOnlyList<UnitType>>()
             {
                 { UnitType.MINE,        new List<UnitType>() },
-                { UnitType.WORKER,      new List<UnitType>() { UnitType.BASE, UnitType.BARRACKS, UnitType.ARCHERY } },
-                { UnitType.SOLDIER,     new List<UnitType>() },
+                { UnitType.PAWN,      new List<UnitType>() { UnitType.BASE, UnitType.BARRACKS, UnitType.ARCHERY } },
+                { UnitType.WARRIOR,     new List<UnitType>() },
                 { UnitType.ARCHER,      new List<UnitType>() },
                 { UnitType.BASE,        new List<UnitType>() },
                 { UnitType.BARRACKS,    new List<UnitType>() },
@@ -175,11 +175,11 @@ namespace AgentSDK
             new ReadOnlyDictionary<UnitType, IReadOnlyList<UnitType>>(new Dictionary<UnitType, IReadOnlyList<UnitType>>()
             {
                 { UnitType.MINE,        new List<UnitType>() },
-                { UnitType.WORKER,      new List<UnitType>() },
-                { UnitType.SOLDIER,     new List<UnitType>() },
+                { UnitType.PAWN,      new List<UnitType>() },
+                { UnitType.WARRIOR,     new List<UnitType>() },
                 { UnitType.ARCHER,      new List<UnitType>() },
-                { UnitType.BASE,        new List<UnitType>() { UnitType.WORKER } },
-                { UnitType.BARRACKS,    new List<UnitType>() { UnitType.SOLDIER } },
+                { UnitType.BASE,        new List<UnitType>() { UnitType.PAWN } },
+                { UnitType.BARRACKS,    new List<UnitType>() { UnitType.WARRIOR } },
                 { UnitType.ARCHERY,     new List<UnitType>() { UnitType.ARCHER } },
             });
 
@@ -187,7 +187,7 @@ namespace AgentSDK
         public static readonly ReadOnlyDictionary<UnitType, bool> CAN_MOVE =
             new ReadOnlyDictionary<UnitType, bool>(new Dictionary<UnitType, bool>()
             {
-                { UnitType.MINE, false }, { UnitType.WORKER, true }, { UnitType.SOLDIER, true },
+                { UnitType.MINE, false }, { UnitType.PAWN, true }, { UnitType.WARRIOR, true },
                 { UnitType.ARCHER, true }, { UnitType.BASE, false }, { UnitType.BARRACKS, false },
                 { UnitType.ARCHERY, false },
             });
@@ -196,7 +196,7 @@ namespace AgentSDK
         public static readonly ReadOnlyDictionary<UnitType, bool> CAN_BUILD =
             new ReadOnlyDictionary<UnitType, bool>(new Dictionary<UnitType, bool>()
             {
-                { UnitType.MINE, false }, { UnitType.WORKER, true }, { UnitType.SOLDIER, false },
+                { UnitType.MINE, false }, { UnitType.PAWN, true }, { UnitType.WARRIOR, false },
                 { UnitType.ARCHER, false }, { UnitType.BASE, false }, { UnitType.BARRACKS, false },
                 { UnitType.ARCHERY, false },
             });
@@ -205,7 +205,7 @@ namespace AgentSDK
         public static readonly ReadOnlyDictionary<UnitType, bool> CAN_TRAIN =
             new ReadOnlyDictionary<UnitType, bool>(new Dictionary<UnitType, bool>()
             {
-                { UnitType.MINE, false }, { UnitType.WORKER, false }, { UnitType.SOLDIER, false },
+                { UnitType.MINE, false }, { UnitType.PAWN, false }, { UnitType.WARRIOR, false },
                 { UnitType.ARCHER, false }, { UnitType.BASE, true }, { UnitType.BARRACKS, true },
                 { UnitType.ARCHERY, true },
             });
@@ -214,7 +214,7 @@ namespace AgentSDK
         public static readonly ReadOnlyDictionary<UnitType, bool> CAN_ATTACK =
             new ReadOnlyDictionary<UnitType, bool>(new Dictionary<UnitType, bool>()
             {
-                { UnitType.MINE, false }, { UnitType.WORKER, false }, { UnitType.SOLDIER, true },
+                { UnitType.MINE, false }, { UnitType.PAWN, false }, { UnitType.WARRIOR, true },
                 { UnitType.ARCHER, true }, { UnitType.BASE, false }, { UnitType.BARRACKS, false },
                 { UnitType.ARCHERY, false },
             });
@@ -223,7 +223,7 @@ namespace AgentSDK
         public static readonly ReadOnlyDictionary<UnitType, bool> CAN_GATHER =
             new ReadOnlyDictionary<UnitType, bool>(new Dictionary<UnitType, bool>()
             {
-                { UnitType.MINE, false }, { UnitType.WORKER, true }, { UnitType.SOLDIER, false },
+                { UnitType.MINE, false }, { UnitType.PAWN, true }, { UnitType.WARRIOR, false },
                 { UnitType.ARCHER, false }, { UnitType.BASE, false }, { UnitType.BARRACKS, false },
                 { UnitType.ARCHERY, false },
             });
@@ -242,17 +242,17 @@ namespace AgentSDK
 
         /// <summary>
         /// Damage multiplier based on attacker/defender type interaction.
-        /// Soldiers (melee, armored) take 75% damage from ranged attacks.
+        /// Warriors (melee, armored) take 75% damage from ranged attacks.
         /// Archers (ranged, unarmored) take 125% damage from melee attacks.
         /// All other matchups are 1.0x.
         /// </summary>
         public static float DamageMultiplier(UnitType attacker, UnitType defender)
         {
-            // Melee vs unarmored: soldiers deal 1.15x to archers
-            if (attacker == UnitType.SOLDIER && defender == UnitType.ARCHER)
+            // Melee vs unarmored: warriors deal 1.15x to archers
+            if (attacker == UnitType.WARRIOR && defender == UnitType.ARCHER)
                 return 1.15f;
-            // Ranged vs armored: archers deal 0.85x to soldiers
-            if (attacker == UnitType.ARCHER && defender == UnitType.SOLDIER)
+            // Ranged vs armored: archers deal 0.85x to warriors
+            if (attacker == UnitType.ARCHER && defender == UnitType.WARRIOR)
                 return 0.85f;
             return 1.0f;
         }

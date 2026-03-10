@@ -44,13 +44,13 @@ namespace GameManager.Tests.PlayMode
 				ctx.MapManager.GetBuildableGridPositionsNearUnit(UnitType.BASE, basePos);
 
 			foreach (Vector3Int pos in neighborPositions)
-				PlaceUnit(UnitType.WORKER, pos);
+				PlaceUnit(UnitType.PAWN, pos);
 
 			var remaining = ctx.MapManager.GetBuildableGridPositionsNearUnit(UnitType.BASE, basePos);
 			Assert.AreEqual(0, remaining.Count,
 				"All neighbor cells should be occupied before training");
 
-			baseUnit.StartTraining(new TrainEventArgs(baseUnit, UnitType.WORKER));
+			baseUnit.StartTraining(new TrainEventArgs(baseUnit, UnitType.PAWN));
 			Assert.AreEqual(UnitAction.TRAIN, baseUnit.CurrentAction);
 
 			int unitCountBefore = ctx.UnitManager.GetAllUnits().Count;
@@ -80,16 +80,16 @@ namespace GameManager.Tests.PlayMode
 			Agent agent = GetAgent0();
 
 			int goldBefore = agent.Gold;
-			int workerCost = (int)Constants.COST[UnitType.WORKER];
+			int pawnCost = (int)Constants.COST[UnitType.PAWN];
 
-			baseUnit.StartTraining(new TrainEventArgs(baseUnit, UnitType.WORKER));
+			baseUnit.StartTraining(new TrainEventArgs(baseUnit, UnitType.PAWN));
 			Assert.AreEqual(UnitAction.TRAIN, baseUnit.CurrentAction);
-			Assert.AreEqual(goldBefore - workerCost, agent.Gold,
+			Assert.AreEqual(goldBefore - pawnCost, agent.Gold,
 				"Gold should be deducted for the first train command");
 
 			int goldAfterFirst = agent.Gold;
 
-			baseUnit.StartTraining(new TrainEventArgs(baseUnit, UnitType.WORKER));
+			baseUnit.StartTraining(new TrainEventArgs(baseUnit, UnitType.PAWN));
 			Assert.AreEqual(goldAfterFirst, agent.Gold,
 				"Gold should NOT be deducted for a rejected second train command");
 
@@ -107,8 +107,8 @@ namespace GameManager.Tests.PlayMode
 
 			int goldBefore = agent.Gold;
 
-			// BASE can only train WORKER, not SOLDIER
-			baseUnit.StartTraining(new TrainEventArgs(baseUnit, UnitType.SOLDIER));
+			// BASE can only train PAWN, not WARRIOR
+			baseUnit.StartTraining(new TrainEventArgs(baseUnit, UnitType.WARRIOR));
 
 			Assert.AreEqual(UnitAction.IDLE, baseUnit.CurrentAction,
 				"Base should remain IDLE after invalid train command");
@@ -121,18 +121,18 @@ namespace GameManager.Tests.PlayMode
 		// ── Stress ────────────────────────────────────────────────────────────
 
 		/// <summary>
-		/// Train 5 workers sequentially from the same base; verify all 5 exist
+		/// Train 5 pawns sequentially from the same base; verify all 5 exist
 		/// on distinct cells.
 		/// </summary>
 		[UnityTest]
-		public IEnumerator TrainFiveWorkersSequentially_AllExistOnDistinctCells()
+		public IEnumerator TrainFivePawnsSequentially_AllExistOnDistinctCells()
 		{
 			Unit baseUnit = PlaceBuiltBase(new Vector3Int(10, 10, 0));
 			int initialUnitCount = ctx.UnitManager.GetAllUnits().Count;
 
 			for (int i = 0; i < 5; i++)
 			{
-				baseUnit.StartTraining(new TrainEventArgs(baseUnit, UnitType.WORKER));
+				baseUnit.StartTraining(new TrainEventArgs(baseUnit, UnitType.PAWN));
 				Assert.AreEqual(UnitAction.TRAIN, baseUnit.CurrentAction,
 					$"Training iteration {i}: base should be in TRAIN");
 
@@ -145,18 +145,18 @@ namespace GameManager.Tests.PlayMode
 
 			int finalUnitCount = ctx.UnitManager.GetAllUnits().Count;
 			Assert.AreEqual(initialUnitCount + 5, finalUnitCount,
-				"5 additional workers should exist after training");
+				"5 additional pawns should exist after training");
 
-			List<Unit> workers = ctx.UnitManager.GetAllUnits().Values
+			List<Unit> pawns = ctx.UnitManager.GetAllUnits().Values
 				.Select(go => go.GetComponent<Unit>())
-				.Where(u => u.UnitType == UnitType.WORKER)
+				.Where(u => u.UnitType == UnitType.PAWN)
 				.ToList();
 
 			HashSet<Vector3Int> positions = new HashSet<Vector3Int>();
-			foreach (Unit w in workers)
+			foreach (Unit w in pawns)
 			{
 				Assert.IsTrue(positions.Add(w.GridPosition),
-					$"Worker at {w.GridPosition} shares a cell with another worker");
+					$"Pawn at {w.GridPosition} shares a cell with another pawn");
 			}
 		}
 	}

@@ -53,17 +53,15 @@ namespace GameManager.GameElements
 		}
 
 		/// <summary>
-		/// Find an unfinished building of the given type anchored at position that
-		/// has no active builder (i.e. the original worker was interrupted or killed).
-		/// Returns null if none found or if another worker is already building it.
+		/// Find an unfinished building of the given type anchored at position.
+		/// Multiple pawns can build the same building simultaneously.
 		/// </summary>
 		private Unit FindUnbuiltBuildingAt(Vector3Int position, UnitType unitType)
 		{
 			foreach (var kvp in GameManager.Instance.Units.GetAllUnits())
 			{
 				Unit u = kvp.Value.GetComponent<Unit>();
-				if (u != null && !u.IsBuilt && u.UnitType == unitType && u.GridPosition == position
-				    && u.ActiveBuilderNbr == -1)
+				if (u != null && !u.IsBuilt && u.UnitType == unitType && u.GridPosition == position)
 					return u;
 			}
 			return null;
@@ -76,12 +74,12 @@ namespace GameManager.GameElements
 		internal void StartBuilding(BuildEventArgs args)
 		{
 			ExitMine();
-			// Exclude the building worker's cell - the worker will move to a neighbor before building
-			var workerExclusion = new HashSet<Vector3Int> { GridPosition };
+			// Exclude the building pawn's cell - the pawn will move to a neighbor before building
+			var pawnExclusion = new HashSet<Vector3Int> { GridPosition };
 
 			// ── RESUME PATH ──────────────────────────────────────────────────────
 			// If there is already an incomplete building at the target, skip placement
-			// and walk the worker over to finish it.
+			// and walk the pawn over to finish it.
 			Unit pausedBuilding = FindUnbuiltBuildingAt(args.TargetPosition, args.UnitType);
 			if (pausedBuilding != null && CanBuild && CurrentAction != UnitAction.BUILD)
 			{
@@ -89,17 +87,17 @@ namespace GameManager.GameElements
 				if (path.Count > 0)
 				{
 					currentBuilding = pausedBuilding.gameObject;
-					pausedBuilding.ActiveBuilderNbr = UnitNbr;
+					pausedBuilding.ActiveBuilders.Add(UnitNbr);
 					CurrentAction = UnitAction.BUILD;
 					buildPhase = BuildPhase.TO_POSITION;
 					taskUnitType = pausedBuilding.UnitType;
 					TargetGridPos = pausedBuilding.GridPosition;
-					GetCmdLog()?.LogCommand("BUILD", $"worker#{UnitNbr} -> RESUME {args.UnitType} at {args.TargetPosition}",
+					GetCmdLog()?.LogCommand("BUILD", $"pawn#{UnitNbr} -> RESUME {args.UnitType} at {args.TargetPosition}",
 						$"RESUMING (progress={pausedBuilding.BuildProgress:F2}s, path={path.Count} steps)");
 				}
 				else
 				{
-					GetCmdLog()?.LogCommand("BUILD", $"worker#{UnitNbr} -> RESUME {args.UnitType} at {args.TargetPosition}",
+					GetCmdLog()?.LogCommand("BUILD", $"pawn#{UnitNbr} -> RESUME {args.UnitType} at {args.TargetPosition}",
 						"EXEC_FAILED: no path to paused building");
 				}
 				return;
@@ -110,7 +108,7 @@ namespace GameManager.GameElements
 			if (CurrentAction != UnitAction.BUILD
 				&& CanBuild
 				&& CanBuildUnit(args.UnitType)
-				&& GameManager.Instance.Map.IsAreaBuildable(args.UnitType, args.TargetPosition, workerExclusion)
+				&& GameManager.Instance.Map.IsAreaBuildable(args.UnitType, args.TargetPosition, pawnExclusion)
 				&& Agent.GetComponent<AgentController>().Agent.Gold >= (int)Constants.COST[args.UnitType])
 			{
 				TargetGridPos = args.TargetPosition;
@@ -125,18 +123,18 @@ namespace GameManager.GameElements
 				if (path.Count > 0)
 				{
 					currentBuilding = GameManager.Instance.Units.PlaceUnit(Agent, args.TargetPosition, args.UnitType, Color.white);
-					currentBuilding.GetComponent<Unit>().ActiveBuilderNbr = UnitNbr;
+					currentBuilding.GetComponent<Unit>().ActiveBuilders.Add(UnitNbr);
 					CurrentAction = UnitAction.BUILD;
 					buildPhase = BuildPhase.TO_POSITION;
 					taskUnitType = args.UnitType;
 					TargetGridPos = args.TargetPosition;
 					Agent.GetComponent<AgentController>().Agent.Gold -= (int)Constants.COST[taskUnitType];
-					GetCmdLog()?.LogCommand("BUILD", $"worker#{UnitNbr} -> {args.UnitType} at {args.TargetPosition}",
+					GetCmdLog()?.LogCommand("BUILD", $"pawn#{UnitNbr} -> {args.UnitType} at {args.TargetPosition}",
 						$"STARTED (path={path.Count} steps, gold remaining={Agent.GetComponent<AgentController>().Agent.Gold})");
 				}
 				else
 				{
-					GetCmdLog()?.LogCommand("BUILD", $"worker#{UnitNbr} -> {args.UnitType} at {args.TargetPosition}",
+					GetCmdLog()?.LogCommand("BUILD", $"pawn#{UnitNbr} -> {args.UnitType} at {args.TargetPosition}",
 						"EXEC_FAILED: no path found to build site");
 				}
 			}
@@ -145,9 +143,9 @@ namespace GameManager.GameElements
 				string reason = CurrentAction == UnitAction.BUILD ? "already building"
 					: !CanBuild ? "unit can't build"
 					: !CanBuildUnit(args.UnitType) ? $"can't build {args.UnitType}"
-					: !GameManager.Instance.Map.IsAreaBuildable(args.UnitType, args.TargetPosition, workerExclusion) ? $"area not buildable at {args.TargetPosition} (re-check)"
+					: !GameManager.Instance.Map.IsAreaBuildable(args.UnitType, args.TargetPosition, pawnExclusion) ? $"area not buildable at {args.TargetPosition} (re-check)"
 					: $"not enough gold (have {Agent.GetComponent<AgentController>().Agent.Gold}, need {(int)Constants.COST[args.UnitType]})";
-				GetCmdLog()?.LogCommand("BUILD", $"worker#{UnitNbr} at {GridPosition} -> {args.UnitType} at {args.TargetPosition}",
+				GetCmdLog()?.LogCommand("BUILD", $"pawn#{UnitNbr} at {GridPosition} -> {args.UnitType} at {args.TargetPosition}",
 					$"EXEC_FAILED: {reason}");
 			}
 		}
@@ -160,11 +158,11 @@ namespace GameManager.GameElements
 		{
 			ExitMine();
 
-			// Allow MOVE to interrupt BUILD — building retains its progress
-			if (CurrentAction == UnitAction.BUILD)
+			// Allow MOVE to interrupt BUILD/REPAIR
+			if (CurrentAction == UnitAction.BUILD || CurrentAction == UnitAction.REPAIR)
 			{
 				if (currentBuilding != null)
-					currentBuilding.GetComponent<Unit>().ActiveBuilderNbr = -1;
+					currentBuilding.GetComponent<Unit>().ActiveBuilders.Remove(UnitNbr);
 				currentBuilding = null;
 				CurrentAction = UnitAction.IDLE;
 			}
@@ -211,7 +209,7 @@ namespace GameManager.GameElements
 		{
 			ExitMine();
 
-			if (CurrentAction != UnitAction.BUILD
+			if (CurrentAction != UnitAction.BUILD && CurrentAction != UnitAction.REPAIR
 				&& CanGather
 				&& GameManager.Instance.Units.GetUnit(args.ResourceUnit.UnitNbr) != null
 				&& GameManager.Instance.Units.GetUnit(args.BaseUnit.UnitNbr) != null)
@@ -229,12 +227,12 @@ namespace GameManager.GameElements
 				BaseUnit = GameManager.Instance.Units.GetUnit(args.BaseUnit.UnitNbr);
 				CurrentAction = UnitAction.GATHER;
 				gatherPhase = GatherPhase.TO_MINE;
-				GetCmdLog()?.LogCommand("GATHER", $"worker#{UnitNbr} at {GridPosition} -> mine#{args.ResourceUnit.UnitNbr} at {args.ResourceUnit.GridPosition}, base#{args.BaseUnit.UnitNbr}",
+				GetCmdLog()?.LogCommand("GATHER", $"pawn#{UnitNbr} at {GridPosition} -> mine#{args.ResourceUnit.UnitNbr} at {args.ResourceUnit.GridPosition}, base#{args.BaseUnit.UnitNbr}",
 					$"STARTED (path={path.Count} steps)");
 			}
 			else if (!(CurrentAction == UnitAction.IDLE || CurrentAction == UnitAction.MOVE))
 			{
-				GetCmdLog()?.LogCommand("GATHER", $"worker#{UnitNbr} -> mine#{args.ResourceUnit?.UnitNbr}",
+				GetCmdLog()?.LogCommand("GATHER", $"pawn#{UnitNbr} -> mine#{args.ResourceUnit?.UnitNbr}",
 					$"EXEC_FAILED: unit busy (current={CurrentAction})");
 			}
 			else if (!CanGather)
@@ -244,7 +242,7 @@ namespace GameManager.GameElements
 			}
 			else
 			{
-				GetCmdLog()?.LogCommand("GATHER", $"worker#{UnitNbr}",
+				GetCmdLog()?.LogCommand("GATHER", $"pawn#{UnitNbr}",
 					"EXEC_FAILED: resource or base unit no longer exists");
 			}
 		}
@@ -257,19 +255,18 @@ namespace GameManager.GameElements
 		{
 			ExitMine();
 
-			if (CurrentAction != UnitAction.BUILD && CanAttack)
+			if (CurrentAction != UnitAction.BUILD && CurrentAction != UnitAction.REPAIR && CanAttack)
 			{
 				var targetUnit = args.Target.GetComponent<Unit>();
 				pathFailCount = 0;
 				pathBackoffMultiplier = 1;
 
-				// Check if already within effective attack range — if so, start
+				// Check if already within attack range of the closest cell — if so, start
 				// attacking immediately without pathfinding toward the target.
 				// This prevents ranged units from walking up to melee range.
-				float effectiveRange = GameConstants.EffectiveAttackRange(UnitType, targetUnit.UnitType);
-				float dist = Vector3.Distance(targetUnit.CenterGridPosition, CenterGridPosition);
+				float dist = DistanceToClosestCell(targetUnit);
 
-				if (dist < effectiveRange)
+				if (dist < Constants.ATTACK_RANGE[UnitType] + 0.5f)
 				{
 					path.Clear();
 					TargetGridPos = targetUnit.GridPosition;
@@ -308,6 +305,50 @@ namespace GameManager.GameElements
 				string reason = CurrentAction == UnitAction.BUILD ? "unit is building" : "unit can't attack";
 				GetCmdLog()?.LogCommand("ATTACK", $"{UnitType}#{UnitNbr} -> target#{args.Target?.GetComponent<Unit>()?.UnitNbr}",
 					$"EXEC_FAILED: {reason}");
+			}
+		}
+
+		/// <summary>
+		/// Start repairing a damaged building
+		/// </summary>
+		internal void StartRepairing(RepairEventArgs args)
+		{
+			ExitMine();
+
+			if (CurrentAction == UnitAction.BUILD)
+			{
+				if (currentBuilding != null)
+					currentBuilding.GetComponent<Unit>().ActiveBuilders.Remove(UnitNbr);
+				currentBuilding = null;
+			}
+
+			if (!CanBuild)
+			{
+				GetCmdLog()?.LogCommand("REPAIR", $"{UnitType}#{UnitNbr} -> {args.Building.UnitType}#{args.Building.UnitNbr}",
+					"EXEC_FAILED: unit can't repair");
+				return;
+			}
+
+			var building = args.Building;
+			pathFailCount = 0;
+			pathBackoffMultiplier = 1;
+
+			UpdatePath(GridPosition, building.UnitType, building.GridPosition, forceImmediate: true);
+
+			if (path.Count > 0 || GameManager.Instance.Map.IsNeighborOfUnit(GridPosition, building.UnitType, building.GridPosition))
+			{
+				currentBuilding = building.gameObject;
+				CurrentAction = UnitAction.REPAIR;
+				buildPhase = BuildPhase.TO_POSITION;
+				TargetGridPos = building.GridPosition;
+				TargetUnitType = building.UnitType;
+				GetCmdLog()?.LogCommand("REPAIR", $"pawn#{UnitNbr} at {GridPosition} -> {building.UnitType}#{building.UnitNbr} at {building.GridPosition}",
+					$"STARTED (health={building.Health}/{Constants.HEALTH[building.UnitType]}, path={path.Count} steps)");
+			}
+			else
+			{
+				GetCmdLog()?.LogCommand("REPAIR", $"pawn#{UnitNbr} at {GridPosition} -> {building.UnitType}#{building.UnitNbr} at {building.GridPosition}",
+					"EXEC_FAILED: no path found to building");
 			}
 		}
 

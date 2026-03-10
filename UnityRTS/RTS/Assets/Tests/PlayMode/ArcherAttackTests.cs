@@ -9,7 +9,7 @@ namespace GameManager.Tests.PlayMode
 {
 	/// <summary>
 	/// Play Mode tests for ARCHER ranged attack behavior.
-	/// Covers: ranged attack at distance, range advantage over SOLDIER,
+	/// Covers: ranged attack at distance, range advantage over WARRIOR,
 	/// and multiple archers focusing the same target.
 	/// </summary>
 	[TestFixture]
@@ -24,7 +24,7 @@ namespace GameManager.Tests.PlayMode
 		public IEnumerator Archer_AttacksAdjacentEnemy_HealthDecreases()
 		{
 			Unit archer = PlaceUnit(UnitType.ARCHER, new Vector3Int(10, 10, 0));
-			Unit enemy = PlaceUnit(UnitType.WORKER, new Vector3Int(11, 10, 0), ctx.Agent1Go);
+			Unit enemy = PlaceUnit(UnitType.PAWN, new Vector3Int(11, 10, 0), ctx.Agent1Go);
 
 			float initialHealth = enemy.Health;
 			archer.StartAttacking(new AttackEventArgs(archer, enemy));
@@ -43,17 +43,17 @@ namespace GameManager.Tests.PlayMode
 		}
 
 		/// <summary>
-		/// Archer has greater attack range than soldier (from Constants).
+		/// Archer has greater attack range than warrior (from Constants).
 		/// Verify at runtime that ARCHER range constant is greater.
 		/// </summary>
 		[UnityTest]
-		public IEnumerator Archer_AttackRange_GreaterThanSoldier_AtRuntime()
+		public IEnumerator Archer_AttackRange_GreaterThanWarrior_AtRuntime()
 		{
 			float archerRange = Constants.ATTACK_RANGE[UnitType.ARCHER];
-			float soldierRange = Constants.ATTACK_RANGE[UnitType.SOLDIER];
+			float warriorRange = Constants.ATTACK_RANGE[UnitType.WARRIOR];
 
-			Assert.Greater(archerRange, soldierRange,
-				"Archer attack range should be greater than soldier attack range at runtime");
+			Assert.Greater(archerRange, warriorRange,
+				"Archer attack range should be greater than warrior attack range at runtime");
 
 			yield return null;
 		}
@@ -65,7 +65,7 @@ namespace GameManager.Tests.PlayMode
 		public IEnumerator Archer_KillsEnemy_GoesIdle()
 		{
 			Unit archer = PlaceUnit(UnitType.ARCHER, new Vector3Int(10, 10, 0));
-			Unit enemy = PlaceUnit(UnitType.WORKER, new Vector3Int(11, 10, 0), ctx.Agent1Go);
+			Unit enemy = PlaceUnit(UnitType.PAWN, new Vector3Int(11, 10, 0), ctx.Agent1Go);
 			enemy.Health = 1f;
 
 			archer.StartAttacking(new AttackEventArgs(archer, enemy));
@@ -90,7 +90,7 @@ namespace GameManager.Tests.PlayMode
 		[UnityTest]
 		public IEnumerator Archer_WithinRange_AttacksWithoutMoving()
 		{
-			// Place archer and enemy within ARCHER range but well beyond SOLDIER range
+			// Place archer and enemy within ARCHER range but well beyond WARRIOR range
 			float archerRange = Constants.ATTACK_RANGE[UnitType.ARCHER];
 			int rangeInt = Mathf.FloorToInt(archerRange);
 
@@ -99,7 +99,7 @@ namespace GameManager.Tests.PlayMode
 			var enemyPos = new Vector3Int(10 + rangeInt - 1, 10, 0);
 
 			Unit archer = PlaceUnit(UnitType.ARCHER, archerPos);
-			Unit enemy = PlaceUnit(UnitType.WORKER, enemyPos, ctx.Agent1Go);
+			Unit enemy = PlaceUnit(UnitType.PAWN, enemyPos, ctx.Agent1Go);
 
 			float initialHealth = enemy.Health;
 			archer.StartAttacking(new AttackEventArgs(archer, enemy));
@@ -174,27 +174,27 @@ namespace GameManager.Tests.PlayMode
 		}
 
 		/// <summary>
-		/// Archer and soldier attacking the same target simultaneously deal combined damage.
+		/// Archer and warrior attacking the same target simultaneously deal combined damage.
 		/// </summary>
 		[UnityTest]
-		public IEnumerator ArcherAndSoldier_CombinedAttack_MoreDamage()
+		public IEnumerator ArcherAndWarrior_CombinedAttack_MoreDamage()
 		{
 			Unit enemy = PlaceUnit(UnitType.BASE, new Vector3Int(15, 10, 0), ctx.Agent1Go);
 			int enemyNbr = enemy.UnitNbr;
 
 			Unit archer = PlaceUnit(UnitType.ARCHER, new Vector3Int(14, 10, 0));
-			Unit soldier = PlaceUnit(UnitType.SOLDIER, new Vector3Int(14, 11, 0));
+			Unit warrior = PlaceUnit(UnitType.WARRIOR, new Vector3Int(14, 11, 0));
 
 			float startHealth = enemy.Health;
 
 			archer.StartAttacking(new AttackEventArgs(archer, enemy));
-			soldier.StartAttacking(new AttackEventArgs(soldier, enemy));
+			warrior.StartAttacking(new AttackEventArgs(warrior, enemy));
 
 			// Wait for significant health loss
 			yield return WaitUntil(
 				() => enemy == null || enemy.Health < startHealth * 0.5f,
 				timeoutSeconds: 30f,
-				failMessage: "Archer+Soldier combo did not deal 50% health to enemy");
+				failMessage: "Archer+Warrior combo did not deal 50% health to enemy");
 
 			if (enemy != null)
 				Assert.Less(enemy.Health, startHealth * 0.5f,

@@ -83,10 +83,10 @@ namespace PlanningAgent.Tests
         }
 
         [Fact]
-        public void GetPositionsNearUnit_1x1Worker_Returns8Neighbors()
+        public void GetPositionsNearUnit_1x1Pawn_Returns8Neighbors()
         {
             var map = new SimMap(30, 30);
-            var positions = map.GetPositionsNearUnit(UnitType.WORKER, new Position(10, 10));
+            var positions = map.GetPositionsNearUnit(UnitType.PAWN, new Position(10, 10));
 
             // 1x1 unit: ring is 8 surrounding cells
             Assert.Equal(8, positions.Count);
@@ -127,7 +127,7 @@ namespace PlanningAgent.Tests
         public void SetAreaBuildability_MobileUnit_KeepsWalkable()
         {
             var map = new SimMap(30, 30);
-            map.SetAreaBuildability(UnitType.WORKER, new Position(10, 10), false);
+            map.SetAreaBuildability(UnitType.PAWN, new Position(10, 10), false);
 
             Assert.False(map.IsPositionBuildable(new Position(10, 10)));
             // Mobile units keep cells walkable for pathfinding

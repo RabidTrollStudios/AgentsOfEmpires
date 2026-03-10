@@ -19,7 +19,7 @@ namespace GameManager.Tests.PlayMode
 		[UnityTest]
 		public IEnumerator ChangeColor_UpdatesColorProperty()
 		{
-			var unit = PlaceUnit(UnitType.WORKER, new Vector3Int(5, 5, 0));
+			var unit = PlaceUnit(UnitType.PAWN, new Vector3Int(5, 5, 0));
 
 			unit.ChangeColor(Color.red);
 
@@ -31,44 +31,44 @@ namespace GameManager.Tests.PlayMode
 		// ── CanTrainUnit ───────────────────────────────────────────────────────
 
 		[UnityTest]
-		public IEnumerator CanTrainUnit_BarracksSoldier_ReturnsTrue()
+		public IEnumerator CanTrainUnit_BarracksWarrior_ReturnsTrue()
 		{
 			var barracks = PlaceUnit(UnitType.BARRACKS, new Vector3Int(5, 5, 0));
 
-			Assert.IsTrue(barracks.CanTrainUnit(UnitType.SOLDIER),
-				"BARRACKS should be able to train SOLDIER");
+			Assert.IsTrue(barracks.CanTrainUnit(UnitType.WARRIOR),
+				"BARRACKS should be able to train WARRIOR");
 			yield return null;
 		}
 
 		[UnityTest]
-		public IEnumerator CanTrainUnit_BarracksWorker_ReturnsFalse()
+		public IEnumerator CanTrainUnit_BarracksPawn_ReturnsFalse()
 		{
 			var barracks = PlaceUnit(UnitType.BARRACKS, new Vector3Int(5, 5, 0));
 
-			Assert.IsFalse(barracks.CanTrainUnit(UnitType.WORKER),
-				"BARRACKS should not be able to train WORKER");
+			Assert.IsFalse(barracks.CanTrainUnit(UnitType.PAWN),
+				"BARRACKS should not be able to train PAWN");
 			yield return null;
 		}
 
 		// ── CanBuildUnit ───────────────────────────────────────────────────────
 
 		[UnityTest]
-		public IEnumerator CanBuildUnit_WorkerBase_ReturnsTrue()
+		public IEnumerator CanBuildUnit_PawnBase_ReturnsTrue()
 		{
-			var worker = PlaceUnit(UnitType.WORKER, new Vector3Int(5, 5, 0));
+			var pawn = PlaceUnit(UnitType.PAWN, new Vector3Int(5, 5, 0));
 
-			Assert.IsTrue(worker.CanBuildUnit(UnitType.BASE),
-				"WORKER should be able to build BASE");
+			Assert.IsTrue(pawn.CanBuildUnit(UnitType.BASE),
+				"PAWN should be able to build BASE");
 			yield return null;
 		}
 
 		[UnityTest]
-		public IEnumerator CanBuildUnit_WorkerSoldier_ReturnsFalse()
+		public IEnumerator CanBuildUnit_PawnWarrior_ReturnsFalse()
 		{
-			var worker = PlaceUnit(UnitType.WORKER, new Vector3Int(5, 5, 0));
+			var pawn = PlaceUnit(UnitType.PAWN, new Vector3Int(5, 5, 0));
 
-			Assert.IsFalse(worker.CanBuildUnit(UnitType.SOLDIER),
-				"WORKER should not be able to build SOLDIER");
+			Assert.IsFalse(pawn.CanBuildUnit(UnitType.WARRIOR),
+				"PAWN should not be able to build WARRIOR");
 			yield return null;
 		}
 
@@ -78,9 +78,9 @@ namespace GameManager.Tests.PlayMode
 		public IEnumerator CenterGridPosition_1x1Unit_EqualsGridPosition()
 		{
 			var pos    = new Vector3Int(10, 10, 0);
-			var worker = PlaceUnit(UnitType.WORKER, pos);
+			var pawn = PlaceUnit(UnitType.PAWN, pos);
 
-			Assert.AreEqual(pos, worker.CenterGridPosition,
+			Assert.AreEqual(pos, pawn.CenterGridPosition,
 				"1×1 unit CenterGridPosition should equal GridPosition");
 			yield return null;
 		}

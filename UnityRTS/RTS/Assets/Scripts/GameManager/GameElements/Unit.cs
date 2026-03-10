@@ -39,16 +39,15 @@ namespace GameManager.GameElements
 
 		/// <summary>
 		/// Accumulated build time in seconds. Only meaningful when IsBuilt=false.
-		/// Allows construction to pause and resume independently of which worker is building.
+		/// Allows construction to pause and resume independently of which pawn is building.
 		/// </summary>
 		internal float BuildProgress { get; set; }
 
 		/// <summary>
-		/// UnitNbr of the worker currently constructing this building.
-		/// -1 when unattended (paused or interrupted). Only meaningful when IsBuilt=false.
-		/// Prevents a second worker from resuming a build that is already active.
+		/// Set of UnitNbrs of pawns currently constructing or repairing this building.
+		/// Empty when unattended. Multiple pawns can build/repair simultaneously.
 		/// </summary>
-		internal int ActiveBuilderNbr { get; set; } = -1;
+		internal HashSet<int> ActiveBuilders { get; set; } = new HashSet<int>();
 
 		/// <summary>
 		/// Color of this agent
@@ -127,6 +126,7 @@ namespace GameManager.GameElements
 		private GatherPhase gatherPhase = GatherPhase.TO_MINE;
 		private bool isInsideMine = false;
 		private Vector3Int mineEntryGridPos;
+		private bool goldNuggetSpawnedThisCycle = false;
 
 		// Training Variables
 		// Building Variables
@@ -138,6 +138,8 @@ namespace GameManager.GameElements
 		private int attackUnitNbr = -1;
 		private float damage = 0.0f;
 		private float totalDamage = 0.0f;
+		private bool arrowFiredThisCycle = false;
+		private const float ARROW_SPEED = 7.5f;
 
 		// Path variables
 		private int baseUnit = -1;
@@ -153,6 +155,7 @@ namespace GameManager.GameElements
 		private LineRenderer pathLineRenderer;
 		// Red line from attacker to its target
 		private LineRenderer targetLineRenderer;
+		private GameObject targetArrowhead;
 
 		// State indicator squares under unit
 		private SpriteRenderer unitSprite;
@@ -163,7 +166,46 @@ namespace GameManager.GameElements
 		private Color moveColor;
 		private Color actionColor;
 		private Color buildColor;
+		// Health bar
+		private Transform healthBarFill;
+		private Transform healthBarBg;
+		private float maxHealth;
+		private int healthBarColorTier = -1; // 0=red, 1=yellow, 2=green; -1=unset
+		private int tierChangeFrames;       // countdown for tier-change effects
+		private const int TIER_FLASH_FRAMES = 24; // total frames for flash/pulse/shake
+		private int buildPulseFrames;             // countdown for build-complete pulse
+		private const int BUILD_PULSE_TOTAL = 24; // 3 pulses over 24 frames (8 frames each)
+		// Building fire: spawn a fire every 2% health lost
+		private int lastFireThreshold = 50; // starts at 100% = 50 (100/2)
+		// Small bar (mobile units): SmallBar_Base visible = 94x19 px, inner channel = 82x9 px
+		// PPU = 64.  Channel spans image y=[27,35], center at y=31 (sprite center y=32).
+		private const float SM_BAR_SCALE = 64f / 94f;            // uniform scale → visible = 1 cell
+		private const float SM_BAR_FILL_SCALE_X = 0.629089713f;  // fill X scale (tuned to frame)
+		private const float SM_BAR_FILL_SCALE_Y = 0.339356124f;  // fill Y scale (tuned to frame)
+		private const float SM_BAR_FILL_X_OFFSET = 0.00120000006f;
+		private const float SM_BAR_FILL_Y_OFFSET = 1.00549996f;
+		private const float SM_BAR_Y_OFFSET = 1.0f;
+
+		// Big bar (buildings/mines): tuned in editor
+		private const float BIG_BAR_SCALE_X = 0.928591847f;
+		private const float BIG_BAR_SCALE_Y = 0.528470576f;
+		private const float BIG_BAR_Y_OFFSET = 2.67000008f;
+		private const float BIG_BAR_FILL_SCALE_X = 0.933809578f;
+		private const float BIG_BAR_FILL_SCALE_Y = 0.580541074f;
+		private const float BIG_BAR_FILL_X_OFFSET = 0.00149977207f;
+		private const float BIG_BAR_FILL_Y_OFFSET = 2.66759968f;
+
+		// Tracks which bar type this unit uses
+		private bool usesBigBar;
+
+		// Training bar (buildings only) — positioned below health bar
+		private Transform trainingBarFrame;
+		private Transform trainingBarFill;
+		private const float TRAIN_BAR_Y_GAP = 0.35f; // gap below health bar
+
 		private static Sprite _squareSprite;
+		private static Sprite _healthFillSprite;
+		private static Sprite _bigHealthFillSprite;
 
 		/// <summary>
 		/// Lazily create a shared filled-square sprite for state indicators.
@@ -180,6 +222,43 @@ namespace GameManager.GameElements
 			tex.filterMode = FilterMode.Point;
 			_squareSprite = Sprite.Create(tex, new Rect(0, 0, size, size), new Vector2(0.5f, 0.5f), size);
 			return _squareSprite;
+		}
+
+		/// <summary>
+		/// Lazily create a shared white sprite for health bar fill.
+		/// White tints cleanly with SpriteRenderer.color (unlike the red SmallBar_Fill.png).
+		/// Sized to match the SmallBar_Base inner channel: 82 x 9 pixels at PPU 64.
+		/// </summary>
+		private static Sprite GetHealthFillSprite()
+		{
+			if (_healthFillSprite != null) return _healthFillSprite;
+			int w = 82, h = 9;
+			var tex = new Texture2D(w, h, TextureFormat.RGBA32, false);
+			for (int y = 0; y < h; y++)
+				for (int x = 0; x < w; x++)
+					tex.SetPixel(x, y, Color.white);
+			tex.Apply();
+			tex.filterMode = FilterMode.Point;
+			_healthFillSprite = Sprite.Create(tex, new Rect(0, 0, w, h), new Vector2(0.5f, 0.5f), 64);
+			return _healthFillSprite;
+		}
+
+		/// <summary>
+		/// Lazily create a shared white sprite for big health bar fill.
+		/// Sized to match the BigBar_Base inner channel: 90 x 19 pixels at PPU 64.
+		/// </summary>
+		private static Sprite GetBigHealthFillSprite()
+		{
+			if (_bigHealthFillSprite != null) return _bigHealthFillSprite;
+			int w = 90, h = 19;
+			var tex = new Texture2D(w, h, TextureFormat.RGBA32, false);
+			for (int y = 0; y < h; y++)
+				for (int x = 0; x < w; x++)
+					tex.SetPixel(x, y, Color.white);
+			tex.Apply();
+			tex.filterMode = FilterMode.Point;
+			_bigHealthFillSprite = Sprite.Create(tex, new Rect(0, 0, w, h), new Vector2(0.5f, 0.5f), 64);
+			return _bigHealthFillSprite;
 		}
 
 		#endregion
@@ -379,7 +458,7 @@ namespace GameManager.GameElements
 			pathFailCount = 0;
 			pathBackoffMultiplier = 1;
 			UnitType = unitType;
-			if (Constants.BUILDS[UnitType.WORKER].Contains(UnitType))
+			if (Constants.BUILDS[UnitType.PAWN].Contains(UnitType))
 			{
 				IsBuilt = false;
 				if (unitSprite != null)
@@ -398,6 +477,21 @@ namespace GameManager.GameElements
 			Health = Constants.HEALTH[UnitType];
 			animator = gameObject.GetComponent<Animator>();
 
+			if (animator != null)
+			{
+				if (UnitType == UnitType.MINE)
+				{
+					// Offset mine animations so gold stones shimmer at different times
+					animator.Play(0, 0, UnityEngine.Random.value);
+				}
+				else if (CanMove)
+				{
+					// Force idle animation from the first frame (mobile units only)
+					animator.SetInteger("State", 0);
+					animator.Play(0, 0, 0f);
+				}
+			}
+
 			pathLineRenderer = gameObject.AddComponent<LineRenderer>();
 			pathLineRenderer.startWidth = 0.05f;
 			pathLineRenderer.endWidth = 0.05f;
@@ -405,6 +499,7 @@ namespace GameManager.GameElements
 			pathLineRenderer.startColor = Color.cyan;
 			pathLineRenderer.endColor = Color.cyan;
 			pathLineRenderer.useWorldSpace = true;
+			pathLineRenderer.sortingLayerName = "UnitUI";
 			pathLineRenderer.sortingOrder = 10;
 			pathLineRenderer.positionCount = 0;
 
@@ -418,16 +513,18 @@ namespace GameManager.GameElements
 			targetLineRenderer.startColor = Color.red;
 			targetLineRenderer.endColor = Color.red;
 			targetLineRenderer.useWorldSpace = true;
-			targetLineRenderer.sortingOrder = 11;
+			targetLineRenderer.sortingLayerName = "UnitUI";
+			targetLineRenderer.sortingOrder = 1;
 			targetLineRenderer.positionCount = 0;
+			targetArrowhead = CreateArrowhead("TargetArrowhead", Color.red, "UnitUI", 11);
 
 			// Determine indicator colors by agent faction (semi-transparent overlays)
-			bool isOrc = agent.GetComponent<AgentController>()?.Agent?.AgentName == Constants.ORC_ABBR;
-			moveColor   = isOrc ? new Color(0f, 1f, 1f, 0.5f)      : new Color(0f, 0f, 1f, 0.5f);      // cyan / blue
-			actionColor = isOrc ? new Color(1f, 0f, 1f, 0.5f)      : new Color(1f, 0f, 0f, 0.5f);      // magenta / red
-			buildColor  = isOrc ? new Color(1f, 0.65f, 0f, 0.5f) : new Color(0.8f, 0.25f, 0f, 0.5f);  // light orange / dark orange
+			bool isRed = agent.GetComponent<AgentController>()?.Agent?.AgentName == Constants.RED_ABBR;
+			moveColor   = isRed ? new Color(0f, 1f, 1f, 0.5f)      : new Color(0f, 0f, 1f, 0.5f);      // cyan / blue
+			actionColor = isRed ? new Color(1f, 0f, 1f, 0.5f)      : new Color(1f, 0f, 0f, 0.5f);      // magenta / red
+			buildColor  = isRed ? new Color(1f, 0.65f, 0f, 0.5f) : new Color(0.8f, 0.25f, 0f, 0.5f);  // light orange / dark orange
 
-			// Square indicator overlays rendered ABOVE the unit sprite (sortingOrder 11 > unit's 10)
+			// Square indicator overlays rendered ABOVE the unit sprite (sortingOrder 1 > unit's 0)
 			var attackObj = new GameObject("AttackIndicator") { layer = LayerMask.NameToLayer("Units") };
 			attackObj.transform.SetParent(transform);
 			attackObj.transform.localPosition = Vector3.zero;
@@ -436,7 +533,7 @@ namespace GameManager.GameElements
 			attackIndicator.sprite = GetSquareSprite();
 			attackIndicator.color = actionColor;
 			attackIndicator.sortingLayerName = "Agents";
-			attackIndicator.sortingOrder = 11;
+			attackIndicator.sortingOrder = 1;
 			attackIndicator.enabled = false;
 
 			var moveObj = new GameObject("MoveIndicator") { layer = LayerMask.NameToLayer("Units") };
@@ -447,7 +544,7 @@ namespace GameManager.GameElements
 			moveIndicator.sprite = GetSquareSprite();
 			moveIndicator.color = moveColor;
 			moveIndicator.sortingLayerName = "Agents";
-			moveIndicator.sortingOrder = 11;
+			moveIndicator.sortingOrder = 1;
 			moveIndicator.enabled = false;
 
 			var gatherObj = new GameObject("GatherIndicator") { layer = LayerMask.NameToLayer("Units") };
@@ -458,7 +555,7 @@ namespace GameManager.GameElements
 			gatherIndicator.sprite = GetSquareSprite();
 			gatherIndicator.color = actionColor;
 			gatherIndicator.sortingLayerName = "Agents";
-			gatherIndicator.sortingOrder = 11;
+			gatherIndicator.sortingOrder = 1;
 			gatherIndicator.enabled = false;
 
 			var buildObj = new GameObject("BuildIndicator") { layer = LayerMask.NameToLayer("Units") };
@@ -469,8 +566,91 @@ namespace GameManager.GameElements
 			buildIndicator.sprite = GetSquareSprite();
 			buildIndicator.color = buildColor;
 			buildIndicator.sortingLayerName = "Agents";
-			buildIndicator.sortingOrder = 11;
+			buildIndicator.sortingOrder = 1;
 			buildIndicator.enabled = false;
+
+			// Health bar — small bar for mobile units, big bar for buildings/mines
+			maxHealth = Health;
+			if (CanMove)
+			{
+				usesBigBar = false;
+
+				var bgObj = new GameObject("HealthBarFrame");
+				bgObj.transform.SetParent(transform);
+				bgObj.transform.localPosition = new Vector3(0f, SM_BAR_Y_OFFSET, 0f);
+				bgObj.transform.localScale = new Vector3(SM_BAR_SCALE, SM_BAR_SCALE, 1f);
+				var bgSr = bgObj.AddComponent<SpriteRenderer>();
+				bgSr.sprite = GameManager.Instance.SmallBarBase;
+				bgSr.sortingLayerName = "AgentUI";
+				bgSr.sortingOrder = 30;
+				healthBarBg = bgObj.transform;
+
+				var fillObj = new GameObject("HealthBarFill");
+				fillObj.transform.SetParent(transform);
+				fillObj.transform.localPosition = new Vector3(SM_BAR_FILL_X_OFFSET, SM_BAR_FILL_Y_OFFSET, 0f);
+				fillObj.transform.localScale = new Vector3(SM_BAR_FILL_SCALE_X, SM_BAR_FILL_SCALE_Y, 1f);
+				var fillSr = fillObj.AddComponent<SpriteRenderer>();
+				fillSr.sprite = GetHealthFillSprite();
+				fillSr.color = Color.green;
+				fillSr.sortingLayerName = "AgentUI";
+				fillSr.sortingOrder = 31;
+				healthBarFill = fillObj.transform;
+			}
+			else
+			{
+				usesBigBar = true;
+
+				var bgObj = new GameObject("HealthBarFrame");
+				bgObj.transform.SetParent(transform);
+				bgObj.transform.localPosition = new Vector3(0f, BIG_BAR_Y_OFFSET, 0f);
+				bgObj.transform.localScale = new Vector3(BIG_BAR_SCALE_X, BIG_BAR_SCALE_Y, 1f);
+				var bgSr = bgObj.AddComponent<SpriteRenderer>();
+				bgSr.sprite = GameManager.Instance.BigBarBase;
+				bgSr.sortingLayerName = "UnitUI";
+				bgSr.sortingOrder = 30;
+				healthBarBg = bgObj.transform;
+
+				var fillObj = new GameObject("HealthBarFill");
+				fillObj.transform.SetParent(transform);
+				fillObj.transform.localPosition = new Vector3(BIG_BAR_FILL_X_OFFSET, BIG_BAR_FILL_Y_OFFSET, 0f);
+				fillObj.transform.localScale = new Vector3(BIG_BAR_FILL_SCALE_X, BIG_BAR_FILL_SCALE_Y, 1f);
+				var fillSr = fillObj.AddComponent<SpriteRenderer>();
+				fillSr.sprite = GetBigHealthFillSprite();
+				fillSr.color = Color.green;
+				fillSr.sortingLayerName = "UnitUI";
+				fillSr.sortingOrder = 31;
+				healthBarFill = fillObj.transform;
+
+				// Training bar (only for buildings that can train)
+				if (CanTrain)
+				{
+					float trainBarY = BIG_BAR_Y_OFFSET - TRAIN_BAR_Y_GAP;
+					float trainFillY = BIG_BAR_FILL_Y_OFFSET - TRAIN_BAR_Y_GAP;
+
+					var trainBgObj = new GameObject("TrainingBarFrame");
+					trainBgObj.transform.SetParent(transform);
+					trainBgObj.transform.localPosition = new Vector3(0f, trainBarY, 0f);
+					trainBgObj.transform.localScale = new Vector3(BIG_BAR_SCALE_X, BIG_BAR_SCALE_Y, 1f);
+					var trainBgSr = trainBgObj.AddComponent<SpriteRenderer>();
+					trainBgSr.sprite = GameManager.Instance.BigBarBase;
+					trainBgSr.sortingLayerName = "UnitUI";
+					trainBgSr.sortingOrder = 30;
+					trainBgObj.SetActive(false);
+					trainingBarFrame = trainBgObj.transform;
+
+					var trainFillObj = new GameObject("TrainingBarFill");
+					trainFillObj.transform.SetParent(transform);
+					trainFillObj.transform.localPosition = new Vector3(BIG_BAR_FILL_X_OFFSET, trainFillY, 0f);
+					trainFillObj.transform.localScale = new Vector3(BIG_BAR_FILL_SCALE_X, BIG_BAR_FILL_SCALE_Y, 1f);
+					var trainFillSr = trainFillObj.AddComponent<SpriteRenderer>();
+					trainFillSr.sprite = GetBigHealthFillSprite();
+					trainFillSr.color = new Color(0.2f, 0.4f, 1f); // blue
+					trainFillSr.sortingLayerName = "UnitUI";
+					trainFillSr.sortingOrder = 31;
+					trainFillObj.SetActive(false);
+					trainingBarFill = trainFillObj.transform;
+				}
+			}
 		}
 
 		#endregion

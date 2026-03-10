@@ -14,7 +14,7 @@ namespace GameManager.Tests
 	public class ConstantsCapabilityDictTests
 	{
 		private static readonly UnitType[] AllUnitTypes = {
-			UnitType.MINE, UnitType.WORKER, UnitType.SOLDIER,
+			UnitType.MINE, UnitType.PAWN, UnitType.WARRIOR,
 			UnitType.ARCHER, UnitType.BASE, UnitType.BARRACKS, UnitType.ARCHERY
 		};
 

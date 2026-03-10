@@ -124,7 +124,7 @@ namespace GameManager.Tests
 		public void LoadDLL_MissingFile_ThrowsFileNotFoundException()
 		{
 			Assert.Throws<FileNotFoundException>(
-				() => loader.LoadDLL("Human", "NonExistent", null),
+				() => loader.LoadDLL("Blue", "NonExistent", null),
 				"LoadDLL should throw when the DLL file does not exist");
 		}
 
@@ -136,7 +136,7 @@ namespace GameManager.Tests
 				"not a valid dotnet assembly");
 
 			Assert.Throws<BadImageFormatException>(
-				() => loader.LoadDLL("Human", "Fake", null),
+				() => loader.LoadDLL("Blue", "Fake", null),
 				"LoadDLL should throw when the file is not a valid .NET assembly");
 		}
 	}

@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.Tilemaps;
 using UnityEngine.UI;
 using Random = UnityEngine.Random;
@@ -23,21 +24,24 @@ namespace GameManager
 		#region Public GameObjects
 
 		/// <summary>
-		/// Name of the DLL to use for the Humans
+		/// Name of the DLL to use for the Blue agent
 		/// </summary>
 		[Header("Player Settings")]
 
-		[SerializeField] public string HumanDllName;
+		[FormerlySerializedAs("HumanDllName")]
+		[SerializeField] public string BlueDllName;
 
 		/// <summary>
-		/// Name of the DLL to use for the Orcs
+		/// Name of the DLL to use for the Red agent
 		/// </summary>
-		[SerializeField] public string OrcDllName;
+		[FormerlySerializedAs("OrcDllName")]
+		[SerializeField] public string RedDllName;
 
 		/// <summary>
 		/// Should matches be played against random agents?
 		/// </summary>
-		[SerializeField] public bool RandomizeAgentsAsOrc;
+		[FormerlySerializedAs("RandomizeAgentsAsOrc")]
+		[SerializeField] public bool RandomizeAgentsAsRed;
 
 		/// <summary>
 		/// Starting gold for each player
@@ -105,17 +109,21 @@ namespace GameManager
 
 		[Header("Debug Info")]
 		/// <summary>
-		/// Human Debugger Panel
+		/// Blue Debugger Panel
 		/// </summary>
-		[SerializeField] private GameObject HumanDebuggerPanel;
+		[FormerlySerializedAs("HumanDebuggerPanel")]
+		[SerializeField] private GameObject BlueDebuggerPanel;
 
 		/// <summary>
-		/// Orc Debugger Panel
+		/// Red Debugger Panel
 		/// </summary>
-		[SerializeField] private GameObject OrcDebuggerPanel;
+		[FormerlySerializedAs("OrcDebuggerPanel")]
+		[SerializeField] private GameObject RedDebuggerPanel;
 
-		[SerializeField] private Text HumanCustomDebugText;
-		[SerializeField] private Text OrcCustomDebugText;
+		[FormerlySerializedAs("HumanCustomDebugText")]
+		[SerializeField] private Text BlueCustomDebugText;
+		[FormerlySerializedAs("OrcCustomDebugText")]
+		[SerializeField] private Text RedCustomDebugText;
 
 		#endregion
 
@@ -157,7 +165,7 @@ namespace GameManager
 		public bool HasMoveTint { get; private set; }
 
 		/// <summary>
-		/// Tints GATHER-state workers when enabled
+		/// Tints GATHER-state pawns when enabled
 		/// </summary>
 		public bool HasGatherTint { get; private set; }
 
@@ -172,7 +180,7 @@ namespace GameManager
 		public bool HasPathTint { get; private set; }
 
 		/// <summary>
-		/// Tints BUILD-state workers orange when enabled
+		/// Tints BUILD-state pawns orange when enabled
 		/// </summary>
 		public bool HasBuildTint { get; private set; }
 
@@ -180,6 +188,50 @@ namespace GameManager
 		/// Shows the red attacker-to-target line when enabled
 		/// </summary>
 		public bool HasTargetLineTint { get; private set; }
+
+		/// <summary>
+		/// True when the game is actively playing (not paused for intro, showing winner, etc.)
+		/// </summary>
+		public bool IsPlaying => gameState == GameState.PLAYING;
+
+		/// <summary>
+		/// Arrow sprite for archer projectiles
+		/// </summary>
+		public Sprite ArrowSprite => Prefabs.ArrowSprite;
+
+		/// <summary>
+		/// Fire animator controller for flaming arrows
+		/// </summary>
+		public RuntimeAnimatorController FireAnimatorController => Prefabs.FireAnimatorController;
+
+		/// <summary>
+		/// Explosion animator controller for arrow impacts
+		/// </summary>
+		public RuntimeAnimatorController ExplosionAnimatorController => Prefabs.ExplosionAnimatorController;
+
+		/// <summary>
+		/// Fire animator controllers for building impact fires
+		/// </summary>
+		public RuntimeAnimatorController[] BuildingFireControllers => new[]
+		{
+			Prefabs.Fire1AnimatorController,
+			Prefabs.Fire2AnimatorController,
+			Prefabs.Fire3AnimatorController
+		};
+
+		/// <summary>
+		/// Dust 2 animator controller for unit death effect
+		/// </summary>
+		public RuntimeAnimatorController Dust2AnimatorController => Prefabs.Dust2AnimatorController;
+
+		/// <summary>
+		/// Gold resource sprite for mining nugget effect
+		/// </summary>
+		public Sprite GoldResourceSprite => Prefabs.GoldResourceSprite;
+
+		public Sprite SmallBarBase => Prefabs.SmallBarBase;
+		public Sprite SmallBarFill => Prefabs.SmallBarFill;
+		public Sprite BigBarBase => Prefabs.BigBarBase;
 
 		#endregion
 
@@ -190,7 +242,7 @@ namespace GameManager
 		/// </summary>
 		private static GameManager instance;
 
-		private enum GameState { PLAYING, SHOWING_WINNER, RESTARTING, FINISHED };
+		private enum GameState { INTRO, PLAYING, SHOWING_WINNER, RESTARTING, FINISHED };
 		private GameState gameState;
 
 		/// <summary>
@@ -223,7 +275,7 @@ namespace GameManager
 		/// </summary>
 		private List<string> dllNames = null;
 
-		private bool isHumanUsingDllNames = false;
+		private bool isBlueUsingDllNames = false;
 
 		private GameObject roundWinner = null;
 
@@ -272,27 +324,28 @@ namespace GameManager
 			agentLoader = new AgentLoader(pathToDLLs);
 
 			InitializeDebugToggles();
+			SetupGameOverBanner();
 
-			unitManager.OrcUnitPrefabs = new Dictionary<UnitType, GameObject>()
+			unitManager.RedUnitPrefabs = new Dictionary<UnitType, GameObject>()
 			{
 				{ UnitType.MINE, Prefabs.MinePrefab },
-				{ UnitType.WORKER, Prefabs.OrcPeonPrefab },
-				{ UnitType.SOLDIER, Prefabs.OrcGruntPrefab },
-				{ UnitType.ARCHER, Prefabs.OrcAxethrowerPrefab },
-				{ UnitType.BASE, Prefabs.OrcBasePrefab },
-				{ UnitType.BARRACKS, Prefabs.OrcBarracksPrefab },
-				{ UnitType.ARCHERY, Prefabs.OrcArcheryPrefab },
+				{ UnitType.PAWN, Prefabs.RedPawnPrefab },
+				{ UnitType.WARRIOR, Prefabs.RedWarriorPrefab },
+				{ UnitType.ARCHER, Prefabs.RedArcherPrefab },
+				{ UnitType.BASE, Prefabs.RedBasePrefab },
+				{ UnitType.BARRACKS, Prefabs.RedBarracksPrefab },
+				{ UnitType.ARCHERY, Prefabs.RedArcheryPrefab },
 			};
 
-			unitManager.HumanUnitPrefabs = new Dictionary<UnitType, GameObject>()
+			unitManager.BlueUnitPrefabs = new Dictionary<UnitType, GameObject>()
 			{
 				{ UnitType.MINE, Prefabs.MinePrefab },
-				{ UnitType.WORKER, Prefabs.HumanPeasantPrefab },
-				{ UnitType.SOLDIER, Prefabs.HumanFootmanPrefab },
-				{ UnitType.ARCHER, Prefabs.HumanArcherPrefab },
-				{ UnitType.BASE, Prefabs.HumanBasePrefab },
-				{ UnitType.BARRACKS, Prefabs.HumanBarracksPrefab },
-				{ UnitType.ARCHERY, Prefabs.HumanArcheryPrefab },
+				{ UnitType.PAWN, Prefabs.BluePawnPrefab },
+				{ UnitType.WARRIOR, Prefabs.BlueWarriorPrefab },
+				{ UnitType.ARCHER, Prefabs.BlueArcherPrefab },
+				{ UnitType.BASE, Prefabs.BlueBasePrefab },
+				{ UnitType.BARRACKS, Prefabs.BlueBarracksPrefab },
+				{ UnitType.ARCHERY, Prefabs.BlueArcheryPrefab },
 			};
 
 			InitializeMatch();
