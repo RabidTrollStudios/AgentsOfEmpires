@@ -98,9 +98,8 @@
         <member name="M:AgentSDK.GameConstants.DamageMultiplier(AgentSDK.UnitType,AgentSDK.UnitType)">
             <summary>
             Damage multiplier based on attacker/defender type interaction.
-            Warriors (melee, armored) take 75% damage from ranged attacks.
-            Archers (ranged, unarmored) take 125% damage from melee attacks.
-            All other matchups are 1.0x.
+            Rock-paper-scissors triangle: Warrior→Archer→Lancer→Warrior.
+            Strong matchup = 1.25x damage, weak matchup = 0.75x damage.
             </summary>
         </member>
         <member name="T:AgentSDK.IAgentActions">
@@ -337,6 +336,12 @@
         <member name="F:AgentSDK.PlanningAgentBase.myArchery">
             <summary>Your archeries</summary>
         </member>
+        <member name="F:AgentSDK.PlanningAgentBase.myLancers">
+            <summary>Your lancers</summary>
+        </member>
+        <member name="F:AgentSDK.PlanningAgentBase.myTowers">
+            <summary>Your towers</summary>
+        </member>
         <member name="F:AgentSDK.PlanningAgentBase.enemyPawns">
             <summary>Enemy pawns</summary>
         </member>
@@ -354,6 +359,12 @@
         </member>
         <member name="F:AgentSDK.PlanningAgentBase.enemyArchery">
             <summary>Enemy archeries</summary>
+        </member>
+        <member name="F:AgentSDK.PlanningAgentBase.enemyLancers">
+            <summary>Enemy lancers</summary>
+        </member>
+        <member name="F:AgentSDK.PlanningAgentBase.enemyTowers">
+            <summary>Enemy towers</summary>
         </member>
         <member name="F:AgentSDK.PlanningAgentBase.buildPositions">
             <summary>Pre-computed valid build positions for 3x3 structures</summary>
@@ -557,6 +568,12 @@
         </member>
         <member name="F:AgentSDK.UnitType.ARCHERY">
             <summary>Ranged military structure - trains archers</summary>
+        </member>
+        <member name="F:AgentSDK.UnitType.LANCER">
+            <summary>Lance cavalry unit - extended melee range, strong vs warriors</summary>
+        </member>
+        <member name="F:AgentSDK.UnitType.TOWER">
+            <summary>Defensive tower structure - unlocks lancer training</summary>
         </member>
     </members>
 </doc>

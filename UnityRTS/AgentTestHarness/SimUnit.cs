@@ -53,6 +53,9 @@ namespace AgentTestHarness
         // Attack state
         internal int AttackTargetNbr;
 
+        // Repair state
+        internal int RepairBuildingNbr;
+
         public SimUnit(int unitNbr, UnitType unitType, int ownerAgentNbr, Position gridPosition, float health, bool isBuilt)
         {
             UnitNbr = unitNbr;
@@ -63,6 +66,7 @@ namespace AgentTestHarness
             IsBuilt = isBuilt;
             CurrentAction = UnitAction.IDLE;
             AttackTargetNbr = -1;
+            RepairBuildingNbr = -1;
             GatherMineNbr = -1;
             GatherBaseNbr = -1;
         }

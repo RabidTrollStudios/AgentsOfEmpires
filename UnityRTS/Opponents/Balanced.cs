@@ -4,16 +4,16 @@ using AgentSDK;
 namespace PlanningAgent
 {
     /// <summary>
-    /// [MEDIUM] Well-rounded: 5 pawns, barracks, alternates training
-    /// warriors and archers for a mixed army. Attacks with 5+ troops.
-    /// No glaring weakness — requires a solid strategy to beat.
+    /// [MEDIUM] Well-rounded: 5 pawns, barracks + archery + tower, cycles
+    /// training warriors, archers, and lancers for a mixed army.
+    /// Attacks with 5+ troops. No glaring weakness.
     /// </summary>
     public class PlanningAgent : PlanningAgentBase
     {
         private const int MAX_PAWNS = 5;
-        private bool trainWarriorNext = true;
+        private int trainCycle = 0; // 0=warrior, 1=archer, 2=lancer
 
-        public override void InitializeMatch() { trainWarriorNext = true; }
+        public override void InitializeMatch() { trainCycle = 0; }
 
         public override void Update(IGameState state, IAgentActions actions)
         {
@@ -32,33 +32,73 @@ namespace PlanningAgent
 
             TrainPawns(state, actions);
 
-            if (myBarracks.Count == 0 && HasBuiltUnit(myBases, state))
+            bool hasBase = HasBuiltUnit(myBases, state);
+            if (myBarracks.Count == 0 && hasBase)
                 BuildStructure(UnitType.BARRACKS, state, actions);
+            if (myArchery.Count == 0 && hasBase)
+                BuildStructure(UnitType.ARCHERY, state, actions);
+            if (myTowers.Count == 0 && hasBase)
+                BuildStructure(UnitType.TOWER, state, actions);
 
             GatherWithIdlePawns(state, actions);
 
+            // Train warriors from barracks
             foreach (int barracksNbr in myBarracks)
             {
                 var info = state.GetUnit(barracksNbr);
                 if (!info.HasValue || !info.Value.IsBuilt || info.Value.CurrentAction != UnitAction.IDLE)
                     continue;
 
-                UnitType toTrain = trainWarriorNext ? UnitType.WARRIOR : UnitType.ARCHER;
-                if (state.MyGold >= GameConstants.COST[toTrain])
+                if (trainCycle == 0 && state.MyGold >= GameConstants.COST[UnitType.WARRIOR])
                 {
-                    actions.Train(barracksNbr, toTrain);
-                    trainWarriorNext = !trainWarriorNext;
+                    actions.Train(barracksNbr, UnitType.WARRIOR);
+                    AdvanceTrainCycle();
+                }
+            }
+
+            // Train archers from archery
+            foreach (int archeryNbr in myArchery)
+            {
+                var info = state.GetUnit(archeryNbr);
+                if (!info.HasValue || !info.Value.IsBuilt || info.Value.CurrentAction != UnitAction.IDLE)
+                    continue;
+
+                if (trainCycle == 1 && state.MyGold >= GameConstants.COST[UnitType.ARCHER])
+                {
+                    actions.Train(archeryNbr, UnitType.ARCHER);
+                    AdvanceTrainCycle();
+                }
+            }
+
+            // Train lancers from tower
+            foreach (int towerNbr in myTowers)
+            {
+                var info = state.GetUnit(towerNbr);
+                if (!info.HasValue || !info.Value.IsBuilt || info.Value.CurrentAction != UnitAction.IDLE)
+                    continue;
+
+                if (trainCycle == 2 && state.MyGold >= GameConstants.COST[UnitType.LANCER])
+                {
+                    actions.Train(towerNbr, UnitType.LANCER);
+                    AdvanceTrainCycle();
                 }
             }
 
             DefendTroops(myWarriors, state, actions);
             DefendTroops(myArchers, state, actions);
-            int armySize = myWarriors.Count + myArchers.Count;
+            DefendTroops(myLancers, state, actions);
+            int armySize = myWarriors.Count + myArchers.Count + myLancers.Count;
             if (armySize >= 5)
             {
                 AttackWithUnits(myWarriors, state, actions);
                 AttackWithUnits(myArchers, state, actions);
+                AttackWithUnits(myLancers, state, actions);
             }
+        }
+
+        private void AdvanceTrainCycle()
+        {
+            trainCycle = (trainCycle + 1) % 3;
         }
 
         private void TrainPawns(IGameState state, IAgentActions actions)
@@ -177,7 +217,7 @@ namespace PlanningAgent
                     if (bestPos.X >= 0) return bestPos;
                 }
             }
-            else if (type == UnitType.BARRACKS && mainBaseNbr >= 0)
+            else if ((type == UnitType.BARRACKS || type == UnitType.ARCHERY || type == UnitType.TOWER) && mainBaseNbr >= 0)
             {
                 var baseInfo = state.GetUnit(mainBaseNbr);
                 if (baseInfo.HasValue)
@@ -224,8 +264,8 @@ namespace PlanningAgent
 
                 int? bestTarget = null;
                 float bestDist = float.MaxValue;
-                foreach (UnitType ut in new[] { UnitType.WARRIOR, UnitType.ARCHER, UnitType.PAWN,
-                                                UnitType.BASE, UnitType.BARRACKS })
+                foreach (UnitType ut in new[] { UnitType.WARRIOR, UnitType.ARCHER, UnitType.LANCER, UnitType.PAWN,
+                                                UnitType.BASE, UnitType.BARRACKS, UnitType.ARCHERY, UnitType.TOWER })
                 {
                     var enemies = state.GetEnemyUnits(ut);
                     foreach (int enemyNbr in enemies)

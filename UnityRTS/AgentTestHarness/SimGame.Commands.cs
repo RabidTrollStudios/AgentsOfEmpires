@@ -31,6 +31,9 @@ namespace AgentTestHarness
                     case CommandType.Attack:
                         ProcessAttack(unit, cmd.TargetUnitNbr);
                         break;
+                    case CommandType.Repair:
+                        ProcessRepair(unit, cmd.TargetUnitNbr);
+                        break;
                 }
             }
         }
@@ -117,6 +120,18 @@ namespace AgentTestHarness
             attacker.AttackTargetNbr = targetNbr;
             attacker.Path = path;
             attacker.PathIndex = 0;
+        }
+
+        private void ProcessRepair(SimUnit pawn, int buildingNbr)
+        {
+            if (!Units.TryGetValue(buildingNbr, out var building)) return;
+
+            var path = Map.FindPathToUnit(pawn.GridPosition, building.UnitType, building.GridPosition);
+
+            pawn.CurrentAction = UnitAction.REPAIR;
+            pawn.RepairBuildingNbr = buildingNbr;
+            pawn.Path = path;
+            pawn.PathIndex = 0;
         }
     }
 }

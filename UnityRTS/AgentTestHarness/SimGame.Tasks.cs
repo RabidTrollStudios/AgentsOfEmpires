@@ -35,6 +35,9 @@ namespace AgentTestHarness
                     case UnitAction.ATTACK:
                         AdvanceAttack(unit);
                         break;
+                    case UnitAction.REPAIR:
+                        AdvanceRepair(unit);
+                        break;
                 }
             }
         }
@@ -265,6 +268,52 @@ namespace AgentTestHarness
             pawn.GatherPhase = GatherPhase.TO_MINE;
             pawn.Path = path;
             pawn.PathIndex = 0;
+        }
+
+        #endregion
+
+        #region Repair
+
+        private void AdvanceRepair(SimUnit pawn)
+        {
+            // If building was destroyed, go idle
+            if (!Units.TryGetValue(pawn.RepairBuildingNbr, out var building) || building.Health <= 0)
+            {
+                pawn.CurrentAction = UnitAction.IDLE;
+                pawn.Path = null;
+                return;
+            }
+
+            // Phase 1: walk to building
+            if (pawn.Path != null && pawn.PathIndex < pawn.Path.Count)
+            {
+                MoveUnitOneStep(pawn);
+                pawn.CurrentAction = UnitAction.REPAIR;
+                return;
+            }
+
+            // Phase 2: heal at 2x the build rate
+            float maxHp = GameConstants.HEALTH[building.UnitType];
+
+            // Already at full health
+            if (building.Health >= maxHp)
+            {
+                pawn.CurrentAction = UnitAction.IDLE;
+                pawn.Path = null;
+                return;
+            }
+
+            float repairRate = 2f * maxHp / creationTime[building.UnitType];
+            building.Health += repairRate * Config.TickDuration;
+            if (building.Health > maxHp)
+                building.Health = maxHp;
+
+            // Done — building is at full health
+            if (building.Health >= maxHp)
+            {
+                pawn.CurrentAction = UnitAction.IDLE;
+                pawn.Path = null;
+            }
         }
 
         #endregion

@@ -194,11 +194,14 @@ namespace GameManager
 		/// </summary>
 		private const float BASE_MOVE_SPEED = 0.05f;
 
-		/// <summary>Warrior moves at 2.25x pawn speed (slower, armored).</summary>
-		private const float WARRIOR_SPEED_MULTIPLIER = 2.25f;
+		/// <summary>Warrior moves at 2.1x pawn speed (slowest combat unit, heavy armored).</summary>
+		private const float WARRIOR_SPEED_MULTIPLIER = 2.1f;
 
-		/// <summary>Archer moves at 3.0x pawn speed (light, fast — 33% faster than warrior).</summary>
+		/// <summary>Archer moves at 3.0x pawn speed (light, fast).</summary>
 		private const float ARCHER_SPEED_MULTIPLIER = 3.0f;
+
+		/// <summary>Lancer moves at 3.45x pawn speed (fastest combat unit, cavalry).</summary>
+		private const float LANCER_SPEED_MULTIPLIER = 3.45f;
 
 		/// <summary>
         /// Base moving speed (= pawn speed). Multiply by unit speed multipliers for other units.
@@ -277,6 +280,8 @@ namespace GameManager
 			{ UnitType.BASE,        2 },
 			{ UnitType.BARRACKS,    3 },
 			{ UnitType.ARCHERY,     3 },
+			{ UnitType.LANCER,      5 },
+			{ UnitType.TOWER,       3 },
 		};
 
         /// <summary>
@@ -298,6 +303,8 @@ namespace GameManager
 		        { UnitType.BASE,        0.0f },
 		        { UnitType.BARRACKS,    0.0f },
 		        { UnitType.ARCHERY,     0.0f },
+		        { UnitType.LANCER,      SCALAR_MOVING_SPEED * LANCER_SPEED_MULTIPLIER },
+		        { UnitType.TOWER,       0.0f },
 	        };
 
 	        SCALAR_MINING_SPEED = GAME_SPEED;
@@ -310,6 +317,8 @@ namespace GameManager
 		        { UnitType.BASE,        0.0f },
 		        { UnitType.BARRACKS,    0.0f },
 		        { UnitType.ARCHERY,     0.0f },
+		        { UnitType.LANCER,      0.0f },
+		        { UnitType.TOWER,       0.0f },
 	        };
 
 	        COST = new Dictionary<UnitType, float>(GameConstants.COST);

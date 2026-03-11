@@ -213,6 +213,23 @@ namespace GameManager
 				return;
 			}
 
+			bool hasTrainDeps = true;
+			string missingDeps = "";
+			foreach (UnitType dep in Constants.DEPENDENCY[args.UnitType])
+			{
+				if (unitManager.GetUnitNbrsOfType(dep).Where(
+						u => unitManager.GetUnit(u).IsBuilt).ToList().Count == 0)
+				{
+					hasTrainDeps = false;
+					missingDeps += dep + " ";
+				}
+			}
+			if (!hasTrainDeps)
+			{
+				GameManager.Instance.Log(agent.AgentName + " ERROR: Missing dependencies " + missingDeps + "for training " + args.UnitType, logContext);
+				return;
+			}
+
 			unit.GetComponent<Unit>().StartTraining(args);
 		}
 

@@ -61,6 +61,14 @@ namespace Preloader
         /// </summary>
 		[FormerlySerializedAs("HumanArcheryPrefab")]
 		public GameObject BlueArcheryPrefab;
+		/// <summary>
+		/// Blue Lancer Prefab
+		/// </summary>
+		public GameObject BlueLancerPrefab;
+		/// <summary>
+		/// Blue Tower Prefab
+		/// </summary>
+		public GameObject BlueTowerPrefab;
 
 		/// <summary>
         /// Red Pawn prefab
@@ -95,6 +103,14 @@ namespace Preloader
         /// </summary>
 		[FormerlySerializedAs("OrcArcheryPrefab")]
 		public GameObject RedArcheryPrefab;
+		/// <summary>
+		/// Red Lancer Prefab
+		/// </summary>
+		public GameObject RedLancerPrefab;
+		/// <summary>
+		/// Red Tower Prefab
+		/// </summary>
+		public GameObject RedTowerPrefab;
 
 		/// <summary>
         /// Mine Prefab
@@ -157,10 +173,20 @@ namespace Preloader
         /// </summary>
 		public Text TimerText;
         /// <summary>
+        /// Blue label textbox (displays DLL name)
+        /// </summary>
+		[FormerlySerializedAs("HumanLabel")]
+        public Text BlueLabelText;
+        /// <summary>
         /// Blue score textbox
         /// </summary>
 		[FormerlySerializedAs("HumanScoreText")]
         public Text BlueScoreText;
+        /// <summary>
+        /// Red label textbox (displays DLL name)
+        /// </summary>
+		[FormerlySerializedAs("OrcLabel")]
+        public Text RedLabelText;
         /// <summary>
         /// Red Score textbox
         /// </summary>
