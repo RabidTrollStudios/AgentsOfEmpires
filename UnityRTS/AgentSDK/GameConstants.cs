@@ -28,6 +28,8 @@ namespace AgentSDK
                 { UnitType.BASE,        SCALAR_COST * 10 },
                 { UnitType.BARRACKS,    SCALAR_COST * 8 },
                 { UnitType.ARCHERY,     SCALAR_COST * 7 },
+                { UnitType.LANCER,      70f },
+                { UnitType.TOWER,       SCALAR_COST * 6 },
             });
 
         /// <summary>
@@ -40,11 +42,13 @@ namespace AgentSDK
             {
                 { UnitType.MINE,        0.0f },
                 { UnitType.PAWN,      200.0f },
-                { UnitType.WARRIOR,     1200.0f },
-                { UnitType.ARCHER,      800.0f },
+                { UnitType.WARRIOR,     1500.0f },
+                { UnitType.ARCHER,      600.0f },
                 { UnitType.BASE,        8000.0f },
                 { UnitType.BARRACKS,    4000.0f },
                 { UnitType.ARCHERY,     4000.0f },
+                { UnitType.LANCER,      900.0f },
+                { UnitType.TOWER,       3000.0f },
             });
 
         /// <summary>
@@ -60,6 +64,8 @@ namespace AgentSDK
                 { UnitType.BASE,        0.0f },
                 { UnitType.BARRACKS,    0.0f },
                 { UnitType.ARCHERY,     0.0f },
+                { UnitType.LANCER,      0.0f },
+                { UnitType.TOWER,       0.0f },
             });
 
         /// <summary>
@@ -70,11 +76,13 @@ namespace AgentSDK
             {
                 { UnitType.MINE,        0f },
                 { UnitType.PAWN,      0f },
-                { UnitType.WARRIOR,     48f },
-                { UnitType.ARCHER,      40f },
+                { UnitType.WARRIOR,     50f },
+                { UnitType.ARCHER,      38f },
                 { UnitType.BASE,        0f },
                 { UnitType.BARRACKS,    0f },
                 { UnitType.ARCHERY,     0f },
+                { UnitType.LANCER,      42f },
+                { UnitType.TOWER,       0f },
             });
 
         /// <summary>
@@ -85,11 +93,13 @@ namespace AgentSDK
             {
                 { UnitType.MINE,        0f },
                 { UnitType.PAWN,      2f },
-                { UnitType.WARRIOR,     6f },
+                { UnitType.WARRIOR,     7f },
                 { UnitType.ARCHER,      4f },
                 { UnitType.BASE,        10f },
                 { UnitType.BARRACKS,    20f },
                 { UnitType.ARCHERY,     18f },
+                { UnitType.LANCER,      4f },
+                { UnitType.TOWER,       15f },
             });
 
         /// <summary>
@@ -105,6 +115,8 @@ namespace AgentSDK
                 { UnitType.BASE,        0.0f },
                 { UnitType.BARRACKS,    0.0f },
                 { UnitType.ARCHERY,     0.0f },
+                { UnitType.LANCER,      2.5f },
+                { UnitType.TOWER,       0.0f },
             });
 
         /// <summary>
@@ -116,11 +128,13 @@ namespace AgentSDK
             {
                 { UnitType.MINE,        0.0f },
                 { UnitType.PAWN,      1.0f },
-                { UnitType.WARRIOR,     0.75f },
+                { UnitType.WARRIOR,     0.70f },
                 { UnitType.ARCHER,      1.0f },
                 { UnitType.BASE,        0.0f },
                 { UnitType.BARRACKS,    0.0f },
                 { UnitType.ARCHERY,     0.0f },
+                { UnitType.LANCER,      1.15f },
+                { UnitType.TOWER,       0.0f },
             });
 
         /// <summary>
@@ -136,6 +150,8 @@ namespace AgentSDK
                 { UnitType.BASE,        new Position(6, 4) },
                 { UnitType.BARRACKS,    new Position(3, 3) },
                 { UnitType.ARCHERY,     new Position(3, 3) },
+                { UnitType.LANCER,      new Position(1, 1) },
+                { UnitType.TOWER,       new Position(2, 2) },
             });
 
         /// <summary>
@@ -151,6 +167,8 @@ namespace AgentSDK
                 { UnitType.BASE,        new List<UnitType>() },
                 { UnitType.BARRACKS,    new List<UnitType>() { UnitType.BASE } },
                 { UnitType.ARCHERY,     new List<UnitType>() { UnitType.BASE } },
+                { UnitType.LANCER,      new List<UnitType>() { UnitType.TOWER } },
+                { UnitType.TOWER,       new List<UnitType>() { UnitType.BASE } },
             });
 
         /// <summary>
@@ -160,12 +178,14 @@ namespace AgentSDK
             new ReadOnlyDictionary<UnitType, IReadOnlyList<UnitType>>(new Dictionary<UnitType, IReadOnlyList<UnitType>>()
             {
                 { UnitType.MINE,        new List<UnitType>() },
-                { UnitType.PAWN,      new List<UnitType>() { UnitType.BASE, UnitType.BARRACKS, UnitType.ARCHERY } },
+                { UnitType.PAWN,      new List<UnitType>() { UnitType.BASE, UnitType.BARRACKS, UnitType.ARCHERY, UnitType.TOWER } },
                 { UnitType.WARRIOR,     new List<UnitType>() },
                 { UnitType.ARCHER,      new List<UnitType>() },
                 { UnitType.BASE,        new List<UnitType>() },
                 { UnitType.BARRACKS,    new List<UnitType>() },
                 { UnitType.ARCHERY,     new List<UnitType>() },
+                { UnitType.LANCER,      new List<UnitType>() },
+                { UnitType.TOWER,       new List<UnitType>() },
             });
 
         /// <summary>
@@ -181,6 +201,8 @@ namespace AgentSDK
                 { UnitType.BASE,        new List<UnitType>() { UnitType.PAWN } },
                 { UnitType.BARRACKS,    new List<UnitType>() { UnitType.WARRIOR } },
                 { UnitType.ARCHERY,     new List<UnitType>() { UnitType.ARCHER } },
+                { UnitType.LANCER,      new List<UnitType>() },
+                { UnitType.TOWER,       new List<UnitType>() { UnitType.LANCER } },
             });
 
         /// <summary>Which unit types can move</summary>
@@ -189,7 +211,7 @@ namespace AgentSDK
             {
                 { UnitType.MINE, false }, { UnitType.PAWN, true }, { UnitType.WARRIOR, true },
                 { UnitType.ARCHER, true }, { UnitType.BASE, false }, { UnitType.BARRACKS, false },
-                { UnitType.ARCHERY, false },
+                { UnitType.ARCHERY, false }, { UnitType.LANCER, true }, { UnitType.TOWER, false },
             });
 
         /// <summary>Which unit types can build structures</summary>
@@ -198,7 +220,7 @@ namespace AgentSDK
             {
                 { UnitType.MINE, false }, { UnitType.PAWN, true }, { UnitType.WARRIOR, false },
                 { UnitType.ARCHER, false }, { UnitType.BASE, false }, { UnitType.BARRACKS, false },
-                { UnitType.ARCHERY, false },
+                { UnitType.ARCHERY, false }, { UnitType.LANCER, false }, { UnitType.TOWER, false },
             });
 
         /// <summary>Which unit types can train units</summary>
@@ -207,7 +229,7 @@ namespace AgentSDK
             {
                 { UnitType.MINE, false }, { UnitType.PAWN, false }, { UnitType.WARRIOR, false },
                 { UnitType.ARCHER, false }, { UnitType.BASE, true }, { UnitType.BARRACKS, true },
-                { UnitType.ARCHERY, true },
+                { UnitType.ARCHERY, true }, { UnitType.LANCER, false }, { UnitType.TOWER, true },
             });
 
         /// <summary>Which unit types can attack</summary>
@@ -216,7 +238,7 @@ namespace AgentSDK
             {
                 { UnitType.MINE, false }, { UnitType.PAWN, false }, { UnitType.WARRIOR, true },
                 { UnitType.ARCHER, true }, { UnitType.BASE, false }, { UnitType.BARRACKS, false },
-                { UnitType.ARCHERY, false },
+                { UnitType.ARCHERY, false }, { UnitType.LANCER, true }, { UnitType.TOWER, false },
             });
 
         /// <summary>Which unit types can gather resources</summary>
@@ -225,7 +247,7 @@ namespace AgentSDK
             {
                 { UnitType.MINE, false }, { UnitType.PAWN, true }, { UnitType.WARRIOR, false },
                 { UnitType.ARCHER, false }, { UnitType.BASE, false }, { UnitType.BARRACKS, false },
-                { UnitType.ARCHERY, false },
+                { UnitType.ARCHERY, false }, { UnitType.LANCER, false }, { UnitType.TOWER, false },
             });
 
         /// <summary>
@@ -242,18 +264,26 @@ namespace AgentSDK
 
         /// <summary>
         /// Damage multiplier based on attacker/defender type interaction.
-        /// Warriors (melee, armored) take 75% damage from ranged attacks.
-        /// Archers (ranged, unarmored) take 125% damage from melee attacks.
-        /// All other matchups are 1.0x.
+        /// Rock-paper-scissors triangle: Warrior→Archer→Lancer→Warrior.
+        /// Strong matchup = 1.25x damage, weak matchup = 0.75x damage.
         /// </summary>
         public static float DamageMultiplier(UnitType attacker, UnitType defender)
         {
-            // Melee vs unarmored: warriors deal 1.15x to archers
+            // Warrior beats Archer (close combat overwhelms light ranged)
             if (attacker == UnitType.WARRIOR && defender == UnitType.ARCHER)
-                return 1.15f;
-            // Ranged vs armored: archers deal 0.85x to warriors
+                return 1.25f;
             if (attacker == UnitType.ARCHER && defender == UnitType.WARRIOR)
-                return 0.85f;
+                return 0.75f;
+            // Archer beats Lancer (ranged fire picks off cavalry)
+            if (attacker == UnitType.ARCHER && defender == UnitType.LANCER)
+                return 1.25f;
+            if (attacker == UnitType.LANCER && defender == UnitType.ARCHER)
+                return 0.75f;
+            // Lancer beats Warrior (lance reach defeats heavy melee)
+            if (attacker == UnitType.LANCER && defender == UnitType.WARRIOR)
+                return 1.25f;
+            if (attacker == UnitType.WARRIOR && defender == UnitType.LANCER)
+                return 0.75f;
             return 1.0f;
         }
     }

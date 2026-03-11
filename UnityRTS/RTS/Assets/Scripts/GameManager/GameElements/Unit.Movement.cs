@@ -386,6 +386,9 @@ namespace GameManager.GameElements
 		/// Pawn (Pawn) states:  0=Idle, 1=Run, 2=RunGold, 3=InteractHammer, 4=RunHammer, 5=RunPickaxe, 6=InteractPickaxe
 		/// Warrior (Warrior) states: 0=Idle, 1=Run, 2=Attack1, 3=Attack2, 4=Guard
 		/// Archer states: 0=Idle, 1=Run, 2=Shoot
+		/// Lancer states: 0=Idle, 1=Run,
+		///   2=Right_Attack, 3=Up_Attack, 4=Down_Attack, 5=UpRight_Attack, 6=DownRight_Attack,
+		///   7=Right_Defence, 8=Up_Defence, 9=Down_Defence, 10=UpRight_Defence, 11=DownRight_Defence
 		/// </summary>
 		private void UpdateAnimation()
 		{
@@ -441,6 +444,25 @@ namespace GameManager.GameElements
 							state = 2; // Shoot (in range)
 						break;
 				}
+			}
+			else if (UnitType == UnitType.LANCER)
+			{
+				// Lancer uses Animator.Play() by hash instead of State parameter
+				// because the asset pack controller doesn't have reliable AnyState transitions.
+				if (lancerStateHashes != null)
+				{
+					int idx = GetLancerStateIndex();
+					int hash = lancerStateHashes[idx];
+					var currentInfo = animator.GetCurrentAnimatorStateInfo(0);
+					if (currentInfo.shortNameHash != hash)
+						animator.Play(hash, 0, 0f);
+				}
+
+				// Handle facing/flip, then return early (skip SetInteger at end)
+				UpdateLancerFacing();
+				if (unitSprite != null)
+					unitSprite.flipX = !facingRight;
+				return;
 			}
 			else // PAWN
 			{
@@ -516,6 +538,134 @@ namespace GameManager.GameElements
 				unitSprite.flipX = !facingRight;
 
 			animator.SetInteger("State", state);
+		}
+
+		/// <summary>
+		/// Lancer animation clip name lookup. Populated once during InitializeUnit
+		/// by scanning the animator controller for clip names matching known suffixes.
+		/// Index: 0=Idle, 1=Run,
+		///   2=Right_Attack, 3=Up_Attack, 4=Down_Attack, 5=UpRight_Attack, 6=DownRight_Attack,
+		///   7=Right_Defence, 8=Up_Defence, 9=Down_Defence, 10=UpRight_Defence, 11=DownRight_Defence
+		/// </summary>
+		private int[] lancerStateHashes;
+
+		/// <summary>Suffixes used to identify lancer animation states (order matches index).</summary>
+		private static readonly string[] LancerStateSuffixes = new[]
+		{
+			"Idle",                   // 0
+			"Run",                    // 1
+			"Right_Attack",           // 2
+			"Up_Attack",              // 3
+			"Down_Attack",            // 4
+			"UpRight_Attack",         // 5
+			"DownRight_Attack",       // 6
+			"Right_Defence",          // 7
+			"Up_Defence",             // 8
+			"Down_Defence",           // 9
+			"UpRight_Defence",        // 10
+			"DownRight_Defence",      // 11
+		};
+
+		internal void InitLancerStateHashes()
+		{
+			lancerStateHashes = new int[LancerStateSuffixes.Length];
+			// Build hashes from the clip names in the animator controller.
+			// State names in the controller follow the pattern: "Lancer_<Suffix>_<Color>"
+			// or "Lancer_ <Suffix>_<Color>" (with a space after underscore — asset pack quirk).
+			// Animator.StringToHash uses the short state name (m_Name in the controller).
+			var clips = animator.runtimeAnimatorController.animationClips;
+			for (int i = 0; i < LancerStateSuffixes.Length; i++)
+			{
+				string suffix = LancerStateSuffixes[i];
+				lancerStateHashes[i] = -1;
+				foreach (var clip in clips)
+				{
+					// Match suffix case-insensitively (e.g., clip "Lancer_ Run_Blue" matches suffix "Run")
+					string clipName = clip.name.Replace(" ", ""); // normalize spaces
+					string normalizedSuffix = suffix.Replace(" ", "");
+					if (clipName.IndexOf(normalizedSuffix, System.StringComparison.OrdinalIgnoreCase) >= 0)
+					{
+						// The animator state name matches the clip name (they share names in the controller)
+						lancerStateHashes[i] = Animator.StringToHash(clip.name);
+						break;
+					}
+				}
+			}
+			// Fallback: if any hash wasn't found, use Idle
+			for (int i = 0; i < lancerStateHashes.Length; i++)
+			{
+				if (lancerStateHashes[i] == -1)
+					lancerStateHashes[i] = lancerStateHashes[0];
+			}
+		}
+
+		/// <summary>
+		/// Return the animator state name for the lancer's current action.
+		/// Uses Animator.Play() by hash instead of State parameter to avoid
+		/// dependency on AnyState transitions in the controller.
+		/// </summary>
+		private string GetLancerClipName()
+		{
+			// Not used — we use hash-based lookup. Kept as reference.
+			return "";
+		}
+
+		/// <summary>
+		/// Get the lancer state hash index for the current action.
+		/// </summary>
+		private int GetLancerStateIndex()
+		{
+			if (CurrentAction == UnitAction.MOVE && path.Count > 0)
+				return 1; // Run
+
+			if (CurrentAction == UnitAction.ATTACK)
+			{
+				if (path.Count > 0)
+					return 1; // Run (pursuing)
+				return GetLancerDirectionalAttackIndex();
+			}
+
+			return 0; // Idle
+		}
+
+		/// <summary>
+		/// Pick the directional attack animation index based on angle to the target.
+		/// Indices: 2=Right, 3=Up, 4=Down, 5=UpRight, 6=DownRight
+		/// </summary>
+		private int GetLancerDirectionalAttackIndex()
+		{
+			if (AttackUnit == null) return 2;
+
+			float dx = AttackUnit.CenterGridPosition.x - CenterGridPosition.x;
+			float dy = AttackUnit.CenterGridPosition.y - CenterGridPosition.y;
+			float absDx = Mathf.Abs(dx);
+			float angle = Mathf.Atan2(dy, absDx) * Mathf.Rad2Deg;
+
+			if (angle > 67.5f)  return 3;  // Up
+			if (angle > 22.5f)  return 5;  // UpRight
+			if (angle > -22.5f) return 2;  // Right
+			if (angle > -67.5f) return 6;  // DownRight
+			return 4;                       // Down
+		}
+
+		/// <summary>
+		/// Handle lancer-specific sprite flipping based on movement or target direction.
+		/// </summary>
+		private void UpdateLancerFacing()
+		{
+			if (velocity.x > 0.05f)
+				facingRight = true;
+			else if (velocity.x < -0.05f)
+				facingRight = false;
+
+			if (CurrentAction == UnitAction.ATTACK && AttackUnit != null && path.Count == 0)
+			{
+				float dx = AttackUnit.CenterGridPosition.x - CenterGridPosition.x;
+				if (dx > 0.01f)
+					facingRight = true;
+				else if (dx < -0.01f)
+					facingRight = false;
+			}
 		}
 
 		internal void FixedUpdate()

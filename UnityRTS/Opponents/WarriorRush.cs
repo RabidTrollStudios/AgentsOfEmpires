@@ -214,8 +214,8 @@ namespace PlanningAgent
 
                 int? bestTarget = null;
                 float bestDist = float.MaxValue;
-                foreach (UnitType ut in new[] { UnitType.WARRIOR, UnitType.ARCHER, UnitType.PAWN,
-                                                UnitType.BASE, UnitType.BARRACKS })
+                foreach (UnitType ut in new[] { UnitType.WARRIOR, UnitType.ARCHER, UnitType.LANCER, UnitType.PAWN,
+                                                UnitType.BASE, UnitType.BARRACKS, UnitType.ARCHERY, UnitType.TOWER })
                 {
                     var enemies = state.GetEnemyUnits(ut);
                     foreach (int enemyNbr in enemies)

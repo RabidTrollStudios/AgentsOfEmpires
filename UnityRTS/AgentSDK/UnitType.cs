@@ -19,5 +19,9 @@ namespace AgentSDK
         BARRACKS,
         /// <summary>Ranged military structure - trains archers</summary>
         ARCHERY,
+        /// <summary>Lance cavalry unit - extended melee range, strong vs warriors</summary>
+        LANCER,
+        /// <summary>Defensive tower structure - unlocks lancer training</summary>
+        TOWER,
     }
 }

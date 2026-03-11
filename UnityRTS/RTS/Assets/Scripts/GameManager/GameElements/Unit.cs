@@ -484,6 +484,11 @@ namespace GameManager.GameElements
 					// Offset mine animations so gold stones shimmer at different times
 					animator.Play(0, 0, UnityEngine.Random.value);
 				}
+				else if (UnitType == UnitType.LANCER)
+				{
+					InitLancerStateHashes();
+					animator.Play(lancerStateHashes[0], 0, 0f); // Start with Idle
+				}
 				else if (CanMove)
 				{
 					// Force idle animation from the first frame (mobile units only)

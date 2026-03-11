@@ -13,7 +13,8 @@ namespace AgentTestHarness
         Build,
         Gather,
         Train,
-        Attack
+        Attack,
+        Repair
     }
 
     /// <summary>
@@ -160,6 +161,29 @@ namespace AgentTestHarness
                 Type = CommandType.Attack,
                 UnitNbr = unitNbr,
                 TargetUnitNbr = targetNbr
+            });
+        }
+
+        public void Repair(int pawnNbr, int buildingNbr)
+        {
+            if (!game.Units.TryGetValue(pawnNbr, out var pawn)) return;
+            if (pawn.OwnerAgentNbr != agentNbr) return;
+            if (!GameConstants.CAN_BUILD[pawn.UnitType]) return;
+
+            if (!game.Units.TryGetValue(buildingNbr, out var building)) return;
+            // Target must be a non-mobile, non-mine building
+            if (GameConstants.CAN_MOVE[building.UnitType]) return;
+            if (building.UnitType == UnitType.MINE) return;
+            // Building must be finished
+            if (!building.IsBuilt) return;
+            // Must belong to the same agent
+            if (building.OwnerAgentNbr != agentNbr) return;
+
+            PendingCommands.Add(new SimCommand
+            {
+                Type = CommandType.Repair,
+                UnitNbr = pawnNbr,
+                TargetUnitNbr = buildingNbr
             });
         }
 

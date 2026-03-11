@@ -335,6 +335,8 @@ namespace GameManager
 				{ UnitType.BASE, Prefabs.RedBasePrefab },
 				{ UnitType.BARRACKS, Prefabs.RedBarracksPrefab },
 				{ UnitType.ARCHERY, Prefabs.RedArcheryPrefab },
+				{ UnitType.LANCER, Prefabs.RedLancerPrefab },
+				{ UnitType.TOWER, Prefabs.RedTowerPrefab },
 			};
 
 			unitManager.BlueUnitPrefabs = new Dictionary<UnitType, GameObject>()
@@ -346,6 +348,8 @@ namespace GameManager
 				{ UnitType.BASE, Prefabs.BlueBasePrefab },
 				{ UnitType.BARRACKS, Prefabs.BlueBarracksPrefab },
 				{ UnitType.ARCHERY, Prefabs.BlueArcheryPrefab },
+				{ UnitType.LANCER, Prefabs.BlueLancerPrefab },
+				{ UnitType.TOWER, Prefabs.BlueTowerPrefab },
 			};
 
 			InitializeMatch();

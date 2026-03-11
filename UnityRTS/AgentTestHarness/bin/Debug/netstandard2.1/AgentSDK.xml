@@ -30,7 +30,7 @@
         </member>
         <member name="F:AgentSDK.GameConstants.MINING_CAPACITY">
             <summary>
-            How much gold a worker can carry per mining trip
+            How much gold a pawn can carry per mining trip
             </summary>
         </member>
         <member name="F:AgentSDK.GameConstants.BASE_DAMAGE">
@@ -51,7 +51,7 @@
         <member name="F:AgentSDK.GameConstants.MOVEMENT_SPEED">
             <summary>
             Movement speed multiplier for each unit type (1.0 = baseline).
-            Soldiers are slower (armored/heavy), archers are faster (light).
+            Warriors are slower (armored/heavy), archers are faster (light).
             </summary>
         </member>
         <member name="F:AgentSDK.GameConstants.UNIT_SIZE">
@@ -98,9 +98,8 @@
         <member name="M:AgentSDK.GameConstants.DamageMultiplier(AgentSDK.UnitType,AgentSDK.UnitType)">
             <summary>
             Damage multiplier based on attacker/defender type interaction.
-            Soldiers (melee, armored) take 75% damage from ranged attacks.
-            Archers (ranged, unarmored) take 125% damage from melee attacks.
-            All other matchups are 1.0x.
+            Rock-paper-scissors triangle: Warrior→Archer→Lancer→Warrior.
+            Strong matchup = 1.25x damage, weak matchup = 0.75x damage.
             </summary>
         </member>
         <member name="T:AgentSDK.IAgentActions">
@@ -119,18 +118,18 @@
         </member>
         <member name="M:AgentSDK.IAgentActions.Build(System.Int32,AgentSDK.Position,AgentSDK.UnitType)">
             <summary>
-            Send a worker to build a structure at a target position.
+            Send a pawn to build a structure at a target position.
             Requires sufficient gold and all dependencies met.
             </summary>
-            <param name="unitNbr">The worker unit that will build</param>
+            <param name="unitNbr">The pawn unit that will build</param>
             <param name="target">Where to place the structure</param>
             <param name="unitType">Type of structure to build (BASE, BARRACKS, or ARCHERY)</param>
         </member>
         <member name="M:AgentSDK.IAgentActions.Gather(System.Int32,System.Int32,System.Int32)">
             <summary>
-            Send a worker to gather gold from a mine and return it to a base.
+            Send a pawn to gather gold from a mine and return it to a base.
             </summary>
-            <param name="workerNbr">The worker unit</param>
+            <param name="pawnNbr">The pawn unit</param>
             <param name="mineNbr">The gold mine to gather from</param>
             <param name="baseNbr">The base to return gold to</param>
         </member>
@@ -140,7 +139,7 @@
             Requires sufficient gold and the structure must be fully built.
             </summary>
             <param name="buildingNbr">The structure that will train (BASE or BARRACKS)</param>
-            <param name="unitType">Type of unit to train (WORKER, SOLDIER, or ARCHER)</param>
+            <param name="unitType">Type of unit to train (PAWN, WARRIOR, or ARCHER)</param>
         </member>
         <member name="M:AgentSDK.IAgentActions.Attack(System.Int32,System.Int32)">
             <summary>
@@ -149,6 +148,14 @@
             </summary>
             <param name="unitNbr">Your attacking unit</param>
             <param name="targetNbr">The enemy unit to attack</param>
+        </member>
+        <member name="M:AgentSDK.IAgentActions.Repair(System.Int32,System.Int32)">
+            <summary>
+            Send a pawn to repair a damaged friendly building.
+            The building must belong to the same agent and have less than full health.
+            </summary>
+            <param name="pawnNbr">The pawn unit that will repair</param>
+            <param name="buildingNbr">The building to repair</param>
         </member>
         <member name="M:AgentSDK.IAgentActions.Log(System.String)">
             <summary>
@@ -311,11 +318,11 @@
         <member name="F:AgentSDK.PlanningAgentBase.mines">
             <summary>All gold mines on the map</summary>
         </member>
-        <member name="F:AgentSDK.PlanningAgentBase.myWorkers">
-            <summary>Your workers</summary>
+        <member name="F:AgentSDK.PlanningAgentBase.myPawns">
+            <summary>Your pawns</summary>
         </member>
-        <member name="F:AgentSDK.PlanningAgentBase.mySoldiers">
-            <summary>Your soldiers</summary>
+        <member name="F:AgentSDK.PlanningAgentBase.myWarriors">
+            <summary>Your warriors</summary>
         </member>
         <member name="F:AgentSDK.PlanningAgentBase.myArchers">
             <summary>Your archers</summary>
@@ -329,11 +336,17 @@
         <member name="F:AgentSDK.PlanningAgentBase.myArchery">
             <summary>Your archeries</summary>
         </member>
-        <member name="F:AgentSDK.PlanningAgentBase.enemyWorkers">
-            <summary>Enemy workers</summary>
+        <member name="F:AgentSDK.PlanningAgentBase.myLancers">
+            <summary>Your lancers</summary>
         </member>
-        <member name="F:AgentSDK.PlanningAgentBase.enemySoldiers">
-            <summary>Enemy soldiers</summary>
+        <member name="F:AgentSDK.PlanningAgentBase.myTowers">
+            <summary>Your towers</summary>
+        </member>
+        <member name="F:AgentSDK.PlanningAgentBase.enemyPawns">
+            <summary>Enemy pawns</summary>
+        </member>
+        <member name="F:AgentSDK.PlanningAgentBase.enemyWarriors">
+            <summary>Enemy warriors</summary>
         </member>
         <member name="F:AgentSDK.PlanningAgentBase.enemyArchers">
             <summary>Enemy archers</summary>
@@ -346,6 +359,12 @@
         </member>
         <member name="F:AgentSDK.PlanningAgentBase.enemyArchery">
             <summary>Enemy archeries</summary>
+        </member>
+        <member name="F:AgentSDK.PlanningAgentBase.enemyLancers">
+            <summary>Enemy lancers</summary>
+        </member>
+        <member name="F:AgentSDK.PlanningAgentBase.enemyTowers">
+            <summary>Enemy towers</summary>
         </member>
         <member name="F:AgentSDK.PlanningAgentBase.buildPositions">
             <summary>Pre-computed valid build positions for 3x3 structures</summary>
@@ -404,6 +423,9 @@
         <member name="P:AgentSDK.Position.Y">
             <summary>Y coordinate on the grid</summary>
         </member>
+        <member name="M:AgentSDK.Position.#ctor(System.Int32,System.Int32)">
+            <summary>Create a new position at (<paramref name="x"/>, <paramref name="y"/>)</summary>
+        </member>
         <member name="P:AgentSDK.Position.Zero">
             <summary>Position (0, 0)</summary>
         </member>
@@ -417,6 +439,30 @@
             Center cell of a unit's footprint given its top-left corner and size.
             For 1x1 units returns the same position; for 3x3 returns topLeft+(1,-1).
             </summary>
+        </member>
+        <member name="M:AgentSDK.Position.op_Addition(AgentSDK.Position,AgentSDK.Position)">
+            <summary>Add two positions component-wise</summary>
+        </member>
+        <member name="M:AgentSDK.Position.op_Subtraction(AgentSDK.Position,AgentSDK.Position)">
+            <summary>Subtract two positions component-wise</summary>
+        </member>
+        <member name="M:AgentSDK.Position.op_Equality(AgentSDK.Position,AgentSDK.Position)">
+            <summary>Check if two positions are equal</summary>
+        </member>
+        <member name="M:AgentSDK.Position.op_Inequality(AgentSDK.Position,AgentSDK.Position)">
+            <summary>Check if two positions are not equal</summary>
+        </member>
+        <member name="M:AgentSDK.Position.Equals(AgentSDK.Position)">
+            <inheritdoc/>
+        </member>
+        <member name="M:AgentSDK.Position.Equals(System.Object)">
+            <inheritdoc/>
+        </member>
+        <member name="M:AgentSDK.Position.GetHashCode">
+            <inheritdoc/>
+        </member>
+        <member name="M:AgentSDK.Position.ToString">
+            <inheritdoc/>
         </member>
         <member name="T:AgentSDK.UnitAction">
             <summary>
@@ -440,6 +486,9 @@
         </member>
         <member name="F:AgentSDK.UnitAction.ATTACK">
             <summary>Attacking a target</summary>
+        </member>
+        <member name="F:AgentSDK.UnitAction.REPAIR">
+            <summary>Repairing a damaged building</summary>
         </member>
         <member name="T:AgentSDK.UnitInfo">
             <summary>
@@ -487,9 +536,12 @@
             <summary>
             Center cell of this unit's footprint.
             Use this for distance calculations instead of GridPosition, which is the top-left corner.
-            For 1x1 units (soldiers, archers, workers) this equals GridPosition.
+            For 1x1 units (warriors, archers, pawns) this equals GridPosition.
             For 3x3 structures (bases, barracks, mines, refineries) this is GridPosition+(1,-1).
             </summary>
+        </member>
+        <member name="M:AgentSDK.UnitInfo.#ctor(System.Int32,AgentSDK.UnitType,AgentSDK.Position,System.Single,System.Boolean,AgentSDK.UnitAction,System.Boolean,System.Boolean,System.Boolean,System.Boolean,System.Boolean,System.Int32)">
+            <summary>Create a new UnitInfo snapshot</summary>
         </member>
         <member name="T:AgentSDK.UnitType">
             <summary>
@@ -499,23 +551,29 @@
         <member name="F:AgentSDK.UnitType.MINE">
             <summary>Gold mine resource</summary>
         </member>
-        <member name="F:AgentSDK.UnitType.WORKER">
-            <summary>Worker unit - gathers resources and builds structures</summary>
+        <member name="F:AgentSDK.UnitType.PAWN">
+            <summary>Pawn unit - gathers resources and builds structures</summary>
         </member>
-        <member name="F:AgentSDK.UnitType.SOLDIER">
+        <member name="F:AgentSDK.UnitType.WARRIOR">
             <summary>Melee combat unit</summary>
         </member>
         <member name="F:AgentSDK.UnitType.ARCHER">
             <summary>Ranged combat unit</summary>
         </member>
         <member name="F:AgentSDK.UnitType.BASE">
-            <summary>Main base structure - trains workers</summary>
+            <summary>Main base structure - trains pawns</summary>
         </member>
         <member name="F:AgentSDK.UnitType.BARRACKS">
-            <summary>Military structure - trains soldiers</summary>
+            <summary>Military structure - trains warriors</summary>
         </member>
         <member name="F:AgentSDK.UnitType.ARCHERY">
             <summary>Ranged military structure - trains archers</summary>
+        </member>
+        <member name="F:AgentSDK.UnitType.LANCER">
+            <summary>Lance cavalry unit - extended melee range, strong vs warriors</summary>
+        </member>
+        <member name="F:AgentSDK.UnitType.TOWER">
+            <summary>Defensive tower structure - unlocks lancer training</summary>
         </member>
     </members>
 </doc>

@@ -83,6 +83,11 @@ namespace GameManager
 			BlueCustomDebugText.text = Constants.BLUE_ABBR + " " + BlueDllName;
 			RedCustomDebugText.text = Constants.RED_ABBR + " " + RedDllName;
 
+			if (Prefabs.BlueLabelText != null)
+				Prefabs.BlueLabelText.text = BlueDllName;
+			if (Prefabs.RedLabelText != null)
+				Prefabs.RedLabelText.text = RedDllName;
+
 			string versusText = BlueCustomDebugText.text + "\nvs\n" + RedCustomDebugText.text;
 
 			foreach (GameObject agent in Agents.Values)
@@ -182,6 +187,11 @@ namespace GameManager
 
 		        BlueCustomDebugText.text = Constants.BLUE_ABBR + " " + BlueDllName;
 		        RedCustomDebugText.text = Constants.RED_ABBR + " " + RedDllName;
+
+		        if (Prefabs.BlueLabelText != null)
+			        Prefabs.BlueLabelText.text = BlueDllName;
+		        if (Prefabs.RedLabelText != null)
+			        Prefabs.RedLabelText.text = RedDllName;
 
 		        string versusText = Constants.BLUE_ABBR + " " + BlueDllName + "\nvs\n" + Constants.RED_ABBR + " " + RedDllName;
 		        StartCoroutine(DropIntroVersus(versusText));

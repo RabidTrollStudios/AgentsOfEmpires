@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("PlanningAgent")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+6fa9ddb049f6f1de57a5c3d9310cfc59992fc2bf")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+86504a1a0be3a31e26c7bc437c2f7d82c326731a")]
 [assembly: System.Reflection.AssemblyProductAttribute("PlanningAgent")]
 [assembly: System.Reflection.AssemblyTitleAttribute("PlanningAgent")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

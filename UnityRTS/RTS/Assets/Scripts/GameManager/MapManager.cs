@@ -136,6 +136,52 @@ namespace GameManager
 						}
 					}
 				}
+
+				// Replace tree tiles with individual SpriteRenderers so each tree
+				// participates in Y-depth sorting via SpriteSortPoint.Pivot.
+				// TilemapRenderer (even Individual mode) uses sprite bounds center
+				// for sorting, which breaks Y-depth with tall tree sprites.
+				if (layerName == "Trees")
+				{
+					var treeParent = new GameObject("TreeSprites");
+					treeParent.transform.SetParent(grid.transform);
+
+					BoundsInt bounds = tilemap.cellBounds;
+					for (int x = bounds.xMin; x < bounds.xMax; x++)
+					{
+						for (int y = bounds.yMin; y < bounds.yMax; y++)
+						{
+							Vector3Int cellPos = new Vector3Int(x, y, 0);
+							Sprite sprite = tilemap.GetSprite(cellPos);
+							if (sprite == null)
+								continue;
+
+							// Position at tile anchor (0.5, 0.5) to match original tilemap placement
+							Vector3 worldPos = tilemap.CellToWorld(cellPos) + new Vector3(0.5f, 0.5f, 0f);
+
+							var treeGo = new GameObject($"Tree_{x}_{y}");
+							treeGo.transform.SetParent(treeParent.transform);
+							treeGo.transform.position = worldPos;
+
+							var sr = treeGo.AddComponent<SpriteRenderer>();
+							sr.sprite = sprite;
+							sr.sortingLayerName = "Agents";
+							sr.sortingOrder = 0;
+							sr.spriteSortPoint = SpriteSortPoint.Pivot;
+							sr.color = tilemap.GetColor(cellPos);
+
+							// Preserve tile flip/rotation
+							Matrix4x4 matrix = tilemap.GetTransformMatrix(cellPos);
+							sr.flipX = matrix.m00 < 0;
+							sr.flipY = matrix.m11 < 0;
+						}
+					}
+
+					// Disable the TilemapRenderer so tiles don't double-render
+					var tilemapRenderer = tilemap.GetComponent<TilemapRenderer>();
+					if (tilemapRenderer != null)
+						tilemapRenderer.enabled = false;
+				}
 			}
 			return Graph;
 		}
