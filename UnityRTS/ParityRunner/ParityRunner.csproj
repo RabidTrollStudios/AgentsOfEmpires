@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <RootNamespace>ParityRunner</RootNamespace>
+    <AssemblyName>ParityRunner</AssemblyName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\AgentTestHarness\AgentTestHarness.csproj" />
+    <ProjectReference Include="..\PlanningAgent.Tests\PlanningAgent.Tests.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="AgentSDK">
+      <HintPath>..\AgentSDK\bin\Debug\netstandard2.1\AgentSDK.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>

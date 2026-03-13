@@ -10,10 +10,11 @@
 using System;
 using System.Reflection;
 
+[assembly: System.Runtime.CompilerServices.InternalsVisibleTo("ParityRunner")]
 [assembly: System.Reflection.AssemblyCompanyAttribute("PlanningAgent.Tests")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+86504a1a0be3a31e26c7bc437c2f7d82c326731a")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+6175fcd2a880e7fe623c138e23aac656cbd2d5f4")]
 [assembly: System.Reflection.AssemblyProductAttribute("PlanningAgent.Tests")]
 [assembly: System.Reflection.AssemblyTitleAttribute("PlanningAgent.Tests")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
