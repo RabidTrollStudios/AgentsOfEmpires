@@ -7,14 +7,15 @@ namespace AgentTestHarness
     /// <summary>
     /// Types of commands an agent can issue.
     /// </summary>
-    internal enum CommandType
+    public enum CommandType
     {
         Move,
         Build,
         Gather,
         Train,
         Attack,
-        Repair
+        Repair,
+        Log
     }
 
     /// <summary>

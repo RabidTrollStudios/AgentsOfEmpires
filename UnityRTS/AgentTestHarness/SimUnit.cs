@@ -56,6 +56,9 @@ namespace AgentTestHarness
         // Repair state
         internal int RepairBuildingNbr;
 
+        // Local avoidance state — how many ticks the unit has waited for a blocker to clear
+        internal int LocalAvoidWaitTicks;
+
         public SimUnit(int unitNbr, UnitType unitType, int ownerAgentNbr, Position gridPosition, float health, bool isBuilt)
         {
             UnitNbr = unitNbr;
