@@ -116,13 +116,13 @@ namespace GameManager.Tests.PlayMode
 		#region DAMAGE Dictionary Completeness
 
 		/// <summary>
-		/// At runtime, DAMAGE dictionary contains entries for all 6 unit types.
+		/// At runtime, DAMAGE dictionary contains entries for all 9 unit types.
 		/// </summary>
 		[UnityTest]
 		public IEnumerator Runtime_Damage_HasAllUnitTypes()
 		{
-			Assert.AreEqual(6, Constants.DAMAGE.Count,
-				"DAMAGE dictionary should have 6 entries at runtime");
+			Assert.AreEqual(9, Constants.DAMAGE.Count,
+				"DAMAGE dictionary should have 9 entries at runtime");
 			yield return null;
 		}
 

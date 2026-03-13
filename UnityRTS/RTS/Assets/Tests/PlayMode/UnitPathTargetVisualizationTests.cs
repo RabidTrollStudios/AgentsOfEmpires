@@ -156,39 +156,5 @@ namespace GameManager.Tests.PlayMode
 			yield return null;
 		}
 
-		// ── MapVelocityToDirection (dead code, exercised via reflection) ───────
-
-		[UnityTest]
-		public IEnumerator MapVelocityToDirection_NullAnimator_DoesNotThrow()
-		{
-			var unit = PlaceUnit(UnitType.PAWN, new Vector3Int(5, 5, 0));
-			SetUnitField(unit, "animator", null);
-
-			Assert.DoesNotThrow(() => InvokeUnitMethod(unit, "MapVelocityToDirection"),
-				"MapVelocityToDirection with null animator should return early without throwing");
-			yield return null;
-		}
-
-		[UnityTest]
-		public IEnumerator MapVelocityToDirection_SouthVelocity_DoesNotThrow()
-		{
-			var unit = PlaceUnit(UnitType.PAWN, new Vector3Int(5, 5, 0));
-			SetUnitField(unit, "velocity", new Vector3(0f, 0.95f, 0f));
-
-			Assert.DoesNotThrow(() => InvokeUnitMethod(unit, "MapVelocityToDirection"),
-				"MapVelocityToDirection with south velocity should not throw");
-			yield return null;
-		}
-
-		[UnityTest]
-		public IEnumerator MapVelocityToDirection_DiagonalVelocity_DoesNotThrow()
-		{
-			var unit = PlaceUnit(UnitType.PAWN, new Vector3Int(5, 5, 0));
-			SetUnitField(unit, "velocity", new Vector3(0.5f, 0.95f, 0f));
-
-			Assert.DoesNotThrow(() => InvokeUnitMethod(unit, "MapVelocityToDirection"),
-				"MapVelocityToDirection with diagonal velocity should not throw");
-			yield return null;
-		}
 	}
 }

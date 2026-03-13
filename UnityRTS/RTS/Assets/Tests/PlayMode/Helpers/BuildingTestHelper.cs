@@ -50,6 +50,18 @@ namespace GameManager.Tests.PlayMode
 		}
 
 		/// <summary>
+		/// Place a TOWER at the given position and immediately mark it as built.
+		/// </summary>
+		public static Unit PlaceBuiltTower(PlayModeTestContext ctx, Vector3Int position,
+			GameObject agentGo = null)
+		{
+			agentGo = agentGo ?? ctx.Agent0Go;
+			Unit tower = PlayModeTestHelper.PlaceUnit(ctx, agentGo, UnitType.TOWER, position);
+			tower.IsBuilt = true;
+			return tower;
+		}
+
+		/// <summary>
 		/// Assert that the given area is buildable for the specified unit type.
 		/// </summary>
 		public static void AssertAreaBuildable(PlayModeTestContext ctx, UnitType unitType,

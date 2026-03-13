@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Reflection;
 using AgentSDK;
 using GameManager.GameElements;
 using NUnit.Framework;
@@ -28,10 +29,25 @@ namespace GameManager.Tests.PlayMode
 		[UnityTearDown]
 		public IEnumerator TearDown()
 		{
+			// Set gameState to FINISHED so Unit.Update/FixedUpdate early-return via IsPlaying
+			// before we destroy anything. This prevents NREs during the teardown frame.
+			if (GameManager.Instance != null)
+			{
+				var gameStateField = typeof(GameManager).GetField("gameState",
+					BindingFlags.NonPublic | BindingFlags.Instance);
+				gameStateField.SetValue(GameManager.Instance,
+					System.Enum.ToObject(gameStateField.FieldType, 4)); // FINISHED = 4
+			}
+
 			PlayModeTestHelper.TearDown(ctx);
 			ctx = null;
 			// Yield one frame so Object.Destroy calls are processed
 			yield return null;
+
+			// Clear the singleton AFTER units are destroyed
+			typeof(GameManager)
+				.GetField("instance", BindingFlags.NonPublic | BindingFlags.Static)
+				.SetValue(null, null);
 		}
 
 		/// <summary>

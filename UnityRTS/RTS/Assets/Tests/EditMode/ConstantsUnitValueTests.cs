@@ -14,20 +14,22 @@ namespace GameManager.Tests
 		#region Completeness
 
 		/// <summary>
-		/// UNIT_VALUE contains entries for all 7 unit types.
+		/// UNIT_VALUE contains entries for all 9 unit types.
 		/// </summary>
 		[Test]
-		public void UnitValue_HasAllSevenUnitTypes()
+		public void UnitValue_HasAllNineUnitTypes()
 		{
-			Assert.AreEqual(7, Constants.UNIT_VALUE.Count,
-				"UNIT_VALUE should have exactly 7 entries");
+			Assert.AreEqual(9, Constants.UNIT_VALUE.Count,
+				"UNIT_VALUE should have exactly 9 entries");
 			Assert.IsTrue(Constants.UNIT_VALUE.ContainsKey(UnitType.MINE));
 			Assert.IsTrue(Constants.UNIT_VALUE.ContainsKey(UnitType.PAWN));
 			Assert.IsTrue(Constants.UNIT_VALUE.ContainsKey(UnitType.WARRIOR));
 			Assert.IsTrue(Constants.UNIT_VALUE.ContainsKey(UnitType.ARCHER));
+			Assert.IsTrue(Constants.UNIT_VALUE.ContainsKey(UnitType.LANCER));
 			Assert.IsTrue(Constants.UNIT_VALUE.ContainsKey(UnitType.BASE));
 			Assert.IsTrue(Constants.UNIT_VALUE.ContainsKey(UnitType.BARRACKS));
 			Assert.IsTrue(Constants.UNIT_VALUE.ContainsKey(UnitType.ARCHERY));
+			Assert.IsTrue(Constants.UNIT_VALUE.ContainsKey(UnitType.TOWER));
 		}
 
 		/// <summary>
@@ -108,6 +110,26 @@ namespace GameManager.Tests
 		}
 
 		/// <summary>
+		/// LANCER has unit value 5 (same as ARCHER).
+		/// </summary>
+		[Test]
+		public void UnitValue_Lancer_IsFive()
+		{
+			Assert.AreEqual(5, Constants.UNIT_VALUE[UnitType.LANCER],
+				"LANCER should have UNIT_VALUE = 5");
+		}
+
+		/// <summary>
+		/// TOWER has unit value 3 (same as BARRACKS and ARCHERY).
+		/// </summary>
+		[Test]
+		public void UnitValue_Tower_IsThree()
+		{
+			Assert.AreEqual(3, Constants.UNIT_VALUE[UnitType.TOWER],
+				"TOWER should have UNIT_VALUE = 3");
+		}
+
+		/// <summary>
 		/// MINE has unit value 0 (it is a neutral resource node, not owned).
 		/// </summary>
 		[Test]
@@ -130,6 +152,17 @@ namespace GameManager.Tests
 			Assert.Greater(Constants.UNIT_VALUE[UnitType.ARCHER],
 				Constants.UNIT_VALUE[UnitType.WARRIOR],
 				"ARCHER should be worth more than WARRIOR");
+		}
+
+		/// <summary>
+		/// LANCER and ARCHER have equal value.
+		/// </summary>
+		[Test]
+		public void UnitValue_LancerEqualsArcher()
+		{
+			Assert.AreEqual(Constants.UNIT_VALUE[UnitType.LANCER],
+				Constants.UNIT_VALUE[UnitType.ARCHER],
+				"LANCER and ARCHER should have equal value");
 		}
 
 		/// <summary>

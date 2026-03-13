@@ -6,7 +6,7 @@ namespace GameManager.Tests
 	/// <summary>
 	/// Tests that all capability dictionaries (CAN_MOVE, CAN_BUILD, CAN_TRAIN,
 	/// CAN_ATTACK, CAN_GATHER) are complete — containing an entry for every
-	/// one of the 7 unit types.
+	/// one of the 9 unit types.
 	/// Complements ConstantsCapabilityTests which verifies individual values
 	/// but does not check dictionary completeness.
 	/// </summary>
@@ -15,19 +15,20 @@ namespace GameManager.Tests
 	{
 		private static readonly UnitType[] AllUnitTypes = {
 			UnitType.MINE, UnitType.PAWN, UnitType.WARRIOR,
-			UnitType.ARCHER, UnitType.BASE, UnitType.BARRACKS, UnitType.ARCHERY
+			UnitType.ARCHER, UnitType.LANCER, UnitType.BASE,
+			UnitType.BARRACKS, UnitType.ARCHERY, UnitType.TOWER
 		};
 
 		#region CAN_MOVE Completeness
 
 		/// <summary>
-		/// CAN_MOVE has an entry for every unit type (7 entries).
+		/// CAN_MOVE has an entry for every unit type (9 entries).
 		/// </summary>
 		[Test]
-		public void CanMove_HasAllSevenUnitTypes()
+		public void CanMove_HasAllNineUnitTypes()
 		{
-			Assert.AreEqual(7, Constants.CAN_MOVE.Count,
-				"CAN_MOVE should have 7 entries");
+			Assert.AreEqual(9, Constants.CAN_MOVE.Count,
+				"CAN_MOVE should have 9 entries");
 			foreach (var type in AllUnitTypes)
 				Assert.IsTrue(Constants.CAN_MOVE.ContainsKey(type),
 					$"CAN_MOVE missing key: {type}");
@@ -38,13 +39,13 @@ namespace GameManager.Tests
 		#region CAN_BUILD Completeness
 
 		/// <summary>
-		/// CAN_BUILD has an entry for every unit type.
+		/// CAN_BUILD has an entry for every unit type (9 entries).
 		/// </summary>
 		[Test]
-		public void CanBuild_HasAllSevenUnitTypes()
+		public void CanBuild_HasAllNineUnitTypes()
 		{
-			Assert.AreEqual(7, Constants.CAN_BUILD.Count,
-				"CAN_BUILD should have 7 entries");
+			Assert.AreEqual(9, Constants.CAN_BUILD.Count,
+				"CAN_BUILD should have 9 entries");
 			foreach (var type in AllUnitTypes)
 				Assert.IsTrue(Constants.CAN_BUILD.ContainsKey(type),
 					$"CAN_BUILD missing key: {type}");
@@ -55,13 +56,13 @@ namespace GameManager.Tests
 		#region CAN_TRAIN Completeness
 
 		/// <summary>
-		/// CAN_TRAIN has an entry for every unit type.
+		/// CAN_TRAIN has an entry for every unit type (9 entries).
 		/// </summary>
 		[Test]
-		public void CanTrain_HasAllSevenUnitTypes()
+		public void CanTrain_HasAllNineUnitTypes()
 		{
-			Assert.AreEqual(7, Constants.CAN_TRAIN.Count,
-				"CAN_TRAIN should have 7 entries");
+			Assert.AreEqual(9, Constants.CAN_TRAIN.Count,
+				"CAN_TRAIN should have 9 entries");
 			foreach (var type in AllUnitTypes)
 				Assert.IsTrue(Constants.CAN_TRAIN.ContainsKey(type),
 					$"CAN_TRAIN missing key: {type}");
@@ -72,13 +73,13 @@ namespace GameManager.Tests
 		#region CAN_ATTACK Completeness
 
 		/// <summary>
-		/// CAN_ATTACK has an entry for every unit type.
+		/// CAN_ATTACK has an entry for every unit type (9 entries).
 		/// </summary>
 		[Test]
-		public void CanAttack_HasAllSevenUnitTypes()
+		public void CanAttack_HasAllNineUnitTypes()
 		{
-			Assert.AreEqual(7, Constants.CAN_ATTACK.Count,
-				"CAN_ATTACK should have 7 entries");
+			Assert.AreEqual(9, Constants.CAN_ATTACK.Count,
+				"CAN_ATTACK should have 9 entries");
 			foreach (var type in AllUnitTypes)
 				Assert.IsTrue(Constants.CAN_ATTACK.ContainsKey(type),
 					$"CAN_ATTACK missing key: {type}");
@@ -89,13 +90,13 @@ namespace GameManager.Tests
 		#region CAN_GATHER Completeness
 
 		/// <summary>
-		/// CAN_GATHER has an entry for every unit type.
+		/// CAN_GATHER has an entry for every unit type (9 entries).
 		/// </summary>
 		[Test]
-		public void CanGather_HasAllSevenUnitTypes()
+		public void CanGather_HasAllNineUnitTypes()
 		{
-			Assert.AreEqual(7, Constants.CAN_GATHER.Count,
-				"CAN_GATHER should have 7 entries");
+			Assert.AreEqual(9, Constants.CAN_GATHER.Count,
+				"CAN_GATHER should have 9 entries");
 			foreach (var type in AllUnitTypes)
 				Assert.IsTrue(Constants.CAN_GATHER.ContainsKey(type),
 					$"CAN_GATHER missing key: {type}");

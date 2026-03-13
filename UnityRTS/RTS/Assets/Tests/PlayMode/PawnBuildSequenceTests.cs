@@ -26,7 +26,7 @@ namespace GameManager.Tests.PlayMode
 			Agent agent = GetAgent0();
 			Vector3Int basePos = new Vector3Int(10, 10, 0);
 			Vector3Int pawnPos = new Vector3Int(9, 10, 0);
-			Vector3Int barracksPos = new Vector3Int(14, 10, 0);
+			Vector3Int barracksPos = new Vector3Int(17, 10, 0);
 
 			// Give agent enough gold for both structures
 			agent.Gold = (int)(Constants.COST[UnitType.BASE] + Constants.COST[UnitType.BARRACKS] + 10);

@@ -191,8 +191,8 @@ namespace GameManager.Tests
 				"GameOverUI Canvas should be enabled after declaring a winner");
 			Assert.AreEqual("1", blueScoreText.text,
 				"BlueScoreText should show 1 after the first blue win");
-			Assert.AreEqual(1, GetGameStateInt(),
-				"gameState should be SHOWING_WINNER (1)");
+			Assert.AreEqual(2, GetGameStateInt(),
+				"gameState should be SHOWING_WINNER (2)");
 			Assert.AreEqual(1.5f, GetTimeToDisplayBanner(), 0.001f,
 				"TimeToDisplayBanner should be set to 1.5f");
 		}
@@ -222,8 +222,8 @@ namespace GameManager.Tests
 				"GameOverUI Canvas should be enabled after declaring a winner");
 			Assert.AreEqual("1", redScoreText.text,
 				"RedScoreText should show 1 after the first red win");
-			Assert.AreEqual(1, GetGameStateInt(),
-				"gameState should be SHOWING_WINNER (1)");
+			Assert.AreEqual(2, GetGameStateInt(),
+				"gameState should be SHOWING_WINNER (2)");
 		}
 	}
 }

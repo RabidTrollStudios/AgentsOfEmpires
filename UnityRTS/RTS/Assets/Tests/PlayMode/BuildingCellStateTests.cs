@@ -41,11 +41,12 @@ namespace GameManager.Tests.PlayMode
 		}
 
 		/// <summary>
-		/// A pawn that has started building occupies the target area, preventing
-		/// a second pawn from issuing the same build command.
+		/// When a building is already under construction, a second pawn issuing a build
+		/// at the same position resumes the existing building (multi-builder), not
+		/// placing a duplicate. No additional gold is deducted.
 		/// </summary>
 		[UnityTest]
-		public IEnumerator TwoPawnsAtSamePos_SecondBuildRejected()
+		public IEnumerator TwoPawnsAtSamePos_SecondPawnResumesExisting()
 		{
 			Vector3Int buildPos = new Vector3Int(10, 10, 0);
 			Agent agent = GetAgent0();
@@ -62,11 +63,11 @@ namespace GameManager.Tests.PlayMode
 			int goldBeforeSecond = agent.Gold;
 			w2.StartBuilding(new BuildEventArgs(w2, buildPos, UnitType.BASE));
 
-			// Second build at same position should be rejected
-			Assert.AreNotEqual(UnitAction.BUILD, w2.CurrentAction,
-				"Second pawn should NOT be able to build at an already-occupied position");
+			// Second pawn should join the existing build (resume), not place a new building
+			Assert.AreEqual(UnitAction.BUILD, w2.CurrentAction,
+				"Second pawn should resume the in-progress building");
 			Assert.AreEqual(goldBeforeSecond, agent.Gold,
-				"Gold should not be deducted for the rejected second build");
+				"Gold should not be deducted when resuming an existing build");
 		}
 
 		#endregion

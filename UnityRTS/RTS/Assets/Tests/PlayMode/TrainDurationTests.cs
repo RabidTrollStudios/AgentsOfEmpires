@@ -72,15 +72,15 @@ namespace GameManager.Tests.PlayMode
 		[UnityTest]
 		public IEnumerator TrainArcher_CompletesWithinTimeBound()
 		{
-			Unit barracks = PlaceUnit(UnitType.BARRACKS, new Vector3Int(10, 10, 0));
-			barracks.IsBuilt = true;
+			Unit archery = PlaceUnit(UnitType.ARCHERY, new Vector3Int(10, 10, 0));
+			archery.IsBuilt = true;
 
 			float startTime = Time.time;
-			barracks.StartTraining(new TrainEventArgs(barracks, UnitType.ARCHER));
-			Assert.AreEqual(UnitAction.TRAIN, barracks.CurrentAction);
+			archery.StartTraining(new TrainEventArgs(archery, UnitType.ARCHER));
+			Assert.AreEqual(UnitAction.TRAIN, archery.CurrentAction);
 
 			yield return WaitUntil(
-				() => barracks.CurrentAction == UnitAction.IDLE,
+				() => archery.CurrentAction == UnitAction.IDLE,
 				timeoutSeconds: 60f,
 				failMessage: "ARCHER training did not complete within 60s");
 

@@ -31,15 +31,15 @@ namespace GameManager.Tests
 		#region GetGridPositionsNearUnit
 
 		/// <summary>
-		/// A BASE at an interior position has 20 perimeter neighbors.
-		/// The formula: 2*(size.x+2) + 2*size.y = 2*(4+2) + 2*4 = 20.
+		/// A BASE at an interior position has 24 perimeter neighbors.
+		/// The formula: 2*(size.x+2) + 2*size.y = 2*(6+2) + 2*4 = 24.
 		/// </summary>
 		[Test]
-		public void GetGridPositionsNearUnit_Base_Interior_Returns20()
+		public void GetGridPositionsNearUnit_Base_Interior_Returns24()
 		{
 			var positions = manager.GetGridPositionsNearUnit(UnitType.BASE, new Vector3Int(5, 5, 0));
-			Assert.AreEqual(20, positions.Count,
-				"BASE at (5,5) should have 20 perimeter cells (all within 20x20 map)");
+			Assert.AreEqual(24, positions.Count,
+				"BASE at (5,5) should have 24 perimeter cells (all within 20x20 map)");
 		}
 
 		/// <summary>
@@ -72,15 +72,15 @@ namespace GameManager.Tests
 		}
 
 		/// <summary>
-		/// A 3x3 BASE clipped by the map boundary should have fewer than 16 neighbors.
+		/// A 6x4 BASE clipped by the map boundary should have fewer than 24 neighbors.
 		/// </summary>
 		[Test]
-		public void GetGridPositionsNearUnit_Base3x3_AtEdge_FewerNeighbors()
+		public void GetGridPositionsNearUnit_Base6x4_AtEdge_FewerNeighbors()
 		{
 			// BASE at (0,5): left edge clips columns at x=-1, reducing count
 			var positions = manager.GetGridPositionsNearUnit(UnitType.BASE, new Vector3Int(0, 5, 0));
-			Assert.Less(positions.Count, 16,
-				"3x3 BASE at left edge should have fewer than 16 valid perimeter cells");
+			Assert.Less(positions.Count, 24,
+				"6x4 BASE at left edge should have fewer than 24 valid perimeter cells");
 		}
 
 		/// <summary>
@@ -111,7 +111,7 @@ namespace GameManager.Tests
 		#region GetBuildableGridPositionsNearUnit
 
 		/// <summary>
-		/// On a fully open map all perimeter cells of a 3x3 BASE are buildable.
+		/// On a fully open map all perimeter cells of a 6x4 BASE are buildable.
 		/// </summary>
 		[Test]
 		public void GetBuildableGridPositionsNearUnit_OpenMap_EqualsAll()
@@ -199,19 +199,19 @@ namespace GameManager.Tests
 
 		/// <summary>
 		/// Cells adjacent to any side of a BASE are neighbors.
-		/// BASE footprint at (5,5): x=[5,8], y=[2,5] (4x4).
+		/// BASE footprint at (5,5): x=[5,10], y=[2,5] (6x4).
 		/// </summary>
 		[Test]
 		public void IsNeighborOfUnit_Base_VariousSides_AllTrue()
 		{
 			var basePos = new Vector3Int(5, 5, 0);
-			// Cells just outside each side of the 4x4 footprint
+			// Cells just outside each side of the 6x4 footprint
 			var testCells = new[]
 			{
 				new Vector3Int(5, 6, 0),   // north of top row  (y=6 > top y=5)
 				new Vector3Int(5, 1, 0),   // south of bottom row (y=1 < bottom y=2)
 				new Vector3Int(4, 5, 0),   // west of leftmost col (x=4 < left x=5)
-				new Vector3Int(9, 5, 0),   // east of rightmost col (x=9 > right x=8)
+				new Vector3Int(11, 5, 0),  // east of rightmost col (x=11 > right x=10)
 			};
 
 			foreach (var cell in testCells)

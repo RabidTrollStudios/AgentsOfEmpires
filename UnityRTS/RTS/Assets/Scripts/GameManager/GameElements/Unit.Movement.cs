@@ -24,7 +24,7 @@ namespace GameManager.GameElements
 		{
 			UpdateAnimation();
 
-			if (!GameManager.Instance.IsPlaying) return;
+			if (GameManager.Instance == null || !GameManager.Instance.IsPlaying) return;
 
 			MineUnit = GameManager.Instance.Units.GetUnit(mineUnit);
 			BaseUnit = GameManager.Instance.Units.GetUnit(baseUnit);
@@ -121,6 +121,8 @@ namespace GameManager.GameElements
 		/// </summary>
 		internal void LateUpdate()
 		{
+			if (GameManager.Instance == null) return;
+
 			UpdateStateColor();
 			UpdateHealthBar();
 			UpdateTrainingBar();
@@ -573,6 +575,7 @@ namespace GameManager.GameElements
 			// State names in the controller follow the pattern: "Lancer_<Suffix>_<Color>"
 			// or "Lancer_ <Suffix>_<Color>" (with a space after underscore — asset pack quirk).
 			// Animator.StringToHash uses the short state name (m_Name in the controller).
+			if (animator == null || animator.runtimeAnimatorController == null) return;
 			var clips = animator.runtimeAnimatorController.animationClips;
 			for (int i = 0; i < LancerStateSuffixes.Length; i++)
 			{
@@ -670,7 +673,7 @@ namespace GameManager.GameElements
 
 		internal void FixedUpdate()
 		{
-			if (!GameManager.Instance.IsPlaying) return;
+			if (GameManager.Instance == null || !GameManager.Instance.IsPlaying) return;
 
 			// If we have a path, move along it
 			if (path.Count > 0)
@@ -805,7 +808,9 @@ namespace GameManager.GameElements
 		private void UpdateDebuggingInfo()
 		{
 			// Enable/disable debugging
-			gameObject.GetComponentInChildren<Canvas>().enabled = HasDebugging;
+			var canvas = gameObject.GetComponentInChildren<Canvas>();
+			if (canvas == null) return;
+			canvas.enabled = HasDebugging;
 			if (HasDebugging)
 			{
 				var textAreas = gameObject.GetComponentsInChildren<Text>().ToList();

@@ -102,26 +102,26 @@ namespace GameManager.Tests.PlayMode
 
 		#endregion
 
-		#region ARCHER Spawn from BARRACKS
+		#region ARCHER Spawn from ARCHERY
 
 		/// <summary>
-		/// BARRACKS can train an ARCHER; the ARCHER appears in UnitManager after training.
+		/// ARCHERY can train an ARCHER; the ARCHER appears in UnitManager after training.
 		/// </summary>
 		[UnityTest]
 		public IEnumerator TrainedArcher_AppearsInUnitManager()
 		{
-			Unit barracks = PlaceUnit(UnitType.BARRACKS, new Vector3Int(10, 10, 0));
-			barracks.IsBuilt = true;
+			Unit archery = PlaceUnit(UnitType.ARCHERY, new Vector3Int(10, 10, 0));
+			archery.IsBuilt = true;
 
 			int archersBefore = ctx.UnitManager.GetUnitNbrsOfType(UnitType.ARCHER).Count;
 
-			barracks.StartTraining(new TrainEventArgs(barracks, UnitType.ARCHER));
-			Assert.AreEqual(UnitAction.TRAIN, barracks.CurrentAction);
+			archery.StartTraining(new TrainEventArgs(archery, UnitType.ARCHER));
+			Assert.AreEqual(UnitAction.TRAIN, archery.CurrentAction);
 
 			yield return WaitUntil(
-				() => barracks.CurrentAction == UnitAction.IDLE,
+				() => archery.CurrentAction == UnitAction.IDLE,
 				timeoutSeconds: 30f,
-				failMessage: "BARRACKS did not complete ARCHER training");
+				failMessage: "ARCHERY did not complete ARCHER training");
 
 			int archersAfter = ctx.UnitManager.GetUnitNbrsOfType(UnitType.ARCHER).Count;
 			Assert.Greater(archersAfter, archersBefore,

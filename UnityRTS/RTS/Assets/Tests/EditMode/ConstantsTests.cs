@@ -17,7 +17,8 @@ namespace GameManager.Tests
 		[Test]
 		public void Speed1_PawnMovingSpeed()
 		{
-			Assert.AreEqual(0.1f, Constants.MOVING_SPEED[UnitType.PAWN], 0.001f);
+			// BASE_MOVE_SPEED = 0.05f, so at GAME_SPEED=1: 1 * 0.05 = 0.05
+			Assert.AreEqual(0.05f, Constants.MOVING_SPEED[UnitType.PAWN], 0.001f);
 		}
 
 		[Test]
@@ -25,7 +26,8 @@ namespace GameManager.Tests
 		{
 			Constants.GAME_SPEED = 5;
 			Constants.CalculateGameConstants();
-			Assert.AreEqual(0.5f, Constants.MOVING_SPEED[UnitType.PAWN], 0.001f);
+			// 5 * 0.05 = 0.25
+			Assert.AreEqual(0.25f, Constants.MOVING_SPEED[UnitType.PAWN], 0.001f);
 		}
 
 		[Test]
@@ -41,7 +43,8 @@ namespace GameManager.Tests
 		[Test]
 		public void Speed1_WarriorDamage()
 		{
-			Assert.AreEqual(48.0f, Constants.DAMAGE[UnitType.WARRIOR], 0.001f);
+			// BASE_DAMAGE[WARRIOR] = 50f, SCALAR_DAMAGE = GAME_SPEED = 1
+			Assert.AreEqual(50.0f, Constants.DAMAGE[UnitType.WARRIOR], 0.001f);
 		}
 
 		[Test]
@@ -49,7 +52,8 @@ namespace GameManager.Tests
 		{
 			Constants.GAME_SPEED = 3;
 			Constants.CalculateGameConstants();
-			Assert.AreEqual(144.0f, Constants.DAMAGE[UnitType.WARRIOR], 0.001f);
+			// 50 * 3 = 150
+			Assert.AreEqual(150.0f, Constants.DAMAGE[UnitType.WARRIOR], 0.001f);
 		}
 
 		[Test]
@@ -59,6 +63,7 @@ namespace GameManager.Tests
 			Assert.AreEqual(0.0f, Constants.MOVING_SPEED[UnitType.BASE]);
 			Assert.AreEqual(0.0f, Constants.MOVING_SPEED[UnitType.BARRACKS]);
 			Assert.AreEqual(0.0f, Constants.MOVING_SPEED[UnitType.ARCHERY]);
+			Assert.AreEqual(0.0f, Constants.MOVING_SPEED[UnitType.TOWER]);
 		}
 
 		[Test]
@@ -69,6 +74,7 @@ namespace GameManager.Tests
 			Assert.AreEqual(0.0f, Constants.DAMAGE[UnitType.BASE]);
 			Assert.AreEqual(0.0f, Constants.DAMAGE[UnitType.BARRACKS]);
 			Assert.AreEqual(0.0f, Constants.DAMAGE[UnitType.ARCHERY]);
+			Assert.AreEqual(0.0f, Constants.DAMAGE[UnitType.TOWER]);
 		}
 
 		[Test]
