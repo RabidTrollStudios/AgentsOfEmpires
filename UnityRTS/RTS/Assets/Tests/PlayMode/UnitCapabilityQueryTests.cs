@@ -89,10 +89,10 @@ namespace GameManager.Tests.PlayMode
 		public IEnumerator CenterGridPosition_3x3Building_IsOffsetByOne()
 		{
 			var pos      = new Vector3Int(5, 15, 0);
-			var baseUnit = PlaceUnit(UnitType.BASE, pos);
+			var barracks = PlaceUnit(UnitType.BARRACKS, pos);
 			var expected = new Vector3Int(pos.x + 1, pos.y - 1, 0);
 
-			Assert.AreEqual(expected, baseUnit.CenterGridPosition,
+			Assert.AreEqual(expected, barracks.CenterGridPosition,
 				"3×3 building CenterGridPosition should be GridPosition + (1,−1)");
 			yield return null;
 		}

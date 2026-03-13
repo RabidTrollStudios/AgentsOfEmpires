@@ -63,9 +63,9 @@ namespace GameManager.Tests.PlayMode
 			// Place an obstacle building in the direct horizontal path
 			Unit obstacle = MovementTestHelper.PlaceObstacle(ctx, new Vector3Int(10, 5, 0));
 
-			// Pawn on left side of obstacle, destination on right side
+			// Pawn on left side of obstacle, destination on right side (BASE is 6x4, occupies x:10-15)
 			Unit pawn = PlaceUnit(UnitType.PAWN, new Vector3Int(7, 5, 0));
-			pawn.StartMoving(new MoveEventArgs(pawn, pawn.UnitType, new Vector3Int(14, 5, 0)));
+			pawn.StartMoving(new MoveEventArgs(pawn, pawn.UnitType, new Vector3Int(17, 5, 0)));
 
 			Assert.AreEqual(UnitAction.MOVE, pawn.CurrentAction,
 				"Pawn should accept the move command");

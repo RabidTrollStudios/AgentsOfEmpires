@@ -38,19 +38,19 @@ namespace GameManager.Tests
 		}
 
 		[Test]
-		public void IsAreaBuildable_Base3x3_FullyOpen_True()
+		public void IsAreaBuildable_Base6x4_FullyOpen_True()
 		{
-			// BASE is 3x3. Position (5,5) means cells (5,5), (6,5), (7,5), (5,4), (6,4), (7,4), (5,3), (6,3), (7,3)
+			// BASE is 6x4. Position (2,5) means cells x=[2,7], y=[2,5]
 			// using the pattern gridPosition + (i, -j) for i in [0,size.x), j in [0,size.y)
-			Assert.IsTrue(manager.IsAreaBuildable(UnitType.BASE, new Vector3Int(5, 5, 0)));
+			Assert.IsTrue(manager.IsAreaBuildable(UnitType.BASE, new Vector3Int(2, 5, 0)));
 		}
 
 		[Test]
-		public void IsAreaBuildable_Base3x3_PartiallyBlocked_False()
+		public void IsAreaBuildable_Base6x4_PartiallyBlocked_False()
 		{
-			// Block one cell within the BASE footprint: (6, 4) is at offset (1, -1) from (5, 5)
-			var (mgr, go) = MapManagerTestHelper.Build(10, 10, new (int, int)[] { (6, 4) });
-			Assert.IsFalse(mgr.IsAreaBuildable(UnitType.BASE, new Vector3Int(5, 5, 0)));
+			// Block one cell within the BASE footprint: (3, 4) is at offset (1, -1) from (2, 5)
+			var (mgr, go) = MapManagerTestHelper.Build(10, 10, new (int, int)[] { (3, 4) });
+			Assert.IsFalse(mgr.IsAreaBuildable(UnitType.BASE, new Vector3Int(2, 5, 0)));
 			Object.DestroyImmediate(go);
 		}
 
@@ -71,8 +71,8 @@ namespace GameManager.Tests
 		[Test]
 		public void IsAreaBuildable_BaseOverlapsEdge_False()
 		{
-			// BASE at (8, 9) — extends to x=10 which is out of bounds on a 10-wide map
-			Assert.IsFalse(manager.IsAreaBuildable(UnitType.BASE, new Vector3Int(8, 9, 0)));
+			// BASE is 6x4. At (5, 9) extends to x=10 which is out of bounds on a 10-wide map
+			Assert.IsFalse(manager.IsAreaBuildable(UnitType.BASE, new Vector3Int(5, 9, 0)));
 		}
 
 		[Test]
@@ -103,20 +103,20 @@ namespace GameManager.Tests
 		[Test]
 		public void SetAreaBuildability_Building_WalkableFalse()
 		{
-			// BASE is immobile — both buildable and walkable should be false
-			manager.SetAreaBuildability(UnitType.BASE, new Vector3Int(5, 5, 0), false);
-			Assert.IsFalse(manager.IsGridPositionBuildable(new Vector3Int(5, 5, 0)));
-			Assert.IsFalse(manager.IsGridPositionWalkable(new Vector3Int(5, 5, 0)));
+			// BASE is immobile (6x4) — both buildable and walkable should be false
+			manager.SetAreaBuildability(UnitType.BASE, new Vector3Int(2, 5, 0), false);
+			Assert.IsFalse(manager.IsGridPositionBuildable(new Vector3Int(2, 5, 0)));
+			Assert.IsFalse(manager.IsGridPositionWalkable(new Vector3Int(2, 5, 0)));
 		}
 
 		[Test]
 		public void SetAreaBuildability_Restore_BothTrue()
 		{
 			// Set then restore
-			manager.SetAreaBuildability(UnitType.BASE, new Vector3Int(5, 5, 0), false);
-			manager.SetAreaBuildability(UnitType.BASE, new Vector3Int(5, 5, 0), true);
-			Assert.IsTrue(manager.IsGridPositionBuildable(new Vector3Int(5, 5, 0)));
-			Assert.IsTrue(manager.IsGridPositionWalkable(new Vector3Int(5, 5, 0)));
+			manager.SetAreaBuildability(UnitType.BASE, new Vector3Int(2, 5, 0), false);
+			manager.SetAreaBuildability(UnitType.BASE, new Vector3Int(2, 5, 0), true);
+			Assert.IsTrue(manager.IsGridPositionBuildable(new Vector3Int(2, 5, 0)));
+			Assert.IsTrue(manager.IsGridPositionWalkable(new Vector3Int(2, 5, 0)));
 		}
 
 		[Test]

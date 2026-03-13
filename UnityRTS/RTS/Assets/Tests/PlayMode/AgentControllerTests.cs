@@ -91,8 +91,8 @@ namespace GameManager.Tests.PlayMode
 
 			var updaters = GetPrivateField<Dictionary<string, Func<string>>>(
 				controller, "_debugUpdaters");
-			Assert.AreEqual(10, updaters.Count,
-				"InitializeAgent should populate exactly 10 debug updater entries");
+			Assert.AreEqual(12, updaters.Count,
+				"InitializeAgent should populate exactly 12 debug updater entries");
 
 			yield return null;
 		}

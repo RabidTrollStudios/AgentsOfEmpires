@@ -1,4 +1,5 @@
 using System.Reflection;
+using AgentSDK;
 using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.UI;
@@ -78,6 +79,32 @@ namespace GameManager.Tests
 			Constants.GAME_SPEED = 2;
 			bool wouldDecrement = Constants.GAME_SPEED > 1;
 			Assert.IsTrue(wouldDecrement, "Speed above 1 should pass the decrement guard");
+		}
+
+		// ── Speed relationships after CalculateGameConstants ─────────────────
+
+		[Test]
+		public void MovingSpeed_LancerFasterThanWarriorAndArcher()
+		{
+			Constants.GAME_SPEED = 20;
+			Constants.CalculateGameConstants();
+
+			Assert.Greater(Constants.MOVING_SPEED[UnitType.LANCER],
+				Constants.MOVING_SPEED[UnitType.WARRIOR],
+				"LANCER should move faster than WARRIOR");
+			Assert.Greater(Constants.MOVING_SPEED[UnitType.LANCER],
+				Constants.MOVING_SPEED[UnitType.ARCHER],
+				"LANCER should move faster than ARCHER");
+		}
+
+		[Test]
+		public void MovingSpeed_TowerIsZero()
+		{
+			Constants.GAME_SPEED = 20;
+			Constants.CalculateGameConstants();
+
+			Assert.AreEqual(0f, Constants.MOVING_SPEED[UnitType.TOWER], 0.001f,
+				"TOWER should have zero movement speed");
 		}
 
 		// ── UpdateCustomDebugUI edge cases ────────────────────────────────────

@@ -99,8 +99,14 @@ namespace GameManager.Tests.PlayMode
 			SetPrivateField(gm, "mapManager", ctx.MapManager);
 			SetPrivateField(gm, "unitManager", ctx.UnitManager);
 			SetPrivateField(gm, "eventDispatcher", eventDispatcher);
+			SetPrivateField(gm, "Prefabs", prefabs);
 
-			// 7. Create test agents
+			// 7. Set gameState to PLAYING so Unit.FixedUpdate (which checks IsPlaying) doesn't NRE
+			var gameStateField = typeof(GameManager).GetField("gameState",
+				BindingFlags.NonPublic | BindingFlags.Instance);
+			gameStateField.SetValue(gm, System.Enum.ToObject(gameStateField.FieldType, 1)); // PLAYING = 1
+
+			// 8. Create test agents
 			ctx.Agent0Go = CreateTestAgent(ctx, 0, "TestPlayer0", unitPrefabMap);
 			ctx.Agent1Go = CreateTestAgent(ctx, 1, "TestPlayer1", unitPrefabMap);
 
@@ -128,10 +134,8 @@ namespace GameManager.Tests.PlayMode
 			if (ctx.Agent1Go != null) Object.Destroy(ctx.Agent1Go);
 			if (ctx.GameManagerGo != null) Object.Destroy(ctx.GameManagerGo);
 
-			// Clear the singleton so the next test gets a fresh instance
-			typeof(GameManager)
-				.GetField("instance", BindingFlags.NonPublic | BindingFlags.Static)
-				.SetValue(null, null);
+			// Singleton is cleared in PlayModeTestBase.TearDown after yield return null
+			// so that units are destroyed before the singleton is nulled.
 		}
 
 		/// <summary>

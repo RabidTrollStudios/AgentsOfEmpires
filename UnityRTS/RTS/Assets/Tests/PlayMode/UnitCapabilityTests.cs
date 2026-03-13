@@ -58,6 +58,27 @@ namespace GameManager.Tests.PlayMode
 			yield return null;
 		}
 
+		/// <summary>
+		/// TOWER is not a combatant; an attack command should be ignored.
+		/// </summary>
+		[UnityTest]
+		public IEnumerator Tower_CannotAttack_CommandIgnored()
+		{
+			Unit tower = PlaceUnit(UnitType.TOWER, new Vector3Int(10, 10, 0));
+			tower.IsBuilt = true;
+			Unit enemy = PlaceUnit(UnitType.PAWN, new Vector3Int(11, 10, 0), ctx.Agent1Go);
+			float healthBefore = enemy.Health;
+
+			tower.StartAttacking(new AttackEventArgs(tower, enemy));
+
+			Assert.AreNotEqual(UnitAction.ATTACK, tower.CurrentAction,
+				"TOWER should not be able to attack");
+			Assert.AreEqual(healthBefore, enemy.Health,
+				"Enemy health should not change when TOWER tries to attack");
+
+			yield return null;
+		}
+
 		#endregion
 
 		#region Build Capability
@@ -96,6 +117,25 @@ namespace GameManager.Tests.PlayMode
 
 			Assert.AreNotEqual(UnitAction.BUILD, archer.CurrentAction,
 				"ARCHER should not be able to build");
+			Assert.AreEqual(goldBefore, agent.Gold);
+
+			yield return null;
+		}
+
+		/// <summary>
+		/// LANCER cannot build — build command is rejected.
+		/// </summary>
+		[UnityTest]
+		public IEnumerator Lancer_CannotBuild_CommandRejected()
+		{
+			Unit lancer = PlaceUnit(UnitType.LANCER, new Vector3Int(9, 10, 0));
+			Agent agent = GetAgent0();
+			int goldBefore = agent.Gold;
+
+			lancer.StartBuilding(new BuildEventArgs(lancer, new Vector3Int(10, 10, 0), UnitType.BASE));
+
+			Assert.AreNotEqual(UnitAction.BUILD, lancer.CurrentAction,
+				"LANCER should not be able to build");
 			Assert.AreEqual(goldBefore, agent.Gold);
 
 			yield return null;
@@ -143,6 +183,25 @@ namespace GameManager.Tests.PlayMode
 			yield return null;
 		}
 
+		/// <summary>
+		/// LANCER cannot train units.
+		/// </summary>
+		[UnityTest]
+		public IEnumerator Lancer_CannotTrain_CommandRejected()
+		{
+			Unit lancer = PlaceUnit(UnitType.LANCER, new Vector3Int(10, 10, 0));
+			Agent agent = GetAgent0();
+			int goldBefore = agent.Gold;
+
+			lancer.StartTraining(new TrainEventArgs(lancer, UnitType.LANCER));
+
+			Assert.AreNotEqual(UnitAction.TRAIN, lancer.CurrentAction,
+				"LANCER should not be able to train units");
+			Assert.AreEqual(goldBefore, agent.Gold);
+
+			yield return null;
+		}
+
 		#endregion
 
 		#region Gather Capability
@@ -185,6 +244,25 @@ namespace GameManager.Tests.PlayMode
 			yield return null;
 		}
 
+		/// <summary>
+		/// LANCER cannot gather resources.
+		/// </summary>
+		[UnityTest]
+		public IEnumerator Lancer_CannotGather_CommandRejected()
+		{
+			Unit lancer = PlaceUnit(UnitType.LANCER, new Vector3Int(10, 10, 0));
+			Unit mine = PlaceUnit(UnitType.MINE, new Vector3Int(15, 10, 0));
+			Unit baseUnit = PlaceUnit(UnitType.BASE, new Vector3Int(5, 10, 0));
+			baseUnit.IsBuilt = true;
+
+			lancer.StartGathering(new GatherEventArgs(lancer, mine, baseUnit));
+
+			Assert.AreNotEqual(UnitAction.GATHER, lancer.CurrentAction,
+				"LANCER should not be able to gather resources");
+
+			yield return null;
+		}
+
 		#endregion
 
 		#region Move Capability
@@ -221,6 +299,25 @@ namespace GameManager.Tests.PlayMode
 
 			Assert.AreNotEqual(UnitAction.MOVE, mine.CurrentAction,
 				"MINE should not be able to move");
+
+			yield return null;
+		}
+
+		/// <summary>
+		/// TOWER is immobile — move command is rejected.
+		/// </summary>
+		[UnityTest]
+		public IEnumerator Tower_CannotMove_CommandRejected()
+		{
+			var towerPos = new Vector3Int(10, 10, 0);
+			Unit tower = PlaceUnit(UnitType.TOWER, towerPos);
+
+			tower.StartMoving(new MoveEventArgs(tower, UnitType.TOWER, new Vector3Int(15, 15, 0)));
+
+			Assert.AreNotEqual(UnitAction.MOVE, tower.CurrentAction,
+				"TOWER should not be able to move");
+			Assert.AreEqual(towerPos, tower.GridPosition,
+				"TOWER should remain at its original position");
 
 			yield return null;
 		}

@@ -124,13 +124,13 @@ namespace GameManager.Tests.PlayMode
 		[UnityTest]
 		public IEnumerator BuildNearMapEdge_FitsWithinBounds()
 		{
-			Vector3Int pawnPos = new Vector3Int(24, 4, 0);
-			Vector3Int buildPos  = new Vector3Int(25, 4, 0);
+			Vector3Int pawnPos = new Vector3Int(22, 6, 0);
+			Vector3Int buildPos  = new Vector3Int(23, 6, 0);
 			Unit pawn = PlaceUnit(UnitType.PAWN, pawnPos);
 
 			var exclusion = new HashSet<Vector3Int> { pawnPos };
 			Assert.IsTrue(ctx.MapManager.IsAreaBuildable(UnitType.BASE, buildPos, exclusion),
-				"4x4 area at (25,4) should be buildable within 30x30 map");
+				"6x4 area at (23,6) should be buildable within 30x30 map");
 
 			pawn.StartBuilding(new BuildEventArgs(pawn, buildPos, UnitType.BASE));
 
