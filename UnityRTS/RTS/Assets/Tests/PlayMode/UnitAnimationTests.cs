@@ -314,7 +314,8 @@ namespace GameManager.Tests.PlayMode
 		{
 			Unit baseUnit = BuildingTestHelper.PlaceBuiltBase(ctx, new Vector3Int(0, 5, 0));
 			Unit mine = PlaceUnit(UnitType.MINE, new Vector3Int(15, 15, 0));
-			Unit pawn = PlaceUnit(UnitType.PAWN, new Vector3Int(5, 5, 0));
+			// Pawn must be outside the BASE footprint (6x4: x=[0,5], y=[2,5])
+			Unit pawn = PlaceUnit(UnitType.PAWN, new Vector3Int(8, 10, 0));
 			VisualTestHelper.SetupPawnAnimator(pawn);
 			yield return null;
 

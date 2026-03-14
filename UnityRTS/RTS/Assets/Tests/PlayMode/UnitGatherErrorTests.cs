@@ -33,8 +33,9 @@ namespace GameManager.Tests.PlayMode
 		public IEnumerator Gather_MineDestroyedMidTrip_PawnGoesIdle()
 		{
 			Unit baseUnit = PlaceBuiltBase(new Vector3Int(5, 5, 0));
-			Unit mine     = PlaceUnit(UnitType.MINE,   new Vector3Int(15, 5, 0));
-			Unit pawn   = PlaceUnit(UnitType.PAWN, new Vector3Int(8,  5, 0));
+			Unit mine     = PlaceUnit(UnitType.MINE,   new Vector3Int(20, 10, 0));
+			// Pawn must be outside the BASE footprint (6x4: x=[5,10], y=[2,5])
+			Unit pawn   = PlaceUnit(UnitType.PAWN, new Vector3Int(12, 10, 0));
 
 			StartGathering(pawn, mine, baseUnit);
 
@@ -56,8 +57,9 @@ namespace GameManager.Tests.PlayMode
 		public IEnumerator Gather_BaseDestroyedMidTrip_PawnGoesIdle()
 		{
 			Unit baseUnit = PlaceBuiltBase(new Vector3Int(5, 5, 0));
-			Unit mine     = PlaceUnit(UnitType.MINE,   new Vector3Int(10, 5, 0));
-			Unit pawn   = PlaceUnit(UnitType.PAWN, new Vector3Int(9,  5, 0));
+			// Mine and pawn must be outside the BASE footprint (6x4: x=[5,10], y=[2,5])
+			Unit mine     = PlaceUnit(UnitType.MINE,   new Vector3Int(20, 10, 0));
+			Unit pawn   = PlaceUnit(UnitType.PAWN, new Vector3Int(12, 10, 0));
 
 			StartGathering(pawn, mine, baseUnit);
 
@@ -86,14 +88,15 @@ namespace GameManager.Tests.PlayMode
 		public IEnumerator Gather_MultiplePawnsSameMine_AllDepositGold()
 		{
 			Unit baseUnit = PlaceBuiltBase(new Vector3Int(5, 5, 0));
-			Unit mine     = PlaceUnit(UnitType.MINE, new Vector3Int(15, 5, 0));
+			Unit mine     = PlaceUnit(UnitType.MINE, new Vector3Int(20, 10, 0));
 
+			// Pawns must be outside the BASE footprint (6x4: x=[5,10], y=[2,5])
 			Unit[] pawns = new Unit[5];
-			pawns[0] = PlaceUnit(UnitType.PAWN, new Vector3Int(9,  4, 0));
-			pawns[1] = PlaceUnit(UnitType.PAWN, new Vector3Int(9,  6, 0));
-			pawns[2] = PlaceUnit(UnitType.PAWN, new Vector3Int(10, 4, 0));
-			pawns[3] = PlaceUnit(UnitType.PAWN, new Vector3Int(11, 4, 0));
-			pawns[4] = PlaceUnit(UnitType.PAWN, new Vector3Int(11, 6, 0));
+			pawns[0] = PlaceUnit(UnitType.PAWN, new Vector3Int(12, 9, 0));
+			pawns[1] = PlaceUnit(UnitType.PAWN, new Vector3Int(12, 10, 0));
+			pawns[2] = PlaceUnit(UnitType.PAWN, new Vector3Int(12, 11, 0));
+			pawns[3] = PlaceUnit(UnitType.PAWN, new Vector3Int(13, 9, 0));
+			pawns[4] = PlaceUnit(UnitType.PAWN, new Vector3Int(13, 10, 0));
 
 			Agent agent = GetAgent0();
 			int initialGold = agent.Gold;

@@ -35,8 +35,9 @@ namespace GameManager.Tests.PlayMode
 		public IEnumerator Gather_MineDepletedDuringMining_PawnGoesToBase()
 		{
 			Unit baseUnit = PlaceBuiltBase(new Vector3Int(5, 5, 0));
-			Unit mine = PlaceUnit(UnitType.MINE, new Vector3Int(10, 5, 0));
-			Unit pawn = PlaceUnit(UnitType.PAWN, new Vector3Int(9, 5, 0));
+			// Mine and pawn must be outside the BASE footprint (6x4: x=[5,10], y=[2,5])
+			Unit mine = PlaceUnit(UnitType.MINE, new Vector3Int(20, 10, 0));
+			Unit pawn = PlaceUnit(UnitType.PAWN, new Vector3Int(12, 10, 0));
 
 			StartGathering(pawn, mine, baseUnit);
 
@@ -82,8 +83,9 @@ namespace GameManager.Tests.PlayMode
 		public IEnumerator Gather_BaseDestroyedDuringGather_PawnGoesIdle()
 		{
 			Unit baseUnit = PlaceBuiltBase(new Vector3Int(5, 5, 0));
-			Unit mine = PlaceUnit(UnitType.MINE, new Vector3Int(15, 5, 0));
-			Unit pawn = PlaceUnit(UnitType.PAWN, new Vector3Int(8, 5, 0));
+			Unit mine = PlaceUnit(UnitType.MINE, new Vector3Int(20, 10, 0));
+			// Pawn must be outside the BASE footprint (6x4: x=[5,10], y=[2,5])
+			Unit pawn = PlaceUnit(UnitType.PAWN, new Vector3Int(12, 10, 0));
 
 			StartGathering(pawn, mine, baseUnit);
 			Assert.AreEqual(UnitAction.GATHER, pawn.CurrentAction);
@@ -121,8 +123,9 @@ namespace GameManager.Tests.PlayMode
 		{
 			Unit baseUnit = PlaceBuiltBase(new Vector3Int(5, 5, 0));
 			// Place mine far away so the pawn has time to walk
-			Unit mine = PlaceUnit(UnitType.MINE, new Vector3Int(25, 5, 0));
-			Unit pawn = PlaceUnit(UnitType.PAWN, new Vector3Int(8, 5, 0));
+			// Pawn must be outside the BASE footprint (6x4: x=[5,10], y=[2,5])
+			Unit mine = PlaceUnit(UnitType.MINE, new Vector3Int(25, 10, 0));
+			Unit pawn = PlaceUnit(UnitType.PAWN, new Vector3Int(12, 10, 0));
 
 			StartGathering(pawn, mine, baseUnit);
 			Assert.AreEqual(UnitAction.GATHER, pawn.CurrentAction);

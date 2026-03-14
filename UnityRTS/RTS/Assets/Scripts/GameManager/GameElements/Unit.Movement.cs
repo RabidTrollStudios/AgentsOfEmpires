@@ -394,7 +394,7 @@ namespace GameManager.GameElements
 		/// </summary>
 		private void UpdateAnimation()
 		{
-			if (animator == null || !CanMove)
+			if (animator == null || animator.runtimeAnimatorController == null || !CanMove)
 				return;
 
 			int state = 0; // default: Idle

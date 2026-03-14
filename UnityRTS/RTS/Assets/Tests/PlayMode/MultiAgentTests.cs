@@ -122,16 +122,18 @@ namespace GameManager.Tests.PlayMode
 		[UnityTest]
 		public IEnumerator BothAgents_GatherSameMine_BothGainGold()
 		{
+			// base0 at (2,10) covers x=[2,7], y=[7,10]; base1 at (24,10) covers x=[24,29], y=[7,10]
 			Unit base0 = PlaceUnit(UnitType.BASE, new Vector3Int(2, 10, 0));
 			base0.IsBuilt = true;
 
 			Unit base1 = PlaceUnit(UnitType.BASE, new Vector3Int(24, 10, 0), ctx.Agent1Go);
 			base1.IsBuilt = true;
 
-			Unit mine = PlaceUnit(UnitType.MINE, new Vector3Int(15, 10, 0));
+			Unit mine = PlaceUnit(UnitType.MINE, new Vector3Int(15, 15, 0));
 
-			Unit pawn0 = PlaceUnit(UnitType.PAWN, new Vector3Int(5, 10, 0));
-			Unit pawn1 = PlaceUnit(UnitType.PAWN, new Vector3Int(20, 10, 0), ctx.Agent1Go);
+			// Pawns must be outside their respective BASE footprints
+			Unit pawn0 = PlaceUnit(UnitType.PAWN, new Vector3Int(10, 15, 0));
+			Unit pawn1 = PlaceUnit(UnitType.PAWN, new Vector3Int(20, 15, 0), ctx.Agent1Go);
 
 			Agent agent0 = GetAgent0();
 			Agent agent1 = ctx.GetAgent(1);

@@ -63,12 +63,12 @@ namespace GameManager.Tests
 		private void SetProp(string name, object value) =>
 			typeof(GameManager)
 				.GetProperty(name, BindingFlags.NonPublic | BindingFlags.Instance)
-				?.SetValue(gm, value);
+				.SetValue(gm, value);
 
 		private void SetField(string name, object value) =>
 			typeof(GameManager)
 				.GetField(name, BindingFlags.NonPublic | BindingFlags.Instance)
-				?.SetValue(gm, value);
+				.SetValue(gm, value);
 
 		private void InvokePrivate(string methodName, params object[] args) =>
 			typeof(GameManager)

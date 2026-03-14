@@ -477,7 +477,7 @@ namespace GameManager.GameElements
 			Health = Constants.HEALTH[UnitType];
 			animator = gameObject.GetComponent<Animator>();
 
-			if (animator != null)
+			if (animator != null && animator.runtimeAnimatorController != null)
 			{
 				if (UnitType == UnitType.MINE)
 				{

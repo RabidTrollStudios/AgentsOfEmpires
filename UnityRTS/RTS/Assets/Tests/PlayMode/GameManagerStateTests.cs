@@ -31,12 +31,12 @@ namespace GameManager.Tests.PlayMode
 		private static void SetProp(string name, object value) =>
 			typeof(GameManager)
 				.GetProperty(name, BindingFlags.NonPublic | BindingFlags.Instance)
-				?.SetValue(GM, value);
+				.SetValue(GM, value);
 
 		private static void SetField(string name, object value) =>
 			typeof(GameManager)
 				.GetField(name, BindingFlags.NonPublic | BindingFlags.Instance)
-				?.SetValue(GM, value);
+				.SetValue(GM, value);
 
 		/// <summary>
 		/// Manually drives one Update() tick on the inactive GameManager singleton.

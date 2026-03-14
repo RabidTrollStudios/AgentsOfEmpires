@@ -33,8 +33,9 @@ namespace GameManager.Tests.PlayMode
 		public IEnumerator Gather_PawnCompletesRoundTrip_AgentGoldIncreases()
 		{
 			Unit baseUnit = PlaceBuiltBase(new Vector3Int(5, 5, 0));
-			Unit mine     = PlaceUnit(UnitType.MINE,   new Vector3Int(15, 5, 0));
-			Unit pawn   = PlaceUnit(UnitType.PAWN, new Vector3Int(8,  5, 0));
+			Unit mine     = PlaceUnit(UnitType.MINE,   new Vector3Int(20, 10, 0));
+			// Pawn must be outside the BASE footprint (6x4: x=[5,10], y=[2,5])
+			Unit pawn   = PlaceUnit(UnitType.PAWN, new Vector3Int(12, 10, 0));
 
 			Agent agent = GetAgent0();
 			int initialGold = agent.Gold;
@@ -54,8 +55,9 @@ namespace GameManager.Tests.PlayMode
 		public IEnumerator Gather_PawnContinuesAfterFirstDeposit_StillGathering()
 		{
 			Unit baseUnit = PlaceBuiltBase(new Vector3Int(5, 5, 0));
-			Unit mine     = PlaceUnit(UnitType.MINE,   new Vector3Int(15, 5, 0));
-			Unit pawn   = PlaceUnit(UnitType.PAWN, new Vector3Int(8,  5, 0));
+			Unit mine     = PlaceUnit(UnitType.MINE,   new Vector3Int(20, 10, 0));
+			// Pawn must be outside the BASE footprint (6x4: x=[5,10], y=[2,5])
+			Unit pawn   = PlaceUnit(UnitType.PAWN, new Vector3Int(12, 10, 0));
 
 			Agent agent = GetAgent0();
 			int initialGold = agent.Gold;
@@ -75,8 +77,9 @@ namespace GameManager.Tests.PlayMode
 		public IEnumerator Gather_MineHealthDecreases_DuringMining()
 		{
 			Unit baseUnit = PlaceBuiltBase(new Vector3Int(5, 5, 0));
-			Unit mine     = PlaceUnit(UnitType.MINE,   new Vector3Int(10, 5, 0));
-			Unit pawn   = PlaceUnit(UnitType.PAWN, new Vector3Int(9,  5, 0));
+			Unit mine     = PlaceUnit(UnitType.MINE,   new Vector3Int(20, 10, 0));
+			// Pawn must be outside the BASE footprint (6x4: x=[5,10], y=[2,5])
+			Unit pawn   = PlaceUnit(UnitType.PAWN, new Vector3Int(12, 10, 0));
 
 			float initialMineHealth = mine.Health;
 
@@ -97,8 +100,9 @@ namespace GameManager.Tests.PlayMode
 		public IEnumerator Gather_MineCloseToBase_GoldStillDeposited()
 		{
 			Unit baseUnit = PlaceBuiltBase(new Vector3Int(5, 5, 0));
-			Unit mine     = PlaceUnit(UnitType.MINE,   new Vector3Int(10, 5, 0));
-			Unit pawn   = PlaceUnit(UnitType.PAWN, new Vector3Int(8,  5, 0));
+			Unit mine     = PlaceUnit(UnitType.MINE,   new Vector3Int(20, 10, 0));
+			// Pawn must be outside the BASE footprint (6x4: x=[5,10], y=[2,5])
+			Unit pawn   = PlaceUnit(UnitType.PAWN, new Vector3Int(12, 10, 0));
 
 			Agent agent = GetAgent0();
 			int initialGold = agent.Gold;
@@ -139,8 +143,9 @@ namespace GameManager.Tests.PlayMode
 		public IEnumerator Gather_MineLowHealth_PawnGoesIdleAfterDepletion()
 		{
 			Unit baseUnit = PlaceBuiltBase(new Vector3Int(5, 5, 0));
-			Unit mine     = PlaceUnit(UnitType.MINE,   new Vector3Int(10, 5, 0));
-			Unit pawn   = PlaceUnit(UnitType.PAWN, new Vector3Int(8,  5, 0));
+			Unit mine     = PlaceUnit(UnitType.MINE,   new Vector3Int(20, 10, 0));
+			// Pawn must be outside the BASE footprint (6x4: x=[5,10], y=[2,5])
+			Unit pawn   = PlaceUnit(UnitType.PAWN, new Vector3Int(12, 10, 0));
 
 			mine.Health = 50; // deplete quickly
 
