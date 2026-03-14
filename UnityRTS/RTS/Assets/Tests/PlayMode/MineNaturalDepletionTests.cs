@@ -26,12 +26,13 @@ namespace GameManager.Tests.PlayMode
 			Unit baseUnit = PlaceUnit(UnitType.BASE, new Vector3Int(5, 5, 0));
 			baseUnit.IsBuilt = true;
 
-			Unit mine = PlaceUnit(UnitType.MINE, new Vector3Int(8, 5, 0));
+			// Mine must be outside the BASE footprint (6x4: x=[5,10], y=[2,5])
+			Unit mine = PlaceUnit(UnitType.MINE, new Vector3Int(20, 10, 0));
 			// Set mine health very low so a single gather trip depletes it
 			float miningCapacity = Constants.MINING_CAPACITY[UnitType.PAWN];
 			mine.Health = miningCapacity * 0.5f; // Less than one full mining capacity
 
-			Unit pawn = PlaceUnit(UnitType.PAWN, new Vector3Int(7, 5, 0));
+			Unit pawn = PlaceUnit(UnitType.PAWN, new Vector3Int(12, 10, 0));
 			Agent agent = GetAgent0();
 			int initialGold = agent.Gold;
 
@@ -57,11 +58,12 @@ namespace GameManager.Tests.PlayMode
 			Unit baseUnit = PlaceUnit(UnitType.BASE, new Vector3Int(5, 5, 0));
 			baseUnit.IsBuilt = true;
 
-			Unit mine = PlaceUnit(UnitType.MINE, new Vector3Int(8, 5, 0));
+			// Mine must be outside the BASE footprint (6x4: x=[5,10], y=[2,5])
+			Unit mine = PlaceUnit(UnitType.MINE, new Vector3Int(20, 10, 0));
 			float miningCapacity = Constants.MINING_CAPACITY[UnitType.PAWN];
 			mine.Health = miningCapacity * 0.5f;
 
-			Unit pawn = PlaceUnit(UnitType.PAWN, new Vector3Int(7, 5, 0));
+			Unit pawn = PlaceUnit(UnitType.PAWN, new Vector3Int(12, 10, 0));
 			Agent agent = GetAgent0();
 			int initialGold = agent.Gold;
 
@@ -93,10 +95,11 @@ namespace GameManager.Tests.PlayMode
 			Unit baseUnit = PlaceUnit(UnitType.BASE, new Vector3Int(5, 5, 0));
 			baseUnit.IsBuilt = true;
 
-			Unit mine = PlaceUnit(UnitType.MINE, new Vector3Int(8, 5, 0));
+			// Mine must be outside the BASE footprint (6x4: x=[5,10], y=[2,5])
+			Unit mine = PlaceUnit(UnitType.MINE, new Vector3Int(20, 10, 0));
 			mine.Health = 0; // Already depleted
 
-			Unit pawn = PlaceUnit(UnitType.PAWN, new Vector3Int(7, 5, 0));
+			Unit pawn = PlaceUnit(UnitType.PAWN, new Vector3Int(12, 10, 0));
 
 			pawn.StartGathering(new GatherEventArgs(pawn, mine, baseUnit));
 
@@ -123,10 +126,11 @@ namespace GameManager.Tests.PlayMode
 			Unit baseUnit = PlaceUnit(UnitType.BASE, new Vector3Int(5, 5, 0));
 			baseUnit.IsBuilt = true;
 
-			Unit mine = PlaceUnit(UnitType.MINE, new Vector3Int(8, 5, 0));
+			// Mine must be outside the BASE footprint (6x4: x=[5,10], y=[2,5])
+			Unit mine = PlaceUnit(UnitType.MINE, new Vector3Int(20, 10, 0));
 			float initialMineHealth = mine.Health;
 
-			Unit pawn = PlaceUnit(UnitType.PAWN, new Vector3Int(7, 5, 0));
+			Unit pawn = PlaceUnit(UnitType.PAWN, new Vector3Int(12, 10, 0));
 			Agent agent = GetAgent0();
 			int initialGold = agent.Gold;
 

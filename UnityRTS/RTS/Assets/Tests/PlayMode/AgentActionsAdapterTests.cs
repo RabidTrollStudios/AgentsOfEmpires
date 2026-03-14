@@ -104,7 +104,7 @@ namespace GameManager.Tests.PlayMode
 			var fs = File.Open(tempPath, FileMode.Append);
 			typeof(Agent)
 				.GetProperty("LogFileStream", BindingFlags.NonPublic | BindingFlags.Instance)
-				?.SetValue(GetAgent0(), fs);
+				.SetValue(GetAgent0(), fs);
 
 			var adapter = new AgentActionsAdapter(GetAgent0(), ctx.UnitManager);
 			try

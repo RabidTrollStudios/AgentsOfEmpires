@@ -42,7 +42,7 @@ namespace GameManager.GameElements
 				}
 
 				// Spawn arrow projectile on frame 5 of the shoot animation (once per loop)
-				if (UnitType == UnitType.ARCHER && animator != null)
+				if (UnitType == UnitType.ARCHER && animator != null && animator.runtimeAnimatorController != null)
 				{
 					float loopPos = animator.GetCurrentAnimatorStateInfo(0).normalizedTime % 1f;
 					if (loopPos >= 0.625f && !arrowFiredThisCycle)
@@ -214,7 +214,7 @@ namespace GameManager.GameElements
 			if (mineUnit != null)
 			{
 				var mineAnimator = mineUnit.GetComponent<Animator>();
-				if (mineAnimator != null)
+				if (mineAnimator != null && mineAnimator.runtimeAnimatorController != null)
 					mineAnimator.Play(0, 0, 0f);
 			}
 
@@ -325,7 +325,7 @@ namespace GameManager.GameElements
 						buildSprite.color = c;
 					}
 					var buildAnimator = currentBuilding.GetComponent<Animator>();
-					if (buildAnimator != null)
+					if (buildAnimator != null && buildAnimator.runtimeAnimatorController != null)
 						buildAnimator.SetBool("IsBuilt", buildUnit.IsBuilt);
 					path.Clear();
 					CurrentAction = UnitAction.IDLE;
@@ -509,7 +509,7 @@ namespace GameManager.GameElements
 					}
 
 					// Spawn gold nugget at the pickaxe downswing (frame 3 of 6, normalized ~0.5)
-					if (animator != null)
+					if (animator != null && animator.runtimeAnimatorController != null)
 					{
 						float loopPos = animator.GetCurrentAnimatorStateInfo(0).normalizedTime % 1f;
 						if (loopPos >= 0.5f && !goldNuggetSpawnedThisCycle)

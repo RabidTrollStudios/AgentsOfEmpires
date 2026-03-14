@@ -39,7 +39,7 @@ namespace GameManager.Tests
 		private void SetField(string name, object value) =>
 			typeof(GameManager)
 				.GetField(name, BindingFlags.NonPublic | BindingFlags.Instance)
-				?.SetValue(gm, value);
+				.SetValue(gm, value);
 
 		private T Invoke<T>(string methodName, params object[] args) =>
 			(T)typeof(GameManager)

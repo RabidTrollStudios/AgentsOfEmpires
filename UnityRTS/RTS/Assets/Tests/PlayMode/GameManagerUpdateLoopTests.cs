@@ -53,17 +53,17 @@ namespace GameManager.Tests.PlayMode
 		private static void SetProp(string name, object value) =>
 			typeof(GameManager)
 				.GetProperty(name, BindingFlags.NonPublic | BindingFlags.Instance)
-				?.SetValue(GM, value);
+				.SetValue(GM, value);
 
 		private static void SetField(string name, object value) =>
 			typeof(GameManager)
 				.GetField(name, BindingFlags.NonPublic | BindingFlags.Instance)
-				?.SetValue(GM, value);
+				.SetValue(GM, value);
 
 		private static object GetField(string name) =>
 			typeof(GameManager)
 				.GetField(name, BindingFlags.NonPublic | BindingFlags.Instance)
-				?.GetValue(GM);
+				.GetValue(GM);
 
 		private static void InvokeUpdate() =>
 			typeof(GameManager)

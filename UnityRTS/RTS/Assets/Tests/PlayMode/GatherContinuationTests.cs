@@ -32,8 +32,9 @@ namespace GameManager.Tests.PlayMode
 		public IEnumerator AfterDeposit_PawnCyclesBackToMine()
 		{
 			Unit baseUnit = PlaceBuiltBase(new Vector3Int(5, 5, 0));
-			Unit mine = PlaceUnit(UnitType.MINE, new Vector3Int(15, 5, 0));
-			Unit pawn = PlaceUnit(UnitType.PAWN, new Vector3Int(8, 5, 0));
+			Unit mine = PlaceUnit(UnitType.MINE, new Vector3Int(20, 10, 0));
+			// Pawn must be outside the BASE footprint (6x4: x=[5,10], y=[2,5])
+			Unit pawn = PlaceUnit(UnitType.PAWN, new Vector3Int(12, 10, 0));
 
 			Agent agent = GetAgent0();
 			int initialGold = agent.Gold;
@@ -58,8 +59,9 @@ namespace GameManager.Tests.PlayMode
 		public IEnumerator MultipleCycles_GoldMonotonicallyIncreases()
 		{
 			Unit baseUnit = PlaceBuiltBase(new Vector3Int(5, 5, 0));
-			Unit mine = PlaceUnit(UnitType.MINE, new Vector3Int(10, 5, 0));
-			Unit pawn = PlaceUnit(UnitType.PAWN, new Vector3Int(8, 5, 0));
+			Unit mine = PlaceUnit(UnitType.MINE, new Vector3Int(20, 10, 0));
+			// Pawn must be outside the BASE footprint (6x4: x=[5,10], y=[2,5])
+			Unit pawn = PlaceUnit(UnitType.PAWN, new Vector3Int(12, 10, 0));
 
 			Agent agent = GetAgent0();
 			int lastGold = agent.Gold;
@@ -91,10 +93,11 @@ namespace GameManager.Tests.PlayMode
 		public IEnumerator TwoPawns_SequentialStart_BothDeposit()
 		{
 			Unit baseUnit = PlaceBuiltBase(new Vector3Int(5, 5, 0));
-			Unit mine = PlaceUnit(UnitType.MINE, new Vector3Int(15, 5, 0));
+			Unit mine = PlaceUnit(UnitType.MINE, new Vector3Int(20, 10, 0));
 
-			Unit pawn1 = PlaceUnit(UnitType.PAWN, new Vector3Int(8, 5, 0));
-			Unit pawn2 = PlaceUnit(UnitType.PAWN, new Vector3Int(8, 6, 0));
+			// Pawns must be outside the BASE footprint (6x4: x=[5,10], y=[2,5])
+			Unit pawn1 = PlaceUnit(UnitType.PAWN, new Vector3Int(12, 9, 0));
+			Unit pawn2 = PlaceUnit(UnitType.PAWN, new Vector3Int(12, 10, 0));
 
 			Agent agent = GetAgent0();
 			int initialGold = agent.Gold;
@@ -129,8 +132,9 @@ namespace GameManager.Tests.PlayMode
 		public IEnumerator Mine_DepletedDuringSecondCycle_PawnGoesIdle()
 		{
 			Unit baseUnit = PlaceBuiltBase(new Vector3Int(5, 5, 0));
-			Unit mine = PlaceUnit(UnitType.MINE, new Vector3Int(10, 5, 0));
-			Unit pawn = PlaceUnit(UnitType.PAWN, new Vector3Int(8, 5, 0));
+			Unit mine = PlaceUnit(UnitType.MINE, new Vector3Int(20, 10, 0));
+			// Pawn must be outside the BASE footprint (6x4: x=[5,10], y=[2,5])
+			Unit pawn = PlaceUnit(UnitType.PAWN, new Vector3Int(12, 10, 0));
 
 			Agent agent = GetAgent0();
 			int initialGold = agent.Gold;
@@ -163,8 +167,9 @@ namespace GameManager.Tests.PlayMode
 		public IEnumerator Base_DestroyedMidSecondCycle_PawnGoesIdle()
 		{
 			Unit baseUnit = PlaceBuiltBase(new Vector3Int(5, 5, 0));
-			Unit mine = PlaceUnit(UnitType.MINE, new Vector3Int(10, 5, 0));
-			Unit pawn = PlaceUnit(UnitType.PAWN, new Vector3Int(9, 5, 0));
+			Unit mine = PlaceUnit(UnitType.MINE, new Vector3Int(20, 10, 0));
+			// Pawn must be outside the BASE footprint (6x4: x=[5,10], y=[2,5])
+			Unit pawn = PlaceUnit(UnitType.PAWN, new Vector3Int(12, 10, 0));
 
 			Agent agent = GetAgent0();
 			int initialGold = agent.Gold;

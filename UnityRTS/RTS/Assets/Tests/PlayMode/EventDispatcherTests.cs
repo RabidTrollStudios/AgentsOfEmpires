@@ -21,12 +21,12 @@ namespace GameManager.Tests.PlayMode
 		private Agent agent1;
 
 		[UnitySetUp]
-		public new IEnumerator SetUp()
+		public IEnumerator SetUpDispatcher()
 		{
-			yield return base.SetUp();
 			dispatcher = GameManager.Instance.Events;
 			agent0 = ctx.GetAgent(0);
 			agent1 = ctx.GetAgent(1);
+			yield return null;
 		}
 
 		#region MoveEventHandler

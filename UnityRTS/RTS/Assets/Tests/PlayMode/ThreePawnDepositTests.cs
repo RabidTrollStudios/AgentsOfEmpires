@@ -26,11 +26,12 @@ namespace GameManager.Tests.PlayMode
 		{
 			Unit baseUnit = PlaceUnit(UnitType.BASE, new Vector3Int(5, 5, 0));
 			baseUnit.IsBuilt = true;
-			Unit mine = PlaceUnit(UnitType.MINE, new Vector3Int(15, 5, 0));
+			Unit mine = PlaceUnit(UnitType.MINE, new Vector3Int(20, 10, 0));
 
-			Unit w1 = PlaceUnit(UnitType.PAWN, new Vector3Int(8, 4, 0));
-			Unit w2 = PlaceUnit(UnitType.PAWN, new Vector3Int(8, 5, 0));
-			Unit w3 = PlaceUnit(UnitType.PAWN, new Vector3Int(8, 6, 0));
+			// Pawns must be outside the BASE footprint (6x4: x=[5,10], y=[2,5])
+			Unit w1 = PlaceUnit(UnitType.PAWN, new Vector3Int(12, 9, 0));
+			Unit w2 = PlaceUnit(UnitType.PAWN, new Vector3Int(12, 10, 0));
+			Unit w3 = PlaceUnit(UnitType.PAWN, new Vector3Int(12, 11, 0));
 
 			Agent agent = GetAgent0();
 			int initialGold = agent.Gold;
@@ -61,11 +62,12 @@ namespace GameManager.Tests.PlayMode
 		{
 			Unit baseUnit = PlaceUnit(UnitType.BASE, new Vector3Int(5, 5, 0));
 			baseUnit.IsBuilt = true;
-			Unit mine = PlaceUnit(UnitType.MINE, new Vector3Int(12, 5, 0));
+			Unit mine = PlaceUnit(UnitType.MINE, new Vector3Int(20, 10, 0));
 
-			Unit w1 = PlaceUnit(UnitType.PAWN, new Vector3Int(8, 4, 0));
-			Unit w2 = PlaceUnit(UnitType.PAWN, new Vector3Int(8, 5, 0));
-			Unit w3 = PlaceUnit(UnitType.PAWN, new Vector3Int(8, 6, 0));
+			// Pawns must be outside the BASE footprint (6x4: x=[5,10], y=[2,5])
+			Unit w1 = PlaceUnit(UnitType.PAWN, new Vector3Int(12, 9, 0));
+			Unit w2 = PlaceUnit(UnitType.PAWN, new Vector3Int(12, 10, 0));
+			Unit w3 = PlaceUnit(UnitType.PAWN, new Vector3Int(12, 11, 0));
 
 			Agent agent = GetAgent0();
 			w1.StartGathering(new GatherEventArgs(w1, mine, baseUnit));
@@ -112,11 +114,12 @@ namespace GameManager.Tests.PlayMode
 		{
 			Unit baseUnit = PlaceUnit(UnitType.BASE, new Vector3Int(5, 5, 0));
 			baseUnit.IsBuilt = true;
-			Unit mine = PlaceUnit(UnitType.MINE, new Vector3Int(14, 5, 0));
+			Unit mine = PlaceUnit(UnitType.MINE, new Vector3Int(20, 10, 0));
 
-			Unit w1 = PlaceUnit(UnitType.PAWN, new Vector3Int(8, 4, 0));
-			Unit w2 = PlaceUnit(UnitType.PAWN, new Vector3Int(8, 5, 0));
-			Unit w3 = PlaceUnit(UnitType.PAWN, new Vector3Int(8, 6, 0));
+			// Pawns must be outside the BASE footprint (6x4: x=[5,10], y=[2,5])
+			Unit w1 = PlaceUnit(UnitType.PAWN, new Vector3Int(12, 9, 0));
+			Unit w2 = PlaceUnit(UnitType.PAWN, new Vector3Int(12, 10, 0));
+			Unit w3 = PlaceUnit(UnitType.PAWN, new Vector3Int(12, 11, 0));
 
 			Agent agent = GetAgent0();
 			int initialGold = agent.Gold;

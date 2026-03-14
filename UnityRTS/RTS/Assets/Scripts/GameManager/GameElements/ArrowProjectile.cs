@@ -152,7 +152,7 @@ namespace GameManager.GameElements
 
 				// Spawn a mirrored fire each time the animation reaches frame 2
 				var animator = fireTransform.GetComponent<Animator>();
-				if (animator != null)
+				if (animator != null && animator.runtimeAnimatorController != null)
 				{
 					float loopPos = animator.GetCurrentAnimatorStateInfo(0).normalizedTime % 1f;
 					if (loopPos >= 0.5f && !mirrorSpawnedThisCycle)

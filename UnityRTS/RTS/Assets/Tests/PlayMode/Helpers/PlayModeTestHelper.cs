@@ -147,7 +147,7 @@ namespace GameManager.Tests.PlayMode
 		{
 			GameObject go;
 			while ((go = GameObject.Find(name)) != null)
-				Object.Destroy(go);
+				Object.DestroyImmediate(go);
 		}
 
 		/// <summary>
