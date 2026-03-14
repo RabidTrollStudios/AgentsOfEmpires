@@ -1,6 +1,6 @@
-=== EditMode Test Run: 2026-03-12 23:23:04 ===
-Result: Passed  |  Duration: 1.09s
-Passed: 323  Failed: 0  Skipped: 0
+=== EditMode Test Run: 2026-03-14 12:12:59 ===
+Result: Passed  |  Duration: 2.04s
+Passed: 340  Failed: 0  Skipped: 0
 
           [PASS] GameManager.Tests.AgentActionsAdapterTests.Attack_BothUnknownUnits_DoesNotThrow
           [PASS] GameManager.Tests.AgentActionsAdapterTests.Build_UnknownUnit_DoesNotThrow
@@ -150,6 +150,23 @@ Passed: 323  Failed: 0  Skipped: 0
           [PASS] GameManager.Tests.GameManagerDebugBindingsTests.DebugBinding8_Execute_TogglesHasTargetLineTint
           [PASS] GameManager.Tests.GameManagerDebugBindingsTests.InitializeDebugToggles_PopulatesNineBindings
           [PASS] GameManager.Tests.GameManagerDebugBindingsTests.ProcessUserInput_NullBindings_DoesNotThrow
+          [PASS] GameManager.Tests.GameManagerLearnToggleTests.BigBarBase_DelegatesToPrefabs
+          [PASS] GameManager.Tests.GameManagerLearnToggleTests.GoldResourceSprite_DelegatesToPrefabs
+          [PASS] GameManager.Tests.GameManagerLearnToggleTests.HandleSpeedInput_NoKeysPressed_DoesNotChangeSpeed
+          [PASS] GameManager.Tests.GameManagerLearnToggleTests.InitializeDebugToggles_WithAgentToggle_SetsIsOnTrueAndRegistersListener
+          [PASS] GameManager.Tests.GameManagerLearnToggleTests.InitializeDebugToggles_WithAttackTintToggle_SetsIsOnFalseAndRegistersListener
+          [PASS] GameManager.Tests.GameManagerLearnToggleTests.InitializeDebugToggles_WithBuildTintToggle_SetsIsOnFalseAndRegistersListener
+          [PASS] GameManager.Tests.GameManagerLearnToggleTests.InitializeDebugToggles_WithGatherTintToggle_SetsIsOnFalseAndRegistersListener
+          [PASS] GameManager.Tests.GameManagerLearnToggleTests.InitializeDebugToggles_WithMoveTintToggle_SetsIsOnFalseAndRegistersListener
+          [PASS] GameManager.Tests.GameManagerLearnToggleTests.InitializeDebugToggles_WithPathTintToggle_SetsIsOnTrueAndRegistersListener
+          [PASS] GameManager.Tests.GameManagerLearnToggleTests.InitializeDebugToggles_WithTargetLineTintToggle_SetsIsOnTrueAndRegistersListener
+          [PASS] GameManager.Tests.GameManagerLearnToggleTests.InitializeDebugToggles_WithUnitToggle_SetsIsOnFalseAndRegistersListener
+          [PASS] GameManager.Tests.GameManagerLearnToggleTests.Learn_EnableLearningFalse_SkipsLearnButCallsEndRound
+          [PASS] GameManager.Tests.GameManagerLearnToggleTests.Learn_EnableLearningTrue_CallsLearnOnAgentsWithoutCrash
+          [PASS] GameManager.Tests.GameManagerLearnToggleTests.Learn_RoundWinnerNull_UsesUnknownInWinnerName
+          [PASS] GameManager.Tests.GameManagerLearnToggleTests.ProcessUserInput_WithBindings_NoKeysPressed_DoesNotThrow
+          [PASS] GameManager.Tests.GameManagerLearnToggleTests.SmallBarBase_DelegatesToPrefabs
+          [PASS] GameManager.Tests.GameManagerLearnToggleTests.SmallBarFill_DelegatesToPrefabs
           [PASS] GameManager.Tests.GameManagerResultsDisplayTests.DisplayMultiAgentResults_Agent0IsBlue_UsesAgent0AsRepresentative
           [PASS] GameManager.Tests.GameManagerResultsDisplayTests.DisplayMultiAgentResults_Agent0IsRed_UsesAgent1AsRepresentative
           [PASS] GameManager.Tests.GameManagerResultsDisplayTests.DisplaySingleAgentResults_Agent0IsOverallWinner_BannerContainsAgent0Name

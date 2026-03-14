@@ -294,11 +294,7 @@ namespace GameManager
 		/// </summary>
 		private GameManager()
 		{
-			if (instance != null && instance != this)
-			{
-				Destroy(gameObject);
-			}
-			else
+			if (instance == null)
 			{
 				instance = this;
 			}
