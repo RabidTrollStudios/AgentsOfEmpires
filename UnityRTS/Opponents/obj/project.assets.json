@@ -1,11 +1,30 @@
 {
   "version": 3,
   "targets": {
-    ".NETStandard,Version=v2.1": {}
+    ".NETStandard,Version=v2.1": {
+      "AgentSDK/1.0.0": {
+        "type": "project",
+        "framework": ".NETStandard,Version=v2.1",
+        "compile": {
+          "bin/placeholder/AgentSDK.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/AgentSDK.dll": {}
+        }
+      }
+    }
   },
-  "libraries": {},
+  "libraries": {
+    "AgentSDK/1.0.0": {
+      "type": "project",
+      "path": "../AgentSDK/AgentSDK.csproj",
+      "msbuildProject": "../AgentSDK/AgentSDK.csproj"
+    }
+  },
   "projectFileDependencyGroups": {
-    ".NETStandard,Version=v2.1": []
+    ".NETStandard,Version=v2.1": [
+      "AgentSDK >= 1.0.0"
+    ]
   },
   "packageFolders": {
     "C:\\Users\\Dana\\.nuget\\packages\\": {},
@@ -15,7 +34,7 @@
     "version": "1.0.0",
     "restore": {
       "projectUniqueName": "C:\\Git\\Warcrap\\UnityRTS\\Opponents\\Opponents.csproj",
-      "projectName": "PlanningAgent_Idle",
+      "projectName": "PlanningAgent_WarriorRush",
       "projectPath": "C:\\Git\\Warcrap\\UnityRTS\\Opponents\\Opponents.csproj",
       "packagesPath": "C:\\Users\\Dana\\.nuget\\packages\\",
       "outputPath": "C:\\Git\\Warcrap\\UnityRTS\\Opponents\\obj\\",
@@ -38,7 +57,11 @@
       "frameworks": {
         "netstandard2.1": {
           "targetAlias": "netstandard2.1",
-          "projectReferences": {}
+          "projectReferences": {
+            "C:\\Git\\Warcrap\\UnityRTS\\AgentSDK\\AgentSDK.csproj": {
+              "projectPath": "C:\\Git\\Warcrap\\UnityRTS\\AgentSDK\\AgentSDK.csproj"
+            }
+          }
         }
       },
       "warningProperties": {

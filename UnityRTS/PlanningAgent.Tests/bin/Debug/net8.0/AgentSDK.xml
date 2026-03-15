@@ -4,6 +4,61 @@
         <name>AgentSDK</name>
     </assembly>
     <members>
+        <member name="T:AgentSDK.CommandResult">
+            <summary>
+            Result codes returned by IAgentActions command methods.
+            Agents can inspect these to understand why a command failed
+            and avoid re-issuing the same failing command every frame.
+            </summary>
+        </member>
+        <member name="F:AgentSDK.CommandResult.SUCCESS">
+            <summary>Command was accepted and dispatched to the unit.</summary>
+        </member>
+        <member name="F:AgentSDK.CommandResult.UNIT_NOT_FOUND">
+            <summary>The specified unit does not exist.</summary>
+        </member>
+        <member name="F:AgentSDK.CommandResult.UNIT_CANNOT_PERFORM_ACTION">
+            <summary>The unit does not have the capability for this command
+            (e.g., a warrior trying to build).</summary>
+        </member>
+        <member name="F:AgentSDK.CommandResult.INVALID_POSITION">
+            <summary>The target position is outside the map boundaries.</summary>
+        </member>
+        <member name="F:AgentSDK.CommandResult.POSITION_NOT_WALKABLE">
+            <summary>The target position is not walkable (blocked by terrain).</summary>
+        </member>
+        <member name="F:AgentSDK.CommandResult.AREA_NOT_BUILDABLE">
+            <summary>The build area is occupied or otherwise not buildable.</summary>
+        </member>
+        <member name="F:AgentSDK.CommandResult.MISSING_DEPENDENCY">
+            <summary>A required dependency building has not been built yet.</summary>
+        </member>
+        <member name="F:AgentSDK.CommandResult.INSUFFICIENT_GOLD">
+            <summary>Not enough gold to perform the action.</summary>
+        </member>
+        <member name="F:AgentSDK.CommandResult.TARGET_NOT_FOUND">
+            <summary>The target unit does not exist.</summary>
+        </member>
+        <member name="F:AgentSDK.CommandResult.INVALID_TARGET">
+            <summary>The target unit type is invalid for this command
+            (e.g., attacking a mine, gathering from a non-mine).</summary>
+        </member>
+        <member name="F:AgentSDK.CommandResult.FRIENDLY_FIRE">
+            <summary>Cannot attack or interact with your own units in this way.</summary>
+        </member>
+        <member name="F:AgentSDK.CommandResult.UNIT_BUSY">
+            <summary>The unit is busy with another action and cannot accept this command.</summary>
+        </member>
+        <member name="F:AgentSDK.CommandResult.BUILDING_NOT_FINISHED">
+            <summary>The building has not finished construction yet.</summary>
+        </member>
+        <member name="F:AgentSDK.CommandResult.NO_PATH_FOUND">
+            <summary>No path could be found to the target.</summary>
+        </member>
+        <member name="F:AgentSDK.CommandResult.ON_COOLDOWN">
+            <summary>The command was throttled because the same unit recently failed
+            a similar command. Try again after a short delay.</summary>
+        </member>
         <member name="T:AgentSDK.GameConstants">
             <summary>
             Game balance constants. These are the authoritative values used by the game engine.
@@ -105,7 +160,8 @@
         <member name="T:AgentSDK.IAgentActions">
             <summary>
             Interface for issuing commands to your units.
-            All commands are validated by the game engine - invalid commands are ignored with a log message.
+            All commands are validated by the game engine. Each method returns a
+            <see cref="T:AgentSDK.CommandResult"/> indicating success or the specific reason for failure.
             </summary>
         </member>
         <member name="M:AgentSDK.IAgentActions.Move(System.Int32,AgentSDK.Position)">
@@ -115,6 +171,7 @@
             </summary>
             <param name="unitNbr">The unit to move</param>
             <param name="target">The grid position to move to</param>
+            <returns>Success if the command was dispatched, or a failure code.</returns>
         </member>
         <member name="M:AgentSDK.IAgentActions.Build(System.Int32,AgentSDK.Position,AgentSDK.UnitType)">
             <summary>
@@ -123,7 +180,8 @@
             </summary>
             <param name="unitNbr">The pawn unit that will build</param>
             <param name="target">Where to place the structure</param>
-            <param name="unitType">Type of structure to build (BASE, BARRACKS, or ARCHERY)</param>
+            <param name="unitType">Type of structure to build (BASE, BARRACKS, ARCHERY, or TOWER)</param>
+            <returns>Success if the command was dispatched, or a failure code.</returns>
         </member>
         <member name="M:AgentSDK.IAgentActions.Gather(System.Int32,System.Int32,System.Int32)">
             <summary>
@@ -132,14 +190,16 @@
             <param name="pawnNbr">The pawn unit</param>
             <param name="mineNbr">The gold mine to gather from</param>
             <param name="baseNbr">The base to return gold to</param>
+            <returns>Success if the command was dispatched, or a failure code.</returns>
         </member>
         <member name="M:AgentSDK.IAgentActions.Train(System.Int32,AgentSDK.UnitType)">
             <summary>
             Train a new unit at a structure.
             Requires sufficient gold and the structure must be fully built.
             </summary>
-            <param name="buildingNbr">The structure that will train (BASE or BARRACKS)</param>
-            <param name="unitType">Type of unit to train (PAWN, WARRIOR, or ARCHER)</param>
+            <param name="buildingNbr">The structure that will train (BASE, BARRACKS, ARCHERY, or TOWER)</param>
+            <param name="unitType">Type of unit to train (PAWN, WARRIOR, ARCHER, or LANCER)</param>
+            <returns>Success if the command was dispatched, or a failure code.</returns>
         </member>
         <member name="M:AgentSDK.IAgentActions.Attack(System.Int32,System.Int32)">
             <summary>
@@ -148,6 +208,7 @@
             </summary>
             <param name="unitNbr">Your attacking unit</param>
             <param name="targetNbr">The enemy unit to attack</param>
+            <returns>Success if the command was dispatched, or a failure code.</returns>
         </member>
         <member name="M:AgentSDK.IAgentActions.Repair(System.Int32,System.Int32)">
             <summary>
@@ -156,6 +217,7 @@
             </summary>
             <param name="pawnNbr">The pawn unit that will repair</param>
             <param name="buildingNbr">The building to repair</param>
+            <returns>Success if the command was dispatched, or a failure code.</returns>
         </member>
         <member name="M:AgentSDK.IAgentActions.Log(System.String)">
             <summary>

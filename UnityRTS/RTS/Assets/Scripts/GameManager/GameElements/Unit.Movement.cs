@@ -39,6 +39,18 @@ namespace GameManager.GameElements
 			// If this unit is dead, destroy it
 			if (Health <= 0)
 			{
+				// Log the death to the owning agent's command log
+				var cmdLog = GetCmdLog();
+				string killedBy = "";
+				if (attackUnitNbr >= 0)
+				{
+					var killer = GameManager.Instance.Units.GetUnit(attackUnitNbr);
+					if (killer != null)
+						killedBy = $" by {killer.UnitType}#{killer.UnitNbr}";
+				}
+				cmdLog?.LogCommand("DEATH", $"{UnitType}#{UnitNbr} at {GridPosition} (action={CurrentAction}){killedBy}",
+					$"DESTROYED (health={Health:F0})");
+
 				// Spawn dust 2 death effect at unit position
 				SpawnDeathDust();
 
