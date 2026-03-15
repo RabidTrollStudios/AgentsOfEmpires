@@ -60,6 +60,33 @@ namespace PlanningAgent.Tests
         }
     }
 
+    internal class TrainFromArcheryAgent : IPlanningAgent
+    {
+        private readonly UnitType trainType;
+        private bool trained;
+
+        public TrainFromArcheryAgent(UnitType trainType) { this.trainType = trainType; }
+        public void InitializeMatch() { trained = false; }
+        public void InitializeRound(IGameState state) { }
+        public void Learn(IGameState state) { }
+
+        public void Update(IGameState state, IAgentActions actions)
+        {
+            if (trained) return;
+            var archeries = state.GetMyUnits(UnitType.ARCHERY);
+            if (archeries.Count > 0)
+            {
+                var info = state.GetUnit(archeries[0]);
+                if (info.HasValue && info.Value.IsBuilt && info.Value.CurrentAction == UnitAction.IDLE
+                    && state.MyGold >= GameConstants.COST[trainType])
+                {
+                    actions.Train(archeries[0], trainType);
+                    trained = true;
+                }
+            }
+        }
+    }
+
     internal class TrainFromBaseAgent : IPlanningAgent
     {
         private readonly UnitType trainType;

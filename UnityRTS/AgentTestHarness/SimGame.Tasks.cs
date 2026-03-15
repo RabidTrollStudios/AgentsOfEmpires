@@ -402,7 +402,7 @@ namespace AgentTestHarness
                 return;
             }
 
-            // Phase 2: heal at 2x the build rate
+            // Phase 2: heal at 110% of the build rate
             float maxHp = GameConstants.HEALTH[building.UnitType];
 
             // Already at full health
@@ -413,7 +413,7 @@ namespace AgentTestHarness
                 return;
             }
 
-            float repairRate = 2f * maxHp / creationTime[building.UnitType];
+            float repairRate = 1.1f * maxHp / creationTime[building.UnitType];
             building.Health += repairRate * Config.TickDuration;
             if (building.Health > maxHp)
                 building.Health = maxHp;

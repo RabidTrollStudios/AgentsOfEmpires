@@ -49,14 +49,14 @@ namespace PlanningAgent.Tests
         }
 
         [Fact]
-        public void BarracksTrainsArcher_NewArcherAppears()
+        public void ArcheryTrainsArcher_NewArcherAppears()
         {
             var game = new SimGameBuilder()
                 .WithMapSize(30, 30)
                 .WithGold(0, 5000)
                 .WithUnit(0, UnitType.BASE, new Position(5, 5), isBuilt: true)
-                .WithUnit(0, UnitType.BARRACKS, new Position(15, 15), isBuilt: true)
-                .WithAgent(0, new TrainFromBarracksAgent(UnitType.ARCHER))
+                .WithUnit(0, UnitType.ARCHERY, new Position(15, 15), isBuilt: true)
+                .WithAgent(0, new TrainFromArcheryAgent(UnitType.ARCHER))
                 .Build();
 
             game.InitializeMatch();

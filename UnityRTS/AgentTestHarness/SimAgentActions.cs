@@ -58,12 +58,12 @@ namespace AgentTestHarness
             PendingCommands.Clear();
         }
 
-        public void Move(int unitNbr, Position target)
+        public CommandResult Move(int unitNbr, Position target)
         {
-            if (!game.Units.TryGetValue(unitNbr, out var unit)) return;
-            if (unit.OwnerAgentNbr != agentNbr) return;
-            if (!GameConstants.CAN_MOVE[unit.UnitType]) return;
-            if (!game.Map.IsPositionValid(target)) return;
+            if (!game.Units.TryGetValue(unitNbr, out var unit)) return CommandResult.UNIT_NOT_FOUND;
+            if (unit.OwnerAgentNbr != agentNbr) return CommandResult.UNIT_NOT_FOUND;
+            if (!GameConstants.CAN_MOVE[unit.UnitType]) return CommandResult.UNIT_CANNOT_PERFORM_ACTION;
+            if (!game.Map.IsPositionValid(target)) return CommandResult.INVALID_POSITION;
 
             PendingCommands.Add(new SimCommand
             {
@@ -71,27 +71,28 @@ namespace AgentTestHarness
                 UnitNbr = unitNbr,
                 Target = target
             });
+            return CommandResult.SUCCESS;
         }
 
-        public void Build(int unitNbr, Position target, UnitType unitType)
+        public CommandResult Build(int unitNbr, Position target, UnitType unitType)
         {
-            if (!game.Units.TryGetValue(unitNbr, out var unit)) return;
-            if (unit.OwnerAgentNbr != agentNbr) return;
-            if (!GameConstants.CAN_BUILD[unit.UnitType]) return;
-            if (!GameConstants.BUILDS[unit.UnitType].Contains(unitType)) return;
-            if (!game.Map.IsPositionValid(target)) return;
-            if (!game.Map.IsAreaBuildable(unitType, target)) return;
+            if (!game.Units.TryGetValue(unitNbr, out var unit)) return CommandResult.UNIT_NOT_FOUND;
+            if (unit.OwnerAgentNbr != agentNbr) return CommandResult.UNIT_NOT_FOUND;
+            if (!GameConstants.CAN_BUILD[unit.UnitType]) return CommandResult.UNIT_CANNOT_PERFORM_ACTION;
+            if (!GameConstants.BUILDS[unit.UnitType].Contains(unitType)) return CommandResult.UNIT_CANNOT_PERFORM_ACTION;
+            if (!game.Map.IsPositionValid(target)) return CommandResult.INVALID_POSITION;
+            if (!game.Map.IsAreaBuildable(unitType, target)) return CommandResult.AREA_NOT_BUILDABLE;
 
             // Check gold
             float cost = GameConstants.COST[unitType];
-            if (game.GetGold(agentNbr) < cost) return;
+            if (game.GetGold(agentNbr) < cost) return CommandResult.INSUFFICIENT_GOLD;
 
             // Check dependencies
             foreach (UnitType dep in GameConstants.DEPENDENCY[unitType])
             {
                 bool hasDep = game.Units.Values.Any(u =>
                     u.OwnerAgentNbr == agentNbr && u.UnitType == dep && u.IsBuilt);
-                if (!hasDep) return;
+                if (!hasDep) return CommandResult.MISSING_DEPENDENCY;
             }
 
             PendingCommands.Add(new SimCommand
@@ -101,20 +102,21 @@ namespace AgentTestHarness
                 Target = target,
                 UnitType = unitType
             });
+            return CommandResult.SUCCESS;
         }
 
-        public void Gather(int pawnNbr, int mineNbr, int baseNbr)
+        public CommandResult Gather(int pawnNbr, int mineNbr, int baseNbr)
         {
-            if (!game.Units.TryGetValue(pawnNbr, out var pawn)) return;
-            if (pawn.OwnerAgentNbr != agentNbr) return;
-            if (!GameConstants.CAN_GATHER[pawn.UnitType]) return;
+            if (!game.Units.TryGetValue(pawnNbr, out var pawn)) return CommandResult.UNIT_NOT_FOUND;
+            if (pawn.OwnerAgentNbr != agentNbr) return CommandResult.UNIT_NOT_FOUND;
+            if (!GameConstants.CAN_GATHER[pawn.UnitType]) return CommandResult.UNIT_CANNOT_PERFORM_ACTION;
 
-            if (!game.Units.TryGetValue(mineNbr, out var mine)) return;
-            if (mine.UnitType != UnitType.MINE) return;
+            if (!game.Units.TryGetValue(mineNbr, out var mine)) return CommandResult.TARGET_NOT_FOUND;
+            if (mine.UnitType != UnitType.MINE) return CommandResult.INVALID_TARGET;
 
-            if (!game.Units.TryGetValue(baseNbr, out var baseUnit)) return;
-            if (baseUnit.UnitType != UnitType.BASE) return;
-            if (baseUnit.OwnerAgentNbr != agentNbr) return;
+            if (!game.Units.TryGetValue(baseNbr, out var baseUnit)) return CommandResult.TARGET_NOT_FOUND;
+            if (baseUnit.UnitType != UnitType.BASE) return CommandResult.INVALID_TARGET;
+            if (baseUnit.OwnerAgentNbr != agentNbr) return CommandResult.INVALID_TARGET;
 
             PendingCommands.Add(new SimCommand
             {
@@ -123,19 +125,20 @@ namespace AgentTestHarness
                 MineNbr = mineNbr,
                 BaseNbr = baseNbr
             });
+            return CommandResult.SUCCESS;
         }
 
-        public void Train(int buildingNbr, UnitType unitType)
+        public CommandResult Train(int buildingNbr, UnitType unitType)
         {
-            if (!game.Units.TryGetValue(buildingNbr, out var building)) return;
-            if (building.OwnerAgentNbr != agentNbr) return;
-            if (!GameConstants.CAN_TRAIN[building.UnitType]) return;
-            if (!building.IsBuilt) return;
-            if (building.CurrentAction != UnitAction.IDLE) return;
-            if (!GameConstants.TRAINS[building.UnitType].Contains(unitType)) return;
+            if (!game.Units.TryGetValue(buildingNbr, out var building)) return CommandResult.UNIT_NOT_FOUND;
+            if (building.OwnerAgentNbr != agentNbr) return CommandResult.UNIT_NOT_FOUND;
+            if (!GameConstants.CAN_TRAIN[building.UnitType]) return CommandResult.UNIT_CANNOT_PERFORM_ACTION;
+            if (!building.IsBuilt) return CommandResult.BUILDING_NOT_FINISHED;
+            if (building.CurrentAction != UnitAction.IDLE) return CommandResult.UNIT_BUSY;
+            if (!GameConstants.TRAINS[building.UnitType].Contains(unitType)) return CommandResult.UNIT_CANNOT_PERFORM_ACTION;
 
             float cost = GameConstants.COST[unitType];
-            if (game.GetGold(agentNbr) < cost) return;
+            if (game.GetGold(agentNbr) < cost) return CommandResult.INSUFFICIENT_GOLD;
 
             PendingCommands.Add(new SimCommand
             {
@@ -143,19 +146,20 @@ namespace AgentTestHarness
                 UnitNbr = buildingNbr,
                 UnitType = unitType
             });
+            return CommandResult.SUCCESS;
         }
 
-        public void Attack(int unitNbr, int targetNbr)
+        public CommandResult Attack(int unitNbr, int targetNbr)
         {
-            if (!game.Units.TryGetValue(unitNbr, out var unit)) return;
-            if (unit.OwnerAgentNbr != agentNbr) return;
-            if (!GameConstants.CAN_ATTACK[unit.UnitType]) return;
+            if (!game.Units.TryGetValue(unitNbr, out var unit)) return CommandResult.UNIT_NOT_FOUND;
+            if (unit.OwnerAgentNbr != agentNbr) return CommandResult.UNIT_NOT_FOUND;
+            if (!GameConstants.CAN_ATTACK[unit.UnitType]) return CommandResult.UNIT_CANNOT_PERFORM_ACTION;
 
-            if (!game.Units.TryGetValue(targetNbr, out var target)) return;
+            if (!game.Units.TryGetValue(targetNbr, out var target)) return CommandResult.TARGET_NOT_FOUND;
             // Can't attack own units
-            if (target.OwnerAgentNbr == agentNbr) return;
+            if (target.OwnerAgentNbr == agentNbr) return CommandResult.FRIENDLY_FIRE;
             // Can't attack mines
-            if (target.UnitType == UnitType.MINE) return;
+            if (target.UnitType == UnitType.MINE) return CommandResult.INVALID_TARGET;
 
             PendingCommands.Add(new SimCommand
             {
@@ -163,22 +167,23 @@ namespace AgentTestHarness
                 UnitNbr = unitNbr,
                 TargetUnitNbr = targetNbr
             });
+            return CommandResult.SUCCESS;
         }
 
-        public void Repair(int pawnNbr, int buildingNbr)
+        public CommandResult Repair(int pawnNbr, int buildingNbr)
         {
-            if (!game.Units.TryGetValue(pawnNbr, out var pawn)) return;
-            if (pawn.OwnerAgentNbr != agentNbr) return;
-            if (!GameConstants.CAN_BUILD[pawn.UnitType]) return;
+            if (!game.Units.TryGetValue(pawnNbr, out var pawn)) return CommandResult.UNIT_NOT_FOUND;
+            if (pawn.OwnerAgentNbr != agentNbr) return CommandResult.UNIT_NOT_FOUND;
+            if (!GameConstants.CAN_BUILD[pawn.UnitType]) return CommandResult.UNIT_CANNOT_PERFORM_ACTION;
 
-            if (!game.Units.TryGetValue(buildingNbr, out var building)) return;
+            if (!game.Units.TryGetValue(buildingNbr, out var building)) return CommandResult.TARGET_NOT_FOUND;
             // Target must be a non-mobile, non-mine building
-            if (GameConstants.CAN_MOVE[building.UnitType]) return;
-            if (building.UnitType == UnitType.MINE) return;
+            if (GameConstants.CAN_MOVE[building.UnitType]) return CommandResult.INVALID_TARGET;
+            if (building.UnitType == UnitType.MINE) return CommandResult.INVALID_TARGET;
             // Building must be finished
-            if (!building.IsBuilt) return;
+            if (!building.IsBuilt) return CommandResult.BUILDING_NOT_FINISHED;
             // Must belong to the same agent
-            if (building.OwnerAgentNbr != agentNbr) return;
+            if (building.OwnerAgentNbr != agentNbr) return CommandResult.FRIENDLY_FIRE;
 
             PendingCommands.Add(new SimCommand
             {
@@ -186,6 +191,7 @@ namespace AgentTestHarness
                 UnitNbr = pawnNbr,
                 TargetUnitNbr = buildingNbr
             });
+            return CommandResult.SUCCESS;
         }
 
         public void Log(string message)

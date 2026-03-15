@@ -369,8 +369,8 @@ namespace GameManager.GameElements
 					return;
 				}
 
-				// Heal at 2x the build rate
-				float repairRate = 2f * maxHp / Constants.CREATION_TIME[buildUnit.UnitType];
+				// Heal at 110% of the build rate
+				float repairRate = 1.1f * maxHp / Constants.CREATION_TIME[buildUnit.UnitType];
 				buildUnit.Health = Mathf.Min(buildUnit.Health + repairRate * Time.deltaTime, maxHp);
 
 				// Done — building is at full health

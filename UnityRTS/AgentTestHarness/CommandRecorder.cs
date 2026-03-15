@@ -26,7 +26,7 @@ namespace AgentTestHarness
             this.getCurrentTick = getCurrentTick;
         }
 
-        public void Move(int unitNbr, Position target)
+        public CommandResult Move(int unitNbr, Position target)
         {
             Records.Add(new CommandRecord
             {
@@ -36,10 +36,10 @@ namespace AgentTestHarness
                 UnitNbr = unitNbr,
                 Target = target
             });
-            inner.Move(unitNbr, target);
+            return inner.Move(unitNbr, target);
         }
 
-        public void Build(int unitNbr, Position target, UnitType unitType)
+        public CommandResult Build(int unitNbr, Position target, UnitType unitType)
         {
             Records.Add(new CommandRecord
             {
@@ -50,10 +50,10 @@ namespace AgentTestHarness
                 Target = target,
                 BuildingType = unitType
             });
-            inner.Build(unitNbr, target, unitType);
+            return inner.Build(unitNbr, target, unitType);
         }
 
-        public void Gather(int pawnNbr, int mineNbr, int baseNbr)
+        public CommandResult Gather(int pawnNbr, int mineNbr, int baseNbr)
         {
             Records.Add(new CommandRecord
             {
@@ -64,10 +64,10 @@ namespace AgentTestHarness
                 MineNbr = mineNbr,
                 BaseNbr = baseNbr
             });
-            inner.Gather(pawnNbr, mineNbr, baseNbr);
+            return inner.Gather(pawnNbr, mineNbr, baseNbr);
         }
 
-        public void Train(int buildingNbr, UnitType unitType)
+        public CommandResult Train(int buildingNbr, UnitType unitType)
         {
             Records.Add(new CommandRecord
             {
@@ -77,10 +77,10 @@ namespace AgentTestHarness
                 BuildingNbr = buildingNbr,
                 TrainType = unitType
             });
-            inner.Train(buildingNbr, unitType);
+            return inner.Train(buildingNbr, unitType);
         }
 
-        public void Attack(int unitNbr, int targetNbr)
+        public CommandResult Attack(int unitNbr, int targetNbr)
         {
             Records.Add(new CommandRecord
             {
@@ -90,10 +90,10 @@ namespace AgentTestHarness
                 UnitNbr = unitNbr,
                 TargetUnitNbr = targetNbr
             });
-            inner.Attack(unitNbr, targetNbr);
+            return inner.Attack(unitNbr, targetNbr);
         }
 
-        public void Repair(int pawnNbr, int buildingNbr)
+        public CommandResult Repair(int pawnNbr, int buildingNbr)
         {
             Records.Add(new CommandRecord
             {
@@ -103,7 +103,7 @@ namespace AgentTestHarness
                 UnitNbr = pawnNbr,
                 RepairBuildingNbr = buildingNbr
             });
-            inner.Repair(pawnNbr, buildingNbr);
+            return inner.Repair(pawnNbr, buildingNbr);
         }
 
         public void Log(string message)
