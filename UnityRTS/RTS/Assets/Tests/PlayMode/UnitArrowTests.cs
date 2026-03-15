@@ -177,11 +177,7 @@ namespace GameManager.Tests.PlayMode
 				if (arrowGo != null) break;
 			}
 
-			if (arrowGo == null)
-			{
-				Assert.Inconclusive("Arrow did not spawn — cannot test lifecycle");
-				yield break;
-			}
+			Assert.IsNotNull(arrowGo, "Arrow should spawn during archer attack to test lifecycle");
 
 			// Now wait for the arrow to be destroyed (flight + stuck + exploding ≈ 1-2 seconds)
 			float elapsed = 0f;

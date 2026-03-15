@@ -39,9 +39,8 @@ namespace GameManager.Tests.PlayMode
 				timeoutSeconds: 10f,
 				failMessage: "Enemy health did not decrease after warrior attack");
 
-			if (enemy != null)
-				Assert.Less(enemy.Health, initialHealth,
-					"Enemy health should drop as warrior attacks");
+			Assert.IsTrue(enemy == null || enemy.Health < initialHealth,
+				"Enemy health should drop as warrior attacks");
 		}
 
 		/// <summary>
@@ -121,9 +120,8 @@ namespace GameManager.Tests.PlayMode
 				timeoutSeconds: 30f,
 				failMessage: "Warrior never reached or attacked out-of-range enemy");
 
-			if (enemy != null)
-				Assert.Less(enemy.Health, initialHealth,
-					"Enemy health should drop once warrior is in range");
+			Assert.IsTrue(enemy == null || enemy.Health < initialHealth,
+				"Enemy health should drop once warrior is in range");
 		}
 
 		/// <summary>

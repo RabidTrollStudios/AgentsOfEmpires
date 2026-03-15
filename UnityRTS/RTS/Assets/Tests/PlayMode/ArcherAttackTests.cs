@@ -37,9 +37,8 @@ namespace GameManager.Tests.PlayMode
 				timeoutSeconds: 10f,
 				failMessage: "Adjacent enemy health did not decrease from archer attack");
 
-			if (enemy != null)
-				Assert.Less(enemy.Health, initialHealth,
-					"Adjacent enemy should lose health from archer attack");
+			Assert.IsTrue(enemy == null || enemy.Health < initialHealth,
+				"Adjacent enemy should lose health from archer attack");
 		}
 
 		/// <summary>
@@ -109,9 +108,8 @@ namespace GameManager.Tests.PlayMode
 				timeoutSeconds: 15f,
 				failMessage: "Archer did not deal damage to in-range enemy");
 
-			if (enemy != null)
-				Assert.Less(enemy.Health, initialHealth,
-					"In-range enemy should take damage from archer");
+			Assert.IsTrue(enemy == null || enemy.Health < initialHealth,
+				"In-range enemy should take damage from archer");
 		}
 
 		/// <summary>
@@ -196,9 +194,8 @@ namespace GameManager.Tests.PlayMode
 				timeoutSeconds: 30f,
 				failMessage: "Archer+Warrior combo did not deal 50% health to enemy");
 
-			if (enemy != null)
-				Assert.Less(enemy.Health, startHealth * 0.5f,
-					"Combined attack should quickly reduce enemy health below 50%");
+			Assert.IsTrue(enemy == null || enemy.Health < startHealth * 0.5f,
+				"Combined attack should quickly reduce enemy health below 50%");
 		}
 
 		#endregion

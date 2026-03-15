@@ -1,21 +1,21 @@
 ﻿# Summary
 |||
 |:---|:---|
-| Generated on: | 3/14/2026 - 2:30:24 PM |
+| Generated on: | 3/15/2026 - 1:06:13 AM |
 | Parser: | MultiReportParser (4x OpenCoverParser) |
 | Assemblies: | 3 |
 | Classes: | 138 |
 | Files: | 138 |
-| Covered lines: | 10871 |
-| Uncovered lines: | 1217 |
-| Coverable lines: | 12088 |
-| Total lines: | 26441 |
-| Line coverage: | 89.9% (10871 of 12088) |
+| Covered lines: | 10863 |
+| Uncovered lines: | 1325 |
+| Coverable lines: | 12188 |
+| Total lines: | 26429 |
+| Line coverage: | 89.1% (10863 of 12188) |
 | Covered branches: | 0 |
 | Total branches: | 0 |
-| Covered methods: | 1328 |
-| Total methods: | 1441 |
-| Method coverage: | 92.1% (1328 of 1441) |
+| Covered methods: | 1351 |
+| Total methods: | 1464 |
+| Method coverage: | 92.2% (1351 of 1464) |
 
 |**Name**|**Covered**|**Uncovered**|**Coverable**|**Total**|**Line coverage**|**Covered**|**Total**|**Branch coverage**|**Covered**|**Total**|**Method coverage**|
 |:---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
@@ -91,12 +91,12 @@
 |GameManager.Tests.TestCell|11|1|12|31|91.6%|0|0||6|7|85.7%|
 |GameManager.Tests.UtilityAdditionalTests|96|0|96|208|100%|0|0||17|17|100%|
 |GameManager.Tests.UtilityTests|70|0|70|126|100%|0|0||12|12|100%|
-|**GameManager.Tests.PlayMode**|**5057**|**383**|**5440**|**12745**|**92.9%**|**0**|**0**|****|**533**|**557**|**95.6%**|
+|**GameManager.Tests.PlayMode**|**5049**|**491**|**5540**|**12733**|**91.1%**|**0**|**0**|****|**556**|**580**|**95.8%**|
 |GameManager.Tests.PlayMode.AgentActionsAdapterTests|53|0|53|125|100%|0|0||6|6|100%|
 |GameManager.Tests.PlayMode.AgentControllerTests|93|0|93|225|100%|0|0||15|15|100%|
 |GameManager.Tests.PlayMode.AgentGoldTests|92|15|107|240|85.9%|0|0||10|11|90.9%|
 |GameManager.Tests.PlayMode.AgentUnitFilterTests|59|0|59|172|100%|0|0||5|5|100%|
-|GameManager.Tests.PlayMode.ArcherAttackTests|80|0|80|206|100%|0|0||7|7|100%|
+|GameManager.Tests.PlayMode.ArcherAttackTests|77|39|116|203|66.3%|0|0||13|13|100%|
 |GameManager.Tests.PlayMode.ArcherEngageRangeTests|41|0|41|130|100%|0|0||4|4|100%|
 |GameManager.Tests.PlayMode.BuildDependencyTests|52|0|52|116|100%|0|0||3|3|100%|
 |GameManager.Tests.PlayMode.BuildingCellStateTests|40|0|40|126|100%|0|0||4|4|100%|
@@ -111,12 +111,12 @@
 |GameManager.Tests.PlayMode.GameManagerWinConditionTests|89|0|89|207|100%|0|0||11|11|100%|
 |GameManager.Tests.PlayMode.GatherContinuationTests|79|34|113|198|69.9%|0|0||10|10|100%|
 |GameManager.Tests.PlayMode.GatherTestHelper|0|44|44|110|0%|0|0||0|5|0%|
-|GameManager.Tests.PlayMode.LancerCombatTests|62|0|62|191|100%|0|0||10|10|100%|
+|GameManager.Tests.PlayMode.LancerCombatTests|61|25|86|190|70.9%|0|0||19|19|100%|
 |GameManager.Tests.PlayMode.MapDimensionTests|33|0|33|117|100%|0|0||7|7|100%|
 |GameManager.Tests.PlayMode.MapReclaimTests|77|0|77|188|100%|0|0||6|6|100%|
 |GameManager.Tests.PlayMode.MineNaturalDepletionTests|52|27|79|151|65.8%|0|0||7|7|100%|
 |GameManager.Tests.PlayMode.MovementTestHelper|5|32|37|94|13.5%|0|0||1|5|20%|
-|GameManager.Tests.PlayMode.MultiAgentTests|61|12|73|159|83.5%|0|0||5|5|100%|
+|GameManager.Tests.PlayMode.MultiAgentTests|59|11|70|157|84.2%|0|0||7|7|100%|
 |GameManager.Tests.PlayMode.PawnBuildSequenceTests|44|0|44|123|100%|0|0||3|3|100%|
 |GameManager.Tests.PlayMode.PlayModeTestBase|41|3|44|114|93.1%|0|0||8|8|100%|
 |GameManager.Tests.PlayMode.PlayModeTestContext|5|0|5|294|100%|0|0||2|2|100%|
@@ -127,8 +127,8 @@
 |GameManager.Tests.PlayMode.TrainingFromBarracksTests|111|0|111|246|100%|0|0||10|10|100%|
 |GameManager.Tests.PlayMode.TrainingFromTowerTests|70|0|70|168|100%|0|0||8|8|100%|
 |GameManager.Tests.PlayMode.UnitAnimationTests|185|17|202|396|91.5%|0|0||16|16|100%|
-|GameManager.Tests.PlayMode.UnitArrowTests|99|5|104|202|95.1%|0|0||5|5|100%|
-|GameManager.Tests.PlayMode.UnitAttackTests|79|0|79|217|100%|0|0||7|7|100%|
+|GameManager.Tests.PlayMode.UnitArrowTests|99|9|108|198|91.6%|0|0||5|5|100%|
+|GameManager.Tests.PlayMode.UnitAttackTests|77|41|118|215|65.2%|0|0||13|13|100%|
 |GameManager.Tests.PlayMode.UnitBuildErrorTests|45|0|45|100|100%|0|0||3|3|100%|
 |GameManager.Tests.PlayMode.UnitBuildHappyPathTests|93|0|93|176|100%|0|0||7|7|100%|
 |GameManager.Tests.PlayMode.UnitCapabilityQueryTests|39|0|39|100|100%|0|0||7|7|100%|

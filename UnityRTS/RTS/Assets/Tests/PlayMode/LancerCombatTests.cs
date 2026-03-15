@@ -38,9 +38,8 @@ namespace GameManager.Tests.PlayMode
 				timeoutSeconds: 10f,
 				failMessage: "Enemy health did not decrease after LANCER attack");
 
-			if (enemy != null)
-				Assert.Less(enemy.Health, initialHealth,
-					"Enemy health should drop as LANCER attacks");
+			Assert.IsTrue(enemy == null || enemy.Health < initialHealth,
+				"Enemy health should drop as LANCER attacks");
 		}
 
 		/// <summary>
