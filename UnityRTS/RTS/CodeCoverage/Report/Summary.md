@@ -1,56 +1,56 @@
 ﻿# Summary
 |||
 |:---|:---|
-| Generated on: | 3/15/2026 - 1:06:13 AM |
+| Generated on: | 3/15/2026 - 2:35:09 PM |
 | Parser: | MultiReportParser (4x OpenCoverParser) |
 | Assemblies: | 3 |
 | Classes: | 138 |
 | Files: | 138 |
-| Covered lines: | 10863 |
-| Uncovered lines: | 1325 |
-| Coverable lines: | 12188 |
-| Total lines: | 26429 |
-| Line coverage: | 89.1% (10863 of 12188) |
+| Covered lines: | 4157 |
+| Uncovered lines: | 7761 |
+| Coverable lines: | 11918 |
+| Total lines: | 26551 |
+| Line coverage: | 34.8% (4157 of 11918) |
 | Covered branches: | 0 |
 | Total branches: | 0 |
-| Covered methods: | 1351 |
-| Total methods: | 1464 |
-| Method coverage: | 92.2% (1351 of 1464) |
+| Covered methods: | 667 |
+| Total methods: | 1423 |
+| Method coverage: | 46.8% (667 of 1423) |
 
 |**Name**|**Covered**|**Uncovered**|**Coverable**|**Total**|**Line coverage**|**Covered**|**Total**|**Branch coverage**|**Covered**|**Total**|**Method coverage**|
 |:---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
-|**GameManager**|**3139**|**783**|**3922**|**8633**|**80%**|**0**|**0**|****|**375**|**454**|**82.5%**|
-|GameManager.Agent|106|111|217|469|48.8%|0|0||31|35|88.5%|
-|GameManager.AgentActionsAdapter|36|6|42|72|85.7%|0|0||7|8|87.5%|
-|GameManager.AgentBridge|22|7|29|66|75.8%|0|0||6|8|75%|
-|GameManager.AgentController|30|15|45|117|66.6%|0|0||5|6|83.3%|
+|**GameManager**|**1315**|**2674**|**3989**|**8755**|**32.9%**|**0**|**0**|****|**229**|**458**|**50%**|
+|GameManager.Agent|53|170|223|475|23.7%|0|0||24|35|68.5%|
+|GameManager.AgentActionsAdapter|54|44|98|180|55.1%|0|0||9|12|75%|
+|GameManager.AgentBridge|7|22|29|66|24.1%|0|0||3|8|37.5%|
+|GameManager.AgentController|7|38|45|117|15.5%|0|0||2|6|33.3%|
 |GameManager.AgentLoader|30|24|54|107|55.5%|0|0||4|4|100%|
 |GameManager.AssemblyLoader|0|11|11|41|0%|0|0||0|4|0%|
 |GameManager.CommandLogger|0|30|30|64|0%|0|0||0|5|0%|
 |GameManager.Constants|46|17|63|364|73%|0|0||4|21|19%|
-|GameManager.EventDispatcher|178|22|200|324|89%|0|0||7|7|100%|
-|GameManager.GameElements.ArrowProjectile|148|24|172|292|86%|0|0||11|12|91.6%|
-|GameManager.GameElements.AttackEventArgs|7|0|7|178|100%|0|0||5|5|100%|
-|GameManager.GameElements.BuildEventArgs|9|0|9|178|100%|0|0||7|7|100%|
+|GameManager.EventDispatcher|5|195|200|324|2.5%|0|0||1|7|14.2%|
+|GameManager.GameElements.ArrowProjectile|0|172|172|292|0%|0|0||0|12|0%|
+|GameManager.GameElements.AttackEventArgs|0|7|7|178|0%|0|0||0|5|0%|
+|GameManager.GameElements.BuildEventArgs|0|9|9|178|0%|0|0||0|7|0%|
 |GameManager.GameElements.CameraController|0|43|43|84|0%|0|0||0|2|0%|
-|GameManager.GameElements.GatherEventArgs|9|0|9|178|100%|0|0||7|7|100%|
-|GameManager.GameElements.GoldNuggetProjectile|21|0|21|53|100%|0|0||2|2|100%|
+|GameManager.GameElements.GatherEventArgs|0|9|9|178|0%|0|0||0|7|0%|
+|GameManager.GameElements.GoldNuggetProjectile|0|21|21|53|0%|0|0||0|2|0%|
 |GameManager.GameElements.GridCell|26|2|28|59|92.8%|0|0||12|13|92.3%|
-|GameManager.GameElements.MoveEventArgs|9|0|9|178|100%|0|0||7|7|100%|
-|GameManager.GameElements.RepairEventArgs|7|0|7|178|100%|0|0||5|5|100%|
-|GameManager.GameElements.TrainEventArgs|7|0|7|178|100%|0|0||5|5|100%|
-|GameManager.GameElements.Unit|1440|102|1542|2620|93.3%|0|0||101|103|98%|
-|GameManager.GameElements.Utility|46|2|48|126|95.8%|0|0||8|10|80%|
-|GameManager.GameManager|435|123|558|1186|77.9%|0|0||71|78|91%|
-|GameManager.GameStateAdapter|14|101|115|222|12.1%|0|0||3|23|13%|
+|GameManager.GameElements.MoveEventArgs|0|9|9|178|0%|0|0||0|7|0%|
+|GameManager.GameElements.RepairEventArgs|0|7|7|178|0%|0|0||0|5|0%|
+|GameManager.GameElements.TrainEventArgs|0|7|7|178|0%|0|0||0|5|0%|
+|GameManager.GameElements.Unit|350|1197|1547|2628|22.6%|0|0||47|103|45.6%|
+|GameManager.GameElements.Utility|45|3|48|126|93.7%|0|0||7|10|70%|
+|GameManager.GameManager|255|303|558|1186|45.6%|0|0||56|78|71.7%|
+|GameManager.GameStateAdapter|0|115|115|222|0%|0|0||0|23|0%|
 |GameManager.Graph.Edge[V]|11|6|17|30|64.7%|0|0||2|3|66.6%|
 |GameManager.Graph.Graph[T]|127|0|127|203|100%|0|0||13|13|100%|
 |GameManager.Graph.Node[V]|19|0|19|35|100%|0|0||3|3|100%|
 |GameManager.Graph.PriorityNode[V]|19|0|19|159|100%|0|0||3|3|100%|
 |GameManager.Graph.PriorityQueue[T]|76|9|85|159|89.4%|0|0||8|9|88.8%|
 |GameManager.InfluenceTile|0|4|4|20|0%|0|0||0|2|0%|
-|GameManager.MapManager|178|122|300|496|59.3%|0|0||22|24|91.6%|
-|GameManager.UnitManager|83|2|85|197|97.6%|0|0||16|20|80%|
+|GameManager.MapManager|136|164|300|496|45.3%|0|0||20|24|83.3%|
+|GameManager.UnitManager|49|36|85|197|57.6%|0|0||11|20|55%|
 |**GameManager.Tests.EditMode**|**2675**|**51**|**2726**|**6406**|**98.1%**|**0**|**0**|****|**420**|**430**|**97.6%**|
 |GameManager.Tests.AgentActionsAdapterTests|29|3|32|102|90.6%|0|0||7|10|70%|
 |GameManager.Tests.AgentControllerTests|6|0|6|27|100%|0|0||1|1|100%|
@@ -91,72 +91,72 @@
 |GameManager.Tests.TestCell|11|1|12|31|91.6%|0|0||6|7|85.7%|
 |GameManager.Tests.UtilityAdditionalTests|96|0|96|208|100%|0|0||17|17|100%|
 |GameManager.Tests.UtilityTests|70|0|70|126|100%|0|0||12|12|100%|
-|**GameManager.Tests.PlayMode**|**5049**|**491**|**5540**|**12733**|**91.1%**|**0**|**0**|****|**556**|**580**|**95.8%**|
-|GameManager.Tests.PlayMode.AgentActionsAdapterTests|53|0|53|125|100%|0|0||6|6|100%|
-|GameManager.Tests.PlayMode.AgentControllerTests|93|0|93|225|100%|0|0||15|15|100%|
-|GameManager.Tests.PlayMode.AgentGoldTests|92|15|107|240|85.9%|0|0||10|11|90.9%|
-|GameManager.Tests.PlayMode.AgentUnitFilterTests|59|0|59|172|100%|0|0||5|5|100%|
-|GameManager.Tests.PlayMode.ArcherAttackTests|77|39|116|203|66.3%|0|0||13|13|100%|
-|GameManager.Tests.PlayMode.ArcherEngageRangeTests|41|0|41|130|100%|0|0||4|4|100%|
-|GameManager.Tests.PlayMode.BuildDependencyTests|52|0|52|116|100%|0|0||3|3|100%|
-|GameManager.Tests.PlayMode.BuildingCellStateTests|40|0|40|126|100%|0|0||4|4|100%|
-|GameManager.Tests.PlayMode.BuildingTestHelper|38|29|67|157|56.7%|0|0||7|10|70%|
-|GameManager.Tests.PlayMode.BuildOccupiedCellTests|35|0|35|117|100%|0|0||3|3|100%|
-|GameManager.Tests.PlayMode.BuildResumeTests|68|0|68|167|100%|0|0||4|4|100%|
-|GameManager.Tests.PlayMode.CombatTestHelper|18|20|38|111|47.3%|0|0||3|7|42.8%|
-|GameManager.Tests.PlayMode.ConcurrentActionsTests|72|8|80|149|90%|0|0||4|4|100%|
-|GameManager.Tests.PlayMode.EventDispatcherTests|367|0|367|594|100%|0|0||45|45|100%|
-|GameManager.Tests.PlayMode.GameManagerStateTests|61|0|61|179|100%|0|0||12|12|100%|
-|GameManager.Tests.PlayMode.GameManagerUpdateLoopTests|357|1|358|858|99.7%|0|0||34|35|97.1%|
-|GameManager.Tests.PlayMode.GameManagerWinConditionTests|89|0|89|207|100%|0|0||11|11|100%|
-|GameManager.Tests.PlayMode.GatherContinuationTests|79|34|113|198|69.9%|0|0||10|10|100%|
+|**GameManager.Tests.PlayMode**|**167**|**5036**|**5203**|**12733**|**3.2%**|**0**|**0**|****|**18**|**535**|**3.3%**|
+|GameManager.Tests.PlayMode.AgentActionsAdapterTests|0|53|53|125|0%|0|0||0|6|0%|
+|GameManager.Tests.PlayMode.AgentControllerTests|0|93|93|225|0%|0|0||0|15|0%|
+|GameManager.Tests.PlayMode.AgentGoldTests|0|96|96|240|0%|0|0||0|10|0%|
+|GameManager.Tests.PlayMode.AgentUnitFilterTests|0|59|59|172|0%|0|0||0|5|0%|
+|GameManager.Tests.PlayMode.ArcherAttackTests|0|77|77|203|0%|0|0||0|7|0%|
+|GameManager.Tests.PlayMode.ArcherEngageRangeTests|0|41|41|130|0%|0|0||0|4|0%|
+|GameManager.Tests.PlayMode.BuildDependencyTests|0|52|52|116|0%|0|0||0|3|0%|
+|GameManager.Tests.PlayMode.BuildingCellStateTests|0|40|40|126|0%|0|0||0|4|0%|
+|GameManager.Tests.PlayMode.BuildingTestHelper|0|67|67|157|0%|0|0||0|10|0%|
+|GameManager.Tests.PlayMode.BuildOccupiedCellTests|0|35|35|117|0%|0|0||0|3|0%|
+|GameManager.Tests.PlayMode.BuildResumeTests|0|68|68|167|0%|0|0||0|4|0%|
+|GameManager.Tests.PlayMode.CombatTestHelper|0|38|38|111|0%|0|0||0|7|0%|
+|GameManager.Tests.PlayMode.ConcurrentActionsTests|0|72|72|149|0%|0|0||0|4|0%|
+|GameManager.Tests.PlayMode.EventDispatcherTests|0|367|367|594|0%|0|0||0|44|0%|
+|GameManager.Tests.PlayMode.GameManagerStateTests|0|61|61|179|0%|0|0||0|12|0%|
+|GameManager.Tests.PlayMode.GameManagerUpdateLoopTests|0|358|358|858|0%|0|0||0|35|0%|
+|GameManager.Tests.PlayMode.GameManagerWinConditionTests|0|89|89|207|0%|0|0||0|11|0%|
+|GameManager.Tests.PlayMode.GatherContinuationTests|0|79|79|198|0%|0|0||0|6|0%|
 |GameManager.Tests.PlayMode.GatherTestHelper|0|44|44|110|0%|0|0||0|5|0%|
-|GameManager.Tests.PlayMode.LancerCombatTests|61|25|86|190|70.9%|0|0||19|19|100%|
-|GameManager.Tests.PlayMode.MapDimensionTests|33|0|33|117|100%|0|0||7|7|100%|
-|GameManager.Tests.PlayMode.MapReclaimTests|77|0|77|188|100%|0|0||6|6|100%|
-|GameManager.Tests.PlayMode.MineNaturalDepletionTests|52|27|79|151|65.8%|0|0||7|7|100%|
-|GameManager.Tests.PlayMode.MovementTestHelper|5|32|37|94|13.5%|0|0||1|5|20%|
-|GameManager.Tests.PlayMode.MultiAgentTests|59|11|70|157|84.2%|0|0||7|7|100%|
-|GameManager.Tests.PlayMode.PawnBuildSequenceTests|44|0|44|123|100%|0|0||3|3|100%|
-|GameManager.Tests.PlayMode.PlayModeTestBase|41|3|44|114|93.1%|0|0||8|8|100%|
-|GameManager.Tests.PlayMode.PlayModeTestContext|5|0|5|294|100%|0|0||2|2|100%|
-|GameManager.Tests.PlayMode.PlayModeTestHelper|136|0|136|294|100%|0|0||10|10|100%|
-|GameManager.Tests.PlayMode.ThreePawnDepositTests|64|26|90|146|71.1%|0|0||5|5|100%|
-|GameManager.Tests.PlayMode.TrainDurationTests|53|0|53|135|100%|0|0||6|6|100%|
-|GameManager.Tests.PlayMode.TrainingBusyRejectTests|49|0|49|146|100%|0|0||4|4|100%|
-|GameManager.Tests.PlayMode.TrainingFromBarracksTests|111|0|111|246|100%|0|0||10|10|100%|
-|GameManager.Tests.PlayMode.TrainingFromTowerTests|70|0|70|168|100%|0|0||8|8|100%|
-|GameManager.Tests.PlayMode.UnitAnimationTests|185|17|202|396|91.5%|0|0||16|16|100%|
-|GameManager.Tests.PlayMode.UnitArrowTests|99|9|108|198|91.6%|0|0||5|5|100%|
-|GameManager.Tests.PlayMode.UnitAttackTests|77|41|118|215|65.2%|0|0||13|13|100%|
-|GameManager.Tests.PlayMode.UnitBuildErrorTests|45|0|45|100|100%|0|0||3|3|100%|
-|GameManager.Tests.PlayMode.UnitBuildHappyPathTests|93|0|93|176|100%|0|0||7|7|100%|
-|GameManager.Tests.PlayMode.UnitCapabilityQueryTests|39|0|39|100|100%|0|0||7|7|100%|
-|GameManager.Tests.PlayMode.UnitCapabilityTests|134|0|134|327|100%|0|0||15|15|100%|
-|GameManager.Tests.PlayMode.UnitDamageValuesTests|41|0|41|131|100%|0|0||6|6|100%|
-|GameManager.Tests.PlayMode.UnitDebuggingInfoTests|84|0|84|188|100%|0|0||14|14|100%|
-|GameManager.Tests.PlayMode.UnitDestructionTests|121|0|121|284|100%|0|0||8|8|100%|
-|GameManager.Tests.PlayMode.UnitGatherEdgeCaseTests|71|25|96|158|73.9%|0|0||7|7|100%|
-|GameManager.Tests.PlayMode.UnitGatherErrorTests|52|23|75|125|69.3%|0|0||7|7|100%|
-|GameManager.Tests.PlayMode.UnitGatherLifecycleTests|70|36|106|163|66%|0|0||13|13|100%|
-|GameManager.Tests.PlayMode.UnitGoldNuggetTests|90|2|92|207|97.8%|0|0||8|8|100%|
-|GameManager.Tests.PlayMode.UnitIdleTransitionTests|66|6|72|191|91.6%|0|0||7|7|100%|
-|GameManager.Tests.PlayMode.UnitInitialHealthTests|60|0|60|165|100%|0|0||9|9|100%|
-|GameManager.Tests.PlayMode.UnitInterruptTests|37|10|47|134|78.7%|0|0||4|5|80%|
-|GameManager.Tests.PlayMode.UnitManagerQueryTests|83|0|83|211|100%|0|0||10|10|100%|
-|GameManager.Tests.PlayMode.UnitMovementBoundaryTests|86|0|86|182|100%|0|0||7|7|100%|
-|GameManager.Tests.PlayMode.UnitMovementHappyPathTests|32|0|32|82|100%|0|0||3|3|100%|
-|GameManager.Tests.PlayMode.UnitMovementObstacleTests|40|0|40|131|100%|0|0||5|5|100%|
-|GameManager.Tests.PlayMode.UnitPathFailureTests|56|0|56|138|100%|0|0||3|3|100%|
-|GameManager.Tests.PlayMode.UnitPathTargetVisualizationTests|67|1|68|160|98.5%|0|0||11|12|91.6%|
-|GameManager.Tests.PlayMode.UnitPropertyTests|44|0|44|119|100%|0|0||8|8|100%|
-|GameManager.Tests.PlayMode.UnitRepairTests|112|0|112|267|100%|0|0||8|8|100%|
-|GameManager.Tests.PlayMode.UnitRetargetTests|62|0|62|142|100%|0|0||4|4|100%|
-|GameManager.Tests.PlayMode.UnitSpawnPositionTests|60|0|60|170|100%|0|0||5|5|100%|
-|GameManager.Tests.PlayMode.UnitStateColorTests|73|0|73|148|100%|0|0||10|10|100%|
-|GameManager.Tests.PlayMode.UnitTrainingErrorTests|73|0|73|163|100%|0|0||6|6|100%|
-|GameManager.Tests.PlayMode.UnitTrainingLifecycleTests|86|0|86|163|100%|0|0||8|8|100%|
-|GameManager.Tests.PlayMode.UnitVisualEffectTests|123|2|125|252|98.4%|0|0||6|6|100%|
-|GameManager.Tests.PlayMode.VisualTestHelper|45|5|50|133|90%|0|0||9|13|69.2%|
-|GameManager.Tests.PlayMode.WarriorChaseTests|39|0|39|125|100%|0|0||4|4|100%|
-|GameManager.Tests.PlayMode.WarriorGroupCombatTests|53|0|53|142|100%|0|0||4|4|100%|
+|GameManager.Tests.PlayMode.LancerCombatTests|0|61|61|190|0%|0|0||0|10|0%|
+|GameManager.Tests.PlayMode.MapDimensionTests|0|33|33|117|0%|0|0||0|7|0%|
+|GameManager.Tests.PlayMode.MapReclaimTests|0|77|77|188|0%|0|0||0|6|0%|
+|GameManager.Tests.PlayMode.MineNaturalDepletionTests|0|52|52|151|0%|0|0||0|4|0%|
+|GameManager.Tests.PlayMode.MovementTestHelper|0|37|37|94|0%|0|0||0|5|0%|
+|GameManager.Tests.PlayMode.MultiAgentTests|0|59|59|157|0%|0|0||0|5|0%|
+|GameManager.Tests.PlayMode.PawnBuildSequenceTests|0|44|44|123|0%|0|0||0|3|0%|
+|GameManager.Tests.PlayMode.PlayModeTestBase|18|26|44|114|40.9%|0|0||3|8|37.5%|
+|GameManager.Tests.PlayMode.PlayModeTestContext|1|4|5|294|20%|0|0||1|2|50%|
+|GameManager.Tests.PlayMode.PlayModeTestHelper|135|1|136|294|99.2%|0|0||10|10|100%|
+|GameManager.Tests.PlayMode.ThreePawnDepositTests|0|67|67|146|0%|0|0||0|3|0%|
+|GameManager.Tests.PlayMode.TrainDurationTests|0|53|53|135|0%|0|0||0|6|0%|
+|GameManager.Tests.PlayMode.TrainingBusyRejectTests|0|49|49|146|0%|0|0||0|4|0%|
+|GameManager.Tests.PlayMode.TrainingFromBarracksTests|0|111|111|246|0%|0|0||0|10|0%|
+|GameManager.Tests.PlayMode.TrainingFromTowerTests|0|70|70|168|0%|0|0||0|8|0%|
+|GameManager.Tests.PlayMode.UnitAnimationTests|0|187|187|396|0%|0|0||0|14|0%|
+|GameManager.Tests.PlayMode.UnitArrowTests|0|101|101|198|0%|0|0||0|5|0%|
+|GameManager.Tests.PlayMode.UnitAttackTests|0|77|77|215|0%|0|0||0|7|0%|
+|GameManager.Tests.PlayMode.UnitBuildErrorTests|0|45|45|100|0%|0|0||0|3|0%|
+|GameManager.Tests.PlayMode.UnitBuildHappyPathTests|0|93|93|176|0%|0|0||0|7|0%|
+|GameManager.Tests.PlayMode.UnitCapabilityQueryTests|0|39|39|100|0%|0|0||0|7|0%|
+|GameManager.Tests.PlayMode.UnitCapabilityTests|0|134|134|327|0%|0|0||0|15|0%|
+|GameManager.Tests.PlayMode.UnitDamageValuesTests|0|41|41|131|0%|0|0||0|6|0%|
+|GameManager.Tests.PlayMode.UnitDebuggingInfoTests|0|84|84|188|0%|0|0||0|14|0%|
+|GameManager.Tests.PlayMode.UnitDestructionTests|0|121|121|284|0%|0|0||0|8|0%|
+|GameManager.Tests.PlayMode.UnitGatherEdgeCaseTests|0|71|71|158|0%|0|0||0|5|0%|
+|GameManager.Tests.PlayMode.UnitGatherErrorTests|0|52|52|125|0%|0|0||0|5|0%|
+|GameManager.Tests.PlayMode.UnitGatherLifecycleTests|0|70|70|163|0%|0|0||0|8|0%|
+|GameManager.Tests.PlayMode.UnitGoldNuggetTests|0|92|92|207|0%|0|0||0|8|0%|
+|GameManager.Tests.PlayMode.UnitIdleTransitionTests|0|66|66|191|0%|0|0||0|7|0%|
+|GameManager.Tests.PlayMode.UnitInitialHealthTests|0|60|60|165|0%|0|0||0|9|0%|
+|GameManager.Tests.PlayMode.UnitInterruptTests|0|41|41|134|0%|0|0||0|5|0%|
+|GameManager.Tests.PlayMode.UnitManagerQueryTests|0|83|83|211|0%|0|0||0|10|0%|
+|GameManager.Tests.PlayMode.UnitMovementBoundaryTests|0|86|86|182|0%|0|0||0|7|0%|
+|GameManager.Tests.PlayMode.UnitMovementHappyPathTests|0|32|32|82|0%|0|0||0|3|0%|
+|GameManager.Tests.PlayMode.UnitMovementObstacleTests|0|40|40|131|0%|0|0||0|5|0%|
+|GameManager.Tests.PlayMode.UnitPathFailureTests|0|56|56|138|0%|0|0||0|3|0%|
+|GameManager.Tests.PlayMode.UnitPathTargetVisualizationTests|13|55|68|160|19.1%|0|0||4|12|33.3%|
+|GameManager.Tests.PlayMode.UnitPropertyTests|0|44|44|119|0%|0|0||0|8|0%|
+|GameManager.Tests.PlayMode.UnitRepairTests|0|112|112|267|0%|0|0||0|8|0%|
+|GameManager.Tests.PlayMode.UnitRetargetTests|0|62|62|142|0%|0|0||0|4|0%|
+|GameManager.Tests.PlayMode.UnitSpawnPositionTests|0|60|60|170|0%|0|0||0|5|0%|
+|GameManager.Tests.PlayMode.UnitStateColorTests|0|73|73|148|0%|0|0||0|10|0%|
+|GameManager.Tests.PlayMode.UnitTrainingErrorTests|0|73|73|163|0%|0|0||0|6|0%|
+|GameManager.Tests.PlayMode.UnitTrainingLifecycleTests|0|86|86|163|0%|0|0||0|8|0%|
+|GameManager.Tests.PlayMode.UnitVisualEffectTests|0|125|125|252|0%|0|0||0|6|0%|
+|GameManager.Tests.PlayMode.VisualTestHelper|0|50|50|133|0%|0|0||0|13|0%|
+|GameManager.Tests.PlayMode.WarriorChaseTests|0|39|39|125|0%|0|0||0|4|0%|
+|GameManager.Tests.PlayMode.WarriorGroupCombatTests|0|53|53|142|0%|0|0||0|4|0%|

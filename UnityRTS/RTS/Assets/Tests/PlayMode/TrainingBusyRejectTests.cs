@@ -102,7 +102,7 @@ namespace GameManager.Tests.PlayMode
 			// Wait for first training to complete
 			yield return WaitUntil(
 				() => barracks.CurrentAction == UnitAction.IDLE,
-				timeoutSeconds: 30f,
+				timeoutSeconds: 10f,
 				failMessage: "First BARRACKS training did not complete");
 
 			// Now issue second train command

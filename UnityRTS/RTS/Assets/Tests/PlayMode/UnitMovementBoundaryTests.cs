@@ -29,7 +29,7 @@ namespace GameManager.Tests.PlayMode
 
 			yield return WaitUntil(
 				() => pawn.CurrentAction == UnitAction.IDLE,
-				timeoutSeconds: 30f,
+				timeoutSeconds: 10f,
 				failMessage: "Pawn at map edge (0,0) did not reach interior target");
 
 			Assert.AreEqual(target, pawn.GridPosition,
@@ -47,7 +47,7 @@ namespace GameManager.Tests.PlayMode
 
 			yield return WaitUntil(
 				() => pawn.CurrentAction == UnitAction.IDLE,
-				timeoutSeconds: 30f,
+				timeoutSeconds: 10f,
 				failMessage: "Pawn did not reach near-corner target (27,27)");
 
 			Assert.AreEqual(target, pawn.GridPosition,
@@ -109,7 +109,7 @@ namespace GameManager.Tests.PlayMode
 
 			yield return WaitUntil(
 				() => pawn.CurrentAction == UnitAction.IDLE,
-				timeoutSeconds: 30f,
+				timeoutSeconds: 10f,
 				failMessage: "Pawn did not resolve blocked path (re-path or go IDLE)");
 
 			Assert.AreEqual(UnitAction.IDLE, pawn.CurrentAction,
@@ -168,7 +168,7 @@ namespace GameManager.Tests.PlayMode
 							return false;
 					return true;
 				},
-				timeoutSeconds: 60f,
+				timeoutSeconds: 15f,
 				failMessage: "Not all pawns resolved to IDLE within timeout");
 
 			for (int i = 0; i < pawnCount; i++)

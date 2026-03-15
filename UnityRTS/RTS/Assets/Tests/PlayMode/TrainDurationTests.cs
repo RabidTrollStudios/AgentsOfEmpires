@@ -30,8 +30,8 @@ namespace GameManager.Tests.PlayMode
 
 			yield return WaitUntil(
 				() => barracks.CurrentAction == UnitAction.IDLE,
-				timeoutSeconds: 60f,
-				failMessage: "WARRIOR training did not complete within 60s");
+				timeoutSeconds: 15f,
+				failMessage: "WARRIOR training did not complete within 15s");
 
 			float elapsed = Time.time - startTime;
 			float expectedTime = Constants.CREATION_TIME[UnitType.WARRIOR];
@@ -56,8 +56,8 @@ namespace GameManager.Tests.PlayMode
 
 			yield return WaitUntil(
 				() => baseUnit.CurrentAction == UnitAction.IDLE,
-				timeoutSeconds: 60f,
-				failMessage: "PAWN training did not complete within 60s");
+				timeoutSeconds: 15f,
+				failMessage: "PAWN training did not complete within 15s");
 
 			float elapsed = Time.time - startTime;
 			float expectedTime = Constants.CREATION_TIME[UnitType.PAWN];
@@ -81,8 +81,8 @@ namespace GameManager.Tests.PlayMode
 
 			yield return WaitUntil(
 				() => archery.CurrentAction == UnitAction.IDLE,
-				timeoutSeconds: 60f,
-				failMessage: "ARCHER training did not complete within 60s");
+				timeoutSeconds: 15f,
+				failMessage: "ARCHER training did not complete within 15s");
 
 			float elapsed = Time.time - startTime;
 			float expectedTime = Constants.CREATION_TIME[UnitType.ARCHER];

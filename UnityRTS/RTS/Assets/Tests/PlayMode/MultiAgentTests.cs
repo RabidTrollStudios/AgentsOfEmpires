@@ -145,7 +145,7 @@ namespace GameManager.Tests.PlayMode
 			// Wait until both agents gain gold
 			yield return WaitUntil(
 				() => agent0.Gold > gold0Before && agent1.Gold > gold1Before,
-				timeoutSeconds: 60f,
+				timeoutSeconds: 15f,
 				failMessage: "Both agents did not gain gold from competing gather");
 
 			Assert.Greater(agent0.Gold, gold0Before, "Agent 0 should gain gold");

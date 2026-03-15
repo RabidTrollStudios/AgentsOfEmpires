@@ -916,6 +916,10 @@ namespace GameManager.GameElements
 
 			bool show = GameManager.Instance.HasPathTint;
 
+			// Hide attack pursuit paths when the attack tint toggle is off
+			if (show && CurrentAction == UnitAction.ATTACK && !GameManager.Instance.HasAttackTint)
+				show = false;
+
 			if (!show)
 			{
 				pathLineRenderer.positionCount = 0;

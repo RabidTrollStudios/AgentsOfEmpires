@@ -163,7 +163,7 @@ namespace GameManager.Tests.PlayMode
 			// Three archers should destroy the enemy building
 			yield return WaitUntil(
 				() => ctx.UnitManager.GetUnit(enemyNbr) == null,
-				timeoutSeconds: 30f,
+				timeoutSeconds: 10f,
 				failMessage: "Three archers could not destroy the enemy BASE");
 
 			yield return null;
@@ -191,7 +191,7 @@ namespace GameManager.Tests.PlayMode
 			// Wait for significant health loss
 			yield return WaitUntil(
 				() => enemy == null || enemy.Health < startHealth * 0.5f,
-				timeoutSeconds: 30f,
+				timeoutSeconds: 10f,
 				failMessage: "Archer+Warrior combo did not deal 50% health to enemy");
 
 			Assert.IsTrue(enemy == null || enemy.Health < startHealth * 0.5f,

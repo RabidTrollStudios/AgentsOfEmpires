@@ -77,7 +77,7 @@ namespace GameManager.Tests.PlayMode
 
 			yield return WaitUntil(
 				() => ctx.UnitManager.GetUnit(barracksNbr) == null,
-				timeoutSeconds: 30f,
+				timeoutSeconds: 10f,
 				failMessage: "Barracks was not destroyed by warriors");
 
 			yield return null; // let Destroy process

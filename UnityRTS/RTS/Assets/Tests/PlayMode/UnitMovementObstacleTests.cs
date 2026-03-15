@@ -72,7 +72,7 @@ namespace GameManager.Tests.PlayMode
 
 			yield return WaitUntil(
 				() => pawn.CurrentAction == UnitAction.IDLE,
-				timeoutSeconds: 30f,
+				timeoutSeconds: 10f,
 				failMessage: "Pawn with obstacle in path did not complete its move");
 
 			Assert.AreEqual(UnitAction.IDLE, pawn.CurrentAction,

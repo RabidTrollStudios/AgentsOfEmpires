@@ -1,11 +1,11 @@
 [Licensing::Module] Trying to connect to existing licensing client channel...
 Built from '6000.3/respin/6000.3.5f1-a1ec4b2f2d19' branch; Version is '6000.3.5f2 (3fa8bc678cb0) revision 4171964'; Using compiler version '194234433'; Build Type 'Release'
 OS: 'Windows 11  (10.0.26200) Professional' Language: 'en' Physical Memory: 32469 MB
-[Licensing::IpcConnector] Successfully connected to: "LicenseClient-Dana" at "2026-03-15T18:41:56.4562261Z"
+[Licensing::IpcConnector] Successfully connected to: "LicenseClient-Dana" at "2026-03-15T20:51:41.9625819Z"
 BatchMode: 1, IsHumanControllingUs: 0, StartBugReporterOnCrash: 0, Is64bit: 1
 System  architecture: x64
 Process architecture: x64
-Date: 2026-03-15T18:41:56Z
+Date: 2026-03-15T20:51:41Z
 
 COMMAND LINE ARGUMENTS:
 C:\Program Files\Unity\Hub\Editor\6000.3.5f2\Editor\Unity.exe
@@ -19,7 +19,7 @@ C:/Git/Warcrap/UnityRTS/RTS
 -logFile
 Logs/AssetImportWorker2.log
 -srvPort
-51883
+50732
 -licensingIpc
 LicenseClient-Dana
 -job-worker-count
@@ -67,16 +67,16 @@ C:/Git/Warcrap/UnityRTS/RTS
     "memorysetup-job-temp-allocator-block-size-background=1048576"
     "memorysetup-job-temp-allocator-reduction-small-platforms=262144"
     "memorysetup-temp-allocator-size-cloud-worker=32768"
-Player connection [475248]  Target information:
+Player connection [485228]  Target information:
 
-Player connection [475248]  * "[IP] 192.168.100.6 [Port] 0 [Flags] 2 [Guid] 1294682871 [EditorId] 1294682871 [Version] 1048832 [Id] WindowsEditor(7,MSI-Laptop) [Debug] 1 [PackageName] WindowsEditor [ProjectName] Editor" 
+Player connection [485228]  * "[IP] 192.168.100.6 [Port] 0 [Flags] 2 [Guid] 2807842519 [EditorId] 2807842519 [Version] 1048832 [Id] WindowsEditor(7,MSI-Laptop) [Debug] 1 [PackageName] WindowsEditor [ProjectName] Editor" 
 
-Player connection [475248]  * "[IP] 172.22.112.1 [Port] 0 [Flags] 2 [Guid] 1294682871 [EditorId] 1294682871 [Version] 1048832 [Id] WindowsEditor(7,MSI-Laptop) [Debug] 1 [PackageName] WindowsEditor [ProjectName] Editor" 
+Player connection [485228]  * "[IP] 172.22.112.1 [Port] 0 [Flags] 2 [Guid] 2807842519 [EditorId] 2807842519 [Version] 1048832 [Id] WindowsEditor(7,MSI-Laptop) [Debug] 1 [PackageName] WindowsEditor [ProjectName] Editor" 
 
-Player connection [475248]  * "[IP] 172.19.176.1 [Port] 0 [Flags] 2 [Guid] 1294682871 [EditorId] 1294682871 [Version] 1048832 [Id] WindowsEditor(7,MSI-Laptop) [Debug] 1 [PackageName] WindowsEditor [ProjectName] Editor" 
+Player connection [485228]  * "[IP] 172.19.176.1 [Port] 0 [Flags] 2 [Guid] 2807842519 [EditorId] 2807842519 [Version] 1048832 [Id] WindowsEditor(7,MSI-Laptop) [Debug] 1 [PackageName] WindowsEditor [ProjectName] Editor" 
 
-Player connection [475248] Host joined multi-casting on [225.0.0.222:54997]...
-Player connection [475248] Host joined alternative multi-casting on [225.0.0.222:34997]...
+Player connection [485228] Host joined multi-casting on [225.0.0.222:54997]...
+Player connection [485228] Host joined alternative multi-casting on [225.0.0.222:34997]...
 JobSystem: Creating JobQueue using job-worker-count value 7
 Input System module state changed to: Initialized.
 [Physics::Module] Initialized fallback backend.
@@ -88,7 +88,7 @@ Library Redirect Path: Library/
 [Physics::Module] SDK Version: 4.1.2
 [Physics::Module] Integration Version: 1.0.0
 [Physics::Module] Threading Mode: Multi-Threaded
-Refreshing native plugins compatible for Editor in 8.17 ms, found 1 plugins.
+Refreshing native plugins compatible for Editor in 16.47 ms, found 1 plugins.
 Preloading 0 native plugins for Editor in 0.00 ms.
 Initialize engine version: 6000.3.5f2 (3fa8bc678cb0)
 [Subsystems] Discovering subsystems at path C:/Program Files/Unity/Hub/Editor/6000.3.5f2/Editor/Data/Resources/UnitySubsystems
@@ -104,7 +104,7 @@ Initialize mono
 Mono path[0] = 'C:/Program Files/Unity/Hub/Editor/6000.3.5f2/Editor/Data/Managed'
 Mono path[1] = 'C:/Program Files/Unity/Hub/Editor/6000.3.5f2/Editor/Data/MonoBleedingEdge/lib/mono/unityjit-win32'
 Mono config path = 'C:/Program Files/Unity/Hub/Editor/6000.3.5f2/Editor/Data/MonoBleedingEdge/etc'
-Using monoOptions --debugger-agent=transport=dt_socket,embedding=1,server=y,suspend=n,address=127.0.0.1:56312
+Using monoOptions --debugger-agent=transport=dt_socket,embedding=1,server=y,suspend=n,address=127.0.0.1:56228
 Begin MonoManager ReloadAssembly
 Registering precompiled unity dll's ...
 Register platform support module: C:/Program Files/Unity/Hub/Editor/6000.3.5f2/Editor/Data/PlaybackEngines/MacStandaloneSupport/UnityEditor.OSXStandalone.Extensions.dll
@@ -112,14 +112,14 @@ Register platform support module: C:/Program Files/Unity/Hub/Editor/6000.3.5f2/E
 [Licensing::Module] Licensing is not yet initialized.
 [Licensing::Client] Handshaking with LicensingClient:
   Version:                 1.17.4+4293ba1
-  Session Id:              d0afd0afb999448993736b4935deb64e
+  Session Id:              2baa78ae165c41378eef9ed0fd961dd4
   Correlation Id:          b52d15c038914e23347e3cd250404319
-  External correlation Id: 10753272895900724
+  External correlation Id: 7649011137834960001
   Machine Id:              BAGb8nebUhhiBVw0Z6q4fvTS/FM=
-[Licensing::Module] Successfully connected to LicensingClient on channel: "LicenseClient-Dana" (connect: 0.00s, validation: 0.00s, handshake: 4.37s)
-[Licensing::IpcConnector] Successfully connected to: "LicenseClient-Dana-notifications" at "2026-03-15T18:42:00.8246927Z"
-[Licensing::Module] Licensing Background thread has ended after 4.37s
-[Licensing::Module] Licensing is initialized (took 0.66s).
+[Licensing::Module] Successfully connected to LicensingClient on channel: "LicenseClient-Dana" (connect: 0.00s, validation: 0.00s, handshake: 6.74s)
+[Licensing::IpcConnector] Successfully connected to: "LicenseClient-Dana-notifications" at "2026-03-15T20:51:48.7030289Z"
+[Licensing::Module] Licensing Background thread has ended after 6.74s
+[Licensing::Module] Licensing is initialized (took 1.02s).
 [Licensing::Client] Successfully resolved entitlement details
 [Licensing::Module] License group:
   Id: F4-ATU6-VSZ8-RZS2-73JK-XXXX
@@ -144,46 +144,46 @@ Register platform support module: C:/Program Files/Unity/Hub/Editor/6000.3.5f2/E
   Type: Assigned
   Expiration: Unlimited
 Register platform support module: C:/Program Files/Unity/Hub/Editor/6000.3.5f2/Editor/Data/PlaybackEngines/iOSSupport/UnityEditor.iOS.Extensions.dll
-Registered in 0.669767 seconds.
-- Loaded All Assemblies, in  1.553 seconds
+Registered in 1.041710 seconds.
+- Loaded All Assemblies, in  2.107 seconds
 [usbmuxd] Start listen thread
 [usbmuxd] Listen thread started
 Native extension for iOS target not found
 Native extension for Android target not found
-Android Extension - Scanning For ADB Devices 606 ms
+Android Extension - Scanning For ADB Devices 798 ms
 Native extension for WindowsStandalone target not found
 Native extension for OSXStandalone target not found
 ScheduleIndexationOnStartup MainProcess:False IndexOnStartup:True
 Mono: successfully reloaded assembly
-- Finished resetting the current domain, in  1.444 seconds
-Domain Reload Profiling: 2990ms
-	BeginReloadAssembly (294ms)
+- Finished resetting the current domain, in  1.797 seconds
+Domain Reload Profiling: 3896ms
+	BeginReloadAssembly (388ms)
 		ExecutionOrderSort (0ms)
 		DisableScriptedObjects (0ms)
 		BackupInstance (0ms)
 		ReleaseScriptingObjects (0ms)
 		CreateAndSetChildDomain (1ms)
-	RebuildCommonClasses (89ms)
-	RebuildNativeTypeToScriptingClass (28ms)
-	initialDomainReloadingComplete (755ms)
-	LoadAllAssembliesAndSetupDomain (379ms)
-		LoadAssemblies (283ms)
+	RebuildCommonClasses (114ms)
+	RebuildNativeTypeToScriptingClass (38ms)
+	initialDomainReloadingComplete (1153ms)
+	LoadAllAssembliesAndSetupDomain (405ms)
+		LoadAssemblies (379ms)
 		RebuildTransferFunctionScriptingTraits (0ms)
-		AnalyzeDomain (372ms)
-			TypeCache.Refresh (368ms)
-				TypeCache.ScanAssembly (341ms)
+		AnalyzeDomain (398ms)
+			TypeCache.Refresh (393ms)
+				TypeCache.ScanAssembly (361ms)
 			BuildScriptInfoCaches (0ms)
 			ResolveRequiredComponents (1ms)
-	FinalizeReload (1444ms)
+	FinalizeReload (1798ms)
 		ReleaseScriptCaches (0ms)
 		RebuildScriptCaches (0ms)
-		SetupLoadedEditorAssemblies (1364ms)
+		SetupLoadedEditorAssemblies (1719ms)
 			LogAssemblyErrors (0ms)
-			InitializePlatformSupportModulesInManaged (788ms)
-			SetLoadedEditorAssemblies (7ms)
-			BeforeProcessingInitializeOnLoad (178ms)
-			ProcessInitializeOnLoadAttributes (275ms)
-			ProcessInitializeOnLoadMethodAttributes (116ms)
+			InitializePlatformSupportModulesInManaged (984ms)
+			SetLoadedEditorAssemblies (12ms)
+			BeforeProcessingInitializeOnLoad (239ms)
+			ProcessInitializeOnLoadAttributes (326ms)
+			ProcessInitializeOnLoadMethodAttributes (159ms)
 			AfterProcessingInitializeOnLoad (0ms)
 			EditorAssembliesLoaded (0ms)
 		ExecutionOrderSort2 (0ms)
@@ -204,8 +204,8 @@ Begin MonoManager ReloadAssembly
   Type: Assigned
   Expiration: Unlimited
 Symbol file LoadedFromMemory is not a mono symbol file
-- Loaded All Assemblies, in  1.458 seconds
-Refreshing native plugins compatible for Editor in 6.29 ms, found 1 plugins.
+- Loaded All Assemblies, in  1.609 seconds
+Refreshing native plugins compatible for Editor in 7.68 ms, found 1 plugins.
 Native extension for iOS target not found
 Native extension for Android target not found
 Native extension for WindowsStandalone target not found
@@ -218,778 +218,156 @@ Package Manager log level set to [2]
 [Package Manager] Cannot connect to Unity Package Manager local server
 ScheduleIndexationOnStartup MainProcess:False IndexOnStartup:True
 Mono: successfully reloaded assembly
-- Finished resetting the current domain, in  1.105 seconds
-Domain Reload Profiling: 2546ms
-	BeginReloadAssembly (356ms)
+- Finished resetting the current domain, in  1.377 seconds
+Domain Reload Profiling: 2968ms
+	BeginReloadAssembly (340ms)
 		ExecutionOrderSort (0ms)
-		DisableScriptedObjects (10ms)
+		DisableScriptedObjects (11ms)
 		BackupInstance (0ms)
 		ReleaseScriptingObjects (0ms)
-		CreateAndSetChildDomain (62ms)
-	RebuildCommonClasses (67ms)
-	RebuildNativeTypeToScriptingClass (18ms)
-	initialDomainReloadingComplete (80ms)
-	LoadAllAssembliesAndSetupDomain (918ms)
-		LoadAssemblies (821ms)
+		CreateAndSetChildDomain (61ms)
+	RebuildCommonClasses (81ms)
+	RebuildNativeTypeToScriptingClass (31ms)
+	initialDomainReloadingComplete (87ms)
+	LoadAllAssembliesAndSetupDomain (1050ms)
+		LoadAssemblies (884ms)
 		RebuildTransferFunctionScriptingTraits (0ms)
-		AnalyzeDomain (302ms)
-			TypeCache.Refresh (242ms)
-				TypeCache.ScanAssembly (216ms)
-			BuildScriptInfoCaches (51ms)
+		AnalyzeDomain (349ms)
+			TypeCache.Refresh (269ms)
+				TypeCache.ScanAssembly (240ms)
+			BuildScriptInfoCaches (70ms)
 			ResolveRequiredComponents (4ms)
-	FinalizeReload (1106ms)
+	FinalizeReload (1378ms)
 		ReleaseScriptCaches (0ms)
 		RebuildScriptCaches (0ms)
-		SetupLoadedEditorAssemblies (841ms)
+		SetupLoadedEditorAssemblies (1139ms)
 			LogAssemblyErrors (0ms)
-			InitializePlatformSupportModulesInManaged (26ms)
-			SetLoadedEditorAssemblies (10ms)
-			BeforeProcessingInitializeOnLoad (338ms)
-			ProcessInitializeOnLoadAttributes (309ms)
-			ProcessInitializeOnLoadMethodAttributes (142ms)
-			AfterProcessingInitializeOnLoad (16ms)
-			EditorAssembliesLoaded (0ms)
+			InitializePlatformSupportModulesInManaged (31ms)
+			SetLoadedEditorAssemblies (13ms)
+			BeforeProcessingInitializeOnLoad (423ms)
+			ProcessInitializeOnLoadAttributes (488ms)
+			ProcessInitializeOnLoadMethodAttributes (159ms)
+			AfterProcessingInitializeOnLoad (23ms)
+			EditorAssembliesLoaded (1ms)
 		ExecutionOrderSort2 (0ms)
-		AwakeInstancesAfterBackupRestoration (10ms)
-Launched and connected shader compiler UnityShaderCompiler.exe after 0.02 seconds
-Refreshing native plugins compatible for Editor in 5.68 ms, found 1 plugins.
+		AwakeInstancesAfterBackupRestoration (11ms)
+Launched and connected shader compiler UnityShaderCompiler.exe after 0.03 seconds
+Refreshing native plugins compatible for Editor in 7.13 ms, found 1 plugins.
 Preloading 0 native plugins for Editor in 0.00 ms.
 Unloading 0 Unused Serialized files (Serialized files now loaded: 0)
-Unloading 3273 unused Assets / (1.0 MB). Loaded Objects now: 3857.
-Memory consumption went from 92.9 MB to 91.9 MB.
-Total: 8.026300 ms (FindLiveObjects: 0.391700 ms CreateObjectMapping: 0.275700 ms MarkObjects: 6.246900 ms  DeleteObjects: 1.110500 ms)
+Unloading 3273 unused Assets / (1.1 MB). Loaded Objects now: 3857.
+Memory consumption went from 93.1 MB to 91.9 MB.
+Total: 13.244500 ms (FindLiveObjects: 0.481000 ms CreateObjectMapping: 0.551200 ms MarkObjects: 9.767400 ms  DeleteObjects: 2.442800 ms)
 
 ========================================================================
 Received Import Request.
-  Time since last request: 351974.901309 seconds.
-  path: Assets/Prefabs/UI/Category.prefab
-  artifactKey: Guid(2704c4ae0534f9746ab419226aa478e7) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Prefabs/UI/Category.prefab using Guid(2704c4ae0534f9746ab419226aa478e7) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: 'c6cfc212cfd24910ce6010b5690fe699') in 0.0862255 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 14
+  Time since last request: 359743.469508 seconds.
+  path: Assets/Scripts/GameManager/Agent.Commands.cs
+  artifactKey: Guid(bf3526420c15ce94ca922d8faa4a5d86) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e)
+Start importing Assets/Scripts/GameManager/Agent.Commands.cs using Guid(bf3526420c15ce94ca922d8faa4a5d86) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e) (ScriptedImporter) -> (artifact id: 'aafca6819c7794863daf7842998dd2fb') in 0.2130155 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 0
 
 ========================================================================
 Received Import Request.
-  Time since last request: 0.758436 seconds.
-  path: Assets/Prefabs/UI/Category.prefab
-  artifactKey: Guid(2704c4ae0534f9746ab419226aa478e7) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e)
-Start importing Assets/Prefabs/UI/Category.prefab using Guid(2704c4ae0534f9746ab419226aa478e7) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e) (ScriptedImporter) -> (artifact id: '708e5424d50c655c21a020fdf8855fd5') in 0.1709177 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 14
-
-========================================================================
-Received Import Request.
-  Time since last request: 5.463175 seconds.
-  path: Assets/Prefabs/UI/Category.prefab
-  artifactKey: Guid(2704c4ae0534f9746ab419226aa478e7) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Prefabs/UI/Category.prefab using Guid(2704c4ae0534f9746ab419226aa478e7) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: 'f7d3a738804ff8901fad56844f16d467') in 0.0032118 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 14
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.875132 seconds.
-  path: Assets/Prefabs/UI/Category.prefab
-  artifactKey: Guid(2704c4ae0534f9746ab419226aa478e7) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e)
-Start importing Assets/Prefabs/UI/Category.prefab using Guid(2704c4ae0534f9746ab419226aa478e7) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e) (ScriptedImporter) -> (artifact id: '28546286118e1cd3cc67e2a43d69de1a') in 0.0102448 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 14
-
-========================================================================
-Received Import Request.
-  Time since last request: 5.933961 seconds.
-  path: Assets/Prefabs/UI/Category.prefab
-  artifactKey: Guid(2704c4ae0534f9746ab419226aa478e7) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Prefabs/UI/Category.prefab using Guid(2704c4ae0534f9746ab419226aa478e7) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: 'e9e95dfd75ce47e5f2c90073ce242daa') in 0.0026772 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 14
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.822138 seconds.
-  path: Assets/Prefabs/UI/Category.prefab
-  artifactKey: Guid(2704c4ae0534f9746ab419226aa478e7) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e)
-Start importing Assets/Prefabs/UI/Category.prefab using Guid(2704c4ae0534f9746ab419226aa478e7) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e) (ScriptedImporter) -> (artifact id: 'd936c243299c4699204854b510df3e10') in 0.0109186 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 14
-
-========================================================================
-Received Import Request.
-  Time since last request: 116.754600 seconds.
-  path: Assets/Prefabs/UI/Category.prefab
-  artifactKey: Guid(2704c4ae0534f9746ab419226aa478e7) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Prefabs/UI/Category.prefab using Guid(2704c4ae0534f9746ab419226aa478e7) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '218f6b809431359e78dac2146cd9ffc9') in 0.0041849 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 15
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.828116 seconds.
-  path: Assets/Prefabs/UI/Category.prefab
-  artifactKey: Guid(2704c4ae0534f9746ab419226aa478e7) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e)
-Start importing Assets/Prefabs/UI/Category.prefab using Guid(2704c4ae0534f9746ab419226aa478e7) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e) (ScriptedImporter) -> (artifact id: 'ebba3d0918e6edbf239d5036444c0974') in 0.0243252 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 15
-
-========================================================================
-Received Import Request.
-  Time since last request: 18.811969 seconds.
-  path: Assets/Prefabs/UI/Category.prefab
-  artifactKey: Guid(2704c4ae0534f9746ab419226aa478e7) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Prefabs/UI/Category.prefab using Guid(2704c4ae0534f9746ab419226aa478e7) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '33f7d7d3f34311314dd1b8275b4fbb81') in 0.0024657 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 15
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.866438 seconds.
-  path: Assets/Prefabs/UI/Category.prefab
-  artifactKey: Guid(2704c4ae0534f9746ab419226aa478e7) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e)
-Start importing Assets/Prefabs/UI/Category.prefab using Guid(2704c4ae0534f9746ab419226aa478e7) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e) (ScriptedImporter) -> (artifact id: '8cc175164bdf16a04a2e61a2f86d92c1') in 0.0115596 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 15
-
-========================================================================
-Received Import Request.
-  Time since last request: 8.410422 seconds.
-  path: Assets/Prefabs/UI/Category.prefab
-  artifactKey: Guid(2704c4ae0534f9746ab419226aa478e7) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Prefabs/UI/Category.prefab using Guid(2704c4ae0534f9746ab419226aa478e7) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '9e519d6d1a2fa5794b9a7db3ccdee53e') in 0.0029636 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 15
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.814519 seconds.
-  path: Assets/Prefabs/UI/Category.prefab
-  artifactKey: Guid(2704c4ae0534f9746ab419226aa478e7) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e)
-Start importing Assets/Prefabs/UI/Category.prefab using Guid(2704c4ae0534f9746ab419226aa478e7) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e) (ScriptedImporter) -> (artifact id: '03291c1298ff5b349253763b5b82b95f') in 0.0117953 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 15
-
-========================================================================
-Received Import Request.
-  Time since last request: 3.685442 seconds.
-  path: Assets/Prefabs/UI/Category.prefab
-  artifactKey: Guid(2704c4ae0534f9746ab419226aa478e7) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Prefabs/UI/Category.prefab using Guid(2704c4ae0534f9746ab419226aa478e7) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: 'ae1c64aef96fef2735cd2491ff430322') in 0.0025023 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 15
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.852852 seconds.
-  path: Assets/Prefabs/UI/Category.prefab
-  artifactKey: Guid(2704c4ae0534f9746ab419226aa478e7) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e)
-Start importing Assets/Prefabs/UI/Category.prefab using Guid(2704c4ae0534f9746ab419226aa478e7) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e) (ScriptedImporter) -> (artifact id: 'b8f0e7c6f30f4643bfc8196188961ce5') in 0.0114652 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 15
-
-========================================================================
-Received Import Request.
-  Time since last request: 8.216842 seconds.
-  path: Assets/Prefabs/UI/Category.prefab
-  artifactKey: Guid(2704c4ae0534f9746ab419226aa478e7) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Prefabs/UI/Category.prefab using Guid(2704c4ae0534f9746ab419226aa478e7) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: 'b85c7747d594f447960fa4474c7c90a3') in 0.0022814 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 15
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.856125 seconds.
-  path: Assets/Prefabs/UI/Category.prefab
-  artifactKey: Guid(2704c4ae0534f9746ab419226aa478e7) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e)
-Start importing Assets/Prefabs/UI/Category.prefab using Guid(2704c4ae0534f9746ab419226aa478e7) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e) (ScriptedImporter) -> (artifact id: '19f1ee1bfc78c54131fa30724f48e254') in 0.0134735 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 15
-
-========================================================================
-Received Import Request.
-  Time since last request: 128.779444 seconds.
-  path: Assets/Prefabs/UI/Category.prefab
-  artifactKey: Guid(2704c4ae0534f9746ab419226aa478e7) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Prefabs/UI/Category.prefab using Guid(2704c4ae0534f9746ab419226aa478e7) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '4154906263738a9bbe60f69dbe1dc62e') in 0.0045289 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 15
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.802481 seconds.
-  path: Assets/Prefabs/UI/Category.prefab
-  artifactKey: Guid(2704c4ae0534f9746ab419226aa478e7) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e)
-Start importing Assets/Prefabs/UI/Category.prefab using Guid(2704c4ae0534f9746ab419226aa478e7) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e) (ScriptedImporter) -> (artifact id: '88059365c5667ded24e11732fdf3de87') in 0.0152094 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 15
-
-========================================================================
-Received Import Request.
-  Time since last request: 7.839754 seconds.
-  path: Assets/Prefabs/UI/Category.prefab
-  artifactKey: Guid(2704c4ae0534f9746ab419226aa478e7) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Prefabs/UI/Category.prefab using Guid(2704c4ae0534f9746ab419226aa478e7) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '89f82d2c71607a623984f98d2f599cca') in 0.0027722 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 15
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.853263 seconds.
-  path: Assets/Prefabs/UI/Category.prefab
-  artifactKey: Guid(2704c4ae0534f9746ab419226aa478e7) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e)
-Start importing Assets/Prefabs/UI/Category.prefab using Guid(2704c4ae0534f9746ab419226aa478e7) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e) (ScriptedImporter) -> (artifact id: '71c66088ab895f1d0b95025eed66a403') in 0.0124031 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 15
-
-========================================================================
-Received Import Request.
-  Time since last request: 23.612503 seconds.
-  path: Assets/Prefabs/UI/Blue Debugging Panel.prefab
-  artifactKey: Guid(4ce6e67396f3d9d4d8fd31e027942611) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Prefabs/UI/Blue Debugging Panel.prefab using Guid(4ce6e67396f3d9d4d8fd31e027942611) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: 'd5fc7ca8c84fa75b1974f02607104d9d') in 0.005362 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 125
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.887676 seconds.
-  path: Assets/Prefabs/UI/Blue Debugging Panel.prefab
-  artifactKey: Guid(4ce6e67396f3d9d4d8fd31e027942611) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e)
-Start importing Assets/Prefabs/UI/Blue Debugging Panel.prefab using Guid(4ce6e67396f3d9d4d8fd31e027942611) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e) (ScriptedImporter) -> (artifact id: '075b320f4c5bd909ef91add01959510f') in 0.017492 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 125
-
-========================================================================
-Received Import Request.
-  Time since last request: 6.888486 seconds.
-  path: Assets/Prefabs/UI/Agent Debugging Panel.prefab
-  artifactKey: Guid(4ce6e67396f3d9d4d8fd31e027942611) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Prefabs/UI/Agent Debugging Panel.prefab using Guid(4ce6e67396f3d9d4d8fd31e027942611) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '1f7371af102a681cc93442881416dad9') in 0.0054941 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 125
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.837474 seconds.
-  path: Assets/Prefabs/UI/Agent Debugging Panel.prefab
-  artifactKey: Guid(4ce6e67396f3d9d4d8fd31e027942611) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e)
-Start importing Assets/Prefabs/UI/Agent Debugging Panel.prefab using Guid(4ce6e67396f3d9d4d8fd31e027942611) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e) (ScriptedImporter) -> (artifact id: '7b10096ce6085eb9f5aa326d7470af3d') in 0.012662 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 125
-
-========================================================================
-Received Import Request.
-  Time since last request: 29.363369 seconds.
-  path: Assets/Prefabs/UI/Agent Debugging Panel.prefab
-  artifactKey: Guid(4ce6e67396f3d9d4d8fd31e027942611) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Prefabs/UI/Agent Debugging Panel.prefab using Guid(4ce6e67396f3d9d4d8fd31e027942611) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: 'ce91f97aada2005b73d8848a5c0f373a') in 0.0045219 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 125
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.826643 seconds.
-  path: Assets/Prefabs/UI/Agent Debugging Panel.prefab
-  artifactKey: Guid(4ce6e67396f3d9d4d8fd31e027942611) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e)
-Start importing Assets/Prefabs/UI/Agent Debugging Panel.prefab using Guid(4ce6e67396f3d9d4d8fd31e027942611) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e) (ScriptedImporter) -> (artifact id: '7735b571755197b1572286d19b2d2f94') in 0.0161725 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 125
-
-========================================================================
-Received Import Request.
-  Time since last request: 79.052270 seconds.
-  path: Assets/Prefabs/UI/Agent Debugging Panel.prefab
-  artifactKey: Guid(4ce6e67396f3d9d4d8fd31e027942611) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Prefabs/UI/Agent Debugging Panel.prefab using Guid(4ce6e67396f3d9d4d8fd31e027942611) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '7fc725edd2cdf66c348e23233f427a44') in 0.0035082 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 125
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.804725 seconds.
-  path: Assets/Prefabs/UI/Agent Debugging Panel.prefab
-  artifactKey: Guid(4ce6e67396f3d9d4d8fd31e027942611) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e)
-Start importing Assets/Prefabs/UI/Agent Debugging Panel.prefab using Guid(4ce6e67396f3d9d4d8fd31e027942611) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e) (ScriptedImporter) -> (artifact id: '01e14af2e1659ad23cdf31e55f12013a') in 0.0142645 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 125
-
-========================================================================
-Received Import Request.
-  Time since last request: 4.271497 seconds.
-  path: Assets/Prefabs/UI/Agent Debugging Panel.prefab
-  artifactKey: Guid(4ce6e67396f3d9d4d8fd31e027942611) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Prefabs/UI/Agent Debugging Panel.prefab using Guid(4ce6e67396f3d9d4d8fd31e027942611) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: 'c50d54d7da0915f496e081cdb9c4b73d') in 0.0039976 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 125
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.813017 seconds.
-  path: Assets/Prefabs/UI/Agent Debugging Panel.prefab
-  artifactKey: Guid(4ce6e67396f3d9d4d8fd31e027942611) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e)
-Start importing Assets/Prefabs/UI/Agent Debugging Panel.prefab using Guid(4ce6e67396f3d9d4d8fd31e027942611) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e) (ScriptedImporter) -> (artifact id: '546dafeb747c4a754f44d730cd3e0247') in 0.0128855 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 125
-
-========================================================================
-Received Import Request.
-  Time since last request: 11.594465 seconds.
-  path: Assets/Prefabs/UI/Agent Debugging Panel.prefab
-  artifactKey: Guid(4ce6e67396f3d9d4d8fd31e027942611) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Prefabs/UI/Agent Debugging Panel.prefab using Guid(4ce6e67396f3d9d4d8fd31e027942611) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '826d9fdfb059d7b89abeeed543c8667b') in 0.0037385 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 125
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.822515 seconds.
-  path: Assets/Prefabs/UI/Agent Debugging Panel.prefab
-  artifactKey: Guid(4ce6e67396f3d9d4d8fd31e027942611) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e)
-Start importing Assets/Prefabs/UI/Agent Debugging Panel.prefab using Guid(4ce6e67396f3d9d4d8fd31e027942611) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e) (ScriptedImporter) -> (artifact id: '055345dacb445ce403e6e31161ca9c58') in 0.0135738 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 125
-
-========================================================================
-Received Import Request.
-  Time since last request: 4.336713 seconds.
-  path: Assets/Prefabs/UI/Agent Debugging Panel.prefab
-  artifactKey: Guid(4ce6e67396f3d9d4d8fd31e027942611) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Prefabs/UI/Agent Debugging Panel.prefab using Guid(4ce6e67396f3d9d4d8fd31e027942611) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: 'fc2fbebe0844d6392532f6d9ae32a7d9') in 0.0038488 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 125
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.797027 seconds.
-  path: Assets/Prefabs/UI/Agent Debugging Panel.prefab
-  artifactKey: Guid(4ce6e67396f3d9d4d8fd31e027942611) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e)
-Start importing Assets/Prefabs/UI/Agent Debugging Panel.prefab using Guid(4ce6e67396f3d9d4d8fd31e027942611) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e) (ScriptedImporter) -> (artifact id: 'e0d53021f885f2f40c183e36f004937f') in 0.0130423 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 125
-
-========================================================================
-Received Import Request.
-  Time since last request: 4.396481 seconds.
-  path: Assets/Prefabs/UI/Agent Debugging Panel.prefab
-  artifactKey: Guid(4ce6e67396f3d9d4d8fd31e027942611) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Prefabs/UI/Agent Debugging Panel.prefab using Guid(4ce6e67396f3d9d4d8fd31e027942611) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '949ffc60be390a86c490cd52e2e3b316') in 0.004368 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 125
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.830621 seconds.
-  path: Assets/Prefabs/UI/Agent Debugging Panel.prefab
-  artifactKey: Guid(4ce6e67396f3d9d4d8fd31e027942611) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e)
-Start importing Assets/Prefabs/UI/Agent Debugging Panel.prefab using Guid(4ce6e67396f3d9d4d8fd31e027942611) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e) (ScriptedImporter) -> (artifact id: '4084c087254599ec53498b655b684a7d') in 0.0150219 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 125
-
-========================================================================
-Received Import Request.
-  Time since last request: 4.176529 seconds.
-  path: Assets/Prefabs/UI/Agent Debugging Panel.prefab
-  artifactKey: Guid(4ce6e67396f3d9d4d8fd31e027942611) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Prefabs/UI/Agent Debugging Panel.prefab using Guid(4ce6e67396f3d9d4d8fd31e027942611) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '1fe743407e1c205ed4ed90a72de52622') in 0.0038127 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 125
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.818200 seconds.
-  path: Assets/Prefabs/UI/Agent Debugging Panel.prefab
-  artifactKey: Guid(4ce6e67396f3d9d4d8fd31e027942611) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e)
-Start importing Assets/Prefabs/UI/Agent Debugging Panel.prefab using Guid(4ce6e67396f3d9d4d8fd31e027942611) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e) (ScriptedImporter) -> (artifact id: 'ffb1cf375967ec9f3552db46bc4c5d43') in 0.0155319 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 125
-
-========================================================================
-Received Import Request.
-  Time since last request: 5.190478 seconds.
-  path: Assets/Prefabs/UI/Agent Debugging Panel.prefab
-  artifactKey: Guid(4ce6e67396f3d9d4d8fd31e027942611) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Prefabs/UI/Agent Debugging Panel.prefab using Guid(4ce6e67396f3d9d4d8fd31e027942611) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '4329ccc5f11da37f7eeef60541a08c5c') in 0.0049519 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 125
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.817290 seconds.
-  path: Assets/Prefabs/UI/Agent Debugging Panel.prefab
-  artifactKey: Guid(4ce6e67396f3d9d4d8fd31e027942611) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e)
-Start importing Assets/Prefabs/UI/Agent Debugging Panel.prefab using Guid(4ce6e67396f3d9d4d8fd31e027942611) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e) (ScriptedImporter) -> (artifact id: 'd42c8cb70a5d4020470fdef3629b4dea') in 0.0110798 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 125
-
-========================================================================
-Received Import Request.
-  Time since last request: 6.105744 seconds.
-  path: Assets/Prefabs/UI/Agent Debugging Panel.prefab
-  artifactKey: Guid(4ce6e67396f3d9d4d8fd31e027942611) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Prefabs/UI/Agent Debugging Panel.prefab using Guid(4ce6e67396f3d9d4d8fd31e027942611) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '4eccee766626e74c8ce9c7f2234247a6') in 0.0044407 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 125
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.826335 seconds.
-  path: Assets/Prefabs/UI/Agent Debugging Panel.prefab
-  artifactKey: Guid(4ce6e67396f3d9d4d8fd31e027942611) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e)
-Start importing Assets/Prefabs/UI/Agent Debugging Panel.prefab using Guid(4ce6e67396f3d9d4d8fd31e027942611) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e) (ScriptedImporter) -> (artifact id: 'f6c7c617e3b38ebf5f528da6b6ae8c91') in 0.0138676 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 125
-
-========================================================================
-Received Import Request.
-  Time since last request: 5.973313 seconds.
-  path: Assets/Prefabs/UI/Agent Debugging Panel.prefab
-  artifactKey: Guid(4ce6e67396f3d9d4d8fd31e027942611) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Prefabs/UI/Agent Debugging Panel.prefab using Guid(4ce6e67396f3d9d4d8fd31e027942611) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '27787171910f6db544a6ea4fc55cf67a') in 0.0045999 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 125
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.813442 seconds.
-  path: Assets/Prefabs/UI/Agent Debugging Panel.prefab
-  artifactKey: Guid(4ce6e67396f3d9d4d8fd31e027942611) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e)
-Start importing Assets/Prefabs/UI/Agent Debugging Panel.prefab using Guid(4ce6e67396f3d9d4d8fd31e027942611) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e) (ScriptedImporter) -> (artifact id: '770fec88f75b3092851d01019186f41b') in 0.0128363 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 125
-
-========================================================================
-Received Import Request.
-  Time since last request: 3.949817 seconds.
-  path: Assets/Prefabs/UI/Agent Debugging Panel.prefab
-  artifactKey: Guid(4ce6e67396f3d9d4d8fd31e027942611) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Prefabs/UI/Agent Debugging Panel.prefab using Guid(4ce6e67396f3d9d4d8fd31e027942611) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '687f852794b9a3ade521a47a3b6870b4') in 0.0051712 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 125
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.779288 seconds.
-  path: Assets/Prefabs/UI/Agent Debugging Panel.prefab
-  artifactKey: Guid(4ce6e67396f3d9d4d8fd31e027942611) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e)
-Start importing Assets/Prefabs/UI/Agent Debugging Panel.prefab using Guid(4ce6e67396f3d9d4d8fd31e027942611) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e) (ScriptedImporter) -> (artifact id: 'e2c62ef12b3642b62858c7a1ebf9f16a') in 0.0161158 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 125
-
-========================================================================
-Received Import Request.
-  Time since last request: 5.405386 seconds.
-  path: Assets/Prefabs/UI/Agent Debugging Panel.prefab
-  artifactKey: Guid(4ce6e67396f3d9d4d8fd31e027942611) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Prefabs/UI/Agent Debugging Panel.prefab using Guid(4ce6e67396f3d9d4d8fd31e027942611) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '64104c8e43827977977e57b8b8772283') in 0.0034228 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 125
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.819285 seconds.
-  path: Assets/Prefabs/UI/Agent Debugging Panel.prefab
-  artifactKey: Guid(4ce6e67396f3d9d4d8fd31e027942611) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e)
-Start importing Assets/Prefabs/UI/Agent Debugging Panel.prefab using Guid(4ce6e67396f3d9d4d8fd31e027942611) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e) (ScriptedImporter) -> (artifact id: '0e9341a0200304c03f794a9b1acc7754') in 0.0133638 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 125
-
-========================================================================
-Received Import Request.
-  Time since last request: 136.724070 seconds.
-  path: Assets/Prefabs/UI/Agent Debugging Panel.prefab
-  artifactKey: Guid(4ce6e67396f3d9d4d8fd31e027942611) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Prefabs/UI/Agent Debugging Panel.prefab using Guid(4ce6e67396f3d9d4d8fd31e027942611) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '1a29485477d82812e1aa28b7d7a68d68') in 0.0037391 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 125
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.844954 seconds.
-  path: Assets/Prefabs/UI/Agent Debugging Panel.prefab
-  artifactKey: Guid(4ce6e67396f3d9d4d8fd31e027942611) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e)
-Start importing Assets/Prefabs/UI/Agent Debugging Panel.prefab using Guid(4ce6e67396f3d9d4d8fd31e027942611) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e) (ScriptedImporter) -> (artifact id: '817a2f7a36f4b227da9ab2c41add6d96') in 0.0147578 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 125
-
-========================================================================
-Received Import Request.
-  Time since last request: 3.017789 seconds.
-  path: Assets/Prefabs/UI/Agent Debugging Panel.prefab
-  artifactKey: Guid(4ce6e67396f3d9d4d8fd31e027942611) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Prefabs/UI/Agent Debugging Panel.prefab using Guid(4ce6e67396f3d9d4d8fd31e027942611) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '043cb08060f7bd558e2085ede5165d1c') in 0.0045795 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 125
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.842707 seconds.
-  path: Assets/Prefabs/UI/Agent Debugging Panel.prefab
-  artifactKey: Guid(4ce6e67396f3d9d4d8fd31e027942611) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e)
-Start importing Assets/Prefabs/UI/Agent Debugging Panel.prefab using Guid(4ce6e67396f3d9d4d8fd31e027942611) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e) (ScriptedImporter) -> (artifact id: '8df61a4afd5120b27fb725e8ee6ce34f') in 0.0116672 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 125
-
-========================================================================
-Received Import Request.
-  Time since last request: 4.620454 seconds.
-  path: Assets/Prefabs/UI/Agent Debugging Panel.prefab
-  artifactKey: Guid(4ce6e67396f3d9d4d8fd31e027942611) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Prefabs/UI/Agent Debugging Panel.prefab using Guid(4ce6e67396f3d9d4d8fd31e027942611) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: 'd21de83b696570e1599fe61c1c9b4fef') in 0.003773 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 125
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.857385 seconds.
-  path: Assets/Prefabs/UI/Agent Debugging Panel.prefab
-  artifactKey: Guid(4ce6e67396f3d9d4d8fd31e027942611) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e)
-Start importing Assets/Prefabs/UI/Agent Debugging Panel.prefab using Guid(4ce6e67396f3d9d4d8fd31e027942611) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e) (ScriptedImporter) -> (artifact id: '7c07804b6d56ab06b3304f6c8a5602a9') in 0.0132836 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 125
-
-========================================================================
-Received Import Request.
-  Time since last request: 6.148369 seconds.
-  path: Assets/Prefabs/UI/Agent Debugging Panel.prefab
-  artifactKey: Guid(4ce6e67396f3d9d4d8fd31e027942611) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Prefabs/UI/Agent Debugging Panel.prefab using Guid(4ce6e67396f3d9d4d8fd31e027942611) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: 'db47093e7efe319f67a3a1dee5cf699e') in 0.0034646 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 125
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.785510 seconds.
-  path: Assets/Prefabs/UI/Agent Debugging Panel.prefab
-  artifactKey: Guid(4ce6e67396f3d9d4d8fd31e027942611) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e)
-Start importing Assets/Prefabs/UI/Agent Debugging Panel.prefab using Guid(4ce6e67396f3d9d4d8fd31e027942611) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e) (ScriptedImporter) -> (artifact id: '0798f84f072c85a072eb87f3d29ea2de') in 0.0139941 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 125
-
-========================================================================
-Received Import Request.
-  Time since last request: 1.662765 seconds.
-  path: Assets/Prefabs/UI/Agent Debugging Panel.prefab
-  artifactKey: Guid(4ce6e67396f3d9d4d8fd31e027942611) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Prefabs/UI/Agent Debugging Panel.prefab using Guid(4ce6e67396f3d9d4d8fd31e027942611) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '86b82ea777ca251e4f87b0af73b26fdf') in 0.005545 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 138
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.838796 seconds.
-  path: Assets/Prefabs/UI/Agent Debugging Panel.prefab
-  artifactKey: Guid(4ce6e67396f3d9d4d8fd31e027942611) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e)
-Start importing Assets/Prefabs/UI/Agent Debugging Panel.prefab using Guid(4ce6e67396f3d9d4d8fd31e027942611) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e) (ScriptedImporter) -> (artifact id: 'eecd886883b91b6f6cf48c343b968845') in 0.0125845 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 138
-
-========================================================================
-Received Import Request.
-  Time since last request: 3.618390 seconds.
-  path: Assets/Prefabs/UI/Agent Debugging Panel.prefab
-  artifactKey: Guid(4ce6e67396f3d9d4d8fd31e027942611) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Prefabs/UI/Agent Debugging Panel.prefab using Guid(4ce6e67396f3d9d4d8fd31e027942611) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: 'c4e595a886a4d2891228d9e478f3eb9b') in 0.004023 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 138
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.842087 seconds.
-  path: Assets/Prefabs/UI/Agent Debugging Panel.prefab
-  artifactKey: Guid(4ce6e67396f3d9d4d8fd31e027942611) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e)
-Start importing Assets/Prefabs/UI/Agent Debugging Panel.prefab using Guid(4ce6e67396f3d9d4d8fd31e027942611) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e) (ScriptedImporter) -> (artifact id: '79e56c3ef4b96d1285469d916ed17b4c') in 0.0114908 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 138
-
-========================================================================
-Received Import Request.
-  Time since last request: 5.428707 seconds.
-  path: Assets/Prefabs/UI/Agent Debugging Panel.prefab
-  artifactKey: Guid(4ce6e67396f3d9d4d8fd31e027942611) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Prefabs/UI/Agent Debugging Panel.prefab using Guid(4ce6e67396f3d9d4d8fd31e027942611) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '5f7fcb23d8896d6eb9c4cdb418efe837') in 0.0044914 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 138
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.843873 seconds.
-  path: Assets/Prefabs/UI/Agent Debugging Panel.prefab
-  artifactKey: Guid(4ce6e67396f3d9d4d8fd31e027942611) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e)
-Start importing Assets/Prefabs/UI/Agent Debugging Panel.prefab using Guid(4ce6e67396f3d9d4d8fd31e027942611) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e) (ScriptedImporter) -> (artifact id: '513c0e813633ece9be3dd43ce995b2f9') in 0.0149469 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 138
-
-========================================================================
-Received Import Request.
-  Time since last request: 3.226798 seconds.
-  path: Assets/Prefabs/UI/Agent Debugging Panel.prefab
-  artifactKey: Guid(4ce6e67396f3d9d4d8fd31e027942611) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Prefabs/UI/Agent Debugging Panel.prefab using Guid(4ce6e67396f3d9d4d8fd31e027942611) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: 'eaf1fb31a28f1404ba701d411a2ab67a') in 0.0040424 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 138
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.842322 seconds.
-  path: Assets/Prefabs/UI/Agent Debugging Panel.prefab
-  artifactKey: Guid(4ce6e67396f3d9d4d8fd31e027942611) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e)
-Start importing Assets/Prefabs/UI/Agent Debugging Panel.prefab using Guid(4ce6e67396f3d9d4d8fd31e027942611) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e) (ScriptedImporter) -> (artifact id: '83103296557a05150d49f76405ac5013') in 0.0147494 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 138
-
-========================================================================
-Received Import Request.
-  Time since last request: 74.527045 seconds.
-  path: Assets/Scenes/main.unity
-  artifactKey: Guid(4f458e630af72a947b3881b375dfccd5) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e)
-Start importing Assets/Scenes/main.unity using Guid(4f458e630af72a947b3881b375dfccd5) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e) (ScriptedImporter) -> (artifact id: '50478e546bbe4e8b574a3510adbb275b') in 0.0069584 seconds
+  Time since last request: 0.000121 seconds.
+  path: Assets/_Recovery/0 (5).unity
+  artifactKey: Guid(815f4634f5474d145980ed229d790a25) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e)
+Start importing Assets/_Recovery/0 (5).unity using Guid(815f4634f5474d145980ed229d790a25) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e) (ScriptedImporter) -> (artifact id: '785d651b9e262c830f7a38aa871dfd6e') in 0.0113329 seconds
 Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 1
 
 ========================================================================
 Received Import Request.
-  Time since last request: 40.703671 seconds.
-  path: Assets/Prefabs/UI/Agent Debugging Panel.prefab
-  artifactKey: Guid(4ce6e67396f3d9d4d8fd31e027942611) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Prefabs/UI/Agent Debugging Panel.prefab using Guid(4ce6e67396f3d9d4d8fd31e027942611) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '797fdf9570251434bd380c9242a085e6') in 0.0047746 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 138
+  Time since last request: 0.000670 seconds.
+  path: Assets/Tests/PlayMode/UnitMovementBoundaryTests.cs
+  artifactKey: Guid(850fc19649c2c2640b62aeb88244f0ed) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e)
+Start importing Assets/Tests/PlayMode/UnitMovementBoundaryTests.cs using Guid(850fc19649c2c2640b62aeb88244f0ed) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e) (ScriptedImporter) -> (artifact id: 'b369209e42cfdbc9e7eded46d83106c0') in 0.0103444 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 0
 
 ========================================================================
 Received Import Request.
-  Time since last request: 0.826726 seconds.
-  path: Assets/Prefabs/UI/Category Data Row.prefab
-  artifactKey: Guid(2704c4ae0534f9746ab419226aa478e7) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e)
-Start importing Assets/Prefabs/UI/Category Data Row.prefab using Guid(2704c4ae0534f9746ab419226aa478e7) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e) (ScriptedImporter) -> (artifact id: '41e0e0d7f9eb7c6eac3d853157471123') in 0.012529 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 15
-
-========================================================================
-Received Prepare
-Begin MonoManager ReloadAssembly
-[Licensing::Client] Successfully resolved entitlement details
-[Licensing::Module] License group:
-  Id: F4-ATU6-VSZ8-RZS2-73JK-XXXX
-  Product: Unity Personal
-  Type: ULF
-  Expiration: Unlimited
-[Licensing::Module] License group:
-  Id: 1374479331469-UnityPersXXXX
-  Product: Unity Personal
-  Type: Assigned
-  Expiration: Unlimited
-Symbol file LoadedFromMemory is not a mono symbol file
-- Loaded All Assemblies, in  1.326 seconds
-Refreshing native plugins compatible for Editor in 7.48 ms, found 1 plugins.
-Native extension for iOS target not found
-Native extension for Android target not found
-Native extension for WindowsStandalone target not found
-Native extension for OSXStandalone target not found
-[Package Manager] Failed to launch server process. Reason: Unity was launched with the -noUpm command-line argument
-[Package Manager] Unable to send message (not connected to server process).
-[Package Manager] Cannot connect to Unity Package Manager local server
-ScheduleIndexationOnStartup MainProcess:False IndexOnStartup:True
-Mono: successfully reloaded assembly
-- Finished resetting the current domain, in  1.215 seconds
-Domain Reload Profiling: 2526ms
-	BeginReloadAssembly (379ms)
-		ExecutionOrderSort (0ms)
-		DisableScriptedObjects (24ms)
-		BackupInstance (0ms)
-		ReleaseScriptingObjects (0ms)
-		CreateAndSetChildDomain (77ms)
-	RebuildCommonClasses (63ms)
-	RebuildNativeTypeToScriptingClass (26ms)
-	initialDomainReloadingComplete (63ms)
-	LoadAllAssembliesAndSetupDomain (778ms)
-		LoadAssemblies (749ms)
-		RebuildTransferFunctionScriptingTraits (0ms)
-		AnalyzeDomain (217ms)
-			TypeCache.Refresh (20ms)
-				TypeCache.ScanAssembly (6ms)
-			BuildScriptInfoCaches (182ms)
-			ResolveRequiredComponents (7ms)
-	FinalizeReload (1216ms)
-		ReleaseScriptCaches (0ms)
-		RebuildScriptCaches (0ms)
-		SetupLoadedEditorAssemblies (967ms)
-			LogAssemblyErrors (0ms)
-			InitializePlatformSupportModulesInManaged (27ms)
-			SetLoadedEditorAssemblies (16ms)
-			BeforeProcessingInitializeOnLoad (393ms)
-			ProcessInitializeOnLoadAttributes (337ms)
-			ProcessInitializeOnLoadMethodAttributes (174ms)
-			AfterProcessingInitializeOnLoad (20ms)
-			EditorAssembliesLoaded (1ms)
-		ExecutionOrderSort2 (0ms)
-		AwakeInstancesAfterBackupRestoration (9ms)
-Refreshing native plugins compatible for Editor in 7.10 ms, found 1 plugins.
-Preloading 0 native plugins for Editor in 0.00 ms.
-Unloading 0 Unused Serialized files (Serialized files now loaded: 0)
-Unloading 3272 unused Assets / (0.8 MB). Loaded Objects now: 3867.
-Memory consumption went from 93.3 MB to 92.5 MB.
-Total: 10.274000 ms (FindLiveObjects: 0.421500 ms CreateObjectMapping: 0.353600 ms MarkObjects: 8.534400 ms  DeleteObjects: 0.961900 ms)
-
-Prepare: number of updated asset objects reloaded= 0
-========================================================================
-Received Import Request.
-  Time since last request: 750.248160 seconds.
-  path: Assets/Prefabs/UI/Agent Debugging Panel.prefab
-  artifactKey: Guid(4ce6e67396f3d9d4d8fd31e027942611) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Prefabs/UI/Agent Debugging Panel.prefab using Guid(4ce6e67396f3d9d4d8fd31e027942611) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '83936b9449fe041dd667ed5fef6da04c') in 0.0713951 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 138
+  Time since last request: 0.000801 seconds.
+  path: Assets/Tests/PlayMode/MapReclaimTests.cs
+  artifactKey: Guid(5ecaff15c9ab32f4fa37909acc3df139) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e)
+Start importing Assets/Tests/PlayMode/MapReclaimTests.cs using Guid(5ecaff15c9ab32f4fa37909acc3df139) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e) (ScriptedImporter) -> (artifact id: '20820dca1fdd044c75b6ef8d7fe3f6cf') in 0.0087036 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 0
 
 ========================================================================
 Received Import Request.
-  Time since last request: 5.726434 seconds.
-  path: Assets/Prefabs/UI/Agent Debugging Panel.prefab
-  artifactKey: Guid(4ce6e67396f3d9d4d8fd31e027942611) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Prefabs/UI/Agent Debugging Panel.prefab using Guid(4ce6e67396f3d9d4d8fd31e027942611) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '3c7a69af30b32db039c50085af71ebc2') in 0.0036452 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 138
+  Time since last request: 0.000668 seconds.
+  path: Assets/Tests/PlayMode/UnitMovementHappyPathTests.cs
+  artifactKey: Guid(667924eb7404bd04bb819b2c9237c580) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e)
+Start importing Assets/Tests/PlayMode/UnitMovementHappyPathTests.cs using Guid(667924eb7404bd04bb819b2c9237c580) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e) (ScriptedImporter) -> (artifact id: '2f7cd68f6caa653d92d233eb8a8f7709') in 0.0085734 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 0
 
 ========================================================================
 Received Import Request.
-  Time since last request: 3.870061 seconds.
-  path: Assets/Prefabs/UI/Agent Debugging Panel.prefab
-  artifactKey: Guid(4ce6e67396f3d9d4d8fd31e027942611) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Prefabs/UI/Agent Debugging Panel.prefab using Guid(4ce6e67396f3d9d4d8fd31e027942611) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '0f90e0ef0b600b478d4aed59814602ae') in 0.0047053 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 138
+  Time since last request: 0.000770 seconds.
+  path: Assets/Tests/PlayMode/PawnBuildSequenceTests.cs
+  artifactKey: Guid(e87cc229e7aaa3a4ba6f0aeff9ccced5) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e)
+Start importing Assets/Tests/PlayMode/PawnBuildSequenceTests.cs using Guid(e87cc229e7aaa3a4ba6f0aeff9ccced5) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e) (ScriptedImporter) -> (artifact id: '437b04e5b2590f391ed56907293cfb50') in 0.0096052 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 0
 
 ========================================================================
 Received Import Request.
-  Time since last request: 5.969013 seconds.
-  path: Assets/Prefabs/UI/Agent Debugging Panel.prefab
-  artifactKey: Guid(4ce6e67396f3d9d4d8fd31e027942611) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Prefabs/UI/Agent Debugging Panel.prefab using Guid(4ce6e67396f3d9d4d8fd31e027942611) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '7d50658d04691007949bae5039d24036') in 0.0042684 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 138
-
-========================================================================
-Received Prepare
-Begin MonoManager ReloadAssembly
-[Licensing::Client] Successfully resolved entitlement details
-[Licensing::Module] License group:
-  Id: F4-ATU6-VSZ8-RZS2-73JK-XXXX
-  Product: Unity Personal
-  Type: ULF
-  Expiration: Unlimited
-[Licensing::Module] License group:
-  Id: 1374479331469-UnityPersXXXX
-  Product: Unity Personal
-  Type: Assigned
-  Expiration: Unlimited
-Symbol file LoadedFromMemory is not a mono symbol file
-- Loaded All Assemblies, in  1.388 seconds
-Refreshing native plugins compatible for Editor in 6.45 ms, found 1 plugins.
-Native extension for iOS target not found
-Native extension for Android target not found
-Native extension for WindowsStandalone target not found
-Native extension for OSXStandalone target not found
-[Package Manager] Failed to launch server process. Reason: Unity was launched with the -noUpm command-line argument
-[Package Manager] Unable to send message (not connected to server process).
-[Package Manager] Cannot connect to Unity Package Manager local server
-ScheduleIndexationOnStartup MainProcess:False IndexOnStartup:True
-Mono: successfully reloaded assembly
-- Finished resetting the current domain, in  1.063 seconds
-Domain Reload Profiling: 2443ms
-	BeginReloadAssembly (395ms)
-		ExecutionOrderSort (0ms)
-		DisableScriptedObjects (25ms)
-		BackupInstance (0ms)
-		ReleaseScriptingObjects (0ms)
-		CreateAndSetChildDomain (85ms)
-	RebuildCommonClasses (63ms)
-	RebuildNativeTypeToScriptingClass (24ms)
-	initialDomainReloadingComplete (55ms)
-	LoadAllAssembliesAndSetupDomain (840ms)
-		LoadAssemblies (764ms)
-		RebuildTransferFunctionScriptingTraits (0ms)
-		AnalyzeDomain (274ms)
-			TypeCache.Refresh (26ms)
-				TypeCache.ScanAssembly (11ms)
-			BuildScriptInfoCaches (234ms)
-			ResolveRequiredComponents (6ms)
-	FinalizeReload (1064ms)
-		ReleaseScriptCaches (0ms)
-		RebuildScriptCaches (0ms)
-		SetupLoadedEditorAssemblies (862ms)
-			LogAssemblyErrors (0ms)
-			InitializePlatformSupportModulesInManaged (21ms)
-			SetLoadedEditorAssemblies (10ms)
-			BeforeProcessingInitializeOnLoad (361ms)
-			ProcessInitializeOnLoadAttributes (334ms)
-			ProcessInitializeOnLoadMethodAttributes (123ms)
-			AfterProcessingInitializeOnLoad (13ms)
-			EditorAssembliesLoaded (1ms)
-		ExecutionOrderSort2 (0ms)
-		AwakeInstancesAfterBackupRestoration (9ms)
-Refreshing native plugins compatible for Editor in 6.65 ms, found 1 plugins.
-Preloading 0 native plugins for Editor in 0.00 ms.
-Unloading 0 Unused Serialized files (Serialized files now loaded: 0)
-Unloading 3272 unused Assets / (0.7 MB). Loaded Objects now: 3871.
-Memory consumption went from 93.3 MB to 92.6 MB.
-Total: 11.529100 ms (FindLiveObjects: 0.542700 ms CreateObjectMapping: 0.487500 ms MarkObjects: 9.393800 ms  DeleteObjects: 1.102400 ms)
-
-Prepare: number of updated asset objects reloaded= 0
-========================================================================
-Received Import Request.
-  Time since last request: 70.687060 seconds.
-  path: Assets/Prefabs/UI/Agent Debugging Panel.prefab
-  artifactKey: Guid(4ce6e67396f3d9d4d8fd31e027942611) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Prefabs/UI/Agent Debugging Panel.prefab using Guid(4ce6e67396f3d9d4d8fd31e027942611) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: 'b376dd82cd5b6a60ce311836d4e4b08b') in 0.0636184 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 138
+  Time since last request: 0.000904 seconds.
+  path: Assets/Scenes/main.unity
+  artifactKey: Guid(4f458e630af72a947b3881b375dfccd5) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Scenes/main.unity using Guid(4f458e630af72a947b3881b375dfccd5) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '791f642f9177431bc0c804c99e794d8f') in 0.0033424 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 0
 
 ========================================================================
 Received Import Request.
-  Time since last request: 4.015882 seconds.
-  path: Assets/Prefabs/UI/Agent Debugging Panel.prefab
-  artifactKey: Guid(4ce6e67396f3d9d4d8fd31e027942611) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Prefabs/UI/Agent Debugging Panel.prefab using Guid(4ce6e67396f3d9d4d8fd31e027942611) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '8af108cfbd81b9e214211d5cf51c5826') in 0.0038582 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 138
+  Time since last request: 0.000718 seconds.
+  path: Assets/Tests/PlayMode/TrainingBusyRejectTests.cs
+  artifactKey: Guid(080e9555cfbf93a41a39d85ac22a13f7) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e)
+Start importing Assets/Tests/PlayMode/TrainingBusyRejectTests.cs using Guid(080e9555cfbf93a41a39d85ac22a13f7) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e) (ScriptedImporter) -> (artifact id: '43e5b44f783835c70f83024ad9acad50') in 0.0088417 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 0
 
 ========================================================================
 Received Import Request.
-  Time since last request: 3.895899 seconds.
-  path: Assets/Prefabs/UI/Agent Debugging Panel.prefab
-  artifactKey: Guid(4ce6e67396f3d9d4d8fd31e027942611) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Prefabs/UI/Agent Debugging Panel.prefab using Guid(4ce6e67396f3d9d4d8fd31e027942611) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '36e7108edc194fda2b0ad743b22f6570') in 0.0038624 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 138
+  Time since last request: 0.001056 seconds.
+  path: Assets/Tests/PlayMode/UnitMovementObstacleTests.cs
+  artifactKey: Guid(0fc7e99b84ec3a049a67329ab65bb3a9) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e)
+Start importing Assets/Tests/PlayMode/UnitMovementObstacleTests.cs using Guid(0fc7e99b84ec3a049a67329ab65bb3a9) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e) (ScriptedImporter) -> (artifact id: 'e869c6586ace8de11d0ff69b5dfeea6a') in 0.0086169 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 0
 
 ========================================================================
 Received Import Request.
-  Time since last request: 8.999472 seconds.
-  path: Assets/Prefabs/UI/Agent Debugging Panel.prefab
-  artifactKey: Guid(4ce6e67396f3d9d4d8fd31e027942611) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Prefabs/UI/Agent Debugging Panel.prefab using Guid(4ce6e67396f3d9d4d8fd31e027942611) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: 'db730ebaa2534fe86dc25be24f7e2621') in 0.0034545 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 138
+  Time since last request: 0.000847 seconds.
+  path: Assets/Tests/PlayMode/ThreePawnDepositTests.cs
+  artifactKey: Guid(a957867d53389e645b808ef8c55b098c) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e)
+Start importing Assets/Tests/PlayMode/ThreePawnDepositTests.cs using Guid(a957867d53389e645b808ef8c55b098c) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e) (ScriptedImporter) -> (artifact id: '4394aa2962b6aa07518631da79cbb635') in 0.0101334 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 0
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000793 seconds.
+  path: Assets/Tests/PlayMode/Helpers/GatherTestHelper.cs
+  artifactKey: Guid(aa9b623badb684548a9e5e1109956990) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e)
+Start importing Assets/Tests/PlayMode/Helpers/GatherTestHelper.cs using Guid(aa9b623badb684548a9e5e1109956990) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e) (ScriptedImporter) -> (artifact id: '62acd9cd92d86a39aca12d35ca7da4ac') in 0.0104019 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 0
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.001015 seconds.
+  path: Assets/Scripts/GameManager/AgentController.cs
+  artifactKey: Guid(7d6f8cfbcd9327046812f33a32100eba) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e)
+Start importing Assets/Scripts/GameManager/AgentController.cs using Guid(7d6f8cfbcd9327046812f33a32100eba) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e) (ScriptedImporter) -> (artifact id: '74f0a0473b8e38fa0be8d952ad946a4e') in 0.0098454 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 0
+
+========================================================================
+Received Import Request.
+  Time since last request: 9.617832 seconds.
+  path: Assets/Scenes/main.unity
+  artifactKey: Guid(4f458e630af72a947b3881b375dfccd5) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Scenes/main.unity using Guid(4f458e630af72a947b3881b375dfccd5) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '3fa9722c0fe1216473783b587661457f') in 0.000864 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 0
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.829626 seconds.
+  path: Assets/Scenes/main.unity
+  artifactKey: Guid(4f458e630af72a947b3881b375dfccd5) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e)
+Start importing Assets/Scenes/main.unity using Guid(4f458e630af72a947b3881b375dfccd5) Importer(2089858483,d624ce77472d68a35037170ec1d2d27e) (ScriptedImporter) -> (artifact id: 'e412b3088b4bd67d5cd67d4cea9f08d9') in 0.005023 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 1
 

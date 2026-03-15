@@ -103,7 +103,7 @@ namespace GameManager.Tests.PlayMode
 			// Wait for the building to complete
 			yield return WaitUntil(
 				() => building != null && building.IsBuilt,
-				timeoutSeconds: 30f,
+				timeoutSeconds: 10f,
 				failMessage: "Building should complete after Pawn B resumes");
 
 			Assert.IsTrue(building.IsBuilt, "BASE should be fully built after resume");
@@ -156,7 +156,7 @@ namespace GameManager.Tests.PlayMode
 			// Wait for completion
 			yield return WaitUntil(
 				() => building.IsBuilt,
-				timeoutSeconds: 30f,
+				timeoutSeconds: 10f,
 				failMessage: "Building should complete after pawn resumes");
 
 			Assert.IsTrue(building.IsBuilt, "BASE should be fully built after self-resume");

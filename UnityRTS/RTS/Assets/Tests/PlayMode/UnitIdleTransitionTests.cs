@@ -128,7 +128,7 @@ namespace GameManager.Tests.PlayMode
 
 			yield return WaitUntil(
 				() => barracks.CurrentAction == UnitAction.IDLE,
-				timeoutSeconds: 30f,
+				timeoutSeconds: 10f,
 				failMessage: "BARRACKS did not return to IDLE after training completed");
 
 			Assert.AreEqual(UnitAction.IDLE, barracks.CurrentAction,
@@ -149,7 +149,7 @@ namespace GameManager.Tests.PlayMode
 
 			yield return WaitUntil(
 				() => baseUnit.CurrentAction == UnitAction.IDLE,
-				timeoutSeconds: 30f,
+				timeoutSeconds: 10f,
 				failMessage: "BASE did not return to IDLE after training");
 
 			Assert.AreEqual(UnitAction.IDLE, baseUnit.CurrentAction,

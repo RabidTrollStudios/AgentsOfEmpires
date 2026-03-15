@@ -44,7 +44,7 @@ namespace GameManager.Tests.PlayMode
 			// Wait for first deposit
 			yield return WaitUntil(
 				() => agent.Gold > initialGold,
-				timeoutSeconds: 30f,
+				timeoutSeconds: 10f,
 				failMessage: "First deposit did not occur");
 
 			// Pawn should still be in GATHER action
@@ -79,7 +79,7 @@ namespace GameManager.Tests.PlayMode
 					depositCount++;
 				}
 				return depositCount >= 3;
-			}, timeoutSeconds: 60f, failMessage: "Did not complete 3 gather deposits");
+			}, timeoutSeconds: 15f, failMessage: "Did not complete 3 gather deposits");
 
 			Assert.GreaterOrEqual(depositCount, 3,
 				"Pawn should complete at least 3 gather cycles");
@@ -113,7 +113,7 @@ namespace GameManager.Tests.PlayMode
 			int targetGold = initialGold + (int)(Constants.MINING_CAPACITY[UnitType.PAWN] * 2);
 			yield return WaitUntil(
 				() => agent.Gold >= targetGold,
-				timeoutSeconds: 60f,
+				timeoutSeconds: 15f,
 				failMessage: "Two pawns did not together deposit enough gold");
 
 			Assert.GreaterOrEqual(agent.Gold, targetGold,
@@ -143,7 +143,7 @@ namespace GameManager.Tests.PlayMode
 			// Wait for first deposit (one complete cycle)
 			yield return WaitUntil(
 				() => agent.Gold > initialGold,
-				timeoutSeconds: 30f,
+				timeoutSeconds: 10f,
 				failMessage: "First gather cycle did not complete");
 
 			// Deplete the mine on the second cycle

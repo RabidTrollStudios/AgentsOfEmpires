@@ -36,8 +36,8 @@ namespace GameManager.Tests.PlayMode
 				"Warrior should enter ATTACK state after issuing attack command");
 
 			// Wait for enemy to be destroyed
-			yield return CombatTestHelper.WaitForDeath(ctx, enemyNbr, timeoutSeconds: 30f,
-				failMessage: "Warrior did not kill distant enemy within 30s");
+			yield return CombatTestHelper.WaitForDeath(ctx, enemyNbr, timeoutSeconds: 10f,
+				failMessage: "Warrior did not kill distant enemy within 10s");
 
 			Assert.IsNull(ctx.UnitManager.GetUnit(enemyNbr),
 				"Enemy should be removed from UnitManager after being killed");
@@ -56,7 +56,7 @@ namespace GameManager.Tests.PlayMode
 			int enemyNbr = enemy.UnitNbr;
 			warrior.StartAttacking(new AttackEventArgs(warrior, enemy));
 
-			yield return CombatTestHelper.WaitForDeath(ctx, enemyNbr, timeoutSeconds: 30f);
+			yield return CombatTestHelper.WaitForDeath(ctx, enemyNbr, timeoutSeconds: 10f);
 
 			yield return WaitUntil(
 				() => warrior.CurrentAction == UnitAction.IDLE,

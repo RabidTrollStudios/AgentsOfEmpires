@@ -72,7 +72,7 @@ namespace GameManager.Tests.PlayMode
 
 			yield return WaitUntil(
 				() => pawn.CurrentAction == UnitAction.IDLE,
-				timeoutSeconds: 30f,
+				timeoutSeconds: 10f,
 				failMessage: "Pawn did not arrive at distant target via multi-step path");
 
 			Assert.AreEqual(target, pawn.GridPosition,
