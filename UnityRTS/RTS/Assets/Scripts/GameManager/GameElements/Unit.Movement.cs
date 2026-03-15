@@ -449,18 +449,13 @@ namespace GameManager.GameElements
 			}
 			else if (UnitType == UnitType.LANCER)
 			{
-				// Lancer uses Animator.Play() by hash instead of State parameter
-				// because the asset pack controller doesn't have reliable AnyState transitions.
-				if (lancerStateHashes != null)
-				{
-					int idx = GetLancerStateIndex();
-					int hash = lancerStateHashes[idx];
-					var currentInfo = animator.GetCurrentAnimatorStateInfo(0);
-					if (currentInfo.shortNameHash != hash)
-						animator.Play(hash, 0, 0f);
-				}
+				// Lancer uses the same State integer parameter as other units.
+				// The controller's AnyState transitions map:
+				//   0=Idle, 1=Run (unconditional fallback), 2-6=directional attacks.
+				int idx = GetLancerStateIndex();
+				animator.SetInteger("State", idx);
 
-				// Handle facing/flip, then return early (skip SetInteger at end)
+				// Handle facing/flip, then return early (skip generic facing at end)
 				UpdateLancerFacing();
 				if (unitSprite != null)
 					unitSprite.flipX = !facingRight;
@@ -907,10 +902,7 @@ namespace GameManager.GameElements
 		{
 			if (pathLineRenderer == null) return;
 
-			// The pursuit path for attacking units is gated by HasAttackTint so the
-			// Attack Tint checkbox hides all attack visuals (indicator, target line, path).
-			bool show = GameManager.Instance.HasPathTint
-			         && (CurrentAction != UnitAction.ATTACK || GameManager.Instance.HasAttackTint);
+			bool show = GameManager.Instance.HasPathTint;
 
 			if (!show)
 			{
