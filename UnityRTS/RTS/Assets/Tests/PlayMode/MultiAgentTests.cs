@@ -82,9 +82,8 @@ namespace GameManager.Tests.PlayMode
 				timeoutSeconds: 10f,
 				failMessage: "Agent 1 enemy health did not decrease from agent 0 warrior attack");
 
-			if (enemy != null)
-				Assert.Less(enemy.Health, initialHealth,
-					"Cross-agent attack should deal damage");
+			Assert.IsTrue(enemy == null || enemy.Health < initialHealth,
+				"Cross-agent attack should deal damage");
 		}
 
 		/// <summary>
@@ -107,9 +106,8 @@ namespace GameManager.Tests.PlayMode
 				timeoutSeconds: 10f,
 				failMessage: "Agent 0 pawn health did not decrease from agent 1 attack");
 
-			if (friendlyPawn != null)
-				Assert.Less(friendlyPawn.Health, initialHealth,
-					"Reverse cross-agent attack should deal damage");
+			Assert.IsTrue(friendlyPawn == null || friendlyPawn.Health < initialHealth,
+				"Reverse cross-agent attack should deal damage");
 		}
 
 		#endregion
