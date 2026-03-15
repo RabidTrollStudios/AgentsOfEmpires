@@ -135,7 +135,7 @@ namespace GameManager.Tests.PlayMode
 			// Wait for warrior to arrive AND at least one gold deposit
 			yield return WaitUntil(
 				() => warrior.CurrentAction == UnitAction.IDLE && agent.Gold > initialGold,
-				timeoutSeconds: 60f,
+				timeoutSeconds: 15f,
 				failMessage: "Warrior did not finish moving or pawn did not deposit gold");
 
 			Assert.AreEqual(UnitAction.IDLE, warrior.CurrentAction,

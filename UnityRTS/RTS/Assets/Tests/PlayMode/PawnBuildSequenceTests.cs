@@ -42,7 +42,7 @@ namespace GameManager.Tests.PlayMode
 			Assert.IsNotNull(builtBase, "BASE should have been created");
 
 			yield return BuildingTestHelper.WaitForConstruction(pawn, builtBase,
-				timeoutSeconds: 30f);
+				timeoutSeconds: 10f);
 
 			Assert.IsTrue(builtBase.IsBuilt,
 				"BASE should be fully built before starting BARRACKS");
@@ -74,7 +74,7 @@ namespace GameManager.Tests.PlayMode
 			Assert.IsNotNull(builtBase, "BASE should have been created by the build command");
 
 			yield return BuildingTestHelper.WaitForConstruction(pawn, builtBase,
-				timeoutSeconds: 30f);
+				timeoutSeconds: 10f);
 
 			// After construction, pawn should be IDLE
 			yield return WaitUntil(

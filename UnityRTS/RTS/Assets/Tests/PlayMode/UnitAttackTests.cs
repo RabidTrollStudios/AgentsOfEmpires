@@ -117,7 +117,7 @@ namespace GameManager.Tests.PlayMode
 			// Wait until health decreases (attack landed)
 			yield return WaitUntil(
 				() => enemy == null || enemy.Health < initialHealth,
-				timeoutSeconds: 30f,
+				timeoutSeconds: 10f,
 				failMessage: "Warrior never reached or attacked out-of-range enemy");
 
 			Assert.IsTrue(enemy == null || enemy.Health < initialHealth,
@@ -201,7 +201,7 @@ namespace GameManager.Tests.PlayMode
 			// Wait for enemy to be destroyed
 			yield return WaitUntil(
 				() => ctx.UnitManager.GetUnit(enemyNbr) == null,
-				timeoutSeconds: 30f,
+				timeoutSeconds: 10f,
 				failMessage: "Three warriors could not destroy the enemy building");
 
 			yield return null;

@@ -41,7 +41,7 @@ namespace GameManager.Tests.PlayMode
 			// Wait for pawn to go IDLE (mine exhausted)
 			yield return WaitUntil(
 				() => pawn.CurrentAction == UnitAction.IDLE,
-				timeoutSeconds: 30f,
+				timeoutSeconds: 10f,
 				failMessage: "Pawn did not go IDLE after low-health mine was depleted");
 
 			Assert.AreEqual(UnitAction.IDLE, pawn.CurrentAction,
@@ -72,7 +72,7 @@ namespace GameManager.Tests.PlayMode
 			// Wait for gold to increase (deposit occurred) or pawn to go IDLE
 			yield return WaitUntil(
 				() => agent.Gold > initialGold || pawn.CurrentAction == UnitAction.IDLE,
-				timeoutSeconds: 30f,
+				timeoutSeconds: 10f,
 				failMessage: "Pawn did not complete gather cycle before going IDLE");
 
 			// At minimum the pawn should have gone IDLE
@@ -139,7 +139,7 @@ namespace GameManager.Tests.PlayMode
 			// Wait for first deposit (one complete mining cycle)
 			yield return WaitUntil(
 				() => agent.Gold > initialGold,
-				timeoutSeconds: 30f,
+				timeoutSeconds: 10f,
 				failMessage: "First gather deposit did not occur");
 
 			Assert.Less(mine.Health, initialMineHealth,

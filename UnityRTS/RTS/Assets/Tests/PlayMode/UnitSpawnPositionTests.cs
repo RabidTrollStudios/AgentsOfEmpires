@@ -36,7 +36,7 @@ namespace GameManager.Tests.PlayMode
 			// Wait for training to complete (barracks returns to IDLE)
 			yield return WaitUntil(
 				() => barracks.CurrentAction == UnitAction.IDLE,
-				timeoutSeconds: 30f,
+				timeoutSeconds: 10f,
 				failMessage: "BARRACKS did not complete WARRIOR training");
 
 			int warriorsAfter = ctx.UnitManager.GetUnitNbrsOfType(UnitType.WARRIOR).Count;
@@ -58,7 +58,7 @@ namespace GameManager.Tests.PlayMode
 
 			yield return WaitUntil(
 				() => barracks.CurrentAction == UnitAction.IDLE,
-				timeoutSeconds: 30f,
+				timeoutSeconds: 10f,
 				failMessage: "BARRACKS did not complete training");
 
 			// Find the new WARRIOR
@@ -92,7 +92,7 @@ namespace GameManager.Tests.PlayMode
 
 			yield return WaitUntil(
 				() => baseUnit.CurrentAction == UnitAction.IDLE,
-				timeoutSeconds: 30f,
+				timeoutSeconds: 10f,
 				failMessage: "BASE did not complete PAWN training");
 
 			int pawnsAfter = ctx.UnitManager.GetUnitNbrsOfType(UnitType.PAWN).Count;
@@ -120,7 +120,7 @@ namespace GameManager.Tests.PlayMode
 
 			yield return WaitUntil(
 				() => archery.CurrentAction == UnitAction.IDLE,
-				timeoutSeconds: 30f,
+				timeoutSeconds: 10f,
 				failMessage: "ARCHERY did not complete ARCHER training");
 
 			int archersAfter = ctx.UnitManager.GetUnitNbrsOfType(UnitType.ARCHER).Count;
@@ -150,14 +150,14 @@ namespace GameManager.Tests.PlayMode
 			barracks.StartTraining(new TrainEventArgs(barracks, UnitType.WARRIOR));
 			yield return WaitUntil(
 				() => barracks.CurrentAction == UnitAction.IDLE,
-				timeoutSeconds: 30f,
+				timeoutSeconds: 10f,
 				failMessage: "First training did not complete");
 
 			// Second training
 			barracks.StartTraining(new TrainEventArgs(barracks, UnitType.WARRIOR));
 			yield return WaitUntil(
 				() => barracks.CurrentAction == UnitAction.IDLE,
-				timeoutSeconds: 30f,
+				timeoutSeconds: 10f,
 				failMessage: "Second training did not complete");
 
 			int warriorsAfter = ctx.UnitManager.GetUnitNbrsOfType(UnitType.WARRIOR).Count;

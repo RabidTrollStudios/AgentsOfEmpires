@@ -43,7 +43,7 @@ namespace GameManager.Tests.PlayMode
 
 			yield return WaitUntil(
 				() => agent.Gold >= targetGold,
-				timeoutSeconds: 90f,
+				timeoutSeconds: 15f,
 				failMessage: $"Three pawns did not accumulate {targetGold} gold (started at {initialGold})");
 
 			Assert.GreaterOrEqual(agent.Gold, targetGold,
@@ -81,9 +81,9 @@ namespace GameManager.Tests.PlayMode
 			while (depositsObserved < 3)
 			{
 				elapsed += Time.deltaTime;
-				if (elapsed > 90f)
+				if (elapsed > 15f)
 				{
-					Assert.Fail("Did not observe 3 deposits within 90s with three pawns");
+					Assert.Fail("Did not observe 3 deposits within 15s with three pawns");
 					yield break;
 				}
 
@@ -134,7 +134,7 @@ namespace GameManager.Tests.PlayMode
 
 			yield return WaitUntil(
 				() => agent.Gold >= targetGold,
-				timeoutSeconds: 90f,
+				timeoutSeconds: 15f,
 				failMessage: "Staggered three pawns did not accumulate expected gold");
 
 			Assert.GreaterOrEqual(agent.Gold, targetGold,

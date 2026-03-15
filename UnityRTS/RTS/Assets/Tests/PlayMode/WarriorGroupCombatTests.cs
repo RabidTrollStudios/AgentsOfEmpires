@@ -43,11 +43,11 @@ namespace GameManager.Tests.PlayMode
 			Assert.AreEqual(UnitAction.ATTACK, s3.CurrentAction, "Warrior 3 should enter ATTACK");
 
 			// Wait for all enemies to die
-			yield return CombatTestHelper.WaitForDeath(ctx, n1, timeoutSeconds: 30f,
+			yield return CombatTestHelper.WaitForDeath(ctx, n1, timeoutSeconds: 10f,
 				failMessage: "Enemy 1 was not killed");
-			yield return CombatTestHelper.WaitForDeath(ctx, n2, timeoutSeconds: 30f,
+			yield return CombatTestHelper.WaitForDeath(ctx, n2, timeoutSeconds: 10f,
 				failMessage: "Enemy 2 was not killed");
-			yield return CombatTestHelper.WaitForDeath(ctx, n3, timeoutSeconds: 30f,
+			yield return CombatTestHelper.WaitForDeath(ctx, n3, timeoutSeconds: 10f,
 				failMessage: "Enemy 3 was not killed");
 
 			Assert.IsNull(ctx.UnitManager.GetUnit(n1), "Enemy 1 should be gone from UnitManager");

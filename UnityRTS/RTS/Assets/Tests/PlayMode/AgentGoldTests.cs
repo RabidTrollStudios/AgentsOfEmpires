@@ -200,7 +200,7 @@ namespace GameManager.Tests.PlayMode
 
 			yield return WaitUntil(
 				() => agent.Gold > initialGold,
-				timeoutSeconds: 30f,
+				timeoutSeconds: 10f,
 				failMessage: "Gold did not increase after gather round trip");
 
 			Assert.Greater(agent.Gold, initialGold,
@@ -228,7 +228,7 @@ namespace GameManager.Tests.PlayMode
 			int expectedMinGold = initialGold + (int)(Constants.MINING_CAPACITY[UnitType.PAWN] * 2);
 			yield return WaitUntil(
 				() => agent.Gold >= expectedMinGold,
-				timeoutSeconds: 60f,
+				timeoutSeconds: 15f,
 				failMessage: "Gold did not compound over two gather trips");
 
 			Assert.GreaterOrEqual(agent.Gold, expectedMinGold,

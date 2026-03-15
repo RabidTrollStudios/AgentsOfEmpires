@@ -38,7 +38,7 @@ namespace GameManager.Tests.PlayMode
 		/// </summary>
 		public static IEnumerator WaitForGoldIncrease(
 			Agent agent, int initialGold, int minimumIncrease,
-			float timeoutSeconds = 30f)
+			float timeoutSeconds = 10f)
 		{
 			float elapsed = 0f;
 			while (agent.Gold < initialGold + minimumIncrease)
@@ -61,7 +61,7 @@ namespace GameManager.Tests.PlayMode
 		/// </summary>
 		public static IEnumerator WaitForNDeposits(
 			Agent agent, int nDeposits,
-			float timeoutSeconds = 60f)
+			float timeoutSeconds = 15f)
 		{
 			int depositsObserved = 0;
 			int lastGold = agent.Gold;
