@@ -73,7 +73,6 @@ namespace GameManager.GameElements
 		/// <param name="args">arguments for the building task</param>
 		internal void StartBuilding(BuildEventArgs args)
 		{
-			ExitMine();
 			// Exclude the building pawn's cell - the pawn will move to a neighbor before building
 			var pawnExclusion = new HashSet<Vector3Int> { GridPosition };
 
@@ -156,7 +155,6 @@ namespace GameManager.GameElements
 		/// <param name="args">arguments for moving task</param>
 		internal void StartMoving(MoveEventArgs args)
 		{
-			ExitMine();
 
 			// Allow MOVE to interrupt BUILD/REPAIR
 			if (CurrentAction == UnitAction.BUILD || CurrentAction == UnitAction.REPAIR)
@@ -207,7 +205,6 @@ namespace GameManager.GameElements
 		/// <param name="args">arguments for the gathering task</param>
 		internal void StartGathering(GatherEventArgs args)
 		{
-			ExitMine();
 
 			if (CurrentAction != UnitAction.BUILD && CurrentAction != UnitAction.REPAIR
 				&& CanGather
@@ -253,7 +250,6 @@ namespace GameManager.GameElements
 		/// <param name="args">arguments for attacking task</param>
 		internal void StartAttacking(AttackEventArgs args)
 		{
-			ExitMine();
 
 			if (CurrentAction != UnitAction.BUILD && CurrentAction != UnitAction.REPAIR && CanAttack)
 			{
@@ -313,7 +309,6 @@ namespace GameManager.GameElements
 		/// </summary>
 		internal void StartRepairing(RepairEventArgs args)
 		{
-			ExitMine();
 
 			if (CurrentAction == UnitAction.BUILD)
 			{

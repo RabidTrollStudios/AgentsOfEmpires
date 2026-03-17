@@ -111,6 +111,7 @@ namespace GameManager.Tests.PlayMode
 		internal static string WarriorControllerPath => WARRIOR_BLUE_CONTROLLER_PATH;
 		internal static string ArcherControllerPath => ARCHER_BLUE_CONTROLLER_PATH;
 		internal static string PawnControllerPath => PAWN_BLUE_CONTROLLER_PATH;
+		internal static string MineControllerPath => MINE_CONTROLLER_PATH;
 
 #if UNITY_EDITOR
 		private static PrefabLoader GetPrefabLoader()

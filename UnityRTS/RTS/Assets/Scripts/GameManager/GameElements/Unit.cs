@@ -124,9 +124,7 @@ namespace GameManager.GameElements
 		private int totalGold = 0;
 		private float minedGold = 0.0f;
 		private GatherPhase gatherPhase = GatherPhase.TO_MINE;
-		private bool isInsideMine = false;
-		private Vector3Int mineEntryGridPos;
-		private bool goldNuggetSpawnedThisCycle = false;
+	private bool goldNuggetSpawnedThisCycle = false;
 
 		// Training Variables
 		// Building Variables

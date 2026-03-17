@@ -85,7 +85,8 @@ namespace GameManager
 
 		internal void OpenCommandLog()
 		{
-			string cmdLogPath = DllPath + Path.AltDirectorySeparatorChar + "CommandLog_" + AgentDLLName + ".txt";
+			string cmdLogPath = DllPath + Path.AltDirectorySeparatorChar
+				+ "CommandLog_" + AgentDLLName + "_" + AgentName + ".txt";
 			CmdLog = new CommandLogger(AgentName + " " + AgentDLLName, cmdLogPath, this.gameObject);
 		}
 
@@ -114,26 +115,25 @@ namespace GameManager
 			AgentDLLName = dllName;
 			DllPath = dllPath;
 			AgentNbrWins = 0;
-			logFileName = dllPath + Path.AltDirectorySeparatorChar + "PlanningAgent_" + dllName + ".csv";
+
+			string baseName = "PlanningAgent_" + dllName + "_" + agentName;
+			logFileName = dllPath + Path.AltDirectorySeparatorChar + baseName + ".csv";
 
 			// Create a new file by appending a number if it already exists
 			if (File.Exists(logFileName))
 			{
-				// Only get files that begin with the letter PlanningAgent_dllName
-				string[] files = Directory.GetFiles(dllPath + Path.AltDirectorySeparatorChar, "PlanningAgent_" + dllName + "*.csv");
+				string[] files = Directory.GetFiles(dllPath + Path.AltDirectorySeparatorChar, baseName + "*.csv");
 				int max = 0;
 
-				Regex rx = new Regex(@"PlanningAgent_" + dllName + @"_(\d)\.csv",
+				Regex rx = new Regex(Regex.Escape(baseName) + @"_(\d)\.csv",
 					RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
 				foreach (string file in files)
 				{
 					MatchCollection mc = rx.Matches(file);
 
-					//GameManager.Instance.Log("mc.count: " + mc.Count.ToString(), this.gameObject);
 					foreach (Match m in mc)
 					{
-						//GameManager.Instance.Log("m.groups[1].Value: " + m.Groups[1].Value, this.gameObject);
 						int value;
 						if (Int32.TryParse(m.Groups[1].Value, out value) && max < value)
 						{
@@ -141,7 +141,7 @@ namespace GameManager
 						}
 					}
 				}
-				logFileName = dllPath + Path.AltDirectorySeparatorChar + "PlanningAgent_" + dllName + "_" + (++max) + ".csv";
+				logFileName = dllPath + Path.AltDirectorySeparatorChar + baseName + "_" + (++max) + ".csv";
 			}
 			GameManager.Instance.Log("Creating: " + logFileName, this.gameObject);
 			//LogFileStream = File.Create(logFileName);

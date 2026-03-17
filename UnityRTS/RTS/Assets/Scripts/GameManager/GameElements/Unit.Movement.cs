@@ -175,14 +175,6 @@ namespace GameManager.GameElements
 			bool showGather = CurrentAction == UnitAction.GATHER && GameManager.Instance.HasGatherTint;
 			bool showBuild  = CurrentAction == UnitAction.BUILD  && GameManager.Instance.HasBuildTint;
 
-			// Don't show indicators when the pawn is hidden inside a mine
-			if (isInsideMine)
-			{
-				showAttack = false;
-				showMove   = false;
-				showGather = false;
-				showBuild  = false;
-			}
 
 			if (attackIndicator != null) attackIndicator.enabled = showAttack;
 			if (moveIndicator   != null) moveIndicator.enabled   = showMove;
@@ -607,17 +599,6 @@ namespace GameManager.GameElements
 				if (lancerStateHashes[i] == -1)
 					lancerStateHashes[i] = lancerStateHashes[0];
 			}
-		}
-
-		/// <summary>
-		/// Return the animator state name for the lancer's current action.
-		/// Uses Animator.Play() by hash instead of State parameter to avoid
-		/// dependency on AnyState transitions in the controller.
-		/// </summary>
-		private string GetLancerClipName()
-		{
-			// Not used — we use hash-based lookup. Kept as reference.
-			return "";
 		}
 
 		/// <summary>
