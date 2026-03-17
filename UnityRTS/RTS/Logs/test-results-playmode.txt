@@ -1,6 +1,6 @@
-=== PlayMode Test Run: 2026-03-16 18:20:28 ===
-Result: Skipped  |  Duration: 69.56s
-Passed: 492  Failed: 0  Skipped: 1
+=== PlayMode Test Run: 2026-03-16 19:34:37 ===
+Result: Passed  |  Duration: 72.13s
+Passed: 527  Failed: 0  Skipped: 0
 
             [PASS] GameManager.Tests.PlayMode.AgentActionsAdapterTests.Attack_ValidUnits_DelegatesToAgentAttack
             [PASS] GameManager.Tests.PlayMode.AgentActionsAdapterTests.Build_ValidPawn_DelegatesToAgentBuild
@@ -184,6 +184,40 @@ Passed: 492  Failed: 0  Skipped: 1
             [PASS] GameManager.Tests.PlayMode.GameManagerWinConditionTests.DetermineRoundWinner_Timeout_Agent1HigherScore_ReturnsAgent1
             [PASS] GameManager.Tests.PlayMode.GameManagerWinConditionTests.DetermineRoundWinner_Timeout_EqualScore_Agent0MoreGold_ReturnsAgent0
             [PASS] GameManager.Tests.PlayMode.GameManagerWinConditionTests.DetermineRoundWinner_Timeout_EqualScore_Agent1MoreGold_ReturnsAgent1
+            [PASS] GameManager.Tests.PlayMode.GameStateAdapterTests.Constructor_SetsAgentNbr
+            [PASS] GameManager.Tests.PlayMode.GameStateAdapterTests.EnemyGold_NegativeEnemy_ReturnsZero
+            [PASS] GameManager.Tests.PlayMode.GameStateAdapterTests.EnemyGold_ReturnsEnemyAgentGold
+            [PASS] GameManager.Tests.PlayMode.GameStateAdapterTests.FindProspectiveBuildPositions_ExcludesPawnPositions
+            [PASS] GameManager.Tests.PlayMode.GameStateAdapterTests.FindProspectiveBuildPositions_ReturnsValidPositions
+            [PASS] GameManager.Tests.PlayMode.GameStateAdapterTests.GetAllUnits_ReturnsBothAgents
+            [PASS] GameManager.Tests.PlayMode.GameStateAdapterTests.GetBuildablePositionsNearUnit_ReturnsPositions
+            [PASS] GameManager.Tests.PlayMode.GameStateAdapterTests.GetEnemyUnits_NegativeEnemy_ReturnsEmpty
+            [PASS] GameManager.Tests.PlayMode.GameStateAdapterTests.GetEnemyUnits_ReturnsEnemyUnits
+            [PASS] GameManager.Tests.PlayMode.GameStateAdapterTests.GetMyUnits_DoesNotReturnEnemyUnits
+            [PASS] GameManager.Tests.PlayMode.GameStateAdapterTests.GetMyUnits_ReturnsOwnUnits
+            [PASS] GameManager.Tests.PlayMode.GameStateAdapterTests.GetPathBetween_AvoidFalse_DelegatesToBasic
+            [PASS] GameManager.Tests.PlayMode.GameStateAdapterTests.GetPathBetween_AvoidTrue_ExceedsBudget_ReturnsEmpty
+            [PASS] GameManager.Tests.PlayMode.GameStateAdapterTests.GetPathBetween_AvoidTrue_ReturnsPath
+            [PASS] GameManager.Tests.PlayMode.GameStateAdapterTests.GetPathBetween_CachedResult_ReturnsSameObject
+            [PASS] GameManager.Tests.PlayMode.GameStateAdapterTests.GetPathBetween_ExceedsBudget_ReturnsEmptyPath
+            [PASS] GameManager.Tests.PlayMode.GameStateAdapterTests.GetPathBetween_ValidPath_ReturnsPositions
+            [PASS] GameManager.Tests.PlayMode.GameStateAdapterTests.GetPathToUnit_CachedResult_ReturnsSameObject
+            [PASS] GameManager.Tests.PlayMode.GameStateAdapterTests.GetPathToUnit_ExceedsBudget_ReturnsEmpty
+            [PASS] GameManager.Tests.PlayMode.GameStateAdapterTests.GetPathToUnit_ValidTarget_ReturnsPath
+            [PASS] GameManager.Tests.PlayMode.GameStateAdapterTests.GetUnit_EnemyUnit_ReturnsEnemyOwner
+            [PASS] GameManager.Tests.PlayMode.GameStateAdapterTests.GetUnit_InvalidNbr_ReturnsNull
+            [PASS] GameManager.Tests.PlayMode.GameStateAdapterTests.GetUnit_ValidUnit_ReturnsUnitInfo
+            [PASS] GameManager.Tests.PlayMode.GameStateAdapterTests.IsAreaBuildable_EmptyArea_ReturnsTrue
+            [PASS] GameManager.Tests.PlayMode.GameStateAdapterTests.IsAreaBuildable_OccupiedArea_ReturnsFalse
+            [PASS] GameManager.Tests.PlayMode.GameStateAdapterTests.IsBoundedAreaBuildable_InBounds_ReturnsTrue
+            [PASS] GameManager.Tests.PlayMode.GameStateAdapterTests.IsBoundedAreaBuildable_OutOfBounds_ReturnsFalse
+            [PASS] GameManager.Tests.PlayMode.GameStateAdapterTests.IsPositionBuildable_EmptyCell_ReturnsTrue
+            [PASS] GameManager.Tests.PlayMode.GameStateAdapterTests.IsPositionBuildable_OccupiedCell_ReturnsFalse
+            [PASS] GameManager.Tests.PlayMode.GameStateAdapterTests.MapSize_ReturnsCorrectSize
+            [PASS] GameManager.Tests.PlayMode.GameStateAdapterTests.MyGold_ReturnsAgentGold
+            [PASS] GameManager.Tests.PlayMode.GameStateAdapterTests.MyWins_ReturnsAgentWins
+            [PASS] GameManager.Tests.PlayMode.GameStateAdapterTests.ResetCache_NewFrame_ClearsCache
+            [PASS] GameManager.Tests.PlayMode.GameStateAdapterTests.UpdateEnemyAgentNbr_SetsEnemyNbr
             [PASS] GameManager.Tests.PlayMode.GatherContinuationTests.AfterDeposit_PawnCyclesBackToMine
             [PASS] GameManager.Tests.PlayMode.GatherContinuationTests.Base_DestroyedMidSecondCycle_PawnGoesIdle
             [PASS] GameManager.Tests.PlayMode.GatherContinuationTests.Mine_DepletedDuringSecondCycle_PawnGoesIdle
@@ -264,7 +298,6 @@ Passed: 492  Failed: 0  Skipped: 1
             [PASS] GameManager.Tests.PlayMode.UnitAnimationCoverageTests.Lancer_DirectionalAttack_CoverAllAngles
             [PASS] GameManager.Tests.PlayMode.UnitAnimationCoverageTests.Lancer_InitStateHashes_AllSlotsPopulated
             [PASS] GameManager.Tests.PlayMode.UnitAnimationCoverageTests.Movement_CollisionAvoidance_RestoresSavedPathOnFailure
-            [SKIP] GameManager.Tests.PlayMode.UnitAnimationCoverageTests.Pawn_Attack_WithPath_SetsRunState
             [PASS] GameManager.Tests.PlayMode.UnitAnimationCoverageTests.Pawn_Build_AnimationStates
             [PASS] GameManager.Tests.PlayMode.UnitAnimationCoverageTests.Pawn_Building_FacesLeftWhenBuildingIsToLeft
             [PASS] GameManager.Tests.PlayMode.UnitAnimationCoverageTests.Pawn_Gather_AnimationStates
@@ -272,6 +305,7 @@ Passed: 492  Failed: 0  Skipped: 1
             [PASS] GameManager.Tests.PlayMode.UnitAnimationCoverageTests.Pawn_Move_WithPath_SetsRunState
             [PASS] GameManager.Tests.PlayMode.UnitAnimationCoverageTests.Warrior_Attack_AlternatesAttackAnimation
             [PASS] GameManager.Tests.PlayMode.UnitAnimationCoverageTests.Warrior_Attack_FacesLeftWhenTargetIsToLeft
+            [PASS] GameManager.Tests.PlayMode.UnitAnimationCoverageTests.Warrior_Attack_WithPath_SetsRunState
             [PASS] GameManager.Tests.PlayMode.UnitAnimationTests.Archer_InRange_PlaysShootAnimation
             [PASS] GameManager.Tests.PlayMode.UnitAnimationTests.Lancer_AttackingDown_UsesDownAttack
             [PASS] GameManager.Tests.PlayMode.UnitAnimationTests.Lancer_AttackingRight_UsesDirectionalAttack

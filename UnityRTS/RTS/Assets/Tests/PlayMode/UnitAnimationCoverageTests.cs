@@ -277,37 +277,36 @@ namespace GameManager.Tests.PlayMode
 
 		#endregion
 
-		#region Pawn ATTACK with path (Unit.Movement.cs:503-505)
+		#region Warrior ATTACK with path (Unit.Movement.cs:503-505)
 
 		/// <summary>
-		/// Pawn in ATTACK action with path.Count > 0 (chasing) sets state=1 (Run).
+		/// Warrior in ATTACK action with path.Count > 0 (chasing) sets state=1 (Run).
+		/// Uses WARRIOR because PAWN has CAN_ATTACK=false.
 		/// </summary>
 		[UnityTest]
-		public IEnumerator Pawn_Attack_WithPath_SetsRunState()
+		public IEnumerator Warrior_Attack_WithPath_SetsRunState()
 		{
-			Unit pawn = PlaceUnit(UnitType.PAWN, new Vector3Int(5, 10, 0));
-			Unit enemy = PlaceUnit(UnitType.PAWN, new Vector3Int(20, 10, 0), ctx.Agent1Go);
-			VisualTestHelper.SetupPawnAnimator(pawn);
+			Unit warrior = PlaceUnit(UnitType.WARRIOR, new Vector3Int(5, 10, 0));
+			Unit enemy = PlaceUnit(UnitType.WARRIOR, new Vector3Int(20, 10, 0), ctx.Agent1Go);
+			VisualTestHelper.SetupPawnAnimator(warrior);
 			yield return null;
 
-			pawn.StartAttacking(new AttackEventArgs(pawn, enemy));
-
-			// Pawns can attack — check if it entered ATTACK
-			if (pawn.CurrentAction != UnitAction.ATTACK)
-				Assert.Ignore("Pawn did not enter ATTACK state");
+			warrior.StartAttacking(new AttackEventArgs(warrior, enemy));
+			Assert.AreEqual(UnitAction.ATTACK, warrior.CurrentAction,
+				"Warrior should enter ATTACK state");
 
 			for (int i = 0; i < 3; i++)
 			{
-				BuildingTestHelper.Tick(pawn);
+				BuildingTestHelper.Tick(warrior);
 				yield return null;
 			}
 
-			var path = GetPrivateField<List<Vector3Int>>(pawn, "path");
-			if (path.Count > 0)
+			var path = GetPrivateField<List<Vector3Int>>(warrior, "path");
+			if (path != null && path.Count > 0)
 			{
-				var animator = pawn.GetComponent<Animator>();
+				var animator = warrior.GetComponent<Animator>();
 				Assert.AreEqual(1, animator.GetInteger("State"),
-					"Pawn chasing target with path should be in Run state (1)");
+					"Warrior chasing target with path should be in Run state (1)");
 			}
 		}
 

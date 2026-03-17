@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("PlanningAgent_Turtle")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+8f750b6c912d47a81c710ddf21f2bd60fa78437b")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+0841b3b5f4b68eaaec297e3833743a1db48ff1f9")]
 [assembly: System.Reflection.AssemblyProductAttribute("PlanningAgent_Turtle")]
 [assembly: System.Reflection.AssemblyTitleAttribute("PlanningAgent_Turtle")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
