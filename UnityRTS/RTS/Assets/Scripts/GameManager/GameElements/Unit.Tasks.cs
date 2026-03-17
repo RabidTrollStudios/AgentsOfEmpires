@@ -407,46 +407,6 @@ namespace GameManager.GameElements
 		}
 
 		/// <summary>
-		/// Hide the pawn inside the mine: free its grid cell and disable its sprite.
-		/// </summary>
-		private void EnterMine()
-		{
-			isInsideMine = true;
-			mineEntryGridPos = MineUnit.GetComponent<Unit>().GridPosition;
-
-			// Free the pawn's grid cell so other units can walk through
-			GameManager.Instance.Map.SetAreaBuildability(UnitType, GridPosition, true);
-
-			// Hide the pawn sprite
-			if (unitSprite != null) unitSprite.enabled = false;
-		}
-
-		/// <summary>
-		/// Reappear at a random buildable cell neighboring the mine.
-		/// </summary>
-		private void ExitMine()
-		{
-			if (!isInsideMine) return;
-			isInsideMine = false;
-
-			// Find a random buildable neighbor of the mine
-			var neighbors = GameManager.Instance.Map.GetBuildableGridPositionsNearUnit(UnitType.MINE, mineEntryGridPos);
-			if (neighbors.Count > 0)
-			{
-				Vector3Int spawnPos = neighbors[UnityEngine.Random.Range(0, neighbors.Count)];
-				GridPosition = spawnPos;
-				WorldPosition = (Vector3)spawnPos + new Vector3(0.5f, 0f, 0);
-			}
-			// else: stay at current GridPosition (fallback)
-
-			// Mark the new position as occupied
-			GameManager.Instance.Map.SetAreaBuildability(UnitType, GridPosition, false);
-
-			// Show the pawn sprite
-			if (unitSprite != null) unitSprite.enabled = true;
-		}
-
-		/// <summary>
 		/// Update the gather task
 		/// </summary>
 		private void UpdateGather()

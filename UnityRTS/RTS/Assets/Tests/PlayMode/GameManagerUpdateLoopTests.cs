@@ -854,5 +854,179 @@ namespace GameManager.Tests.PlayMode
 			Assert.AreEqual(2, GetGameStateInt(),
 				"gameState should be SHOWING_WINNER (2)");
 		}
+
+		// ── SetupGameOverBanner ────────────────────────────────────────────
+
+		/// <summary>
+		/// SetupGameOverBanner is an empty method — calling it covers the entry point.
+		/// </summary>
+		[UnityTest]
+		public IEnumerator SetupGameOverBanner_DoesNotThrow()
+		{
+			yield return null;
+
+			Assert.DoesNotThrow(() =>
+				typeof(GameManager).GetMethod("SetupGameOverBanner",
+					BindingFlags.NonPublic | BindingFlags.Instance)
+				.Invoke(GM, null),
+				"SetupGameOverBanner should complete without errors");
+		}
+
+		// ── InitializeDebugToggles with all toggles ────────────────────────
+
+		/// <summary>
+		/// InitializeDebugToggles with all 9 toggles set up should wire listeners
+		/// and set initial isOn values for each toggle. This covers the toggle
+		/// body branches that are skipped when toggles are null.
+		/// </summary>
+		[UnityTest]
+		public IEnumerator InitializeDebugToggles_WithAllToggles_WiresAllListeners()
+		{
+			// Create InfluenceMap so binding 2 / InfluenceToggle don't crash
+			var influenceGo = new GameObject("InfluenceMap");
+			ctx.CreatedObjects.Add(influenceGo);
+			influenceGo.AddComponent<Tilemap>();
+			ctx.MapManager.InfluenceMap = influenceGo.GetComponent<Tilemap>();
+			influenceGo.SetActive(false);
+
+			// Create all 9 toggles
+			var toggleNames = new[]
+			{
+				"AgentToggle", "UnitToggle", "InfluenceToggle",
+				"MoveTintToggle", "GatherTintToggle", "BuildTintToggle",
+				"AttackTintToggle", "PathTintToggle", "TargetLineTintToggle"
+			};
+
+			var toggles = new Dictionary<string, Toggle>();
+			foreach (var name in toggleNames)
+			{
+				var toggleGo = new GameObject(name);
+				ctx.CreatedObjects.Add(toggleGo);
+				var toggle = toggleGo.AddComponent<Toggle>();
+				toggles[name] = toggle;
+				SetField(name, toggle);
+			}
+
+			yield return null;
+
+			InvokePrivate("InitializeDebugToggles");
+
+			// Verify initial isOn values
+			Assert.IsTrue(toggles["AgentToggle"].isOn,
+				"AgentToggle should be isOn=true");
+			Assert.IsFalse(toggles["UnitToggle"].isOn,
+				"UnitToggle should be isOn=false");
+			Assert.IsFalse(toggles["InfluenceToggle"].isOn,
+				"InfluenceToggle should be isOn=false");
+			Assert.IsFalse(toggles["MoveTintToggle"].isOn,
+				"MoveTintToggle should be isOn=false");
+			Assert.IsFalse(toggles["GatherTintToggle"].isOn,
+				"GatherTintToggle should be isOn=false");
+			Assert.IsFalse(toggles["BuildTintToggle"].isOn,
+				"BuildTintToggle should be isOn=false");
+			Assert.IsFalse(toggles["AttackTintToggle"].isOn,
+				"AttackTintToggle should be isOn=false");
+			Assert.IsTrue(toggles["PathTintToggle"].isOn,
+				"PathTintToggle should be isOn=true");
+			Assert.IsTrue(toggles["TargetLineTintToggle"].isOn,
+				"TargetLineTintToggle should be isOn=true");
+
+			// Verify listeners fire correctly for a few toggles
+			toggles["AgentToggle"].isOn = false;
+			Assert.IsFalse(GM.HasAgentDebugging,
+				"AgentToggle listener should set HasAgentDebugging=false");
+
+			toggles["UnitToggle"].isOn = true;
+			Assert.IsTrue(GM.HasUnitDebugging,
+				"UnitToggle listener should set HasUnitDebugging=true");
+
+			toggles["MoveTintToggle"].isOn = true;
+			Assert.IsTrue(GM.HasMoveTint,
+				"MoveTintToggle listener should set HasMoveTint=true");
+
+			toggles["GatherTintToggle"].isOn = true;
+			Assert.IsTrue(GM.HasGatherTint,
+				"GatherTintToggle listener should set HasGatherTint=true");
+
+			toggles["AttackTintToggle"].isOn = true;
+			Assert.IsTrue(GM.HasAttackTint,
+				"AttackTintToggle listener should set HasAttackTint=true");
+
+			toggles["PathTintToggle"].isOn = false;
+			Assert.IsFalse(GM.HasPathTint,
+				"PathTintToggle listener should set HasPathTint=false");
+
+			toggles["BuildTintToggle"].isOn = true;
+			Assert.IsTrue(GM.HasBuildTint,
+				"BuildTintToggle listener should set HasBuildTint=true");
+
+			toggles["TargetLineTintToggle"].isOn = false;
+			Assert.IsFalse(GM.HasTargetLineTint,
+				"TargetLineTintToggle listener should set HasTargetLineTint=false");
+
+			// Clean up — reset all toggles to null
+			foreach (var name in toggleNames)
+				SetField(name, null);
+		}
+
+		// ── UpdateCustomDebugUI with non-empty debug text ──────────────────
+
+		/// <summary>
+		/// When PlanningAgentDebugText is non-empty, UpdateCustomDebugUI should
+		/// display "DLLName\nDebugText" rather than an empty string.
+		/// </summary>
+		[UnityTest]
+		public IEnumerator UpdateCustomDebugUI_WithNonEmptyDebugText_ShowsDllNameAndText()
+		{
+			var blueGo = MakeNamedAgent(Constants.BLUE_ABBR, 0);
+			var redGo = MakeNamedAgent(Constants.RED_ABBR, 1);
+
+			// Inject a PlanningAgentBase with non-empty DebugText
+			var debugAgent = new TestDebugTextAgent("My debug info");
+			typeof(AgentBridge).GetMethod("SetPlanningAgent",
+					BindingFlags.NonPublic | BindingFlags.Instance)
+				.Invoke(blueGo.GetComponent<AgentBridge>(),
+					new object[] { debugAgent });
+
+			SetProp("Agents", new Dictionary<int, GameObject>
+			{
+				{ 0, blueGo },
+				{ 1, redGo }
+			});
+
+			var blueText = MakeText("BlueDebug");
+			var redText = MakeText("RedDebug");
+			SetField("BlueCustomDebugText", blueText);
+			SetField("RedCustomDebugText", redText);
+
+			GM.OnAgentToggleChanged(true);
+
+			yield return null;
+
+			InvokePrivate("UpdateCustomDebugUI");
+
+			// Blue agent has non-empty debug text → shows "DLLName\nDebugText"
+			StringAssert.Contains("My debug info", blueText.text,
+				"BlueCustomDebugText should contain the debug text");
+			StringAssert.Contains("TestDLL0", blueText.text,
+				"BlueCustomDebugText should contain the DLL name");
+
+			// Red agent has no planning agent → empty text
+			Assert.AreEqual("", redText.text,
+				"RedCustomDebugText should be empty when PlanningAgentDebugText is empty");
+
+			SetField("BlueCustomDebugText", null);
+			SetField("RedCustomDebugText", null);
+		}
+
+		/// <summary>
+		/// Minimal PlanningAgentBase subclass for testing non-empty DebugText.
+		/// </summary>
+		private class TestDebugTextAgent : PlanningAgentBase
+		{
+			public TestDebugTextAgent(string text) { DebugText = text; }
+			public override void InitializeMatch() { }
+			public override void Update(IGameState state, IAgentActions actions) { }
+		}
 	}
 }

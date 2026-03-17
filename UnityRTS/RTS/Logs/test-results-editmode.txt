@@ -1,6 +1,6 @@
-=== EditMode Test Run: 2026-03-15 14:35:10 ===
-Result: Passed  |  Duration: 1.17s
-Passed: 340  Failed: 0  Skipped: 0
+=== EditMode Test Run: 2026-03-16 18:18:50 ===
+Result: Passed  |  Duration: 1.37s
+Passed: 348  Failed: 0  Skipped: 0
 
           [PASS] GameManager.Tests.AgentActionsAdapterTests.Attack_BothUnknownUnits_DoesNotThrow
           [PASS] GameManager.Tests.AgentActionsAdapterTests.Build_UnknownUnit_DoesNotThrow
@@ -49,6 +49,14 @@ Passed: 340  Failed: 0  Skipped: 0
           [PASS] GameManager.Tests.AStarPathPropertiesTests.PathIsContiguous
           [PASS] GameManager.Tests.AStarPathPropertiesTests.ResetSearch_ClearsAllNodes
           [PASS] GameManager.Tests.AStarPathPropertiesTests.RunTwice_SecondSearchValid
+          [PASS] GameManager.Tests.CameraControllerTests.CameraController_RequiresCamera
+          [PASS] GameManager.Tests.CameraControllerTests.Start_InitializesDraggingFlags
+          [PASS] GameManager.Tests.CameraControllerTests.Update_LeftDragActive_NoInput_DragFlagPersists
+          [PASS] GameManager.Tests.CameraControllerTests.Update_NoInput_CameraPositionUnchanged
+          [PASS] GameManager.Tests.CameraControllerTests.Update_NoInput_DoesNotThrow
+          [PASS] GameManager.Tests.CameraControllerTests.Update_NoInput_DraggingFlagsRemainFalse
+          [PASS] GameManager.Tests.CameraControllerTests.Update_NoInput_ZoomUnchanged
+          [PASS] GameManager.Tests.CameraControllerTests.Update_RightDragActive_NoInput_DragFlagPersists
           [PASS] GameManager.Tests.ConstantsAttackSizeTests.AttackRange_AllNonNegative
           [PASS] GameManager.Tests.ConstantsAttackSizeTests.AttackRange_CombatUnits_HavePositiveRange
           [PASS] GameManager.Tests.ConstantsAttackSizeTests.AttackRange_ConsistentWithCanAttack

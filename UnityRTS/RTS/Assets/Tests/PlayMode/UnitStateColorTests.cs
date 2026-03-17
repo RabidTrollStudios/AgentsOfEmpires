@@ -125,24 +125,5 @@ namespace GameManager.Tests.PlayMode
 			yield return null;
 		}
 
-		[UnityTest]
-		public IEnumerator LateUpdate_InsideMine_AllIndicatorsHidden()
-		{
-			SetGmProperty("HasAttackTint", true);
-			SetGmProperty("HasMoveTint",   true);
-			SetGmProperty("HasGatherTint", true);
-			SetGmProperty("HasBuildTint",  true);
-			var unit = PlaceUnit(UnitType.PAWN, new Vector3Int(5, 5, 0));
-			unit.CurrentAction = UnitAction.GATHER;
-			SetUnitField(unit, "isInsideMine", true);
-
-			unit.LateUpdate();
-
-			Assert.IsFalse(Indicator(unit, "AttackIndicator")?.enabled ?? false, "attack hidden in mine");
-			Assert.IsFalse(Indicator(unit, "MoveIndicator")?.enabled   ?? false, "move hidden in mine");
-			Assert.IsFalse(Indicator(unit, "GatherIndicator")?.enabled ?? false, "gather hidden in mine");
-			Assert.IsFalse(Indicator(unit, "BuildIndicator")?.enabled  ?? false, "build hidden in mine");
-			yield return null;
-		}
 	}
 }
