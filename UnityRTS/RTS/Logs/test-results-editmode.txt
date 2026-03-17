@@ -1,6 +1,6 @@
-=== EditMode Test Run: 2026-03-16 19:35:41 ===
-Result: Passed  |  Duration: 1.28s
-Passed: 348  Failed: 0  Skipped: 0
+=== EditMode Test Run: 2026-03-16 19:55:02 ===
+Result: Passed  |  Duration: 1.37s
+Passed: 374  Failed: 0  Skipped: 0
 
           [PASS] GameManager.Tests.AgentActionsAdapterTests.Attack_BothUnknownUnits_DoesNotThrow
           [PASS] GameManager.Tests.AgentActionsAdapterTests.Build_UnknownUnit_DoesNotThrow
@@ -283,17 +283,43 @@ Passed: 348  Failed: 0  Skipped: 0
           [PASS] GameManager.Tests.MapManagerNeighborTests.IsNeighborOfUnit_Base_VariousSides_AllTrue
           [PASS] GameManager.Tests.MapManagerNeighborTests.IsNeighborOfUnit_SameCell_ReturnsFalse
           [PASS] GameManager.Tests.MapManagerNeighborTests.IsNeighborOfUnit_TwoStepsAway_ReturnsFalse
+          [PASS] GameManager.Tests.MapManagerTests.GenerateGraph_InfluenceMapTag_SetsInfluenceMap
+          [PASS] GameManager.Tests.MapManagerTests.GenerateGraph_SkipsNonObstacleLayers
+          [PASS] GameManager.Tests.MapManagerTests.GenerateGraph_WallsTilemap_MarksObstacles
+          [PASS] GameManager.Tests.MapManagerTests.GenerateGraph_WithGroundTilemap_CreatesGridCells
+          [PASS] GameManager.Tests.MapManagerTests.GetBuildableGridPositionsNearUnit_AllOpen_MatchesNearUnit
+          [PASS] GameManager.Tests.MapManagerTests.GetBuildableGridPositionsNearUnit_SomeBlocked_FewerResults
+          [PASS] GameManager.Tests.MapManagerTests.GetGridPositionsNearUnit_AtCorner_ClipsToMap
+          [PASS] GameManager.Tests.MapManagerTests.GetGridPositionsNearUnit_Base_ReturnsPerimeterCells
           [PASS] GameManager.Tests.MapManagerTests.GetGridPositionsNearUnit_Pawn_Returns8
+          [PASS] GameManager.Tests.MapManagerTests.GetPathBetweenGridPositions_BlockedDestination_ReturnsEmptyPath
           [PASS] GameManager.Tests.MapManagerTests.GetPathBetweenGridPositions_FindsPath
+          [PASS] GameManager.Tests.MapManagerTests.GetPathBetweenGridPositions_SamePosition_ReturnsPath
+          [PASS] GameManager.Tests.MapManagerTests.GetPathToUnit_AdjacentStart_ShortPath
+          [PASS] GameManager.Tests.MapManagerTests.GetPathToUnit_ClosestNeighborFirst
+          [PASS] GameManager.Tests.MapManagerTests.GetPathToUnit_FindsPathToNeighbor
+          [PASS] GameManager.Tests.MapManagerTests.GetRandomBuildableLocation_ReturnsValidPosition
           [PASS] GameManager.Tests.MapManagerTests.IsAreaBuildable_AtMapEdge_Works
           [PASS] GameManager.Tests.MapManagerTests.IsAreaBuildable_Base6x4_FullyOpen_True
           [PASS] GameManager.Tests.MapManagerTests.IsAreaBuildable_Base6x4_PartiallyBlocked_False
           [PASS] GameManager.Tests.MapManagerTests.IsAreaBuildable_BaseOverlapsEdge_False
+          [PASS] GameManager.Tests.MapManagerTests.IsAreaBuildable_ExcludePositions_SkipsBlockedCell
+          [PASS] GameManager.Tests.MapManagerTests.IsAreaBuildable_ExcludePositions_StillFailsOnOtherBlocked
           [PASS] GameManager.Tests.MapManagerTests.IsAreaBuildable_OffMap_ReturnsFalse
           [PASS] GameManager.Tests.MapManagerTests.IsAreaBuildable_PawnOnBlocked_False
           [PASS] GameManager.Tests.MapManagerTests.IsAreaBuildable_PawnOnOpen_True
           [PASS] GameManager.Tests.MapManagerTests.IsBoundedAreaBuildable_AdjacentWall_False
+          [PASS] GameManager.Tests.MapManagerTests.IsBoundedAreaBuildable_ExcludePositions_SkipsBlockedCell
+          [PASS] GameManager.Tests.MapManagerTests.IsBoundedAreaBuildable_ExcludePositions_StillFailsOnOtherBlocked
           [PASS] GameManager.Tests.MapManagerTests.IsBoundedAreaBuildable_Open_True
+          [PASS] GameManager.Tests.MapManagerTests.IsNeighborOfUnit_AdjacentCell_True
+          [PASS] GameManager.Tests.MapManagerTests.IsNeighborOfUnit_Base3x3_AdjacentToFootprint_True
+          [PASS] GameManager.Tests.MapManagerTests.IsNeighborOfUnit_DiagonalCell_True
+          [PASS] GameManager.Tests.MapManagerTests.IsNeighborOfUnit_FarCell_False
+          [PASS] GameManager.Tests.MapManagerTests.IsNeighborOfUnit_SameCell_False
+          [PASS] GameManager.Tests.MapManagerTests.SetAreaBuildability_ArcherMobile_WalkableStaysTrue
+          [PASS] GameManager.Tests.MapManagerTests.SetAreaBuildability_AtEdge_SkipsOutOfBounds
+          [PASS] GameManager.Tests.MapManagerTests.SetAreaBuildability_Barracks_MultiCellBlocked
           [PASS] GameManager.Tests.MapManagerTests.SetAreaBuildability_Building_WalkableFalse
           [PASS] GameManager.Tests.MapManagerTests.SetAreaBuildability_MobileUnit_WalkableStaysTrue
           [PASS] GameManager.Tests.MapManagerTests.SetAreaBuildability_Restore_BothTrue
