@@ -94,6 +94,92 @@ namespace GameManager.Tests.PlayMode
 			yield return null;
 		}
 
+		// ── Repair ────────────────────────────────────────────────────────────────
+
+		[UnityTest]
+		public IEnumerator Repair_ValidUnits_DelegatesToAgentRepair()
+		{
+			var pawn = PlaceUnit(UnitType.PAWN, new Vector3Int(5, 5, 0));
+			var baseUnit = PlaceUnit(UnitType.BASE, new Vector3Int(8, 8, 0));
+			baseUnit.IsBuilt = true;
+			var adapter = new AgentActionsAdapter(GetAgent0(), ctx.UnitManager);
+
+			Assert.DoesNotThrow(
+				() => adapter.Repair(pawn.UnitNbr, baseUnit.UnitNbr),
+				"Repair with valid units should delegate to agent.Repair without throwing");
+
+			yield return null;
+		}
+
+		[UnityTest]
+		public IEnumerator Repair_UnknownPawn_ReturnsUnitNotFound()
+		{
+			var baseUnit = PlaceUnit(UnitType.BASE, new Vector3Int(8, 8, 0));
+			var adapter = new AgentActionsAdapter(GetAgent0(), ctx.UnitManager);
+			yield return null;
+
+			var result = adapter.Repair(999, baseUnit.UnitNbr);
+			Assert.AreEqual(CommandResult.UNIT_NOT_FOUND, result);
+		}
+
+		[UnityTest]
+		public IEnumerator Repair_UnknownBuilding_ReturnsTargetNotFound()
+		{
+			var pawn = PlaceUnit(UnitType.PAWN, new Vector3Int(5, 5, 0));
+			var adapter = new AgentActionsAdapter(GetAgent0(), ctx.UnitManager);
+			yield return null;
+
+			var result = adapter.Repair(pawn.UnitNbr, 999);
+			Assert.AreEqual(CommandResult.TARGET_NOT_FOUND, result);
+		}
+
+		// ── Target not found (unit valid, target missing) ─────────────────────────
+
+		[UnityTest]
+		public IEnumerator Gather_ValidPawn_UnknownMine_ReturnsTargetNotFound()
+		{
+			var pawn = PlaceUnit(UnitType.PAWN, new Vector3Int(5, 5, 0));
+			var adapter = new AgentActionsAdapter(GetAgent0(), ctx.UnitManager);
+			yield return null;
+
+			var result = adapter.Gather(pawn.UnitNbr, 999, 998);
+			Assert.AreEqual(CommandResult.TARGET_NOT_FOUND, result);
+		}
+
+		[UnityTest]
+		public IEnumerator Attack_ValidUnit_UnknownTarget_ReturnsTargetNotFound()
+		{
+			var warrior = PlaceUnit(UnitType.WARRIOR, new Vector3Int(5, 5, 0));
+			var adapter = new AgentActionsAdapter(GetAgent0(), ctx.UnitManager);
+			yield return null;
+
+			var result = adapter.Attack(warrior.UnitNbr, 999);
+			Assert.AreEqual(CommandResult.TARGET_NOT_FOUND, result);
+		}
+
+		// ── Cooldown expiry ───────────────────────────────────────────────────────
+
+		[UnityTest]
+		public IEnumerator Move_CooldownExpires_AllowsRetry()
+		{
+			var adapter = new AgentActionsAdapter(GetAgent0(), ctx.UnitManager);
+			yield return null;
+
+			// First call with unknown unit → UNIT_NOT_FOUND, triggers cooldown
+			adapter.Move(999, new Position(5, 5));
+			// Immediate retry → ON_COOLDOWN
+			Assert.AreEqual(CommandResult.ON_COOLDOWN,
+				adapter.Move(999, new Position(5, 5)));
+
+			// Advance past cooldown (BASE_COOLDOWN_FRAMES = 15)
+			yield return WaitFrames(20);
+
+			// Now the cooldown should have expired — gets UNIT_NOT_FOUND again, not ON_COOLDOWN
+			var result = adapter.Move(999, new Position(5, 5));
+			Assert.AreEqual(CommandResult.UNIT_NOT_FOUND, result,
+				"After cooldown expires, command should be processed again");
+		}
+
 		// ── Log ───────────────────────────────────────────────────────────────────
 
 		[UnityTest]
