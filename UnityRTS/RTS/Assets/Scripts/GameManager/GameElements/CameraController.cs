@@ -1,5 +1,6 @@
-﻿using System;
+using System;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace GameManager.GameElements
 {
@@ -17,65 +18,92 @@ namespace GameManager.GameElements
 		Vector3 mousePositionOld;
 		bool isDraggingRightBtn;
 
+		private InputSystem_Actions _input;
+
 
 		// Use this for initialization
 		void Start () {
 			isDraggingLeftBtn = false;
 			isDraggingRightBtn = false;
 			mousePositionOld = Vector3.zero;
+		}
 
-			// var cam = GetComponent<Camera>();
-			// if (cam != null)
-			// 	cam.orthographicSize = 23f;
+		void OnEnable()
+		{
+			_input = new InputSystem_Actions();
+			_input.asset.bindingMask = null;
+			_input.Camera.Enable();
+		}
+
+		void OnDisable()
+		{
+			_input?.Camera.Disable();
+			_input?.Dispose();
+			_input = null;
 		}
 
 		// Update is called once per frame
 		void Update () {
+			if (_input == null) return;
+
+			var mouse = _input.Camera;
+			bool leftPressed = mouse.LeftClick.IsPressed();
+			bool leftDown = mouse.LeftClick.WasPressedThisFrame();
+			bool leftUp = mouse.LeftClick.WasReleasedThisFrame();
+			bool rightPressed = mouse.RightClick.IsPressed();
+			bool rightDown = mouse.RightClick.WasPressedThisFrame();
+			bool rightUp = mouse.RightClick.WasReleasedThisFrame();
+			Vector2 mousePos = mouse.MousePosition.ReadValue<Vector2>();
+			Vector2 scroll = mouse.Scroll.ReadValue<Vector2>();
 
 			// Handle Click & Drag behavior using left-button
-			if (!Input.GetMouseButton(1) && Input.GetMouseButtonDown(0) && !isDraggingLeftBtn)
+			if (!rightPressed && leftDown && !isDraggingLeftBtn)
 			{
-				mousePositionOld = Input.mousePosition;
+				mousePositionOld = mousePos;
 				isDraggingLeftBtn = true;
 			}
-			if (Input.GetMouseButton(0) && isDraggingLeftBtn)
+			if (leftPressed && isDraggingLeftBtn)
 			{
-				Vector3 delta = new Vector3((Input.mousePosition.x - mousePositionOld.x) / Screen.width,
-					(Input.mousePosition.y - mousePositionOld.y) / Screen.height,
+				Vector3 delta = new Vector3((mousePos.x - mousePositionOld.x) / Screen.width,
+					(mousePos.y - mousePositionOld.y) / Screen.height,
 					0);
 				transform.position -= delta * dragMultiplier;
 
-				mousePositionOld = Input.mousePosition;
+				mousePositionOld = mousePos;
 			}
-			if (Input.GetMouseButtonUp(0) && isDraggingLeftBtn)
+			if (leftUp && isDraggingLeftBtn)
 			{
 				isDraggingLeftBtn = false;
 			}
 
 			// Handle Zoom Behavior
-			if (Math.Abs(Input.GetAxis("Mouse ScrollWheel")) > .00001f)
+			float scrollY = scroll.y;
+			if (Math.Abs(scrollY) > .00001f)
 			{
 				var cam = gameObject.GetComponent<Camera>();
-				cam.orthographicSize = Math.Min(maxZoom, Math.Max(minZoom, cam.orthographicSize + -Input.GetAxis("Mouse ScrollWheel") * scrollMultiplier));
+				// Normalize scroll: old Input.GetAxis("Mouse ScrollWheel") was ~0.1 per notch,
+				// new Input System scroll.y is 120 per notch
+				float normalizedScroll = scrollY / 120f * 0.1f;
+				cam.orthographicSize = Math.Min(maxZoom, Math.Max(minZoom, cam.orthographicSize + -normalizedScroll * scrollMultiplier));
 			}
 
 			// Handle Zoom Behavior using right-button
-			if (!Input.GetMouseButton(0) && Input.GetMouseButtonDown(1) && !isDraggingRightBtn)
+			if (!leftPressed && rightDown && !isDraggingRightBtn)
 			{
-				mousePositionOld = Input.mousePosition;
+				mousePositionOld = mousePos;
 				isDraggingRightBtn = true;
 			}
-			if (Input.GetMouseButton(1) && isDraggingRightBtn)
+			if (rightPressed && isDraggingRightBtn)
 			{
-				Vector3 delta = new Vector3((Input.mousePosition.x - mousePositionOld.x) / Screen.width,
-					(Input.mousePosition.y - mousePositionOld.y) / Screen.height,
+				Vector3 delta = new Vector3((mousePos.x - mousePositionOld.x) / Screen.width,
+					(mousePos.y - mousePositionOld.y) / Screen.height,
 					0);
 				var cam = gameObject.GetComponent<Camera>();
 				cam.orthographicSize = Math.Min(maxZoom, Math.Max(minZoom, cam.orthographicSize - delta.y * dragMultiplier));
 
-				mousePositionOld = Input.mousePosition;
+				mousePositionOld = mousePos;
 			}
-			if (Input.GetMouseButtonUp(1) && isDraggingRightBtn)
+			if (rightUp && isDraggingRightBtn)
 			{
 				isDraggingRightBtn = false;
 			}

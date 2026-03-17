@@ -285,6 +285,9 @@ namespace GameManager
 		private EventDispatcher eventDispatcher;
 		private AgentLoader agentLoader;
 
+		// Input
+		private InputSystem_Actions _input;
+
 		#endregion
 
 		#region Initialization
@@ -298,6 +301,13 @@ namespace GameManager
 			{
 				instance = this;
 			}
+		}
+
+		private void OnDestroy()
+		{
+			_input?.Gameplay.Disable();
+			_input?.Dispose();
+			_input = null;
 		}
 
 		/// <summary>
@@ -318,6 +328,10 @@ namespace GameManager
 			unitManager = new UnitManager(mapManager, Prefabs);
 			eventDispatcher = new EventDispatcher(unitManager, mapManager);
 			agentLoader = new AgentLoader(pathToDLLs);
+
+			_input = new InputSystem_Actions();
+			_input.asset.bindingMask = null;
+			_input.Gameplay.Enable();
 
 			InitializeDebugToggles();
 			SetupGameOverBanner();
