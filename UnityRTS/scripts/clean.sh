@@ -19,7 +19,8 @@ rm -f "$PROJECT_ROOT/EnemyAgents/"*.dll
 rm -f "$PROJECT_ROOT/EnemyAgents/"*.pdb
 rm -f "$PROJECT_ROOT/EnemyAgents/"*.xml
 
-echo "Removing EnemyAgents CSV files..."
+echo "Removing EnemyAgents CSV and log files..."
 rm -f "$PROJECT_ROOT/EnemyAgents/"PlanningAgent_*.csv
+rm -f "$PROJECT_ROOT/EnemyAgents/"CommandLog_*.txt
 
 echo "Clean complete."
