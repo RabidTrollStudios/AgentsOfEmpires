@@ -1,25 +1,25 @@
 ﻿# Summary
 |||
 |:---|:---|
-| Generated on: | 3/16/2026 - 7:35:40 PM |
+| Generated on: | 3/16/2026 - 7:56:40 PM |
 | Parser: | MultiReportParser (4x OpenCoverParser) |
 | Assemblies: | 3 |
 | Classes: | 145 |
 | Files: | 145 |
-| Covered lines: | 13078 |
-| Uncovered lines: | 527 |
-| Coverable lines: | 13605 |
-| Total lines: | 29977 |
-| Line coverage: | 96.1% (13078 of 13605) |
+| Covered lines: | 13294 |
+| Uncovered lines: | 511 |
+| Coverable lines: | 13805 |
+| Total lines: | 30370 |
+| Line coverage: | 96.2% (13294 of 13805) |
 | Covered branches: | 0 |
 | Total branches: | 0 |
-| Covered methods: | 1527 |
-| Total methods: | 1595 |
-| Method coverage: | 95.7% (1527 of 1595) |
+| Covered methods: | 1553 |
+| Total methods: | 1621 |
+| Method coverage: | 95.8% (1553 of 1621) |
 
 |**Name**|**Covered**|**Uncovered**|**Coverable**|**Total**|**Line coverage**|**Covered**|**Total**|**Branch coverage**|**Covered**|**Total**|**Method coverage**|
 |:---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
-|**GameManager**|**3642**|**313**|**3955**|**8689**|**92%**|**0**|**0**|****|**421**|**455**|**92.5%**|
+|**GameManager**|**3658**|**297**|**3955**|**8689**|**92.4%**|**0**|**0**|****|**421**|**455**|**92.5%**|
 |GameManager.Agent|223|1|224|475|99.5%|0|0||35|35|100%|
 |GameManager.AgentActionsAdapter|67|31|98|180|68.3%|0|0||11|12|91.6%|
 |GameManager.AgentBridge|29|0|29|66|100%|0|0||8|8|100%|
@@ -41,7 +41,7 @@
 |GameManager.GameElements.TrainEventArgs|7|0|7|178|100%|0|0||5|5|100%|
 |GameManager.GameElements.Unit|1500|12|1512|2562|99.2%|0|0||100|100|100%|
 |GameManager.GameElements.Utility|46|2|48|126|95.8%|0|0||8|10|80%|
-|GameManager.GameManager|506|52|558|1186|90.6%|0|0||77|78|98.7%|
+|GameManager.GameManager|502|56|558|1186|89.9%|0|0||77|78|98.7%|
 |GameManager.GameStateAdapter|115|0|115|222|100%|0|0||23|23|100%|
 |GameManager.Graph.Edge[V]|11|6|17|30|64.7%|0|0||2|3|66.6%|
 |GameManager.Graph.Graph[T]|127|0|127|203|100%|0|0||13|13|100%|
@@ -49,9 +49,9 @@
 |GameManager.Graph.PriorityNode[V]|19|0|19|159|100%|0|0||3|3|100%|
 |GameManager.Graph.PriorityQueue[T]|76|9|85|159|89.4%|0|0||8|9|88.8%|
 |GameManager.InfluenceTile|0|4|4|20|0%|0|0||0|2|0%|
-|GameManager.MapManager|242|58|300|496|80.6%|0|0||24|24|100%|
+|GameManager.MapManager|262|38|300|496|87.3%|0|0||24|24|100%|
 |GameManager.UnitManager|85|0|85|197|100%|0|0||20|20|100%|
-|**GameManager.Tests.EditMode**|**2733**|**51**|**2784**|**6553**|**98.1%**|**0**|**0**|****|**434**|**444**|**97.7%**|
+|**GameManager.Tests.EditMode**|**2933**|**51**|**2984**|**6946**|**98.2%**|**0**|**0**|****|**460**|**470**|**97.8%**|
 |GameManager.Tests.AgentActionsAdapterTests|29|3|32|102|90.6%|0|0||7|10|70%|
 |GameManager.Tests.AgentControllerTests|6|0|6|27|100%|0|0||1|1|100%|
 |GameManager.Tests.AgentLoaderTests|61|0|61|143|100%|0|0||12|12|100%|
@@ -86,7 +86,7 @@
 |GameManager.Tests.MapManagerNeighborTests|96|0|96|265|100%|0|0||16|16|100%|
 |GameManager.Tests.MapManagerPathTestHelper|0|47|47|123|0%|0|0||0|6|0%|
 |GameManager.Tests.MapManagerTestHelper|45|0|45|90|100%|0|0||1|1|100%|
-|GameManager.Tests.MapManagerTests|63|0|63|137|100%|0|0||16|16|100%|
+|GameManager.Tests.MapManagerTests|263|0|263|530|100%|0|0||42|42|100%|
 |GameManager.Tests.PriorityNodeTests|62|0|62|181|100%|0|0||12|12|100%|
 |GameManager.Tests.PriorityQueueTests|103|0|103|175|100%|0|0||13|13|100%|
 |GameManager.Tests.TestCell|11|1|12|31|91.6%|0|0||6|7|85.7%|
