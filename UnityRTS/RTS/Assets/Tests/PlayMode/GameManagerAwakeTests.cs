@@ -412,5 +412,104 @@ namespace GameManager.Tests.PlayMode
 
 			CloseAgentLogs(gm);
 		}
+
+		// ── PickNextRandomAgent / RecreateAgent ──────────────────────────────
+
+		/// <summary>
+		/// After Awake with RandomizeAgentsAsRed, calling InitializeRound a second time
+		/// triggers PickNextRandomAgent (NbrOfRounds > 0, dllNames != null).
+		/// With isBlueUsingDllNames=false this takes the red-agent branch,
+		/// covering RecreateAgent and label/versus text updates (lines 120-134, 180-198).
+		/// </summary>
+		[UnityTest]
+		public IEnumerator PickNextRandomAgent_RedBranch_RecreatesRedAgent()
+		{
+			SkipIfNoDll();
+
+			var (gmGo, gm, prefabs) = BuildAwakeTestGM("PickNextRed",
+				totalRounds: 3, randomizeRed: true);
+			gmGo.SetActive(true);
+			yield return null;
+
+			// After Awake: NbrOfRounds=1, dllNames populated, isBlueUsingDllNames=false
+			// Close log files from the first InitializeRound to avoid sharing violations
+			CloseAgentLogs(gm);
+
+			// Destroy existing units so PlaceUnits can re-place them
+			gm.Units.DestroyAllUnits();
+			yield return null;
+
+			// Call InitializeRound → PickNextRandomAgent fires (red branch)
+			typeof(GameManager)
+				.GetMethod("InitializeRound", BindingFlags.NonPublic | BindingFlags.Instance)
+				.Invoke(gm, null);
+
+			yield return null;
+
+			// Agents should still exist after RecreateAgent
+			var agents = (Dictionary<int, GameObject>)typeof(GameManager)
+				.GetProperty("Agents", BindingFlags.NonPublic | BindingFlags.Instance)
+				.GetValue(gm);
+			Assert.AreEqual(2, agents.Count,
+				"Should still have 2 agents after RecreateAgent");
+
+			// Units should be placed by InitializeRound → PlaceUnits
+			Assert.GreaterOrEqual(gm.Units.GetAllUnits().Count, 4,
+				"Units should be placed after InitializeRound");
+
+			// Label texts should be updated
+			Assert.IsNotEmpty(prefabs.RedLabelText.text,
+				"Red label should be updated by PickNextRandomAgent");
+			Assert.IsNotEmpty(prefabs.BlueLabelText.text,
+				"Blue label should be updated by PickNextRandomAgent");
+
+			CloseAgentLogs(gm);
+		}
+
+		/// <summary>
+		/// Same as above but with isBlueUsingDllNames=true to cover the blue-agent branch
+		/// in PickNextRandomAgent (lines 172-178).
+		/// </summary>
+		[UnityTest]
+		public IEnumerator PickNextRandomAgent_BlueBranch_RecreatesBlueAgent()
+		{
+			SkipIfNoDll();
+
+			var (gmGo, gm, prefabs) = BuildAwakeTestGM("PickNextBlue",
+				totalRounds: 3, randomizeRed: true);
+			gmGo.SetActive(true);
+			yield return null;
+
+			// Switch to blue branch
+			typeof(GameManager)
+				.GetField("isBlueUsingDllNames", BindingFlags.NonPublic | BindingFlags.Instance)
+				.SetValue(gm, true);
+
+			// Close log files from the first InitializeRound to avoid sharing violations
+			CloseAgentLogs(gm);
+
+			gm.Units.DestroyAllUnits();
+			yield return null;
+
+			typeof(GameManager)
+				.GetMethod("InitializeRound", BindingFlags.NonPublic | BindingFlags.Instance)
+				.Invoke(gm, null);
+
+			yield return null;
+
+			var agents = (Dictionary<int, GameObject>)typeof(GameManager)
+				.GetProperty("Agents", BindingFlags.NonPublic | BindingFlags.Instance)
+				.GetValue(gm);
+			Assert.AreEqual(2, agents.Count,
+				"Should still have 2 agents after RecreateAgent (blue branch)");
+
+			Assert.GreaterOrEqual(gm.Units.GetAllUnits().Count, 4,
+				"Units should be placed after InitializeRound");
+
+			Assert.IsNotEmpty(prefabs.BlueLabelText.text,
+				"Blue label should be updated by PickNextRandomAgent (blue branch)");
+
+			CloseAgentLogs(gm);
+		}
 	}
 }
