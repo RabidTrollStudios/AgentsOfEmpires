@@ -4,6 +4,10 @@ set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
+echo "=== Step 0: Clean stale CSV files ==="
+rm -f "$SCRIPT_DIR/../EnemyAgents/"PlanningAgent_*.csv
+echo ""
+
 echo "=== Step 1: Build AgentSDK ==="
 "$SCRIPT_DIR/build-sdk.sh"
 echo ""
