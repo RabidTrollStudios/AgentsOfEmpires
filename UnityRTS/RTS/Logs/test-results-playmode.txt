@@ -1,12 +1,18 @@
-=== PlayMode Test Run: 2026-03-16 19:56:41 ===
-Result: Passed  |  Duration: 71.30s
-Passed: 527  Failed: 0  Skipped: 0
+=== PlayMode Test Run: 2026-03-16 20:17:32 ===
+Result: Passed  |  Duration: 72.47s
+Passed: 533  Failed: 0  Skipped: 0
 
+            [PASS] GameManager.Tests.PlayMode.AgentActionsAdapterTests.Attack_ValidUnit_UnknownTarget_ReturnsTargetNotFound
             [PASS] GameManager.Tests.PlayMode.AgentActionsAdapterTests.Attack_ValidUnits_DelegatesToAgentAttack
             [PASS] GameManager.Tests.PlayMode.AgentActionsAdapterTests.Build_ValidPawn_DelegatesToAgentBuild
+            [PASS] GameManager.Tests.PlayMode.AgentActionsAdapterTests.Gather_ValidPawn_UnknownMine_ReturnsTargetNotFound
             [PASS] GameManager.Tests.PlayMode.AgentActionsAdapterTests.Gather_ValidUnits_DelegatesToAgentGather
             [PASS] GameManager.Tests.PlayMode.AgentActionsAdapterTests.Log_DelegatesToAgentLog
+            [PASS] GameManager.Tests.PlayMode.AgentActionsAdapterTests.Move_CooldownExpires_AllowsRetry
             [PASS] GameManager.Tests.PlayMode.AgentActionsAdapterTests.Move_ValidUnit_DelegatesToAgentMove
+            [PASS] GameManager.Tests.PlayMode.AgentActionsAdapterTests.Repair_UnknownBuilding_ReturnsTargetNotFound
+            [PASS] GameManager.Tests.PlayMode.AgentActionsAdapterTests.Repair_UnknownPawn_ReturnsUnitNotFound
+            [PASS] GameManager.Tests.PlayMode.AgentActionsAdapterTests.Repair_ValidUnits_DelegatesToAgentRepair
             [PASS] GameManager.Tests.PlayMode.AgentActionsAdapterTests.Train_ValidBuilding_DelegatesToAgentTrain
             [PASS] GameManager.Tests.PlayMode.AgentCommandTests.Attack_FriendlyFire_ReturnsFriendlyFire
             [PASS] GameManager.Tests.PlayMode.AgentCommandTests.Attack_NullTarget_ReturnsTargetNotFound
