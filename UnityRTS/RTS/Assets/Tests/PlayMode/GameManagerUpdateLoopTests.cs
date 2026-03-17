@@ -722,6 +722,11 @@ namespace GameManager.Tests.PlayMode
 			ctx.MapManager.InfluenceMap = influenceGo.GetComponent<Tilemap>();
 			influenceGo.SetActive(false);
 
+			// Inject InputSystem_Actions so InitializeDebugToggles can populate _debugBindings
+			var inputActions = new InputSystem_Actions();
+			inputActions.Gameplay.Enable();
+			SetField("_input", inputActions);
+
 			InvokePrivate("InitializeDebugToggles");
 
 			yield return null;
@@ -731,7 +736,8 @@ namespace GameManager.Tests.PlayMode
 				"_debugBindings", BindingFlags.NonPublic | BindingFlags.Instance);
 			var bindings = bindingsField.GetValue(GM) as Array;
 			var binding = bindings.GetValue(2);
-			var execute = (Action)binding.GetType().GetField("Item3").GetValue(binding);
+			// Named tuple fields: (InputAction Action, Action Execute) → Item2 is Execute
+			var execute = (Action)binding.GetType().GetField("Item2").GetValue(binding);
 
 			// Execute: should toggle InfluenceMap from false to true
 			execute();
@@ -742,6 +748,9 @@ namespace GameManager.Tests.PlayMode
 			execute();
 			Assert.IsFalse(influenceGo.activeSelf,
 				"Second execute should deactivate InfluenceMap");
+
+			inputActions.Dispose();
+			SetField("_input", null);
 		}
 
 		// ── UpdateCustomDebugUI with agents ─────────────────────────────────

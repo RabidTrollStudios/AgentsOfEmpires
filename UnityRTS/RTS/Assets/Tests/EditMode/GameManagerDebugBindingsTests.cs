@@ -14,6 +14,7 @@ namespace GameManager.Tests
 	public class GameManagerDebugBindingsTests
 	{
 		private GameManager gm;
+		private InputSystem_Actions inputActions;
 
 		[SetUp]
 		public void SetUp()
@@ -21,6 +22,14 @@ namespace GameManager.Tests
 			gm = GameManager.Instance;
 			Constants.GAME_SPEED = 1;
 			Constants.CalculateGameConstants();
+
+			// Inject a InputSystem_Actions so InitializeDebugToggles can populate _debugBindings
+			inputActions = new InputSystem_Actions();
+			inputActions.Gameplay.Enable();
+			typeof(GameManager)
+				.GetField("_input", BindingFlags.NonPublic | BindingFlags.Instance)
+				.SetValue(gm, inputActions);
+
 			InvokePrivate("InitializeDebugToggles");
 		}
 
@@ -31,6 +40,11 @@ namespace GameManager.Tests
 			Constants.CalculateGameConstants();
 			// Ensure bindings are restored for other tests
 			InvokePrivate("InitializeDebugToggles");
+
+			inputActions?.Dispose();
+			typeof(GameManager)
+				.GetField("_input", BindingFlags.NonPublic | BindingFlags.Instance)
+				.SetValue(gm, null);
 		}
 
 		// ── Helpers ───────────────────────────────────────────────────────────
@@ -50,8 +64,8 @@ namespace GameManager.Tests
 				"_debugBindings", BindingFlags.NonPublic | BindingFlags.Instance);
 			var bindings = field.GetValue(gm) as Array;
 			var binding = bindings.GetValue(index);
-			// Named tuple fields are stored as Item1/Item2/Item3 at runtime
-			return (Action)binding.GetType().GetField("Item3").GetValue(binding);
+			// Named tuple fields: (InputAction Action, Action Execute) → Item2 is Execute
+			return (Action)binding.GetType().GetField("Item2").GetValue(binding);
 		}
 
 		// ── Structure ─────────────────────────────────────────────────────────

@@ -205,6 +205,21 @@ namespace GameManager.GameElements
 		private static Sprite _healthFillSprite;
 		private static Sprite _bigHealthFillSprite;
 
+		private SpriteRenderer CreateIndicator(string name, Color color, Vector3 center, float size)
+		{
+			var obj = new GameObject(name) { layer = LayerMask.NameToLayer("Units") };
+			obj.transform.SetParent(transform);
+			obj.transform.localPosition = center;
+			obj.transform.localScale = new Vector3(size, size, 1f);
+			var sr = obj.AddComponent<SpriteRenderer>();
+			sr.sprite = GetSquareSprite();
+			sr.color = color;
+			sr.sortingLayerName = "Agents";
+			sr.sortingOrder = 1;
+			sr.enabled = false;
+			return sr;
+		}
+
 		/// <summary>
 		/// Lazily create a shared filled-square sprite for state indicators.
 		/// </summary>
@@ -527,50 +542,44 @@ namespace GameManager.GameElements
 			actionColor = isRed ? new Color(1f, 0f, 1f, 0.5f)      : new Color(1f, 0f, 0f, 0.5f);      // magenta / red
 			buildColor  = isRed ? new Color(1f, 0.65f, 0f, 0.5f) : new Color(0.8f, 0.25f, 0f, 0.5f);  // light orange / dark orange
 
-			// Square indicator overlays rendered ABOVE the unit sprite (sortingOrder 1 > unit's 0)
-			var attackObj = new GameObject("AttackIndicator") { layer = LayerMask.NameToLayer("Units") };
-			attackObj.transform.SetParent(transform);
-			attackObj.transform.localPosition = Vector3.zero;
-			attackObj.transform.localScale = new Vector3(0.9f, 0.9f, 1f);
-			attackIndicator = attackObj.AddComponent<SpriteRenderer>();
-			attackIndicator.sprite = GetSquareSprite();
-			attackIndicator.color = actionColor;
-			attackIndicator.sortingLayerName = "Agents";
-			attackIndicator.sortingOrder = 1;
-			attackIndicator.enabled = false;
+			// Square indicator overlays: fixed 1x1 world-unit size, centered on the
+			// visible character body (head to feet, excluding shadow/weapons).
+			// The sprite pivot Y varies by unit type, so we compute the visible-body
+			// center as a local-space offset from the pivot (transform origin).
+			Vector3 visibleCenter;
+			if (unitSprite != null)
+			{
+				var sprite = unitSprite.sprite;
+				float ppu = sprite.pixelsPerUnit;
+				var pivot = sprite.pivot;           // in pixels from bottom-left
+				var rect = sprite.rect;             // pixel rect in the texture
 
-			var moveObj = new GameObject("MoveIndicator") { layer = LayerMask.NameToLayer("Units") };
-			moveObj.transform.SetParent(transform);
-			moveObj.transform.localPosition = Vector3.zero;
-			moveObj.transform.localScale = new Vector3(0.9f, 0.9f, 1f);
-			moveIndicator = moveObj.AddComponent<SpriteRenderer>();
-			moveIndicator.sprite = GetSquareSprite();
-			moveIndicator.color = moveColor;
-			moveIndicator.sortingLayerName = "Agents";
-			moveIndicator.sortingOrder = 1;
-			moveIndicator.enabled = false;
+				// Visible-body vertical extent (approximate, excluding shadow at bottom
+				// and weapon overhang at top). These ratios are tuned for TinySwords art.
+				// For 192x192 mobile units (Pawn/Warrior/Archer): body ≈ rows 20-170
+				// For 320x320 Lancer: body ≈ rows 40-280
+				// For buildings: full sprite is fine (pivot y=0.5)
+				float bodyBottomFrac = CanMove ? 0.10f : 0f;
+				float bodyTopFrac    = CanMove ? 0.88f : 1f;
 
-			var gatherObj = new GameObject("GatherIndicator") { layer = LayerMask.NameToLayer("Units") };
-			gatherObj.transform.SetParent(transform);
-			gatherObj.transform.localPosition = Vector3.zero;
-			gatherObj.transform.localScale = new Vector3(0.9f, 0.9f, 1f);
-			gatherIndicator = gatherObj.AddComponent<SpriteRenderer>();
-			gatherIndicator.sprite = GetSquareSprite();
-			gatherIndicator.color = actionColor;
-			gatherIndicator.sortingLayerName = "Agents";
-			gatherIndicator.sortingOrder = 1;
-			gatherIndicator.enabled = false;
+				float bodyBottomPx = rect.height * bodyBottomFrac;
+				float bodyTopPx    = rect.height * bodyTopFrac;
+				float bodyCenterPx = (bodyBottomPx + bodyTopPx) * 0.5f;
 
-			var buildObj = new GameObject("BuildIndicator") { layer = LayerMask.NameToLayer("Units") };
-			buildObj.transform.SetParent(transform);
-			buildObj.transform.localPosition = Vector3.zero;
-			buildObj.transform.localScale = new Vector3(0.9f, 0.9f, 1f);
-			buildIndicator = buildObj.AddComponent<SpriteRenderer>();
-			buildIndicator.sprite = GetSquareSprite();
-			buildIndicator.color = buildColor;
-			buildIndicator.sortingLayerName = "Agents";
-			buildIndicator.sortingOrder = 1;
-			buildIndicator.enabled = false;
+				// Local Y offset: positive = above pivot
+				float localY = (bodyCenterPx - pivot.y) / ppu;
+				visibleCenter = new Vector3(0f, localY, 0f);
+			}
+			else
+			{
+				visibleCenter = Vector3.zero;
+			}
+			float indicatorSize = 1f;
+
+			attackIndicator  = CreateIndicator("AttackIndicator",  actionColor, visibleCenter, indicatorSize);
+			moveIndicator    = CreateIndicator("MoveIndicator",    moveColor,   visibleCenter, indicatorSize);
+			gatherIndicator  = CreateIndicator("GatherIndicator",  actionColor, visibleCenter, indicatorSize);
+			buildIndicator   = CreateIndicator("BuildIndicator",   buildColor,  visibleCenter, indicatorSize);
 
 			// Health bar — small bar for mobile units, big bar for buildings/mines
 			maxHealth = Health;
