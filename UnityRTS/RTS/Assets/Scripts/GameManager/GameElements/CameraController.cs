@@ -24,9 +24,9 @@ namespace GameManager.GameElements
 			isDraggingRightBtn = false;
 			mousePositionOld = Vector3.zero;
 
-			var cam = GetComponent<Camera>();
-			if (cam != null)
-				cam.orthographicSize = 23f;
+			// var cam = GetComponent<Camera>();
+			// if (cam != null)
+			// 	cam.orthographicSize = 23f;
 		}
 
 		// Update is called once per frame

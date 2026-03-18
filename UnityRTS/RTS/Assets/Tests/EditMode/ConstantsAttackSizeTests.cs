@@ -13,20 +13,21 @@ namespace GameManager.Tests
 	public class ConstantsAttackSizeTests
 	{
 		private static readonly UnitType[] AllUnitTypes = {
-			UnitType.MINE, UnitType.WORKER, UnitType.SOLDIER,
-			UnitType.ARCHER, UnitType.BASE, UnitType.BARRACKS, UnitType.REFINERY
+			UnitType.MINE, UnitType.PAWN, UnitType.WARRIOR,
+			UnitType.ARCHER, UnitType.LANCER, UnitType.BASE,
+			UnitType.BARRACKS, UnitType.ARCHERY, UnitType.TOWER
 		};
 
 		#region ATTACK_RANGE Completeness
 
 		/// <summary>
-		/// ATTACK_RANGE contains entries for all 7 unit types.
+		/// ATTACK_RANGE contains entries for all 9 unit types.
 		/// </summary>
 		[Test]
-		public void AttackRange_HasAllSevenUnitTypes()
+		public void AttackRange_HasAllNineUnitTypes()
 		{
-			Assert.AreEqual(7, Constants.ATTACK_RANGE.Count,
-				"ATTACK_RANGE should have 7 entries");
+			Assert.AreEqual(9, Constants.ATTACK_RANGE.Count,
+				"ATTACK_RANGE should have 9 entries");
 			foreach (var type in AllUnitTypes)
 				Assert.IsTrue(Constants.ATTACK_RANGE.ContainsKey(type),
 					$"ATTACK_RANGE missing entry for {type}");
@@ -46,15 +47,17 @@ namespace GameManager.Tests
 		}
 
 		/// <summary>
-		/// SOLDIER and ARCHER (CAN_ATTACK=true) should have strictly positive range.
+		/// WARRIOR, ARCHER, and LANCER (CAN_ATTACK=true) should have strictly positive range.
 		/// </summary>
 		[Test]
 		public void AttackRange_CombatUnits_HavePositiveRange()
 		{
-			Assert.Greater(Constants.ATTACK_RANGE[UnitType.SOLDIER], 0f,
-				"SOLDIER should have positive attack range");
+			Assert.Greater(Constants.ATTACK_RANGE[UnitType.WARRIOR], 0f,
+				"WARRIOR should have positive attack range");
 			Assert.Greater(Constants.ATTACK_RANGE[UnitType.ARCHER], 0f,
 				"ARCHER should have positive attack range");
+			Assert.Greater(Constants.ATTACK_RANGE[UnitType.LANCER], 0f,
+				"LANCER should have positive attack range");
 		}
 
 		/// <summary>
@@ -63,16 +66,18 @@ namespace GameManager.Tests
 		[Test]
 		public void AttackRange_NonCombatUnits_HaveZeroRange()
 		{
-			Assert.AreEqual(0f, Constants.ATTACK_RANGE[UnitType.WORKER], 0.001f,
-				"WORKER should have zero attack range");
+			Assert.AreEqual(0f, Constants.ATTACK_RANGE[UnitType.PAWN], 0.001f,
+				"PAWN should have zero attack range");
 			Assert.AreEqual(0f, Constants.ATTACK_RANGE[UnitType.MINE], 0.001f,
 				"MINE should have zero attack range");
 			Assert.AreEqual(0f, Constants.ATTACK_RANGE[UnitType.BASE], 0.001f,
 				"BASE should have zero attack range");
 			Assert.AreEqual(0f, Constants.ATTACK_RANGE[UnitType.BARRACKS], 0.001f,
 				"BARRACKS should have zero attack range");
-			Assert.AreEqual(0f, Constants.ATTACK_RANGE[UnitType.REFINERY], 0.001f,
-				"REFINERY should have zero attack range");
+			Assert.AreEqual(0f, Constants.ATTACK_RANGE[UnitType.ARCHERY], 0.001f,
+				"ARCHERY should have zero attack range");
+			Assert.AreEqual(0f, Constants.ATTACK_RANGE[UnitType.TOWER], 0.001f,
+				"TOWER should have zero attack range");
 		}
 
 		/// <summary>
@@ -101,13 +106,13 @@ namespace GameManager.Tests
 		#region UNIT_SIZE Completeness
 
 		/// <summary>
-		/// UNIT_SIZE contains entries for all 7 unit types.
+		/// UNIT_SIZE contains entries for all 9 unit types.
 		/// </summary>
 		[Test]
-		public void UnitSize_HasAllSevenUnitTypes()
+		public void UnitSize_HasAllNineUnitTypes()
 		{
-			Assert.AreEqual(7, Constants.UNIT_SIZE.Count,
-				"UNIT_SIZE should have 7 entries");
+			Assert.AreEqual(9, Constants.UNIT_SIZE.Count,
+				"UNIT_SIZE should have 9 entries");
 			foreach (var type in AllUnitTypes)
 				Assert.IsTrue(Constants.UNIT_SIZE.ContainsKey(type),
 					$"UNIT_SIZE missing entry for {type}");
@@ -129,32 +134,36 @@ namespace GameManager.Tests
 		}
 
 		/// <summary>
-		/// Building types (BASE, BARRACKS, REFINERY) have a size greater than 1×1.
+		/// Building types (BASE, BARRACKS, ARCHERY, TOWER) have a size greater than 1x1.
 		/// </summary>
 		[Test]
 		public void UnitSize_Buildings_LargerThanOneByOne()
 		{
 			int baseArea = Constants.UNIT_SIZE[UnitType.BASE].x * Constants.UNIT_SIZE[UnitType.BASE].y;
 			int barracksArea = Constants.UNIT_SIZE[UnitType.BARRACKS].x * Constants.UNIT_SIZE[UnitType.BARRACKS].y;
-			int refineryArea = Constants.UNIT_SIZE[UnitType.REFINERY].x * Constants.UNIT_SIZE[UnitType.REFINERY].y;
+			int archeryArea = Constants.UNIT_SIZE[UnitType.ARCHERY].x * Constants.UNIT_SIZE[UnitType.ARCHERY].y;
+			int towerArea = Constants.UNIT_SIZE[UnitType.TOWER].x * Constants.UNIT_SIZE[UnitType.TOWER].y;
 
 			Assert.Greater(baseArea, 1, "BASE footprint should span more than 1 cell");
 			Assert.Greater(barracksArea, 1, "BARRACKS footprint should span more than 1 cell");
-			Assert.Greater(refineryArea, 1, "REFINERY footprint should span more than 1 cell");
+			Assert.Greater(archeryArea, 1, "ARCHERY footprint should span more than 1 cell");
+			Assert.Greater(towerArea, 1, "TOWER footprint should span more than 1 cell");
 		}
 
 		/// <summary>
-		/// Mobile units (WORKER, SOLDIER, ARCHER) occupy a 1×1 footprint.
+		/// Mobile units (PAWN, WARRIOR, ARCHER, LANCER) occupy a 1×1 footprint.
 		/// </summary>
 		[Test]
 		public void UnitSize_MobileUnits_AreOneByOne()
 		{
-			Assert.AreEqual(new Vector3Int(1, 1, 0), Constants.UNIT_SIZE[UnitType.WORKER],
-				"WORKER should have 1x1 footprint");
-			Assert.AreEqual(new Vector3Int(1, 1, 0), Constants.UNIT_SIZE[UnitType.SOLDIER],
-				"SOLDIER should have 1x1 footprint");
+			Assert.AreEqual(new Vector3Int(1, 1, 0), Constants.UNIT_SIZE[UnitType.PAWN],
+				"PAWN should have 1x1 footprint");
+			Assert.AreEqual(new Vector3Int(1, 1, 0), Constants.UNIT_SIZE[UnitType.WARRIOR],
+				"WARRIOR should have 1x1 footprint");
 			Assert.AreEqual(new Vector3Int(1, 1, 0), Constants.UNIT_SIZE[UnitType.ARCHER],
 				"ARCHER should have 1x1 footprint");
+			Assert.AreEqual(new Vector3Int(1, 1, 0), Constants.UNIT_SIZE[UnitType.LANCER],
+				"LANCER should have 1x1 footprint");
 		}
 
 		#endregion

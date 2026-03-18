@@ -3,7 +3,7 @@ namespace GameManager.EnumTypes
 	/// <summary>
 	/// State machine variables for animation controls
 	/// </summary>
-	public enum PeasantAnimation
+	public enum PawnAnimation
 	{
 		/// <summary>
 		/// Walking
@@ -34,7 +34,7 @@ namespace GameManager.EnumTypes
 	/// <summary>
 	/// Speed for animation controls
 	/// </summary>
-	public enum PeasantSpeed
+	public enum PawnSpeed
 	{
 		/// <summary>
 		/// Idle speed (not moving)

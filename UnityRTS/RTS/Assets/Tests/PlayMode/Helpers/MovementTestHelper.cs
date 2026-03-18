@@ -31,7 +31,7 @@ namespace GameManager.Tests.PlayMode
 		/// (indicating arrival at destination or command completion).
 		/// </summary>
 		public static IEnumerator MoveAndWaitIdle(Unit unit, Vector3Int destination,
-			float timeoutSeconds = 30f)
+			float timeoutSeconds = 10f)
 		{
 			unit.StartMoving(new MoveEventArgs(unit, unit.UnitType, destination));
 

@@ -2,20 +2,20 @@
 %TAG !u! tag:unity3d.com,2011:
 --- !u!78 &1
 TagManager:
-  serializedVersion: 2
+  serializedVersion: 3
   tags:
   - InfluenceMap
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - Terrain
+  - 
   - Water
   - UI
+  - Terrain
+  - Buildings
   - Units
   - Debugging
-  - 
-  - 
   - 
   - 
   - 
@@ -42,14 +42,14 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
-  - name: Grass
+  - name: Water Background
+    uniqueID: 686840339
+    locked: 0
+  - name: Water Effects
+    uniqueID: 980949779
+    locked: 0
+  - name: Ground
     uniqueID: 3863819749
-    locked: 0
-  - name: Walls
-    uniqueID: 260447889
-    locked: 0
-  - name: Trees
-    uniqueID: 2520825469
     locked: 0
   - name: Resources
     uniqueID: 3664039183
@@ -69,3 +69,5 @@ TagManager:
   - name: HudUI
     uniqueID: 2219807347
     locked: 0
+  m_RenderingLayers:
+  - Default

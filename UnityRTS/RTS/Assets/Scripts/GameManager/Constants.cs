@@ -13,14 +13,14 @@ namespace GameManager
         #region Game Configuration
 
         /// <summary>
-        /// String that represents the name of the Human agent
+        /// String that represents the name of the Blue agent
         /// </summary>
-        public const string HUMAN_ABBR = "(HUM)";
+        public const string BLUE_ABBR = "(BLU)";
 
         /// <summary>
-        /// String that represents the name of the Orc agent
+        /// String that represents the name of the Red agent
         /// </summary>
-        public const string ORC_ABBR = "(ORC)";
+        public const string RED_ABBR = "(RED)";
 
         /// <summary>
 		/// Health associated with each unit (Mine health is amount of gold)
@@ -112,11 +112,6 @@ namespace GameManager
 		#region Static Arrays
 
 		/// <summary>
-		/// Gold mining boost for refineries
-		/// </summary>
-		public static readonly float MINING_BOOST = GameConstants.MINING_BOOST;
-
-		/// <summary>
 		/// Initial damage associated with each unit
 		/// </summary>
 		public static Dictionary<UnitType, float> DAMAGE;
@@ -194,19 +189,22 @@ namespace GameManager
 		internal static float SCALAR_DAMAGE;
 
 		/// <summary>
-		/// Base move speed factor applied to GAME_SPEED to get worker speed.
-		/// Worker speed = GAME_SPEED * BASE_MOVE_SPEED.
+		/// Base move speed factor applied to GAME_SPEED to get pawn speed.
+		/// Pawn speed = GAME_SPEED * BASE_MOVE_SPEED.
 		/// </summary>
-		private const float BASE_MOVE_SPEED = 0.1f;
+		private const float BASE_MOVE_SPEED = 0.05f;
 
-		/// <summary>Soldier moves at 2.25x worker speed (slower, armored).</summary>
-		private const float SOLDIER_SPEED_MULTIPLIER = 2.25f;
+		/// <summary>Warrior moves at 2.1x pawn speed (slowest combat unit, heavy armored).</summary>
+		private const float WARRIOR_SPEED_MULTIPLIER = 2.1f;
 
-		/// <summary>Archer moves at 3.0x worker speed (light, fast — 33% faster than soldier).</summary>
+		/// <summary>Archer moves at 3.0x pawn speed (light, fast).</summary>
 		private const float ARCHER_SPEED_MULTIPLIER = 3.0f;
 
+		/// <summary>Lancer moves at 3.45x pawn speed (fastest combat unit, cavalry).</summary>
+		private const float LANCER_SPEED_MULTIPLIER = 3.45f;
+
 		/// <summary>
-        /// Base moving speed (= worker speed). Multiply by unit speed multipliers for other units.
+        /// Base moving speed (= pawn speed). Multiply by unit speed multipliers for other units.
         /// </summary>
         internal static float SCALAR_MOVING_SPEED;
 
@@ -276,12 +274,14 @@ namespace GameManager
 		internal static readonly Dictionary<UnitType, int> UNIT_VALUE = new Dictionary<UnitType, int>()
 		{
 			{ UnitType.MINE,        0 },
-			{ UnitType.WORKER,      1 },
-			{ UnitType.SOLDIER,     4 },
+			{ UnitType.PAWN,      1 },
+			{ UnitType.WARRIOR,     4 },
 			{ UnitType.ARCHER,      5 },
 			{ UnitType.BASE,        2 },
 			{ UnitType.BARRACKS,    3 },
-			{ UnitType.REFINERY,    1 },
+			{ UnitType.ARCHERY,     3 },
+			{ UnitType.LANCER,      5 },
+			{ UnitType.TOWER,       3 },
 		};
 
         /// <summary>
@@ -297,24 +297,28 @@ namespace GameManager
 	        MOVING_SPEED = new Dictionary<UnitType, float>()
 	        {
 		        { UnitType.MINE,        0.0f },
-		        { UnitType.WORKER,      SCALAR_MOVING_SPEED },
-		        { UnitType.SOLDIER,     SCALAR_MOVING_SPEED * SOLDIER_SPEED_MULTIPLIER },
+		        { UnitType.PAWN,      SCALAR_MOVING_SPEED },
+		        { UnitType.WARRIOR,     SCALAR_MOVING_SPEED * WARRIOR_SPEED_MULTIPLIER },
 		        { UnitType.ARCHER,      SCALAR_MOVING_SPEED * ARCHER_SPEED_MULTIPLIER },
 		        { UnitType.BASE,        0.0f },
 		        { UnitType.BARRACKS,    0.0f },
-		        { UnitType.REFINERY,    0.0f },
+		        { UnitType.ARCHERY,     0.0f },
+		        { UnitType.LANCER,      SCALAR_MOVING_SPEED * LANCER_SPEED_MULTIPLIER },
+		        { UnitType.TOWER,       0.0f },
 	        };
 
 	        SCALAR_MINING_SPEED = GAME_SPEED;
 	        MINING_SPEED = new Dictionary<UnitType, float>()
 	        {
 		        { UnitType.MINE,        0.0f},
-		        { UnitType.WORKER,      SCALAR_MINING_SPEED * MINING_BOOST * 20.0f},
-		        { UnitType.SOLDIER,     0.0f },
+		        { UnitType.PAWN,      SCALAR_MINING_SPEED * 20.0f},
+		        { UnitType.WARRIOR,     0.0f },
 		        { UnitType.ARCHER,      0.0f },
 		        { UnitType.BASE,        0.0f },
 		        { UnitType.BARRACKS,    0.0f },
-		        { UnitType.REFINERY,    0.0f},
+		        { UnitType.ARCHERY,     0.0f },
+		        { UnitType.LANCER,      0.0f },
+		        { UnitType.TOWER,       0.0f },
 	        };
 
 	        COST = new Dictionary<UnitType, float>(GameConstants.COST);

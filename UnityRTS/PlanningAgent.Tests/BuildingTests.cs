@@ -5,7 +5,7 @@ using Xunit;
 namespace PlanningAgent.Tests
 {
     /// <summary>
-    /// Tests for the building system: workers construct structures.
+    /// Tests for the building system: pawns construct structures.
     /// </summary>
     public class BuildingTests
     {
@@ -14,13 +14,13 @@ namespace PlanningAgent.Tests
         // ------------------------------------------------------------------
 
         [Fact]
-        public void WorkerBuildsBarracks_BarracksAppears()
+        public void PawnBuildsBarracks_BarracksAppears()
         {
             var game = new SimGameBuilder()
                 .WithMapSize(30, 30)
                 .WithGold(0, 5000)
                 .WithUnit(0, UnitType.BASE, new Position(5, 5), isBuilt: true)
-                .WithUnit(0, UnitType.WORKER, new Position(8, 5))
+                .WithUnit(0, UnitType.PAWN, new Position(8, 5))
                 .WithAgent(0, new BuildOnceAgent(UnitType.BARRACKS, new Position(15, 15)))
                 .Build();
 
@@ -40,7 +40,7 @@ namespace PlanningAgent.Tests
                 .WithMapSize(30, 30)
                 .WithGold(0, 5000)
                 .WithUnit(0, UnitType.BASE, new Position(5, 5), isBuilt: true)
-                .WithUnit(0, UnitType.WORKER, new Position(8, 5))
+                .WithUnit(0, UnitType.PAWN, new Position(8, 5))
                 .WithAgent(0, new BuildOnceAgent(UnitType.BARRACKS, new Position(15, 15)))
                 .Build();
 
@@ -56,13 +56,13 @@ namespace PlanningAgent.Tests
         }
 
         [Fact]
-        public void Building_WorkerReturnsToIdle()
+        public void Building_PawnReturnsToIdle()
         {
             var game = new SimGameBuilder()
                 .WithMapSize(30, 30)
                 .WithGold(0, 5000)
                 .WithUnit(0, UnitType.BASE, new Position(5, 5), isBuilt: true)
-                .WithUnit(0, UnitType.WORKER, new Position(14, 15)) // Near build site
+                .WithUnit(0, UnitType.PAWN, new Position(14, 15)) // Near build site
                 .WithAgent(0, new BuildOnceAgent(UnitType.BARRACKS, new Position(15, 15)))
                 .Build();
 
@@ -70,9 +70,9 @@ namespace PlanningAgent.Tests
             game.InitializeRound();
             game.Run(500);
 
-            var workers = game.GetUnitsByType(0, UnitType.WORKER);
-            Assert.Single(workers);
-            Assert.Equal(UnitAction.IDLE, workers[0].CurrentAction);
+            var pawns = game.GetUnitsByType(0, UnitType.PAWN);
+            Assert.Single(pawns);
+            Assert.Equal(UnitAction.IDLE, pawns[0].CurrentAction);
         }
 
         [Fact]
@@ -82,7 +82,7 @@ namespace PlanningAgent.Tests
                 .WithMapSize(30, 30)
                 .WithGold(0, 5000)
                 .WithUnit(0, UnitType.BASE, new Position(5, 5), isBuilt: true)
-                .WithUnit(0, UnitType.WORKER, new Position(8, 5))
+                .WithUnit(0, UnitType.PAWN, new Position(8, 5))
                 .WithAgent(0, new BuildOnceAgent(UnitType.BARRACKS, new Position(15, 15)))
                 .Build();
 
@@ -107,7 +107,7 @@ namespace PlanningAgent.Tests
                 .WithMapSize(30, 30)
                 .WithGold(0, 100) // Barracks costs 400
                 .WithUnit(0, UnitType.BASE, new Position(5, 5), isBuilt: true)
-                .WithUnit(0, UnitType.WORKER, new Position(8, 5))
+                .WithUnit(0, UnitType.PAWN, new Position(8, 5))
                 .WithAgent(0, new BuildOnceAgent(UnitType.BARRACKS, new Position(15, 15)))
                 .Build();
 
@@ -126,7 +126,7 @@ namespace PlanningAgent.Tests
                 .WithMapSize(30, 30)
                 .WithGold(0, 5000)
                 .WithUnit(0, UnitType.BASE, new Position(5, 5), isBuilt: true)
-                .WithUnit(0, UnitType.WORKER, new Position(8, 5))
+                .WithUnit(0, UnitType.PAWN, new Position(8, 5))
                 // Build overlapping with existing base
                 .WithAgent(0, new BuildOnceAgent(UnitType.BARRACKS, new Position(6, 5)))
                 .Build();
@@ -145,7 +145,7 @@ namespace PlanningAgent.Tests
             var game = new SimGameBuilder()
                 .WithMapSize(30, 30)
                 .WithGold(0, 5000)
-                .WithUnit(0, UnitType.WORKER, new Position(8, 5))
+                .WithUnit(0, UnitType.PAWN, new Position(8, 5))
                 .WithAgent(0, new BuildOnceAgent(UnitType.BARRACKS, new Position(15, 15)))
                 .Build();
 
@@ -157,15 +157,15 @@ namespace PlanningAgent.Tests
         }
 
         [Fact]
-        public void NonWorkerCannotBuild()
+        public void NonPawnCannotBuild()
         {
-            // Soldiers can't build
+            // Warriors can't build
             var game = new SimGameBuilder()
                 .WithMapSize(30, 30)
                 .WithGold(0, 5000)
                 .WithUnit(0, UnitType.BASE, new Position(5, 5), isBuilt: true)
-                .WithUnit(0, UnitType.SOLDIER, new Position(8, 5))
-                .WithAgent(0, new BuildWithSoldierAgent())
+                .WithUnit(0, UnitType.WARRIOR, new Position(8, 5))
+                .WithAgent(0, new BuildWithWarriorAgent())
                 .Build();
 
             game.InitializeMatch();
@@ -187,7 +187,7 @@ namespace PlanningAgent.Tests
             var game = new SimGameBuilder()
                 .WithMapSize(30, 30)
                 .WithGold(0, 5000)
-                .WithUnit(0, UnitType.WORKER, new Position(8, 5))
+                .WithUnit(0, UnitType.PAWN, new Position(8, 5))
                 .WithMine(new Position(12, 5))
                 .WithAgent(0, new BuildOnceAgent(UnitType.BASE, new Position(15, 15)))
                 .Build();
@@ -206,15 +206,15 @@ namespace PlanningAgent.Tests
         // ------------------------------------------------------------------
 
         [Fact]
-        public void ThreeWorkersBuildThreeBarracks_AllComplete()
+        public void ThreePawnsBuildThreeBarracks_AllComplete()
         {
             var game = new SimGameBuilder()
                 .WithMapSize(30, 30)
                 .WithGold(0, 5000)
                 .WithUnit(0, UnitType.BASE, new Position(5, 5), isBuilt: true)
-                .WithUnit(0, UnitType.WORKER, new Position(8, 5))
-                .WithUnit(0, UnitType.WORKER, new Position(8, 7))
-                .WithUnit(0, UnitType.WORKER, new Position(8, 9))
+                .WithUnit(0, UnitType.PAWN, new Position(8, 5))
+                .WithUnit(0, UnitType.PAWN, new Position(8, 7))
+                .WithUnit(0, UnitType.PAWN, new Position(8, 9))
                 .WithAgent(0, new BuildMultipleAgent())
                 .Build();
 

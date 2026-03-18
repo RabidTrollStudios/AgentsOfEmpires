@@ -12,7 +12,7 @@ AGENTS=(
     "Commander:Commander.cs"
     "EconBoom:EconBoom.cs"
     "Gatherer:Gatherer.cs"
-    "SoldierRush:SoldierRush.cs"
+    "WarriorRush:WarriorRush.cs"
     "Swarm:Swarm.cs"
     "Phalanx:Phalanx.cs"
     "Volley:Volley.cs"

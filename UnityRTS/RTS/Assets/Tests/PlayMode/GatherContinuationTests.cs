@@ -9,8 +9,8 @@ namespace GameManager.Tests.PlayMode
 {
 	/// <summary>
 	/// Play Mode tests for gather continuation and cycle behavior:
-	/// worker cycling back to mine after deposit, handling mine depletion
-	/// mid-cycle, and refinery boost on gold collection.
+	/// pawn cycling back to mine after deposit and handling mine depletion
+	/// mid-cycle.
 	/// </summary>
 	[TestFixture]
 	public class GatherContinuationTests : PlayModeTestBase
@@ -22,40 +22,34 @@ namespace GameManager.Tests.PlayMode
 			return baseUnit;
 		}
 
-		private Unit PlaceBuiltRefinery(Vector3Int position)
-		{
-			Unit refinery = PlaceUnit(UnitType.REFINERY, position);
-			refinery.IsBuilt = true;
-			return refinery;
-		}
-
 		#region Happy Path – Cycle Continuation
 
 		/// <summary>
-		/// After the first deposit, the worker automatically cycles back toward the mine
+		/// After the first deposit, the pawn automatically cycles back toward the mine
 		/// (stays in GATHER, not IDLE).
 		/// </summary>
 		[UnityTest]
-		public IEnumerator AfterDeposit_WorkerCyclesBackToMine()
+		public IEnumerator AfterDeposit_PawnCyclesBackToMine()
 		{
 			Unit baseUnit = PlaceBuiltBase(new Vector3Int(5, 5, 0));
-			Unit mine = PlaceUnit(UnitType.MINE, new Vector3Int(15, 5, 0));
-			Unit worker = PlaceUnit(UnitType.WORKER, new Vector3Int(8, 5, 0));
+			Unit mine = PlaceUnit(UnitType.MINE, new Vector3Int(20, 10, 0));
+			// Pawn must be outside the BASE footprint (6x4: x=[5,10], y=[2,5])
+			Unit pawn = PlaceUnit(UnitType.PAWN, new Vector3Int(12, 10, 0));
 
 			Agent agent = GetAgent0();
 			int initialGold = agent.Gold;
 
-			worker.StartGathering(new GatherEventArgs(worker, mine, baseUnit));
+			pawn.StartGathering(new GatherEventArgs(pawn, mine, baseUnit));
 
 			// Wait for first deposit
 			yield return WaitUntil(
 				() => agent.Gold > initialGold,
-				timeoutSeconds: 30f,
+				timeoutSeconds: 10f,
 				failMessage: "First deposit did not occur");
 
-			// Worker should still be in GATHER action
-			Assert.AreEqual(UnitAction.GATHER, worker.CurrentAction,
-				"Worker should continue gathering after first deposit");
+			// Pawn should still be in GATHER action
+			Assert.AreEqual(UnitAction.GATHER, pawn.CurrentAction,
+				"Pawn should continue gathering after first deposit");
 		}
 
 		/// <summary>
@@ -65,12 +59,13 @@ namespace GameManager.Tests.PlayMode
 		public IEnumerator MultipleCycles_GoldMonotonicallyIncreases()
 		{
 			Unit baseUnit = PlaceBuiltBase(new Vector3Int(5, 5, 0));
-			Unit mine = PlaceUnit(UnitType.MINE, new Vector3Int(10, 5, 0));
-			Unit worker = PlaceUnit(UnitType.WORKER, new Vector3Int(8, 5, 0));
+			Unit mine = PlaceUnit(UnitType.MINE, new Vector3Int(20, 10, 0));
+			// Pawn must be outside the BASE footprint (6x4: x=[5,10], y=[2,5])
+			Unit pawn = PlaceUnit(UnitType.PAWN, new Vector3Int(12, 10, 0));
 
 			Agent agent = GetAgent0();
 			int lastGold = agent.Gold;
-			worker.StartGathering(new GatherEventArgs(worker, mine, baseUnit));
+			pawn.StartGathering(new GatherEventArgs(pawn, mine, baseUnit));
 
 			// Wait for 3 deposits
 			int depositCount = 0;
@@ -84,44 +79,45 @@ namespace GameManager.Tests.PlayMode
 					depositCount++;
 				}
 				return depositCount >= 3;
-			}, timeoutSeconds: 60f, failMessage: "Did not complete 3 gather deposits");
+			}, timeoutSeconds: 15f, failMessage: "Did not complete 3 gather deposits");
 
 			Assert.GreaterOrEqual(depositCount, 3,
-				"Worker should complete at least 3 gather cycles");
+				"Pawn should complete at least 3 gather cycles");
 		}
 
 		/// <summary>
-		/// A second worker starting to gather after the first has already started
+		/// A second pawn starting to gather after the first has already started
 		/// both eventually deposit gold.
 		/// </summary>
 		[UnityTest]
-		public IEnumerator TwoWorkers_SequentialStart_BothDeposit()
+		public IEnumerator TwoPawns_SequentialStart_BothDeposit()
 		{
 			Unit baseUnit = PlaceBuiltBase(new Vector3Int(5, 5, 0));
-			Unit mine = PlaceUnit(UnitType.MINE, new Vector3Int(15, 5, 0));
+			Unit mine = PlaceUnit(UnitType.MINE, new Vector3Int(20, 10, 0));
 
-			Unit worker1 = PlaceUnit(UnitType.WORKER, new Vector3Int(8, 5, 0));
-			Unit worker2 = PlaceUnit(UnitType.WORKER, new Vector3Int(8, 6, 0));
+			// Pawns must be outside the BASE footprint (6x4: x=[5,10], y=[2,5])
+			Unit pawn1 = PlaceUnit(UnitType.PAWN, new Vector3Int(12, 9, 0));
+			Unit pawn2 = PlaceUnit(UnitType.PAWN, new Vector3Int(12, 10, 0));
 
 			Agent agent = GetAgent0();
 			int initialGold = agent.Gold;
 
-			// Start first worker
-			worker1.StartGathering(new GatherEventArgs(worker1, mine, baseUnit));
+			// Start first pawn
+			pawn1.StartGathering(new GatherEventArgs(pawn1, mine, baseUnit));
 
 			// Wait a few frames before starting second
 			yield return WaitFrames(10);
-			worker2.StartGathering(new GatherEventArgs(worker2, mine, baseUnit));
+			pawn2.StartGathering(new GatherEventArgs(pawn2, mine, baseUnit));
 
 			// Wait for gold to increase by at least 2 mining capacities
-			int targetGold = initialGold + (int)(Constants.MINING_CAPACITY[UnitType.WORKER] * 2);
+			int targetGold = initialGold + (int)(Constants.MINING_CAPACITY[UnitType.PAWN] * 2);
 			yield return WaitUntil(
 				() => agent.Gold >= targetGold,
-				timeoutSeconds: 60f,
-				failMessage: "Two workers did not together deposit enough gold");
+				timeoutSeconds: 15f,
+				failMessage: "Two pawns did not together deposit enough gold");
 
 			Assert.GreaterOrEqual(agent.Gold, targetGold,
-				"Two workers gathering sequentially should deposit combined gold");
+				"Two pawns gathering sequentially should deposit combined gold");
 		}
 
 		#endregion
@@ -130,52 +126,54 @@ namespace GameManager.Tests.PlayMode
 
 		/// <summary>
 		/// If the mine is depleted (health = 0) during the second gather cycle,
-		/// the worker eventually goes IDLE.
+		/// the pawn eventually goes IDLE.
 		/// </summary>
 		[UnityTest]
-		public IEnumerator Mine_DepletedDuringSecondCycle_WorkerGoesIdle()
+		public IEnumerator Mine_DepletedDuringSecondCycle_PawnGoesIdle()
 		{
 			Unit baseUnit = PlaceBuiltBase(new Vector3Int(5, 5, 0));
-			Unit mine = PlaceUnit(UnitType.MINE, new Vector3Int(10, 5, 0));
-			Unit worker = PlaceUnit(UnitType.WORKER, new Vector3Int(8, 5, 0));
+			Unit mine = PlaceUnit(UnitType.MINE, new Vector3Int(20, 10, 0));
+			// Pawn must be outside the BASE footprint (6x4: x=[5,10], y=[2,5])
+			Unit pawn = PlaceUnit(UnitType.PAWN, new Vector3Int(12, 10, 0));
 
 			Agent agent = GetAgent0();
 			int initialGold = agent.Gold;
-			worker.StartGathering(new GatherEventArgs(worker, mine, baseUnit));
+			pawn.StartGathering(new GatherEventArgs(pawn, mine, baseUnit));
 
 			// Wait for first deposit (one complete cycle)
 			yield return WaitUntil(
 				() => agent.Gold > initialGold,
-				timeoutSeconds: 30f,
+				timeoutSeconds: 10f,
 				failMessage: "First gather cycle did not complete");
 
 			// Deplete the mine on the second cycle
 			mine.Health = 0;
 
-			// Worker should eventually go IDLE when it can't mine
+			// Pawn should eventually go IDLE when it can't mine
 			yield return WaitUntil(
-				() => worker.CurrentAction == UnitAction.IDLE,
+				() => pawn.CurrentAction == UnitAction.IDLE,
 				timeoutSeconds: 20f,
-				failMessage: "Worker did not go IDLE after mine was depleted");
+				failMessage: "Pawn did not go IDLE after mine was depleted");
 
-			Assert.AreEqual(UnitAction.IDLE, worker.CurrentAction,
-				"Worker should be IDLE after mine is depleted mid-cycle");
+			Assert.AreEqual(UnitAction.IDLE, pawn.CurrentAction,
+				"Pawn should be IDLE after mine is depleted mid-cycle");
 		}
 
 		/// <summary>
-		/// If the base is destroyed mid-cycle while the worker is heading back,
-		/// the worker eventually goes IDLE.
+		/// If the base is destroyed mid-cycle while the pawn is heading back,
+		/// the pawn eventually goes IDLE.
 		/// </summary>
 		[UnityTest]
-		public IEnumerator Base_DestroyedMidSecondCycle_WorkerGoesIdle()
+		public IEnumerator Base_DestroyedMidSecondCycle_PawnGoesIdle()
 		{
 			Unit baseUnit = PlaceBuiltBase(new Vector3Int(5, 5, 0));
-			Unit mine = PlaceUnit(UnitType.MINE, new Vector3Int(10, 5, 0));
-			Unit worker = PlaceUnit(UnitType.WORKER, new Vector3Int(9, 5, 0));
+			Unit mine = PlaceUnit(UnitType.MINE, new Vector3Int(20, 10, 0));
+			// Pawn must be outside the BASE footprint (6x4: x=[5,10], y=[2,5])
+			Unit pawn = PlaceUnit(UnitType.PAWN, new Vector3Int(12, 10, 0));
 
 			Agent agent = GetAgent0();
 			int initialGold = agent.Gold;
-			worker.StartGathering(new GatherEventArgs(worker, mine, baseUnit));
+			pawn.StartGathering(new GatherEventArgs(pawn, mine, baseUnit));
 
 			// Wait for first deposit
 			yield return WaitUntil(
@@ -187,12 +185,12 @@ namespace GameManager.Tests.PlayMode
 			baseUnit.Health = 0;
 
 			yield return WaitUntil(
-				() => worker.CurrentAction == UnitAction.IDLE,
+				() => pawn.CurrentAction == UnitAction.IDLE,
 				timeoutSeconds: 20f,
-				failMessage: "Worker did not go IDLE after base was destroyed");
+				failMessage: "Pawn did not go IDLE after base was destroyed");
 
-			Assert.AreEqual(UnitAction.IDLE, worker.CurrentAction,
-				"Worker should be IDLE when target base is destroyed");
+			Assert.AreEqual(UnitAction.IDLE, pawn.CurrentAction,
+				"Pawn should be IDLE when target base is destroyed");
 		}
 
 		#endregion

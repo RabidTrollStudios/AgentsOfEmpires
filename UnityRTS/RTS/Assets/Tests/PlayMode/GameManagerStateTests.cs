@@ -31,12 +31,12 @@ namespace GameManager.Tests.PlayMode
 		private static void SetProp(string name, object value) =>
 			typeof(GameManager)
 				.GetProperty(name, BindingFlags.NonPublic | BindingFlags.Instance)
-				?.SetValue(GM, value);
+				.SetValue(GM, value);
 
 		private static void SetField(string name, object value) =>
 			typeof(GameManager)
 				.GetField(name, BindingFlags.NonPublic | BindingFlags.Instance)
-				?.SetValue(GM, value);
+				.SetValue(GM, value);
 
 		/// <summary>
 		/// Manually drives one Update() tick on the inactive GameManager singleton.
@@ -98,15 +98,15 @@ namespace GameManager.Tests.PlayMode
 		[UnityTest]
 		public IEnumerator Update_ShowingWinner_BannerNotExpired_StateRemainsShowingWinner()
 		{
-			SetGameState(1); // SHOWING_WINNER
+			SetGameState(2); // SHOWING_WINNER
 			SetProp("TimeToDisplayBanner", 100f);
 
 			yield return null;
 
 			InvokeUpdate();
 
-			Assert.AreEqual(1, GetGameStateInt(),
-				"gameState should remain SHOWING_WINNER (1) when TimeToDisplayBanner has not expired");
+			Assert.AreEqual(2, GetGameStateInt(),
+				"gameState should remain SHOWING_WINNER (2) when TimeToDisplayBanner has not expired");
 			Assert.Greater(GetTimeToDisplayBanner(), 0f,
 				"TimeToDisplayBanner should still be positive after one frame");
 		}
@@ -116,14 +116,14 @@ namespace GameManager.Tests.PlayMode
 		[UnityTest]
 		public IEnumerator Update_ShowingWinner_BannerExpired_RoundsNotComplete_TransitionsToRestarting()
 		{
-			SetGameState(1); // SHOWING_WINNER
+			SetGameState(2); // SHOWING_WINNER
 			SetProp("TimeToDisplayBanner", -1f); // already expired
 
 			// DetermineRoundsCompleted sums AgentWins: 0 + 0 = 0 != TotalNbrOfRounds (3)
 			SetProp("AgentWins", new Dictionary<string, int>
 			{
-				{ Constants.HUMAN_ABBR, 0 },
-				{ Constants.ORC_ABBR,   0 }
+				{ Constants.BLUE_ABBR, 0 },
+				{ Constants.RED_ABBR,   0 }
 			});
 			GM.TotalNbrOfRounds = 3;
 
@@ -131,8 +131,8 @@ namespace GameManager.Tests.PlayMode
 
 			InvokeUpdate();
 
-			Assert.AreEqual(2, GetGameStateInt(),
-				"gameState should transition to RESTARTING (2) when banner expires and rounds remain");
+			Assert.AreEqual(3, GetGameStateInt(),
+				"gameState should transition to RESTARTING (3) when banner expires and rounds remain");
 		}
 
 		// ── SHOWING_WINNER → FINISHED ─────────────────────────────────────────
@@ -145,14 +145,14 @@ namespace GameManager.Tests.PlayMode
 			var prefabs    = MakePrefabs(gameOverUI);
 			SetField("Prefabs", prefabs);
 
-			SetGameState(1); // SHOWING_WINNER
+			SetGameState(2); // SHOWING_WINNER
 			SetProp("TimeToDisplayBanner", -1f);
 
 			// sum = 1 == TotalNbrOfRounds (1) → FINISHED path
 			SetProp("AgentWins", new Dictionary<string, int>
 			{
-				{ Constants.HUMAN_ABBR, 1 },
-				{ Constants.ORC_ABBR,   0 }
+				{ Constants.BLUE_ABBR, 1 },
+				{ Constants.RED_ABBR,   0 }
 			});
 			GM.TotalNbrOfRounds = 1;
 
@@ -170,8 +170,8 @@ namespace GameManager.Tests.PlayMode
 
 			InvokeUpdate();
 
-			Assert.AreEqual(3, GetGameStateInt(),
-				"gameState should transition to FINISHED (3) when all rounds complete and dllNames is null");
+			Assert.AreEqual(4, GetGameStateInt(),
+				"gameState should transition to FINISHED (4) when all rounds complete and dllNames is null");
 			Assert.AreEqual(3.0f, GetTimeToDisplayBanner(), 0.001f,
 				"TimeToDisplayBanner should be reset to 3.0f after transitioning to FINISHED");
 		}

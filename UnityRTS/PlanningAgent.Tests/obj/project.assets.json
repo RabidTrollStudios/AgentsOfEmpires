@@ -426,9 +426,22 @@
           "build/net6.0/xunit.runner.visualstudio.props": {}
         }
       },
+      "AgentSDK/1.0.0": {
+        "type": "project",
+        "framework": ".NETStandard,Version=v2.1",
+        "compile": {
+          "bin/placeholder/AgentSDK.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/AgentSDK.dll": {}
+        }
+      },
       "AgentTestHarness/1.0.0": {
         "type": "project",
         "framework": ".NETStandard,Version=v2.1",
+        "dependencies": {
+          "AgentSDK": "1.0.0"
+        },
         "compile": {
           "bin/placeholder/AgentTestHarness.dll": {}
         },
@@ -439,6 +452,9 @@
       "PlanningAgent/1.0.0": {
         "type": "project",
         "framework": ".NETStandard,Version=v2.1",
+        "dependencies": {
+          "AgentSDK": "1.0.0"
+        },
         "compile": {
           "bin/placeholder/PlanningAgent.dll": {}
         },
@@ -950,6 +966,11 @@
         "xunit.runner.visualstudio.nuspec"
       ]
     },
+    "AgentSDK/1.0.0": {
+      "type": "project",
+      "path": "../AgentSDK/AgentSDK.csproj",
+      "msbuildProject": "../AgentSDK/AgentSDK.csproj"
+    },
     "AgentTestHarness/1.0.0": {
       "type": "project",
       "path": "../AgentTestHarness/AgentTestHarness.csproj",
@@ -963,6 +984,7 @@
   },
   "projectFileDependencyGroups": {
     "net8.0": [
+      "AgentSDK >= 1.0.0",
       "AgentTestHarness >= 1.0.0",
       "Microsoft.NET.Test.Sdk >= 17.*",
       "PlanningAgent >= 1.0.0",
@@ -1002,6 +1024,9 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "projectReferences": {
+            "C:\\Git\\Warcrap\\UnityRTS\\AgentSDK\\AgentSDK.csproj": {
+              "projectPath": "C:\\Git\\Warcrap\\UnityRTS\\AgentSDK\\AgentSDK.csproj"
+            },
             "C:\\Git\\Warcrap\\UnityRTS\\AgentTestHarness\\AgentTestHarness.csproj": {
               "projectPath": "C:\\Git\\Warcrap\\UnityRTS\\AgentTestHarness\\AgentTestHarness.csproj"
             },

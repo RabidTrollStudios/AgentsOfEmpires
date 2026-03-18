@@ -4,16 +4,16 @@ using AgentSDK;
 namespace PlanningAgent
 {
     /// <summary>
-    /// [MEDIUM] Well-rounded: 5 workers, barracks, alternates training
-    /// soldiers and archers for a mixed army. Attacks with 5+ troops.
-    /// No glaring weakness — requires a solid strategy to beat.
+    /// [MEDIUM] Well-rounded: 5 pawns, barracks + archery + tower, cycles
+    /// training warriors, archers, and lancers for a mixed army.
+    /// Attacks with 5+ troops. No glaring weakness.
     /// </summary>
     public class PlanningAgent : PlanningAgentBase
     {
-        private const int MAX_WORKERS = 5;
-        private bool trainSoldierNext = true;
+        private const int MAX_PAWNS = 5;
+        private int trainCycle = 0; // 0=warrior, 1=archer, 2=lancer
 
-        public override void InitializeMatch() { trainSoldierNext = true; }
+        public override void InitializeMatch() { trainCycle = 0; }
 
         public override void Update(IGameState state, IAgentActions actions)
         {
@@ -23,81 +23,121 @@ namespace PlanningAgent
                 if (mainMineNbr < 0 || !state.GetUnit(mainMineNbr).HasValue || state.GetUnit(mainMineNbr).Value.Health <= 0)
                 mainMineNbr = FindClosestMine(state);
 
-            // Build a base first — game starts with only a worker and a mine
+            // Build a base first — game starts with only a pawn and a mine
             if (myBases.Count == 0)
             {
                 BuildStructure(UnitType.BASE, state, actions);
                 return;
             }
 
-            TrainWorkers(state, actions);
+            TrainPawns(state, actions);
 
-            if (myBarracks.Count == 0 && HasBuiltUnit(myBases, state))
+            bool hasBase = HasBuiltUnit(myBases, state);
+            if (myBarracks.Count == 0 && hasBase)
                 BuildStructure(UnitType.BARRACKS, state, actions);
+            if (myArchery.Count == 0 && hasBase)
+                BuildStructure(UnitType.ARCHERY, state, actions);
+            if (myTowers.Count == 0 && hasBase)
+                BuildStructure(UnitType.TOWER, state, actions);
 
-            GatherWithIdleWorkers(state, actions);
+            GatherWithIdlePawns(state, actions);
 
+            // Train warriors from barracks
             foreach (int barracksNbr in myBarracks)
             {
                 var info = state.GetUnit(barracksNbr);
                 if (!info.HasValue || !info.Value.IsBuilt || info.Value.CurrentAction != UnitAction.IDLE)
                     continue;
 
-                UnitType toTrain = trainSoldierNext ? UnitType.SOLDIER : UnitType.ARCHER;
-                if (state.MyGold >= GameConstants.COST[toTrain])
+                if (trainCycle == 0 && state.MyGold >= GameConstants.COST[UnitType.WARRIOR])
                 {
-                    actions.Train(barracksNbr, toTrain);
-                    trainSoldierNext = !trainSoldierNext;
+                    actions.Train(barracksNbr, UnitType.WARRIOR);
+                    AdvanceTrainCycle();
                 }
             }
 
-            DefendTroops(mySoldiers, state, actions);
+            // Train archers from archery
+            foreach (int archeryNbr in myArchery)
+            {
+                var info = state.GetUnit(archeryNbr);
+                if (!info.HasValue || !info.Value.IsBuilt || info.Value.CurrentAction != UnitAction.IDLE)
+                    continue;
+
+                if (trainCycle == 1 && state.MyGold >= GameConstants.COST[UnitType.ARCHER])
+                {
+                    actions.Train(archeryNbr, UnitType.ARCHER);
+                    AdvanceTrainCycle();
+                }
+            }
+
+            // Train lancers from tower
+            foreach (int towerNbr in myTowers)
+            {
+                var info = state.GetUnit(towerNbr);
+                if (!info.HasValue || !info.Value.IsBuilt || info.Value.CurrentAction != UnitAction.IDLE)
+                    continue;
+
+                if (trainCycle == 2 && state.MyGold >= GameConstants.COST[UnitType.LANCER])
+                {
+                    actions.Train(towerNbr, UnitType.LANCER);
+                    AdvanceTrainCycle();
+                }
+            }
+
+            DefendTroops(myWarriors, state, actions);
             DefendTroops(myArchers, state, actions);
-            int armySize = mySoldiers.Count + myArchers.Count;
+            DefendTroops(myLancers, state, actions);
+            int armySize = myWarriors.Count + myArchers.Count + myLancers.Count;
             if (armySize >= 5)
             {
-                AttackWithUnits(mySoldiers, state, actions);
+                AttackWithUnits(myWarriors, state, actions);
                 AttackWithUnits(myArchers, state, actions);
+                AttackWithUnits(myLancers, state, actions);
             }
         }
 
-        private void TrainWorkers(IGameState state, IAgentActions actions)
+        private void AdvanceTrainCycle()
+        {
+            trainCycle = (trainCycle + 1) % 3;
+        }
+
+        private void TrainPawns(IGameState state, IAgentActions actions)
         {
             foreach (int baseNbr in myBases)
             {
                 var info = state.GetUnit(baseNbr);
                 if (info.HasValue && info.Value.IsBuilt
                     && info.Value.CurrentAction == UnitAction.IDLE
-                    && state.MyGold >= GameConstants.COST[UnitType.WORKER]
-                    && myWorkers.Count < MAX_WORKERS)
+                    && state.MyGold >= GameConstants.COST[UnitType.PAWN]
+                    && myPawns.Count < MAX_PAWNS)
                 {
-                    actions.Train(baseNbr, UnitType.WORKER);
+                    actions.Train(baseNbr, UnitType.PAWN);
                 }
             }
         }
 
-        private void GatherWithIdleWorkers(IGameState state, IAgentActions actions)
+        private void GatherWithIdlePawns(IGameState state, IAgentActions actions)
         {
             if (mainBaseNbr < 0 || mainMineNbr < 0) return;
             var mineInfo = state.GetUnit(mainMineNbr);
             if (!mineInfo.HasValue || mineInfo.Value.Health <= 0) return;
 
-            foreach (int worker in myWorkers)
+            foreach (int pawn in myPawns)
             {
-                var info = state.GetUnit(worker);
+                var info = state.GetUnit(pawn);
                 if (info.HasValue && info.Value.CurrentAction == UnitAction.IDLE)
-                    actions.Gather(worker, mainMineNbr, mainBaseNbr);
+                    actions.Gather(pawn, mainMineNbr, mainBaseNbr);
             }
         }
 
         private int FindClosestMine(IGameState state)
         {
             if (mines.Count == 0) return -1;
-            if (myWorkers.Count == 0) return mines[0];
-            var workerInfo = state.GetUnit(myWorkers[0]);
-            if (!workerInfo.HasValue) return mines[0];
+            if (myPawns.Count == 0) return mines[0];
+            var pawnInfo = state.GetUnit(myPawns[0]);
+            if (!pawnInfo.HasValue) return mines[0];
 
-            Position workerPos = workerInfo.Value.GridPosition;
+            Position pawnPos = pawnInfo.Value.GridPosition;
             int bestMine = -1;
             int bestPathLen = int.MaxValue;
             foreach (int mineNbr in mines)
@@ -105,7 +145,7 @@ namespace PlanningAgent
                 var mineInfo = state.GetUnit(mineNbr);
                 if (mineInfo.HasValue && mineInfo.Value.Health > 0)
                 {
-                    int pathLen = state.GetPathToUnit(workerPos, UnitType.MINE, mineInfo.Value.GridPosition).Count;
+                    int pathLen = state.GetPathToUnit(pawnPos, UnitType.MINE, mineInfo.Value.GridPosition).Count;
                     if (pathLen > 0 && pathLen < bestPathLen)
                     {
                         bestPathLen = pathLen;
@@ -122,7 +162,7 @@ namespace PlanningAgent
                     var mineInfo = state.GetUnit(mineNbr);
                     if (mineInfo.HasValue && mineInfo.Value.Health > 0)
                     {
-                        float dist = Position.Distance(workerPos, mineInfo.Value.CenterPosition);
+                        float dist = Position.Distance(pawnPos, mineInfo.Value.CenterPosition);
                         if (dist < bestDist)
                         {
                             bestDist = dist;
@@ -137,16 +177,16 @@ namespace PlanningAgent
 
         private void BuildStructure(UnitType type, IGameState state, IAgentActions actions)
         {
-            foreach (int worker in myWorkers)
+            foreach (int pawn in myPawns)
             {
-                var info = state.GetUnit(worker);
+                var info = state.GetUnit(pawn);
                 if (info.HasValue && info.Value.CurrentAction == UnitAction.IDLE
                     && state.MyGold >= GameConstants.COST[type])
                 {
                     Position buildPos = FindBestBuildPosition(type, state);
                     if (buildPos.X >= 0)
                     {
-                        actions.Build(worker, buildPos, type);
+                        actions.Build(pawn, buildPos, type);
                         return;
                     }
                 }
@@ -177,7 +217,7 @@ namespace PlanningAgent
                     if (bestPos.X >= 0) return bestPos;
                 }
             }
-            else if (type == UnitType.BARRACKS && mainBaseNbr >= 0)
+            else if ((type == UnitType.BARRACKS || type == UnitType.ARCHERY || type == UnitType.TOWER) && mainBaseNbr >= 0)
             {
                 var baseInfo = state.GetUnit(mainBaseNbr);
                 if (baseInfo.HasValue)
@@ -224,8 +264,8 @@ namespace PlanningAgent
 
                 int? bestTarget = null;
                 float bestDist = float.MaxValue;
-                foreach (UnitType ut in new[] { UnitType.SOLDIER, UnitType.ARCHER, UnitType.WORKER,
-                                                UnitType.BASE, UnitType.BARRACKS, UnitType.REFINERY })
+                foreach (UnitType ut in new[] { UnitType.WARRIOR, UnitType.ARCHER, UnitType.LANCER, UnitType.PAWN,
+                                                UnitType.BASE, UnitType.BARRACKS, UnitType.ARCHERY, UnitType.TOWER })
                 {
                     var enemies = state.GetEnemyUnits(ut);
                     foreach (int enemyNbr in enemies)
@@ -253,8 +293,8 @@ namespace PlanningAgent
 
             int? bestTarget = null;
             float bestDist = float.MaxValue;
-            foreach (UnitType ut in new[] { UnitType.SOLDIER, UnitType.ARCHER, UnitType.WORKER,
-                                            UnitType.BASE, UnitType.BARRACKS, UnitType.REFINERY })
+            foreach (UnitType ut in new[] { UnitType.WARRIOR, UnitType.ARCHER, UnitType.PAWN,
+                                            UnitType.BASE, UnitType.BARRACKS })
             {
                 var enemies = state.GetEnemyUnits(ut);
                 foreach (int enemyNbr in enemies)

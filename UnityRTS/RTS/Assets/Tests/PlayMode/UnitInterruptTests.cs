@@ -25,27 +25,27 @@ namespace GameManager.Tests.PlayMode
 		#region Attack interrupts Move
 
 		/// <summary>
-		/// A moving soldier can be interrupted by an attack command.
-		/// The soldier transitions from MOVE to ATTACK.
+		/// A moving warrior can be interrupted by an attack command.
+		/// The warrior transitions from MOVE to ATTACK.
 		/// </summary>
 		[UnityTest]
-		public IEnumerator Soldier_MovingThenAttackCommand_SwitchesToAttack()
+		public IEnumerator Warrior_MovingThenAttackCommand_SwitchesToAttack()
 		{
-			Unit soldier = PlaceUnit(UnitType.SOLDIER, new Vector3Int(5, 5, 0));
-			Unit enemy = PlaceUnit(UnitType.WORKER, new Vector3Int(12, 10, 0), ctx.Agent1Go);
+			Unit warrior = PlaceUnit(UnitType.WARRIOR, new Vector3Int(5, 5, 0));
+			Unit enemy = PlaceUnit(UnitType.PAWN, new Vector3Int(12, 10, 0), ctx.Agent1Go);
 
 			// Start moving somewhere distant
-			soldier.StartMoving(new MoveEventArgs(soldier, UnitType.SOLDIER, new Vector3Int(25, 25, 0)));
-			Assert.AreEqual(UnitAction.MOVE, soldier.CurrentAction);
+			warrior.StartMoving(new MoveEventArgs(warrior, UnitType.WARRIOR, new Vector3Int(25, 25, 0)));
+			Assert.AreEqual(UnitAction.MOVE, warrior.CurrentAction);
 
-			// Let soldier move for a bit
+			// Let warrior move for a bit
 			yield return WaitFrames(5);
 
 			// Issue attack command (interrupt)
-			soldier.StartAttacking(new AttackEventArgs(soldier, enemy));
+			warrior.StartAttacking(new AttackEventArgs(warrior, enemy));
 
-			Assert.AreEqual(UnitAction.ATTACK, soldier.CurrentAction,
-				"Soldier should switch from MOVE to ATTACK when attack is issued");
+			Assert.AreEqual(UnitAction.ATTACK, warrior.CurrentAction,
+				"Warrior should switch from MOVE to ATTACK when attack is issued");
 		}
 
 		#endregion
@@ -53,26 +53,26 @@ namespace GameManager.Tests.PlayMode
 		#region Move interrupts Attack
 
 		/// <summary>
-		/// A soldier mid-attack can be interrupted by a move command.
-		/// The soldier transitions from ATTACK to MOVE.
+		/// A warrior mid-attack can be interrupted by a move command.
+		/// The warrior transitions from ATTACK to MOVE.
 		/// </summary>
 		[UnityTest]
-		public IEnumerator Soldier_AttackingThenMoveCommand_SwitchesToMove()
+		public IEnumerator Warrior_AttackingThenMoveCommand_SwitchesToMove()
 		{
-			Unit soldier = PlaceUnit(UnitType.SOLDIER, new Vector3Int(10, 10, 0));
+			Unit warrior = PlaceUnit(UnitType.WARRIOR, new Vector3Int(10, 10, 0));
 			Unit enemy = PlaceUnit(UnitType.BASE, new Vector3Int(11, 10, 0), ctx.Agent1Go);
 
-			soldier.StartAttacking(new AttackEventArgs(soldier, enemy));
-			Assert.AreEqual(UnitAction.ATTACK, soldier.CurrentAction);
+			warrior.StartAttacking(new AttackEventArgs(warrior, enemy));
+			Assert.AreEqual(UnitAction.ATTACK, warrior.CurrentAction);
 
 			// Let attack run briefly
 			yield return WaitFrames(5);
 
 			// Issue move command (interrupt)
-			soldier.StartMoving(new MoveEventArgs(soldier, UnitType.SOLDIER, new Vector3Int(20, 20, 0)));
+			warrior.StartMoving(new MoveEventArgs(warrior, UnitType.WARRIOR, new Vector3Int(20, 20, 0)));
 
-			Assert.AreEqual(UnitAction.MOVE, soldier.CurrentAction,
-				"Soldier should switch from ATTACK to MOVE when move is issued");
+			Assert.AreEqual(UnitAction.MOVE, warrior.CurrentAction,
+				"Warrior should switch from ATTACK to MOVE when move is issued");
 		}
 
 		#endregion
@@ -80,22 +80,22 @@ namespace GameManager.Tests.PlayMode
 		#region Move interrupts Build
 
 		/// <summary>
-		/// A worker mid-build can be interrupted by a move command.
-		/// The worker transitions from BUILD to MOVE; building retains its progress.
+		/// A pawn mid-build can be interrupted by a move command.
+		/// The pawn transitions from BUILD to MOVE; building retains its progress.
 		/// </summary>
 		[UnityTest]
-		public IEnumerator Worker_BuildingThenMoveCommand_SwitchesToMove()
+		public IEnumerator Pawn_BuildingThenMoveCommand_SwitchesToMove()
 		{
-			Unit worker = PlaceUnit(UnitType.WORKER, new Vector3Int(9, 10, 0));
-			worker.StartBuilding(new BuildEventArgs(worker, new Vector3Int(10, 10, 0), UnitType.BASE));
-			Assert.AreEqual(UnitAction.BUILD, worker.CurrentAction);
+			Unit pawn = PlaceUnit(UnitType.PAWN, new Vector3Int(9, 10, 0));
+			pawn.StartBuilding(new BuildEventArgs(pawn, new Vector3Int(10, 10, 0), UnitType.BASE));
+			Assert.AreEqual(UnitAction.BUILD, pawn.CurrentAction);
 
 			yield return WaitFrames(5);
 
-			worker.StartMoving(new MoveEventArgs(worker, UnitType.WORKER, new Vector3Int(20, 20, 0)));
+			pawn.StartMoving(new MoveEventArgs(pawn, UnitType.PAWN, new Vector3Int(20, 20, 0)));
 
-			Assert.AreEqual(UnitAction.MOVE, worker.CurrentAction,
-				"Worker should switch from BUILD to MOVE when move command is issued");
+			Assert.AreEqual(UnitAction.MOVE, pawn.CurrentAction,
+				"Pawn should switch from BUILD to MOVE when move command is issued");
 		}
 
 		#endregion
@@ -103,30 +103,30 @@ namespace GameManager.Tests.PlayMode
 		#region Build interrupts Gather
 
 		/// <summary>
-		/// A worker mid-gather can be interrupted by a build command.
+		/// A pawn mid-gather can be interrupted by a build command.
 		/// </summary>
 		[UnityTest]
-		public IEnumerator Worker_GatheringThenBuildCommand_SwitchesToBuild()
+		public IEnumerator Pawn_GatheringThenBuildCommand_SwitchesToBuild()
 		{
 			Unit baseUnit = PlaceUnit(UnitType.BASE, new Vector3Int(5, 5, 0));
 			baseUnit.IsBuilt = true;
 
-			Unit mine = PlaceUnit(UnitType.MINE, new Vector3Int(20, 5, 0));
-			Unit worker = PlaceUnit(UnitType.WORKER, new Vector3Int(8, 5, 0));
+			Unit mine = PlaceUnit(UnitType.MINE, new Vector3Int(20, 10, 0));
+			// Pawn must be outside the BASE footprint (6x4: x=[5,10], y=[2,5])
+			Unit pawn = PlaceUnit(UnitType.PAWN, new Vector3Int(12, 10, 0));
 
-			worker.StartGathering(new GatherEventArgs(worker, mine, baseUnit));
-			Assert.AreEqual(UnitAction.GATHER, worker.CurrentAction,
-				"Worker should start gathering");
+			pawn.StartGathering(new GatherEventArgs(pawn, mine, baseUnit));
+			Assert.AreEqual(UnitAction.GATHER, pawn.CurrentAction,
+				"Pawn should start gathering");
 
 			// Wait a few frames for gather to be in progress
 			yield return WaitFrames(5);
 
-			// Interrupt with build command — BASE already exists so build REFINERY?
-			// Simpler: just interrupt with a move
-			worker.StartMoving(new MoveEventArgs(worker, UnitType.WORKER, new Vector3Int(15, 15, 0)));
+			// Interrupt with a move command
+			pawn.StartMoving(new MoveEventArgs(pawn, UnitType.PAWN, new Vector3Int(15, 15, 0)));
 
-			Assert.AreEqual(UnitAction.MOVE, worker.CurrentAction,
-				"Worker should switch from GATHER to MOVE when move is issued");
+			Assert.AreEqual(UnitAction.MOVE, pawn.CurrentAction,
+				"Pawn should switch from GATHER to MOVE when move is issued");
 		}
 
 		#endregion

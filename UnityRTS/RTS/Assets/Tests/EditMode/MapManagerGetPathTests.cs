@@ -180,10 +180,10 @@ namespace GameManager.Tests
 		{
 			var pos = new Vector3Int(5, 5, 0);
 
-			List<Vector3Int> buildable = manager.GetBuildableGridPositionsNearUnit(UnitType.WORKER, pos);
+			List<Vector3Int> buildable = manager.GetBuildableGridPositionsNearUnit(UnitType.PAWN, pos);
 
 			Assert.Greater(buildable.Count, 0,
-				"Should return buildable positions near a WORKER on an open map");
+				"Should return buildable positions near a PAWN on an open map");
 
 			foreach (var cell in buildable)
 				Assert.IsTrue(manager.IsGridPositionBuildable(cell),
@@ -206,7 +206,7 @@ namespace GameManager.Tests
 			(var blockedMap, var blockedGo) = MapManagerTestHelper.Build(20, 20, blocked);
 
 			var pos = new Vector3Int(5, 5, 0);
-			List<Vector3Int> buildable = blockedMap.GetBuildableGridPositionsNearUnit(UnitType.WORKER, pos);
+			List<Vector3Int> buildable = blockedMap.GetBuildableGridPositionsNearUnit(UnitType.PAWN, pos);
 
 			Assert.AreEqual(0, buildable.Count,
 				"Should return empty list when all neighbors are blocked");

@@ -48,7 +48,7 @@ namespace GameManager.Tests.PlayMode
 		public IEnumerator Update_HasPathTintOff_PathLineRendererEmpty()
 		{
 			SetGmProperty("HasPathTint", false);
-			var unit = PlaceUnit(UnitType.WORKER, new Vector3Int(5, 5, 0));
+			var unit = PlaceUnit(UnitType.PAWN, new Vector3Int(5, 5, 0));
 			SetUnitField(unit, "path", new List<Vector3Int> { new Vector3Int(6, 5, 0) });
 
 			unit.Update();
@@ -62,7 +62,7 @@ namespace GameManager.Tests.PlayMode
 		public IEnumerator Update_HasPathTintOn_EmptyPath_LineRendererEmpty()
 		{
 			SetGmProperty("HasPathTint", true);
-			var unit = PlaceUnit(UnitType.WORKER, new Vector3Int(5, 5, 0));
+			var unit = PlaceUnit(UnitType.PAWN, new Vector3Int(5, 5, 0));
 			// path is empty by default
 
 			unit.Update();
@@ -76,7 +76,7 @@ namespace GameManager.Tests.PlayMode
 		public IEnumerator Update_HasPathTintOn_WithPath_LineRendererHasPositions()
 		{
 			SetGmProperty("HasPathTint", true);
-			var unit = PlaceUnit(UnitType.WORKER, new Vector3Int(5, 5, 0));
+			var unit = PlaceUnit(UnitType.PAWN, new Vector3Int(5, 5, 0));
 			unit.CurrentAction = UnitAction.MOVE;
 			SetUnitField(unit, "path", new List<Vector3Int>
 			{
@@ -97,7 +97,7 @@ namespace GameManager.Tests.PlayMode
 		{
 			SetGmProperty("HasPathTint",   true);
 			SetGmProperty("HasAttackTint", false);
-			var unit = PlaceUnit(UnitType.SOLDIER, new Vector3Int(5, 5, 0));
+			var unit = PlaceUnit(UnitType.WARRIOR, new Vector3Int(5, 5, 0));
 			unit.CurrentAction = UnitAction.ATTACK;
 			SetUnitField(unit, "path", new List<Vector3Int> { new Vector3Int(6, 5, 0) });
 
@@ -114,8 +114,8 @@ namespace GameManager.Tests.PlayMode
 		public IEnumerator Update_HasTargetLineTintOff_TargetLineHidden()
 		{
 			SetGmProperty("HasTargetLineTint", false);
-			var attacker = PlaceUnit(UnitType.SOLDIER, new Vector3Int(5,  5, 0));
-			var target   = PlaceUnit(UnitType.SOLDIER, new Vector3Int(7, 7, 0), ctx.Agent1Go);
+			var attacker = PlaceUnit(UnitType.WARRIOR, new Vector3Int(5,  5, 0));
+			var target   = PlaceUnit(UnitType.WARRIOR, new Vector3Int(7, 7, 0), ctx.Agent1Go);
 			attacker.CurrentAction = UnitAction.ATTACK;
 			attacker.AttackUnit    = target;
 
@@ -130,7 +130,7 @@ namespace GameManager.Tests.PlayMode
 		public IEnumerator Update_HasTargetLineTintOn_NotAttacking_TargetLineHidden()
 		{
 			SetGmProperty("HasTargetLineTint", true);
-			var unit = PlaceUnit(UnitType.SOLDIER, new Vector3Int(5, 5, 0));
+			var unit = PlaceUnit(UnitType.WARRIOR, new Vector3Int(5, 5, 0));
 			unit.CurrentAction = UnitAction.IDLE;
 
 			unit.Update();
@@ -144,8 +144,8 @@ namespace GameManager.Tests.PlayMode
 		public IEnumerator Update_HasTargetLineTintOn_Attacking_TargetLineVisible()
 		{
 			SetGmProperty("HasTargetLineTint", true);
-			var attacker = PlaceUnit(UnitType.SOLDIER, new Vector3Int(5,  5, 0));
-			var target   = PlaceUnit(UnitType.SOLDIER, new Vector3Int(7, 7, 0), ctx.Agent1Go);
+			var attacker = PlaceUnit(UnitType.WARRIOR, new Vector3Int(5,  5, 0));
+			var target   = PlaceUnit(UnitType.WARRIOR, new Vector3Int(7, 7, 0), ctx.Agent1Go);
 			attacker.CurrentAction = UnitAction.ATTACK;
 			attacker.AttackUnit    = target;
 
@@ -156,39 +156,5 @@ namespace GameManager.Tests.PlayMode
 			yield return null;
 		}
 
-		// ── MapVelocityToDirection (dead code, exercised via reflection) ───────
-
-		[UnityTest]
-		public IEnumerator MapVelocityToDirection_NullAnimator_DoesNotThrow()
-		{
-			var unit = PlaceUnit(UnitType.WORKER, new Vector3Int(5, 5, 0));
-			SetUnitField(unit, "animator", null);
-
-			Assert.DoesNotThrow(() => InvokeUnitMethod(unit, "MapVelocityToDirection"),
-				"MapVelocityToDirection with null animator should return early without throwing");
-			yield return null;
-		}
-
-		[UnityTest]
-		public IEnumerator MapVelocityToDirection_SouthVelocity_DoesNotThrow()
-		{
-			var unit = PlaceUnit(UnitType.WORKER, new Vector3Int(5, 5, 0));
-			SetUnitField(unit, "velocity", new Vector3(0f, 0.95f, 0f));
-
-			Assert.DoesNotThrow(() => InvokeUnitMethod(unit, "MapVelocityToDirection"),
-				"MapVelocityToDirection with south velocity should not throw");
-			yield return null;
-		}
-
-		[UnityTest]
-		public IEnumerator MapVelocityToDirection_DiagonalVelocity_DoesNotThrow()
-		{
-			var unit = PlaceUnit(UnitType.WORKER, new Vector3Int(5, 5, 0));
-			SetUnitField(unit, "velocity", new Vector3(0.5f, 0.95f, 0f));
-
-			Assert.DoesNotThrow(() => InvokeUnitMethod(unit, "MapVelocityToDirection"),
-				"MapVelocityToDirection with diagonal velocity should not throw");
-			yield return null;
-		}
 	}
 }

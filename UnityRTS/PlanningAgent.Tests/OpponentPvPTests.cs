@@ -8,9 +8,9 @@ namespace PlanningAgent.Tests
     public class OpponentPvPTests : OpponentTestBase
     {
         [Fact]
-        public void SoldierRush_vs_Turtle_NoCrash()
+        public void WarriorRush_vs_Turtle_NoCrash()
         {
-            var game = BuildPvPGame(new SoldierRushOpponent(), new TurtleOpponent());
+            var game = BuildPvPGame(new WarriorRushOpponent(), new TurtleOpponent());
             game.InitializeMatch();
             game.InitializeRound();
             game.Run(2000);

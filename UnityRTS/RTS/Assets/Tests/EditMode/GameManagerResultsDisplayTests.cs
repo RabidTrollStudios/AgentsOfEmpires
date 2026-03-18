@@ -11,8 +11,8 @@ namespace GameManager.Tests
 	/// <summary>
 	/// EditMode tests for GameManager match result display methods:
 	/// - DisplaySingleAgentResults (agent0 wins / agent1 wins)
-	/// - DisplayMultiAgentResults (agent0 is ORC / agent0 is HUM)
-	/// - UpdateCustomDebugUI foreach body (HUM agent, ORC agent, null-Agent skip)
+	/// - DisplayMultiAgentResults (agent0 is RED / agent0 is BLU)
+	/// - UpdateCustomDebugUI foreach body (BLU agent, RED agent, null-Agent skip)
 	/// </summary>
 	[TestFixture]
 	public class GameManagerResultsDisplayTests
@@ -33,8 +33,8 @@ namespace GameManager.Tests
 			SetField("Prefabs", null);
 			SetProp("Agents", null);
 			SetProp("AgentWins", null);
-			SetField("HumanCustomDebugText", null);
-			SetField("OrcCustomDebugText", null);
+			SetField("BlueCustomDebugText", null);
+			SetField("RedCustomDebugText", null);
 
 			var stateField = typeof(GameManager).GetField("gameState",
 				BindingFlags.NonPublic | BindingFlags.Instance);
@@ -51,12 +51,12 @@ namespace GameManager.Tests
 		private void SetProp(string name, object value) =>
 			typeof(GameManager)
 				.GetProperty(name, BindingFlags.NonPublic | BindingFlags.Instance)
-				?.SetValue(gm, value);
+				.SetValue(gm, value);
 
 		private void SetField(string name, object value) =>
 			typeof(GameManager)
 				.GetField(name, BindingFlags.NonPublic | BindingFlags.Instance)
-				?.SetValue(gm, value);
+				.SetValue(gm, value);
 
 		private void InvokeVoid(string methodName, params object[] args) =>
 			typeof(GameManager)
@@ -112,21 +112,21 @@ namespace GameManager.Tests
 			prefabs.GameOverUI = gameOverUI;
 			SetField("Prefabs", prefabs);
 
-			var humGo = MakeAgentGo(Constants.HUMAN_ABBR, 0);
-			var orcGo = MakeAgentGo(Constants.ORC_ABBR,   1);
-			SetProp("Agents", new Dictionary<int, GameObject> { { 0, humGo }, { 1, orcGo } });
+			var blueGo = MakeAgentGo(Constants.BLUE_ABBR, 0);
+			var redGo = MakeAgentGo(Constants.RED_ABBR,   1);
+			SetProp("Agents", new Dictionary<int, GameObject> { { 0, blueGo }, { 1, redGo } });
 			SetProp("AgentWins", new Dictionary<string, int>
 			{
-				{ Constants.HUMAN_ABBR, 2 },
-				{ Constants.ORC_ABBR,   1 }
+				{ Constants.BLUE_ABBR, 2 },
+				{ Constants.RED_ABBR,   1 }
 			});
 			gm.TotalNbrOfRounds = 3;
 
 			InvokeVoid("DisplaySingleAgentResults");
 
-			// HUM wins(2) >= ORC wins(1) → winnerAbbr = HUMAN; Agents[0].AgentName == HUMAN → winner = Agents[0]
-			StringAssert.Contains(Constants.HUMAN_ABBR, bannerText.text,
-				"Banner should contain human agent name when human has more wins");
+			// BLU wins(2) >= RED wins(1) → winnerAbbr = BLUE; Agents[0].AgentName == BLUE → winner = Agents[0]
+			StringAssert.Contains(Constants.BLUE_ABBR, bannerText.text,
+				"Banner should contain blue agent name when blue has more wins");
 			StringAssert.Contains("2", bannerText.text,
 				"Banner should include the win count");
 		}
@@ -139,21 +139,21 @@ namespace GameManager.Tests
 			prefabs.GameOverUI = gameOverUI;
 			SetField("Prefabs", prefabs);
 
-			var humGo = MakeAgentGo(Constants.HUMAN_ABBR, 0);
-			var orcGo = MakeAgentGo(Constants.ORC_ABBR,   1);
-			SetProp("Agents", new Dictionary<int, GameObject> { { 0, humGo }, { 1, orcGo } });
+			var blueGo = MakeAgentGo(Constants.BLUE_ABBR, 0);
+			var redGo = MakeAgentGo(Constants.RED_ABBR,   1);
+			SetProp("Agents", new Dictionary<int, GameObject> { { 0, blueGo }, { 1, redGo } });
 			SetProp("AgentWins", new Dictionary<string, int>
 			{
-				{ Constants.HUMAN_ABBR, 1 },
-				{ Constants.ORC_ABBR,   2 }
+				{ Constants.BLUE_ABBR, 1 },
+				{ Constants.RED_ABBR,   2 }
 			});
 			gm.TotalNbrOfRounds = 3;
 
 			InvokeVoid("DisplaySingleAgentResults");
 
-			// ORC wins(2) > HUM wins(1) → winnerAbbr = ORC; Agents[0].AgentName = HUM ≠ ORC → winner = Agents[1]
-			StringAssert.Contains(Constants.ORC_ABBR, bannerText.text,
-				"Banner should contain orc agent name when orc has more wins");
+			// RED wins(2) > BLU wins(1) → winnerAbbr = RED; Agents[0].AgentName = BLU ≠ RED → winner = Agents[1]
+			StringAssert.Contains(Constants.RED_ABBR, bannerText.text,
+				"Banner should contain red agent name when red has more wins");
 			StringAssert.Contains("2", bannerText.text,
 				"Banner should include the win count");
 		}
@@ -161,57 +161,57 @@ namespace GameManager.Tests
 		// ── DisplayMultiAgentResults ───────────────────────────────────────────
 
 		[Test]
-		public void DisplayMultiAgentResults_Agent0IsOrc_UsesAgent1AsRepresentative()
+		public void DisplayMultiAgentResults_Agent0IsRed_UsesAgent1AsRepresentative()
 		{
 			var (gameOverUI, bannerText) = MakeGameOverUI();
 			var prefabs = MakePrefabs();
 			prefabs.GameOverUI = gameOverUI;
 			SetField("Prefabs", prefabs);
 
-			// Agents[0] is ORC → code picks singleAgent = Agents[1] (HUM)
-			var orcGo = MakeAgentGo(Constants.ORC_ABBR,   0);
-			var humGo = MakeAgentGo(Constants.HUMAN_ABBR, 1);
-			SetProp("Agents", new Dictionary<int, GameObject> { { 0, orcGo }, { 1, humGo } });
+			// Agents[0] is RED → code picks singleAgent = Agents[1] (BLU)
+			var redGo = MakeAgentGo(Constants.RED_ABBR,   0);
+			var blueGo = MakeAgentGo(Constants.BLUE_ABBR, 1);
+			SetProp("Agents", new Dictionary<int, GameObject> { { 0, redGo }, { 1, blueGo } });
 			SetProp("AgentWins", new Dictionary<string, int>
 			{
-				{ Constants.HUMAN_ABBR, 2 },
-				{ Constants.ORC_ABBR,   1 }
+				{ Constants.BLUE_ABBR, 2 },
+				{ Constants.RED_ABBR,   1 }
 			});
 			gm.TotalNbrOfRounds = 3;
 
 			InvokeVoid("DisplayMultiAgentResults");
 
-			// singleAgent = Agents[1] (HUM); nbrWins = AgentWins[HUMAN_ABBR] = 2
-			StringAssert.Contains(Constants.HUMAN_ABBR, bannerText.text,
-				"Banner should use Agents[1] (HUM) when Agents[0] is ORC");
+			// singleAgent = Agents[1] (BLU); nbrWins = AgentWins[BLUE_ABBR] = 2
+			StringAssert.Contains(Constants.BLUE_ABBR, bannerText.text,
+				"Banner should use Agents[1] (BLU) when Agents[0] is RED");
 			StringAssert.Contains("2", bannerText.text,
 				"Banner should include the win count");
 		}
 
 		[Test]
-		public void DisplayMultiAgentResults_Agent0IsHuman_UsesAgent0AsRepresentative()
+		public void DisplayMultiAgentResults_Agent0IsBlue_UsesAgent0AsRepresentative()
 		{
 			var (gameOverUI, bannerText) = MakeGameOverUI();
 			var prefabs = MakePrefabs();
 			prefabs.GameOverUI = gameOverUI;
 			SetField("Prefabs", prefabs);
 
-			// Agents[0] is HUM → code picks singleAgent = Agents[0] (HUM)
-			var humGo = MakeAgentGo(Constants.HUMAN_ABBR, 0);
-			var orcGo = MakeAgentGo(Constants.ORC_ABBR,   1);
-			SetProp("Agents", new Dictionary<int, GameObject> { { 0, humGo }, { 1, orcGo } });
+			// Agents[0] is BLU → code picks singleAgent = Agents[0] (BLU)
+			var blueGo = MakeAgentGo(Constants.BLUE_ABBR, 0);
+			var redGo = MakeAgentGo(Constants.RED_ABBR,   1);
+			SetProp("Agents", new Dictionary<int, GameObject> { { 0, blueGo }, { 1, redGo } });
 			SetProp("AgentWins", new Dictionary<string, int>
 			{
-				{ Constants.HUMAN_ABBR, 3 },
-				{ Constants.ORC_ABBR,   0 }
+				{ Constants.BLUE_ABBR, 3 },
+				{ Constants.RED_ABBR,   0 }
 			});
 			gm.TotalNbrOfRounds = 3;
 
 			InvokeVoid("DisplayMultiAgentResults");
 
-			// singleAgent = Agents[0] (HUM); nbrWins = AgentWins[HUMAN_ABBR] = 3
-			StringAssert.Contains(Constants.HUMAN_ABBR, bannerText.text,
-				"Banner should use Agents[0] (HUM) when Agents[0] is not ORC");
+			// singleAgent = Agents[0] (BLU); nbrWins = AgentWins[BLUE_ABBR] = 3
+			StringAssert.Contains(Constants.BLUE_ABBR, bannerText.text,
+				"Banner should use Agents[0] (BLU) when Agents[0] is not RED");
 			StringAssert.Contains("3", bannerText.text,
 				"Banner should include the win count");
 		}
@@ -219,53 +219,53 @@ namespace GameManager.Tests
 		// ── UpdateCustomDebugUI (foreach body) ────────────────────────────────
 
 		[Test]
-		public void UpdateCustomDebugUI_HumanAgent_WritesEmptyDisplayToHumanText()
+		public void UpdateCustomDebugUI_BlueAgent_WritesEmptyDisplayToBlueText()
 		{
-			var humanText = MakeText("HumanText");
-			var orcText   = MakeText("OrcText");
-			humanText.text = "stale";
-			orcText.text   = "stale";
-			SetField("HumanCustomDebugText", humanText);
-			SetField("OrcCustomDebugText",   orcText);
+			var blueText = MakeText("BlueText");
+			var redText   = MakeText("RedText");
+			blueText.text = "stale";
+			redText.text   = "stale";
+			SetField("BlueCustomDebugText", blueText);
+			SetField("RedCustomDebugText",   redText);
 			gm.OnAgentToggleChanged(true); // HasAgentDebugging = true
 
-			var humGo = MakeAgentGo(Constants.HUMAN_ABBR, 0);
-			SetProp("Agents", new Dictionary<int, GameObject> { { 0, humGo } });
+			var blueGo = MakeAgentGo(Constants.BLUE_ABBR, 0);
+			SetProp("Agents", new Dictionary<int, GameObject> { { 0, blueGo } });
 
 			InvokeVoid("UpdateCustomDebugUI");
 
 			// PlanningAgentDebugText always returns "" in tests (no planning agent loaded)
-			Assert.AreEqual("", humanText.text,
-				"HumanCustomDebugText should be set to empty when PlanningAgentDebugText is empty");
+			Assert.AreEqual("", blueText.text,
+				"BlueCustomDebugText should be set to empty when PlanningAgentDebugText is empty");
 		}
 
 		[Test]
-		public void UpdateCustomDebugUI_OrcAgent_WritesEmptyDisplayToOrcText()
+		public void UpdateCustomDebugUI_RedAgent_WritesEmptyDisplayToRedText()
 		{
-			var humanText = MakeText("HumanText");
-			var orcText   = MakeText("OrcText");
-			humanText.text = "stale";
-			orcText.text   = "stale";
-			SetField("HumanCustomDebugText", humanText);
-			SetField("OrcCustomDebugText",   orcText);
+			var blueText = MakeText("BlueText");
+			var redText   = MakeText("RedText");
+			blueText.text = "stale";
+			redText.text   = "stale";
+			SetField("BlueCustomDebugText", blueText);
+			SetField("RedCustomDebugText",   redText);
 			gm.OnAgentToggleChanged(true);
 
-			var orcGo = MakeAgentGo(Constants.ORC_ABBR, 1);
-			SetProp("Agents", new Dictionary<int, GameObject> { { 1, orcGo } });
+			var redGo = MakeAgentGo(Constants.RED_ABBR, 1);
+			SetProp("Agents", new Dictionary<int, GameObject> { { 1, redGo } });
 
 			InvokeVoid("UpdateCustomDebugUI");
 
-			Assert.AreEqual("", orcText.text,
-				"OrcCustomDebugText should be set to empty when PlanningAgentDebugText is empty");
+			Assert.AreEqual("", redText.text,
+				"RedCustomDebugText should be set to empty when PlanningAgentDebugText is empty");
 		}
 
 		[Test]
 		public void UpdateCustomDebugUI_AgentWithNullAgentField_SkipsWithoutChangingText()
 		{
-			var humanText = MakeText("HumanText");
-			humanText.text = "unchanged";
-			SetField("HumanCustomDebugText", humanText);
-			SetField("OrcCustomDebugText",   null);
+			var blueText = MakeText("BlueText");
+			blueText.text = "unchanged";
+			SetField("BlueCustomDebugText", blueText);
+			SetField("RedCustomDebugText",   null);
 			gm.OnAgentToggleChanged(true);
 
 			// Create a GO with AgentController but leave Agent field null (not set via reflection)
@@ -276,8 +276,8 @@ namespace GameManager.Tests
 
 			Assert.DoesNotThrow(() => InvokeVoid("UpdateCustomDebugUI"),
 				"UpdateCustomDebugUI should not throw when controller.Agent is null");
-			Assert.AreEqual("unchanged", humanText.text,
-				"HumanCustomDebugText should not be modified when the agent has no Agent component");
+			Assert.AreEqual("unchanged", blueText.text,
+				"BlueCustomDebugText should not be modified when the agent has no Agent component");
 		}
 	}
 }

@@ -1,4 +1,4 @@
-﻿using AgentSDK;
+using AgentSDK;
 using GameManager.GameElements;
 using Preloader;
 using System.Collections;
@@ -13,13 +13,21 @@ namespace GameManager
 	{
 		#region Match Initialization
 
-		IEnumerator DropIntroVersus()
+		IEnumerator DropIntroVersus(string versusText)
 		{
-			Prefabs.GameOverUI.GetComponent<Canvas>().enabled = true;
+			var bannerText = Prefabs.GameOverUI.GetComponentInChildren<Text>();
 
-			yield return new WaitForSeconds(1.5f);
+			// Show game title for 3 seconds
+			bannerText.text = "Agents of Empires";
+			Prefabs.GameOverUI.GetComponent<Canvas>().enabled = true;
+			yield return new WaitForSeconds(3f);
+
+			// Show battle matchup for 3 seconds
+			bannerText.text = versusText;
+			yield return new WaitForSeconds(3f);
 
 			Prefabs.GameOverUI.GetComponent<Canvas>().enabled = false;
+			gameState = GameState.PLAYING;
 		}
 
 		/// <summary>
@@ -27,15 +35,15 @@ namespace GameManager
 		/// </summary>
 		private void InitializeMatch()
 		{
-			if (RandomizeAgentsAsOrc)
+			if (RandomizeAgentsAsRed)
 			{
-				OrcDllName = "";
+				RedDllName = "";
 				dllNames = agentLoader.GetDLLNamesFromDir(this.gameObject);
 
 				if (dllNames.Count > 0)
 				{
-					OrcDllName = dllNames[Random.Range(0, dllNames.Count)];
-					isHumanUsingDllNames = false;
+					RedDllName = dllNames[Random.Range(0, dllNames.Count)];
+					isBlueUsingDllNames = false;
 				}
 				else
 				{
@@ -54,8 +62,8 @@ namespace GameManager
 			mapManager.InfluenceMap.gameObject.SetActive(false);
 
 			AgentWins = new Dictionary<string, int>();
-			AgentWins[Constants.HUMAN_ABBR] = 0;
-			AgentWins[Constants.ORC_ABBR] = 0;
+			AgentWins[Constants.BLUE_ABBR] = 0;
+			AgentWins[Constants.RED_ABBR] = 0;
 
 			unitManager.UnitPrefabs = new Dictionary<int, Dictionary<UnitType, GameObject>>();
 			Agents = new Dictionary<int, GameObject>();
@@ -63,20 +71,24 @@ namespace GameManager
 			// Randomly select one player to be instantiated first, for fairness
 			if (Random.Range(0, 2) == 0)
 			{
-				CreateAgent(Constants.HUMAN_ABBR, HumanDllName, Prefabs.HumanPlayerPrefab, unitManager.HumanUnitPrefabs, HumanDebuggerPanel);
-				CreateAgent(Constants.ORC_ABBR, OrcDllName, Prefabs.OrcPlayerPrefab, unitManager.OrcUnitPrefabs, OrcDebuggerPanel);
+				CreateAgent(Constants.BLUE_ABBR, BlueDllName, Prefabs.BluePlayerPrefab, unitManager.BlueUnitPrefabs, BlueDebuggerPanel);
+				CreateAgent(Constants.RED_ABBR, RedDllName, Prefabs.RedPlayerPrefab, unitManager.RedUnitPrefabs, RedDebuggerPanel);
 			}
 			else
 			{
-				CreateAgent(Constants.ORC_ABBR, OrcDllName, Prefabs.OrcPlayerPrefab, unitManager.OrcUnitPrefabs, OrcDebuggerPanel);
-				CreateAgent(Constants.HUMAN_ABBR, HumanDllName, Prefabs.HumanPlayerPrefab, unitManager.HumanUnitPrefabs, HumanDebuggerPanel);
+				CreateAgent(Constants.RED_ABBR, RedDllName, Prefabs.RedPlayerPrefab, unitManager.RedUnitPrefabs, RedDebuggerPanel);
+				CreateAgent(Constants.BLUE_ABBR, BlueDllName, Prefabs.BluePlayerPrefab, unitManager.BlueUnitPrefabs, BlueDebuggerPanel);
 			}
 
-			HumanCustomDebugText.text = Constants.HUMAN_ABBR + " " + HumanDllName;
-			OrcCustomDebugText.text = Constants.ORC_ABBR + " " + OrcDllName;
+			BlueCustomDebugText.text = Constants.BLUE_ABBR + " " + BlueDllName;
+			RedCustomDebugText.text = Constants.RED_ABBR + " " + RedDllName;
 
-			Prefabs.GameOverUI.GetComponentInChildren<Text>().text
-					= HumanCustomDebugText.text + "\nvs\n" + OrcCustomDebugText.text;
+			if (Prefabs.BlueLabelText != null)
+				Prefabs.BlueLabelText.text = BlueDllName;
+			if (Prefabs.RedLabelText != null)
+				Prefabs.RedLabelText.text = RedDllName;
+
+			string versusText = BlueCustomDebugText.text + "\nvs\n" + RedCustomDebugText.text;
 
 			foreach (GameObject agent in Agents.Values)
 			{
@@ -88,7 +100,7 @@ namespace GameManager
 
 			InitializeRound();
 
-			StartCoroutine(DropIntroVersus());
+			StartCoroutine(DropIntroVersus(versusText));
 		}
 
 		/// <summary>
@@ -132,7 +144,7 @@ namespace GameManager
 		{
 			Log("********************************** InitializeRound **********************************", gameObject);
 
-			gameState = GameState.PLAYING;
+			gameState = GameState.INTRO;
 			TotalGameTime = 0;
 			TimeToDisplayBanner = 0f;
 			unitManager.ResetForRound();
@@ -156,29 +168,33 @@ namespace GameManager
         {
 	        if (NbrOfRounds > 0 && dllNames != null)
 	        {
-		        if (isHumanUsingDllNames)
+		        if (isBlueUsingDllNames)
 		        {
-			        int agentNbr = (Agents[0].GetComponent<AgentController>().Agent.AgentDLLName == HumanDllName) ? 0 : 1;
-			        HumanDllName = dllNames[Random.Range(0, dllNames.Count)];
-			        RecreateAgent(Constants.HUMAN_ABBR, HumanDllName, agentNbr, Prefabs.HumanPlayerPrefab, unitManager.HumanUnitPrefabs,
-				        HumanDebuggerPanel);
+			        int agentNbr = (Agents[0].GetComponent<AgentController>().Agent.AgentDLLName == BlueDllName) ? 0 : 1;
+			        BlueDllName = dllNames[Random.Range(0, dllNames.Count)];
+			        RecreateAgent(Constants.BLUE_ABBR, BlueDllName, agentNbr, Prefabs.BluePlayerPrefab, unitManager.BlueUnitPrefabs,
+				        BlueDebuggerPanel);
 			        Agents[agentNbr].GetComponent<AgentController>().InitializeMatch();
 		        }
 		        else
 		        {
-			        int agentNbr = (Agents[0].GetComponent<AgentController>().Agent.AgentDLLName == OrcDllName) ? 0 : 1;
-			        OrcDllName = dllNames[Random.Range(0, dllNames.Count)];
-			        RecreateAgent(Constants.ORC_ABBR, OrcDllName, agentNbr, Prefabs.OrcPlayerPrefab, unitManager.OrcUnitPrefabs,
-				        OrcDebuggerPanel);
+			        int agentNbr = (Agents[0].GetComponent<AgentController>().Agent.AgentDLLName == RedDllName) ? 0 : 1;
+			        RedDllName = dllNames[Random.Range(0, dllNames.Count)];
+			        RecreateAgent(Constants.RED_ABBR, RedDllName, agentNbr, Prefabs.RedPlayerPrefab, unitManager.RedUnitPrefabs,
+				        RedDebuggerPanel);
 			        Agents[agentNbr].GetComponent<AgentController>().InitializeMatch();
 		        }
 
-		        HumanCustomDebugText.text = Constants.HUMAN_ABBR + " " + HumanDllName;
-		        OrcCustomDebugText.text = Constants.ORC_ABBR + " " + OrcDllName;
+		        BlueCustomDebugText.text = Constants.BLUE_ABBR + " " + BlueDllName;
+		        RedCustomDebugText.text = Constants.RED_ABBR + " " + RedDllName;
 
-		        Prefabs.GameOverUI.GetComponentInChildren<Text>().text
-			        = Constants.HUMAN_ABBR + " " + HumanDllName + "\nvs\n" + Constants.ORC_ABBR + " " + OrcDllName;
-		        StartCoroutine(DropIntroVersus());
+		        if (Prefabs.BlueLabelText != null)
+			        Prefabs.BlueLabelText.text = BlueDllName;
+		        if (Prefabs.RedLabelText != null)
+			        Prefabs.RedLabelText.text = RedDllName;
+
+		        string versusText = Constants.BLUE_ABBR + " " + BlueDllName + "\nvs\n" + Constants.RED_ABBR + " " + RedDllName;
+		        StartCoroutine(DropIntroVersus(versusText));
 	        }
         }
 
@@ -190,33 +206,33 @@ namespace GameManager
 
 		private void PlaceUnits()
         {
-	        // Identify human and orc agent numbers
-	        int humanAgentNbr = -1;
-	        int orcAgentNbr = -1;
+	        // Identify blue and red agent numbers
+	        int blueAgentNbr = -1;
+	        int redAgentNbr = -1;
 	        foreach (var kvp in Agents)
 	        {
-		        if (kvp.Value.GetComponent<AgentController>().Agent.AgentName == Constants.HUMAN_ABBR)
-			        humanAgentNbr = kvp.Key;
+		        if (kvp.Value.GetComponent<AgentController>().Agent.AgentName == Constants.BLUE_ABBR)
+			        blueAgentNbr = kvp.Key;
 		        else
-			        orcAgentNbr = kvp.Key;
+			        redAgentNbr = kvp.Key;
 	        }
 
         // Grid positions use top-left corner convention (IsAreaBuildable extends +X and -Y).
         // World center of a unit = (topLeft.x + size.x/2, topLeft.y - size.y/2 + 1)
-        //   1x1  workers/troops:          world center = grid + (0.5, 0.5)  =>  valid grid [1, 71] x [1, 40]
-        //   3x3  mine/barracks/refinery:  world center = grid + (1.5,-0.5)  =>  valid top-left [1, 69] x [3, 40]
+        //   1x1  pawns/troops:          world center = grid + (0.5, 0.5)  =>  valid grid [1, 71] x [1, 40]
+        //   3x3  mine/barracks/archery:   world center = grid + (1.5,-0.5)  =>  valid top-left [1, 69] x [3, 40]
         //   4x4  base:                    world center = grid + (2, -1)      =>  valid top-left [1, 68] x [4, 40]
 
-        // Worker spawn corners - use BASE buildability so there's room to build a base at spawn
-        const int workerMinXY = 1;   // world 1.5  = first valid 1x1 position
-        const int workerMaxX  = 71;  // world 71.5 = last valid 1x1 position in X
-        const int workerMaxY  = 40;  // world 40.5 = last valid 1x1 position in Y
+        // Pawn spawn corners - use BASE buildability so there's room to build a base at spawn
+        const int pawnMinXY = 1;   // world 1.5  = first valid 1x1 position
+        const int pawnMaxX  = 71;  // world 71.5 = last valid 1x1 position in X
+        const int pawnMaxY  = 40;  // world 40.5 = last valid 1x1 position in Y
 
-        Vector3Int humanWorkerLoc = GetBuildableLocationNearCorner(workerMinXY, workerMinXY, UnitType.BASE);
-        unitManager.PlaceUnit(Agents[humanAgentNbr], humanWorkerLoc, UnitType.WORKER, Color.white);
+        Vector3Int bluePawnLoc = GetBuildableLocationNearCorner(pawnMinXY, pawnMinXY, UnitType.BASE);
+        unitManager.PlaceUnit(Agents[blueAgentNbr], bluePawnLoc, UnitType.PAWN, Color.white);
 
-        Vector3Int orcWorkerLoc = GetBuildableLocationNearCorner(workerMaxX, workerMaxY, UnitType.BASE);
-        unitManager.PlaceUnit(Agents[orcAgentNbr], orcWorkerLoc, UnitType.WORKER, Color.white);
+        Vector3Int redPawnLoc = GetBuildableLocationNearCorner(pawnMaxX, pawnMaxY, UnitType.BASE);
+        unitManager.PlaceUnit(Agents[redAgentNbr], redPawnLoc, UnitType.PAWN, Color.white);
 
         // Mine placement - top-left of 3x3 footprint. World center = (topLeft.x + 1.5, topLeft.y - 0.5)
         //   Valid world centers: (2.5, 2.5) to (70.5, 39.5)
@@ -248,9 +264,9 @@ namespace GameManager
 	        || IsInCorner(mine1Loc, 5)
 	        || IsInCorner(mine2Loc, 5)
 	        || (Mathf.Abs(mine1Loc.x - mine2Loc.x) <= 2 && Mathf.Abs(mine1Loc.y - mine2Loc.y) <= 2)) && mineAttempts < 1000);
-        // mine1 is near HUM spawn (lower-left); mine2 is its symmetric mirror near ORC spawn (upper-right)
-        unitManager.PlaceUnit(Agents[humanAgentNbr], mine1Loc, UnitType.MINE, Color.white);
-        unitManager.PlaceUnit(Agents[orcAgentNbr], mine2Loc, UnitType.MINE, Color.white);
+        // mine1 is near BLU spawn (lower-left); mine2 is its symmetric mirror near RED spawn (upper-right)
+        unitManager.PlaceUnit(Agents[blueAgentNbr], mine1Loc, UnitType.MINE, Color.white);
+        unitManager.PlaceUnit(Agents[redAgentNbr], mine2Loc, UnitType.MINE, Color.white);
         }
 
         /// <summary>

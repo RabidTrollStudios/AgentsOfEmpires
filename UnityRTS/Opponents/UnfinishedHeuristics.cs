@@ -1,54 +1,30 @@
-﻿// -territoryMap: generates influence based on proximety to own structures and mines using linear falloff, bases have higher intensity
+// -territoryMap: generates influence based on proximety to own structures and mines using linear falloff, bases have higher intensity
 // -enemyMap: generates influence based on proximety to enemy structures using linear falloff, bases have higher intensity
 // -Functions for ideal build positions and unit positions subtract territoryMap influence from enemyMap influence for decision making
-// -Workers use influence to determine where to build bases and refineries
-// -Soldiers and archers use influence to prioritize which enemy unit to attack first
+// -Pawns use influence to determine where to build bases
+// -Warriors and archers use influence to prioritize which enemy unit to attack first
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using GameManager.EnumTypes;
-using GameManager.GameElements;
-using UnityEngine;
+using AgentSDK;
 
-namespace GameManager
+namespace PlanningAgent
 {
 	// Planning Agent is the over-head planner that decides where
 	// individual units go and what tasks they perform.  Low-level
 	// AI is handled by other classes (like pathfinding).
-	public class PlanningAgent : Agent
+	public class PlanningAgent : PlanningAgentBase
 	{
 		private const int MAX_NBR_ARCHERS = 20;
 		private const float MAX_ARCHER_MULTIPLIER = 2.0f;
-		private const int MAX_NBR_SOLDIERS = 10;
-		private const float MAX_SOLDIER_MULTIPLIER = 2.0f;
-		private const int MAX_NBR_WORKERS = 15;
+		private const int MAX_NBR_WARRIORS = 10;
+		private const float MAX_WARRIOR_MULTIPLIER = 2.0f;
+		private const int MAX_NBR_PAWNS = 15;
 
-		#region Private Methods
+		#region Private Fields
 
-		// Handy short-cuts for pulling all of the relevant data that you
-		// might use for each decision.  Feel free to add your own.
-		public int enemyAgentNbr { get; set; }
-		public int mainMineNbr { get; set; }
-		public int mainBaseNbr { get; set; }
-		public bool lastFighterWasSoldier { get; set; }
-
-		public List<int> mines { get; set; }
-
-		public List<int> myWorkers { get; set; }
-		public List<int> mySoldiers { get; set; }
-		public List<int> myArchers { get; set; }
-		public List<int> myBases { get; set; }
-		public List<int> myBarracks { get; set; }
-		public List<int> myRefineries { get; set; }
-
-		public List<int> enemyWorkers { get; set; }
-		public List<int> enemySoldiers { get; set; }
-		public List<int> enemyArchers { get; set; }
-		public List<int> enemyBases { get; set; }
-		public List<int> enemyBarracks { get; set; }
-		public List<int> enemyRefineries { get; set; }
-
-		public List<Vector3Int> buildPositions { get; set; }
+		public bool lastFighterWasWarrior { get; set; }
 
 		// Added list for heuristic value storage
 		private List<float> heuristics;
@@ -59,69 +35,27 @@ namespace GameManager
 		private float[,] territoryMap;
 		private float[,] enemyMap;
 
-		/// <summary>
-		/// Finds all of the possible build locations for a specific UnitType.
-		/// Currently, all structures are 3x3, so these positions can be reused
-		/// for all structures (Base, Barracks, Refinery)
-		/// Run this once at the beginning of the game and have a list of
-		/// locations that you can use to reduce later computation.  When you
-		/// need a location for a build-site, simply pull one off of this list,
-		/// determine if it is still buildable, determine if you want to use it
-		/// (perhaps it is too far away or too close or not close enough to a mine),
-		/// and then simply remove it from the list and build on it!
-		/// This method is called from the Awake() method to run only once at the
-		/// beginning of the game.
-		/// </summary>
-		/// <param name="unitType">the type of unit you want to build</param>
-		public void FindProspectiveBuildPositions(UnitType unitType)
-		{
-			// For the entire map
-			for (int i = 0; i < GameManager.Instance.MapSize.x; ++i)
-			{
-				for (int j = 0; j < GameManager.Instance.MapSize.y; ++j)
-				{
-					// Construct a new point near gridPosition
-					Vector3Int testGridPosition = new Vector3Int(i, j, 0);
+		#endregion
 
-					// Test if that position can be used to build the unit
-					if (Utility.IsValidGridLocation(testGridPosition)
-						&& GameManager.Instance.IsBoundedAreaBuildable(unitType, testGridPosition))
-					{
-						// If this position is buildable, add it to the list
-						buildPositions.Add(testGridPosition);
-					}
-				}
-			}
-		}
+		#region Private Methods
 
 		/// <summary>
-		/// Assuming you run the FindProspectiveBuildPositions, this method takes that
-		/// list and finds the closest build position to the gridPosition.  This can be
-		/// used to find a position close to a mine, close to the enemy base, close to
-		/// your barracks, close to your base, close to a troop, etc.
+		/// Finds the closest build position to the gridPosition.
 		/// </summary>
-		/// <param name="gridPosition">position that you want to build near</param>
-		/// <param name="unitType">type of unit you want to build</param>
-		/// <returns></returns>
-		public Vector3Int FindClosestBuildPosition(Vector3Int gridPosition, UnitType unitType)
+		public Position FindClosestBuildPosition(Position gridPosition, UnitType unitType, IGameState state)
 		{
-			// Variables to store the closest position as we find it
 			float minDist = float.MaxValue;
-			Vector3Int minBuildPosition = gridPosition;
+			Position minBuildPosition = gridPosition;
 
-			// For all the possible build postions that we already found
-			foreach (Vector3Int buildPosition in buildPositions)
+			foreach (Position buildPosition in buildPositions)
 			{
-				// if the distance to that build position is closer than any other seen so far
-				if (Vector3.Distance(gridPosition, buildPosition) < minDist && GameManager.Instance.IsBoundedAreaBuildable(unitType, buildPosition))
+				if (Position.Distance(gridPosition, buildPosition) < minDist && state.IsBoundedAreaBuildable(unitType, buildPosition))
 				{
-					// Store this build position as the closest seen so far
-					minDist = Vector3.Distance(gridPosition, buildPosition);
+					minDist = Position.Distance(gridPosition, buildPosition);
 					minBuildPosition = buildPosition;
 				}
 			}
 
-			// Return the closest build position
 			return minBuildPosition;
 		}
 
@@ -129,64 +63,51 @@ namespace GameManager
 		/// Method compares the influence maps to the prospective build locations list
 		/// to find an optimal location to build a structure.
 		/// </summary>
-		/// <param name="unitType">type of unit you want to build</param>
-		/// <returns></returns>
-		public Vector3Int FindBestBuildPosition(UnitType unitType)
+		public Position FindBestBuildPosition(UnitType unitType, IGameState state)
 		{
-			// Variables to store the optimal position as we find it
 			float minInf = float.MaxValue;
-			Vector3Int minBuildPosition = new Vector3Int();
+			Position minBuildPosition = new Position(0, 0);
 
-			// For all the possible build postions that we already found
-			foreach (Vector3Int buildPosition in buildPositions)
+			foreach (Position buildPosition in buildPositions)
 			{
 				float influence;
-				if (territoryMap[buildPosition.x, buildPosition.y] < 1)
+				if (territoryMap[buildPosition.X, buildPosition.Y] < 1)
 				{
-					influence = enemyMap[buildPosition.x, buildPosition.y] - territoryMap[buildPosition.x, buildPosition.y];
+					influence = enemyMap[buildPosition.X, buildPosition.Y] - territoryMap[buildPosition.X, buildPosition.Y];
 				}
 				else
 				{
-					influence = enemyMap[buildPosition.x, buildPosition.y];
+					influence = enemyMap[buildPosition.X, buildPosition.Y];
 				}
-				// if the influence on that build position is more advantageous for the player than any other so far
-				if (influence < minInf && GameManager.Instance.IsBoundedAreaBuildable(unitType, buildPosition))
+				if (influence < minInf && state.IsBoundedAreaBuildable(unitType, buildPosition))
 				{
-					// Store this build position as the best seen so far
 					minInf = influence;
 					minBuildPosition = buildPosition;
 				}
 			}
 
-			// Return the best build position
 			return minBuildPosition;
 		}
 
 		/// <summary>
 		/// Find the closest unit to the gridPosition out of a list of units.
-		/// Use this method to find the enemy soldier closest to your archer,
-		/// or the closest base to a mine, or the closest mine to a base, etc.
 		/// </summary>
-		/// <param name="gridPosition">position of an agent or base</param>
-		public int FindClosestUnit(Vector3Int gridPosition, List<int> unitNbrs)
+		public int FindClosestUnit(Position gridPosition, List<int> unitNbrs, IGameState state)
 		{
-			// Variables to store the closest unit as we find it
 			int closestUnitNbr = -1;
 			float closestUnitDist = float.MaxValue;
 
-			// Iterate through all of the units
 			foreach (int unitNbr in unitNbrs)
 			{
-				Unit unit = GameManager.Instance.GetUnit(unitNbr);
-				float unitDist = Vector3.Distance(unit.GridPosition, gridPosition);
+				UnitInfo? info = state.GetUnit(unitNbr);
+				if (!info.HasValue) continue;
+				float unitDist = Position.Distance(info.Value.GridPosition, gridPosition);
 
-				// If this object is closer than any seen so far, save it
 				if (!(unitDist < closestUnitDist)) continue;
 				closestUnitDist = unitDist;
 				closestUnitNbr = unitNbr;
 			}
 
-			// Return the closest unit's number
 			return closestUnitNbr;
 		}
 
@@ -194,82 +115,73 @@ namespace GameManager
 		/// Method compares the influence maps to the list of units provided
 		/// to find an optimally placed unit to attack or move to.
 		/// </summary>
-		/// <param name="unitNbrs">list of units to analyze</param>
-		/// <returns></returns>
-		public int FindBestPlacedUnit(List<int> unitNbrs)
+		public int FindBestPlacedUnit(List<int> unitNbrs, IGameState state)
 		{
-			// Variables to store the closest unit as we find it
 			int bestUnitNbr = -1;
 			float bestUnitInf = float.MaxValue;
 
-			// Iterate through all of the units
 			foreach (int unitNbr in unitNbrs)
 			{
-				Unit unit = GameManager.Instance.GetUnit(unitNbr);
+				UnitInfo? info = state.GetUnit(unitNbr);
+				if (!info.HasValue) continue;
+				Position pos = info.Value.GridPosition;
 				float influence;
-				if (territoryMap[unit.GridPosition.x, unit.GridPosition.y] < 1)
+				if (territoryMap[pos.X, pos.Y] < 1)
 				{
-					influence = enemyMap[unit.GridPosition.x, unit.GridPosition.y] - territoryMap[unit.GridPosition.x, unit.GridPosition.y];
+					influence = enemyMap[pos.X, pos.Y] - territoryMap[pos.X, pos.Y];
 				}
 				else
 				{
-					influence = enemyMap[unit.GridPosition.x, unit.GridPosition.y];
+					influence = enemyMap[pos.X, pos.Y];
 				}
 
-				// If this object is closer than any seen so far, save it
 				if (!(influence < bestUnitInf)) continue;
 				bestUnitInf = influence;
 				bestUnitNbr = unitNbr;
 			}
 
-			// Return the closest unit's number
 			return bestUnitNbr;
 		}
 
 		/// <summary>
 		/// Update heuristics for evaluating potential actions
 		/// </summary>
-		private void UpdateHeuristics()
+		private void UpdateHeuristics(IGameState state)
 		{
+			float gold = state.MyGold;
 			int count = 0;
 
 			// Build a Base
-			heuristics[count++] = Mathf.Clamp01(Gold / Constants.COST[UnitType.BASE])
-								  * Mathf.Clamp01((mines.Count - myBases.Count) / 2.0f);
+			heuristics[count++] = Clamp01(gold / GameConstants.COST[UnitType.BASE])
+								  * Clamp01((mines.Count - myBases.Count) / 2.0f);
 
 			// Build a Barracks
-			heuristics[count++] = Mathf.Clamp01(Gold / Constants.COST[UnitType.BARRACKS])
-								  * Gold / ((Constants.COST[UnitType.BARRACKS]
-								  * (myBarracks.Count + ((mySoldiers.Count + myArchers.Count) / 10))) + Gold + 1);
+			heuristics[count++] = Clamp01(gold / GameConstants.COST[UnitType.BARRACKS])
+								  * gold / ((GameConstants.COST[UnitType.BARRACKS]
+								  * (myBarracks.Count + ((myWarriors.Count + myArchers.Count) / 10))) + gold + 1);
 
 			// Gather
-			heuristics[count++] = (Constants.COST[UnitType.BASE] + Constants.COST[UnitType.BARRACKS] + Constants.COST[UnitType.REFINERY])
-								  / (Gold + Constants.COST[UnitType.BASE] + Constants.COST[UnitType.BARRACKS] + Constants.COST[UnitType.REFINERY]);
+			heuristics[count++] = (GameConstants.COST[UnitType.BASE] + GameConstants.COST[UnitType.BARRACKS])
+								  / (gold + GameConstants.COST[UnitType.BASE] + GameConstants.COST[UnitType.BARRACKS]);
 
 			// Move
 			heuristics[count++] = 0;
 
-			// Build a Refinery
-			heuristics[count++] = Mathf.Clamp01(Gold / Constants.COST[UnitType.REFINERY])
-								  * (Gold * (myWorkers.Count + mySoldiers.Count + myArchers.Count))
-								  / ((Constants.COST[UnitType.REFINERY] * 20) + Gold + 1);
+			// Train a Pawn
+			heuristics[count++] = Clamp01(myBases.Count) * Clamp01(gold / GameConstants.COST[UnitType.PAWN])
+								  * 1 - ((highestCost * myPawns.Count)
+								  / (gold * ((enemyPawns.Count * 3) + myPawns.Count + 1)));
 
-			// Train a Worker
-			heuristics[count++] = Mathf.Clamp01(myBases.Count) * Mathf.Clamp01(Gold / Constants.COST[UnitType.WORKER])
-								  * 1 - ((highestCost * myWorkers.Count)
-								  / (Gold * ((enemyWorkers.Count * 3) + myWorkers.Count + 1)));
-
-			// Train a Soldier
-			heuristics[count++] = Mathf.Clamp01(myBarracks.Count) * Mathf.Clamp01(Gold / Constants.COST[UnitType.SOLDIER])
-								  * 1 - (mySoldiers.Count / ((myArchers.Count * 3) + mySoldiers.Count + 1));
+			// Train a Warrior
+			heuristics[count++] = Clamp01(myBarracks.Count) * Clamp01(gold / GameConstants.COST[UnitType.WARRIOR])
+								  * 1 - (myWarriors.Count / ((myArchers.Count * 3) + myWarriors.Count + 1));
 
 			// Train an Archer
-
-			heuristics[count++] = Mathf.Clamp01(myBarracks.Count) * Mathf.Clamp01(Gold / Constants.COST[UnitType.ARCHER])
-								  * 1 - (myArchers.Count / ((enemySoldiers.Count + enemyArchers.Count) + myArchers.Count + 1));
+			heuristics[count++] = Clamp01(myBarracks.Count) * Clamp01(gold / GameConstants.COST[UnitType.ARCHER])
+								  * 1 - (myArchers.Count / ((enemyWarriors.Count + enemyArchers.Count) + myArchers.Count + 1));
 
 			// Attack the Enemy
-			heuristics[count++] = 1 - (1 / (mySoldiers.Count + myArchers.Count - 1));
+			heuristics[count++] = 1 - (1 / (myWarriors.Count + myArchers.Count - 1));
 
 			// Calculate next decision
 			maxIndex = heuristics.IndexOf(heuristics.Max());
@@ -278,39 +190,37 @@ namespace GameManager
 		/// <summary>
 		/// Update the influence map based on your structures
 		/// </summary>
-		private void UpdateTerritoryMap()
+		private void UpdateTerritoryMap(IGameState state)
 		{
-			for (int i = 0; i < GameManager.Instance.MapSize.x; i++)
+			for (int i = 0; i < state.MapSize.X; i++)
 			{
-				for (int j = 0; j < GameManager.Instance.MapSize.y; j++)
+				for (int j = 0; j < state.MapSize.Y; j++)
 				{
-					Vector3Int gridPosition = new Vector3Int(i, j, 0);
+					Position gridPosition = new Position(i, j);
 					float total = 0;
-					if (Utility.IsValidGridLocation(gridPosition))
+					if (i >= 0 && i < state.MapSize.X && j >= 0 && j < state.MapSize.Y)
 					{
-						if (myBases.Count + myBarracks.Count + myRefineries.Count + mines.Count > 0)
+						if (myBases.Count + myBarracks.Count + mines.Count > 0)
 						{
 							foreach (int unitID in myBases)
 							{
-								Unit unit = GameManager.Instance.GetUnit(unitID);
-								total += 3 / (Vector3.Distance(gridPosition, unit.GridPosition) - 1);
+								UnitInfo? info = state.GetUnit(unitID);
+								if (!info.HasValue) continue;
+								total += 3 / (Position.Distance(gridPosition, info.Value.GridPosition) - 1);
 							}
 							foreach (int unitID in myBarracks)
 							{
-								Unit unit = GameManager.Instance.GetUnit(unitID);
-								total += 2 / (Vector3.Distance(gridPosition, unit.GridPosition) - 1);
-							}
-							foreach (int unitID in myRefineries)
-							{
-								Unit unit = GameManager.Instance.GetUnit(unitID);
-								total += 1 / (Vector3.Distance(gridPosition, unit.GridPosition) - 1);
+								UnitInfo? info = state.GetUnit(unitID);
+								if (!info.HasValue) continue;
+								total += 2 / (Position.Distance(gridPosition, info.Value.GridPosition) - 1);
 							}
 							foreach (int mineID in mines)
 							{
-								Unit mine = GameManager.Instance.GetUnit(mineID);
-								total += 2 / (Vector3.Distance(gridPosition, mine.GridPosition) - 1);
+								UnitInfo? info = state.GetUnit(mineID);
+								if (!info.HasValue) continue;
+								total += 2 / (Position.Distance(gridPosition, info.Value.GridPosition) - 1);
 							}
-							total /= (myBases.Count * 3) + (myBarracks.Count * 2) + myRefineries.Count + (mines.Count * 2);
+							total /= (myBases.Count * 3) + (myBarracks.Count * 2) + (mines.Count * 2);
 						}
 					}
 					else
@@ -325,34 +235,31 @@ namespace GameManager
 		/// <summary>
 		/// Update the influence map based on the opponent's structures
 		/// </summary>
-		private void UpdateEnemyMap()
+		private void UpdateEnemyMap(IGameState state)
 		{
-			for (int i = 0; i < GameManager.Instance.MapSize.x; i++)
+			for (int i = 0; i < state.MapSize.X; i++)
 			{
-				for (int j = 0; j < GameManager.Instance.MapSize.y; j++)
+				for (int j = 0; j < state.MapSize.Y; j++)
 				{
-					Vector3Int gridPosition = new Vector3Int(i, j, 0);
+					Position gridPosition = new Position(i, j);
 					float total = 0;
-					if (Utility.IsValidGridLocation(gridPosition))
+					if (i >= 0 && i < state.MapSize.X && j >= 0 && j < state.MapSize.Y)
 					{
-						if (enemyBases.Count + enemyBarracks.Count + enemyRefineries.Count > 0)
+						if (enemyBases.Count + enemyBarracks.Count > 0)
 						{
 							foreach (int unitID in enemyBases)
 							{
-								Unit unit = GameManager.Instance.GetUnit(unitID);
-								total += 3 / (Vector3.Distance(gridPosition, unit.GridPosition) - 1);
+								UnitInfo? info = state.GetUnit(unitID);
+								if (!info.HasValue) continue;
+								total += 3 / (Position.Distance(gridPosition, info.Value.GridPosition) - 1);
 							}
 							foreach (int unitID in enemyBarracks)
 							{
-								Unit unit = GameManager.Instance.GetUnit(unitID);
-								total += 2 / (Vector3.Distance(gridPosition, unit.GridPosition) - 1);
+								UnitInfo? info = state.GetUnit(unitID);
+								if (!info.HasValue) continue;
+								total += 2 / (Position.Distance(gridPosition, info.Value.GridPosition) - 1);
 							}
-							foreach (int unitID in enemyRefineries)
-							{
-								Unit unit = GameManager.Instance.GetUnit(unitID);
-								total += 1 / (Vector3.Distance(gridPosition, unit.GridPosition) - 1);
-							}
-							total /= (enemyBases.Count * 3) + (enemyBarracks.Count * 2) + enemyRefineries.Count;
+							total /= (enemyBases.Count * 3) + (enemyBarracks.Count * 2);
 						}
 					}
 					else
@@ -364,258 +271,203 @@ namespace GameManager
 			}
 		}
 
-		// Stupid method to process the workers
-		public void ProcessWorkers()
+		/// <summary>
+		/// Process the pawns
+		/// </summary>
+		public void ProcessPawns(IGameState state, IAgentActions actions)
 		{
-			// For each worker
-			foreach (int worker in myWorkers)
+			foreach (int pawn in myPawns)
 			{
-				// Grab the unit we need for this function
-				Unit unit = GameManager.Instance.GetUnit(worker);
-
-				// Make sure this unit actually exists and is idle
-				if (unit != null && unit.CurrentAction == UnitAction.IDLE)
+				UnitInfo? info = state.GetUnit(pawn);
+				if (info.HasValue && info.Value.CurrentAction == UnitAction.IDLE)
 				{
-					UpdateTerritoryMap();
-					UpdateEnemyMap();
-					// If we have enough gold and need a base, build a base
+					UpdateTerritoryMap(state);
+					UpdateEnemyMap(state);
 					if (maxIndex == 2)
 					{
-						// Find the best build position to build a base and 
-						// build the base there
-						Vector3Int toBuild = FindBestBuildPosition(UnitType.BASE);
-						if (toBuild != Vector3Int.zero)
+						Position toBuild = FindBestBuildPosition(UnitType.BASE, state);
+						if (toBuild != new Position(0, 0))
 						{
-							Build(unit, toBuild, UnitType.BASE);
+							actions.Build(pawn, toBuild, UnitType.BASE);
 						}
 					}
-					//If we have enough gold and need a barracks, build a barracks
 					else if (maxIndex == 3)
 					{
-						// Find the closest build position to an enemy base and build
-						// the barracks there
-						Vector3Int toBuild;
+						Position toBuild;
 						if (enemyBases.Count > 0)
 						{
-							toBuild = FindClosestBuildPosition(
-								GameManager.Instance.GetUnit(FindClosestUnit(unit.GridPosition, enemyBases)).GridPosition,
-								UnitType.BARRACKS);
+							int closestEnemyBase = FindClosestUnit(info.Value.GridPosition, enemyBases, state);
+							UnitInfo? enemyBaseInfo = state.GetUnit(closestEnemyBase);
+							if (enemyBaseInfo.HasValue)
+							{
+								toBuild = FindClosestBuildPosition(
+									enemyBaseInfo.Value.GridPosition,
+									UnitType.BARRACKS, state);
+							}
+							else
+							{
+								toBuild = FindBestBuildPosition(UnitType.BARRACKS, state);
+							}
 						}
 						else
 						{
-							toBuild = FindBestBuildPosition(UnitType.BARRACKS);
+							toBuild = FindBestBuildPosition(UnitType.BARRACKS, state);
 						}
-						if (toBuild != Vector3Int.zero)
+						if (toBuild != new Position(0, 0))
 						{
-							Build(unit, toBuild, UnitType.BARRACKS);
+							actions.Build(pawn, toBuild, UnitType.BARRACKS);
 						}
 					}
-					// If we have enough gold and need a refinery, build a refinery
-					else if (maxIndex == 4)
-					{
-						// Find the best build position for a refinery and build
-						// the refinery there
-						Vector3Int toBuild = FindBestBuildPosition(UnitType.REFINERY);
-						if (toBuild != Vector3Int.zero)
-						{
-							Build(unit, toBuild, UnitType.REFINERY);
-						}
-					}
-					// Otherwise, just mine
 					else if (mainBaseNbr >= 0 && mainMineNbr >= 0)
 					{
-						// Grab the mine for this agent
-						Unit mineUnit = GameManager.Instance.GetUnit(mainMineNbr);
-						Unit baseUnit = GameManager.Instance.GetUnit(mainBaseNbr);
-						if (mineUnit != null && baseUnit != null)
-						{ Gather(unit, mineUnit, baseUnit); }
-					}
-				}
-			}
-		}
-
-		// Process the bases
-		public void ProcessBases()
-		{
-			// For each base, determine if it should train a worker
-			foreach (int baseNbr in myBases)
-			{
-				// Get the base unit
-				Unit baseUnit = GameManager.Instance.GetUnit(baseNbr);
-
-				// If the base exists, is idle, we need a worker, and we have gold
-				if (baseUnit != null && baseUnit.IsBuilt
-					&& baseUnit.CurrentAction == UnitAction.IDLE && maxIndex == 5)
-				{
-					Train(baseUnit, UnitType.WORKER);
-				}
-			}
-		}
-
-		// Process the barracks
-		public void ProcessBarracks()
-		{
-			// For each barracks, determine if it should train a soldier or an archer
-			foreach (int barracksNbr in myBarracks)
-			{
-				// Get the barracks
-				Unit barracksUnit = GameManager.Instance.GetUnit(barracksNbr);
-
-				// If this barracks still exists, is idle, we need soldiers, and have gold
-				if (barracksUnit != null && barracksUnit.IsBuilt
-					&& barracksUnit.CurrentAction == UnitAction.IDLE
-					&& maxIndex == 6)
-				{
-					Train(barracksUnit, UnitType.SOLDIER);
-					lastFighterWasSoldier = true;
-				}
-				// If this barracks still exists, is idle, we need archers, and have gold
-				else if (barracksUnit != null && barracksUnit.IsBuilt
-						 && barracksUnit.CurrentAction == UnitAction.IDLE
-						 && maxIndex == 7)
-				{
-					Train(barracksUnit, UnitType.ARCHER);
-					lastFighterWasSoldier = false;
-				}
-			}
-		}
-
-		// Process the soldiers
-		public void ProcessSoldiers()
-		{
-			// For each soldier, determine what they should attack
-			foreach (int soldierNbr in mySoldiers)
-			{
-				// Get this soldier
-				Unit soldierUnit = GameManager.Instance.GetUnit(soldierNbr);
-
-				// If this soldier still exists and is idle
-				if (soldierUnit != null && soldierUnit.CurrentAction == UnitAction.IDLE)
-				{
-					bool tooClose = false;
-					foreach (int enemy in enemySoldiers)
-					{
-						Unit enemyUnit = GameManager.Instance.GetUnit(enemy);
-						if (Vector3.Distance(soldierUnit.GridPosition, enemyUnit.GridPosition)
-							< Constants.UNIT_SIZE[UnitType.SOLDIER].sqrMagnitude && !tooClose)
+						UnitInfo? mineInfo = state.GetUnit(mainMineNbr);
+						UnitInfo? baseInfo = state.GetUnit(mainBaseNbr);
+						if (mineInfo.HasValue && baseInfo.HasValue)
 						{
-							tooClose = true;
-							Attack(soldierUnit, enemyUnit);
+							actions.Gather(pawn, mainMineNbr, mainBaseNbr);
 						}
-					}
-					// If there are enemy archers, find the one in the best position to be attacked and attack it
-					if (enemyArchers.Count > 0 && !tooClose)
-					{
-						Attack(soldierUnit, GameManager.Instance.GetUnit(
-							FindBestPlacedUnit(enemyArchers)));
-					}
-					// If there are enemy soldiers, find the one in the best position to be attacked and attack it
-					else if (enemySoldiers.Count > 0 && !tooClose)
-					{
-						Attack(soldierUnit, GameManager.Instance.GetUnit(
-							FindBestPlacedUnit(enemySoldiers)));
-					}
-					// If there are enemy bases, find the one in the best position to be attacked and attack it
-					else if (enemyBases.Count > 0 && !tooClose)
-					{
-						Attack(soldierUnit, GameManager.Instance.GetUnit(
-							FindBestPlacedUnit(enemyBases)));
-					}
-					// If there are enemy workers, find the one in the best position to be attacked and attack it
-					else if (enemyWorkers.Count > 0 && !tooClose)
-					{
-						Attack(soldierUnit, GameManager.Instance.GetUnit(
-							FindBestPlacedUnit(enemyWorkers)));
-					}
-					// If there are enemy barracks, find the one in the best position to be attacked and attack it
-					else if (enemyBarracks.Count > 0 && !tooClose)
-					{
-						Attack(soldierUnit, GameManager.Instance.GetUnit(
-							FindBestPlacedUnit(enemyBarracks)));
-					}
-					// If there are enemy refineries, find the one in the best position to be attacked and attack it
-					else if (enemyRefineries.Count > 0 && !tooClose)
-					{
-						Attack(soldierUnit, GameManager.Instance.GetUnit(
-							FindBestPlacedUnit(enemyRefineries)));
-					}
-				}
-			}
-		}
-
-		// Process archers
-		public void ProcessArchers()
-		{
-			// For each soldier, determine what they should attack
-			foreach (int archerNbr in myArchers)
-			{
-				// Get the unit
-				Unit archerUnit = GameManager.Instance.GetUnit(archerNbr);
-
-				// If the archer still exists and is idle
-				if (archerUnit != null && archerUnit.CurrentAction == UnitAction.IDLE)
-				{
-					// If there are enemy soldiers, find the one in the best position to be attacked and attack it
-					if (enemySoldiers.Count > 0)
-					{
-						Attack(archerUnit, GameManager.Instance.GetUnit(
-							FindBestPlacedUnit(enemySoldiers)));
-					}
-					// If there are enemy archers, find the one in the best position to be attacked and attack it
-					else if (enemyArchers.Count > 0)
-					{
-						Attack(archerUnit, GameManager.Instance.GetUnit(
-							FindBestPlacedUnit(enemyArchers)));
-					}
-					// If there are enemy workers, find the one in the best position to be attacked and attack it
-					else if (enemyWorkers.Count > 0)
-					{
-						Attack(archerUnit, GameManager.Instance.GetUnit(
-							FindBestPlacedUnit(enemyWorkers)));
-					}
-					// If there are enemy bases, find the one in the best position to be attacked and attack it
-					else if (enemyBases.Count > 0)
-					{
-						Attack(archerUnit, GameManager.Instance.GetUnit(
-							FindBestPlacedUnit(enemyBases)));
-					}
-					// If there are enemy barracks, find the one in the best position to be attacked and attack it
-					else if (enemyBarracks.Count > 0)
-					{
-						Attack(archerUnit, GameManager.Instance.GetUnit(
-							FindBestPlacedUnit(enemyBarracks)));
-					}
-					// If there are enemy refineries, find the one in the best position to be attacked and attack it
-					else if (enemyRefineries.Count > 0)
-					{
-						Attack(archerUnit, GameManager.Instance.GetUnit(
-							FindBestPlacedUnit(enemyRefineries)));
 					}
 				}
 			}
 		}
 
 		/// <summary>
-		/// Creates a bitmap file of your influence map.
+		/// Process the bases
 		/// </summary>
-		/// <param name="map">The float array used to represent the influence map. If you used a different data structure, modify this method to accept it.</param>
-		/// <param name="fileName">The name of the file. Do not include a file extension</param>
-		private void CreateBitmapOfInfluenceMap(float[,] map, string fileName)
+		public void ProcessBases(IGameState state, IAgentActions actions)
 		{
-			System.Drawing.Bitmap b = new System.Drawing.Bitmap(GameManager.Instance.MapSize.x, GameManager.Instance.MapSize.y);
-			for (int x = 0; x < GameManager.Instance.MapSize.x; x++)
+			foreach (int baseNbr in myBases)
 			{
-				for (int y = 0; y < GameManager.Instance.MapSize.y; y++)
+				UnitInfo? info = state.GetUnit(baseNbr);
+				if (info.HasValue && info.Value.IsBuilt
+					&& info.Value.CurrentAction == UnitAction.IDLE && maxIndex == 5)
 				{
-					int value = (int)(map[x, y] * 255);
-					if (map[x, y] < 0.0f)
-						value = 0;
-					if (map[x, y] > 1.0f)
-						value = 255;
-					b.SetPixel(x, y, System.Drawing.Color.FromArgb(value, value, value));
+					actions.Train(baseNbr, UnitType.PAWN);
 				}
 			}
-			b.Save(fileName + ".bmp", System.Drawing.Imaging.ImageFormat.Bmp);
+		}
+
+		/// <summary>
+		/// Process the barracks
+		/// </summary>
+		public void ProcessBarracks(IGameState state, IAgentActions actions)
+		{
+			foreach (int barracksNbr in myBarracks)
+			{
+				UnitInfo? info = state.GetUnit(barracksNbr);
+				if (info.HasValue && info.Value.IsBuilt
+					&& info.Value.CurrentAction == UnitAction.IDLE
+					&& maxIndex == 6)
+				{
+					actions.Train(barracksNbr, UnitType.WARRIOR);
+					lastFighterWasWarrior = true;
+				}
+				else if (info.HasValue && info.Value.IsBuilt
+						 && info.Value.CurrentAction == UnitAction.IDLE
+						 && maxIndex == 7)
+				{
+					actions.Train(barracksNbr, UnitType.ARCHER);
+					lastFighterWasWarrior = false;
+				}
+			}
+		}
+
+		/// <summary>
+		/// Process the warriors
+		/// </summary>
+		public void ProcessWarriors(IGameState state, IAgentActions actions)
+		{
+			foreach (int warriorNbr in myWarriors)
+			{
+				UnitInfo? info = state.GetUnit(warriorNbr);
+				if (info.HasValue && info.Value.CurrentAction == UnitAction.IDLE)
+				{
+					Position warriorPos = info.Value.GridPosition;
+					bool tooClose = false;
+					foreach (int enemy in enemyWarriors)
+					{
+						UnitInfo? enemyInfo = state.GetUnit(enemy);
+						if (!enemyInfo.HasValue) continue;
+						var size = GameConstants.UNIT_SIZE[UnitType.WARRIOR];
+						float sqrMag = size.X * size.X + size.Y * size.Y;
+						if (Position.Distance(warriorPos, enemyInfo.Value.GridPosition)
+							< sqrMag && !tooClose)
+						{
+							tooClose = true;
+							actions.Attack(warriorNbr, enemy);
+						}
+					}
+					if (enemyArchers.Count > 0 && !tooClose)
+					{
+						int target = FindBestPlacedUnit(enemyArchers, state);
+						if (target >= 0) actions.Attack(warriorNbr, target);
+					}
+					else if (enemyWarriors.Count > 0 && !tooClose)
+					{
+						int target = FindBestPlacedUnit(enemyWarriors, state);
+						if (target >= 0) actions.Attack(warriorNbr, target);
+					}
+					else if (enemyBases.Count > 0 && !tooClose)
+					{
+						int target = FindBestPlacedUnit(enemyBases, state);
+						if (target >= 0) actions.Attack(warriorNbr, target);
+					}
+					else if (enemyPawns.Count > 0 && !tooClose)
+					{
+						int target = FindBestPlacedUnit(enemyPawns, state);
+						if (target >= 0) actions.Attack(warriorNbr, target);
+					}
+					else if (enemyBarracks.Count > 0 && !tooClose)
+					{
+						int target = FindBestPlacedUnit(enemyBarracks, state);
+						if (target >= 0) actions.Attack(warriorNbr, target);
+					}
+				}
+			}
+		}
+
+		/// <summary>
+		/// Process archers
+		/// </summary>
+		public void ProcessArchers(IGameState state, IAgentActions actions)
+		{
+			foreach (int archerNbr in myArchers)
+			{
+				UnitInfo? info = state.GetUnit(archerNbr);
+				if (info.HasValue && info.Value.CurrentAction == UnitAction.IDLE)
+				{
+					if (enemyWarriors.Count > 0)
+					{
+						int target = FindBestPlacedUnit(enemyWarriors, state);
+						if (target >= 0) actions.Attack(archerNbr, target);
+					}
+					else if (enemyArchers.Count > 0)
+					{
+						int target = FindBestPlacedUnit(enemyArchers, state);
+						if (target >= 0) actions.Attack(archerNbr, target);
+					}
+					else if (enemyPawns.Count > 0)
+					{
+						int target = FindBestPlacedUnit(enemyPawns, state);
+						if (target >= 0) actions.Attack(archerNbr, target);
+					}
+					else if (enemyBases.Count > 0)
+					{
+						int target = FindBestPlacedUnit(enemyBases, state);
+						if (target >= 0) actions.Attack(archerNbr, target);
+					}
+					else if (enemyBarracks.Count > 0)
+					{
+						int target = FindBestPlacedUnit(enemyBarracks, state);
+						if (target >= 0) actions.Attack(archerNbr, target);
+					}
+				}
+			}
+		}
+
+		private static float Clamp01(float x)
+		{
+			return Math.Max(0f, Math.Min(1f, x));
 		}
 
 		#endregion
@@ -623,47 +475,32 @@ namespace GameManager
 		#region Public Methods
 
 		/// <summary>
-		/// Called when the object is instantiated in the scene 
+		/// Called before each match between two agents.
 		/// </summary>
-		public void Awake()
+		public override void InitializeMatch()
 		{
-			lastFighterWasSoldier = false;
+			// Match initialization
+		}
 
-			buildPositions = new List<Vector3Int>();
+		/// <summary>
+		/// Called at the beginning of each round in a match.
+		/// </summary>
+		public override void InitializeRound(IGameState state)
+		{
+			base.InitializeRound(state);
 
-			FindProspectiveBuildPositions(UnitType.BASE);
-
-			// Set the main mine and base to "non-existant"
-			mainMineNbr = -1;
-			mainBaseNbr = -1;
-
-			// Initialize all of the unit lists
-			mines = new List<int>();
-
-			myWorkers = new List<int>();
-			mySoldiers = new List<int>();
-			myArchers = new List<int>();
-			myBases = new List<int>();
-			myBarracks = new List<int>();
-			myRefineries = new List<int>();
-
-			enemyWorkers = new List<int>();
-			enemySoldiers = new List<int>();
-			enemyArchers = new List<int>();
-			enemyBases = new List<int>();
-			enemyBarracks = new List<int>();
-			enemyRefineries = new List<int>();
+			lastFighterWasWarrior = false;
 
 			// Initialize the list of heuristics
 			heuristics = new List<float>();
-			for (int i = 0; i < 9; i++)
+			for (int i = 0; i < 8; i++)
 			{
 				heuristics.Add(0.0f);
 			}
 
 			// Determine cost for the most expensive type of unit
 			highestCost = 0.0f;
-			foreach (float cost in Constants.COST.Keys)
+			foreach (float cost in GameConstants.COST.Values)
 			{
 				if (cost > highestCost)
 				{
@@ -672,106 +509,27 @@ namespace GameManager
 			}
 
 			// Initialize the influence maps
-			territoryMap = new float[GameManager.Instance.MapSize.x, GameManager.Instance.MapSize.y];
-			enemyMap = new float[GameManager.Instance.MapSize.x, GameManager.Instance.MapSize.y];
-			UpdateTerritoryMap();
-			UpdateEnemyMap();
-		}
-
-		/// <summary>
-		/// Updates the game state for the Agent - called once per frame for GameManager
-		/// Pulls all of the agents from the game and identifies who they belong to
-		/// </summary>
-		public void UpdateGameState()
-		{
-			// Update the common resources
-			mines = GameManager.Instance.GetUnitNbrsOfType(UnitType.MINE);
-
-			// Update all of my unitNbrs
-			myWorkers = GameManager.Instance.GetUnitNbrsOfType(UnitType.WORKER, AgentNbr);
-			mySoldiers = GameManager.Instance.GetUnitNbrsOfType(UnitType.SOLDIER, AgentNbr);
-			myArchers = GameManager.Instance.GetUnitNbrsOfType(UnitType.ARCHER, AgentNbr);
-			myBarracks = GameManager.Instance.GetUnitNbrsOfType(UnitType.BARRACKS, AgentNbr);
-			myBases = GameManager.Instance.GetUnitNbrsOfType(UnitType.BASE, AgentNbr);
-			myRefineries = GameManager.Instance.GetUnitNbrsOfType(UnitType.REFINERY, AgentNbr);
-
-			// Update the enemy agents & unitNbrs
-			List<int> enemyAgentNbrs = GameManager.Instance.GetEnemyAgentNbrs(AgentNbr);
-			if (enemyAgentNbrs.Any())
-			{
-				enemyAgentNbr = enemyAgentNbrs[0];
-				enemyWorkers = GameManager.Instance.GetUnitNbrsOfType(UnitType.WORKER, enemyAgentNbr);
-				enemySoldiers = GameManager.Instance.GetUnitNbrsOfType(UnitType.SOLDIER, enemyAgentNbr);
-				enemyArchers = GameManager.Instance.GetUnitNbrsOfType(UnitType.ARCHER, enemyAgentNbr);
-				enemyBarracks = GameManager.Instance.GetUnitNbrsOfType(UnitType.BARRACKS, enemyAgentNbr);
-				enemyBases = GameManager.Instance.GetUnitNbrsOfType(UnitType.BASE, enemyAgentNbr);
-				enemyRefineries = GameManager.Instance.GetUnitNbrsOfType(UnitType.REFINERY, enemyAgentNbr);
-			}
+			territoryMap = new float[state.MapSize.X, state.MapSize.Y];
+			enemyMap = new float[state.MapSize.X, state.MapSize.Y];
+			UpdateTerritoryMap(state);
+			UpdateEnemyMap(state);
 		}
 
 		/// <summary>
 		/// Called at the end of each round before remaining units are
 		/// destroyed to allow the agent to observe the "win/loss" state
 		/// </summary>
-		public override void Learn()
+		public override void Learn(IGameState state)
 		{
-			Debug.Log("Nbr Wins: " + AgentNbrWins);
-
-			//Debug.Log("PlanningAgent::Learn");
-			Log("value 1");
-			Log("value 2");
-			Log("value 3a, 3b");
-			Log("value 4");
+			// Learning not yet implemented
 		}
 
 		/// <summary>
-		/// Called before each match between two agents.  Matches have
-		/// multiple rounds. 
+		/// Update the GameManager - called once per frame
 		/// </summary>
-		public override void InitializeMatch()
+		public override void Update(IGameState state, IAgentActions actions)
 		{
-			Debug.Log("Moron's: " + AgentName);
-			//Debug.Log("PlanningAgent::InitializeMatch");
-		}
-
-		/// <summary>
-		/// Called at the beginning of each round in a match.
-		/// There are multiple rounds in a single match between two agents.
-		/// </summary>
-		public override void InitializeRound()
-		{
-			//Debug.Log("PlanningAgent::InitializeRound");
-			buildPositions = new List<Vector3Int>();
-
-			FindProspectiveBuildPositions(UnitType.BASE);
-
-			// Set the main mine and base to "non-existent"
-			mainMineNbr = -1;
-			mainBaseNbr = -1;
-
-			// Initialize all of the unit lists
-			mines = new List<int>();
-
-			myWorkers = new List<int>();
-			mySoldiers = new List<int>();
-			myArchers = new List<int>();
-			myBases = new List<int>();
-			myBarracks = new List<int>();
-			myRefineries = new List<int>();
-
-			enemyWorkers = new List<int>();
-			enemySoldiers = new List<int>();
-			enemyArchers = new List<int>();
-			enemyBases = new List<int>();
-			enemyBarracks = new List<int>();
-			enemyRefineries = new List<int>();
-		}
-
-
-		// Update the GameManager - called once per frame
-		public void Update()
-		{
-			UpdateGameState();
+			UpdateGameState(state);
 
 			// If we have at least one base, assume the first one is our "main" base
 			if (myBases.Count > 0)
@@ -786,33 +544,29 @@ namespace GameManager
 			// If we have a base, find the closest mine to the base
 			if (mines.Count > 0 && mainBaseNbr >= 0)
 			{
-				Unit baseUnit = GameManager.Instance.GetUnit(mainBaseNbr);
-				mainMineNbr = FindClosestUnit(baseUnit.GridPosition, mines);
+				UnitInfo? baseInfo = state.GetUnit(mainBaseNbr);
+				if (baseInfo.HasValue)
+				{
+					mainMineNbr = FindClosestUnit(baseInfo.Value.GridPosition, mines, state);
+				}
 			}
 
 			// Update heuristic values for decision making
-			UpdateHeuristics();
+			UpdateHeuristics(state);
 
 			// Process all of the units, prioritize building new structures over
 			// training units in terms of spending gold
-			ProcessWorkers();
+			ProcessPawns(state, actions);
 
-			ProcessSoldiers();
+			ProcessWarriors(state, actions);
 
-			ProcessArchers();
+			ProcessArchers(state, actions);
 
-			ProcessBarracks();
+			ProcessBarracks(state, actions);
 
-			ProcessBases();
-
-			if (Input.GetKeyDown(KeyCode.Space))
-			{
-				CreateBitmapOfInfluenceMap(territoryMap, "PlayerTerritoryInfluenceMap");
-				CreateBitmapOfInfluenceMap(enemyMap, "EnemyTerritoryInfluenceMap");
-			}
+			ProcessBases(state, actions);
 		}
 
 		#endregion
 	}
 }
-
