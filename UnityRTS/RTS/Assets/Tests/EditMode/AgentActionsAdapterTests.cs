@@ -84,7 +84,7 @@ namespace GameManager.Tests
 		public void Train_UnknownBuilding_DoesNotThrow()
 		{
 			Assert.DoesNotThrow(
-				() => adapter.Train(999, UnitType.SOLDIER),
+				() => adapter.Train(999, UnitType.WARRIOR),
 				"Train with an unknown building ID should return early without throwing");
 		}
 
@@ -97,6 +97,105 @@ namespace GameManager.Tests
 			Assert.DoesNotThrow(
 				() => adapter.Attack(999, 998),
 				"Attack with both unknown unit IDs should return early without throwing");
+		}
+
+		// ── Repair ────────────────────────────────────────────────────────────────
+
+		[Test]
+		public void Repair_UnknownPawn_ReturnsUnitNotFound()
+		{
+			var result = adapter.Repair(999, 998);
+			Assert.AreEqual(CommandResult.UNIT_NOT_FOUND, result);
+		}
+
+		// ── Return value assertions ──────────────────────────────────────────────
+
+		[Test]
+		public void Move_UnknownUnit_ReturnsUnitNotFound()
+		{
+			var result = adapter.Move(999, new Position(5, 5));
+			Assert.AreEqual(CommandResult.UNIT_NOT_FOUND, result);
+		}
+
+		[Test]
+		public void Build_UnknownUnit_ReturnsUnitNotFound()
+		{
+			var result = adapter.Build(999, new Position(5, 5), UnitType.BASE);
+			Assert.AreEqual(CommandResult.UNIT_NOT_FOUND, result);
+		}
+
+		[Test]
+		public void Gather_AllUnknown_ReturnsUnitNotFound()
+		{
+			var result = adapter.Gather(999, 998, 997);
+			Assert.AreEqual(CommandResult.UNIT_NOT_FOUND, result);
+		}
+
+		[Test]
+		public void Train_UnknownBuilding_ReturnsUnitNotFound()
+		{
+			var result = adapter.Train(999, UnitType.WARRIOR);
+			Assert.AreEqual(CommandResult.UNIT_NOT_FOUND, result);
+		}
+
+		[Test]
+		public void Attack_BothUnknown_ReturnsUnitNotFound()
+		{
+			var result = adapter.Attack(999, 998);
+			Assert.AreEqual(CommandResult.UNIT_NOT_FOUND, result);
+		}
+
+		// ── Cooldown tests ───────────────────────────────────────────────────────
+		// In EditMode, Time.frameCount is always 0.
+		// After a failure, cooldownExpiry[unit] = 0 + 15 = 15.
+		// Next call: Time.frameCount (0) < 15 → ON_COOLDOWN.
+
+		[Test]
+		public void Move_AfterFailure_ReturnsOnCooldown()
+		{
+			adapter.Move(999, new Position(5, 5)); // fail → triggers cooldown
+			var result = adapter.Move(999, new Position(5, 5));
+			Assert.AreEqual(CommandResult.ON_COOLDOWN, result);
+		}
+
+		[Test]
+		public void Build_AfterFailure_ReturnsOnCooldown()
+		{
+			adapter.Build(999, new Position(5, 5), UnitType.BASE);
+			var result = adapter.Build(999, new Position(5, 5), UnitType.BASE);
+			Assert.AreEqual(CommandResult.ON_COOLDOWN, result);
+		}
+
+		[Test]
+		public void Gather_AfterFailure_ReturnsOnCooldown()
+		{
+			adapter.Gather(999, 998, 997);
+			var result = adapter.Gather(999, 998, 997);
+			Assert.AreEqual(CommandResult.ON_COOLDOWN, result);
+		}
+
+		[Test]
+		public void Train_AfterFailure_ReturnsOnCooldown()
+		{
+			adapter.Train(999, UnitType.WARRIOR);
+			var result = adapter.Train(999, UnitType.WARRIOR);
+			Assert.AreEqual(CommandResult.ON_COOLDOWN, result);
+		}
+
+		[Test]
+		public void Attack_AfterFailure_ReturnsOnCooldown()
+		{
+			adapter.Attack(999, 998);
+			var result = adapter.Attack(999, 998);
+			Assert.AreEqual(CommandResult.ON_COOLDOWN, result);
+		}
+
+		[Test]
+		public void Repair_AfterFailure_ReturnsOnCooldown()
+		{
+			adapter.Repair(999, 998);
+			var result = adapter.Repair(999, 998);
+			Assert.AreEqual(CommandResult.ON_COOLDOWN, result);
 		}
 	}
 }

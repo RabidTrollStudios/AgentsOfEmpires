@@ -26,31 +26,39 @@ namespace AgentSDK
         /// <summary>All gold mines on the map</summary>
         protected List<int> mines;
 
-        /// <summary>Your workers</summary>
-        protected List<int> myWorkers;
-        /// <summary>Your soldiers</summary>
-        protected List<int> mySoldiers;
+        /// <summary>Your pawns</summary>
+        protected List<int> myPawns;
+        /// <summary>Your warriors</summary>
+        protected List<int> myWarriors;
         /// <summary>Your archers</summary>
         protected List<int> myArchers;
         /// <summary>Your bases</summary>
         protected List<int> myBases;
         /// <summary>Your barracks</summary>
         protected List<int> myBarracks;
-        /// <summary>Your refineries</summary>
-        protected List<int> myRefineries;
+        /// <summary>Your archeries</summary>
+        protected List<int> myArchery;
+        /// <summary>Your lancers</summary>
+        protected List<int> myLancers;
+        /// <summary>Your towers</summary>
+        protected List<int> myTowers;
 
-        /// <summary>Enemy workers</summary>
-        protected List<int> enemyWorkers;
-        /// <summary>Enemy soldiers</summary>
-        protected List<int> enemySoldiers;
+        /// <summary>Enemy pawns</summary>
+        protected List<int> enemyPawns;
+        /// <summary>Enemy warriors</summary>
+        protected List<int> enemyWarriors;
         /// <summary>Enemy archers</summary>
         protected List<int> enemyArchers;
         /// <summary>Enemy bases</summary>
         protected List<int> enemyBases;
         /// <summary>Enemy barracks</summary>
         protected List<int> enemyBarracks;
-        /// <summary>Enemy refineries</summary>
-        protected List<int> enemyRefineries;
+        /// <summary>Enemy archeries</summary>
+        protected List<int> enemyArchery;
+        /// <summary>Enemy lancers</summary>
+        protected List<int> enemyLancers;
+        /// <summary>Enemy towers</summary>
+        protected List<int> enemyTowers;
 
         /// <summary>Pre-computed valid build positions for 3x3 structures</summary>
         protected List<Position> buildPositions;
@@ -81,19 +89,23 @@ namespace AgentSDK
             mainBaseNbr = -1;
 
             mines = new List<int>();
-            myWorkers = new List<int>();
-            mySoldiers = new List<int>();
+            myPawns = new List<int>();
+            myWarriors = new List<int>();
             myArchers = new List<int>();
             myBases = new List<int>();
             myBarracks = new List<int>();
-            myRefineries = new List<int>();
+            myArchery = new List<int>();
+            myLancers = new List<int>();
+            myTowers = new List<int>();
 
-            enemyWorkers = new List<int>();
-            enemySoldiers = new List<int>();
+            enemyPawns = new List<int>();
+            enemyWarriors = new List<int>();
             enemyArchers = new List<int>();
             enemyBases = new List<int>();
             enemyBarracks = new List<int>();
-            enemyRefineries = new List<int>();
+            enemyArchery = new List<int>();
+            enemyLancers = new List<int>();
+            enemyTowers = new List<int>();
         }
 
         /// <summary>
@@ -134,20 +146,23 @@ namespace AgentSDK
         {
             mines = new List<int>(state.GetAllUnits(UnitType.MINE));
 
-            myWorkers = new List<int>(state.GetMyUnits(UnitType.WORKER));
-            mySoldiers = new List<int>(state.GetMyUnits(UnitType.SOLDIER));
+            myPawns = new List<int>(state.GetMyUnits(UnitType.PAWN));
+            myWarriors = new List<int>(state.GetMyUnits(UnitType.WARRIOR));
             myArchers = new List<int>(state.GetMyUnits(UnitType.ARCHER));
             myBarracks = new List<int>(state.GetMyUnits(UnitType.BARRACKS));
+            myArchery = new List<int>(state.GetMyUnits(UnitType.ARCHERY));
+            myLancers = new List<int>(state.GetMyUnits(UnitType.LANCER));
+            myTowers = new List<int>(state.GetMyUnits(UnitType.TOWER));
             myBases = new List<int>(state.GetMyUnits(UnitType.BASE));
-            myRefineries = new List<int>(state.GetMyUnits(UnitType.REFINERY));
-
             enemyAgentNbr = state.EnemyAgentNbr;
-            enemyWorkers = new List<int>(state.GetEnemyUnits(UnitType.WORKER));
-            enemySoldiers = new List<int>(state.GetEnemyUnits(UnitType.SOLDIER));
+            enemyPawns = new List<int>(state.GetEnemyUnits(UnitType.PAWN));
+            enemyWarriors = new List<int>(state.GetEnemyUnits(UnitType.WARRIOR));
             enemyArchers = new List<int>(state.GetEnemyUnits(UnitType.ARCHER));
             enemyBarracks = new List<int>(state.GetEnemyUnits(UnitType.BARRACKS));
+            enemyArchery = new List<int>(state.GetEnemyUnits(UnitType.ARCHERY));
+            enemyLancers = new List<int>(state.GetEnemyUnits(UnitType.LANCER));
+            enemyTowers = new List<int>(state.GetEnemyUnits(UnitType.TOWER));
             enemyBases = new List<int>(state.GetEnemyUnits(UnitType.BASE));
-            enemyRefineries = new List<int>(state.GetEnemyUnits(UnitType.REFINERY));
         }
     }
 }

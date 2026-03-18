@@ -67,26 +67,26 @@ namespace PlanningAgent.Tests
         // ------------------------------------------------------------------
 
         [Fact]
-        public void GetPositionsNearUnit_ReturnsRingAround3x3()
+        public void GetPositionsNearUnit_ReturnsRingAroundBase()
         {
             var map = new SimMap(30, 30);
             var positions = map.GetPositionsNearUnit(UnitType.BASE, new Position(10, 10));
 
-            // 4x4 building (BASE): ring around it should have (4+2)*2 + (4)*2 = 20 cells
-            // Top row (6 cells) + bottom row (6 cells) + left col (4 cells) + right col (4 cells) = 20
-            Assert.Equal(20, positions.Count);
+            // 6x4 building (BASE): ring around it should have (6+2)*2 + (4)*2 = 24 cells
+            // Top row (8 cells) + bottom row (8 cells) + left col (4 cells) + right col (4 cells) = 24
+            Assert.Equal(24, positions.Count);
 
             // None should be inside the footprint
-            for (int i = 0; i < 4; i++)
+            for (int i = 0; i < 6; i++)
                 for (int j = 0; j < 4; j++)
                     Assert.DoesNotContain(new Position(10 + i, 10 - j), positions);
         }
 
         [Fact]
-        public void GetPositionsNearUnit_1x1Worker_Returns8Neighbors()
+        public void GetPositionsNearUnit_1x1Pawn_Returns8Neighbors()
         {
             var map = new SimMap(30, 30);
-            var positions = map.GetPositionsNearUnit(UnitType.WORKER, new Position(10, 10));
+            var positions = map.GetPositionsNearUnit(UnitType.PAWN, new Position(10, 10));
 
             // 1x1 unit: ring is 8 surrounding cells
             Assert.Equal(8, positions.Count);
@@ -127,7 +127,7 @@ namespace PlanningAgent.Tests
         public void SetAreaBuildability_MobileUnit_KeepsWalkable()
         {
             var map = new SimMap(30, 30);
-            map.SetAreaBuildability(UnitType.WORKER, new Position(10, 10), false);
+            map.SetAreaBuildability(UnitType.PAWN, new Position(10, 10), false);
 
             Assert.False(map.IsPositionBuildable(new Position(10, 10)));
             // Mobile units keep cells walkable for pathfinding

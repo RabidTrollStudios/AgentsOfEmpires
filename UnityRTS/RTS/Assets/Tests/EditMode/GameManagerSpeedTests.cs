@@ -1,4 +1,5 @@
 using System.Reflection;
+using AgentSDK;
 using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.UI;
@@ -27,8 +28,8 @@ namespace GameManager.Tests
 		{
 			Constants.GAME_SPEED = 1;
 			Constants.CalculateGameConstants();
-			SetPrivateField("HumanCustomDebugText", null);
-			SetPrivateField("OrcCustomDebugText", null);
+			SetPrivateField("BlueCustomDebugText", null);
+			SetPrivateField("RedCustomDebugText", null);
 		}
 
 		// ── Helpers ───────────────────────────────────────────────────────────
@@ -80,13 +81,39 @@ namespace GameManager.Tests
 			Assert.IsTrue(wouldDecrement, "Speed above 1 should pass the decrement guard");
 		}
 
+		// ── Speed relationships after CalculateGameConstants ─────────────────
+
+		[Test]
+		public void MovingSpeed_LancerFasterThanWarriorAndArcher()
+		{
+			Constants.GAME_SPEED = 20;
+			Constants.CalculateGameConstants();
+
+			Assert.Greater(Constants.MOVING_SPEED[UnitType.LANCER],
+				Constants.MOVING_SPEED[UnitType.WARRIOR],
+				"LANCER should move faster than WARRIOR");
+			Assert.Greater(Constants.MOVING_SPEED[UnitType.LANCER],
+				Constants.MOVING_SPEED[UnitType.ARCHER],
+				"LANCER should move faster than ARCHER");
+		}
+
+		[Test]
+		public void MovingSpeed_TowerIsZero()
+		{
+			Constants.GAME_SPEED = 20;
+			Constants.CalculateGameConstants();
+
+			Assert.AreEqual(0f, Constants.MOVING_SPEED[UnitType.TOWER], 0.001f,
+				"TOWER should have zero movement speed");
+		}
+
 		// ── UpdateCustomDebugUI edge cases ────────────────────────────────────
 
 		[Test]
 		public void UpdateCustomDebugUI_BothTextsNull_DoesNotThrow()
 		{
-			SetPrivateField("HumanCustomDebugText", null);
-			SetPrivateField("OrcCustomDebugText", null);
+			SetPrivateField("BlueCustomDebugText", null);
+			SetPrivateField("RedCustomDebugText", null);
 			Assert.DoesNotThrow(() => InvokePrivate("UpdateCustomDebugUI"),
 				"UpdateCustomDebugUI must not throw when both text fields are null");
 		}
@@ -94,23 +121,23 @@ namespace GameManager.Tests
 		[Test]
 		public void UpdateCustomDebugUI_AgentDebuggingFalse_ClearsText()
 		{
-			var go1 = new GameObject("HumanTextGO");
-			var humanText = go1.AddComponent<Text>();
-			var go2 = new GameObject("OrcTextGO");
-			var orcText = go2.AddComponent<Text>();
-			humanText.text = "some agent data";
-			orcText.text = "some agent data";
-			SetPrivateField("HumanCustomDebugText", humanText);
-			SetPrivateField("OrcCustomDebugText", orcText);
+			var go1 = new GameObject("BlueTextGO");
+			var blueText = go1.AddComponent<Text>();
+			var go2 = new GameObject("RedTextGO");
+			var redText = go2.AddComponent<Text>();
+			blueText.text = "some agent data";
+			redText.text = "some agent data";
+			SetPrivateField("BlueCustomDebugText", blueText);
+			SetPrivateField("RedCustomDebugText", redText);
 
 			gm.OnAgentToggleChanged(false);
 			InvokePrivate("UpdateCustomDebugUI");
 
-			Assert.AreEqual("", humanText.text, "HumanCustomDebugText should be cleared when debugging is off");
-			Assert.AreEqual("", orcText.text, "OrcCustomDebugText should be cleared when debugging is off");
+			Assert.AreEqual("", blueText.text, "BlueCustomDebugText should be cleared when debugging is off");
+			Assert.AreEqual("", redText.text, "RedCustomDebugText should be cleared when debugging is off");
 
-			SetPrivateField("HumanCustomDebugText", null);
-			SetPrivateField("OrcCustomDebugText", null);
+			SetPrivateField("BlueCustomDebugText", null);
+			SetPrivateField("RedCustomDebugText", null);
 			Object.DestroyImmediate(go1);
 			Object.DestroyImmediate(go2);
 		}
@@ -119,23 +146,23 @@ namespace GameManager.Tests
 		public void UpdateCustomDebugUI_AgentDebuggingTrue_NoAgents_ClearsText()
 		{
 			// Agents is null in EditMode (InitializeMatch never runs in tests)
-			var go1 = new GameObject("HumanTextGO");
-			var humanText = go1.AddComponent<Text>();
-			var go2 = new GameObject("OrcTextGO");
-			var orcText = go2.AddComponent<Text>();
-			humanText.text = "some agent data";
-			orcText.text = "some agent data";
-			SetPrivateField("HumanCustomDebugText", humanText);
-			SetPrivateField("OrcCustomDebugText", orcText);
+			var go1 = new GameObject("BlueTextGO");
+			var blueText = go1.AddComponent<Text>();
+			var go2 = new GameObject("RedTextGO");
+			var redText = go2.AddComponent<Text>();
+			blueText.text = "some agent data";
+			redText.text = "some agent data";
+			SetPrivateField("BlueCustomDebugText", blueText);
+			SetPrivateField("RedCustomDebugText", redText);
 
 			gm.OnAgentToggleChanged(true);
 			InvokePrivate("UpdateCustomDebugUI");
 
-			Assert.AreEqual("", humanText.text, "HumanCustomDebugText should be cleared with no agents present");
-			Assert.AreEqual("", orcText.text, "OrcCustomDebugText should be cleared with no agents present");
+			Assert.AreEqual("", blueText.text, "BlueCustomDebugText should be cleared with no agents present");
+			Assert.AreEqual("", redText.text, "RedCustomDebugText should be cleared with no agents present");
 
-			SetPrivateField("HumanCustomDebugText", null);
-			SetPrivateField("OrcCustomDebugText", null);
+			SetPrivateField("BlueCustomDebugText", null);
+			SetPrivateField("RedCustomDebugText", null);
 			Object.DestroyImmediate(go1);
 			Object.DestroyImmediate(go2);
 		}

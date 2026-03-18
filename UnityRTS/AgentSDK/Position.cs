@@ -13,6 +13,7 @@ namespace AgentSDK
         /// <summary>Y coordinate on the grid</summary>
         public int Y { get; }
 
+        /// <summary>Create a new position at (<paramref name="x"/>, <paramref name="y"/>)</summary>
         public Position(int x, int y)
         {
             X = x;
@@ -40,14 +41,22 @@ namespace AgentSDK
             new Position(topLeft.X + (size.X - 1) / 2,
                          topLeft.Y - (size.Y - 1) / 2);
 
+        /// <summary>Add two positions component-wise</summary>
         public static Position operator +(Position a, Position b) => new Position(a.X + b.X, a.Y + b.Y);
+        /// <summary>Subtract two positions component-wise</summary>
         public static Position operator -(Position a, Position b) => new Position(a.X - b.X, a.Y - b.Y);
+        /// <summary>Check if two positions are equal</summary>
         public static bool operator ==(Position a, Position b) => a.X == b.X && a.Y == b.Y;
+        /// <summary>Check if two positions are not equal</summary>
         public static bool operator !=(Position a, Position b) => !(a == b);
 
+        /// <inheritdoc/>
         public bool Equals(Position other) => X == other.X && Y == other.Y;
+        /// <inheritdoc/>
         public override bool Equals(object obj) => obj is Position p && Equals(p);
+        /// <inheritdoc/>
         public override int GetHashCode() => X * 397 ^ Y;
+        /// <inheritdoc/>
         public override string ToString() => $"({X}, {Y})";
     }
 }

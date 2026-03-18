@@ -43,7 +43,7 @@ namespace GameManager.Tests.PlayMode
 			SetGmProperty("HasMoveTint",   true);
 			SetGmProperty("HasGatherTint", true);
 			SetGmProperty("HasBuildTint",  true);
-			var unit = PlaceUnit(UnitType.SOLDIER, new Vector3Int(5, 5, 0));
+			var unit = PlaceUnit(UnitType.WARRIOR, new Vector3Int(5, 5, 0));
 			unit.CurrentAction = UnitAction.IDLE;
 
 			unit.LateUpdate();
@@ -59,7 +59,7 @@ namespace GameManager.Tests.PlayMode
 		public IEnumerator LateUpdate_AttackTintOn_AttackIndicatorEnabled()
 		{
 			SetGmProperty("HasAttackTint", true);
-			var unit = PlaceUnit(UnitType.SOLDIER, new Vector3Int(5, 5, 0));
+			var unit = PlaceUnit(UnitType.WARRIOR, new Vector3Int(5, 5, 0));
 			unit.CurrentAction = UnitAction.ATTACK;
 
 			unit.LateUpdate();
@@ -73,7 +73,7 @@ namespace GameManager.Tests.PlayMode
 		public IEnumerator LateUpdate_AttackTintOff_AttackIndicatorDisabled()
 		{
 			SetGmProperty("HasAttackTint", false);
-			var unit = PlaceUnit(UnitType.SOLDIER, new Vector3Int(5, 5, 0));
+			var unit = PlaceUnit(UnitType.WARRIOR, new Vector3Int(5, 5, 0));
 			unit.CurrentAction = UnitAction.ATTACK;
 
 			unit.LateUpdate();
@@ -87,7 +87,7 @@ namespace GameManager.Tests.PlayMode
 		public IEnumerator LateUpdate_MoveTintOn_MoveIndicatorEnabled()
 		{
 			SetGmProperty("HasMoveTint", true);
-			var unit = PlaceUnit(UnitType.WORKER, new Vector3Int(5, 5, 0));
+			var unit = PlaceUnit(UnitType.PAWN, new Vector3Int(5, 5, 0));
 			unit.CurrentAction = UnitAction.MOVE;
 
 			unit.LateUpdate();
@@ -101,7 +101,7 @@ namespace GameManager.Tests.PlayMode
 		public IEnumerator LateUpdate_GatherTintOn_GatherIndicatorEnabled()
 		{
 			SetGmProperty("HasGatherTint", true);
-			var unit = PlaceUnit(UnitType.WORKER, new Vector3Int(5, 5, 0));
+			var unit = PlaceUnit(UnitType.PAWN, new Vector3Int(5, 5, 0));
 			unit.CurrentAction = UnitAction.GATHER;
 
 			unit.LateUpdate();
@@ -115,7 +115,7 @@ namespace GameManager.Tests.PlayMode
 		public IEnumerator LateUpdate_BuildTintOn_BuildIndicatorEnabled()
 		{
 			SetGmProperty("HasBuildTint", true);
-			var unit = PlaceUnit(UnitType.WORKER, new Vector3Int(5, 5, 0));
+			var unit = PlaceUnit(UnitType.PAWN, new Vector3Int(5, 5, 0));
 			unit.CurrentAction = UnitAction.BUILD;
 
 			unit.LateUpdate();
@@ -125,24 +125,5 @@ namespace GameManager.Tests.PlayMode
 			yield return null;
 		}
 
-		[UnityTest]
-		public IEnumerator LateUpdate_InsideMine_AllIndicatorsHidden()
-		{
-			SetGmProperty("HasAttackTint", true);
-			SetGmProperty("HasMoveTint",   true);
-			SetGmProperty("HasGatherTint", true);
-			SetGmProperty("HasBuildTint",  true);
-			var unit = PlaceUnit(UnitType.WORKER, new Vector3Int(5, 5, 0));
-			unit.CurrentAction = UnitAction.GATHER;
-			SetUnitField(unit, "isInsideMine", true);
-
-			unit.LateUpdate();
-
-			Assert.IsFalse(Indicator(unit, "AttackIndicator")?.enabled ?? false, "attack hidden in mine");
-			Assert.IsFalse(Indicator(unit, "MoveIndicator")?.enabled   ?? false, "move hidden in mine");
-			Assert.IsFalse(Indicator(unit, "GatherIndicator")?.enabled ?? false, "gather hidden in mine");
-			Assert.IsFalse(Indicator(unit, "BuildIndicator")?.enabled  ?? false, "build hidden in mine");
-			yield return null;
-		}
 	}
 }

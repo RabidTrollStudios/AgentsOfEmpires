@@ -23,14 +23,14 @@ namespace GameManager
 		private int NbrOfUnits { get; set; }
 
 		/// <summary>
-		/// Prefabs for orc units
+		/// Prefabs for red units
 		/// </summary>
-		public Dictionary<UnitType, GameObject> OrcUnitPrefabs { get; set; }
+		public Dictionary<UnitType, GameObject> RedUnitPrefabs { get; set; }
 
 		/// <summary>
-		/// Prefabs for human units
+		/// Prefabs for blue units
 		/// </summary>
-		public Dictionary<UnitType, GameObject> HumanUnitPrefabs { get; set; }
+		public Dictionary<UnitType, GameObject> BlueUnitPrefabs { get; set; }
 
 		/// <summary>
 		/// Collection of all unit prefabs keyed by agent number
@@ -68,14 +68,41 @@ namespace GameManager
 		/// </summary>
 		public GameObject PlaceUnit(GameObject agent, Vector3Int gridPosition, UnitType unitType, Color color)
 		{
-			Vector3 position = gridPosition + new Vector3(Constants.UNIT_SIZE[unitType].x * 0.5f,
-								   1f - Constants.UNIT_SIZE[unitType].y * 0.5f);
+			Vector3 position;
+			if (Constants.CAN_MOVE[unitType])
+			{
+				// Mobile units: transform at cell bottom so feet align with grid and Y-sort is correct
+				position = gridPosition + new Vector3(Constants.UNIT_SIZE[unitType].x * 0.5f, 0f);
+			}
+			else
+			{
+				// Buildings: transform at center of footprint
+				position = gridPosition + new Vector3(Constants.UNIT_SIZE[unitType].x * 0.5f,
+									   1f - Constants.UNIT_SIZE[unitType].y * 0.5f);
+				// Shift mine sprite so the stone bottom (excluding shadow) aligns with the grid bottom
+				if (unitType == UnitType.MINE)
+					position.y -= 1.01f;
+			}
 
 			GameObject unit = Object.Instantiate(
 				UnitPrefabs[agent.GetComponent<AgentController>().Agent.AgentNbr][unitType],
 				position, Quaternion.identity);
 			unit.AddComponent<Unit>();
+
+			// Sort the body sprite by its pivot (feet) for correct Y-depth against trees
+			var sr = unit.GetComponent<SpriteRenderer>();
+			if (sr != null)
+				sr.spriteSortPoint = SpriteSortPoint.Pivot;
 			unit.GetComponent<Unit>().Initialize(agent, gridPosition, unitType, NbrOfUnits++);
+
+			// Assign buildings and mines to the Buildings layer
+			if (!Constants.CAN_MOVE[unitType])
+			{
+				int buildingsLayer = LayerMask.NameToLayer("Buildings");
+				unit.layer = buildingsLayer;
+				foreach (Transform child in unit.transform)
+					child.gameObject.layer = buildingsLayer;
+			}
 
 			GameObject unitDebugger = Object.Instantiate(prefabs.UnitDebuggerPrefab, gridPosition, Quaternion.identity);
 			unitDebugger.gameObject.GetComponentInChildren<Canvas>().enabled = false;

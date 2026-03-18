@@ -31,6 +31,9 @@ namespace AgentTestHarness
                     case CommandType.Attack:
                         ProcessAttack(unit, cmd.TargetUnitNbr);
                         break;
+                    case CommandType.Repair:
+                        ProcessRepair(unit, cmd.TargetUnitNbr);
+                        break;
                 }
             }
         }
@@ -45,49 +48,49 @@ namespace AgentTestHarness
             unit.PathIndex = 0;
         }
 
-        private void ProcessBuild(SimUnit worker, Position target, UnitType buildingType)
+        private void ProcessBuild(SimUnit pawn, Position target, UnitType buildingType)
         {
             // Re-validate gold (may have been spent by earlier command this tick)
             float cost = GameConstants.COST[buildingType];
-            if (Gold[worker.OwnerAgentNbr] < cost) return;
+            if (Gold[pawn.OwnerAgentNbr] < cost) return;
             if (!Map.IsAreaBuildable(buildingType, target)) return;
 
             // Deduct gold at build start
-            Gold[worker.OwnerAgentNbr] -= (int)cost;
+            Gold[pawn.OwnerAgentNbr] -= (int)cost;
 
             // Place the building immediately (unbuilt)
-            var building = PlaceUnit(worker.OwnerAgentNbr, buildingType, target,
+            var building = PlaceUnit(pawn.OwnerAgentNbr, buildingType, target,
                 GameConstants.HEALTH[buildingType], false);
 
-            // Path worker to a cell adjacent to the building
-            var path = Map.FindPathToUnit(worker.GridPosition, buildingType, target);
+            // Path pawn to a cell adjacent to the building
+            var path = Map.FindPathToUnit(pawn.GridPosition, buildingType, target);
 
-            worker.CurrentAction = UnitAction.BUILD;
-            worker.BuildTarget = buildingType;
-            worker.BuildSite = target;
-            worker.BuildPlaced = true;
-            worker.BuildTimer = creationTime[buildingType];
-            worker.Path = path;
-            worker.PathIndex = 0;
+            pawn.CurrentAction = UnitAction.BUILD;
+            pawn.BuildTarget = buildingType;
+            pawn.BuildSite = target;
+            pawn.BuildPlaced = true;
+            pawn.BuildTimer = creationTime[buildingType];
+            pawn.Path = path;
+            pawn.PathIndex = 0;
         }
 
-        private void ProcessGather(SimUnit worker, int mineNbr, int baseNbr)
+        private void ProcessGather(SimUnit pawn, int mineNbr, int baseNbr)
         {
             if (!Units.TryGetValue(mineNbr, out var mine)) return;
             if (!Units.TryGetValue(baseNbr, out var baseUnit)) return;
 
             // Path to mine
-            var path = Map.FindPathToUnit(worker.GridPosition, UnitType.MINE, mine.GridPosition);
-            if (path.Count == 0 && !IsAdjacentToUnit(worker.GridPosition, UnitType.MINE, mine.GridPosition))
+            var path = Map.FindPathToUnit(pawn.GridPosition, UnitType.MINE, mine.GridPosition);
+            if (path.Count == 0 && !IsAdjacentToUnit(pawn.GridPosition, UnitType.MINE, mine.GridPosition))
                 return;
 
-            worker.CurrentAction = UnitAction.GATHER;
-            worker.GatherMineNbr = mineNbr;
-            worker.GatherBaseNbr = baseNbr;
-            worker.GatherPhase = GatherPhase.TO_MINE;
-            worker.Path = path;
-            worker.PathIndex = 0;
-            worker.MiningTimer = 0f;
+            pawn.CurrentAction = UnitAction.GATHER;
+            pawn.GatherMineNbr = mineNbr;
+            pawn.GatherBaseNbr = baseNbr;
+            pawn.GatherPhase = GatherPhase.TO_MINE;
+            pawn.Path = path;
+            pawn.PathIndex = 0;
+            pawn.MiningTimer = 0f;
         }
 
         private void ProcessTrain(SimUnit building, UnitType unitType)
@@ -117,6 +120,18 @@ namespace AgentTestHarness
             attacker.AttackTargetNbr = targetNbr;
             attacker.Path = path;
             attacker.PathIndex = 0;
+        }
+
+        private void ProcessRepair(SimUnit pawn, int buildingNbr)
+        {
+            if (!Units.TryGetValue(buildingNbr, out var building)) return;
+
+            var path = Map.FindPathToUnit(pawn.GridPosition, building.UnitType, building.GridPosition);
+
+            pawn.CurrentAction = UnitAction.REPAIR;
+            pawn.RepairBuildingNbr = buildingNbr;
+            pawn.Path = path;
+            pawn.PathIndex = 0;
         }
     }
 }

@@ -30,15 +30,15 @@ namespace GameManager.Tests.PlayMode
 		// ── Happy path ─────────────────────────────────────────────────────────
 
 		/// <summary>
-		/// At GAME_SPEED=20: CREATION_TIME[WORKER] = (1/20)*2 = 0.1 s
+		/// At GAME_SPEED=20: CREATION_TIME[PAWN] = (1/20)*2 = 0.1 s
 		/// </summary>
 		[UnityTest]
-		public IEnumerator BaseTrainsWorker_NewWorkerAppearsAfterCreationTime()
+		public IEnumerator BaseTrainsPawn_NewPawnAppearsAfterCreationTime()
 		{
 			Unit baseUnit = PlaceBuiltBase(new Vector3Int(10, 10, 0));
 			int unitsBefore = ctx.UnitManager.GetAllUnits().Count;
 
-			baseUnit.StartTraining(new TrainEventArgs(baseUnit, UnitType.WORKER));
+			baseUnit.StartTraining(new TrainEventArgs(baseUnit, UnitType.PAWN));
 
 			Assert.AreEqual(UnitAction.TRAIN, baseUnit.CurrentAction,
 				"Base should be in TRAIN action after StartTraining");
@@ -47,18 +47,18 @@ namespace GameManager.Tests.PlayMode
 			{
 				TickUnit(baseUnit);
 				return ctx.UnitManager.GetAllUnits().Count > unitsBefore;
-			}, timeoutSeconds: 5f, failMessage: "New worker never appeared after training");
+			}, timeoutSeconds: 5f, failMessage: "New pawn never appeared after training");
 
 			Assert.AreEqual(unitsBefore + 1, ctx.UnitManager.GetAllUnits().Count,
 				"Exactly one new unit should have been created");
 		}
 
 		[UnityTest]
-		public IEnumerator BaseTrainsWorker_ActionIsTrainThenIdle()
+		public IEnumerator BaseTrainsPawn_ActionIsTrainThenIdle()
 		{
 			Unit baseUnit = PlaceBuiltBase(new Vector3Int(10, 10, 0));
 
-			baseUnit.StartTraining(new TrainEventArgs(baseUnit, UnitType.WORKER));
+			baseUnit.StartTraining(new TrainEventArgs(baseUnit, UnitType.PAWN));
 			Assert.AreEqual(UnitAction.TRAIN, baseUnit.CurrentAction);
 
 			yield return WaitUntil(() =>
@@ -71,34 +71,34 @@ namespace GameManager.Tests.PlayMode
 		}
 
 		[UnityTest]
-		public IEnumerator TrainedWorker_HasCorrectTypeAndOccupiesCell()
+		public IEnumerator TrainedPawn_HasCorrectTypeAndOccupiesCell()
 		{
 			Unit baseUnit = PlaceBuiltBase(new Vector3Int(10, 10, 0));
 			int unitsBefore = ctx.UnitManager.GetAllUnits().Count;
 
-			baseUnit.StartTraining(new TrainEventArgs(baseUnit, UnitType.WORKER));
+			baseUnit.StartTraining(new TrainEventArgs(baseUnit, UnitType.PAWN));
 
 			yield return WaitUntil(() =>
 			{
 				TickUnit(baseUnit);
 				return ctx.UnitManager.GetAllUnits().Count > unitsBefore;
-			}, timeoutSeconds: 5f, failMessage: "Trained worker never appeared");
+			}, timeoutSeconds: 5f, failMessage: "Trained pawn never appeared");
 
-			Unit newWorker = ctx.UnitManager.GetAllUnits().Values
+			Unit newPawn = ctx.UnitManager.GetAllUnits().Values
 				.Select(go => go.GetComponent<Unit>())
-				.Where(u => u.UnitType == UnitType.WORKER)
+				.Where(u => u.UnitType == UnitType.PAWN)
 				.OrderByDescending(u => u.UnitNbr)
 				.First();
 
-			Assert.AreEqual(UnitType.WORKER, newWorker.UnitType, "Trained unit should be a WORKER");
-			Assert.IsFalse(ctx.MapManager.IsGridPositionBuildable(newWorker.GridPosition),
-				"Cell occupied by the new worker should not be buildable");
+			Assert.AreEqual(UnitType.PAWN, newPawn.UnitType, "Trained unit should be a PAWN");
+			Assert.IsFalse(ctx.MapManager.IsGridPositionBuildable(newPawn.GridPosition),
+				"Cell occupied by the new pawn should not be buildable");
 		}
 
 		// ── Boundary conditions ────────────────────────────────────────────────
 
 		/// <summary>
-		/// At GAME_SPEED=30 (max): CREATION_TIME[WORKER] ≈ 0.067 s
+		/// At GAME_SPEED=30 (max): CREATION_TIME[PAWN] ≈ 0.067 s
 		/// </summary>
 		[UnityTest]
 		public IEnumerator TrainAtMaxSpeed_CompletesNearlyInstantly()
@@ -112,7 +112,7 @@ namespace GameManager.Tests.PlayMode
 				Unit baseUnit = PlaceBuiltBase(new Vector3Int(10, 10, 0));
 				int unitsBefore = ctx.UnitManager.GetAllUnits().Count;
 
-				baseUnit.StartTraining(new TrainEventArgs(baseUnit, UnitType.WORKER));
+				baseUnit.StartTraining(new TrainEventArgs(baseUnit, UnitType.PAWN));
 
 				yield return WaitUntil(() =>
 				{
@@ -130,23 +130,23 @@ namespace GameManager.Tests.PlayMode
 		}
 
 		[UnityTest]
-		public IEnumerator TrainedWorker_SpawnsOutsideBuildingFootprint()
+		public IEnumerator TrainedPawn_SpawnsOutsideBuildingFootprint()
 		{
 			Vector3Int basePos = new Vector3Int(10, 10, 0);
 			Unit baseUnit = PlaceBuiltBase(basePos);
 			int unitsBefore = ctx.UnitManager.GetAllUnits().Count;
 
-			baseUnit.StartTraining(new TrainEventArgs(baseUnit, UnitType.WORKER));
+			baseUnit.StartTraining(new TrainEventArgs(baseUnit, UnitType.PAWN));
 
 			yield return WaitUntil(() =>
 			{
 				TickUnit(baseUnit);
 				return ctx.UnitManager.GetAllUnits().Count > unitsBefore;
-			}, timeoutSeconds: 5f, failMessage: "Trained worker never appeared");
+			}, timeoutSeconds: 5f, failMessage: "Trained pawn never appeared");
 
-			Unit newWorker = ctx.UnitManager.GetAllUnits().Values
+			Unit newPawn = ctx.UnitManager.GetAllUnits().Values
 				.Select(go => go.GetComponent<Unit>())
-				.Where(u => u.UnitType == UnitType.WORKER)
+				.Where(u => u.UnitType == UnitType.PAWN)
 				.OrderByDescending(u => u.UnitNbr)
 				.First();
 
@@ -156,8 +156,8 @@ namespace GameManager.Tests.PlayMode
 				for (int j = 0; j < baseSize.y; j++)
 					baseCells.Add(basePos + new Vector3Int(i, -j, 0));
 
-			Assert.IsFalse(baseCells.Contains(newWorker.GridPosition),
-				$"Worker spawned at {newWorker.GridPosition} which is inside the base footprint");
+			Assert.IsFalse(baseCells.Contains(newPawn.GridPosition),
+				$"Pawn spawned at {newPawn.GridPosition} which is inside the base footprint");
 		}
 	}
 }

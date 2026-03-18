@@ -12,7 +12,7 @@ namespace GameManager.Tests
 	/// EditMode tests for GameManager round lifecycle methods:
 	/// - UpdateTimerUI
 	/// - SetAllAgentsInactive
-	/// - DeclareRoundWinner (HUMAN branch and ORC branch)
+	/// - DeclareRoundWinner (BLUE branch and RED branch)
 	/// </summary>
 	[TestFixture]
 	public class GameManagerRoundLifecycleTests
@@ -53,12 +53,12 @@ namespace GameManager.Tests
 		private void SetProp(string name, object value) =>
 			typeof(GameManager)
 				.GetProperty(name, BindingFlags.NonPublic | BindingFlags.Instance)
-				?.SetValue(gm, value);
+				.SetValue(gm, value);
 
 		private void SetField(string name, object value) =>
 			typeof(GameManager)
 				.GetField(name, BindingFlags.NonPublic | BindingFlags.Instance)
-				?.SetValue(gm, value);
+				.SetValue(gm, value);
 
 		private void InvokeVoid(string methodName, params object[] args) =>
 			typeof(GameManager)
@@ -146,84 +146,84 @@ namespace GameManager.Tests
 		[Test]
 		public void SetAllAgentsInactive_DeactivatesAllAgentGameObjects()
 		{
-			var humGo = MakeAgentGo(Constants.HUMAN_ABBR, 0);
-			var orcGo = MakeAgentGo(Constants.ORC_ABBR, 1);
+			var blueGo = MakeAgentGo(Constants.BLUE_ABBR, 0);
+			var redGo = MakeAgentGo(Constants.RED_ABBR, 1);
 
 			// SetAllAgentsInactive calls CloseLogFile() → LogFileStream.Close().
 			// Use unique DLL names so each agent writes to a distinct file.
-			humGo.GetComponent<AgentBridge>().OpenLogFile();
-			orcGo.GetComponent<AgentBridge>().OpenLogFile();
+			blueGo.GetComponent<AgentBridge>().OpenLogFile();
+			redGo.GetComponent<AgentBridge>().OpenLogFile();
 
-			SetProp("Agents", new Dictionary<int, GameObject> { { 0, humGo }, { 1, orcGo } });
+			SetProp("Agents", new Dictionary<int, GameObject> { { 0, blueGo }, { 1, redGo } });
 
 			InvokeVoid("SetAllAgentsInactive");
 
-			Assert.IsFalse(humGo.activeSelf,
-				"Human agent GO should be inactive after SetAllAgentsInactive");
-			Assert.IsFalse(orcGo.activeSelf,
-				"Orc agent GO should be inactive after SetAllAgentsInactive");
+			Assert.IsFalse(blueGo.activeSelf,
+				"Blue agent GO should be inactive after SetAllAgentsInactive");
+			Assert.IsFalse(redGo.activeSelf,
+				"Red agent GO should be inactive after SetAllAgentsInactive");
 		}
 
 		// ── DeclareRoundWinner ─────────────────────────────────────────────────
 
 		[Test]
-		public void DeclareRoundWinner_HumanWins_IncrementsHumanScoreAndSetsShowingWinner()
+		public void DeclareRoundWinner_BlueWins_IncrementsBlueScoreAndSetsShowingWinner()
 		{
 			var (gameOverUI, _) = MakeGameOverUI();
-			var humanScoreText = MakeText("HumanScore");
-			var orcScoreText   = MakeText("OrcScore");
+			var blueScoreText = MakeText("BlueScore");
+			var redScoreText   = MakeText("RedScore");
 			var prefabs = MakePrefabs();
 			prefabs.GameOverUI      = gameOverUI;
-			prefabs.HumanScoreText  = humanScoreText;
-			prefabs.OrcScoreText    = orcScoreText;
+			prefabs.BlueScoreText  = blueScoreText;
+			prefabs.RedScoreText    = redScoreText;
 			SetField("Prefabs", prefabs);
 
 			SetProp("AgentWins", new Dictionary<string, int>
 			{
-				{ Constants.HUMAN_ABBR, 0 },
-				{ Constants.ORC_ABBR,   0 }
+				{ Constants.BLUE_ABBR, 0 },
+				{ Constants.RED_ABBR,   0 }
 			});
 
-			var humGo = MakeAgentGo(Constants.HUMAN_ABBR, 0);
-			InvokeVoid("DeclareRoundWinner", humGo);
+			var blueGo = MakeAgentGo(Constants.BLUE_ABBR, 0);
+			InvokeVoid("DeclareRoundWinner", blueGo);
 
 			Assert.IsTrue(gameOverUI.GetComponent<Canvas>().enabled,
 				"GameOverUI Canvas should be enabled after declaring a winner");
-			Assert.AreEqual("1", humanScoreText.text,
-				"HumanScoreText should show 1 after the first human win");
-			Assert.AreEqual(1, GetGameStateInt(),
-				"gameState should be SHOWING_WINNER (1)");
+			Assert.AreEqual("1", blueScoreText.text,
+				"BlueScoreText should show 1 after the first blue win");
+			Assert.AreEqual(2, GetGameStateInt(),
+				"gameState should be SHOWING_WINNER (2)");
 			Assert.AreEqual(1.5f, GetTimeToDisplayBanner(), 0.001f,
 				"TimeToDisplayBanner should be set to 1.5f");
 		}
 
 		[Test]
-		public void DeclareRoundWinner_OrcWins_IncrementsOrcScoreAndSetsShowingWinner()
+		public void DeclareRoundWinner_RedWins_IncrementsRedScoreAndSetsShowingWinner()
 		{
 			var (gameOverUI, _) = MakeGameOverUI();
-			var humanScoreText = MakeText("HumanScore");
-			var orcScoreText   = MakeText("OrcScore");
+			var blueScoreText = MakeText("BlueScore");
+			var redScoreText   = MakeText("RedScore");
 			var prefabs = MakePrefabs();
 			prefabs.GameOverUI      = gameOverUI;
-			prefabs.HumanScoreText  = humanScoreText;
-			prefabs.OrcScoreText    = orcScoreText;
+			prefabs.BlueScoreText  = blueScoreText;
+			prefabs.RedScoreText    = redScoreText;
 			SetField("Prefabs", prefabs);
 
 			SetProp("AgentWins", new Dictionary<string, int>
 			{
-				{ Constants.HUMAN_ABBR, 1 },
-				{ Constants.ORC_ABBR,   0 }
+				{ Constants.BLUE_ABBR, 1 },
+				{ Constants.RED_ABBR,   0 }
 			});
 
-			var orcGo = MakeAgentGo(Constants.ORC_ABBR, 1);
-			InvokeVoid("DeclareRoundWinner", orcGo);
+			var redGo = MakeAgentGo(Constants.RED_ABBR, 1);
+			InvokeVoid("DeclareRoundWinner", redGo);
 
 			Assert.IsTrue(gameOverUI.GetComponent<Canvas>().enabled,
 				"GameOverUI Canvas should be enabled after declaring a winner");
-			Assert.AreEqual("1", orcScoreText.text,
-				"OrcScoreText should show 1 after the first orc win");
-			Assert.AreEqual(1, GetGameStateInt(),
-				"gameState should be SHOWING_WINNER (1)");
+			Assert.AreEqual("1", redScoreText.text,
+				"RedScoreText should show 1 after the first red win");
+			Assert.AreEqual(2, GetGameStateInt(),
+				"gameState should be SHOWING_WINNER (2)");
 		}
 	}
 }

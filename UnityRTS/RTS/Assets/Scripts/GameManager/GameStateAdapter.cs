@@ -97,13 +97,13 @@ namespace GameManager
             => mapManager.IsGridPositionBuildable(new Vector3Int(pos.X, pos.Y, 0));
 
         /// <summary>
-        /// Collects grid positions of all this agent's workers (1x1 units that can move).
+        /// Collects grid positions of all this agent's pawns (1x1 units that can move).
         /// These are excluded from buildability checks because the agent can move them.
         /// </summary>
-        private HashSet<Vector3Int> GetMyWorkerPositions()
+        private HashSet<Vector3Int> GetMyPawnPositions()
         {
             var positions = new HashSet<Vector3Int>();
-            foreach (int unitNbr in unitManager.GetUnitNbrsOfType(AgentSDK.UnitType.WORKER, agentNbr))
+            foreach (int unitNbr in unitManager.GetUnitNbrsOfType(AgentSDK.UnitType.PAWN, agentNbr))
             {
                 var unit = unitManager.GetUnit(unitNbr);
                 if (unit != null)
@@ -113,10 +113,10 @@ namespace GameManager
         }
 
         public bool IsAreaBuildable(AgentSDK.UnitType unitType, Position pos)
-            => mapManager.IsAreaBuildable(unitType, new Vector3Int(pos.X, pos.Y, 0), GetMyWorkerPositions());
+            => mapManager.IsAreaBuildable(unitType, new Vector3Int(pos.X, pos.Y, 0), GetMyPawnPositions());
 
         public bool IsBoundedAreaBuildable(AgentSDK.UnitType unitType, Position pos)
-            => mapManager.IsBoundedAreaBuildable(unitType, new Vector3Int(pos.X, pos.Y, 0), GetMyWorkerPositions());
+            => mapManager.IsBoundedAreaBuildable(unitType, new Vector3Int(pos.X, pos.Y, 0), GetMyPawnPositions());
 
         public IReadOnlyList<Position> GetPathBetween(Position start, Position end)
         {
@@ -202,7 +202,7 @@ namespace GameManager
 
         public IReadOnlyList<Position> FindProspectiveBuildPositions(AgentSDK.UnitType unitType)
         {
-            var workerPositions = GetMyWorkerPositions();
+            var pawnPositions = GetMyPawnPositions();
             var result = new List<Position>();
             for (int i = 0; i < mapManager.MapSize.x; ++i)
             {
@@ -210,7 +210,7 @@ namespace GameManager
                 {
                     var testPos = new Vector3Int(i, j, 0);
                     if (Utility.IsValidGridLocation(testPos)
-                        && mapManager.IsBoundedAreaBuildable(unitType, testPos, workerPositions))
+                        && mapManager.IsBoundedAreaBuildable(unitType, testPos, pawnPositions))
                     {
                         result.Add(new Position(i, j));
                     }

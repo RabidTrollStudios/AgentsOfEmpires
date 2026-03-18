@@ -53,11 +53,11 @@ namespace GameManager.Tests.PlayMode
 			int goldBefore = agent.Gold;
 			int baseCost = (int)Constants.COST[UnitType.BASE];
 
-			Unit worker = PlaceUnit(UnitType.WORKER, new Vector3Int(9, 10, 0));
-			worker.StartBuilding(new BuildEventArgs(worker, new Vector3Int(10, 10, 0), UnitType.BASE));
+			Unit pawn = PlaceUnit(UnitType.PAWN, new Vector3Int(9, 10, 0));
+			pawn.StartBuilding(new BuildEventArgs(pawn, new Vector3Int(10, 10, 0), UnitType.BASE));
 
-			Assert.AreEqual(UnitAction.BUILD, worker.CurrentAction,
-				"Worker should start building");
+			Assert.AreEqual(UnitAction.BUILD, pawn.CurrentAction,
+				"Pawn should start building");
 			Assert.AreEqual(goldBefore - baseCost, agent.Gold,
 				"Gold should drop by BASE cost immediately");
 
@@ -65,43 +65,43 @@ namespace GameManager.Tests.PlayMode
 		}
 
 		/// <summary>
-		/// Training a WORKER from BASE deducts the WORKER cost.
+		/// Training a PAWN from BASE deducts the PAWN cost.
 		/// </summary>
 		[UnityTest]
-		public IEnumerator TrainWorker_DeductsCorrectCost()
+		public IEnumerator TrainPawn_DeductsCorrectCost()
 		{
 			Unit baseUnit = PlaceUnit(UnitType.BASE, new Vector3Int(10, 10, 0));
 			baseUnit.IsBuilt = true;
 
 			Agent agent = GetAgent0();
 			int goldBefore = agent.Gold;
-			int workerCost = (int)Constants.COST[UnitType.WORKER];
+			int pawnCost = (int)Constants.COST[UnitType.PAWN];
 
-			baseUnit.StartTraining(new TrainEventArgs(baseUnit, UnitType.WORKER));
+			baseUnit.StartTraining(new TrainEventArgs(baseUnit, UnitType.PAWN));
 
-			Assert.AreEqual(goldBefore - workerCost, agent.Gold,
-				"Gold should drop by WORKER cost when training starts");
+			Assert.AreEqual(goldBefore - pawnCost, agent.Gold,
+				"Gold should drop by PAWN cost when training starts");
 
 			yield return null;
 		}
 
 		/// <summary>
-		/// Training a SOLDIER from BARRACKS deducts the SOLDIER cost.
+		/// Training a WARRIOR from BARRACKS deducts the WARRIOR cost.
 		/// </summary>
 		[UnityTest]
-		public IEnumerator TrainSoldier_DeductsCorrectCost()
+		public IEnumerator TrainWarrior_DeductsCorrectCost()
 		{
 			Unit barracks = PlaceUnit(UnitType.BARRACKS, new Vector3Int(10, 10, 0));
 			barracks.IsBuilt = true;
 
 			Agent agent = GetAgent0();
 			int goldBefore = agent.Gold;
-			int soldierCost = (int)Constants.COST[UnitType.SOLDIER];
+			int warriorCost = (int)Constants.COST[UnitType.WARRIOR];
 
-			barracks.StartTraining(new TrainEventArgs(barracks, UnitType.SOLDIER));
+			barracks.StartTraining(new TrainEventArgs(barracks, UnitType.WARRIOR));
 
-			Assert.AreEqual(goldBefore - soldierCost, agent.Gold,
-				"Gold should drop by SOLDIER cost when BARRACKS starts training");
+			Assert.AreEqual(goldBefore - warriorCost, agent.Gold,
+				"Gold should drop by WARRIOR cost when BARRACKS starts training");
 
 			yield return null;
 		}
@@ -117,11 +117,11 @@ namespace GameManager.Tests.PlayMode
 			agent.Gold = (int)(Constants.COST[UnitType.BASE] * 2);
 			int startGold = agent.Gold;
 
-			Unit w1 = PlaceUnit(UnitType.WORKER, new Vector3Int(9, 10, 0));
-			Unit w2 = PlaceUnit(UnitType.WORKER, new Vector3Int(9, 14, 0));
+			Unit w1 = PlaceUnit(UnitType.PAWN, new Vector3Int(9, 10, 0));
+			Unit w2 = PlaceUnit(UnitType.PAWN, new Vector3Int(9, 14, 0));
 
 			w1.StartBuilding(new BuildEventArgs(w1, new Vector3Int(10, 10, 0), UnitType.BASE));
-			// BASE requires BASE cost, not WORKER cost — this is the second build
+			// BASE requires BASE cost, not PAWN cost — this is the second build
 			int afterFirstBuild = agent.Gold;
 
 			// We only test one build to keep it simple
@@ -144,10 +144,10 @@ namespace GameManager.Tests.PlayMode
 			Agent agent = GetAgent0();
 			agent.Gold = 1; // Not enough for BASE
 
-			Unit worker = PlaceUnit(UnitType.WORKER, new Vector3Int(9, 10, 0));
-			worker.StartBuilding(new BuildEventArgs(worker, new Vector3Int(10, 10, 0), UnitType.BASE));
+			Unit pawn = PlaceUnit(UnitType.PAWN, new Vector3Int(9, 10, 0));
+			pawn.StartBuilding(new BuildEventArgs(pawn, new Vector3Int(10, 10, 0), UnitType.BASE));
 
-			Assert.AreNotEqual(UnitAction.BUILD, worker.CurrentAction,
+			Assert.AreNotEqual(UnitAction.BUILD, pawn.CurrentAction,
 				"Build should be rejected with insufficient gold");
 			Assert.AreEqual(1, agent.Gold,
 				"Gold should remain unchanged when build is rejected");
@@ -159,7 +159,7 @@ namespace GameManager.Tests.PlayMode
 		/// When gold is insufficient, a train command is rejected and gold unchanged.
 		/// </summary>
 		[UnityTest]
-		public IEnumerator InsufficientGold_TrainSoldier_Rejected()
+		public IEnumerator InsufficientGold_TrainWarrior_Rejected()
 		{
 			Unit barracks = PlaceUnit(UnitType.BARRACKS, new Vector3Int(10, 10, 0));
 			barracks.IsBuilt = true;
@@ -167,7 +167,7 @@ namespace GameManager.Tests.PlayMode
 			Agent agent = GetAgent0();
 			agent.Gold = 1;
 
-			barracks.StartTraining(new TrainEventArgs(barracks, UnitType.SOLDIER));
+			barracks.StartTraining(new TrainEventArgs(barracks, UnitType.WARRIOR));
 
 			Assert.AreEqual(UnitAction.IDLE, barracks.CurrentAction,
 				"Train should be rejected with insufficient gold");
@@ -182,28 +182,29 @@ namespace GameManager.Tests.PlayMode
 		#region Gold Earning
 
 		/// <summary>
-		/// Gold increases after a worker completes a gather round trip.
+		/// Gold increases after a pawn completes a gather round trip.
 		/// </summary>
 		[UnityTest]
 		public IEnumerator GatherRoundTrip_GoldIncreases()
 		{
 			Unit baseUnit = PlaceUnit(UnitType.BASE, new Vector3Int(5, 5, 0));
 			baseUnit.IsBuilt = true;
-			Unit mine = PlaceUnit(UnitType.MINE, new Vector3Int(15, 5, 0));
-			Unit worker = PlaceUnit(UnitType.WORKER, new Vector3Int(8, 5, 0));
+			Unit mine = PlaceUnit(UnitType.MINE, new Vector3Int(20, 10, 0));
+			// Pawn must be outside the BASE footprint (6x4: x=[5,10], y=[2,5])
+			Unit pawn = PlaceUnit(UnitType.PAWN, new Vector3Int(12, 10, 0));
 
 			Agent agent = GetAgent0();
 			int initialGold = agent.Gold;
 
-			worker.StartGathering(new GatherEventArgs(worker, mine, baseUnit));
+			pawn.StartGathering(new GatherEventArgs(pawn, mine, baseUnit));
 
 			yield return WaitUntil(
 				() => agent.Gold > initialGold,
-				timeoutSeconds: 30f,
+				timeoutSeconds: 10f,
 				failMessage: "Gold did not increase after gather round trip");
 
 			Assert.Greater(agent.Gold, initialGold,
-				"Agent gold should increase after worker deposits resources");
+				"Agent gold should increase after pawn deposits resources");
 		}
 
 		/// <summary>
@@ -214,19 +215,20 @@ namespace GameManager.Tests.PlayMode
 		{
 			Unit baseUnit = PlaceUnit(UnitType.BASE, new Vector3Int(5, 5, 0));
 			baseUnit.IsBuilt = true;
-			Unit mine = PlaceUnit(UnitType.MINE, new Vector3Int(10, 5, 0));
-			Unit worker = PlaceUnit(UnitType.WORKER, new Vector3Int(8, 5, 0));
+			Unit mine = PlaceUnit(UnitType.MINE, new Vector3Int(20, 10, 0));
+			// Pawn must be outside the BASE footprint (6x4: x=[5,10], y=[2,5])
+			Unit pawn = PlaceUnit(UnitType.PAWN, new Vector3Int(12, 10, 0));
 
 			Agent agent = GetAgent0();
 			int initialGold = agent.Gold;
 
-			worker.StartGathering(new GatherEventArgs(worker, mine, baseUnit));
+			pawn.StartGathering(new GatherEventArgs(pawn, mine, baseUnit));
 
 			// Wait for at least two deposits (gold to exceed initial + 1 capacity)
-			int expectedMinGold = initialGold + (int)(Constants.MINING_CAPACITY[UnitType.WORKER] * 2);
+			int expectedMinGold = initialGold + (int)(Constants.MINING_CAPACITY[UnitType.PAWN] * 2);
 			yield return WaitUntil(
 				() => agent.Gold >= expectedMinGold,
-				timeoutSeconds: 60f,
+				timeoutSeconds: 15f,
 				failMessage: "Gold did not compound over two gather trips");
 
 			Assert.GreaterOrEqual(agent.Gold, expectedMinGold,

@@ -1,12 +1,24 @@
-=== EditMode Test Run: 2026-03-02 02:20:48 ===
-Result: Passed  |  Duration: 1.01s
-Passed: 315  Failed: 0  Skipped: 0
+=== EditMode Test Run: 2026-03-16 20:32:25 ===
+Result: Passed  |  Duration: 1.28s
+Passed: 386  Failed: 0  Skipped: 0
 
+          [PASS] GameManager.Tests.AgentActionsAdapterTests.Attack_AfterFailure_ReturnsOnCooldown
+          [PASS] GameManager.Tests.AgentActionsAdapterTests.Attack_BothUnknown_ReturnsUnitNotFound
           [PASS] GameManager.Tests.AgentActionsAdapterTests.Attack_BothUnknownUnits_DoesNotThrow
+          [PASS] GameManager.Tests.AgentActionsAdapterTests.Build_AfterFailure_ReturnsOnCooldown
           [PASS] GameManager.Tests.AgentActionsAdapterTests.Build_UnknownUnit_DoesNotThrow
+          [PASS] GameManager.Tests.AgentActionsAdapterTests.Build_UnknownUnit_ReturnsUnitNotFound
+          [PASS] GameManager.Tests.AgentActionsAdapterTests.Gather_AfterFailure_ReturnsOnCooldown
+          [PASS] GameManager.Tests.AgentActionsAdapterTests.Gather_AllUnknown_ReturnsUnitNotFound
           [PASS] GameManager.Tests.AgentActionsAdapterTests.Gather_AllUnknownUnits_DoesNotThrow
+          [PASS] GameManager.Tests.AgentActionsAdapterTests.Move_AfterFailure_ReturnsOnCooldown
           [PASS] GameManager.Tests.AgentActionsAdapterTests.Move_UnknownUnit_DoesNotThrow
+          [PASS] GameManager.Tests.AgentActionsAdapterTests.Move_UnknownUnit_ReturnsUnitNotFound
+          [PASS] GameManager.Tests.AgentActionsAdapterTests.Repair_AfterFailure_ReturnsOnCooldown
+          [PASS] GameManager.Tests.AgentActionsAdapterTests.Repair_UnknownPawn_ReturnsUnitNotFound
+          [PASS] GameManager.Tests.AgentActionsAdapterTests.Train_AfterFailure_ReturnsOnCooldown
           [PASS] GameManager.Tests.AgentActionsAdapterTests.Train_UnknownBuilding_DoesNotThrow
+          [PASS] GameManager.Tests.AgentActionsAdapterTests.Train_UnknownBuilding_ReturnsUnitNotFound
           [PASS] GameManager.Tests.AgentControllerTests.Update_AgentNull_DoesNotThrow
           [PASS] GameManager.Tests.AgentLoaderTests.Constructor_StoresPathToDLLs
           [PASS] GameManager.Tests.AgentLoaderTests.GetDLLNamesFromDir_EmptyDirectory_ReturnsEmptyList
@@ -49,65 +61,79 @@ Passed: 315  Failed: 0  Skipped: 0
           [PASS] GameManager.Tests.AStarPathPropertiesTests.PathIsContiguous
           [PASS] GameManager.Tests.AStarPathPropertiesTests.ResetSearch_ClearsAllNodes
           [PASS] GameManager.Tests.AStarPathPropertiesTests.RunTwice_SecondSearchValid
+          [PASS] GameManager.Tests.CameraControllerTests.CameraController_RequiresCamera
+          [PASS] GameManager.Tests.CameraControllerTests.Start_InitializesDraggingFlags
+          [PASS] GameManager.Tests.CameraControllerTests.Update_LeftDragActive_NoInput_DragFlagPersists
+          [PASS] GameManager.Tests.CameraControllerTests.Update_NoInput_CameraPositionUnchanged
+          [PASS] GameManager.Tests.CameraControllerTests.Update_NoInput_DoesNotThrow
+          [PASS] GameManager.Tests.CameraControllerTests.Update_NoInput_DraggingFlagsRemainFalse
+          [PASS] GameManager.Tests.CameraControllerTests.Update_NoInput_ZoomUnchanged
+          [PASS] GameManager.Tests.CameraControllerTests.Update_RightDragActive_NoInput_DragFlagPersists
           [PASS] GameManager.Tests.ConstantsAttackSizeTests.AttackRange_AllNonNegative
           [PASS] GameManager.Tests.ConstantsAttackSizeTests.AttackRange_CombatUnits_HavePositiveRange
           [PASS] GameManager.Tests.ConstantsAttackSizeTests.AttackRange_ConsistentWithCanAttack
-          [PASS] GameManager.Tests.ConstantsAttackSizeTests.AttackRange_HasAllSevenUnitTypes
+          [PASS] GameManager.Tests.ConstantsAttackSizeTests.AttackRange_HasAllNineUnitTypes
           [PASS] GameManager.Tests.ConstantsAttackSizeTests.AttackRange_NonCombatUnits_HaveZeroRange
           [PASS] GameManager.Tests.ConstantsAttackSizeTests.UnitSize_AllNonNegativeDimensions
           [PASS] GameManager.Tests.ConstantsAttackSizeTests.UnitSize_Buildings_LargerThanOneByOne
-          [PASS] GameManager.Tests.ConstantsAttackSizeTests.UnitSize_HasAllSevenUnitTypes
+          [PASS] GameManager.Tests.ConstantsAttackSizeTests.UnitSize_HasAllNineUnitTypes
           [PASS] GameManager.Tests.ConstantsAttackSizeTests.UnitSize_MobileUnits_AreOneByOne
-          [PASS] GameManager.Tests.ConstantsCapabilityDictTests.CanAttack_HasAllSevenUnitTypes
-          [PASS] GameManager.Tests.ConstantsCapabilityDictTests.CanBuild_HasAllSevenUnitTypes
-          [PASS] GameManager.Tests.ConstantsCapabilityDictTests.CanGather_HasAllSevenUnitTypes
-          [PASS] GameManager.Tests.ConstantsCapabilityDictTests.CanMove_HasAllSevenUnitTypes
-          [PASS] GameManager.Tests.ConstantsCapabilityDictTests.CanTrain_HasAllSevenUnitTypes
+          [PASS] GameManager.Tests.ConstantsCapabilityDictTests.CanAttack_HasAllNineUnitTypes
+          [PASS] GameManager.Tests.ConstantsCapabilityDictTests.CanBuild_HasAllNineUnitTypes
+          [PASS] GameManager.Tests.ConstantsCapabilityDictTests.CanGather_HasAllNineUnitTypes
+          [PASS] GameManager.Tests.ConstantsCapabilityDictTests.CanMove_HasAllNineUnitTypes
+          [PASS] GameManager.Tests.ConstantsCapabilityDictTests.CanTrain_HasAllNineUnitTypes
           [PASS] GameManager.Tests.ConstantsCapabilityDictTests.Immobile_AlsoCannotAttack
           [PASS] GameManager.Tests.ConstantsCapabilityDictTests.Immobile_AlsoCannotGather
           [PASS] GameManager.Tests.ConstantsCapabilityDictTests.NoBuildAndTrainOverlap
-          [PASS] GameManager.Tests.ConstantsCapabilityTests.AttackRange_ArcherGreaterThanSoldier
-          [PASS] GameManager.Tests.ConstantsCapabilityTests.CanAttack_OnlySoldierAndArcherAreTrue
-          [PASS] GameManager.Tests.ConstantsCapabilityTests.CanBuild_OnlyWorkerIsTrue
-          [PASS] GameManager.Tests.ConstantsCapabilityTests.CanGather_OnlyWorkerIsTrue
+          [PASS] GameManager.Tests.ConstantsCapabilityTests.AttackRange_ArcherGreaterThanWarrior
+          [PASS] GameManager.Tests.ConstantsCapabilityTests.AttackRange_LancerBetweenWarriorAndArcher
+          [PASS] GameManager.Tests.ConstantsCapabilityTests.CanAttack_OnlyCombatUnitsAreTrue
+          [PASS] GameManager.Tests.ConstantsCapabilityTests.CanBuild_OnlyPawnIsTrue
+          [PASS] GameManager.Tests.ConstantsCapabilityTests.CanGather_OnlyPawnIsTrue
           [PASS] GameManager.Tests.ConstantsCapabilityTests.CanMove_OnlyMobileUnitsAreTrue
-          [PASS] GameManager.Tests.ConstantsCapabilityTests.CanTrain_OnlyBaseAndBarracksAreTrue
+          [PASS] GameManager.Tests.ConstantsCapabilityTests.CanTrain_OnlyTrainerBuildingsAreTrue
           [PASS] GameManager.Tests.ConstantsCapabilityTests.Dependency_BarracksDependsOnBase
           [PASS] GameManager.Tests.ConstantsCapabilityTests.Dependency_BaseHasNoDependencies
-          [PASS] GameManager.Tests.ConstantsCapabilityTests.Dependency_RefineryDependsOnBase
+          [PASS] GameManager.Tests.ConstantsCapabilityTests.Dependency_TowerDependsOnBase
+          [PASS] GameManager.Tests.ConstantsCapabilityTests.PawnBuilds_BaseBarracksArcheryTower
           [PASS] GameManager.Tests.ConstantsCapabilityTests.TrainsMatrix_CorrectUnitTypes
           [PASS] GameManager.Tests.ConstantsCapabilityTests.TrainsMatrix_DoesNotContainWrongTypes
-          [PASS] GameManager.Tests.ConstantsCapabilityTests.UnitValue_CombatUnitsWorthMoreThanWorker
+          [PASS] GameManager.Tests.ConstantsCapabilityTests.UnitValue_CombatUnitsWorthMoreThanPawn
           [PASS] GameManager.Tests.ConstantsCapabilityTests.UnitValue_MineIsZero
-          [PASS] GameManager.Tests.ConstantsCapabilityTests.WorkerBuilds_BaseBarracksRefinery
           [PASS] GameManager.Tests.ConstantsHealthTests.Health_AllValuesPositive
-          [PASS] GameManager.Tests.ConstantsHealthTests.Health_BarracksGreaterThanWorker
-          [PASS] GameManager.Tests.ConstantsHealthTests.Health_BaseGreaterThanWorker
-          [PASS] GameManager.Tests.ConstantsHealthTests.Health_CombatUnitsGreaterThanWorker
+          [PASS] GameManager.Tests.ConstantsHealthTests.Health_BarracksGreaterThanPawn
+          [PASS] GameManager.Tests.ConstantsHealthTests.Health_BaseGreaterThanPawn
+          [PASS] GameManager.Tests.ConstantsHealthTests.Health_CombatUnitsGreaterThanPawn
           [PASS] GameManager.Tests.ConstantsHealthTests.Health_DictionaryIsNotNull
-          [PASS] GameManager.Tests.ConstantsHealthTests.Health_HasAllSevenUnitTypes
+          [PASS] GameManager.Tests.ConstantsHealthTests.Health_HasAllNineUnitTypes
           [PASS] GameManager.Tests.ConstantsHealthTests.Health_MineLargerThanCombatUnits
+          [PASS] GameManager.Tests.ConstantsHealthTests.Health_TowerGreaterThanPawn
           [PASS] GameManager.Tests.ConstantsTests.CostDelegatedFromSDK
           [PASS] GameManager.Tests.ConstantsTests.HealthMine_MatchesStartingGold
           [PASS] GameManager.Tests.ConstantsTests.ImmobileUnits_ZeroSpeed
           [PASS] GameManager.Tests.ConstantsTests.MaxSpeed_CreationTimeInverse
           [PASS] GameManager.Tests.ConstantsTests.NonCombatants_ZeroDamage
-          [PASS] GameManager.Tests.ConstantsTests.Speed1_SoldierDamage
-          [PASS] GameManager.Tests.ConstantsTests.Speed1_WorkerMovingSpeed
-          [PASS] GameManager.Tests.ConstantsTests.Speed3_SoldierDamageScales
-          [PASS] GameManager.Tests.ConstantsTests.Speed5_WorkerMovingSpeedScales
+          [PASS] GameManager.Tests.ConstantsTests.Speed1_PawnMovingSpeed
+          [PASS] GameManager.Tests.ConstantsTests.Speed1_WarriorDamage
+          [PASS] GameManager.Tests.ConstantsTests.Speed3_WarriorDamageScales
+          [PASS] GameManager.Tests.ConstantsTests.Speed5_PawnMovingSpeedScales
           [PASS] GameManager.Tests.ConstantsTests.SpeedZero_CreationTimeIsExplicitInfinity
           [PASS] GameManager.Tests.ConstantsUnitValueTests.UnitValue_AllNonNegative
           [PASS] GameManager.Tests.ConstantsUnitValueTests.UnitValue_Archer_IsFive
-          [PASS] GameManager.Tests.ConstantsUnitValueTests.UnitValue_ArcherGreaterThanSoldier
+          [PASS] GameManager.Tests.ConstantsUnitValueTests.UnitValue_ArcherGreaterThanWarrior
+          [PASS] GameManager.Tests.ConstantsUnitValueTests.UnitValue_Archery_IsThree
           [PASS] GameManager.Tests.ConstantsUnitValueTests.UnitValue_Barracks_IsThree
           [PASS] GameManager.Tests.ConstantsUnitValueTests.UnitValue_BarracksGreaterThanBase
           [PASS] GameManager.Tests.ConstantsUnitValueTests.UnitValue_Base_IsTwo
-          [PASS] GameManager.Tests.ConstantsUnitValueTests.UnitValue_BaseGreaterThanWorker
-          [PASS] GameManager.Tests.ConstantsUnitValueTests.UnitValue_HasAllSevenUnitTypes
+          [PASS] GameManager.Tests.ConstantsUnitValueTests.UnitValue_BaseGreaterThanPawn
+          [PASS] GameManager.Tests.ConstantsUnitValueTests.UnitValue_HasAllNineUnitTypes
+          [PASS] GameManager.Tests.ConstantsUnitValueTests.UnitValue_Lancer_IsFive
+          [PASS] GameManager.Tests.ConstantsUnitValueTests.UnitValue_LancerEqualsArcher
           [PASS] GameManager.Tests.ConstantsUnitValueTests.UnitValue_Mine_IsZero
-          [PASS] GameManager.Tests.ConstantsUnitValueTests.UnitValue_Soldier_IsFour
-          [PASS] GameManager.Tests.ConstantsUnitValueTests.UnitValue_WorkerAndRefinery_AreOne
+          [PASS] GameManager.Tests.ConstantsUnitValueTests.UnitValue_Pawn_IsOne
+          [PASS] GameManager.Tests.ConstantsUnitValueTests.UnitValue_Tower_IsThree
+          [PASS] GameManager.Tests.ConstantsUnitValueTests.UnitValue_Warrior_IsFour
           [PASS] GameManager.Tests.DirectionMappingTests.Direction_E_MapsToRight
           [PASS] GameManager.Tests.DirectionMappingTests.Direction_N_MapsToUp
           [PASS] GameManager.Tests.DirectionMappingTests.Direction_NE_MapsToUpperRight
@@ -123,8 +149,8 @@ Passed: 315  Failed: 0  Skipped: 0
           [PASS] GameManager.Tests.GameManagerCoreTests.DetermineRoundsCompleted_AllZero_ReturnsZero
           [PASS] GameManager.Tests.GameManagerCoreTests.DetermineRoundsCompleted_EmptyDictionary_ReturnsZero
           [PASS] GameManager.Tests.GameManagerCoreTests.DetermineRoundsCompleted_SumsAllWins
-          [PASS] GameManager.Tests.GameManagerCoreTests.FindMirroredLocation_OriginWorker_ReturnsMapEdge
-          [PASS] GameManager.Tests.GameManagerCoreTests.FindMirroredLocation_Worker_MirrorsCorrectly
+          [PASS] GameManager.Tests.GameManagerCoreTests.FindMirroredLocation_OriginPawn_ReturnsMapEdge
+          [PASS] GameManager.Tests.GameManagerCoreTests.FindMirroredLocation_Pawn_MirrorsCorrectly
           [PASS] GameManager.Tests.GameManagerCoreTests.GetAgent_ReturnsAgentForAgentNbr
           [PASS] GameManager.Tests.GameManagerCoreTests.GetEnemyAgentNbrs_SingleAgent_ReturnsEmpty
           [PASS] GameManager.Tests.GameManagerCoreTests.GetEnemyAgentNbrs_TwoAgents_Agent0_ReturnsAgent1
@@ -144,15 +170,32 @@ Passed: 315  Failed: 0  Skipped: 0
           [PASS] GameManager.Tests.GameManagerDebugBindingsTests.DebugBinding8_Execute_TogglesHasTargetLineTint
           [PASS] GameManager.Tests.GameManagerDebugBindingsTests.InitializeDebugToggles_PopulatesNineBindings
           [PASS] GameManager.Tests.GameManagerDebugBindingsTests.ProcessUserInput_NullBindings_DoesNotThrow
-          [PASS] GameManager.Tests.GameManagerResultsDisplayTests.DisplayMultiAgentResults_Agent0IsHuman_UsesAgent0AsRepresentative
-          [PASS] GameManager.Tests.GameManagerResultsDisplayTests.DisplayMultiAgentResults_Agent0IsOrc_UsesAgent1AsRepresentative
+          [PASS] GameManager.Tests.GameManagerLearnToggleTests.BigBarBase_DelegatesToPrefabs
+          [PASS] GameManager.Tests.GameManagerLearnToggleTests.GoldResourceSprite_DelegatesToPrefabs
+          [PASS] GameManager.Tests.GameManagerLearnToggleTests.HandleSpeedInput_NoKeysPressed_DoesNotChangeSpeed
+          [PASS] GameManager.Tests.GameManagerLearnToggleTests.InitializeDebugToggles_WithAgentToggle_SetsIsOnTrueAndRegistersListener
+          [PASS] GameManager.Tests.GameManagerLearnToggleTests.InitializeDebugToggles_WithAttackTintToggle_SetsIsOnFalseAndRegistersListener
+          [PASS] GameManager.Tests.GameManagerLearnToggleTests.InitializeDebugToggles_WithBuildTintToggle_SetsIsOnFalseAndRegistersListener
+          [PASS] GameManager.Tests.GameManagerLearnToggleTests.InitializeDebugToggles_WithGatherTintToggle_SetsIsOnFalseAndRegistersListener
+          [PASS] GameManager.Tests.GameManagerLearnToggleTests.InitializeDebugToggles_WithMoveTintToggle_SetsIsOnFalseAndRegistersListener
+          [PASS] GameManager.Tests.GameManagerLearnToggleTests.InitializeDebugToggles_WithPathTintToggle_SetsIsOnTrueAndRegistersListener
+          [PASS] GameManager.Tests.GameManagerLearnToggleTests.InitializeDebugToggles_WithTargetLineTintToggle_SetsIsOnTrueAndRegistersListener
+          [PASS] GameManager.Tests.GameManagerLearnToggleTests.InitializeDebugToggles_WithUnitToggle_SetsIsOnFalseAndRegistersListener
+          [PASS] GameManager.Tests.GameManagerLearnToggleTests.Learn_EnableLearningFalse_SkipsLearnButCallsEndRound
+          [PASS] GameManager.Tests.GameManagerLearnToggleTests.Learn_EnableLearningTrue_CallsLearnOnAgentsWithoutCrash
+          [PASS] GameManager.Tests.GameManagerLearnToggleTests.Learn_RoundWinnerNull_UsesUnknownInWinnerName
+          [PASS] GameManager.Tests.GameManagerLearnToggleTests.ProcessUserInput_WithBindings_NoKeysPressed_DoesNotThrow
+          [PASS] GameManager.Tests.GameManagerLearnToggleTests.SmallBarBase_DelegatesToPrefabs
+          [PASS] GameManager.Tests.GameManagerLearnToggleTests.SmallBarFill_DelegatesToPrefabs
+          [PASS] GameManager.Tests.GameManagerResultsDisplayTests.DisplayMultiAgentResults_Agent0IsBlue_UsesAgent0AsRepresentative
+          [PASS] GameManager.Tests.GameManagerResultsDisplayTests.DisplayMultiAgentResults_Agent0IsRed_UsesAgent1AsRepresentative
           [PASS] GameManager.Tests.GameManagerResultsDisplayTests.DisplaySingleAgentResults_Agent0IsOverallWinner_BannerContainsAgent0Name
           [PASS] GameManager.Tests.GameManagerResultsDisplayTests.DisplaySingleAgentResults_Agent1IsOverallWinner_BannerContainsAgent1Name
           [PASS] GameManager.Tests.GameManagerResultsDisplayTests.UpdateCustomDebugUI_AgentWithNullAgentField_SkipsWithoutChangingText
-          [PASS] GameManager.Tests.GameManagerResultsDisplayTests.UpdateCustomDebugUI_HumanAgent_WritesEmptyDisplayToHumanText
-          [PASS] GameManager.Tests.GameManagerResultsDisplayTests.UpdateCustomDebugUI_OrcAgent_WritesEmptyDisplayToOrcText
-          [PASS] GameManager.Tests.GameManagerRoundLifecycleTests.DeclareRoundWinner_HumanWins_IncrementsHumanScoreAndSetsShowingWinner
-          [PASS] GameManager.Tests.GameManagerRoundLifecycleTests.DeclareRoundWinner_OrcWins_IncrementsOrcScoreAndSetsShowingWinner
+          [PASS] GameManager.Tests.GameManagerResultsDisplayTests.UpdateCustomDebugUI_BlueAgent_WritesEmptyDisplayToBlueText
+          [PASS] GameManager.Tests.GameManagerResultsDisplayTests.UpdateCustomDebugUI_RedAgent_WritesEmptyDisplayToRedText
+          [PASS] GameManager.Tests.GameManagerRoundLifecycleTests.DeclareRoundWinner_BlueWins_IncrementsBlueScoreAndSetsShowingWinner
+          [PASS] GameManager.Tests.GameManagerRoundLifecycleTests.DeclareRoundWinner_RedWins_IncrementsRedScoreAndSetsShowingWinner
           [PASS] GameManager.Tests.GameManagerRoundLifecycleTests.SetAllAgentsInactive_DeactivatesAllAgentGameObjects
           [PASS] GameManager.Tests.GameManagerRoundLifecycleTests.UpdateTimerUI_SetsTimerTextAndSpeedText
           [PASS] GameManager.Tests.GameManagerSpawnLocationTests.GetBuildableLocationNearCorner_OpenMap_ReturnsCornerPositionAtRadiusZero
@@ -162,6 +205,8 @@ Passed: 315  Failed: 0  Skipped: 0
           [PASS] GameManager.Tests.GameManagerSpeedTests.GameSpeed_AtMax_GuardPreventsIncrement
           [PASS] GameManager.Tests.GameManagerSpeedTests.GameSpeed_AtOne_GuardPreventsDecrement
           [PASS] GameManager.Tests.GameManagerSpeedTests.GameSpeed_BelowMax_GuardAllowsIncrement
+          [PASS] GameManager.Tests.GameManagerSpeedTests.MovingSpeed_LancerFasterThanWarriorAndArcher
+          [PASS] GameManager.Tests.GameManagerSpeedTests.MovingSpeed_TowerIsZero
           [PASS] GameManager.Tests.GameManagerSpeedTests.UpdateCustomDebugUI_AgentDebuggingFalse_ClearsText
           [PASS] GameManager.Tests.GameManagerSpeedTests.UpdateCustomDebugUI_AgentDebuggingTrue_NoAgents_ClearsText
           [PASS] GameManager.Tests.GameManagerSpeedTests.UpdateCustomDebugUI_BothTextsNull_DoesNotThrow
@@ -239,28 +284,54 @@ Passed: 315  Failed: 0  Skipped: 0
           [PASS] GameManager.Tests.MapManagerNeighborTests.GetBuildableGridPositionsNearUnit_AllBlocked_ReturnsEmpty
           [PASS] GameManager.Tests.MapManagerNeighborTests.GetBuildableGridPositionsNearUnit_OneBlocked_ReducedByOne
           [PASS] GameManager.Tests.MapManagerNeighborTests.GetBuildableGridPositionsNearUnit_OpenMap_EqualsAll
-          [PASS] GameManager.Tests.MapManagerNeighborTests.GetGridPositionsNearUnit_Base_Interior_Returns20
-          [PASS] GameManager.Tests.MapManagerNeighborTests.GetGridPositionsNearUnit_Base3x3_AtEdge_FewerNeighbors
+          [PASS] GameManager.Tests.MapManagerNeighborTests.GetGridPositionsNearUnit_Base_Interior_Returns24
+          [PASS] GameManager.Tests.MapManagerNeighborTests.GetGridPositionsNearUnit_Base6x4_AtEdge_FewerNeighbors
           [PASS] GameManager.Tests.MapManagerNeighborTests.GetGridPositionsNearUnit_NoneInsideFootprint
-          [PASS] GameManager.Tests.MapManagerNeighborTests.GetGridPositionsNearUnit_Worker_AtCorner_Returns3
-          [PASS] GameManager.Tests.MapManagerNeighborTests.GetGridPositionsNearUnit_Worker_AtLeftEdge_Returns5
+          [PASS] GameManager.Tests.MapManagerNeighborTests.GetGridPositionsNearUnit_Pawn_AtCorner_Returns3
+          [PASS] GameManager.Tests.MapManagerNeighborTests.GetGridPositionsNearUnit_Pawn_AtLeftEdge_Returns5
           [PASS] GameManager.Tests.MapManagerNeighborTests.GetPathToUnit_CallerAlreadyAdjacent_ShortPath
           [PASS] GameManager.Tests.MapManagerNeighborTests.GetPathToUnit_OpenMap_FindsPath
           [PASS] GameManager.Tests.MapManagerNeighborTests.IsNeighborOfUnit_AdjacentCell_ReturnsTrue
           [PASS] GameManager.Tests.MapManagerNeighborTests.IsNeighborOfUnit_Base_VariousSides_AllTrue
           [PASS] GameManager.Tests.MapManagerNeighborTests.IsNeighborOfUnit_SameCell_ReturnsFalse
           [PASS] GameManager.Tests.MapManagerNeighborTests.IsNeighborOfUnit_TwoStepsAway_ReturnsFalse
-          [PASS] GameManager.Tests.MapManagerTests.GetGridPositionsNearUnit_Worker_Returns8
+          [PASS] GameManager.Tests.MapManagerTests.GenerateGraph_InfluenceMapTag_SetsInfluenceMap
+          [PASS] GameManager.Tests.MapManagerTests.GenerateGraph_SkipsNonObstacleLayers
+          [PASS] GameManager.Tests.MapManagerTests.GenerateGraph_WallsTilemap_MarksObstacles
+          [PASS] GameManager.Tests.MapManagerTests.GenerateGraph_WithGroundTilemap_CreatesGridCells
+          [PASS] GameManager.Tests.MapManagerTests.GetBuildableGridPositionsNearUnit_AllOpen_MatchesNearUnit
+          [PASS] GameManager.Tests.MapManagerTests.GetBuildableGridPositionsNearUnit_SomeBlocked_FewerResults
+          [PASS] GameManager.Tests.MapManagerTests.GetGridPositionsNearUnit_AtCorner_ClipsToMap
+          [PASS] GameManager.Tests.MapManagerTests.GetGridPositionsNearUnit_Base_ReturnsPerimeterCells
+          [PASS] GameManager.Tests.MapManagerTests.GetGridPositionsNearUnit_Pawn_Returns8
+          [PASS] GameManager.Tests.MapManagerTests.GetPathBetweenGridPositions_BlockedDestination_ReturnsEmptyPath
           [PASS] GameManager.Tests.MapManagerTests.GetPathBetweenGridPositions_FindsPath
+          [PASS] GameManager.Tests.MapManagerTests.GetPathBetweenGridPositions_SamePosition_ReturnsPath
+          [PASS] GameManager.Tests.MapManagerTests.GetPathToUnit_AdjacentStart_ShortPath
+          [PASS] GameManager.Tests.MapManagerTests.GetPathToUnit_ClosestNeighborFirst
+          [PASS] GameManager.Tests.MapManagerTests.GetPathToUnit_FindsPathToNeighbor
+          [PASS] GameManager.Tests.MapManagerTests.GetRandomBuildableLocation_ReturnsValidPosition
           [PASS] GameManager.Tests.MapManagerTests.IsAreaBuildable_AtMapEdge_Works
-          [PASS] GameManager.Tests.MapManagerTests.IsAreaBuildable_Base3x3_FullyOpen_True
-          [PASS] GameManager.Tests.MapManagerTests.IsAreaBuildable_Base3x3_PartiallyBlocked_False
+          [PASS] GameManager.Tests.MapManagerTests.IsAreaBuildable_Base6x4_FullyOpen_True
+          [PASS] GameManager.Tests.MapManagerTests.IsAreaBuildable_Base6x4_PartiallyBlocked_False
           [PASS] GameManager.Tests.MapManagerTests.IsAreaBuildable_BaseOverlapsEdge_False
+          [PASS] GameManager.Tests.MapManagerTests.IsAreaBuildable_ExcludePositions_SkipsBlockedCell
+          [PASS] GameManager.Tests.MapManagerTests.IsAreaBuildable_ExcludePositions_StillFailsOnOtherBlocked
           [PASS] GameManager.Tests.MapManagerTests.IsAreaBuildable_OffMap_ReturnsFalse
-          [PASS] GameManager.Tests.MapManagerTests.IsAreaBuildable_WorkerOnBlocked_False
-          [PASS] GameManager.Tests.MapManagerTests.IsAreaBuildable_WorkerOnOpen_True
+          [PASS] GameManager.Tests.MapManagerTests.IsAreaBuildable_PawnOnBlocked_False
+          [PASS] GameManager.Tests.MapManagerTests.IsAreaBuildable_PawnOnOpen_True
           [PASS] GameManager.Tests.MapManagerTests.IsBoundedAreaBuildable_AdjacentWall_False
+          [PASS] GameManager.Tests.MapManagerTests.IsBoundedAreaBuildable_ExcludePositions_SkipsBlockedCell
+          [PASS] GameManager.Tests.MapManagerTests.IsBoundedAreaBuildable_ExcludePositions_StillFailsOnOtherBlocked
           [PASS] GameManager.Tests.MapManagerTests.IsBoundedAreaBuildable_Open_True
+          [PASS] GameManager.Tests.MapManagerTests.IsNeighborOfUnit_AdjacentCell_True
+          [PASS] GameManager.Tests.MapManagerTests.IsNeighborOfUnit_Base3x3_AdjacentToFootprint_True
+          [PASS] GameManager.Tests.MapManagerTests.IsNeighborOfUnit_DiagonalCell_True
+          [PASS] GameManager.Tests.MapManagerTests.IsNeighborOfUnit_FarCell_False
+          [PASS] GameManager.Tests.MapManagerTests.IsNeighborOfUnit_SameCell_False
+          [PASS] GameManager.Tests.MapManagerTests.SetAreaBuildability_ArcherMobile_WalkableStaysTrue
+          [PASS] GameManager.Tests.MapManagerTests.SetAreaBuildability_AtEdge_SkipsOutOfBounds
+          [PASS] GameManager.Tests.MapManagerTests.SetAreaBuildability_Barracks_MultiCellBlocked
           [PASS] GameManager.Tests.MapManagerTests.SetAreaBuildability_Building_WalkableFalse
           [PASS] GameManager.Tests.MapManagerTests.SetAreaBuildability_MobileUnit_WalkableStaysTrue
           [PASS] GameManager.Tests.MapManagerTests.SetAreaBuildability_Restore_BothTrue
