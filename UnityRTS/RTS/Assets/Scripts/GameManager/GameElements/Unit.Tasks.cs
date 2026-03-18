@@ -36,9 +36,25 @@ namespace GameManager.GameElements
 					* GameConstants.DamageMultiplier(UnitType, attackTarget.UnitType));
 				if (damage > 1)
 				{
-					attackTarget.Health -= (int)damage;
+					int dmg = (int)damage;
+					if (!attackTarget.IsBuilt)
+					{
+						// Unbuilt buildings: damage reduces construction progress.
+						// Convert HP damage to build-time damage so the same total
+						// damage destroys a building regardless of build state.
+						float maxHp = Constants.HEALTH[attackTarget.UnitType];
+						float creationTime = Constants.CREATION_TIME[attackTarget.UnitType];
+						float progressDmg = dmg * creationTime / maxHp;
+						attackTarget.BuildProgress -= progressDmg;
+						if (attackTarget.BuildProgress <= 0)
+							attackTarget.Health = 0; // triggers normal death
+					}
+					else
+					{
+						attackTarget.Health -= dmg;
+					}
 					totalDamage += damage;
-					damage -= (int)damage;
+					damage -= dmg;
 				}
 
 				// Spawn arrow projectile on frame 5 of the shoot animation (once per loop)
