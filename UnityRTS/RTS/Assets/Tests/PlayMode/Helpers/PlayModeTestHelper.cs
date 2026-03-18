@@ -99,8 +99,14 @@ namespace GameManager.Tests.PlayMode
 			SetPrivateField(gm, "mapManager", ctx.MapManager);
 			SetPrivateField(gm, "unitManager", ctx.UnitManager);
 			SetPrivateField(gm, "eventDispatcher", eventDispatcher);
+			SetPrivateField(gm, "Prefabs", prefabs);
 
-			// 7. Create test agents
+			// 7. Set gameState to PLAYING so Unit.FixedUpdate (which checks IsPlaying) doesn't NRE
+			var gameStateField = typeof(GameManager).GetField("gameState",
+				BindingFlags.NonPublic | BindingFlags.Instance);
+			gameStateField.SetValue(gm, System.Enum.ToObject(gameStateField.FieldType, 1)); // PLAYING = 1
+
+			// 8. Create test agents
 			ctx.Agent0Go = CreateTestAgent(ctx, 0, "TestPlayer0", unitPrefabMap);
 			ctx.Agent1Go = CreateTestAgent(ctx, 1, "TestPlayer1", unitPrefabMap);
 
@@ -117,6 +123,11 @@ namespace GameManager.Tests.PlayMode
 				ctx.UnitManager.DestroyAllUnits();
 			}
 
+			// Destroy stale projectiles (Arrow, GoldNugget) that aren't parented
+			// to any tracked object and would leak between tests
+			DestroyAllByName("Arrow");
+			DestroyAllByName("GoldNugget");
+
 			// Destroy all tracked objects
 			foreach (var go in ctx.CreatedObjects)
 			{
@@ -128,10 +139,15 @@ namespace GameManager.Tests.PlayMode
 			if (ctx.Agent1Go != null) Object.Destroy(ctx.Agent1Go);
 			if (ctx.GameManagerGo != null) Object.Destroy(ctx.GameManagerGo);
 
-			// Clear the singleton so the next test gets a fresh instance
-			typeof(GameManager)
-				.GetField("instance", BindingFlags.NonPublic | BindingFlags.Static)
-				.SetValue(null, null);
+			// Singleton is cleared in PlayModeTestBase.TearDown after yield return null
+			// so that units are destroyed before the singleton is nulled.
+		}
+
+		private static void DestroyAllByName(string name)
+		{
+			GameObject go;
+			while ((go = GameObject.Find(name)) != null)
+				Object.DestroyImmediate(go);
 		}
 
 		/// <summary>
@@ -148,8 +164,17 @@ namespace GameManager.Tests.PlayMode
 
 		private static MapManager BuildMapManager(out GameObject tilemapGo)
 		{
+			return BuildMapManager(MAP_WIDTH, MAP_HEIGHT, out tilemapGo);
+		}
+
+		/// <summary>
+		/// Build a MapManager with a custom grid size. Used by tests that need
+		/// maps larger than the default 30x30 (e.g. PlaceUnits requires 72x42).
+		/// </summary>
+		internal static MapManager BuildMapManager(int width, int height, out GameObject tilemapGo)
+		{
 			var manager = new MapManager();
-			var mapSize = new Vector3Int(MAP_WIDTH, MAP_HEIGHT, 0);
+			var mapSize = new Vector3Int(width, height, 0);
 
 			typeof(MapManager)
 				.GetProperty("MapSize", BindingFlags.Public | BindingFlags.Instance)
@@ -159,9 +184,9 @@ namespace GameManager.Tests.PlayMode
 			tilemapGo.AddComponent<Grid>();
 			var tilemap = tilemapGo.AddComponent<Tilemap>();
 
-			var cells = new GridCell[MAP_WIDTH, MAP_HEIGHT];
-			for (int x = 0; x < MAP_WIDTH; x++)
-				for (int y = 0; y < MAP_HEIGHT; y++)
+			var cells = new GridCell[width, height];
+			for (int x = 0; x < width; x++)
+				for (int y = 0; y < height; y++)
 					cells[x, y] = new GridCell(tilemap, new Vector3Int(x, y, 0));
 
 			typeof(MapManager)
@@ -170,13 +195,13 @@ namespace GameManager.Tests.PlayMode
 
 			// Build graph with edges
 			var graph = new Graph<GridCell>();
-			for (int x = 0; x < MAP_WIDTH; x++)
-				for (int y = 0; y < MAP_HEIGHT; y++)
+			for (int x = 0; x < width; x++)
+				for (int y = 0; y < height; y++)
 					graph.AddNode(Utility.GridToInt(new Vector3Int(x, y, 0), mapSize), cells[x, y]);
 
-			for (int x = 0; x < MAP_WIDTH; x++)
+			for (int x = 0; x < width; x++)
 			{
-				for (int y = 0; y < MAP_HEIGHT; y++)
+				for (int y = 0; y < height; y++)
 				{
 					for (int dx = -1; dx <= 1; dx++)
 					{
@@ -184,7 +209,7 @@ namespace GameManager.Tests.PlayMode
 						{
 							if (dx == 0 && dy == 0) continue;
 							int nx = x + dx, ny = y + dy;
-							if (nx >= 0 && ny >= 0 && nx < MAP_WIDTH && ny < MAP_HEIGHT)
+							if (nx >= 0 && ny >= 0 && nx < width && ny < height)
 							{
 								graph.AddEdge(
 									Utility.GridToInt(new Vector3Int(x, y, 0), mapSize),

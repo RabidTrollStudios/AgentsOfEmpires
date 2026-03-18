@@ -17,7 +17,7 @@ namespace PlanningAgent.Tests
                 .WithMapSize(30, 30)
                 .WithGold(0, 5000)
                 .WithUnit(0, UnitType.BASE, new Position(5, 5), isBuilt: true)
-                .WithUnit(0, UnitType.WORKER, new Position(8, 5))
+                .WithUnit(0, UnitType.PAWN, new Position(8, 5))
                 .WithMine(new Position(15, 10), health: 10000)
                 .WithAgent(0, new GatherAgent())
                 .Build();
@@ -37,7 +37,7 @@ namespace PlanningAgent.Tests
                 .WithMapSize(30, 30)
                 .WithGold(0, 5000)
                 .WithUnit(0, UnitType.BASE, new Position(5, 5), isBuilt: true)
-                .WithUnit(0, UnitType.WORKER, new Position(8, 5))
+                .WithUnit(0, UnitType.PAWN, new Position(8, 5))
                 .WithMine(new Position(15, 10), health: 10000)
                 .WithAgent(0, new GatherAgent())
                 .Build();
@@ -60,7 +60,7 @@ namespace PlanningAgent.Tests
                 .WithMapSize(30, 30)
                 .WithGold(0, 0)
                 .WithUnit(0, UnitType.BASE, new Position(5, 5), isBuilt: true)
-                .WithUnit(0, UnitType.WORKER, new Position(8, 5))
+                .WithUnit(0, UnitType.PAWN, new Position(8, 5))
                 .WithMine(new Position(12, 5), health: 50000)
                 .WithAgent(0, new GatherAgent())
                 .Build();
@@ -86,26 +86,26 @@ namespace PlanningAgent.Tests
                 .WithMapSize(30, 30)
                 .WithGold(0, 5000)
                 .WithUnit(0, UnitType.BASE, new Position(5, 5), isBuilt: true)
-                .WithUnit(0, UnitType.WORKER, new Position(8, 5))
+                .WithUnit(0, UnitType.PAWN, new Position(8, 5))
                 .WithMine(new Position(15, 10), health: 10000)
-                .WithAgent(0, new TrainOnceAgent(UnitType.WORKER))
+                .WithAgent(0, new TrainOnceAgent(UnitType.PAWN))
                 .Build();
 
             game.InitializeMatch();
             game.InitializeRound();
 
-            // Train a worker in round 1
+            // Train a pawn in round 1
             bool trained = game.RunUntil(g =>
-                g.GetUnitsByType(0, UnitType.WORKER).Count >= 2, 2000);
-            Assert.True(trained, "Should train at least one worker");
+                g.GetUnitsByType(0, UnitType.PAWN).Count >= 2, 2000);
+            Assert.True(trained, "Should train at least one pawn");
 
-            int workersAfterRound1 = game.GetUnitsByType(0, UnitType.WORKER).Count;
+            int pawnsAfterRound1 = game.GetUnitsByType(0, UnitType.PAWN).Count;
 
             // Start round 2
             game.Learn();
             game.InitializeRound();
 
-            Assert.Equal(workersAfterRound1, game.GetUnitsByType(0, UnitType.WORKER).Count);
+            Assert.Equal(pawnsAfterRound1, game.GetUnitsByType(0, UnitType.PAWN).Count);
         }
 
         [Fact]

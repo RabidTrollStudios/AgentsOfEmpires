@@ -25,7 +25,7 @@ namespace GameManager.Tests.PlayMode
 		{
 			Unit baseUnit = PlaceUnit(UnitType.BASE, new Vector3Int(10, 10, 0));
 			baseUnit.IsBuilt = true;
-			Unit enemy = PlaceUnit(UnitType.WORKER, new Vector3Int(11, 10, 0), ctx.Agent1Go);
+			Unit enemy = PlaceUnit(UnitType.PAWN, new Vector3Int(11, 10, 0), ctx.Agent1Go);
 			float healthBefore = enemy.Health;
 
 			baseUnit.StartAttacking(new AttackEventArgs(baseUnit, enemy));
@@ -46,7 +46,7 @@ namespace GameManager.Tests.PlayMode
 		{
 			Unit barracks = PlaceUnit(UnitType.BARRACKS, new Vector3Int(10, 10, 0));
 			barracks.IsBuilt = true;
-			Unit enemy = PlaceUnit(UnitType.WORKER, new Vector3Int(11, 10, 0), ctx.Agent1Go);
+			Unit enemy = PlaceUnit(UnitType.PAWN, new Vector3Int(11, 10, 0), ctx.Agent1Go);
 			float healthBefore = enemy.Health;
 
 			barracks.StartAttacking(new AttackEventArgs(barracks, enemy));
@@ -58,26 +58,47 @@ namespace GameManager.Tests.PlayMode
 			yield return null;
 		}
 
+		/// <summary>
+		/// TOWER is not a combatant; an attack command should be ignored.
+		/// </summary>
+		[UnityTest]
+		public IEnumerator Tower_CannotAttack_CommandIgnored()
+		{
+			Unit tower = PlaceUnit(UnitType.TOWER, new Vector3Int(10, 10, 0));
+			tower.IsBuilt = true;
+			Unit enemy = PlaceUnit(UnitType.PAWN, new Vector3Int(11, 10, 0), ctx.Agent1Go);
+			float healthBefore = enemy.Health;
+
+			tower.StartAttacking(new AttackEventArgs(tower, enemy));
+
+			Assert.AreNotEqual(UnitAction.ATTACK, tower.CurrentAction,
+				"TOWER should not be able to attack");
+			Assert.AreEqual(healthBefore, enemy.Health,
+				"Enemy health should not change when TOWER tries to attack");
+
+			yield return null;
+		}
+
 		#endregion
 
 		#region Build Capability
 
 		/// <summary>
-		/// SOLDIER cannot build — build command is rejected, gold unchanged.
+		/// WARRIOR cannot build — build command is rejected, gold unchanged.
 		/// </summary>
 		[UnityTest]
-		public IEnumerator Soldier_CannotBuild_CommandRejected()
+		public IEnumerator Warrior_CannotBuild_CommandRejected()
 		{
-			Unit soldier = PlaceUnit(UnitType.SOLDIER, new Vector3Int(9, 10, 0));
+			Unit warrior = PlaceUnit(UnitType.WARRIOR, new Vector3Int(9, 10, 0));
 			Agent agent = GetAgent0();
 			int goldBefore = agent.Gold;
 
-			soldier.StartBuilding(new BuildEventArgs(soldier, new Vector3Int(10, 10, 0), UnitType.BASE));
+			warrior.StartBuilding(new BuildEventArgs(warrior, new Vector3Int(10, 10, 0), UnitType.BASE));
 
-			Assert.AreNotEqual(UnitAction.BUILD, soldier.CurrentAction,
-				"SOLDIER should not be able to build");
+			Assert.AreNotEqual(UnitAction.BUILD, warrior.CurrentAction,
+				"WARRIOR should not be able to build");
 			Assert.AreEqual(goldBefore, agent.Gold,
-				"Gold should not be deducted when soldier tries to build");
+				"Gold should not be deducted when warrior tries to build");
 
 			yield return null;
 		}
@@ -101,43 +122,81 @@ namespace GameManager.Tests.PlayMode
 			yield return null;
 		}
 
+		/// <summary>
+		/// LANCER cannot build — build command is rejected.
+		/// </summary>
+		[UnityTest]
+		public IEnumerator Lancer_CannotBuild_CommandRejected()
+		{
+			Unit lancer = PlaceUnit(UnitType.LANCER, new Vector3Int(9, 10, 0));
+			Agent agent = GetAgent0();
+			int goldBefore = agent.Gold;
+
+			lancer.StartBuilding(new BuildEventArgs(lancer, new Vector3Int(10, 10, 0), UnitType.BASE));
+
+			Assert.AreNotEqual(UnitAction.BUILD, lancer.CurrentAction,
+				"LANCER should not be able to build");
+			Assert.AreEqual(goldBefore, agent.Gold);
+
+			yield return null;
+		}
+
 		#endregion
 
 		#region Train Capability
 
 		/// <summary>
-		/// WORKER cannot train units.
+		/// PAWN cannot train units.
 		/// </summary>
 		[UnityTest]
-		public IEnumerator Worker_CannotTrain_CommandRejected()
+		public IEnumerator Pawn_CannotTrain_CommandRejected()
 		{
-			Unit worker = PlaceUnit(UnitType.WORKER, new Vector3Int(10, 10, 0));
+			Unit pawn = PlaceUnit(UnitType.PAWN, new Vector3Int(10, 10, 0));
 			Agent agent = GetAgent0();
 			int goldBefore = agent.Gold;
 
-			worker.StartTraining(new TrainEventArgs(worker, UnitType.WORKER));
+			pawn.StartTraining(new TrainEventArgs(pawn, UnitType.PAWN));
 
-			Assert.AreNotEqual(UnitAction.TRAIN, worker.CurrentAction,
-				"WORKER should not be able to train units");
+			Assert.AreNotEqual(UnitAction.TRAIN, pawn.CurrentAction,
+				"PAWN should not be able to train units");
 			Assert.AreEqual(goldBefore, agent.Gold);
 
 			yield return null;
 		}
 
 		/// <summary>
-		/// SOLDIER cannot train units.
+		/// WARRIOR cannot train units.
 		/// </summary>
 		[UnityTest]
-		public IEnumerator Soldier_CannotTrain_CommandRejected()
+		public IEnumerator Warrior_CannotTrain_CommandRejected()
 		{
-			Unit soldier = PlaceUnit(UnitType.SOLDIER, new Vector3Int(10, 10, 0));
+			Unit warrior = PlaceUnit(UnitType.WARRIOR, new Vector3Int(10, 10, 0));
 			Agent agent = GetAgent0();
 			int goldBefore = agent.Gold;
 
-			soldier.StartTraining(new TrainEventArgs(soldier, UnitType.SOLDIER));
+			warrior.StartTraining(new TrainEventArgs(warrior, UnitType.WARRIOR));
 
-			Assert.AreNotEqual(UnitAction.TRAIN, soldier.CurrentAction,
-				"SOLDIER should not be able to train units");
+			Assert.AreNotEqual(UnitAction.TRAIN, warrior.CurrentAction,
+				"WARRIOR should not be able to train units");
+			Assert.AreEqual(goldBefore, agent.Gold);
+
+			yield return null;
+		}
+
+		/// <summary>
+		/// LANCER cannot train units.
+		/// </summary>
+		[UnityTest]
+		public IEnumerator Lancer_CannotTrain_CommandRejected()
+		{
+			Unit lancer = PlaceUnit(UnitType.LANCER, new Vector3Int(10, 10, 0));
+			Agent agent = GetAgent0();
+			int goldBefore = agent.Gold;
+
+			lancer.StartTraining(new TrainEventArgs(lancer, UnitType.LANCER));
+
+			Assert.AreNotEqual(UnitAction.TRAIN, lancer.CurrentAction,
+				"LANCER should not be able to train units");
 			Assert.AreEqual(goldBefore, agent.Gold);
 
 			yield return null;
@@ -148,20 +207,20 @@ namespace GameManager.Tests.PlayMode
 		#region Gather Capability
 
 		/// <summary>
-		/// SOLDIER cannot gather resources.
+		/// WARRIOR cannot gather resources.
 		/// </summary>
 		[UnityTest]
-		public IEnumerator Soldier_CannotGather_CommandRejected()
+		public IEnumerator Warrior_CannotGather_CommandRejected()
 		{
-			Unit soldier = PlaceUnit(UnitType.SOLDIER, new Vector3Int(10, 10, 0));
+			Unit warrior = PlaceUnit(UnitType.WARRIOR, new Vector3Int(10, 10, 0));
 			Unit mine = PlaceUnit(UnitType.MINE, new Vector3Int(15, 10, 0));
 			Unit baseUnit = PlaceUnit(UnitType.BASE, new Vector3Int(5, 10, 0));
 			baseUnit.IsBuilt = true;
 
-			soldier.StartGathering(new GatherEventArgs(soldier, mine, baseUnit));
+			warrior.StartGathering(new GatherEventArgs(warrior, mine, baseUnit));
 
-			Assert.AreNotEqual(UnitAction.GATHER, soldier.CurrentAction,
-				"SOLDIER should not be able to gather resources");
+			Assert.AreNotEqual(UnitAction.GATHER, warrior.CurrentAction,
+				"WARRIOR should not be able to gather resources");
 
 			yield return null;
 		}
@@ -181,6 +240,25 @@ namespace GameManager.Tests.PlayMode
 
 			Assert.AreNotEqual(UnitAction.GATHER, archer.CurrentAction,
 				"ARCHER should not be able to gather resources");
+
+			yield return null;
+		}
+
+		/// <summary>
+		/// LANCER cannot gather resources.
+		/// </summary>
+		[UnityTest]
+		public IEnumerator Lancer_CannotGather_CommandRejected()
+		{
+			Unit lancer = PlaceUnit(UnitType.LANCER, new Vector3Int(10, 10, 0));
+			Unit mine = PlaceUnit(UnitType.MINE, new Vector3Int(15, 10, 0));
+			Unit baseUnit = PlaceUnit(UnitType.BASE, new Vector3Int(5, 10, 0));
+			baseUnit.IsBuilt = true;
+
+			lancer.StartGathering(new GatherEventArgs(lancer, mine, baseUnit));
+
+			Assert.AreNotEqual(UnitAction.GATHER, lancer.CurrentAction,
+				"LANCER should not be able to gather resources");
 
 			yield return null;
 		}
@@ -221,6 +299,25 @@ namespace GameManager.Tests.PlayMode
 
 			Assert.AreNotEqual(UnitAction.MOVE, mine.CurrentAction,
 				"MINE should not be able to move");
+
+			yield return null;
+		}
+
+		/// <summary>
+		/// TOWER is immobile — move command is rejected.
+		/// </summary>
+		[UnityTest]
+		public IEnumerator Tower_CannotMove_CommandRejected()
+		{
+			var towerPos = new Vector3Int(10, 10, 0);
+			Unit tower = PlaceUnit(UnitType.TOWER, towerPos);
+
+			tower.StartMoving(new MoveEventArgs(tower, UnitType.TOWER, new Vector3Int(15, 15, 0)));
+
+			Assert.AreNotEqual(UnitAction.MOVE, tower.CurrentAction,
+				"TOWER should not be able to move");
+			Assert.AreEqual(towerPos, tower.GridPosition,
+				"TOWER should remain at its original position");
 
 			yield return null;
 		}

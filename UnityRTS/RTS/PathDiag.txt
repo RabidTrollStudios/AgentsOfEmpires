@@ -1,35 +1,35 @@
 GetPathToUnit FAILED
-  from=(5, 8, 0) to=WORKER at (5, 20, 0)
+  from=(8, 8, 0) to=PAWN at (20, 20, 0)
   mapSize=(30, 30, 0)
   totalNeighbors=8 buildableNeighbors=8
 
 All neighbors:
-  (4, 21, 0) buildable=True
-  (4, 19, 0) buildable=True
-  (5, 21, 0) buildable=True
-  (5, 19, 0) buildable=True
-  (6, 21, 0) buildable=True
-  (6, 19, 0) buildable=True
-  (4, 20, 0) buildable=True
-  (6, 20, 0) buildable=True
+  (19, 21, 0) buildable=True
+  (19, 19, 0) buildable=True
+  (20, 21, 0) buildable=True
+  (20, 19, 0) buildable=True
+  (21, 21, 0) buildable=True
+  (21, 19, 0) buildable=True
+  (19, 20, 0) buildable=True
+  (21, 20, 0) buildable=True
 
 A* attempts (buildable neighbors only):
-  (5, 8, 0) -> (5, 19, 0): result=exhausted expansions=1
-  (5, 8, 0) -> (4, 19, 0): result=exhausted expansions=1
-  (5, 8, 0) -> (6, 19, 0): result=exhausted expansions=1
-  (5, 8, 0) -> (4, 20, 0): result=exhausted expansions=1
-  (5, 8, 0) -> (6, 20, 0): result=exhausted expansions=1
-  (5, 8, 0) -> (5, 21, 0): result=exhausted expansions=1
-  (5, 8, 0) -> (4, 21, 0): result=exhausted expansions=1
-  (5, 8, 0) -> (6, 21, 0): result=exhausted expansions=1
+  (8, 8, 0) -> (19, 19, 0): result=end_blocked expansions=0
+  (8, 8, 0) -> (20, 19, 0): result=end_blocked expansions=0
+  (8, 8, 0) -> (19, 20, 0): result=end_blocked expansions=0
+  (8, 8, 0) -> (19, 21, 0): result=end_blocked expansions=0
+  (8, 8, 0) -> (21, 19, 0): result=end_blocked expansions=0
+  (8, 8, 0) -> (20, 21, 0): result=end_blocked expansions=0
+  (8, 8, 0) -> (21, 20, 0): result=end_blocked expansions=0
+  (8, 8, 0) -> (21, 21, 0): result=end_blocked expansions=0
 
-Start cell (5, 8, 0) buildable=False
+Start cell (8, 8, 0) buildable=False
 Start cell neighbors:
-  (4, 7, 0) buildable=False
-  (4, 8, 0) buildable=False
-  (4, 9, 0) buildable=False
-  (5, 7, 0) buildable=False
-  (5, 9, 0) buildable=False
-  (6, 7, 0) buildable=False
-  (6, 8, 0) buildable=False
-  (6, 9, 0) buildable=False
+  (7, 7, 0) buildable=True
+  (7, 8, 0) buildable=True
+  (7, 9, 0) buildable=True
+  (8, 7, 0) buildable=True
+  (8, 9, 0) buildable=True
+  (9, 7, 0) buildable=True
+  (9, 8, 0) buildable=True
+  (9, 9, 0) buildable=True

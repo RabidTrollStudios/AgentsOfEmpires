@@ -7,6 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
+      <_Parameter1>ParityRunner</_Parameter1>
+    </AssemblyAttribute>
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.*" />
     <PackageReference Include="xunit" Version="2.*" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.*" />
@@ -18,9 +24,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="AgentSDK">
-      <HintPath>..\AgentSDK\bin\Debug\netstandard2.1\AgentSDK.dll</HintPath>
-    </Reference>
+    <ProjectReference Include="..\AgentSDK\AgentSDK.csproj" />
   </ItemGroup>
 
 </Project>

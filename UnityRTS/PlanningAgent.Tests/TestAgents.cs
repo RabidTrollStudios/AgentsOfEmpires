@@ -60,6 +60,33 @@ namespace PlanningAgent.Tests
         }
     }
 
+    internal class TrainFromArcheryAgent : IPlanningAgent
+    {
+        private readonly UnitType trainType;
+        private bool trained;
+
+        public TrainFromArcheryAgent(UnitType trainType) { this.trainType = trainType; }
+        public void InitializeMatch() { trained = false; }
+        public void InitializeRound(IGameState state) { }
+        public void Learn(IGameState state) { }
+
+        public void Update(IGameState state, IAgentActions actions)
+        {
+            if (trained) return;
+            var archeries = state.GetMyUnits(UnitType.ARCHERY);
+            if (archeries.Count > 0)
+            {
+                var info = state.GetUnit(archeries[0]);
+                if (info.HasValue && info.Value.IsBuilt && info.Value.CurrentAction == UnitAction.IDLE
+                    && state.MyGold >= GameConstants.COST[trainType])
+                {
+                    actions.Train(archeries[0], trainType);
+                    trained = true;
+                }
+            }
+        }
+    }
+
     internal class TrainFromBaseAgent : IPlanningAgent
     {
         private readonly UnitType trainType;
@@ -92,16 +119,16 @@ namespace PlanningAgent.Tests
         {
             var bases = state.GetMyUnits(UnitType.BASE);
             foreach (int baseNbr in bases)
-                actions.Train(baseNbr, UnitType.WORKER);
+                actions.Train(baseNbr, UnitType.PAWN);
         }
     }
 
-    internal class TrainNWorkersAgent : IPlanningAgent
+    internal class TrainNPawnsAgent : IPlanningAgent
     {
         private readonly int max;
         private int trained;
 
-        public TrainNWorkersAgent(int max) { this.max = max; }
+        public TrainNPawnsAgent(int max) { this.max = max; }
         public void InitializeMatch() { trained = 0; }
         public void InitializeRound(IGameState state) { }
         public void Learn(IGameState state) { }
@@ -114,9 +141,9 @@ namespace PlanningAgent.Tests
             {
                 var info = state.GetUnit(bases[0]);
                 if (info.HasValue && info.Value.IsBuilt && info.Value.CurrentAction == UnitAction.IDLE
-                    && state.MyGold >= GameConstants.COST[UnitType.WORKER])
+                    && state.MyGold >= GameConstants.COST[UnitType.PAWN])
                 {
-                    actions.Train(bases[0], UnitType.WORKER);
+                    actions.Train(bases[0], UnitType.PAWN);
                     trained++;
                 }
             }
@@ -146,20 +173,20 @@ namespace PlanningAgent.Tests
         public void Update(IGameState state, IAgentActions actions)
         {
             if (built) return;
-            var workers = state.GetMyUnits(UnitType.WORKER);
-            if (workers.Count > 0)
+            var pawns = state.GetMyUnits(UnitType.PAWN);
+            if (pawns.Count > 0)
             {
-                var info = state.GetUnit(workers[0]);
+                var info = state.GetUnit(pawns[0]);
                 if (info.HasValue && info.Value.CurrentAction == UnitAction.IDLE)
                 {
-                    actions.Build(workers[0], buildPos, buildType);
+                    actions.Build(pawns[0], buildPos, buildType);
                     built = true;
                 }
             }
         }
     }
 
-    internal class BuildWithSoldierAgent : IPlanningAgent
+    internal class BuildWithWarriorAgent : IPlanningAgent
     {
         private bool tried;
         public void InitializeMatch() { tried = false; }
@@ -169,10 +196,10 @@ namespace PlanningAgent.Tests
         public void Update(IGameState state, IAgentActions actions)
         {
             if (tried) return;
-            var soldiers = state.GetMyUnits(UnitType.SOLDIER);
-            if (soldiers.Count > 0)
+            var warriors = state.GetMyUnits(UnitType.WARRIOR);
+            if (warriors.Count > 0)
             {
-                actions.Build(soldiers[0], new Position(15, 15), UnitType.BARRACKS);
+                actions.Build(warriors[0], new Position(15, 15), UnitType.BARRACKS);
                 tried = true;
             }
         }
@@ -196,8 +223,8 @@ namespace PlanningAgent.Tests
         {
             if (buildIndex >= buildSites.Length) return;
 
-            var workers = state.GetMyUnits(UnitType.WORKER);
-            foreach (int wNbr in workers)
+            var pawns = state.GetMyUnits(UnitType.PAWN);
+            foreach (int wNbr in pawns)
             {
                 if (buildIndex >= buildSites.Length) break;
                 var info = state.GetUnit(wNbr);
@@ -224,13 +251,13 @@ namespace PlanningAgent.Tests
 
         public void Update(IGameState state, IAgentActions actions)
         {
-            var workers = state.GetMyUnits(UnitType.WORKER);
+            var pawns = state.GetMyUnits(UnitType.PAWN);
             var mines = state.GetAllUnits(UnitType.MINE);
             var bases = state.GetMyUnits(UnitType.BASE);
 
             if (mines.Count == 0 || bases.Count == 0) return;
 
-            foreach (int wNbr in workers)
+            foreach (int wNbr in pawns)
             {
                 var info = state.GetUnit(wNbr);
                 if (info.HasValue && info.Value.CurrentAction == UnitAction.IDLE)
@@ -241,7 +268,7 @@ namespace PlanningAgent.Tests
         }
     }
 
-    internal class GatherWithSoldierAgent : IPlanningAgent
+    internal class GatherWithWarriorAgent : IPlanningAgent
     {
         public void InitializeMatch() { }
         public void InitializeRound(IGameState state) { }
@@ -249,11 +276,11 @@ namespace PlanningAgent.Tests
 
         public void Update(IGameState state, IAgentActions actions)
         {
-            var soldiers = state.GetMyUnits(UnitType.SOLDIER);
+            var warriors = state.GetMyUnits(UnitType.WARRIOR);
             var mines = state.GetAllUnits(UnitType.MINE);
             var bases = state.GetMyUnits(UnitType.BASE);
-            if (soldiers.Count > 0 && mines.Count > 0 && bases.Count > 0)
-                actions.Gather(soldiers[0], mines[0], bases[0]);
+            if (warriors.Count > 0 && mines.Count > 0 && bases.Count > 0)
+                actions.Gather(warriors[0], mines[0], bases[0]);
         }
     }
 
@@ -265,11 +292,11 @@ namespace PlanningAgent.Tests
 
         public void Update(IGameState state, IAgentActions actions)
         {
-            var workers = state.GetMyUnits(UnitType.WORKER);
+            var pawns = state.GetMyUnits(UnitType.PAWN);
             var barracks = state.GetMyUnits(UnitType.BARRACKS);
             var bases = state.GetMyUnits(UnitType.BASE);
-            if (workers.Count > 0 && barracks.Count > 0 && bases.Count > 0)
-                actions.Gather(workers[0], barracks[0], bases[0]);
+            if (pawns.Count > 0 && barracks.Count > 0 && bases.Count > 0)
+                actions.Gather(pawns[0], barracks[0], bases[0]);
         }
     }
 
@@ -287,8 +314,8 @@ namespace PlanningAgent.Tests
         {
             // Find any enemy unit
             int? targetNbr = null;
-            foreach (UnitType ut in new[] { UnitType.SOLDIER, UnitType.ARCHER, UnitType.WORKER,
-                                            UnitType.BASE, UnitType.BARRACKS, UnitType.REFINERY })
+            foreach (UnitType ut in new[] { UnitType.WARRIOR, UnitType.ARCHER, UnitType.PAWN,
+                                            UnitType.BASE, UnitType.BARRACKS })
             {
                 var enemies = state.GetEnemyUnits(ut);
                 if (enemies.Count > 0) { targetNbr = enemies[0]; break; }
@@ -297,7 +324,7 @@ namespace PlanningAgent.Tests
             if (!targetNbr.HasValue) return;
 
             // All my attack-capable units attack that target
-            foreach (UnitType ut in new[] { UnitType.SOLDIER, UnitType.ARCHER })
+            foreach (UnitType ut in new[] { UnitType.WARRIOR, UnitType.ARCHER })
             {
                 foreach (int unitNbr in state.GetMyUnits(ut))
                 {
@@ -319,17 +346,17 @@ namespace PlanningAgent.Tests
         public void Update(IGameState state, IAgentActions actions)
         {
             if (attacked) return;
-            var soldiers = state.GetMyUnits(UnitType.SOLDIER);
-            var enemies = state.GetEnemyUnits(UnitType.WORKER);
-            if (soldiers.Count > 0 && enemies.Count > 0)
+            var warriors = state.GetMyUnits(UnitType.WARRIOR);
+            var enemies = state.GetEnemyUnits(UnitType.PAWN);
+            if (warriors.Count > 0 && enemies.Count > 0)
             {
-                actions.Attack(soldiers[0], enemies[0]);
+                actions.Attack(warriors[0], enemies[0]);
                 attacked = true;
             }
         }
     }
 
-    internal class AttackOwnWorkerAgent : IPlanningAgent
+    internal class AttackOwnPawnAgent : IPlanningAgent
     {
         public void InitializeMatch() { }
         public void InitializeRound(IGameState state) { }
@@ -337,14 +364,14 @@ namespace PlanningAgent.Tests
 
         public void Update(IGameState state, IAgentActions actions)
         {
-            var soldiers = state.GetMyUnits(UnitType.SOLDIER);
-            var workers = state.GetMyUnits(UnitType.WORKER);
-            if (soldiers.Count > 0 && workers.Count > 0)
-                actions.Attack(soldiers[0], workers[0]);
+            var warriors = state.GetMyUnits(UnitType.WARRIOR);
+            var pawns = state.GetMyUnits(UnitType.PAWN);
+            if (warriors.Count > 0 && pawns.Count > 0)
+                actions.Attack(warriors[0], pawns[0]);
         }
     }
 
-    internal class WorkerAttackAgent : IPlanningAgent
+    internal class PawnAttackAgent : IPlanningAgent
     {
         public void InitializeMatch() { }
         public void InitializeRound(IGameState state) { }
@@ -352,10 +379,10 @@ namespace PlanningAgent.Tests
 
         public void Update(IGameState state, IAgentActions actions)
         {
-            var workers = state.GetMyUnits(UnitType.WORKER);
-            var enemies = state.GetEnemyUnits(UnitType.WORKER);
-            if (workers.Count > 0 && enemies.Count > 0)
-                actions.Attack(workers[0], enemies[0]);
+            var pawns = state.GetMyUnits(UnitType.PAWN);
+            var enemies = state.GetEnemyUnits(UnitType.PAWN);
+            if (pawns.Count > 0 && enemies.Count > 0)
+                actions.Attack(pawns[0], enemies[0]);
         }
     }
 
@@ -367,10 +394,10 @@ namespace PlanningAgent.Tests
 
         public void Update(IGameState state, IAgentActions actions)
         {
-            var soldiers = state.GetMyUnits(UnitType.SOLDIER);
+            var warriors = state.GetMyUnits(UnitType.WARRIOR);
             var mines = state.GetAllUnits(UnitType.MINE);
-            if (soldiers.Count > 0 && mines.Count > 0)
-                actions.Attack(soldiers[0], mines[0]);
+            if (warriors.Count > 0 && mines.Count > 0)
+                actions.Attack(warriors[0], mines[0]);
         }
     }
 
@@ -383,8 +410,8 @@ namespace PlanningAgent.Tests
         public void Update(IGameState state, IAgentActions actions)
         {
             int? target = null;
-            foreach (UnitType ut in new[] { UnitType.SOLDIER, UnitType.ARCHER, UnitType.WORKER,
-                                            UnitType.BASE, UnitType.BARRACKS, UnitType.REFINERY })
+            foreach (UnitType ut in new[] { UnitType.WARRIOR, UnitType.ARCHER, UnitType.PAWN,
+                                            UnitType.BASE, UnitType.BARRACKS })
             {
                 var enemies = state.GetEnemyUnits(ut);
                 if (enemies.Count > 0) { target = enemies[0]; break; }
@@ -392,7 +419,7 @@ namespace PlanningAgent.Tests
 
             if (!target.HasValue) return;
 
-            foreach (UnitType ut in new[] { UnitType.SOLDIER, UnitType.ARCHER })
+            foreach (UnitType ut in new[] { UnitType.WARRIOR, UnitType.ARCHER })
             {
                 foreach (int unitNbr in state.GetMyUnits(ut))
                 {

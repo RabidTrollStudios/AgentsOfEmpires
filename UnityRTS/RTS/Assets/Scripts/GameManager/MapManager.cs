@@ -71,10 +71,23 @@ namespace GameManager
 				return null;
 			}
 
-			// Use the first tilemap as the map size and locations of tiles
-			mainTilemap = grid.GetComponentsInChildren<Tilemap>()[0];
+			// Use the Ground tilemap to define the playable grid
+			mainTilemap = null;
+			foreach (Tilemap tilemap in grid.GetComponentsInChildren<Tilemap>())
+			{
+				if (tilemap.gameObject.name == "Ground 1")
+				{
+					mainTilemap = tilemap;
+					break;
+				}
+			}
+			if (mainTilemap == null)
+			{
+				GameManager.Instance.Log("ERROR: no 'Ground 1' tilemap found", logContext);
+				return null;
+			}
 
-			// Create the nodes
+			// Create the nodes; cells with no ground tile are obstacles
 			GridCells = new GridCell[MapSize.x, MapSize.y];
 			for (int i = 0; i < MapSize.x; ++i)
 			{
@@ -83,22 +96,31 @@ namespace GameManager
 					Vector3Int position = new Vector3Int(i, j, 0);
 					GridCells[i, j] = new GridCell(mainTilemap, position);
 					Graph.AddNode(Utility.GridToInt(position, MapSize), GridCells[i, j]);
+
+					if (mainTilemap.GetTile(position) == null)
+					{
+						GridCells[i, j].SetBuildable(false);
+						GridCells[i, j].SetWalkable(false);
+					}
 				}
 			}
 
 			// Build edges from all neighboring tiles
 			GenerateEdges();
 
-			// Set all of the unbuildable nodes by iterating through the Tilemaps
-			for (int t = 1; t < grid.GetComponentsInChildren<Tilemap>().Length; ++t)
+			// Mark obstacle cells from specific tilemap layers and locate the InfluenceMap
+			foreach (Tilemap tilemap in grid.GetComponentsInChildren<Tilemap>())
 			{
-				Tilemap tilemap = grid.GetComponentsInChildren<Tilemap>()[t];
-
 				if (tilemap.CompareTag("InfluenceMap"))
 				{
 					InfluenceMap = tilemap;
 					continue;
 				}
+
+				// Only Walls and Trees layers define obstacles
+				string layerName = tilemap.gameObject.name;
+				if (layerName != "Walls" && layerName != "Trees")
+					continue;
 
 				for (int i = 0; i < MapSize.x; ++i)
 				{
@@ -113,6 +135,52 @@ namespace GameManager
 							GridCells[i, j].SetWalkable(false);
 						}
 					}
+				}
+
+				// Replace tree tiles with individual SpriteRenderers so each tree
+				// participates in Y-depth sorting via SpriteSortPoint.Pivot.
+				// TilemapRenderer (even Individual mode) uses sprite bounds center
+				// for sorting, which breaks Y-depth with tall tree sprites.
+				if (layerName == "Trees")
+				{
+					var treeParent = new GameObject("TreeSprites");
+					treeParent.transform.SetParent(grid.transform);
+
+					BoundsInt bounds = tilemap.cellBounds;
+					for (int x = bounds.xMin; x < bounds.xMax; x++)
+					{
+						for (int y = bounds.yMin; y < bounds.yMax; y++)
+						{
+							Vector3Int cellPos = new Vector3Int(x, y, 0);
+							Sprite sprite = tilemap.GetSprite(cellPos);
+							if (sprite == null)
+								continue;
+
+							// Position at tile anchor (0.5, 0.5) to match original tilemap placement
+							Vector3 worldPos = tilemap.CellToWorld(cellPos) + new Vector3(0.5f, 0.5f, 0f);
+
+							var treeGo = new GameObject($"Tree_{x}_{y}");
+							treeGo.transform.SetParent(treeParent.transform);
+							treeGo.transform.position = worldPos;
+
+							var sr = treeGo.AddComponent<SpriteRenderer>();
+							sr.sprite = sprite;
+							sr.sortingLayerName = "Agents";
+							sr.sortingOrder = 0;
+							sr.spriteSortPoint = SpriteSortPoint.Pivot;
+							sr.color = tilemap.GetColor(cellPos);
+
+							// Preserve tile flip/rotation
+							Matrix4x4 matrix = tilemap.GetTransformMatrix(cellPos);
+							sr.flipX = matrix.m00 < 0;
+							sr.flipY = matrix.m11 < 0;
+						}
+					}
+
+					// Disable the TilemapRenderer so tiles don't double-render
+					var tilemapRenderer = tilemap.GetComponent<TilemapRenderer>();
+					if (tilemapRenderer != null)
+						tilemapRenderer.enabled = false;
 				}
 			}
 			return Graph;
@@ -172,7 +240,7 @@ namespace GameManager
 
 		/// <summary>
 		/// Determines if the unit can be built in that area, optionally ignoring
-		/// a set of positions (e.g., the building worker's cell).
+		/// a set of positions (e.g., the building pawn's cell).
 		/// </summary>
 		public bool IsAreaBuildable(UnitType unitType, Vector3Int gridPosition, HashSet<Vector3Int> excludePositions)
 		{
@@ -208,7 +276,7 @@ namespace GameManager
 
 		/// <summary>
 		/// Determines if the unit can be built in that area with a walkable "boundary" around it,
-		/// optionally ignoring a set of positions (e.g., friendly workers who can move).
+		/// optionally ignoring a set of positions (e.g., friendly pawns who can move).
 		/// </summary>
 		public bool IsBoundedAreaBuildable(UnitType unitType, Vector3Int gridPosition, HashSet<Vector3Int> excludePositions)
 		{

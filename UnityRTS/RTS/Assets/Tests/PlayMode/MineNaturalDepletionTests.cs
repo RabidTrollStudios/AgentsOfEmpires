@@ -9,7 +9,7 @@ namespace GameManager.Tests.PlayMode
 {
 	/// <summary>
 	/// Play Mode tests for natural mine depletion via actual gather operations.
-	/// Uses a low-health mine so the worker exhausts it quickly.
+	/// Uses a low-health mine so the pawn exhausts it quickly.
 	/// </summary>
 	[TestFixture]
 	public class MineNaturalDepletionTests : PlayModeTestBase
@@ -18,65 +18,67 @@ namespace GameManager.Tests.PlayMode
 
 		/// <summary>
 		/// A mine with very low health is exhausted after one gather operation.
-		/// The worker then goes IDLE because there is nothing left to mine.
+		/// The pawn then goes IDLE because there is nothing left to mine.
 		/// </summary>
 		[UnityTest]
-		public IEnumerator LowHealthMine_WorkerGathers_MineDepletesAndWorkerGoesIdle()
+		public IEnumerator LowHealthMine_PawnGathers_MineDepletesAndPawnGoesIdle()
 		{
 			Unit baseUnit = PlaceUnit(UnitType.BASE, new Vector3Int(5, 5, 0));
 			baseUnit.IsBuilt = true;
 
-			Unit mine = PlaceUnit(UnitType.MINE, new Vector3Int(8, 5, 0));
+			// Mine must be outside the BASE footprint (6x4: x=[5,10], y=[2,5])
+			Unit mine = PlaceUnit(UnitType.MINE, new Vector3Int(20, 10, 0));
 			// Set mine health very low so a single gather trip depletes it
-			float miningCapacity = Constants.MINING_CAPACITY[UnitType.WORKER];
+			float miningCapacity = Constants.MINING_CAPACITY[UnitType.PAWN];
 			mine.Health = miningCapacity * 0.5f; // Less than one full mining capacity
 
-			Unit worker = PlaceUnit(UnitType.WORKER, new Vector3Int(7, 5, 0));
+			Unit pawn = PlaceUnit(UnitType.PAWN, new Vector3Int(12, 10, 0));
 			Agent agent = GetAgent0();
 			int initialGold = agent.Gold;
 
-			worker.StartGathering(new GatherEventArgs(worker, mine, baseUnit));
+			pawn.StartGathering(new GatherEventArgs(pawn, mine, baseUnit));
 
-			// Wait for worker to go IDLE (mine exhausted)
+			// Wait for pawn to go IDLE (mine exhausted)
 			yield return WaitUntil(
-				() => worker.CurrentAction == UnitAction.IDLE,
-				timeoutSeconds: 30f,
-				failMessage: "Worker did not go IDLE after low-health mine was depleted");
+				() => pawn.CurrentAction == UnitAction.IDLE,
+				timeoutSeconds: 10f,
+				failMessage: "Pawn did not go IDLE after low-health mine was depleted");
 
-			Assert.AreEqual(UnitAction.IDLE, worker.CurrentAction,
-				"Worker should be IDLE after mining a depleted mine");
+			Assert.AreEqual(UnitAction.IDLE, pawn.CurrentAction,
+				"Pawn should be IDLE after mining a depleted mine");
 		}
 
 		/// <summary>
-		/// After a low-health mine is exhausted, the worker deposits whatever it gathered.
+		/// After a low-health mine is exhausted, the pawn deposits whatever it gathered.
 		/// Agent gold should increase at least once.
 		/// </summary>
 		[UnityTest]
-		public IEnumerator LowHealthMine_WorkerDepositsBeforeIdle()
+		public IEnumerator LowHealthMine_PawnDepositsBeforeIdle()
 		{
 			Unit baseUnit = PlaceUnit(UnitType.BASE, new Vector3Int(5, 5, 0));
 			baseUnit.IsBuilt = true;
 
-			Unit mine = PlaceUnit(UnitType.MINE, new Vector3Int(8, 5, 0));
-			float miningCapacity = Constants.MINING_CAPACITY[UnitType.WORKER];
+			// Mine must be outside the BASE footprint (6x4: x=[5,10], y=[2,5])
+			Unit mine = PlaceUnit(UnitType.MINE, new Vector3Int(20, 10, 0));
+			float miningCapacity = Constants.MINING_CAPACITY[UnitType.PAWN];
 			mine.Health = miningCapacity * 0.5f;
 
-			Unit worker = PlaceUnit(UnitType.WORKER, new Vector3Int(7, 5, 0));
+			Unit pawn = PlaceUnit(UnitType.PAWN, new Vector3Int(12, 10, 0));
 			Agent agent = GetAgent0();
 			int initialGold = agent.Gold;
 
-			worker.StartGathering(new GatherEventArgs(worker, mine, baseUnit));
+			pawn.StartGathering(new GatherEventArgs(pawn, mine, baseUnit));
 
-			// Wait for gold to increase (deposit occurred) or worker to go IDLE
+			// Wait for gold to increase (deposit occurred) or pawn to go IDLE
 			yield return WaitUntil(
-				() => agent.Gold > initialGold || worker.CurrentAction == UnitAction.IDLE,
-				timeoutSeconds: 30f,
-				failMessage: "Worker did not complete gather cycle before going IDLE");
+				() => agent.Gold > initialGold || pawn.CurrentAction == UnitAction.IDLE,
+				timeoutSeconds: 10f,
+				failMessage: "Pawn did not complete gather cycle before going IDLE");
 
-			// At minimum the worker should have gone IDLE
+			// At minimum the pawn should have gone IDLE
 			// (it might go IDLE without depositing if it couldn't gather at all)
-			Assert.AreEqual(UnitAction.IDLE, worker.CurrentAction,
-				"Worker should eventually be IDLE after mine is exhausted");
+			Assert.AreEqual(UnitAction.IDLE, pawn.CurrentAction,
+				"Pawn should eventually be IDLE after mine is exhausted");
 		}
 
 		#endregion
@@ -84,29 +86,30 @@ namespace GameManager.Tests.PlayMode
 		#region Mine Health at Zero
 
 		/// <summary>
-		/// A mine set to health=0 before gathering starts: worker cannot mine
+		/// A mine set to health=0 before gathering starts: pawn cannot mine
 		/// and should go IDLE immediately.
 		/// </summary>
 		[UnityTest]
-		public IEnumerator ZeroHealthMine_WorkerGoesIdleImmediately()
+		public IEnumerator ZeroHealthMine_PawnGoesIdleImmediately()
 		{
 			Unit baseUnit = PlaceUnit(UnitType.BASE, new Vector3Int(5, 5, 0));
 			baseUnit.IsBuilt = true;
 
-			Unit mine = PlaceUnit(UnitType.MINE, new Vector3Int(8, 5, 0));
+			// Mine must be outside the BASE footprint (6x4: x=[5,10], y=[2,5])
+			Unit mine = PlaceUnit(UnitType.MINE, new Vector3Int(20, 10, 0));
 			mine.Health = 0; // Already depleted
 
-			Unit worker = PlaceUnit(UnitType.WORKER, new Vector3Int(7, 5, 0));
+			Unit pawn = PlaceUnit(UnitType.PAWN, new Vector3Int(12, 10, 0));
 
-			worker.StartGathering(new GatherEventArgs(worker, mine, baseUnit));
+			pawn.StartGathering(new GatherEventArgs(pawn, mine, baseUnit));
 
 			yield return WaitUntil(
-				() => worker.CurrentAction == UnitAction.IDLE,
+				() => pawn.CurrentAction == UnitAction.IDLE,
 				timeoutSeconds: 20f,
-				failMessage: "Worker did not go IDLE when mine was already depleted");
+				failMessage: "Pawn did not go IDLE when mine was already depleted");
 
-			Assert.AreEqual(UnitAction.IDLE, worker.CurrentAction,
-				"Worker should go IDLE when targeting a zero-health mine");
+			Assert.AreEqual(UnitAction.IDLE, pawn.CurrentAction,
+				"Pawn should go IDLE when targeting a zero-health mine");
 		}
 
 		#endregion
@@ -114,7 +117,7 @@ namespace GameManager.Tests.PlayMode
 		#region Mine Health Decreases During Gather
 
 		/// <summary>
-		/// After a worker completes one gather cycle from a mine, the mine's
+		/// After a pawn completes one gather cycle from a mine, the mine's
 		/// health (remaining gold) has decreased.
 		/// </summary>
 		[UnityTest]
@@ -123,19 +126,20 @@ namespace GameManager.Tests.PlayMode
 			Unit baseUnit = PlaceUnit(UnitType.BASE, new Vector3Int(5, 5, 0));
 			baseUnit.IsBuilt = true;
 
-			Unit mine = PlaceUnit(UnitType.MINE, new Vector3Int(8, 5, 0));
+			// Mine must be outside the BASE footprint (6x4: x=[5,10], y=[2,5])
+			Unit mine = PlaceUnit(UnitType.MINE, new Vector3Int(20, 10, 0));
 			float initialMineHealth = mine.Health;
 
-			Unit worker = PlaceUnit(UnitType.WORKER, new Vector3Int(7, 5, 0));
+			Unit pawn = PlaceUnit(UnitType.PAWN, new Vector3Int(12, 10, 0));
 			Agent agent = GetAgent0();
 			int initialGold = agent.Gold;
 
-			worker.StartGathering(new GatherEventArgs(worker, mine, baseUnit));
+			pawn.StartGathering(new GatherEventArgs(pawn, mine, baseUnit));
 
 			// Wait for first deposit (one complete mining cycle)
 			yield return WaitUntil(
 				() => agent.Gold > initialGold,
-				timeoutSeconds: 30f,
+				timeoutSeconds: 10f,
 				failMessage: "First gather deposit did not occur");
 
 			Assert.Less(mine.Health, initialMineHealth,

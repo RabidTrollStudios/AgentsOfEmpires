@@ -35,6 +35,9 @@ namespace AgentTestHarness
                     case UnitAction.ATTACK:
                         AdvanceAttack(unit);
                         break;
+                    case UnitAction.REPAIR:
+                        AdvanceRepair(unit);
+                        break;
                 }
             }
         }
@@ -53,6 +56,14 @@ namespace AgentTestHarness
             MoveUnitOneStep(unit);
         }
 
+        /// <summary>
+        /// Move a unit one step along its path with 3-phase collision avoidance
+        /// matching the Unity engine's FixedUpdate logic:
+        ///   Phase 1: Cell is buildable (empty) — move forward normally.
+        ///   Phase 2: Cell is walkable but not buildable (mobile unit blocking) —
+        ///            wait, then detour, then full re-path with avoidUnits.
+        ///   Phase 3: Cell is not walkable (terrain/building) — re-path immediately.
+        /// </summary>
         private void MoveUnitOneStep(SimUnit unit)
         {
             if (unit.Path == null || unit.PathIndex >= unit.Path.Count) return;
@@ -61,33 +72,135 @@ namespace AgentTestHarness
             float speed = GameConstants.MOVEMENT_SPEED[unit.UnitType];
             unit.MoveAccumulator += speed;
             if (unit.MoveAccumulator < 1.0f) return;
-            unit.MoveAccumulator -= 1.0f;
 
             Position nextPos = unit.Path[unit.PathIndex];
 
-            // Free old cell, occupy new cell
-            if (GameConstants.CAN_MOVE[unit.UnitType])
+            // Phase 1: Next cell is buildable (truly empty) — move forward normally
+            if (Map.IsPositionBuildable(nextPos))
             {
-                Map.SetAreaBuildability(unit.UnitType, unit.GridPosition, true);
-            }
+                unit.MoveAccumulator -= 1.0f;
+                unit.LocalAvoidWaitTicks = 0;
 
-            unit.GridPosition = nextPos;
-            unit.PathIndex++;
+                if (GameConstants.CAN_MOVE[unit.UnitType])
+                    Map.SetAreaBuildability(unit.UnitType, unit.GridPosition, true);
 
-            if (GameConstants.CAN_MOVE[unit.UnitType])
-            {
-                Map.SetAreaBuildability(unit.UnitType, unit.GridPosition, false);
-            }
+                unit.GridPosition = nextPos;
+                unit.PathIndex++;
 
-            if (unit.PathIndex >= unit.Path.Count)
-            {
-                // Path complete — for pure MOVE, go IDLE
-                if (unit.CurrentAction == UnitAction.MOVE)
+                if (GameConstants.CAN_MOVE[unit.UnitType])
+                    Map.SetAreaBuildability(unit.UnitType, unit.GridPosition, false);
+
+                if (unit.PathIndex >= unit.Path.Count)
                 {
-                    unit.CurrentAction = UnitAction.IDLE;
-                    unit.Path = null;
+                    if (unit.CurrentAction == UnitAction.MOVE)
+                    {
+                        unit.CurrentAction = UnitAction.IDLE;
+                        unit.Path = null;
+                    }
                 }
             }
+            // Phase 2: Walkable but not buildable — blocked by a mobile unit (temporary)
+            else if (Map.IsPositionWalkable(nextPos))
+            {
+                unit.MoveAccumulator -= 1.0f; // consume to prevent catch-up
+
+                // For MOVE: if close to destination or only 1 step left, stop here
+                if (unit.CurrentAction == UnitAction.MOVE)
+                {
+                    int stepsRemaining = unit.Path.Count - unit.PathIndex;
+                    Position target = unit.Path[unit.Path.Count - 1];
+                    float distToTarget = Position.Distance(unit.GridPosition, target);
+                    if (stepsRemaining == 1 || distToTarget <= 3.0f)
+                    {
+                        unit.Path = null;
+                        unit.CurrentAction = UnitAction.IDLE;
+                        unit.LocalAvoidWaitTicks = 0;
+                        return;
+                    }
+                }
+
+                unit.LocalAvoidWaitTicks++;
+
+                // Wait 3 ticks for the blocker to move (MOVE actions skip the wait)
+                if (unit.CurrentAction != UnitAction.MOVE && unit.LocalAvoidWaitTicks <= 3)
+                    return;
+
+                // Try to find a detour around the blocker
+                var detour = FindDetourAroundBlocker(unit);
+                if (detour != null)
+                {
+                    unit.Path = detour;
+                    unit.PathIndex = 0;
+                    unit.LocalAvoidWaitTicks = 0;
+                }
+                else if (unit.LocalAvoidWaitTicks > 10)
+                {
+                    // Fallback: full re-path to original target avoiding units
+                    Position target = unit.Path[unit.Path.Count - 1];
+                    var newPath = Map.FindPath(unit.GridPosition, target, avoidUnits: true);
+                    if (newPath.Count > 0)
+                    {
+                        unit.Path = newPath;
+                        unit.PathIndex = 0;
+                    }
+                    // If re-path fails, keep old path (blocker may clear)
+                    unit.LocalAvoidWaitTicks = 0;
+                }
+            }
+            // Phase 3: Not walkable — terrain or building, re-path immediately
+            else
+            {
+                unit.MoveAccumulator -= 1.0f;
+                unit.LocalAvoidWaitTicks = 0;
+                Position target = unit.Path[unit.Path.Count - 1];
+                var newPath = Map.FindPath(unit.GridPosition, target);
+                if (newPath.Count > 0)
+                {
+                    unit.Path = newPath;
+                    unit.PathIndex = 0;
+                }
+                else
+                {
+                    unit.Path = null;
+                    if (unit.CurrentAction == UnitAction.MOVE)
+                        unit.CurrentAction = UnitAction.IDLE;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Scan ahead in the current path to find the next buildable (unoccupied) cell,
+        /// then re-path from the unit's current position to that cell avoiding units.
+        /// Returns the spliced detour + remainder path, or null if no detour found.
+        /// Mirrors Unity's FindDetourAroundBlocker().
+        /// </summary>
+        private List<Position> FindDetourAroundBlocker(SimUnit unit)
+        {
+            if (unit.Path == null) return null;
+
+            // Find first buildable cell further along the path
+            int resumeIndex = -1;
+            for (int i = unit.PathIndex + 1; i < unit.Path.Count; i++)
+            {
+                if (Map.IsPositionBuildable(unit.Path[i]))
+                {
+                    resumeIndex = i;
+                    break;
+                }
+            }
+
+            if (resumeIndex < 0) return null;
+
+            Position waypoint = unit.Path[resumeIndex];
+            var detour = Map.FindPath(unit.GridPosition, waypoint, avoidUnits: true);
+            if (detour.Count == 0) return null;
+
+            // Splice: detour to the waypoint + remainder of original path after it
+            for (int i = resumeIndex + 1; i < unit.Path.Count; i++)
+            {
+                detour.Add(unit.Path[i]);
+            }
+            return detour;
         }
 
         #endregion
@@ -121,28 +234,28 @@ namespace AgentTestHarness
 
         #region Building
 
-        private void AdvanceBuild(SimUnit worker)
+        private void AdvanceBuild(SimUnit pawn)
         {
             // Phase 1: walk to build site
-            if (worker.Path != null && worker.PathIndex < worker.Path.Count)
+            if (pawn.Path != null && pawn.PathIndex < pawn.Path.Count)
             {
-                MoveUnitOneStep(worker);
+                MoveUnitOneStep(pawn);
                 // Keep action as BUILD even after step
-                worker.CurrentAction = UnitAction.BUILD;
+                pawn.CurrentAction = UnitAction.BUILD;
                 return;
             }
 
             // Phase 2: count down build timer
-            worker.BuildTimer -= Config.TickDuration;
+            pawn.BuildTimer -= Config.TickDuration;
 
-            if (worker.BuildTimer <= 0f)
+            if (pawn.BuildTimer <= 0f)
             {
                 // Mark building as built
                 foreach (var u in Units.Values)
                 {
-                    if (u.UnitType == worker.BuildTarget
-                        && u.GridPosition == worker.BuildSite
-                        && u.OwnerAgentNbr == worker.OwnerAgentNbr
+                    if (u.UnitType == pawn.BuildTarget
+                        && u.GridPosition == pawn.BuildSite
+                        && u.OwnerAgentNbr == pawn.OwnerAgentNbr
                         && !u.IsBuilt)
                     {
                         u.IsBuilt = true;
@@ -150,8 +263,8 @@ namespace AgentTestHarness
                     }
                 }
 
-                worker.CurrentAction = UnitAction.IDLE;
-                worker.Path = null;
+                pawn.CurrentAction = UnitAction.IDLE;
+                pawn.Path = null;
             }
         }
 
@@ -159,118 +272,158 @@ namespace AgentTestHarness
 
         #region Gathering
 
-        private void AdvanceGather(SimUnit worker)
+        private void AdvanceGather(SimUnit pawn)
         {
-            switch (worker.GatherPhase)
+            switch (pawn.GatherPhase)
             {
                 case GatherPhase.TO_MINE:
-                    AdvanceGatherToMine(worker);
+                    AdvanceGatherToMine(pawn);
                     break;
                 case GatherPhase.MINING:
-                    AdvanceGatherMining(worker);
+                    AdvanceGatherMining(pawn);
                     break;
                 case GatherPhase.TO_BASE:
-                    AdvanceGatherToBase(worker);
+                    AdvanceGatherToBase(pawn);
                     break;
             }
         }
 
-        private void AdvanceGatherToMine(SimUnit worker)
+        private void AdvanceGatherToMine(SimUnit pawn)
         {
             // If mine was destroyed, go idle
-            if (!Units.TryGetValue(worker.GatherMineNbr, out var mine))
+            if (!Units.TryGetValue(pawn.GatherMineNbr, out var mine))
             {
-                worker.CurrentAction = UnitAction.IDLE;
-                worker.Path = null;
+                pawn.CurrentAction = UnitAction.IDLE;
+                pawn.Path = null;
                 return;
             }
 
             // Walk toward the mine
-            if (worker.Path != null && worker.PathIndex < worker.Path.Count)
+            if (pawn.Path != null && pawn.PathIndex < pawn.Path.Count)
             {
-                MoveUnitOneStep(worker);
-                worker.CurrentAction = UnitAction.GATHER;
+                MoveUnitOneStep(pawn);
+                pawn.CurrentAction = UnitAction.GATHER;
                 return;
             }
 
             // Arrived adjacent to mine — start mining
-            worker.GatherPhase = GatherPhase.MINING;
-            // Apply per-agent refinery boost: rate = base * (1 + MINING_BOOST * refineryCount)
-            int refineryCount = 0;
-            foreach (var u in Units.Values)
-                if (u.OwnerAgentNbr == worker.OwnerAgentNbr && u.UnitType == UnitType.REFINERY && u.IsBuilt)
-                    refineryCount++;
-            float effectiveSpeed = miningSpeed * (1f + GameConstants.MINING_BOOST * refineryCount);
-            float miningTime = effectiveSpeed > 0 ? miningCapacity / effectiveSpeed : 1f;
-            worker.MiningTimer = miningTime;
+            pawn.GatherPhase = GatherPhase.MINING;
+            float miningTime = miningSpeed > 0 ? miningCapacity / miningSpeed : 1f;
+            pawn.MiningTimer = miningTime;
         }
 
-        private void AdvanceGatherMining(SimUnit worker)
+        private void AdvanceGatherMining(SimUnit pawn)
         {
-            if (!Units.TryGetValue(worker.GatherMineNbr, out var mine))
+            if (!Units.TryGetValue(pawn.GatherMineNbr, out var mine))
             {
-                worker.CurrentAction = UnitAction.IDLE;
+                pawn.CurrentAction = UnitAction.IDLE;
                 return;
             }
 
-            worker.MiningTimer -= Config.TickDuration;
+            pawn.MiningTimer -= Config.TickDuration;
 
-            if (worker.MiningTimer <= 0f)
+            if (pawn.MiningTimer <= 0f)
             {
                 // Deduct gold from mine
                 float goldMined = Math.Min(miningCapacity, mine.Health);
                 mine.Health -= goldMined;
 
                 // Path to base
-                if (!Units.TryGetValue(worker.GatherBaseNbr, out var baseUnit))
+                if (!Units.TryGetValue(pawn.GatherBaseNbr, out var baseUnit))
                 {
-                    worker.CurrentAction = UnitAction.IDLE;
+                    pawn.CurrentAction = UnitAction.IDLE;
                     return;
                 }
 
-                var path = Map.FindPathToUnit(worker.GridPosition, UnitType.BASE, baseUnit.GridPosition);
-                worker.GatherPhase = GatherPhase.TO_BASE;
-                worker.Path = path;
-                worker.PathIndex = 0;
+                var path = Map.FindPathToUnit(pawn.GridPosition, UnitType.BASE, baseUnit.GridPosition);
+                pawn.GatherPhase = GatherPhase.TO_BASE;
+                pawn.Path = path;
+                pawn.PathIndex = 0;
 
                 // Store gold carried as a small temporary value on the mining timer
-                worker.MiningTimer = goldMined;
+                pawn.MiningTimer = goldMined;
             }
         }
 
-        private void AdvanceGatherToBase(SimUnit worker)
+        private void AdvanceGatherToBase(SimUnit pawn)
         {
             // If base was destroyed, go idle
-            if (!Units.TryGetValue(worker.GatherBaseNbr, out var baseUnit))
+            if (!Units.TryGetValue(pawn.GatherBaseNbr, out var baseUnit))
             {
-                worker.CurrentAction = UnitAction.IDLE;
-                worker.Path = null;
+                pawn.CurrentAction = UnitAction.IDLE;
+                pawn.Path = null;
                 return;
             }
 
             // Walk toward the base
-            if (worker.Path != null && worker.PathIndex < worker.Path.Count)
+            if (pawn.Path != null && pawn.PathIndex < pawn.Path.Count)
             {
-                MoveUnitOneStep(worker);
-                worker.CurrentAction = UnitAction.GATHER;
+                MoveUnitOneStep(pawn);
+                pawn.CurrentAction = UnitAction.GATHER;
                 return;
             }
 
             // Arrived at base — deposit gold
-            float goldCarried = worker.MiningTimer;
-            Gold[worker.OwnerAgentNbr] += (int)goldCarried;
+            float goldCarried = pawn.MiningTimer;
+            Gold[pawn.OwnerAgentNbr] += (int)goldCarried;
 
             // Cycle back to mine
-            if (!Units.TryGetValue(worker.GatherMineNbr, out var mine) || mine.Health <= 0)
+            if (!Units.TryGetValue(pawn.GatherMineNbr, out var mine) || mine.Health <= 0)
             {
-                worker.CurrentAction = UnitAction.IDLE;
+                pawn.CurrentAction = UnitAction.IDLE;
                 return;
             }
 
-            var path = Map.FindPathToUnit(worker.GridPosition, UnitType.MINE, mine.GridPosition);
-            worker.GatherPhase = GatherPhase.TO_MINE;
-            worker.Path = path;
-            worker.PathIndex = 0;
+            var path = Map.FindPathToUnit(pawn.GridPosition, UnitType.MINE, mine.GridPosition);
+            pawn.GatherPhase = GatherPhase.TO_MINE;
+            pawn.Path = path;
+            pawn.PathIndex = 0;
+        }
+
+        #endregion
+
+        #region Repair
+
+        private void AdvanceRepair(SimUnit pawn)
+        {
+            // If building was destroyed, go idle
+            if (!Units.TryGetValue(pawn.RepairBuildingNbr, out var building) || building.Health <= 0)
+            {
+                pawn.CurrentAction = UnitAction.IDLE;
+                pawn.Path = null;
+                return;
+            }
+
+            // Phase 1: walk to building
+            if (pawn.Path != null && pawn.PathIndex < pawn.Path.Count)
+            {
+                MoveUnitOneStep(pawn);
+                pawn.CurrentAction = UnitAction.REPAIR;
+                return;
+            }
+
+            // Phase 2: heal at 110% of the build rate
+            float maxHp = GameConstants.HEALTH[building.UnitType];
+
+            // Already at full health
+            if (building.Health >= maxHp)
+            {
+                pawn.CurrentAction = UnitAction.IDLE;
+                pawn.Path = null;
+                return;
+            }
+
+            float repairRate = 1.1f * maxHp / creationTime[building.UnitType];
+            building.Health += repairRate * Config.TickDuration;
+            if (building.Health > maxHp)
+                building.Health = maxHp;
+
+            // Done — building is at full health
+            if (building.Health >= maxHp)
+            {
+                pawn.CurrentAction = UnitAction.IDLE;
+                pawn.Path = null;
+            }
         }
 
         #endregion

@@ -15,68 +15,68 @@ namespace GameManager.Tests.PlayMode
 	public class UnitMovementHappyPathTests : PlayModeTestBase
 	{
 		[UnityTest]
-		public IEnumerator Worker_MoveCommand_ArrivesAtDestinationAndGoesIdle()
+		public IEnumerator Pawn_MoveCommand_ArrivesAtDestinationAndGoesIdle()
 		{
 			var start  = new Vector3Int(5, 5, 0);
 			var target = new Vector3Int(10, 10, 0);
-			Unit worker = PlaceUnit(UnitType.WORKER, start);
+			Unit pawn = PlaceUnit(UnitType.PAWN, start);
 
-			worker.StartMoving(new MoveEventArgs(worker, UnitType.WORKER, target));
+			pawn.StartMoving(new MoveEventArgs(pawn, UnitType.PAWN, target));
 
-			Assert.AreEqual(UnitAction.MOVE, worker.CurrentAction,
-				"Worker should be in MOVE state after StartMoving");
+			Assert.AreEqual(UnitAction.MOVE, pawn.CurrentAction,
+				"Pawn should be in MOVE state after StartMoving");
 
 			yield return WaitUntil(
-				() => worker.CurrentAction == UnitAction.IDLE,
+				() => pawn.CurrentAction == UnitAction.IDLE,
 				timeoutSeconds: 15f,
-				failMessage: "Worker did not arrive at destination and go IDLE");
+				failMessage: "Pawn did not arrive at destination and go IDLE");
 
-			Assert.AreEqual(UnitAction.IDLE, worker.CurrentAction);
-			Assert.AreEqual(target, worker.GridPosition,
-				"Worker should be at the target grid position after movement completes");
+			Assert.AreEqual(UnitAction.IDLE, pawn.CurrentAction);
+			Assert.AreEqual(target, pawn.GridPosition,
+				"Pawn should be at the target grid position after movement completes");
 		}
 
 		[UnityTest]
-		public IEnumerator Worker_Movement_OriginalCellFreedAfterMove()
+		public IEnumerator Pawn_Movement_OriginalCellFreedAfterMove()
 		{
 			var start  = new Vector3Int(5, 5, 0);
 			var target = new Vector3Int(8, 8, 0);
-			Unit worker = PlaceUnit(UnitType.WORKER, start);
+			Unit pawn = PlaceUnit(UnitType.PAWN, start);
 
 			Assert.IsFalse(ctx.MapManager.IsGridPositionBuildable(start),
-				"Start cell should not be buildable while worker is on it");
+				"Start cell should not be buildable while pawn is on it");
 
-			worker.StartMoving(new MoveEventArgs(worker, UnitType.WORKER, target));
+			pawn.StartMoving(new MoveEventArgs(pawn, UnitType.PAWN, target));
 
 			yield return WaitUntil(
-				() => worker.CurrentAction == UnitAction.IDLE,
+				() => pawn.CurrentAction == UnitAction.IDLE,
 				timeoutSeconds: 15f,
-				failMessage: "Worker did not finish moving");
+				failMessage: "Pawn did not finish moving");
 
 			Assert.IsTrue(ctx.MapManager.IsGridPositionBuildable(start),
-				"Original cell should be buildable after worker has moved away");
+				"Original cell should be buildable after pawn has moved away");
 			Assert.IsFalse(ctx.MapManager.IsGridPositionBuildable(target),
-				"Destination cell should not be buildable while worker occupies it");
+				"Destination cell should not be buildable while pawn occupies it");
 		}
 
 		[UnityTest]
-		public IEnumerator Worker_MultiStepPath_ReachesFinalTarget()
+		public IEnumerator Pawn_MultiStepPath_ReachesFinalTarget()
 		{
 			var start  = new Vector3Int(2, 2, 0);
 			var target = new Vector3Int(20, 20, 0);
-			Unit worker = PlaceUnit(UnitType.WORKER, start);
+			Unit pawn = PlaceUnit(UnitType.PAWN, start);
 
-			worker.StartMoving(new MoveEventArgs(worker, UnitType.WORKER, target));
+			pawn.StartMoving(new MoveEventArgs(pawn, UnitType.PAWN, target));
 
-			Assert.AreEqual(UnitAction.MOVE, worker.CurrentAction);
+			Assert.AreEqual(UnitAction.MOVE, pawn.CurrentAction);
 
 			yield return WaitUntil(
-				() => worker.CurrentAction == UnitAction.IDLE,
-				timeoutSeconds: 30f,
-				failMessage: "Worker did not arrive at distant target via multi-step path");
+				() => pawn.CurrentAction == UnitAction.IDLE,
+				timeoutSeconds: 10f,
+				failMessage: "Pawn did not arrive at distant target via multi-step path");
 
-			Assert.AreEqual(target, worker.GridPosition,
-				"Worker should reach the final target after traversing a long path");
+			Assert.AreEqual(target, pawn.GridPosition,
+				"Pawn should reach the final target after traversing a long path");
 		}
 	}
 }

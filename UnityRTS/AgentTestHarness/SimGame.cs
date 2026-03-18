@@ -34,11 +34,14 @@ namespace AgentTestHarness
         private SimGameState[] states = new SimGameState[2];
         private SimAgentActions[] actions = new SimAgentActions[2];
 
+        // Optional command recording (null when disabled)
+        private CommandRecorder[] recorders;
+
         // Derived timing constants (computed from Config.GameSpeed)
         internal float scalarCreationTime;
         internal Dictionary<UnitType, float> creationTime;
         internal Dictionary<UnitType, float> damage;
-        internal float miningSpeed; // gold per second for WORKER
+        internal float miningSpeed; // gold per second for PAWN
         internal float miningCapacity; // gold per trip
 
         internal SimGame(SimConfig config, SimMap map)
@@ -71,9 +74,8 @@ namespace AgentTestHarness
             foreach (var kvp in GameConstants.BASE_DAMAGE)
                 damage[kvp.Key] = kvp.Value * scalarDamage;
 
-            float miningBoost = GameConstants.MINING_BOOST;
-            miningSpeed = gs * miningBoost * 20f; // gold per second
-            miningCapacity = GameConstants.MINING_CAPACITY[UnitType.WORKER];
+            miningSpeed = gs * 20f; // gold per second
+            miningCapacity = GameConstants.MINING_CAPACITY[UnitType.PAWN];
         }
 
         #region Agent Setup
@@ -95,6 +97,22 @@ namespace AgentTestHarness
         }
 
         #endregion
+
+        /// <summary>
+        /// Enable command recording for all agents. Call before Run/Tick.
+        /// </summary>
+        public void EnableRecording()
+        {
+            recorders = new CommandRecorder[2];
+            for (int a = 0; a < 2; a++)
+                recorders[a] = new CommandRecorder(actions[a], a, () => CurrentTick);
+        }
+
+        /// <summary>Get recorded commands for an agent (null if recording not enabled).</summary>
+        public List<CommandRecord> GetRecordedCommands(int agentNbr)
+        {
+            return recorders?[agentNbr]?.Records;
+        }
 
         #region Game Lifecycle
 
@@ -132,11 +150,12 @@ namespace AgentTestHarness
         {
             CurrentTick++;
 
-            // 1. Call agent Update
+            // 1. Call agent Update (pass recorders if recording is enabled)
             for (int a = 0; a < 2; a++)
             {
                 actions[a].ClearPending();
-                agents[a]?.Update(states[a], actions[a]);
+                IAgentActions agentActions = recorders != null ? (IAgentActions)recorders[a] : actions[a];
+                agents[a]?.Update(states[a], agentActions);
             }
 
             // 2. Process queued commands

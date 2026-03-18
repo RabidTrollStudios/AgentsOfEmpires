@@ -127,6 +127,21 @@ namespace GameManager.GameElements
 	}
 
 	/// <summary>
+	/// Arguments for the Repair action
+	/// </summary>
+	internal class RepairEventArgs : EventArgs
+	{
+		internal RepairEventArgs(Unit pawn, Unit building)
+		{
+			Pawn = pawn;
+			Building = building;
+		}
+
+		internal Unit Pawn { get; set; }
+		internal Unit Building { get; set; }
+	}
+
+	/// <summary>
 	/// Arguments for the Build action
 	/// </summary>
 	internal class BuildEventArgs : EventArgs
