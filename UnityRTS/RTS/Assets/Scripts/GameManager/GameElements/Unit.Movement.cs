@@ -192,7 +192,16 @@ namespace GameManager.GameElements
 
 			float ratio;
 			if (!IsBuilt)
+			{
 				ratio = Mathf.Clamp01(BuildProgress / Constants.CREATION_TIME[UnitType]);
+				// Keep sprite opacity in sync with build progress (damage can reduce it)
+				if (unitSprite != null)
+				{
+					var c = unitSprite.color;
+					c.a = 0.3f + ratio * 0.4f;
+					unitSprite.color = c;
+				}
+			}
 			else
 				ratio = Mathf.Clamp01(Health / maxHealth);
 
