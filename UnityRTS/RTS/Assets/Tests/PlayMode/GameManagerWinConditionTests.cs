@@ -56,8 +56,8 @@ namespace GameManager.Tests.PlayMode
 			GameManager.Instance.TotalGameTime = 0f;
 			GameManager.Instance.MaxNbrOfSeconds = 300;
 
-			PlaceUnit(UnitType.WORKER, new Vector3Int(5, 5, 0));
-			PlaceUnit(UnitType.WORKER, new Vector3Int(20, 20, 0), ctx.Agent1Go);
+			PlaceUnit(UnitType.PAWN, new Vector3Int(5, 5, 0));
+			PlaceUnit(UnitType.PAWN, new Vector3Int(20, 20, 0), ctx.Agent1Go);
 
 			yield return null;
 
@@ -74,7 +74,7 @@ namespace GameManager.Tests.PlayMode
 			GameManager.Instance.MaxNbrOfSeconds = 300;
 
 			// Only agent 0 has a unit
-			PlaceUnit(UnitType.WORKER, new Vector3Int(5, 5, 0));
+			PlaceUnit(UnitType.PAWN, new Vector3Int(5, 5, 0));
 
 			yield return null;
 
@@ -92,7 +92,7 @@ namespace GameManager.Tests.PlayMode
 			GameManager.Instance.MaxNbrOfSeconds = 300;
 
 			// Only agent 1 has a unit
-			PlaceUnit(UnitType.WORKER, new Vector3Int(20, 20, 0), ctx.Agent1Go);
+			PlaceUnit(UnitType.PAWN, new Vector3Int(20, 20, 0), ctx.Agent1Go);
 
 			yield return null;
 
@@ -123,9 +123,9 @@ namespace GameManager.Tests.PlayMode
 		public IEnumerator DetermineRoundWinner_Timeout_Agent0HigherScore_ReturnsAgent0()
 		{
 			InjectAgents();
-			// SOLDIER value=4 vs WORKER value=1
-			PlaceUnit(UnitType.SOLDIER, new Vector3Int(5, 5, 0));
-			PlaceUnit(UnitType.WORKER,  new Vector3Int(20, 20, 0), ctx.Agent1Go);
+			// WARRIOR value=4 vs PAWN value=1
+			PlaceUnit(UnitType.WARRIOR, new Vector3Int(5, 5, 0));
+			PlaceUnit(UnitType.PAWN,  new Vector3Int(20, 20, 0), ctx.Agent1Go);
 
 			// Trigger timeout path
 			GameManager.Instance.TotalGameTime  = 999f;
@@ -136,16 +136,16 @@ namespace GameManager.Tests.PlayMode
 			var winner = InvokeDetermineRoundWinner();
 
 			Assert.AreEqual(ctx.Agent0Go, winner,
-				"SOLDIER (4 pts) beats WORKER (1 pt) — agent 0 should win on score");
+				"WARRIOR (4 pts) beats PAWN (1 pt) — agent 0 should win on score");
 		}
 
 		[UnityTest]
 		public IEnumerator DetermineRoundWinner_Timeout_Agent1HigherScore_ReturnsAgent1()
 		{
 			InjectAgents();
-			// WORKER value=1 vs SOLDIER value=4
-			PlaceUnit(UnitType.WORKER,  new Vector3Int(5, 5, 0));
-			PlaceUnit(UnitType.SOLDIER, new Vector3Int(20, 20, 0), ctx.Agent1Go);
+			// PAWN value=1 vs WARRIOR value=4
+			PlaceUnit(UnitType.PAWN,  new Vector3Int(5, 5, 0));
+			PlaceUnit(UnitType.WARRIOR, new Vector3Int(20, 20, 0), ctx.Agent1Go);
 
 			GameManager.Instance.TotalGameTime  = 999f;
 			GameManager.Instance.MaxNbrOfSeconds = 300;
@@ -155,16 +155,16 @@ namespace GameManager.Tests.PlayMode
 			var winner = InvokeDetermineRoundWinner();
 
 			Assert.AreEqual(ctx.Agent1Go, winner,
-				"SOLDIER (4 pts) beats WORKER (1 pt) — agent 1 should win on score");
+				"WARRIOR (4 pts) beats PAWN (1 pt) — agent 1 should win on score");
 		}
 
 		[UnityTest]
 		public IEnumerator DetermineRoundWinner_Timeout_EqualScore_Agent0MoreGold_ReturnsAgent0()
 		{
 			InjectAgents();
-			// Equal units — one WORKER each (value=1)
-			PlaceUnit(UnitType.WORKER, new Vector3Int(5, 5, 0));
-			PlaceUnit(UnitType.WORKER, new Vector3Int(20, 20, 0), ctx.Agent1Go);
+			// Equal units — one PAWN each (value=1)
+			PlaceUnit(UnitType.PAWN, new Vector3Int(5, 5, 0));
+			PlaceUnit(UnitType.PAWN, new Vector3Int(20, 20, 0), ctx.Agent1Go);
 
 			// Agent 0 has more gold than agent 1
 			ctx.GetAgent(0).Gold = 2000;
@@ -185,9 +185,9 @@ namespace GameManager.Tests.PlayMode
 		public IEnumerator DetermineRoundWinner_Timeout_EqualScore_Agent1MoreGold_ReturnsAgent1()
 		{
 			InjectAgents();
-			// Equal units — one WORKER each (value=1)
-			PlaceUnit(UnitType.WORKER, new Vector3Int(5, 5, 0));
-			PlaceUnit(UnitType.WORKER, new Vector3Int(20, 20, 0), ctx.Agent1Go);
+			// Equal units — one PAWN each (value=1)
+			PlaceUnit(UnitType.PAWN, new Vector3Int(5, 5, 0));
+			PlaceUnit(UnitType.PAWN, new Vector3Int(20, 20, 0), ctx.Agent1Go);
 
 			// Agent 1 has more gold than agent 0
 			ctx.GetAgent(0).Gold = 500;

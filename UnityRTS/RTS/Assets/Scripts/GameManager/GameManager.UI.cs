@@ -9,6 +9,13 @@ namespace GameManager
 	{
 		#region UI and Input
 
+		/// <summary>
+		/// One-time game-over UI setup (banner and font are configured in the editor).
+		/// </summary>
+		private void SetupGameOverBanner()
+		{
+		}
+
 		private void UpdateTimerUI()
 		{
 			TotalGameTime += Time.deltaTime * Constants.GAME_SPEED;
@@ -26,11 +33,11 @@ namespace GameManager
 		{
 			HasAgentDebugging = true;
 			HasUnitDebugging = true;
-			HasMoveTint = true;
-			HasGatherTint = true;
-			HasAttackTint = true;
+			HasMoveTint = false;
+			HasGatherTint = false;
+			HasAttackTint = false;
 			HasPathTint = true;
-			HasBuildTint = true;
+			HasBuildTint = false;
 			HasTargetLineTint = true;
 
 			if (AgentToggle != null)
@@ -51,17 +58,17 @@ namespace GameManager
 			if (MoveTintToggle != null)
 			{
 				MoveTintToggle.onValueChanged.AddListener(OnMoveTintToggleChanged);
-				MoveTintToggle.isOn = true;
+				MoveTintToggle.isOn = false;
 			}
 			if (GatherTintToggle != null)
 			{
 				GatherTintToggle.onValueChanged.AddListener(OnGatherTintToggleChanged);
-				GatherTintToggle.isOn = true;
+				GatherTintToggle.isOn = false;
 			}
 			if (AttackTintToggle != null)
 			{
 				AttackTintToggle.onValueChanged.AddListener(OnAttackTintToggleChanged);
-				AttackTintToggle.isOn = true;
+				AttackTintToggle.isOn = false;
 			}
 			if (PathTintToggle != null)
 			{
@@ -71,7 +78,7 @@ namespace GameManager
 			if (BuildTintToggle != null)
 			{
 				BuildTintToggle.onValueChanged.AddListener(OnBuildTintToggleChanged);
-				BuildTintToggle.isOn = true;
+				BuildTintToggle.isOn = false;
 			}
 			if (TargetLineTintToggle != null)
 			{
@@ -161,22 +168,22 @@ namespace GameManager
 				  + winner.GetComponent<AgentController>().Agent.AgentDLLName + "\nWins Round";
 			gameState = GameState.SHOWING_WINNER;
 
-			if (winner.GetComponent<AgentController>().Agent.AgentName == Constants.HUMAN_ABBR)
+			if (winner.GetComponent<AgentController>().Agent.AgentName == Constants.BLUE_ABBR)
 			{
-				Prefabs.HumanScoreText.text = AgentWins[Constants.HUMAN_ABBR].ToString();
+				Prefabs.BlueScoreText.text = AgentWins[Constants.BLUE_ABBR].ToString();
 			}
 			else
 			{
-				Prefabs.OrcScoreText.text = AgentWins[Constants.ORC_ABBR].ToString();
+				Prefabs.RedScoreText.text = AgentWins[Constants.RED_ABBR].ToString();
 			}
 			TimeToDisplayBanner = 1.5f;
 		}
 
         private void DisplaySingleAgentResults()
         {
-	        string winnerAbbr = AgentWins[Constants.HUMAN_ABBR] >= AgentWins[Constants.ORC_ABBR]
-				? Constants.HUMAN_ABBR
-				: Constants.ORC_ABBR;
+	        string winnerAbbr = AgentWins[Constants.BLUE_ABBR] >= AgentWins[Constants.RED_ABBR]
+				? Constants.BLUE_ABBR
+				: Constants.RED_ABBR;
 
 	        GameObject winner = null;
 	        if (Agents[0].GetComponent<AgentController>().Agent.AgentName == winnerAbbr)
@@ -199,15 +206,15 @@ namespace GameManager
 	        GameObject singleAgent = null;
 	        int nbrWins = 0;
 
-		    if (Agents[0].GetComponent<AgentController>().Agent.AgentName == Constants.ORC_ABBR)
+		    if (Agents[0].GetComponent<AgentController>().Agent.AgentName == Constants.RED_ABBR)
 		    {
 			    singleAgent = Agents[1];
-			    nbrWins = AgentWins[Constants.HUMAN_ABBR];
+			    nbrWins = AgentWins[Constants.BLUE_ABBR];
 		    }
 		    else
 		    {
 			    singleAgent = Agents[0];
-			    nbrWins = AgentWins[Constants.HUMAN_ABBR];
+			    nbrWins = AgentWins[Constants.BLUE_ABBR];
 		    }
 
 	        Prefabs.GameOverUI.GetComponentInChildren<Text>().text
@@ -219,12 +226,12 @@ namespace GameManager
 
 		private void UpdateCustomDebugUI()
 		{
-			if (HumanCustomDebugText == null && OrcCustomDebugText == null) return;
+			if (BlueCustomDebugText == null && RedCustomDebugText == null) return;
 
 			if (!HasAgentDebugging || Agents == null || Agents.Count == 0)
 			{
-				if (HumanCustomDebugText != null) HumanCustomDebugText.text = "";
-				if (OrcCustomDebugText != null) OrcCustomDebugText.text = "";
+				if (BlueCustomDebugText != null) BlueCustomDebugText.text = "";
+				if (RedCustomDebugText != null) RedCustomDebugText.text = "";
 				return;
 			}
 
@@ -240,10 +247,10 @@ namespace GameManager
 					? ""
 					: controller.Agent.AgentDLLName + "\n" + debugText;
 
-				if (controller.Agent.AgentName == Constants.HUMAN_ABBR && HumanCustomDebugText != null)
-					HumanCustomDebugText.text = display;
-				else if (controller.Agent.AgentName == Constants.ORC_ABBR && OrcCustomDebugText != null)
-					OrcCustomDebugText.text = display;
+				if (controller.Agent.AgentName == Constants.BLUE_ABBR && BlueCustomDebugText != null)
+					BlueCustomDebugText.text = display;
+				else if (controller.Agent.AgentName == Constants.RED_ABBR && RedCustomDebugText != null)
+					RedCustomDebugText.text = display;
 			}
 		}
 

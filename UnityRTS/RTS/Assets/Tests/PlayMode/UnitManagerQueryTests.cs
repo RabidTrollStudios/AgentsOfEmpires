@@ -27,10 +27,10 @@ namespace GameManager.Tests.PlayMode
 			Assert.AreEqual(0, ctx.UnitManager.GetAllUnits().Count,
 				"UnitManager should start empty");
 
-			PlaceUnit(UnitType.WORKER, new Vector3Int(5, 5, 0));
+			PlaceUnit(UnitType.PAWN, new Vector3Int(5, 5, 0));
 			Assert.AreEqual(1, ctx.UnitManager.GetAllUnits().Count);
 
-			PlaceUnit(UnitType.SOLDIER, new Vector3Int(6, 5, 0));
+			PlaceUnit(UnitType.WARRIOR, new Vector3Int(6, 5, 0));
 			Assert.AreEqual(2, ctx.UnitManager.GetAllUnits().Count);
 
 			PlaceUnit(UnitType.ARCHER, new Vector3Int(7, 5, 0));
@@ -45,8 +45,8 @@ namespace GameManager.Tests.PlayMode
 		[UnityTest]
 		public IEnumerator GetAllUnits_IncludesBothAgents()
 		{
-			PlaceUnit(UnitType.WORKER, new Vector3Int(5, 5, 0));
-			PlaceUnit(UnitType.WORKER, new Vector3Int(15, 15, 0), ctx.Agent1Go);
+			PlaceUnit(UnitType.PAWN, new Vector3Int(5, 5, 0));
+			PlaceUnit(UnitType.PAWN, new Vector3Int(15, 15, 0), ctx.Agent1Go);
 
 			Assert.AreEqual(2, ctx.UnitManager.GetAllUnits().Count,
 				"Both agents' units should appear in GetAllUnits");
@@ -64,13 +64,13 @@ namespace GameManager.Tests.PlayMode
 		[UnityTest]
 		public IEnumerator GetUnit_ByUnitNbr_ReturnsCorrectUnit()
 		{
-			Unit worker = PlaceUnit(UnitType.WORKER, new Vector3Int(5, 5, 0));
-			int nbr = worker.UnitNbr;
+			Unit pawn = PlaceUnit(UnitType.PAWN, new Vector3Int(5, 5, 0));
+			int nbr = pawn.UnitNbr;
 
 			Unit retrieved = ctx.UnitManager.GetUnit(nbr);
 			Assert.IsNotNull(retrieved);
 			Assert.AreEqual(nbr, retrieved.UnitNbr);
-			Assert.AreEqual(UnitType.WORKER, retrieved.UnitType);
+			Assert.AreEqual(UnitType.PAWN, retrieved.UnitType);
 
 			yield return null;
 		}
@@ -93,11 +93,11 @@ namespace GameManager.Tests.PlayMode
 		[UnityTest]
 		public IEnumerator GetUnit_AfterDestruction_ReturnsNull()
 		{
-			Unit worker = PlaceUnit(UnitType.WORKER, new Vector3Int(5, 5, 0));
-			int nbr = worker.UnitNbr;
+			Unit pawn = PlaceUnit(UnitType.PAWN, new Vector3Int(5, 5, 0));
+			int nbr = pawn.UnitNbr;
 
-			worker.Health = 0;
-			worker.Update();
+			pawn.Health = 0;
+			pawn.Update();
 			yield return null;
 
 			Assert.IsNull(ctx.UnitManager.GetUnit(nbr),
@@ -112,16 +112,16 @@ namespace GameManager.Tests.PlayMode
 		/// GetUnitNbrsOfType returns all units of a given type across both agents.
 		/// </summary>
 		[UnityTest]
-		public IEnumerator GetUnitNbrsOfType_AllWorkers_ReturnsAll()
+		public IEnumerator GetUnitNbrsOfType_AllPawns_ReturnsAll()
 		{
-			PlaceUnit(UnitType.WORKER, new Vector3Int(5, 5, 0));
-			PlaceUnit(UnitType.WORKER, new Vector3Int(6, 5, 0));
-			PlaceUnit(UnitType.WORKER, new Vector3Int(15, 5, 0), ctx.Agent1Go);
-			PlaceUnit(UnitType.SOLDIER, new Vector3Int(7, 5, 0));
+			PlaceUnit(UnitType.PAWN, new Vector3Int(5, 5, 0));
+			PlaceUnit(UnitType.PAWN, new Vector3Int(6, 5, 0));
+			PlaceUnit(UnitType.PAWN, new Vector3Int(15, 5, 0), ctx.Agent1Go);
+			PlaceUnit(UnitType.WARRIOR, new Vector3Int(7, 5, 0));
 
-			var workers = ctx.UnitManager.GetUnitNbrsOfType(UnitType.WORKER);
-			Assert.AreEqual(3, workers.Count,
-				"GetUnitNbrsOfType(WORKER) should return 3 workers (both agents)");
+			var pawns = ctx.UnitManager.GetUnitNbrsOfType(UnitType.PAWN);
+			Assert.AreEqual(3, pawns.Count,
+				"GetUnitNbrsOfType(PAWN) should return 3 pawns (both agents)");
 
 			yield return null;
 		}
@@ -132,19 +132,19 @@ namespace GameManager.Tests.PlayMode
 		[UnityTest]
 		public IEnumerator GetUnitNbrsOfType_AgentFilter_OnlyThatAgent()
 		{
-			Unit w0 = PlaceUnit(UnitType.WORKER, new Vector3Int(5, 5, 0));
-			Unit w1 = PlaceUnit(UnitType.WORKER, new Vector3Int(15, 5, 0), ctx.Agent1Go);
+			Unit w0 = PlaceUnit(UnitType.PAWN, new Vector3Int(5, 5, 0));
+			Unit w1 = PlaceUnit(UnitType.PAWN, new Vector3Int(15, 5, 0), ctx.Agent1Go);
 
 			int agent0Nbr = w0.Agent.GetComponent<AgentController>().Agent.AgentNbr;
 			int agent1Nbr = w1.Agent.GetComponent<AgentController>().Agent.AgentNbr;
 
-			var agent0Workers = ctx.UnitManager.GetUnitNbrsOfType(UnitType.WORKER, agent0Nbr);
-			var agent1Workers = ctx.UnitManager.GetUnitNbrsOfType(UnitType.WORKER, agent1Nbr);
+			var agent0Pawns = ctx.UnitManager.GetUnitNbrsOfType(UnitType.PAWN, agent0Nbr);
+			var agent1Pawns = ctx.UnitManager.GetUnitNbrsOfType(UnitType.PAWN, agent1Nbr);
 
-			Assert.AreEqual(1, agent0Workers.Count);
-			Assert.AreEqual(1, agent1Workers.Count);
-			Assert.AreNotEqual(agent0Workers[0], agent1Workers[0],
-				"Different agents should have different UnitNbrs for their workers");
+			Assert.AreEqual(1, agent0Pawns.Count);
+			Assert.AreEqual(1, agent1Pawns.Count);
+			Assert.AreNotEqual(agent0Pawns[0], agent1Pawns[0],
+				"Different agents should have different UnitNbrs for their pawns");
 
 			yield return null;
 		}
@@ -155,11 +155,11 @@ namespace GameManager.Tests.PlayMode
 		[UnityTest]
 		public IEnumerator GetUnitNbrsOfType_NoUnitsOfType_ReturnsEmpty()
 		{
-			PlaceUnit(UnitType.WORKER, new Vector3Int(5, 5, 0));
+			PlaceUnit(UnitType.PAWN, new Vector3Int(5, 5, 0));
 
-			var soldiers = ctx.UnitManager.GetUnitNbrsOfType(UnitType.SOLDIER);
-			Assert.AreEqual(0, soldiers.Count,
-				"Should return empty list when no SOLDIERs exist");
+			var warriors = ctx.UnitManager.GetUnitNbrsOfType(UnitType.WARRIOR);
+			Assert.AreEqual(0, warriors.Count,
+				"Should return empty list when no WARRIORs exist");
 
 			yield return null;
 		}
@@ -170,17 +170,17 @@ namespace GameManager.Tests.PlayMode
 		[UnityTest]
 		public IEnumerator GetUnitNbrsOfType_AfterDestruction_CountDecreases()
 		{
-			Unit w1 = PlaceUnit(UnitType.WORKER, new Vector3Int(5, 5, 0));
-			Unit w2 = PlaceUnit(UnitType.WORKER, new Vector3Int(6, 5, 0));
+			Unit w1 = PlaceUnit(UnitType.PAWN, new Vector3Int(5, 5, 0));
+			Unit w2 = PlaceUnit(UnitType.PAWN, new Vector3Int(6, 5, 0));
 
-			Assert.AreEqual(2, ctx.UnitManager.GetUnitNbrsOfType(UnitType.WORKER).Count);
+			Assert.AreEqual(2, ctx.UnitManager.GetUnitNbrsOfType(UnitType.PAWN).Count);
 
 			w1.Health = 0;
 			w1.Update();
 			yield return null;
 
-			Assert.AreEqual(1, ctx.UnitManager.GetUnitNbrsOfType(UnitType.WORKER).Count,
-				"Worker count should decrease after one is destroyed");
+			Assert.AreEqual(1, ctx.UnitManager.GetUnitNbrsOfType(UnitType.PAWN).Count,
+				"Pawn count should decrease after one is destroyed");
 		}
 
 		#endregion
@@ -193,8 +193,8 @@ namespace GameManager.Tests.PlayMode
 		[UnityTest]
 		public IEnumerator DestroyAllUnits_EmptiesUnitManager()
 		{
-			PlaceUnit(UnitType.WORKER, new Vector3Int(5, 5, 0));
-			PlaceUnit(UnitType.SOLDIER, new Vector3Int(6, 5, 0));
+			PlaceUnit(UnitType.PAWN, new Vector3Int(5, 5, 0));
+			PlaceUnit(UnitType.WARRIOR, new Vector3Int(6, 5, 0));
 			PlaceUnit(UnitType.ARCHER, new Vector3Int(7, 5, 0));
 
 			Assert.AreEqual(3, ctx.UnitManager.GetAllUnits().Count);

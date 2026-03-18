@@ -17,8 +17,8 @@ namespace GameManager.Tests.PlayMode
 		#region Cell Occupied by Mobile Unit
 
 		/// <summary>
-		/// A worker cannot build at a position occupied by another unit.
-		/// The build command is rejected, worker stays IDLE, gold unchanged.
+		/// A pawn cannot build at a position occupied by another unit.
+		/// The build command is rejected, pawn stays IDLE, gold unchanged.
 		/// </summary>
 		[UnityTest]
 		public IEnumerator BuildAtOccupiedCell_Rejected()
@@ -29,19 +29,19 @@ namespace GameManager.Tests.PlayMode
 			Vector3Int occupiedPos = new Vector3Int(10, 10, 0);
 
 			// Place a unit on the target cell
-			PlaceUnit(UnitType.SOLDIER, occupiedPos);
+			PlaceUnit(UnitType.WARRIOR, occupiedPos);
 			yield return WaitFrames(1);
 
 			// Verify the cell is not buildable
 			Assert.IsFalse(ctx.MapManager.IsAreaBuildable(UnitType.BASE, occupiedPos),
-				"Cell occupied by a soldier should not be buildable");
+				"Cell occupied by a warrior should not be buildable");
 
 			// Try to build at the occupied position
-			Unit worker = PlaceUnit(UnitType.WORKER, new Vector3Int(9, 10, 0));
-			worker.StartBuilding(new BuildEventArgs(worker, occupiedPos, UnitType.BASE));
+			Unit pawn = PlaceUnit(UnitType.PAWN, new Vector3Int(9, 10, 0));
+			pawn.StartBuilding(new BuildEventArgs(pawn, occupiedPos, UnitType.BASE));
 
-			Assert.AreNotEqual(UnitAction.BUILD, worker.CurrentAction,
-				"Build at occupied cell should be rejected; worker should not enter BUILD state");
+			Assert.AreNotEqual(UnitAction.BUILD, pawn.CurrentAction,
+				"Build at occupied cell should be rejected; pawn should not enter BUILD state");
 			Assert.AreEqual(goldBefore, agent.Gold,
 				"Gold should not be deducted when build command is rejected");
 		}
@@ -51,7 +51,7 @@ namespace GameManager.Tests.PlayMode
 		#region Cell Occupied by Building
 
 		/// <summary>
-		/// A worker cannot build a second structure at a position already occupied
+		/// A pawn cannot build a second structure at a position already occupied
 		/// by an existing building.
 		/// </summary>
 		[UnityTest]
@@ -69,11 +69,11 @@ namespace GameManager.Tests.PlayMode
 				"Position occupied by BASE should not be buildable for BARRACKS");
 
 			// Attempt to build at the same position
-			Unit worker = PlaceUnit(UnitType.WORKER, new Vector3Int(9, 10, 0));
+			Unit pawn = PlaceUnit(UnitType.PAWN, new Vector3Int(9, 10, 0));
 			int goldBefore = agent.Gold;
-			worker.StartBuilding(new BuildEventArgs(worker, buildPos, UnitType.BARRACKS));
+			pawn.StartBuilding(new BuildEventArgs(pawn, buildPos, UnitType.BARRACKS));
 
-			Assert.AreNotEqual(UnitAction.BUILD, worker.CurrentAction,
+			Assert.AreNotEqual(UnitAction.BUILD, pawn.CurrentAction,
 				"Build over existing structure should be rejected");
 			Assert.AreEqual(goldBefore, agent.Gold,
 				"Gold should not be deducted for rejected build");
@@ -90,25 +90,25 @@ namespace GameManager.Tests.PlayMode
 		public IEnumerator UnitMovesAway_CellBecomesBuildable()
 		{
 			Vector3Int targetPos = new Vector3Int(10, 10, 0);
-			Unit soldier = PlaceUnit(UnitType.SOLDIER, targetPos);
+			Unit warrior = PlaceUnit(UnitType.WARRIOR, targetPos);
 
 			yield return WaitFrames(1);
 
 			// Cell should be occupied
-			Assert.IsFalse(ctx.MapManager.IsAreaBuildable(UnitType.WORKER, targetPos),
-				"Cell should not be buildable while soldier is on it");
+			Assert.IsFalse(ctx.MapManager.IsAreaBuildable(UnitType.PAWN, targetPos),
+				"Cell should not be buildable while warrior is on it");
 
-			// Move soldier away
-			soldier.StartMoving(new MoveEventArgs(soldier, soldier.UnitType, new Vector3Int(15, 10, 0)));
+			// Move warrior away
+			warrior.StartMoving(new MoveEventArgs(warrior, warrior.UnitType, new Vector3Int(15, 10, 0)));
 
 			yield return WaitUntil(
-				() => soldier.CurrentAction == UnitAction.IDLE,
+				() => warrior.CurrentAction == UnitAction.IDLE,
 				timeoutSeconds: 20f,
-				failMessage: "Soldier did not finish moving");
+				failMessage: "Warrior did not finish moving");
 
 			// Cell should now be free
-			Assert.IsTrue(ctx.MapManager.IsAreaBuildable(UnitType.WORKER, targetPos),
-				"Cell should be buildable again after soldier moves away");
+			Assert.IsTrue(ctx.MapManager.IsAreaBuildable(UnitType.PAWN, targetPos),
+				"Cell should be buildable again after warrior moves away");
 		}
 
 		#endregion

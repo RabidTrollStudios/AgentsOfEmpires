@@ -11,10 +11,10 @@ namespace PlanningAgent.Tests
     public class SmokeTests
     {
         /// <summary>
-        /// The agent should train additional workers when given a base.
+        /// The agent should train additional pawns when given a base.
         /// </summary>
         [Fact]
-        public void AgentTrainsWorkers_NewWorkersAppear()
+        public void AgentTrainsPawns_NewPawnsAppear()
         {
             var agent = new PlanningAgent();
             var game = new SimGameBuilder()
@@ -22,7 +22,7 @@ namespace PlanningAgent.Tests
                 .WithGold(0, 5000)
                 .WithGold(1, 5000)
                 .WithUnit(0, UnitType.BASE, new Position(5, 5), isBuilt: true)
-                .WithUnit(0, UnitType.WORKER, new Position(8, 5))
+                .WithUnit(0, UnitType.PAWN, new Position(8, 5))
                 .WithUnit(1, UnitType.BASE, new Position(25, 25), isBuilt: true)
                 .WithMine(new Position(15, 15))
                 .WithAgent(0, agent)
@@ -32,16 +32,16 @@ namespace PlanningAgent.Tests
             game.InitializeMatch();
             game.InitializeRound();
 
-            int workersBefore = game.GetUnitsByType(0, UnitType.WORKER).Count;
+            int pawnsBefore = game.GetUnitsByType(0, UnitType.PAWN).Count;
             game.Run(100);
 
-            int workersAfter = game.GetUnitsByType(0, UnitType.WORKER).Count;
-            Assert.True(workersAfter > workersBefore,
-                $"Expected more workers after training. Before: {workersBefore}, After: {workersAfter}");
+            int pawnsAfter = game.GetUnitsByType(0, UnitType.PAWN).Count;
+            Assert.True(pawnsAfter > pawnsBefore,
+                $"Expected more pawns after training. Before: {pawnsBefore}, After: {pawnsAfter}");
         }
 
         /// <summary>
-        /// With a worker and nearby mine, the agent should gather gold.
+        /// With a pawn and nearby mine, the agent should gather gold.
         /// </summary>
         [Fact]
         public void AgentGathersGold_GoldIncreases()
@@ -52,7 +52,7 @@ namespace PlanningAgent.Tests
                 .WithGold(0, 500)
                 .WithGold(1, 5000)
                 .WithUnit(0, UnitType.BASE, new Position(5, 5), isBuilt: true)
-                .WithUnit(0, UnitType.WORKER, new Position(8, 5))
+                .WithUnit(0, UnitType.PAWN, new Position(8, 5))
                 .WithUnit(1, UnitType.BASE, new Position(25, 25), isBuilt: true)
                 .WithMine(new Position(12, 5), health: 10000)
                 .WithAgent(0, agent)
@@ -64,7 +64,7 @@ namespace PlanningAgent.Tests
             game.Run(500);
 
             // Gold should have increased from gathering (even after training costs)
-            // The agent starts with 500 — training a worker costs 50, gathering brings in 100/trip
+            // The agent starts with 500 — training a pawn costs 50, gathering brings in 100/trip
             // After 500 ticks with a nearby mine, net gold should be positive
             Assert.True(game.GetGold(0) > 0,
                 $"Expected agent to have gold, but got {game.GetGold(0)}");
@@ -79,22 +79,22 @@ namespace PlanningAgent.Tests
             var game = new SimGameBuilder()
                 .WithMapSize(30, 30)
                 .WithUnit(0, UnitType.BASE, new Position(5, 5), isBuilt: true)
-                .WithUnit(0, UnitType.WORKER, new Position(8, 5))
-                .WithUnit(0, UnitType.WORKER, new Position(9, 5))
+                .WithUnit(0, UnitType.PAWN, new Position(8, 5))
+                .WithUnit(0, UnitType.PAWN, new Position(9, 5))
                 .WithMine(new Position(15, 15))
                 .Build();
 
             Assert.Single(game.GetUnitsByType(0, UnitType.BASE));
-            Assert.Equal(2, game.GetUnitsByType(0, UnitType.WORKER).Count);
+            Assert.Equal(2, game.GetUnitsByType(0, UnitType.PAWN).Count);
             Assert.Single(game.GetUnitsByType(-1, UnitType.MINE));
         }
 
         /// <summary>
-        /// Training a worker at a base should produce a new worker after enough ticks.
+        /// Training a pawn at a base should produce a new pawn after enough ticks.
         /// Tests the harness training logic directly (no agent needed).
         /// </summary>
         [Fact]
-        public void TrainingWorker_ProducesNewUnit()
+        public void TrainingPawn_ProducesNewUnit()
         {
             var game = new SimGameBuilder()
                 .WithMapSize(30, 30)
@@ -104,24 +104,24 @@ namespace PlanningAgent.Tests
                 .WithUnit(1, UnitType.BASE, new Position(25, 25), isBuilt: true)
                 .Build();
 
-            // Use a custom agent that trains a single worker
-            var trainer = new TrainOnceAgent(UnitType.WORKER);
+            // Use a custom agent that trains a single pawn
+            var trainer = new TrainOnceAgent(UnitType.PAWN);
             game.SetAgent(0, trainer);
             game.SetAgent(1, new DoNothingAgent());
 
             game.InitializeMatch();
             game.InitializeRound();
 
-            int workersBefore = game.GetUnitsByType(0, UnitType.WORKER).Count;
-            Assert.Equal(0, workersBefore);
+            int pawnsBefore = game.GetUnitsByType(0, UnitType.PAWN).Count;
+            Assert.Equal(0, pawnsBefore);
 
             // Run enough ticks for training to complete
-            // At GAME_SPEED=20, WORKER creation time = 0.1s = 2 ticks
+            // At GAME_SPEED=20, PAWN creation time = 0.1s = 2 ticks
             game.Run(20);
 
-            int workersAfter = game.GetUnitsByType(0, UnitType.WORKER).Count;
-            Assert.True(workersAfter >= 1,
-                $"Expected at least 1 worker after training, got {workersAfter}");
+            int pawnsAfter = game.GetUnitsByType(0, UnitType.PAWN).Count;
+            Assert.True(pawnsAfter >= 1,
+                $"Expected at least 1 pawn after training, got {pawnsAfter}");
         }
 
         /// <summary>

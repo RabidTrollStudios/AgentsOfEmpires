@@ -8,9 +8,6 @@ namespace AgentSDK
     /// </summary>
     public static class GameConstants
     {
-        /// <summary>Gold mining boost multiplier when a refinery is built</summary>
-        public static readonly float MINING_BOOST = 2.0f;
-
         /// <summary>Base cost scalar (all costs are multiples of this)</summary>
         public static readonly float SCALAR_COST = 50f;
 
@@ -25,12 +22,14 @@ namespace AgentSDK
             new ReadOnlyDictionary<UnitType, float>(new Dictionary<UnitType, float>()
             {
                 { UnitType.MINE,        0.0f },
-                { UnitType.WORKER,      SCALAR_COST },
-                { UnitType.SOLDIER,     SCALAR_COST * 2 },
+                { UnitType.PAWN,      SCALAR_COST },
+                { UnitType.WARRIOR,     SCALAR_COST * 2 },
                 { UnitType.ARCHER,      80f },
                 { UnitType.BASE,        SCALAR_COST * 10 },
                 { UnitType.BARRACKS,    SCALAR_COST * 8 },
-                { UnitType.REFINERY,    SCALAR_COST * 6 },
+                { UnitType.ARCHERY,     SCALAR_COST * 7 },
+                { UnitType.LANCER,      70f },
+                { UnitType.TOWER,       SCALAR_COST * 6 },
             });
 
         /// <summary>
@@ -42,27 +41,31 @@ namespace AgentSDK
             new ReadOnlyDictionary<UnitType, float>(new Dictionary<UnitType, float>()
             {
                 { UnitType.MINE,        0.0f },
-                { UnitType.WORKER,      200.0f },
-                { UnitType.SOLDIER,     1200.0f },
-                { UnitType.ARCHER,      800.0f },
-                { UnitType.BASE,        4000.0f },
-                { UnitType.BARRACKS,    2000.0f },
-                { UnitType.REFINERY,    2000.0f },
+                { UnitType.PAWN,      200.0f },
+                { UnitType.WARRIOR,     1500.0f },
+                { UnitType.ARCHER,      600.0f },
+                { UnitType.BASE,        8000.0f },
+                { UnitType.BARRACKS,    4000.0f },
+                { UnitType.ARCHERY,     4000.0f },
+                { UnitType.LANCER,      900.0f },
+                { UnitType.TOWER,       3000.0f },
             });
 
         /// <summary>
-        /// How much gold a worker can carry per mining trip
+        /// How much gold a pawn can carry per mining trip
         /// </summary>
         public static readonly ReadOnlyDictionary<UnitType, float> MINING_CAPACITY =
             new ReadOnlyDictionary<UnitType, float>(new Dictionary<UnitType, float>()
             {
                 { UnitType.MINE,        0.0f },
-                { UnitType.WORKER,      SCALAR_MINING_CAPACITY * 5.0f },
-                { UnitType.SOLDIER,     0.0f },
+                { UnitType.PAWN,      SCALAR_MINING_CAPACITY * 5.0f },
+                { UnitType.WARRIOR,     0.0f },
                 { UnitType.ARCHER,      0.0f },
                 { UnitType.BASE,        0.0f },
                 { UnitType.BARRACKS,    0.0f },
-                { UnitType.REFINERY,    0.0f },
+                { UnitType.ARCHERY,     0.0f },
+                { UnitType.LANCER,      0.0f },
+                { UnitType.TOWER,       0.0f },
             });
 
         /// <summary>
@@ -72,12 +75,14 @@ namespace AgentSDK
             new ReadOnlyDictionary<UnitType, float>(new Dictionary<UnitType, float>()
             {
                 { UnitType.MINE,        0f },
-                { UnitType.WORKER,      0f },
-                { UnitType.SOLDIER,     48f },
-                { UnitType.ARCHER,      40f },
+                { UnitType.PAWN,      0f },
+                { UnitType.WARRIOR,     50f },
+                { UnitType.ARCHER,      38f },
                 { UnitType.BASE,        0f },
                 { UnitType.BARRACKS,    0f },
-                { UnitType.REFINERY,    0f },
+                { UnitType.ARCHERY,     0f },
+                { UnitType.LANCER,      42f },
+                { UnitType.TOWER,       0f },
             });
 
         /// <summary>
@@ -87,12 +92,14 @@ namespace AgentSDK
             new ReadOnlyDictionary<UnitType, float>(new Dictionary<UnitType, float>()
             {
                 { UnitType.MINE,        0f },
-                { UnitType.WORKER,      2f },
-                { UnitType.SOLDIER,     6f },
+                { UnitType.PAWN,      2f },
+                { UnitType.WARRIOR,     7f },
                 { UnitType.ARCHER,      4f },
                 { UnitType.BASE,        10f },
                 { UnitType.BARRACKS,    20f },
-                { UnitType.REFINERY,    15f },
+                { UnitType.ARCHERY,     18f },
+                { UnitType.LANCER,      4f },
+                { UnitType.TOWER,       15f },
             });
 
         /// <summary>
@@ -102,28 +109,32 @@ namespace AgentSDK
             new ReadOnlyDictionary<UnitType, float>(new Dictionary<UnitType, float>()
             {
                 { UnitType.MINE,        0.0f },
-                { UnitType.WORKER,      0.0f },
-                { UnitType.SOLDIER,     1.0f },
+                { UnitType.PAWN,      0.0f },
+                { UnitType.WARRIOR,     1.0f },
                 { UnitType.ARCHER,      9.0f },
                 { UnitType.BASE,        0.0f },
                 { UnitType.BARRACKS,    0.0f },
-                { UnitType.REFINERY,    0.0f },
+                { UnitType.ARCHERY,     0.0f },
+                { UnitType.LANCER,      2.5f },
+                { UnitType.TOWER,       0.0f },
             });
 
         /// <summary>
         /// Movement speed multiplier for each unit type (1.0 = baseline).
-        /// Soldiers are slower (armored/heavy), archers are faster (light).
+        /// Warriors are slower (armored/heavy), archers are faster (light).
         /// </summary>
         public static readonly ReadOnlyDictionary<UnitType, float> MOVEMENT_SPEED =
             new ReadOnlyDictionary<UnitType, float>(new Dictionary<UnitType, float>()
             {
                 { UnitType.MINE,        0.0f },
-                { UnitType.WORKER,      1.0f },
-                { UnitType.SOLDIER,     0.75f },
+                { UnitType.PAWN,      1.0f },
+                { UnitType.WARRIOR,     0.70f },
                 { UnitType.ARCHER,      1.0f },
                 { UnitType.BASE,        0.0f },
                 { UnitType.BARRACKS,    0.0f },
-                { UnitType.REFINERY,    0.0f },
+                { UnitType.ARCHERY,     0.0f },
+                { UnitType.LANCER,      1.15f },
+                { UnitType.TOWER,       0.0f },
             });
 
         /// <summary>
@@ -133,12 +144,14 @@ namespace AgentSDK
             new ReadOnlyDictionary<UnitType, Position>(new Dictionary<UnitType, Position>()
             {
                 { UnitType.MINE,        new Position(3, 3) },
-                { UnitType.WORKER,      new Position(1, 1) },
-                { UnitType.SOLDIER,     new Position(1, 1) },
+                { UnitType.PAWN,      new Position(1, 1) },
+                { UnitType.WARRIOR,     new Position(1, 1) },
                 { UnitType.ARCHER,      new Position(1, 1) },
-                { UnitType.BASE,        new Position(4, 4) },
+                { UnitType.BASE,        new Position(6, 4) },
                 { UnitType.BARRACKS,    new Position(3, 3) },
-                { UnitType.REFINERY,    new Position(3, 3) },
+                { UnitType.ARCHERY,     new Position(3, 3) },
+                { UnitType.LANCER,      new Position(1, 1) },
+                { UnitType.TOWER,       new Position(2, 2) },
             });
 
         /// <summary>
@@ -148,12 +161,14 @@ namespace AgentSDK
             new ReadOnlyDictionary<UnitType, IReadOnlyList<UnitType>>(new Dictionary<UnitType, IReadOnlyList<UnitType>>()
             {
                 { UnitType.MINE,        new List<UnitType>() },
-                { UnitType.WORKER,      new List<UnitType>() { UnitType.BASE } },
-                { UnitType.SOLDIER,     new List<UnitType>() { UnitType.BARRACKS } },
-                { UnitType.ARCHER,      new List<UnitType>() { UnitType.BARRACKS } },
+                { UnitType.PAWN,      new List<UnitType>() { UnitType.BASE } },
+                { UnitType.WARRIOR,     new List<UnitType>() { UnitType.BARRACKS } },
+                { UnitType.ARCHER,      new List<UnitType>() { UnitType.ARCHERY } },
                 { UnitType.BASE,        new List<UnitType>() },
                 { UnitType.BARRACKS,    new List<UnitType>() { UnitType.BASE } },
-                { UnitType.REFINERY,    new List<UnitType>() { UnitType.BASE, UnitType.BARRACKS } },
+                { UnitType.ARCHERY,     new List<UnitType>() { UnitType.BASE } },
+                { UnitType.LANCER,      new List<UnitType>() { UnitType.TOWER } },
+                { UnitType.TOWER,       new List<UnitType>() { UnitType.BASE } },
             });
 
         /// <summary>
@@ -163,12 +178,14 @@ namespace AgentSDK
             new ReadOnlyDictionary<UnitType, IReadOnlyList<UnitType>>(new Dictionary<UnitType, IReadOnlyList<UnitType>>()
             {
                 { UnitType.MINE,        new List<UnitType>() },
-                { UnitType.WORKER,      new List<UnitType>() { UnitType.BASE, UnitType.BARRACKS, UnitType.REFINERY } },
-                { UnitType.SOLDIER,     new List<UnitType>() },
+                { UnitType.PAWN,      new List<UnitType>() { UnitType.BASE, UnitType.BARRACKS, UnitType.ARCHERY, UnitType.TOWER } },
+                { UnitType.WARRIOR,     new List<UnitType>() },
                 { UnitType.ARCHER,      new List<UnitType>() },
                 { UnitType.BASE,        new List<UnitType>() },
                 { UnitType.BARRACKS,    new List<UnitType>() },
-                { UnitType.REFINERY,    new List<UnitType>() },
+                { UnitType.ARCHERY,     new List<UnitType>() },
+                { UnitType.LANCER,      new List<UnitType>() },
+                { UnitType.TOWER,       new List<UnitType>() },
             });
 
         /// <summary>
@@ -178,57 +195,59 @@ namespace AgentSDK
             new ReadOnlyDictionary<UnitType, IReadOnlyList<UnitType>>(new Dictionary<UnitType, IReadOnlyList<UnitType>>()
             {
                 { UnitType.MINE,        new List<UnitType>() },
-                { UnitType.WORKER,      new List<UnitType>() },
-                { UnitType.SOLDIER,     new List<UnitType>() },
+                { UnitType.PAWN,      new List<UnitType>() },
+                { UnitType.WARRIOR,     new List<UnitType>() },
                 { UnitType.ARCHER,      new List<UnitType>() },
-                { UnitType.BASE,        new List<UnitType>() { UnitType.WORKER } },
-                { UnitType.BARRACKS,    new List<UnitType>() { UnitType.SOLDIER, UnitType.ARCHER } },
-                { UnitType.REFINERY,    new List<UnitType>() },
+                { UnitType.BASE,        new List<UnitType>() { UnitType.PAWN } },
+                { UnitType.BARRACKS,    new List<UnitType>() { UnitType.WARRIOR } },
+                { UnitType.ARCHERY,     new List<UnitType>() { UnitType.ARCHER } },
+                { UnitType.LANCER,      new List<UnitType>() },
+                { UnitType.TOWER,       new List<UnitType>() { UnitType.LANCER } },
             });
 
         /// <summary>Which unit types can move</summary>
         public static readonly ReadOnlyDictionary<UnitType, bool> CAN_MOVE =
             new ReadOnlyDictionary<UnitType, bool>(new Dictionary<UnitType, bool>()
             {
-                { UnitType.MINE, false }, { UnitType.WORKER, true }, { UnitType.SOLDIER, true },
+                { UnitType.MINE, false }, { UnitType.PAWN, true }, { UnitType.WARRIOR, true },
                 { UnitType.ARCHER, true }, { UnitType.BASE, false }, { UnitType.BARRACKS, false },
-                { UnitType.REFINERY, false },
+                { UnitType.ARCHERY, false }, { UnitType.LANCER, true }, { UnitType.TOWER, false },
             });
 
         /// <summary>Which unit types can build structures</summary>
         public static readonly ReadOnlyDictionary<UnitType, bool> CAN_BUILD =
             new ReadOnlyDictionary<UnitType, bool>(new Dictionary<UnitType, bool>()
             {
-                { UnitType.MINE, false }, { UnitType.WORKER, true }, { UnitType.SOLDIER, false },
+                { UnitType.MINE, false }, { UnitType.PAWN, true }, { UnitType.WARRIOR, false },
                 { UnitType.ARCHER, false }, { UnitType.BASE, false }, { UnitType.BARRACKS, false },
-                { UnitType.REFINERY, false },
+                { UnitType.ARCHERY, false }, { UnitType.LANCER, false }, { UnitType.TOWER, false },
             });
 
         /// <summary>Which unit types can train units</summary>
         public static readonly ReadOnlyDictionary<UnitType, bool> CAN_TRAIN =
             new ReadOnlyDictionary<UnitType, bool>(new Dictionary<UnitType, bool>()
             {
-                { UnitType.MINE, false }, { UnitType.WORKER, false }, { UnitType.SOLDIER, false },
+                { UnitType.MINE, false }, { UnitType.PAWN, false }, { UnitType.WARRIOR, false },
                 { UnitType.ARCHER, false }, { UnitType.BASE, true }, { UnitType.BARRACKS, true },
-                { UnitType.REFINERY, false },
+                { UnitType.ARCHERY, true }, { UnitType.LANCER, false }, { UnitType.TOWER, true },
             });
 
         /// <summary>Which unit types can attack</summary>
         public static readonly ReadOnlyDictionary<UnitType, bool> CAN_ATTACK =
             new ReadOnlyDictionary<UnitType, bool>(new Dictionary<UnitType, bool>()
             {
-                { UnitType.MINE, false }, { UnitType.WORKER, false }, { UnitType.SOLDIER, true },
+                { UnitType.MINE, false }, { UnitType.PAWN, false }, { UnitType.WARRIOR, true },
                 { UnitType.ARCHER, true }, { UnitType.BASE, false }, { UnitType.BARRACKS, false },
-                { UnitType.REFINERY, false },
+                { UnitType.ARCHERY, false }, { UnitType.LANCER, true }, { UnitType.TOWER, false },
             });
 
         /// <summary>Which unit types can gather resources</summary>
         public static readonly ReadOnlyDictionary<UnitType, bool> CAN_GATHER =
             new ReadOnlyDictionary<UnitType, bool>(new Dictionary<UnitType, bool>()
             {
-                { UnitType.MINE, false }, { UnitType.WORKER, true }, { UnitType.SOLDIER, false },
+                { UnitType.MINE, false }, { UnitType.PAWN, true }, { UnitType.WARRIOR, false },
                 { UnitType.ARCHER, false }, { UnitType.BASE, false }, { UnitType.BARRACKS, false },
-                { UnitType.REFINERY, false },
+                { UnitType.ARCHERY, false }, { UnitType.LANCER, false }, { UnitType.TOWER, false },
             });
 
         /// <summary>
@@ -245,18 +264,26 @@ namespace AgentSDK
 
         /// <summary>
         /// Damage multiplier based on attacker/defender type interaction.
-        /// Soldiers (melee, armored) take 75% damage from ranged attacks.
-        /// Archers (ranged, unarmored) take 125% damage from melee attacks.
-        /// All other matchups are 1.0x.
+        /// Rock-paper-scissors triangle: Warrior→Archer→Lancer→Warrior.
+        /// Strong matchup = 1.25x damage, weak matchup = 0.75x damage.
         /// </summary>
         public static float DamageMultiplier(UnitType attacker, UnitType defender)
         {
-            // Melee vs unarmored: soldiers deal 1.15x to archers
-            if (attacker == UnitType.SOLDIER && defender == UnitType.ARCHER)
-                return 1.15f;
-            // Ranged vs armored: archers deal 0.85x to soldiers
-            if (attacker == UnitType.ARCHER && defender == UnitType.SOLDIER)
-                return 0.85f;
+            // Warrior beats Archer (close combat overwhelms light ranged)
+            if (attacker == UnitType.WARRIOR && defender == UnitType.ARCHER)
+                return 1.25f;
+            if (attacker == UnitType.ARCHER && defender == UnitType.WARRIOR)
+                return 0.75f;
+            // Archer beats Lancer (ranged fire picks off cavalry)
+            if (attacker == UnitType.ARCHER && defender == UnitType.LANCER)
+                return 1.25f;
+            if (attacker == UnitType.LANCER && defender == UnitType.ARCHER)
+                return 0.75f;
+            // Lancer beats Warrior (lance reach defeats heavy melee)
+            if (attacker == UnitType.LANCER && defender == UnitType.WARRIOR)
+                return 1.25f;
+            if (attacker == UnitType.WARRIOR && defender == UnitType.LANCER)
+                return 0.75f;
             return 1.0f;
         }
     }

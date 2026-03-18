@@ -31,56 +31,56 @@ namespace GameManager.Tests
 		#region GetGridPositionsNearUnit
 
 		/// <summary>
-		/// A BASE at an interior position has 20 perimeter neighbors.
-		/// The formula: 2*(size.x+2) + 2*size.y = 2*(4+2) + 2*4 = 20.
+		/// A BASE at an interior position has 24 perimeter neighbors.
+		/// The formula: 2*(size.x+2) + 2*size.y = 2*(6+2) + 2*4 = 24.
 		/// </summary>
 		[Test]
-		public void GetGridPositionsNearUnit_Base_Interior_Returns20()
+		public void GetGridPositionsNearUnit_Base_Interior_Returns24()
 		{
 			var positions = manager.GetGridPositionsNearUnit(UnitType.BASE, new Vector3Int(5, 5, 0));
-			Assert.AreEqual(20, positions.Count,
-				"BASE at (5,5) should have 20 perimeter cells (all within 20x20 map)");
+			Assert.AreEqual(24, positions.Count,
+				"BASE at (5,5) should have 24 perimeter cells (all within 20x20 map)");
 		}
 
 		/// <summary>
-		/// A 1x1 WORKER at a map corner (0,0) should only have 3 valid neighbors
+		/// A 1x1 PAWN at a map corner (0,0) should only have 3 valid neighbors
 		/// (those that lie within the map bounds).
 		/// </summary>
 		[Test]
-		public void GetGridPositionsNearUnit_Worker_AtCorner_Returns3()
+		public void GetGridPositionsNearUnit_Pawn_AtCorner_Returns3()
 		{
-			// WORKER is 1x1. At (0,0) only (1,0), (0,1), (1,1) neighbors are valid.
+			// PAWN is 1x1. At (0,0) only (1,0), (0,1), (1,1) neighbors are valid.
 			// But the perimeter ring is: top row [(-1,1),(0,1),(1,1)], bottom row [(-1,-1),(0,-1),(1,-1)],
 			// left col [(-1,0)] and right col [(1,0)].
 			// Valid ones: (0,1),(1,1),(1,0) = 3
-			var positions = manager.GetGridPositionsNearUnit(UnitType.WORKER, new Vector3Int(0, 0, 0));
+			var positions = manager.GetGridPositionsNearUnit(UnitType.PAWN, new Vector3Int(0, 0, 0));
 			Assert.AreEqual(3, positions.Count,
-				"WORKER at corner (0,0) should have 3 valid neighbors");
+				"PAWN at corner (0,0) should have 3 valid neighbors");
 		}
 
 		/// <summary>
-		/// A 1x1 WORKER at a map edge (0,5) — against the left wall.
+		/// A 1x1 PAWN at a map edge (0,5) — against the left wall.
 		/// Expected neighbors: (0,6),(1,6) from top; (0,4),(1,4) from bottom; (1,5) from right.
 		/// = 5 valid neighbors.
 		/// </summary>
 		[Test]
-		public void GetGridPositionsNearUnit_Worker_AtLeftEdge_Returns5()
+		public void GetGridPositionsNearUnit_Pawn_AtLeftEdge_Returns5()
 		{
-			var positions = manager.GetGridPositionsNearUnit(UnitType.WORKER, new Vector3Int(0, 5, 0));
+			var positions = manager.GetGridPositionsNearUnit(UnitType.PAWN, new Vector3Int(0, 5, 0));
 			Assert.AreEqual(5, positions.Count,
-				"WORKER at left edge (0,5) should have 5 valid neighbors");
+				"PAWN at left edge (0,5) should have 5 valid neighbors");
 		}
 
 		/// <summary>
-		/// A 3x3 BASE clipped by the map boundary should have fewer than 16 neighbors.
+		/// A 6x4 BASE clipped by the map boundary should have fewer than 24 neighbors.
 		/// </summary>
 		[Test]
-		public void GetGridPositionsNearUnit_Base3x3_AtEdge_FewerNeighbors()
+		public void GetGridPositionsNearUnit_Base6x4_AtEdge_FewerNeighbors()
 		{
 			// BASE at (0,5): left edge clips columns at x=-1, reducing count
 			var positions = manager.GetGridPositionsNearUnit(UnitType.BASE, new Vector3Int(0, 5, 0));
-			Assert.Less(positions.Count, 16,
-				"3x3 BASE at left edge should have fewer than 16 valid perimeter cells");
+			Assert.Less(positions.Count, 24,
+				"6x4 BASE at left edge should have fewer than 24 valid perimeter cells");
 		}
 
 		/// <summary>
@@ -111,7 +111,7 @@ namespace GameManager.Tests
 		#region GetBuildableGridPositionsNearUnit
 
 		/// <summary>
-		/// On a fully open map all perimeter cells of a 3x3 BASE are buildable.
+		/// On a fully open map all perimeter cells of a 6x4 BASE are buildable.
 		/// </summary>
 		[Test]
 		public void GetBuildableGridPositionsNearUnit_OpenMap_EqualsAll()
@@ -163,15 +163,15 @@ namespace GameManager.Tests
 		#region IsNeighborOfUnit
 
 		/// <summary>
-		/// A cell immediately adjacent to a 1x1 WORKER is a neighbor.
+		/// A cell immediately adjacent to a 1x1 PAWN is a neighbor.
 		/// </summary>
 		[Test]
 		public void IsNeighborOfUnit_AdjacentCell_ReturnsTrue()
 		{
 			var unitPos = new Vector3Int(10, 10, 0);
 			var adjacent = new Vector3Int(10, 11, 0); // directly north
-			Assert.IsTrue(manager.IsNeighborOfUnit(adjacent, UnitType.WORKER, unitPos),
-				"Cell directly north of WORKER should be a neighbor");
+			Assert.IsTrue(manager.IsNeighborOfUnit(adjacent, UnitType.PAWN, unitPos),
+				"Cell directly north of PAWN should be a neighbor");
 		}
 
 		/// <summary>
@@ -182,8 +182,8 @@ namespace GameManager.Tests
 		{
 			var unitPos = new Vector3Int(10, 10, 0);
 			var farCell = new Vector3Int(10, 12, 0); // two cells north
-			Assert.IsFalse(manager.IsNeighborOfUnit(farCell, UnitType.WORKER, unitPos),
-				"Cell two steps away should not be a neighbor of a 1x1 WORKER");
+			Assert.IsFalse(manager.IsNeighborOfUnit(farCell, UnitType.PAWN, unitPos),
+				"Cell two steps away should not be a neighbor of a 1x1 PAWN");
 		}
 
 		/// <summary>
@@ -193,25 +193,25 @@ namespace GameManager.Tests
 		public void IsNeighborOfUnit_SameCell_ReturnsFalse()
 		{
 			var unitPos = new Vector3Int(10, 10, 0);
-			Assert.IsFalse(manager.IsNeighborOfUnit(unitPos, UnitType.WORKER, unitPos),
+			Assert.IsFalse(manager.IsNeighborOfUnit(unitPos, UnitType.PAWN, unitPos),
 				"The unit's own cell should not be reported as a neighbor");
 		}
 
 		/// <summary>
 		/// Cells adjacent to any side of a BASE are neighbors.
-		/// BASE footprint at (5,5): x=[5,8], y=[2,5] (4x4).
+		/// BASE footprint at (5,5): x=[5,10], y=[2,5] (6x4).
 		/// </summary>
 		[Test]
 		public void IsNeighborOfUnit_Base_VariousSides_AllTrue()
 		{
 			var basePos = new Vector3Int(5, 5, 0);
-			// Cells just outside each side of the 4x4 footprint
+			// Cells just outside each side of the 6x4 footprint
 			var testCells = new[]
 			{
 				new Vector3Int(5, 6, 0),   // north of top row  (y=6 > top y=5)
 				new Vector3Int(5, 1, 0),   // south of bottom row (y=1 < bottom y=2)
 				new Vector3Int(4, 5, 0),   // west of leftmost col (x=4 < left x=5)
-				new Vector3Int(9, 5, 0),   // east of rightmost col (x=9 > right x=8)
+				new Vector3Int(11, 5, 0),  // east of rightmost col (x=11 > right x=10)
 			};
 
 			foreach (var cell in testCells)

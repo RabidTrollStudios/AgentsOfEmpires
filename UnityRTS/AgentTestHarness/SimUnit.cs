@@ -35,7 +35,7 @@ namespace AgentTestHarness
         internal float TrainTimer;
         internal UnitType TrainTarget;
 
-        // Building state — worker walks to site, then counts down build timer
+        // Building state — pawn walks to site, then counts down build timer
         internal float BuildTimer;
         internal UnitType BuildTarget;
         internal Position BuildSite;
@@ -53,6 +53,12 @@ namespace AgentTestHarness
         // Attack state
         internal int AttackTargetNbr;
 
+        // Repair state
+        internal int RepairBuildingNbr;
+
+        // Local avoidance state — how many ticks the unit has waited for a blocker to clear
+        internal int LocalAvoidWaitTicks;
+
         public SimUnit(int unitNbr, UnitType unitType, int ownerAgentNbr, Position gridPosition, float health, bool isBuilt)
         {
             UnitNbr = unitNbr;
@@ -63,6 +69,7 @@ namespace AgentTestHarness
             IsBuilt = isBuilt;
             CurrentAction = UnitAction.IDLE;
             AttackTargetNbr = -1;
+            RepairBuildingNbr = -1;
             GatherMineNbr = -1;
             GatherBaseNbr = -1;
         }

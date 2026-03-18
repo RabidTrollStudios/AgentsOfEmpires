@@ -18,8 +18,8 @@ namespace GameManager.Tests.PlayMode
 		#region Agent 0 Units Excluded from Agent 1 Filter
 
 		/// <summary>
-		/// GetUnitNbrsOfType with agent 0's agent number returns only agent 0's workers,
-		/// not agent 1's workers.
+		/// GetUnitNbrsOfType with agent 0's agent number returns only agent 0's pawns,
+		/// not agent 1's pawns.
 		/// </summary>
 		[UnityTest]
 		public IEnumerator GetUnitNbrsOfType_FilterByAgent0_ExcludesAgent1Units()
@@ -27,23 +27,23 @@ namespace GameManager.Tests.PlayMode
 			int agent0Nbr = GetAgent0().AgentNbr;
 			int agent1Nbr = ctx.GetAgent(1).AgentNbr;
 
-			Unit agent0Worker = PlaceUnit(UnitType.WORKER, new Vector3Int(5, 5, 0));
-			Unit agent1Worker = PlaceUnit(UnitType.WORKER, new Vector3Int(15, 15, 0), ctx.Agent1Go);
+			Unit agent0Pawn = PlaceUnit(UnitType.PAWN, new Vector3Int(5, 5, 0));
+			Unit agent1Pawn = PlaceUnit(UnitType.PAWN, new Vector3Int(15, 15, 0), ctx.Agent1Go);
 
 			yield return WaitFrames(1);
 
-			var agent0Workers = ctx.UnitManager.GetUnitNbrsOfType(UnitType.WORKER, agent0Nbr);
-			var agent1Workers = ctx.UnitManager.GetUnitNbrsOfType(UnitType.WORKER, agent1Nbr);
+			var agent0Pawns = ctx.UnitManager.GetUnitNbrsOfType(UnitType.PAWN, agent0Nbr);
+			var agent1Pawns = ctx.UnitManager.GetUnitNbrsOfType(UnitType.PAWN, agent1Nbr);
 
-			Assert.IsTrue(agent0Workers.Contains(agent0Worker.UnitNbr),
-				"Agent 0's filter should include agent 0's worker");
-			Assert.IsFalse(agent0Workers.Contains(agent1Worker.UnitNbr),
-				"Agent 0's filter should NOT include agent 1's worker");
+			Assert.IsTrue(agent0Pawns.Contains(agent0Pawn.UnitNbr),
+				"Agent 0's filter should include agent 0's pawn");
+			Assert.IsFalse(agent0Pawns.Contains(agent1Pawn.UnitNbr),
+				"Agent 0's filter should NOT include agent 1's pawn");
 
-			Assert.IsTrue(agent1Workers.Contains(agent1Worker.UnitNbr),
-				"Agent 1's filter should include agent 1's worker");
-			Assert.IsFalse(agent1Workers.Contains(agent0Worker.UnitNbr),
-				"Agent 1's filter should NOT include agent 0's worker");
+			Assert.IsTrue(agent1Pawns.Contains(agent1Pawn.UnitNbr),
+				"Agent 1's filter should include agent 1's pawn");
+			Assert.IsFalse(agent1Pawns.Contains(agent0Pawn.UnitNbr),
+				"Agent 1's filter should NOT include agent 0's pawn");
 		}
 
 		#endregion
@@ -51,7 +51,7 @@ namespace GameManager.Tests.PlayMode
 		#region Correct Counts per Agent
 
 		/// <summary>
-		/// After placing 3 workers for agent 0 and 2 for agent 1,
+		/// After placing 3 pawns for agent 0 and 2 for agent 1,
 		/// GetUnitNbrsOfType returns the correct count for each agent.
 		/// </summary>
 		[UnityTest]
@@ -60,24 +60,24 @@ namespace GameManager.Tests.PlayMode
 			int agent0Nbr = GetAgent0().AgentNbr;
 			int agent1Nbr = ctx.GetAgent(1).AgentNbr;
 
-			// Place 3 workers for agent 0
-			PlaceUnit(UnitType.WORKER, new Vector3Int(5, 5, 0));
-			PlaceUnit(UnitType.WORKER, new Vector3Int(5, 7, 0));
-			PlaceUnit(UnitType.WORKER, new Vector3Int(5, 9, 0));
+			// Place 3 pawns for agent 0
+			PlaceUnit(UnitType.PAWN, new Vector3Int(5, 5, 0));
+			PlaceUnit(UnitType.PAWN, new Vector3Int(5, 7, 0));
+			PlaceUnit(UnitType.PAWN, new Vector3Int(5, 9, 0));
 
-			// Place 2 workers for agent 1
-			PlaceUnit(UnitType.WORKER, new Vector3Int(15, 5, 0), ctx.Agent1Go);
-			PlaceUnit(UnitType.WORKER, new Vector3Int(15, 7, 0), ctx.Agent1Go);
+			// Place 2 pawns for agent 1
+			PlaceUnit(UnitType.PAWN, new Vector3Int(15, 5, 0), ctx.Agent1Go);
+			PlaceUnit(UnitType.PAWN, new Vector3Int(15, 7, 0), ctx.Agent1Go);
 
 			yield return WaitFrames(1);
 
-			var agent0Workers = ctx.UnitManager.GetUnitNbrsOfType(UnitType.WORKER, agent0Nbr);
-			var agent1Workers = ctx.UnitManager.GetUnitNbrsOfType(UnitType.WORKER, agent1Nbr);
+			var agent0Pawns = ctx.UnitManager.GetUnitNbrsOfType(UnitType.PAWN, agent0Nbr);
+			var agent1Pawns = ctx.UnitManager.GetUnitNbrsOfType(UnitType.PAWN, agent1Nbr);
 
-			Assert.AreEqual(3, agent0Workers.Count,
-				"Should have 3 workers for agent 0");
-			Assert.AreEqual(2, agent1Workers.Count,
-				"Should have 2 workers for agent 1");
+			Assert.AreEqual(3, agent0Pawns.Count,
+				"Should have 3 pawns for agent 0");
+			Assert.AreEqual(2, agent1Pawns.Count,
+				"Should have 2 pawns for agent 1");
 		}
 
 		#endregion
@@ -92,20 +92,20 @@ namespace GameManager.Tests.PlayMode
 		{
 			int agent0Nbr = GetAgent0().AgentNbr;
 
-			PlaceUnit(UnitType.SOLDIER, new Vector3Int(5, 5, 0));
-			PlaceUnit(UnitType.SOLDIER, new Vector3Int(5, 7, 0));
+			PlaceUnit(UnitType.WARRIOR, new Vector3Int(5, 5, 0));
+			PlaceUnit(UnitType.WARRIOR, new Vector3Int(5, 7, 0));
 			PlaceUnit(UnitType.ARCHER, new Vector3Int(5, 9, 0));
 
-			// Agent 1 has soldiers too
-			PlaceUnit(UnitType.SOLDIER, new Vector3Int(15, 5, 0), ctx.Agent1Go);
+			// Agent 1 has warriors too
+			PlaceUnit(UnitType.WARRIOR, new Vector3Int(15, 5, 0), ctx.Agent1Go);
 
 			yield return WaitFrames(1);
 
-			var agent0Soldiers = ctx.UnitManager.GetUnitNbrsOfType(UnitType.SOLDIER, agent0Nbr);
+			var agent0Warriors = ctx.UnitManager.GetUnitNbrsOfType(UnitType.WARRIOR, agent0Nbr);
 			var agent0Archers = ctx.UnitManager.GetUnitNbrsOfType(UnitType.ARCHER, agent0Nbr);
 
-			Assert.AreEqual(2, agent0Soldiers.Count,
-				"Agent 0 should have exactly 2 soldiers");
+			Assert.AreEqual(2, agent0Warriors.Count,
+				"Agent 0 should have exactly 2 warriors");
 			Assert.AreEqual(1, agent0Archers.Count,
 				"Agent 0 should have exactly 1 archer");
 		}
@@ -123,7 +123,7 @@ namespace GameManager.Tests.PlayMode
 			int agent0Nbr = GetAgent0().AgentNbr;
 
 			// Agent 0 has no archers
-			PlaceUnit(UnitType.SOLDIER, new Vector3Int(5, 5, 0));
+			PlaceUnit(UnitType.WARRIOR, new Vector3Int(5, 5, 0));
 
 			yield return WaitFrames(1);
 
@@ -145,25 +145,25 @@ namespace GameManager.Tests.PlayMode
 		{
 			int agent0Nbr = GetAgent0().AgentNbr;
 
-			Unit soldier = PlaceUnit(UnitType.SOLDIER, new Vector3Int(5, 5, 0));
-			int soldierNbr = soldier.UnitNbr;
+			Unit warrior = PlaceUnit(UnitType.WARRIOR, new Vector3Int(5, 5, 0));
+			int warriorNbr = warrior.UnitNbr;
 
 			yield return WaitFrames(1);
 
 			// Verify unit is present
-			var soldiersBefore = ctx.UnitManager.GetUnitNbrsOfType(UnitType.SOLDIER, agent0Nbr);
-			Assert.IsTrue(soldiersBefore.Contains(soldierNbr));
+			var warriorsBefore = ctx.UnitManager.GetUnitNbrsOfType(UnitType.WARRIOR, agent0Nbr);
+			Assert.IsTrue(warriorsBefore.Contains(warriorNbr));
 
 			// Destroy the unit
-			soldier.Health = 0;
+			warrior.Health = 0;
 
 			yield return WaitUntil(
-				() => ctx.UnitManager.GetUnit(soldierNbr) == null,
+				() => ctx.UnitManager.GetUnit(warriorNbr) == null,
 				timeoutSeconds: 10f,
-				failMessage: "Soldier was not destroyed");
+				failMessage: "Warrior was not destroyed");
 
-			var soldiersAfter = ctx.UnitManager.GetUnitNbrsOfType(UnitType.SOLDIER, agent0Nbr);
-			Assert.IsFalse(soldiersAfter.Contains(soldierNbr),
+			var warriorsAfter = ctx.UnitManager.GetUnitNbrsOfType(UnitType.WARRIOR, agent0Nbr);
+			Assert.IsFalse(warriorsAfter.Contains(warriorNbr),
 				"Destroyed unit should not appear in agent-filtered query");
 		}
 

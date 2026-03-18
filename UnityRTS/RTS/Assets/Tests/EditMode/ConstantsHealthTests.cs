@@ -20,20 +20,21 @@ namespace GameManager.Tests
 		}
 
 		private static readonly UnitType[] AllUnitTypes = {
-			UnitType.MINE, UnitType.WORKER, UnitType.SOLDIER,
-			UnitType.ARCHER, UnitType.BASE, UnitType.BARRACKS, UnitType.REFINERY
+			UnitType.MINE, UnitType.PAWN, UnitType.WARRIOR,
+			UnitType.ARCHER, UnitType.LANCER, UnitType.BASE,
+			UnitType.BARRACKS, UnitType.ARCHERY, UnitType.TOWER
 		};
 
 		#region Completeness
 
 		/// <summary>
-		/// HEALTH dictionary contains entries for all 7 unit types.
+		/// HEALTH dictionary contains entries for all 9 unit types.
 		/// </summary>
 		[Test]
-		public void Health_HasAllSevenUnitTypes()
+		public void Health_HasAllNineUnitTypes()
 		{
-			Assert.AreEqual(7, Constants.HEALTH.Count,
-				"HEALTH should have exactly 7 entries");
+			Assert.AreEqual(9, Constants.HEALTH.Count,
+				"HEALTH should have exactly 9 entries");
 			foreach (var type in AllUnitTypes)
 				Assert.IsTrue(Constants.HEALTH.ContainsKey(type),
 					$"HEALTH missing entry for {type}");
@@ -57,40 +58,54 @@ namespace GameManager.Tests
 		#region Relative Ordering
 
 		/// <summary>
-		/// Buildings should be tougher than the basic worker unit.
-		/// BASE health > WORKER health.
+		/// Buildings should be tougher than the basic pawn unit.
+		/// BASE health > PAWN health.
 		/// </summary>
 		[Test]
-		public void Health_BaseGreaterThanWorker()
+		public void Health_BaseGreaterThanPawn()
 		{
 			Assert.Greater(Constants.HEALTH[UnitType.BASE],
-				Constants.HEALTH[UnitType.WORKER],
-				"BASE should have more health than WORKER");
+				Constants.HEALTH[UnitType.PAWN],
+				"BASE should have more health than PAWN");
 		}
 
 		/// <summary>
-		/// BARRACKS health should be greater than WORKER health.
+		/// BARRACKS health should be greater than PAWN health.
 		/// </summary>
 		[Test]
-		public void Health_BarracksGreaterThanWorker()
+		public void Health_BarracksGreaterThanPawn()
 		{
 			Assert.Greater(Constants.HEALTH[UnitType.BARRACKS],
-				Constants.HEALTH[UnitType.WORKER],
-				"BARRACKS should have more health than WORKER");
+				Constants.HEALTH[UnitType.PAWN],
+				"BARRACKS should have more health than PAWN");
 		}
 
 		/// <summary>
-		/// Combat units (SOLDIER, ARCHER) should have more health than WORKER.
+		/// Combat units (WARRIOR, ARCHER, LANCER) should have more health than PAWN.
 		/// </summary>
 		[Test]
-		public void Health_CombatUnitsGreaterThanWorker()
+		public void Health_CombatUnitsGreaterThanPawn()
 		{
-			Assert.Greater(Constants.HEALTH[UnitType.SOLDIER],
-				Constants.HEALTH[UnitType.WORKER],
-				"SOLDIER should have more health than WORKER");
+			Assert.Greater(Constants.HEALTH[UnitType.WARRIOR],
+				Constants.HEALTH[UnitType.PAWN],
+				"WARRIOR should have more health than PAWN");
 			Assert.Greater(Constants.HEALTH[UnitType.ARCHER],
-				Constants.HEALTH[UnitType.WORKER],
-				"ARCHER should have more health than WORKER");
+				Constants.HEALTH[UnitType.PAWN],
+				"ARCHER should have more health than PAWN");
+			Assert.Greater(Constants.HEALTH[UnitType.LANCER],
+				Constants.HEALTH[UnitType.PAWN],
+				"LANCER should have more health than PAWN");
+		}
+
+		/// <summary>
+		/// TOWER health should be greater than PAWN health.
+		/// </summary>
+		[Test]
+		public void Health_TowerGreaterThanPawn()
+		{
+			Assert.Greater(Constants.HEALTH[UnitType.TOWER],
+				Constants.HEALTH[UnitType.PAWN],
+				"TOWER should have more health than PAWN");
 		}
 
 		/// <summary>
@@ -101,8 +116,8 @@ namespace GameManager.Tests
 		public void Health_MineLargerThanCombatUnits()
 		{
 			Assert.Greater(Constants.HEALTH[UnitType.MINE],
-				Constants.HEALTH[UnitType.SOLDIER],
-				"MINE health (= starting gold) should exceed SOLDIER combat health");
+				Constants.HEALTH[UnitType.WARRIOR],
+				"MINE health (= starting gold) should exceed WARRIOR combat health");
 			Assert.Greater(Constants.HEALTH[UnitType.MINE],
 				Constants.HEALTH[UnitType.BASE],
 				"MINE health (= starting gold) should exceed BASE health");

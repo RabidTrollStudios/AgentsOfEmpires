@@ -7,17 +7,21 @@ namespace AgentSDK
     {
         /// <summary>Gold mine resource</summary>
         MINE,
-        /// <summary>Worker unit - gathers resources and builds structures</summary>
-        WORKER,
+        /// <summary>Pawn unit - gathers resources and builds structures</summary>
+        PAWN,
         /// <summary>Melee combat unit</summary>
-        SOLDIER,
+        WARRIOR,
         /// <summary>Ranged combat unit</summary>
         ARCHER,
-        /// <summary>Main base structure - trains workers</summary>
+        /// <summary>Main base structure - trains pawns</summary>
         BASE,
-        /// <summary>Military structure - trains soldiers and archers</summary>
+        /// <summary>Military structure - trains warriors</summary>
         BARRACKS,
-        /// <summary>Economic structure - boosts mining speed</summary>
-        REFINERY,
+        /// <summary>Ranged military structure - trains archers</summary>
+        ARCHERY,
+        /// <summary>Lance cavalry unit - extended melee range, strong vs warriors</summary>
+        LANCER,
+        /// <summary>Defensive tower structure - unlocks lancer training</summary>
+        TOWER,
     }
 }

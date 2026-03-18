@@ -6,7 +6,7 @@ namespace GameManager.Tests
 	/// <summary>
 	/// Tests for Constants.UNIT_VALUE — verifies specific integer value assignments
 	/// and relative orderings between unit types.
-	/// Complements ConstantsCapabilityTests which only checks combat > worker and mine = 0.
+	/// Complements ConstantsCapabilityTests which only checks combat > pawn and mine = 0.
 	/// </summary>
 	[TestFixture]
 	public class ConstantsUnitValueTests
@@ -14,20 +14,22 @@ namespace GameManager.Tests
 		#region Completeness
 
 		/// <summary>
-		/// UNIT_VALUE contains entries for all 7 unit types.
+		/// UNIT_VALUE contains entries for all 9 unit types.
 		/// </summary>
 		[Test]
-		public void UnitValue_HasAllSevenUnitTypes()
+		public void UnitValue_HasAllNineUnitTypes()
 		{
-			Assert.AreEqual(7, Constants.UNIT_VALUE.Count,
-				"UNIT_VALUE should have exactly 7 entries");
+			Assert.AreEqual(9, Constants.UNIT_VALUE.Count,
+				"UNIT_VALUE should have exactly 9 entries");
 			Assert.IsTrue(Constants.UNIT_VALUE.ContainsKey(UnitType.MINE));
-			Assert.IsTrue(Constants.UNIT_VALUE.ContainsKey(UnitType.WORKER));
-			Assert.IsTrue(Constants.UNIT_VALUE.ContainsKey(UnitType.SOLDIER));
+			Assert.IsTrue(Constants.UNIT_VALUE.ContainsKey(UnitType.PAWN));
+			Assert.IsTrue(Constants.UNIT_VALUE.ContainsKey(UnitType.WARRIOR));
 			Assert.IsTrue(Constants.UNIT_VALUE.ContainsKey(UnitType.ARCHER));
+			Assert.IsTrue(Constants.UNIT_VALUE.ContainsKey(UnitType.LANCER));
 			Assert.IsTrue(Constants.UNIT_VALUE.ContainsKey(UnitType.BASE));
 			Assert.IsTrue(Constants.UNIT_VALUE.ContainsKey(UnitType.BARRACKS));
-			Assert.IsTrue(Constants.UNIT_VALUE.ContainsKey(UnitType.REFINERY));
+			Assert.IsTrue(Constants.UNIT_VALUE.ContainsKey(UnitType.ARCHERY));
+			Assert.IsTrue(Constants.UNIT_VALUE.ContainsKey(UnitType.TOWER));
 		}
 
 		/// <summary>
@@ -58,13 +60,13 @@ namespace GameManager.Tests
 		}
 
 		/// <summary>
-		/// SOLDIER has unit value 4.
+		/// WARRIOR has unit value 4.
 		/// </summary>
 		[Test]
-		public void UnitValue_Soldier_IsFour()
+		public void UnitValue_Warrior_IsFour()
 		{
-			Assert.AreEqual(4, Constants.UNIT_VALUE[UnitType.SOLDIER],
-				"SOLDIER should have UNIT_VALUE = 4");
+			Assert.AreEqual(4, Constants.UNIT_VALUE[UnitType.WARRIOR],
+				"WARRIOR should have UNIT_VALUE = 4");
 		}
 
 		/// <summary>
@@ -88,15 +90,43 @@ namespace GameManager.Tests
 		}
 
 		/// <summary>
-		/// WORKER and REFINERY share unit value 1.
+		/// PAWN has unit value 1.
 		/// </summary>
 		[Test]
-		public void UnitValue_WorkerAndRefinery_AreOne()
+		public void UnitValue_Pawn_IsOne()
 		{
-			Assert.AreEqual(1, Constants.UNIT_VALUE[UnitType.WORKER],
-				"WORKER should have UNIT_VALUE = 1");
-			Assert.AreEqual(1, Constants.UNIT_VALUE[UnitType.REFINERY],
-				"REFINERY should have UNIT_VALUE = 1");
+			Assert.AreEqual(1, Constants.UNIT_VALUE[UnitType.PAWN],
+				"PAWN should have UNIT_VALUE = 1");
+		}
+
+		/// <summary>
+		/// ARCHERY has unit value 3 (same as BARRACKS).
+		/// </summary>
+		[Test]
+		public void UnitValue_Archery_IsThree()
+		{
+			Assert.AreEqual(3, Constants.UNIT_VALUE[UnitType.ARCHERY],
+				"ARCHERY should have UNIT_VALUE = 3");
+		}
+
+		/// <summary>
+		/// LANCER has unit value 5 (same as ARCHER).
+		/// </summary>
+		[Test]
+		public void UnitValue_Lancer_IsFive()
+		{
+			Assert.AreEqual(5, Constants.UNIT_VALUE[UnitType.LANCER],
+				"LANCER should have UNIT_VALUE = 5");
+		}
+
+		/// <summary>
+		/// TOWER has unit value 3 (same as BARRACKS and ARCHERY).
+		/// </summary>
+		[Test]
+		public void UnitValue_Tower_IsThree()
+		{
+			Assert.AreEqual(3, Constants.UNIT_VALUE[UnitType.TOWER],
+				"TOWER should have UNIT_VALUE = 3");
 		}
 
 		/// <summary>
@@ -114,14 +144,25 @@ namespace GameManager.Tests
 		#region Relative Ordering
 
 		/// <summary>
-		/// ARCHER value exceeds SOLDIER value.
+		/// ARCHER value exceeds WARRIOR value.
 		/// </summary>
 		[Test]
-		public void UnitValue_ArcherGreaterThanSoldier()
+		public void UnitValue_ArcherGreaterThanWarrior()
 		{
 			Assert.Greater(Constants.UNIT_VALUE[UnitType.ARCHER],
-				Constants.UNIT_VALUE[UnitType.SOLDIER],
-				"ARCHER should be worth more than SOLDIER");
+				Constants.UNIT_VALUE[UnitType.WARRIOR],
+				"ARCHER should be worth more than WARRIOR");
+		}
+
+		/// <summary>
+		/// LANCER and ARCHER have equal value.
+		/// </summary>
+		[Test]
+		public void UnitValue_LancerEqualsArcher()
+		{
+			Assert.AreEqual(Constants.UNIT_VALUE[UnitType.LANCER],
+				Constants.UNIT_VALUE[UnitType.ARCHER],
+				"LANCER and ARCHER should have equal value");
 		}
 
 		/// <summary>
@@ -136,14 +177,14 @@ namespace GameManager.Tests
 		}
 
 		/// <summary>
-		/// BASE value exceeds WORKER value.
+		/// BASE value exceeds PAWN value.
 		/// </summary>
 		[Test]
-		public void UnitValue_BaseGreaterThanWorker()
+		public void UnitValue_BaseGreaterThanPawn()
 		{
 			Assert.Greater(Constants.UNIT_VALUE[UnitType.BASE],
-				Constants.UNIT_VALUE[UnitType.WORKER],
-				"BASE should be worth more than WORKER");
+				Constants.UNIT_VALUE[UnitType.PAWN],
+				"BASE should be worth more than PAWN");
 		}
 
 		#endregion

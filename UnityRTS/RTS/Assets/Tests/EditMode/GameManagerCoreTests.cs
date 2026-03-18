@@ -79,7 +79,7 @@ namespace GameManager.Tests
 			createdObjects.Add(go);
 
 			var bridge = go.AddComponent<AgentBridge>();
-			bridge.InitializeAgent("Human", "TestDLL", agentNbr, ".");
+			bridge.InitializeAgent("Blue", "TestDLL", agentNbr, ".");
 
 			var controller = go.AddComponent<AgentController>();
 			typeof(AgentController)
@@ -160,8 +160,8 @@ namespace GameManager.Tests
 		{
 			SetProp("AgentWins", new Dictionary<string, int>
 			{
-				{ Constants.HUMAN_ABBR, 2 },
-				{ Constants.ORC_ABBR,   1 }
+				{ Constants.BLUE_ABBR, 2 },
+				{ Constants.RED_ABBR,   1 }
 			});
 
 			int result = Invoke<int>("DetermineRoundsCompleted");
@@ -174,8 +174,8 @@ namespace GameManager.Tests
 		{
 			SetProp("AgentWins", new Dictionary<string, int>
 			{
-				{ Constants.HUMAN_ABBR, 0 },
-				{ Constants.ORC_ABBR,   0 }
+				{ Constants.BLUE_ABBR, 0 },
+				{ Constants.RED_ABBR,   0 }
 			});
 
 			int result = Invoke<int>("DetermineRoundsCompleted");
@@ -242,29 +242,29 @@ namespace GameManager.Tests
 		// ── FindMirroredLocation ──────────────────────────────────────────────
 
 		[Test]
-		public void FindMirroredLocation_Worker_MirrorsCorrectly()
+		public void FindMirroredLocation_Pawn_MirrorsCorrectly()
 		{
-			// mapSize=(30,30), UNIT_SIZE[WORKER]=(1,1), pos=(5,5)
+			// mapSize=(30,30), UNIT_SIZE[PAWN]=(1,1), pos=(5,5)
 			// mirror.x = 30 - 1 - 5 = 24
 			// mirror.y = 30 - 2 + 1 - 5 = 24
 			SetField("mapManager", MakeMapManager(30, 30));
 
 			var result = Invoke<Vector3Int>(
 				"FindMirroredLocation",
-				new Vector3Int(5, 5, 0), UnitType.WORKER);
+				new Vector3Int(5, 5, 0), UnitType.PAWN);
 
 			Assert.AreEqual(new Vector3Int(24, 24, 0), result);
 		}
 
 		[Test]
-		public void FindMirroredLocation_OriginWorker_ReturnsMapEdge()
+		public void FindMirroredLocation_OriginPawn_ReturnsMapEdge()
 		{
 			// pos=(0,0): mirror.x = 30 - 1 - 0 = 29, mirror.y = 30 - 2 + 1 - 0 = 29
 			SetField("mapManager", MakeMapManager(30, 30));
 
 			var result = Invoke<Vector3Int>(
 				"FindMirroredLocation",
-				new Vector3Int(0, 0, 0), UnitType.WORKER);
+				new Vector3Int(0, 0, 0), UnitType.PAWN);
 
 			Assert.AreEqual(new Vector3Int(29, 29, 0), result);
 		}

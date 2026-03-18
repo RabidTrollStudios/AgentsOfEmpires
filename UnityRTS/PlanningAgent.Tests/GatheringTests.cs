@@ -5,7 +5,7 @@ using Xunit;
 namespace PlanningAgent.Tests
 {
     /// <summary>
-    /// Tests for the gathering system: workers mine gold and deposit at base.
+    /// Tests for the gathering system: pawns mine gold and deposit at base.
     /// </summary>
     public class GatheringTests
     {
@@ -14,13 +14,13 @@ namespace PlanningAgent.Tests
         // ------------------------------------------------------------------
 
         [Fact]
-        public void WorkerGathers_GoldIncreases()
+        public void PawnGathers_GoldIncreases()
         {
             var game = new SimGameBuilder()
                 .WithMapSize(30, 30)
                 .WithGold(0, 0)
                 .WithUnit(0, UnitType.BASE, new Position(5, 5), isBuilt: true)
-                .WithUnit(0, UnitType.WORKER, new Position(8, 5))
+                .WithUnit(0, UnitType.PAWN, new Position(8, 5))
                 .WithMine(new Position(12, 5), health: 10000)
                 .WithAgent(0, new GatherAgent())
                 .Build();
@@ -34,13 +34,13 @@ namespace PlanningAgent.Tests
         }
 
         [Fact]
-        public void WorkerGathers_MineHealthDecreases()
+        public void PawnGathers_MineHealthDecreases()
         {
             var game = new SimGameBuilder()
                 .WithMapSize(30, 30)
                 .WithGold(0, 0)
                 .WithUnit(0, UnitType.BASE, new Position(5, 5), isBuilt: true)
-                .WithUnit(0, UnitType.WORKER, new Position(8, 5))
+                .WithUnit(0, UnitType.PAWN, new Position(8, 5))
                 .WithMine(new Position(12, 5), health: 10000)
                 .WithAgent(0, new GatherAgent())
                 .Build();
@@ -60,13 +60,13 @@ namespace PlanningAgent.Tests
         }
 
         [Fact]
-        public void WorkerGathers_CyclesBackToMine()
+        public void PawnGathers_CyclesBackToMine()
         {
             var game = new SimGameBuilder()
                 .WithMapSize(30, 30)
                 .WithGold(0, 0)
                 .WithUnit(0, UnitType.BASE, new Position(5, 5), isBuilt: true)
-                .WithUnit(0, UnitType.WORKER, new Position(8, 5))
+                .WithUnit(0, UnitType.PAWN, new Position(8, 5))
                 .WithMine(new Position(12, 5), health: 10000)
                 .WithAgent(0, new GatherAgent())
                 .Build();
@@ -78,7 +78,7 @@ namespace PlanningAgent.Tests
             game.Run(1500);
 
             // Gold should be significantly more than 1 trip (100 gold per trip)
-            float miningCapacity = GameConstants.MINING_CAPACITY[UnitType.WORKER];
+            float miningCapacity = GameConstants.MINING_CAPACITY[UnitType.PAWN];
             Assert.True(game.GetGold(0) > (int)miningCapacity,
                 $"Expected multiple gather cycles. Gold: {game.GetGold(0)}, single trip: {miningCapacity}");
         }
@@ -94,7 +94,7 @@ namespace PlanningAgent.Tests
                 .WithMapSize(30, 30)
                 .WithGold(0, 0)
                 .WithUnit(0, UnitType.BASE, new Position(5, 5), isBuilt: true)
-                .WithUnit(0, UnitType.WORKER, new Position(8, 5))
+                .WithUnit(0, UnitType.PAWN, new Position(8, 5))
                 // Mine very close to base
                 .WithMine(new Position(9, 5), health: 10000)
                 .WithAgent(0, new GatherAgent())
@@ -114,7 +114,7 @@ namespace PlanningAgent.Tests
                 .WithMapSize(30, 30)
                 .WithGold(0, 0)
                 .WithUnit(0, UnitType.BASE, new Position(2, 2), isBuilt: true)
-                .WithUnit(0, UnitType.WORKER, new Position(5, 2))
+                .WithUnit(0, UnitType.PAWN, new Position(5, 2))
                 // Mine in far corner
                 .WithMine(new Position(25, 25), health: 10000)
                 .WithAgent(0, new GatherAgent())
@@ -129,13 +129,13 @@ namespace PlanningAgent.Tests
         }
 
         [Fact]
-        public void MineDepleted_WorkerGoesIdle()
+        public void MineDepleted_PawnGoesIdle()
         {
             var game = new SimGameBuilder()
                 .WithMapSize(30, 30)
                 .WithGold(0, 0)
                 .WithUnit(0, UnitType.BASE, new Position(5, 5), isBuilt: true)
-                .WithUnit(0, UnitType.WORKER, new Position(8, 5))
+                .WithUnit(0, UnitType.PAWN, new Position(8, 5))
                 // Mine with very little gold — will deplete quickly
                 .WithMine(new Position(12, 5), health: 50)
                 .WithAgent(0, new GatherAgent())
@@ -149,9 +149,9 @@ namespace PlanningAgent.Tests
             var mines = game.GetUnitsByType(-1, UnitType.MINE);
             Assert.Empty(mines);
 
-            // Worker should not crash — should be idle or gathering (if agent retries)
-            var workers = game.GetUnitsByType(0, UnitType.WORKER);
-            Assert.Single(workers);
+            // Pawn should not crash — should be idle or gathering (if agent retries)
+            var pawns = game.GetUnitsByType(0, UnitType.PAWN);
+            Assert.Single(pawns);
         }
 
         // ------------------------------------------------------------------
@@ -159,15 +159,15 @@ namespace PlanningAgent.Tests
         // ------------------------------------------------------------------
 
         [Fact]
-        public void GatherWithNonWorker_Rejected()
+        public void GatherWithNonPawn_Rejected()
         {
             var game = new SimGameBuilder()
                 .WithMapSize(30, 30)
                 .WithGold(0, 0)
                 .WithUnit(0, UnitType.BASE, new Position(5, 5), isBuilt: true)
-                .WithUnit(0, UnitType.SOLDIER, new Position(8, 5))
+                .WithUnit(0, UnitType.WARRIOR, new Position(8, 5))
                 .WithMine(new Position(12, 5), health: 10000)
-                .WithAgent(0, new GatherWithSoldierAgent())
+                .WithAgent(0, new GatherWithWarriorAgent())
                 .Build();
 
             game.InitializeMatch();
@@ -184,7 +184,7 @@ namespace PlanningAgent.Tests
                 .WithMapSize(30, 30)
                 .WithGold(0, 0)
                 .WithUnit(0, UnitType.BASE, new Position(5, 5), isBuilt: true)
-                .WithUnit(0, UnitType.WORKER, new Position(8, 5))
+                .WithUnit(0, UnitType.PAWN, new Position(8, 5))
                 .WithUnit(0, UnitType.BARRACKS, new Position(12, 5), isBuilt: true)
                 .WithAgent(0, new GatherFromBarracksAgent())
                 .Build();
@@ -201,17 +201,17 @@ namespace PlanningAgent.Tests
         // ------------------------------------------------------------------
 
         [Fact]
-        public void FiveWorkersGatherSimultaneously_AllDepositGold()
+        public void FivePawnsGatherSimultaneously_AllDepositGold()
         {
             var game = new SimGameBuilder()
                 .WithMapSize(30, 30)
                 .WithGold(0, 0)
                 .WithUnit(0, UnitType.BASE, new Position(5, 5), isBuilt: true)
-                .WithUnit(0, UnitType.WORKER, new Position(8, 3))
-                .WithUnit(0, UnitType.WORKER, new Position(8, 5))
-                .WithUnit(0, UnitType.WORKER, new Position(8, 7))
-                .WithUnit(0, UnitType.WORKER, new Position(9, 4))
-                .WithUnit(0, UnitType.WORKER, new Position(9, 6))
+                .WithUnit(0, UnitType.PAWN, new Position(8, 3))
+                .WithUnit(0, UnitType.PAWN, new Position(8, 5))
+                .WithUnit(0, UnitType.PAWN, new Position(8, 7))
+                .WithUnit(0, UnitType.PAWN, new Position(9, 4))
+                .WithUnit(0, UnitType.PAWN, new Position(9, 6))
                 .WithMine(new Position(15, 5), health: 50000)
                 .WithAgent(0, new GatherAgent())
                 .Build();
@@ -220,9 +220,9 @@ namespace PlanningAgent.Tests
             game.InitializeRound();
             game.Run(1000);
 
-            // Five workers should gather significantly more than one
+            // Five pawns should gather significantly more than one
             Assert.True(game.GetGold(0) > 200,
-                $"5 workers should have gathered significant gold, got {game.GetGold(0)}");
+                $"5 pawns should have gathered significant gold, got {game.GetGold(0)}");
         }
     }
 }

@@ -49,7 +49,7 @@ namespace GameManager.Tests.PlayMode
 		}
 
 		/// <summary>
-		/// When a BARRACKS (3x3) is destroyed via combat (soldier attacks it),
+		/// When a BARRACKS (3x3) is destroyed via combat (warrior attacks it),
 		/// all its footprint cells are freed.
 		/// </summary>
 		[UnityTest]
@@ -66,10 +66,10 @@ namespace GameManager.Tests.PlayMode
 
 			int barracksNbr = barracks.UnitNbr;
 
-			// Three soldiers attack the barracks
-			Unit s1 = PlaceUnit(UnitType.SOLDIER, new Vector3Int(14, 10, 0));
-			Unit s2 = PlaceUnit(UnitType.SOLDIER, new Vector3Int(14, 9, 0));
-			Unit s3 = PlaceUnit(UnitType.SOLDIER, new Vector3Int(14, 11, 0));
+			// Three warriors attack the barracks
+			Unit s1 = PlaceUnit(UnitType.WARRIOR, new Vector3Int(14, 10, 0));
+			Unit s2 = PlaceUnit(UnitType.WARRIOR, new Vector3Int(14, 9, 0));
+			Unit s3 = PlaceUnit(UnitType.WARRIOR, new Vector3Int(14, 11, 0));
 
 			s1.StartAttacking(new AttackEventArgs(s1, barracks));
 			s2.StartAttacking(new AttackEventArgs(s2, barracks));
@@ -77,8 +77,8 @@ namespace GameManager.Tests.PlayMode
 
 			yield return WaitUntil(
 				() => ctx.UnitManager.GetUnit(barracksNbr) == null,
-				timeoutSeconds: 30f,
-				failMessage: "Barracks was not destroyed by soldiers");
+				timeoutSeconds: 10f,
+				failMessage: "Barracks was not destroyed by warriors");
 
 			yield return null; // let Destroy process
 
@@ -111,48 +111,48 @@ namespace GameManager.Tests.PlayMode
 		#region Mobile Unit Destruction
 
 		/// <summary>
-		/// When a WORKER is destroyed, its 1x1 cell becomes buildable.
+		/// When a PAWN is destroyed, its 1x1 cell becomes buildable.
 		/// </summary>
 		[UnityTest]
-		public IEnumerator Worker_Destroyed_CellBecomesBuildable()
+		public IEnumerator Pawn_Destroyed_CellBecomesBuildable()
 		{
 			var pos = new Vector3Int(10, 10, 0);
-			Unit worker = PlaceUnit(UnitType.WORKER, pos);
+			Unit pawn = PlaceUnit(UnitType.PAWN, pos);
 
 			Assert.IsFalse(ctx.MapManager.IsGridPositionBuildable(pos),
-				"Worker's cell should not be buildable while alive");
+				"Pawn's cell should not be buildable while alive");
 
-			worker.Health = 0;
-			worker.Update();
+			pawn.Health = 0;
+			pawn.Update();
 			yield return null;
 
 			Assert.IsTrue(ctx.MapManager.IsGridPositionBuildable(pos),
-				"Worker's cell should be buildable after worker dies");
+				"Pawn's cell should be buildable after pawn dies");
 		}
 
 		/// <summary>
-		/// When a SOLDIER is destroyed in combat, its cell becomes buildable again.
+		/// When a WARRIOR is destroyed in combat, its cell becomes buildable again.
 		/// </summary>
 		[UnityTest]
-		public IEnumerator Soldier_DestroyedByCombat_CellReclaimed()
+		public IEnumerator Warrior_DestroyedByCombat_CellReclaimed()
 		{
-			var soldierPos = new Vector3Int(10, 10, 0);
-			Unit friendlySoldier = PlaceUnit(UnitType.SOLDIER, soldierPos, ctx.Agent1Go);
-			int soldierNbr = friendlySoldier.UnitNbr;
-			friendlySoldier.Health = 1f;
+			var warriorPos = new Vector3Int(10, 10, 0);
+			Unit friendlyWarrior = PlaceUnit(UnitType.WARRIOR, warriorPos, ctx.Agent1Go);
+			int warriorNbr = friendlyWarrior.UnitNbr;
+			friendlyWarrior.Health = 1f;
 
-			Unit attacker = PlaceUnit(UnitType.SOLDIER, new Vector3Int(9, 10, 0));
-			attacker.StartAttacking(new AttackEventArgs(attacker, friendlySoldier));
+			Unit attacker = PlaceUnit(UnitType.WARRIOR, new Vector3Int(9, 10, 0));
+			attacker.StartAttacking(new AttackEventArgs(attacker, friendlyWarrior));
 
 			yield return WaitUntil(
-				() => ctx.UnitManager.GetUnit(soldierNbr) == null,
+				() => ctx.UnitManager.GetUnit(warriorNbr) == null,
 				timeoutSeconds: 10f,
-				failMessage: "Soldier was not destroyed by attacker");
+				failMessage: "Warrior was not destroyed by attacker");
 
 			yield return null;
 
-			Assert.IsTrue(ctx.MapManager.IsGridPositionBuildable(soldierPos),
-				"Soldier's cell should be buildable after death");
+			Assert.IsTrue(ctx.MapManager.IsGridPositionBuildable(warriorPos),
+				"Warrior's cell should be buildable after death");
 		}
 
 		#endregion

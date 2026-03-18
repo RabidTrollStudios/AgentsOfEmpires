@@ -11,7 +11,7 @@ namespace PlanningAgent.Tests
     {
         /// <summary>
         /// Standard game setup for testing an opponent.
-        /// Opponent is agent 1 with a base, worker, and mine.
+        /// Opponent is agent 1 with a base, pawn, and mine.
         /// </summary>
         protected SimGame BuildStandardGame(PlanningAgentBase opponent)
         {
@@ -20,9 +20,9 @@ namespace PlanningAgent.Tests
                 .WithGold(0, 5000)
                 .WithGold(1, 5000)
                 .WithUnit(0, UnitType.BASE, new Position(5, 5), isBuilt: true)
-                .WithUnit(0, UnitType.WORKER, new Position(8, 5))
+                .WithUnit(0, UnitType.PAWN, new Position(8, 5))
                 .WithUnit(1, UnitType.BASE, new Position(25, 25), isBuilt: true)
-                .WithUnit(1, UnitType.WORKER, new Position(22, 25))
+                .WithUnit(1, UnitType.PAWN, new Position(22, 25))
                 .WithMine(new Position(15, 10), health: 10000)
                 .WithMine(new Position(15, 20), health: 10000)
                 .WithAgent(0, new DoNothingAgent())
@@ -40,9 +40,9 @@ namespace PlanningAgent.Tests
                 .WithGold(0, 5000)
                 .WithGold(1, 5000)
                 .WithUnit(0, UnitType.BASE, new Position(5, 5), isBuilt: true)
-                .WithUnit(0, UnitType.WORKER, new Position(8, 5))
+                .WithUnit(0, UnitType.PAWN, new Position(8, 5))
                 .WithUnit(1, UnitType.BASE, new Position(25, 25), isBuilt: true)
-                .WithUnit(1, UnitType.WORKER, new Position(22, 25))
+                .WithUnit(1, UnitType.PAWN, new Position(22, 25))
                 .WithMine(new Position(15, 10), health: 10000)
                 .WithMine(new Position(15, 20), health: 10000)
                 .WithAgent(0, agent0)

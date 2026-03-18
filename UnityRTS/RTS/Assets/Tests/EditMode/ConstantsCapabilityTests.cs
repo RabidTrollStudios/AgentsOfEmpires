@@ -15,19 +15,21 @@ namespace GameManager.Tests
 		#region Movement Capabilities
 
 		/// <summary>
-		/// Only mobile unit types (WORKER, SOLDIER, ARCHER) should have CanMove=true.
+		/// Only mobile unit types (PAWN, WARRIOR, ARCHER, LANCER) should have CanMove=true.
 		/// Buildings and mines are immobile.
 		/// </summary>
 		[Test]
 		public void CanMove_OnlyMobileUnitsAreTrue()
 		{
-			Assert.IsTrue(Constants.CAN_MOVE[UnitType.WORKER],   "WORKER should be able to move");
-			Assert.IsTrue(Constants.CAN_MOVE[UnitType.SOLDIER],  "SOLDIER should be able to move");
-			Assert.IsTrue(Constants.CAN_MOVE[UnitType.ARCHER],   "ARCHER should be able to move");
+			Assert.IsTrue(Constants.CAN_MOVE[UnitType.PAWN],    "PAWN should be able to move");
+			Assert.IsTrue(Constants.CAN_MOVE[UnitType.WARRIOR], "WARRIOR should be able to move");
+			Assert.IsTrue(Constants.CAN_MOVE[UnitType.ARCHER],  "ARCHER should be able to move");
+			Assert.IsTrue(Constants.CAN_MOVE[UnitType.LANCER],  "LANCER should be able to move");
 
 			Assert.IsFalse(Constants.CAN_MOVE[UnitType.BASE],     "BASE should not be able to move");
 			Assert.IsFalse(Constants.CAN_MOVE[UnitType.BARRACKS], "BARRACKS should not be able to move");
-			Assert.IsFalse(Constants.CAN_MOVE[UnitType.REFINERY], "REFINERY should not be able to move");
+			Assert.IsFalse(Constants.CAN_MOVE[UnitType.ARCHERY],  "ARCHERY should not be able to move");
+			Assert.IsFalse(Constants.CAN_MOVE[UnitType.TOWER],    "TOWER should not be able to move");
 			Assert.IsFalse(Constants.CAN_MOVE[UnitType.MINE],     "MINE should not be able to move");
 		}
 
@@ -36,32 +38,35 @@ namespace GameManager.Tests
 		#region Build Capabilities
 
 		/// <summary>
-		/// Only WORKER should be able to build structures.
+		/// Only PAWN should be able to build structures.
 		/// </summary>
 		[Test]
-		public void CanBuild_OnlyWorkerIsTrue()
+		public void CanBuild_OnlyPawnIsTrue()
 		{
-			Assert.IsTrue(Constants.CAN_BUILD[UnitType.WORKER], "WORKER should be able to build");
+			Assert.IsTrue(Constants.CAN_BUILD[UnitType.PAWN], "PAWN should be able to build");
 
-			Assert.IsFalse(Constants.CAN_BUILD[UnitType.SOLDIER],  "SOLDIER should not be able to build");
+			Assert.IsFalse(Constants.CAN_BUILD[UnitType.WARRIOR],  "WARRIOR should not be able to build");
 			Assert.IsFalse(Constants.CAN_BUILD[UnitType.ARCHER],   "ARCHER should not be able to build");
+			Assert.IsFalse(Constants.CAN_BUILD[UnitType.LANCER],   "LANCER should not be able to build");
 			Assert.IsFalse(Constants.CAN_BUILD[UnitType.BASE],     "BASE should not be able to build");
 			Assert.IsFalse(Constants.CAN_BUILD[UnitType.BARRACKS], "BARRACKS should not be able to build");
-			Assert.IsFalse(Constants.CAN_BUILD[UnitType.REFINERY], "REFINERY should not be able to build");
+			Assert.IsFalse(Constants.CAN_BUILD[UnitType.ARCHERY],  "ARCHERY should not be able to build");
+			Assert.IsFalse(Constants.CAN_BUILD[UnitType.TOWER],    "TOWER should not be able to build");
 			Assert.IsFalse(Constants.CAN_BUILD[UnitType.MINE],     "MINE should not be able to build");
 		}
 
 		/// <summary>
-		/// WORKER should be able to build BASE, BARRACKS, and REFINERY.
+		/// PAWN should be able to build BASE, BARRACKS, ARCHERY, and TOWER.
 		/// </summary>
 		[Test]
-		public void WorkerBuilds_BaseBarracksRefinery()
+		public void PawnBuilds_BaseBarracksArcheryTower()
 		{
-			var builds = Constants.BUILDS[UnitType.WORKER];
+			var builds = Constants.BUILDS[UnitType.PAWN];
 
-			Assert.Contains(UnitType.BASE,     builds, "WORKER should build BASE");
-			Assert.Contains(UnitType.BARRACKS, builds, "WORKER should build BARRACKS");
-			Assert.Contains(UnitType.REFINERY, builds, "WORKER should build REFINERY");
+			Assert.Contains(UnitType.BASE,     builds, "PAWN should build BASE");
+			Assert.Contains(UnitType.BARRACKS, builds, "PAWN should build BARRACKS");
+			Assert.Contains(UnitType.ARCHERY,  builds, "PAWN should build ARCHERY");
+			Assert.Contains(UnitType.TOWER,    builds, "PAWN should build TOWER");
 		}
 
 		#endregion
@@ -69,18 +74,20 @@ namespace GameManager.Tests
 		#region Gather Capabilities
 
 		/// <summary>
-		/// Only WORKER should be able to gather resources.
+		/// Only PAWN should be able to gather resources.
 		/// </summary>
 		[Test]
-		public void CanGather_OnlyWorkerIsTrue()
+		public void CanGather_OnlyPawnIsTrue()
 		{
-			Assert.IsTrue(Constants.CAN_GATHER[UnitType.WORKER], "WORKER should be able to gather");
+			Assert.IsTrue(Constants.CAN_GATHER[UnitType.PAWN], "PAWN should be able to gather");
 
-			Assert.IsFalse(Constants.CAN_GATHER[UnitType.SOLDIER],  "SOLDIER should not gather");
+			Assert.IsFalse(Constants.CAN_GATHER[UnitType.WARRIOR],  "WARRIOR should not gather");
 			Assert.IsFalse(Constants.CAN_GATHER[UnitType.ARCHER],   "ARCHER should not gather");
+			Assert.IsFalse(Constants.CAN_GATHER[UnitType.LANCER],   "LANCER should not gather");
 			Assert.IsFalse(Constants.CAN_GATHER[UnitType.BASE],     "BASE should not gather");
 			Assert.IsFalse(Constants.CAN_GATHER[UnitType.BARRACKS], "BARRACKS should not gather");
-			Assert.IsFalse(Constants.CAN_GATHER[UnitType.REFINERY], "REFINERY should not gather");
+			Assert.IsFalse(Constants.CAN_GATHER[UnitType.ARCHERY],  "ARCHERY should not gather");
+			Assert.IsFalse(Constants.CAN_GATHER[UnitType.TOWER],    "TOWER should not gather");
 			Assert.IsFalse(Constants.CAN_GATHER[UnitType.MINE],     "MINE should not gather");
 		}
 
@@ -89,30 +96,46 @@ namespace GameManager.Tests
 		#region Attack Capabilities
 
 		/// <summary>
-		/// Only SOLDIER and ARCHER should be able to attack.
+		/// WARRIOR, ARCHER, and LANCER should be able to attack.
 		/// </summary>
 		[Test]
-		public void CanAttack_OnlySoldierAndArcherAreTrue()
+		public void CanAttack_OnlyCombatUnitsAreTrue()
 		{
-			Assert.IsTrue(Constants.CAN_ATTACK[UnitType.SOLDIER], "SOLDIER should be able to attack");
+			Assert.IsTrue(Constants.CAN_ATTACK[UnitType.WARRIOR], "WARRIOR should be able to attack");
 			Assert.IsTrue(Constants.CAN_ATTACK[UnitType.ARCHER],  "ARCHER should be able to attack");
+			Assert.IsTrue(Constants.CAN_ATTACK[UnitType.LANCER],  "LANCER should be able to attack");
 
-			Assert.IsFalse(Constants.CAN_ATTACK[UnitType.WORKER],   "WORKER should not attack");
+			Assert.IsFalse(Constants.CAN_ATTACK[UnitType.PAWN],     "PAWN should not attack");
 			Assert.IsFalse(Constants.CAN_ATTACK[UnitType.BASE],     "BASE should not attack");
 			Assert.IsFalse(Constants.CAN_ATTACK[UnitType.BARRACKS], "BARRACKS should not attack");
-			Assert.IsFalse(Constants.CAN_ATTACK[UnitType.REFINERY], "REFINERY should not attack");
+			Assert.IsFalse(Constants.CAN_ATTACK[UnitType.ARCHERY],  "ARCHERY should not attack");
+			Assert.IsFalse(Constants.CAN_ATTACK[UnitType.TOWER],    "TOWER should not attack");
 			Assert.IsFalse(Constants.CAN_ATTACK[UnitType.MINE],     "MINE should not attack");
 		}
 
 		/// <summary>
-		/// ARCHER should have a strictly greater attack range than SOLDIER.
+		/// ARCHER should have a strictly greater attack range than WARRIOR.
 		/// </summary>
 		[Test]
-		public void AttackRange_ArcherGreaterThanSoldier()
+		public void AttackRange_ArcherGreaterThanWarrior()
 		{
 			Assert.Greater(Constants.ATTACK_RANGE[UnitType.ARCHER],
-				Constants.ATTACK_RANGE[UnitType.SOLDIER],
-				"ARCHER attack range should exceed SOLDIER attack range");
+				Constants.ATTACK_RANGE[UnitType.WARRIOR],
+				"ARCHER attack range should exceed WARRIOR attack range");
+		}
+
+		/// <summary>
+		/// LANCER has extended melee range — greater than WARRIOR, less than ARCHER.
+		/// </summary>
+		[Test]
+		public void AttackRange_LancerBetweenWarriorAndArcher()
+		{
+			Assert.Greater(Constants.ATTACK_RANGE[UnitType.LANCER],
+				Constants.ATTACK_RANGE[UnitType.WARRIOR],
+				"LANCER attack range should exceed WARRIOR attack range");
+			Assert.Less(Constants.ATTACK_RANGE[UnitType.LANCER],
+				Constants.ATTACK_RANGE[UnitType.ARCHER],
+				"LANCER attack range should be less than ARCHER attack range");
 		}
 
 		#endregion
@@ -120,48 +143,55 @@ namespace GameManager.Tests
 		#region Train Capabilities
 
 		/// <summary>
-		/// Only BASE and BARRACKS should be able to train units.
+		/// BASE, BARRACKS, ARCHERY, and TOWER should be able to train units.
 		/// </summary>
 		[Test]
-		public void CanTrain_OnlyBaseAndBarracksAreTrue()
+		public void CanTrain_OnlyTrainerBuildingsAreTrue()
 		{
 			Assert.IsTrue(Constants.CAN_TRAIN[UnitType.BASE],     "BASE should be able to train");
 			Assert.IsTrue(Constants.CAN_TRAIN[UnitType.BARRACKS], "BARRACKS should be able to train");
+			Assert.IsTrue(Constants.CAN_TRAIN[UnitType.ARCHERY],  "ARCHERY should be able to train");
+			Assert.IsTrue(Constants.CAN_TRAIN[UnitType.TOWER],    "TOWER should be able to train");
 
-			Assert.IsFalse(Constants.CAN_TRAIN[UnitType.WORKER],   "WORKER should not train");
-			Assert.IsFalse(Constants.CAN_TRAIN[UnitType.SOLDIER],  "SOLDIER should not train");
-			Assert.IsFalse(Constants.CAN_TRAIN[UnitType.ARCHER],   "ARCHER should not train");
-			Assert.IsFalse(Constants.CAN_TRAIN[UnitType.REFINERY], "REFINERY should not train");
-			Assert.IsFalse(Constants.CAN_TRAIN[UnitType.MINE],     "MINE should not train");
+			Assert.IsFalse(Constants.CAN_TRAIN[UnitType.PAWN],    "PAWN should not train");
+			Assert.IsFalse(Constants.CAN_TRAIN[UnitType.WARRIOR], "WARRIOR should not train");
+			Assert.IsFalse(Constants.CAN_TRAIN[UnitType.ARCHER],  "ARCHER should not train");
+			Assert.IsFalse(Constants.CAN_TRAIN[UnitType.LANCER],  "LANCER should not train");
+			Assert.IsFalse(Constants.CAN_TRAIN[UnitType.MINE],    "MINE should not train");
 		}
 
 		/// <summary>
-		/// BASE should train WORKER; BARRACKS should train SOLDIER and ARCHER.
+		/// BASE should train PAWN; BARRACKS should train WARRIOR; ARCHERY should train ARCHER; TOWER should train LANCER.
 		/// </summary>
 		[Test]
 		public void TrainsMatrix_CorrectUnitTypes()
 		{
-			Assert.Contains(UnitType.WORKER,  Constants.TRAINS[UnitType.BASE],
-				"BASE should train WORKER");
-			Assert.Contains(UnitType.SOLDIER, Constants.TRAINS[UnitType.BARRACKS],
-				"BARRACKS should train SOLDIER");
-			Assert.Contains(UnitType.ARCHER,  Constants.TRAINS[UnitType.BARRACKS],
-				"BARRACKS should train ARCHER");
+			Assert.Contains(UnitType.PAWN,    Constants.TRAINS[UnitType.BASE],
+				"BASE should train PAWN");
+			Assert.Contains(UnitType.WARRIOR, Constants.TRAINS[UnitType.BARRACKS],
+				"BARRACKS should train WARRIOR");
+			Assert.Contains(UnitType.ARCHER,  Constants.TRAINS[UnitType.ARCHERY],
+				"ARCHERY should train ARCHER");
+			Assert.Contains(UnitType.LANCER,  Constants.TRAINS[UnitType.TOWER],
+				"TOWER should train LANCER");
 		}
 
 		/// <summary>
-		/// BASE should not train SOLDIER or ARCHER.
-		/// BARRACKS should not train WORKER.
+		/// Trainers should not train unit types outside their allowed list.
 		/// </summary>
 		[Test]
 		public void TrainsMatrix_DoesNotContainWrongTypes()
 		{
-			Assert.IsFalse(Constants.TRAINS[UnitType.BASE].Contains(UnitType.SOLDIER),
-				"BASE should not train SOLDIER");
+			Assert.IsFalse(Constants.TRAINS[UnitType.BASE].Contains(UnitType.WARRIOR),
+				"BASE should not train WARRIOR");
 			Assert.IsFalse(Constants.TRAINS[UnitType.BASE].Contains(UnitType.ARCHER),
 				"BASE should not train ARCHER");
-			Assert.IsFalse(Constants.TRAINS[UnitType.BARRACKS].Contains(UnitType.WORKER),
-				"BARRACKS should not train WORKER");
+			Assert.IsFalse(Constants.TRAINS[UnitType.BARRACKS].Contains(UnitType.PAWN),
+				"BARRACKS should not train PAWN");
+			Assert.IsFalse(Constants.TRAINS[UnitType.TOWER].Contains(UnitType.PAWN),
+				"TOWER should not train PAWN");
+			Assert.IsFalse(Constants.TRAINS[UnitType.TOWER].Contains(UnitType.WARRIOR),
+				"TOWER should not train WARRIOR");
 		}
 
 		#endregion
@@ -179,13 +209,13 @@ namespace GameManager.Tests
 		}
 
 		/// <summary>
-		/// REFINERY should depend on BASE.
+		/// TOWER should depend on BASE being built before it can be constructed.
 		/// </summary>
 		[Test]
-		public void Dependency_RefineryDependsOnBase()
+		public void Dependency_TowerDependsOnBase()
 		{
-			Assert.Contains(UnitType.BASE, Constants.DEPENDENCY[UnitType.REFINERY],
-				"REFINERY should require BASE as a dependency");
+			Assert.Contains(UnitType.BASE, Constants.DEPENDENCY[UnitType.TOWER],
+				"TOWER should require BASE as a dependency");
 		}
 
 		/// <summary>
@@ -204,17 +234,20 @@ namespace GameManager.Tests
 
 		/// <summary>
 		/// UNIT_VALUE should be non-negative for all unit types and ordered
-		/// so combat units are worth more than workers.
+		/// so combat units are worth more than pawns.
 		/// </summary>
 		[Test]
-		public void UnitValue_CombatUnitsWorthMoreThanWorker()
+		public void UnitValue_CombatUnitsWorthMoreThanPawn()
 		{
-			Assert.Greater(Constants.UNIT_VALUE[UnitType.SOLDIER],
-				Constants.UNIT_VALUE[UnitType.WORKER],
-				"SOLDIER should be worth more than WORKER");
+			Assert.Greater(Constants.UNIT_VALUE[UnitType.WARRIOR],
+				Constants.UNIT_VALUE[UnitType.PAWN],
+				"WARRIOR should be worth more than PAWN");
 			Assert.Greater(Constants.UNIT_VALUE[UnitType.ARCHER],
-				Constants.UNIT_VALUE[UnitType.WORKER],
-				"ARCHER should be worth more than WORKER");
+				Constants.UNIT_VALUE[UnitType.PAWN],
+				"ARCHER should be worth more than PAWN");
+			Assert.Greater(Constants.UNIT_VALUE[UnitType.LANCER],
+				Constants.UNIT_VALUE[UnitType.PAWN],
+				"LANCER should be worth more than PAWN");
 		}
 
 		/// <summary>

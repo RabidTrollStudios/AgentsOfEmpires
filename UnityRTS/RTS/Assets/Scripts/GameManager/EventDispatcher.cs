@@ -100,9 +100,9 @@ namespace GameManager
 				return;
 			}
 
-			// Exclude the building worker's cell - the worker will move to a neighbor before building
-			var workerExclusion = new HashSet<Vector3Int> { unit.GetComponent<Unit>().GridPosition };
-			if (!Utility.IsValidGridLocation(args.TargetPosition) || !mapManager.IsAreaBuildable(args.UnitType, args.TargetPosition, workerExclusion))
+			// Exclude the building pawn's cell - the pawn will move to a neighbor before building
+			var pawnExclusion = new HashSet<Vector3Int> { unit.GetComponent<Unit>().GridPosition };
+			if (!Utility.IsValidGridLocation(args.TargetPosition) || !mapManager.IsAreaBuildable(args.UnitType, args.TargetPosition, pawnExclusion))
 			{
 				GameManager.Instance.Log(agent.AgentName + " ERROR: invalid target grid position " + args.TargetPosition, logContext);
 				return;
@@ -213,7 +213,68 @@ namespace GameManager
 				return;
 			}
 
+			bool hasTrainDeps = true;
+			string missingDeps = "";
+			foreach (UnitType dep in Constants.DEPENDENCY[args.UnitType])
+			{
+				if (unitManager.GetUnitNbrsOfType(dep).Where(
+						u => unitManager.GetUnit(u).IsBuilt).ToList().Count == 0)
+				{
+					hasTrainDeps = false;
+					missingDeps += dep + " ";
+				}
+			}
+			if (!hasTrainDeps)
+			{
+				GameManager.Instance.Log(agent.AgentName + " ERROR: Missing dependencies " + missingDeps + "for training " + args.UnitType, logContext);
+				return;
+			}
+
 			unit.GetComponent<Unit>().StartTraining(args);
+		}
+
+		/// <summary>
+		/// Validates and dispatches a repair command
+		/// </summary>
+		public void RepairEventHandler(object sender, EventArgs e)
+		{
+			Agent agent = (Agent)sender;
+			RepairEventArgs args = (RepairEventArgs)e;
+			GameObject logContext = GameManager.Instance.gameObject;
+
+			if (agent == null || args.Pawn == null || args.Building == null)
+			{
+				GameManager.Instance.Log(agent.AgentName + " ERROR: null parameters to repair event", logContext);
+				return;
+			}
+
+			GameObject unit = unitManager.GetUnit(args.Pawn.UnitNbr)?.gameObject;
+			if (unit == null)
+			{
+				GameManager.Instance.Log(agent.AgentName + " ERROR: unit not found for repair event", logContext);
+				return;
+			}
+
+			if (agent.AgentNbr != unit.GetComponent<Unit>().Agent.GetComponent<AgentController>().Agent.AgentNbr)
+			{
+				GameManager.Instance.Log(agent.AgentName + " CHEATER attempting to send events for the other agent", logContext);
+				return;
+			}
+
+			if (!unit.GetComponent<Unit>().CanBuild)
+			{
+				GameManager.Instance.Log(agent.AgentName + " ERROR: unit cannot repair " + unit.GetComponent<Unit>().UnitType, logContext);
+				return;
+			}
+
+			Unit buildingUnit = unitManager.GetUnit(args.Building.UnitNbr);
+			if (buildingUnit == null || !buildingUnit.IsBuilt)
+			{
+				GameManager.Instance.Log(agent.AgentName + " ERROR: building not found or not finished for repair event", logContext);
+				return;
+			}
+
+			unit.GetComponent<Unit>().StartRepairing(args);
 		}
 
 		/// <summary>

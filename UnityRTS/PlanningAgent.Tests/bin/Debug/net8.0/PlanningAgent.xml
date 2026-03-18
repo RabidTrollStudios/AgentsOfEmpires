@@ -31,20 +31,20 @@
         </member>
         <member name="M:PlanningAgent.PlanningAgent.DefendBase(AgentSDK.IGameState,AgentSDK.IAgentActions)">
             <summary>
-            Defend: only attack enemies that are within a radius of our buildings or workers.
+            Defend: only attack enemies that are within a radius of our buildings or pawns.
             Each idle troop attacks the closest threatening enemy.
             </summary>
         </member>
         <member name="M:PlanningAgent.PlanningAgent.FindClosestThreat(System.Collections.Generic.List{System.Int32},AgentSDK.Position,System.Single,AgentSDK.IGameState,System.Single@,System.Int32@)">
             <summary>
-            Find the closest enemy (to the troop) that is within radius of any of our buildings or workers.
+            Find the closest enemy (to the troop) that is within radius of any of our buildings or pawns.
             </summary>
         </member>
         <member name="M:PlanningAgent.PlanningAgent.CoordinatedAttack(AgentSDK.IGameState,AgentSDK.IAgentActions)">
             <summary>
-            Split targeting by unit type: soldiers charge closest enemy (melee),
+            Split targeting by unit type: warriors charge closest enemy (melee),
             archers prefer closest enemy within their attack range to avoid
-            competing for the same cells as soldiers.
+            competing for the same cells as warriors.
             </summary>
         </member>
         <member name="M:PlanningAgent.PlanningAgent.FindClosestTo(System.Collections.Generic.List{System.Int32},AgentSDK.Position,AgentSDK.IGameState)">

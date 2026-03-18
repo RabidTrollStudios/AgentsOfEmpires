@@ -15,55 +15,55 @@ namespace GameManager.Tests.PlayMode
 	public class TrainDurationTests : PlayModeTestBase
 	{
 		/// <summary>
-		/// Training a SOLDIER completes within a reasonable upper time bound
+		/// Training a WARRIOR completes within a reasonable upper time bound
 		/// (2x the nominal CREATION_TIME).
 		/// </summary>
 		[UnityTest]
-		public IEnumerator TrainSoldier_CompletesWithinTimeBound()
+		public IEnumerator TrainWarrior_CompletesWithinTimeBound()
 		{
 			Unit barracks = PlaceUnit(UnitType.BARRACKS, new Vector3Int(10, 10, 0));
 			barracks.IsBuilt = true;
 
 			float startTime = Time.time;
-			barracks.StartTraining(new TrainEventArgs(barracks, UnitType.SOLDIER));
+			barracks.StartTraining(new TrainEventArgs(barracks, UnitType.WARRIOR));
 			Assert.AreEqual(UnitAction.TRAIN, barracks.CurrentAction);
 
 			yield return WaitUntil(
 				() => barracks.CurrentAction == UnitAction.IDLE,
-				timeoutSeconds: 60f,
-				failMessage: "SOLDIER training did not complete within 60s");
+				timeoutSeconds: 15f,
+				failMessage: "WARRIOR training did not complete within 15s");
 
 			float elapsed = Time.time - startTime;
-			float expectedTime = Constants.CREATION_TIME[UnitType.SOLDIER];
+			float expectedTime = Constants.CREATION_TIME[UnitType.WARRIOR];
 
 			// Should complete within 2x the nominal time (allows for game speed effects)
 			Assert.LessOrEqual(elapsed, expectedTime * 2f + 1f,
-				$"SOLDIER training took {elapsed:F2}s, expected <= {expectedTime * 2f + 1f:F2}s");
+				$"WARRIOR training took {elapsed:F2}s, expected <= {expectedTime * 2f + 1f:F2}s");
 		}
 
 		/// <summary>
-		/// Training a WORKER completes within a reasonable time bound.
+		/// Training a PAWN completes within a reasonable time bound.
 		/// </summary>
 		[UnityTest]
-		public IEnumerator TrainWorker_CompletesWithinTimeBound()
+		public IEnumerator TrainPawn_CompletesWithinTimeBound()
 		{
 			Unit baseUnit = PlaceUnit(UnitType.BASE, new Vector3Int(10, 10, 0));
 			baseUnit.IsBuilt = true;
 
 			float startTime = Time.time;
-			baseUnit.StartTraining(new TrainEventArgs(baseUnit, UnitType.WORKER));
+			baseUnit.StartTraining(new TrainEventArgs(baseUnit, UnitType.PAWN));
 			Assert.AreEqual(UnitAction.TRAIN, baseUnit.CurrentAction);
 
 			yield return WaitUntil(
 				() => baseUnit.CurrentAction == UnitAction.IDLE,
-				timeoutSeconds: 60f,
-				failMessage: "WORKER training did not complete within 60s");
+				timeoutSeconds: 15f,
+				failMessage: "PAWN training did not complete within 15s");
 
 			float elapsed = Time.time - startTime;
-			float expectedTime = Constants.CREATION_TIME[UnitType.WORKER];
+			float expectedTime = Constants.CREATION_TIME[UnitType.PAWN];
 
 			Assert.LessOrEqual(elapsed, expectedTime * 2f + 1f,
-				$"WORKER training took {elapsed:F2}s, expected <= {expectedTime * 2f + 1f:F2}s");
+				$"PAWN training took {elapsed:F2}s, expected <= {expectedTime * 2f + 1f:F2}s");
 		}
 
 		/// <summary>
@@ -72,17 +72,17 @@ namespace GameManager.Tests.PlayMode
 		[UnityTest]
 		public IEnumerator TrainArcher_CompletesWithinTimeBound()
 		{
-			Unit barracks = PlaceUnit(UnitType.BARRACKS, new Vector3Int(10, 10, 0));
-			barracks.IsBuilt = true;
+			Unit archery = PlaceUnit(UnitType.ARCHERY, new Vector3Int(10, 10, 0));
+			archery.IsBuilt = true;
 
 			float startTime = Time.time;
-			barracks.StartTraining(new TrainEventArgs(barracks, UnitType.ARCHER));
-			Assert.AreEqual(UnitAction.TRAIN, barracks.CurrentAction);
+			archery.StartTraining(new TrainEventArgs(archery, UnitType.ARCHER));
+			Assert.AreEqual(UnitAction.TRAIN, archery.CurrentAction);
 
 			yield return WaitUntil(
-				() => barracks.CurrentAction == UnitAction.IDLE,
-				timeoutSeconds: 60f,
-				failMessage: "ARCHER training did not complete within 60s");
+				() => archery.CurrentAction == UnitAction.IDLE,
+				timeoutSeconds: 15f,
+				failMessage: "ARCHER training did not complete within 15s");
 
 			float elapsed = Time.time - startTime;
 			float expectedTime = Constants.CREATION_TIME[UnitType.ARCHER];
@@ -92,42 +92,42 @@ namespace GameManager.Tests.PlayMode
 		}
 
 		/// <summary>
-		/// SOLDIER training takes longer than zero seconds (it is not instantaneous).
+		/// WARRIOR training takes longer than zero seconds (it is not instantaneous).
 		/// </summary>
 		[UnityTest]
-		public IEnumerator TrainSoldier_TakesNonZeroTime()
+		public IEnumerator TrainWarrior_TakesNonZeroTime()
 		{
 			Unit barracks = PlaceUnit(UnitType.BARRACKS, new Vector3Int(10, 10, 0));
 			barracks.IsBuilt = true;
 
 			float startTime = Time.time;
-			barracks.StartTraining(new TrainEventArgs(barracks, UnitType.SOLDIER));
+			barracks.StartTraining(new TrainEventArgs(barracks, UnitType.WARRIOR));
 
 			// After a single frame, should still be training (not already done)
 			yield return null;
 			Assert.AreEqual(UnitAction.TRAIN, barracks.CurrentAction,
-				"SOLDIER training should not complete in a single frame");
+				"WARRIOR training should not complete in a single frame");
 		}
 
 		/// <summary>
-		/// Constants.CREATION_TIME has a positive value for SOLDIER.
+		/// Constants.CREATION_TIME has a positive value for WARRIOR.
 		/// </summary>
 		[UnityTest]
-		public IEnumerator CreationTime_Soldier_IsPositive()
+		public IEnumerator CreationTime_Warrior_IsPositive()
 		{
-			Assert.Greater(Constants.CREATION_TIME[UnitType.SOLDIER], 0f,
-				"CREATION_TIME[SOLDIER] should be positive");
+			Assert.Greater(Constants.CREATION_TIME[UnitType.WARRIOR], 0f,
+				"CREATION_TIME[WARRIOR] should be positive");
 			yield return null;
 		}
 
 		/// <summary>
-		/// ARCHER trains in less time than SOLDIER if ARCHER creation time < SOLDIER creation time,
+		/// ARCHER trains in less time than WARRIOR if ARCHER creation time < WARRIOR creation time,
 		/// or at least both complete without error.
 		/// </summary>
 		[UnityTest]
 		public IEnumerator BothCombatUnits_TrainingTimesArePositive()
 		{
-			Assert.Greater(Constants.CREATION_TIME[UnitType.SOLDIER], 0f);
+			Assert.Greater(Constants.CREATION_TIME[UnitType.WARRIOR], 0f);
 			Assert.Greater(Constants.CREATION_TIME[UnitType.ARCHER], 0f);
 			yield return null;
 		}
