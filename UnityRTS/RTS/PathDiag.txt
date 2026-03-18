@@ -1,35 +1,63 @@
 GetPathToUnit FAILED
-  from=(8, 8, 0) to=PAWN at (20, 20, 0)
-  mapSize=(30, 30, 0)
-  totalNeighbors=8 buildableNeighbors=8
+  from=(27, 13, 0) to=BASE at (24, 17, 0)
+  mapSize=(77, 46, 1)
+  totalNeighbors=24 buildableNeighbors=20
 
 All neighbors:
-  (19, 21, 0) buildable=True
-  (19, 19, 0) buildable=True
-  (20, 21, 0) buildable=True
-  (20, 19, 0) buildable=True
-  (21, 21, 0) buildable=True
-  (21, 19, 0) buildable=True
-  (19, 20, 0) buildable=True
-  (21, 20, 0) buildable=True
+  (23, 18, 0) buildable=True
+  (23, 13, 0) buildable=True
+  (24, 18, 0) buildable=True
+  (24, 13, 0) buildable=True
+  (25, 18, 0) buildable=True
+  (25, 13, 0) buildable=True
+  (26, 18, 0) buildable=True
+  (26, 13, 0) buildable=False
+  (27, 18, 0) buildable=True
+  (27, 13, 0) buildable=False
+  (28, 18, 0) buildable=True
+  (28, 13, 0) buildable=False
+  (29, 18, 0) buildable=True
+  (29, 13, 0) buildable=True
+  (30, 18, 0) buildable=True
+  (30, 13, 0) buildable=False
+  (23, 14, 0) buildable=True
+  (30, 14, 0) buildable=True
+  (23, 15, 0) buildable=True
+  (30, 15, 0) buildable=True
+  (23, 16, 0) buildable=True
+  (30, 16, 0) buildable=True
+  (23, 17, 0) buildable=True
+  (30, 17, 0) buildable=True
 
 A* attempts (buildable neighbors only):
-  (8, 8, 0) -> (19, 19, 0): result=end_blocked expansions=0
-  (8, 8, 0) -> (20, 19, 0): result=end_blocked expansions=0
-  (8, 8, 0) -> (19, 20, 0): result=end_blocked expansions=0
-  (8, 8, 0) -> (19, 21, 0): result=end_blocked expansions=0
-  (8, 8, 0) -> (21, 19, 0): result=end_blocked expansions=0
-  (8, 8, 0) -> (20, 21, 0): result=end_blocked expansions=0
-  (8, 8, 0) -> (21, 20, 0): result=end_blocked expansions=0
-  (8, 8, 0) -> (21, 21, 0): result=end_blocked expansions=0
+  (27, 13, 0) -> (25, 13, 0): result=found expansions=3
+  (27, 13, 0) -> (29, 13, 0): result=found expansions=3
+  (27, 13, 0) -> (24, 13, 0): result=found expansions=4
+  (27, 13, 0) -> (30, 14, 0): result=found expansions=4
+  (27, 13, 0) -> (30, 15, 0): result=found expansions=5
+  (27, 13, 0) -> (23, 13, 0): result=found expansions=5
+  (27, 13, 0) -> (23, 14, 0): result=found expansions=5
+  (27, 13, 0) -> (30, 16, 0): result=found expansions=6
+  (27, 13, 0) -> (23, 15, 0): result=found expansions=6
+  (27, 13, 0) -> (30, 17, 0): result=found expansions=7
+  (27, 13, 0) -> (23, 16, 0): result=found expansions=8
+  (27, 13, 0) -> (27, 18, 0): result=found expansions=17
+  (27, 13, 0) -> (26, 18, 0): result=found expansions=28
+  (27, 13, 0) -> (28, 18, 0): result=found expansions=13
+  (27, 13, 0) -> (29, 18, 0): result=found expansions=9
+  (27, 13, 0) -> (25, 18, 0): result=found expansions=17
+  (27, 13, 0) -> (23, 17, 0): result=found expansions=10
+  (27, 13, 0) -> (24, 18, 0): result=found expansions=12
+  (27, 13, 0) -> (30, 18, 0): result=found expansions=9
+  (27, 13, 0) -> (23, 18, 0): result=found expansions=11
 
-Start cell (8, 8, 0) buildable=False
+Start cell (27, 13, 0) buildable=False
 Start cell neighbors:
-  (7, 7, 0) buildable=True
-  (7, 8, 0) buildable=True
-  (7, 9, 0) buildable=True
-  (8, 7, 0) buildable=True
-  (8, 9, 0) buildable=True
-  (9, 7, 0) buildable=True
-  (9, 8, 0) buildable=True
-  (9, 9, 0) buildable=True
+  (26, 12, 0) buildable=False
+  (26, 13, 0) buildable=False
+  (26, 14, 0) buildable=False
+  (27, 12, 0) buildable=False
+  (27, 14, 0) buildable=False
+  (28, 12, 0) buildable=False
+  (28, 13, 0) buildable=False
+  (28, 14, 0) buildable=False

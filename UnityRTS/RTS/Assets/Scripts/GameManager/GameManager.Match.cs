@@ -80,15 +80,19 @@ namespace GameManager
 				CreateAgent(Constants.BLUE_ABBR, BlueDllName, Prefabs.BluePlayerPrefab, unitManager.BlueUnitPrefabs, BlueDebuggerPanel);
 			}
 
-			BlueCustomDebugText.text = Constants.BLUE_ABBR + " " + BlueDllName;
-			RedCustomDebugText.text = Constants.RED_ABBR + " " + RedDllName;
+			if (BlueCustomDebugText != null)
+				BlueCustomDebugText.text = Constants.BLUE_ABBR + " " + BlueDllName;
+			if (RedCustomDebugText != null)
+				RedCustomDebugText.text = Constants.RED_ABBR + " " + RedDllName;
 
 			if (Prefabs.BlueLabelText != null)
 				Prefabs.BlueLabelText.text = BlueDllName;
 			if (Prefabs.RedLabelText != null)
 				Prefabs.RedLabelText.text = RedDllName;
 
-			string versusText = BlueCustomDebugText.text + "\nvs\n" + RedCustomDebugText.text;
+			string blueLabel = Constants.BLUE_ABBR + " " + BlueDllName;
+			string redLabel = Constants.RED_ABBR + " " + RedDllName;
+			string versusText = blueLabel + "\nvs\n" + redLabel;
 
 			foreach (GameObject agent in Agents.Values)
 			{
@@ -185,8 +189,10 @@ namespace GameManager
 			        Agents[agentNbr].GetComponent<AgentController>().InitializeMatch();
 		        }
 
-		        BlueCustomDebugText.text = Constants.BLUE_ABBR + " " + BlueDllName;
-		        RedCustomDebugText.text = Constants.RED_ABBR + " " + RedDllName;
+		        if (BlueCustomDebugText != null)
+			        BlueCustomDebugText.text = Constants.BLUE_ABBR + " " + BlueDllName;
+		        if (RedCustomDebugText != null)
+			        RedCustomDebugText.text = Constants.RED_ABBR + " " + RedDllName;
 
 		        if (Prefabs.BlueLabelText != null)
 			        Prefabs.BlueLabelText.text = BlueDllName;
