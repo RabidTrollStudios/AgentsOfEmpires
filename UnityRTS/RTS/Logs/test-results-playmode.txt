@@ -1,6 +1,6 @@
-=== PlayMode Test Run: 2026-03-18 18:59:03 ===
-Result: Passed  |  Duration: 195.33s
-Passed: 535  Failed: 0  Skipped: 0
+=== PlayMode Test Run: 2026-03-19 00:31:37 ===
+Result: Failed  |  Duration: 135.76s
+Passed: 531  Failed: 4  Skipped: 0
 
             [PASS] GameManager.Tests.PlayMode.AgentActionsAdapterTests.Attack_ValidUnit_UnknownTarget_ReturnsTargetNotFound
             [PASS] GameManager.Tests.PlayMode.AgentActionsAdapterTests.Attack_ValidUnits_DelegatesToAgentAttack
@@ -328,11 +328,24 @@ Passed: 535  Failed: 0  Skipped: 0
             [PASS] GameManager.Tests.PlayMode.UnitAnimationTests.Warrior_Attacking_AnimationPlaysWithoutCrash
             [PASS] GameManager.Tests.PlayMode.UnitAnimationTests.Warrior_Chasing_PlaysRunAnimation
             [PASS] GameManager.Tests.PlayMode.UnitAnimationTests.Warrior_MoveArrived_PlaysGuardAnimation
-            [PASS] GameManager.Tests.PlayMode.UnitArrowTests.Archer_Arrow_HasSpriteRenderer
-            [PASS] GameManager.Tests.PlayMode.UnitArrowTests.Archer_AttackBuilding_SpawnsArrow
-            [PASS] GameManager.Tests.PlayMode.UnitArrowTests.Archer_AttackInRange_SpawnsArrow
+            [FAIL] GameManager.Tests.PlayMode.UnitArrowTests.Archer_Arrow_HasSpriteRenderer
+                   Arrow was not spawned within timeout
+            [FAIL] GameManager.Tests.PlayMode.UnitArrowTests.Archer_AttackBuilding_SpawnsArrow
+                     Arrow should spawn when attacking a building
+                     Expected: True
+                     But was:  False
+                   
+            [FAIL] GameManager.Tests.PlayMode.UnitArrowTests.Archer_AttackInRange_SpawnsArrow
+                     Arrow should be spawned during archer attack animation
+                     Expected: True
+                     But was:  False
+                   
             [PASS] GameManager.Tests.PlayMode.UnitArrowTests.Archer_NoArrowSprite_NoArrowSpawned
-            [PASS] GameManager.Tests.PlayMode.UnitArrowTests.Arrow_CompletesLifecycle_SelfDestructs
+            [FAIL] GameManager.Tests.PlayMode.UnitArrowTests.Arrow_CompletesLifecycle_SelfDestructs
+                     Arrow should spawn during archer attack to test lifecycle
+                     Expected: not null
+                     But was:  null
+                   
             [PASS] GameManager.Tests.PlayMode.UnitAttackTests.MultipleWarriors_SameTarget_KillFaster
             [PASS] GameManager.Tests.PlayMode.UnitAttackTests.Pawn_AttackCommand_Rejected
             [PASS] GameManager.Tests.PlayMode.UnitAttackTests.Warrior_AfterKillingTarget_GoesIdle
