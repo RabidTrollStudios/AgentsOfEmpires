@@ -14,6 +14,11 @@ namespace GameManager.GameElements
 			return Agent?.GetComponent<AgentController>()?.Agent?.CmdLog;
 		}
 
+		private RoundStats GetRoundStats()
+		{
+			return Agent?.GetComponent<AgentController>()?.Agent?.Analytics?.CurrentRound;
+		}
+
 		/// <summary>
 		/// Start training another unit
 		/// </summary>
@@ -31,7 +36,11 @@ namespace GameManager.GameElements
 					CurrentAction = UnitAction.TRAIN;
 					taskTime = 0f;
 					taskUnitType = args.UnitType;
-					Agent.GetComponent<AgentController>().Agent.Gold -= (int)Constants.COST[args.UnitType];
+					int trainCost = (int)Constants.COST[args.UnitType];
+					Agent.GetComponent<AgentController>().Agent.Gold -= trainCost;
+					var trainStats = GetRoundStats();
+					trainStats?.RecordGoldSpent(trainCost);
+					trainStats?.UpdatePeakGold(Agent.GetComponent<AgentController>().Agent.Gold);
 					GetCmdLog()?.LogCommand("TRAIN", $"{UnitType}#{UnitNbr} -> {args.UnitType}",
 						$"STARTED (gold remaining={Agent.GetComponent<AgentController>().Agent.Gold})");
 				}
@@ -127,7 +136,11 @@ namespace GameManager.GameElements
 					buildPhase = BuildPhase.TO_POSITION;
 					taskUnitType = args.UnitType;
 					TargetGridPos = args.TargetPosition;
-					Agent.GetComponent<AgentController>().Agent.Gold -= (int)Constants.COST[taskUnitType];
+					int buildCost = (int)Constants.COST[taskUnitType];
+					Agent.GetComponent<AgentController>().Agent.Gold -= buildCost;
+					var buildStats = GetRoundStats();
+					buildStats?.RecordGoldSpent(buildCost);
+					buildStats?.UpdatePeakGold(Agent.GetComponent<AgentController>().Agent.Gold);
 					GetCmdLog()?.LogCommand("BUILD", $"pawn#{UnitNbr} -> {args.UnitType} at {args.TargetPosition}",
 						$"STARTED (path={path.Count} steps, gold remaining={Agent.GetComponent<AgentController>().Agent.Gold})");
 				}

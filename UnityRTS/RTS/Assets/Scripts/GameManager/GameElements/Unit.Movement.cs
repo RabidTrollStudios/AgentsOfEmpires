@@ -51,6 +51,15 @@ namespace GameManager.GameElements
 				cmdLog?.LogCommand("DEATH", $"{UnitType}#{UnitNbr} at {GridPosition} (action={CurrentAction}){killedBy}",
 					$"DESTROYED (health={Health:F0})");
 
+				// Record death analytics: loss for owner, kill for attacker
+				GetRoundStats()?.RecordUnitLost(UnitType);
+				if (attackUnitNbr >= 0)
+				{
+					var killerUnit = GameManager.Instance.Units.GetUnit(attackUnitNbr);
+					var killerStats = killerUnit?.Agent?.GetComponent<AgentController>()?.Agent?.Analytics?.CurrentRound;
+					killerStats?.RecordEnemyKill(UnitType);
+				}
+
 				// Spawn dust 2 death effect at unit position
 				SpawnDeathDust();
 

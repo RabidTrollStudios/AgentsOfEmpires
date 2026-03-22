@@ -85,15 +85,47 @@ namespace GameManager
 
 		internal void OpenCommandLog()
 		{
-			string cmdLogPath = DllPath + Path.AltDirectorySeparatorChar
-				+ "CommandLog_" + AgentDLLName + "_" + AgentName + ".txt";
+			// Organize logs into CommandLogs/{AgentDLLName}/ with timestamps
+			string logsDir = Path.Combine(DllPath, "CommandLogs", AgentDLLName);
+			Directory.CreateDirectory(logsDir);
+
+			matchTimestamp = DateTime.Now.ToString("yyyyMMdd_HHmmss");
+
+			string cmdLogPath = Path.Combine(logsDir,
+				matchTimestamp + "_" + AgentName + "_commands.txt");
 			CmdLog = new CommandLogger(AgentName + " " + AgentDLLName, cmdLogPath, this.gameObject);
+
+			// Initialize analytics and attach to the logger
+			Analytics = new MatchAnalytics
+			{
+				AgentName = AgentName,
+				AgentDLLName = AgentDLLName,
+				MatchStarted = DateTime.Now.ToString("o")
+			};
+			CmdLog.Analytics = Analytics;
 		}
 
 		internal void CloseCommandLog()
 		{
 			CmdLog?.Close();
 			CmdLog = null;
+		}
+
+		/// <summary>
+		/// Saves the match analytics JSON alongside the command log.
+		/// Called once at the end of a match, before CloseCommandLog.
+		/// </summary>
+		internal void SaveAnalytics()
+		{
+			if (Analytics == null || DllPath == null) return;
+
+			string logsDir = Path.Combine(DllPath, "CommandLogs", AgentDLLName);
+			Directory.CreateDirectory(logsDir);
+
+			string analyticsPath = Path.Combine(logsDir,
+				matchTimestamp + "_" + AgentName + "_analytics.json");
+			Analytics.SaveToFile(analyticsPath);
+			GameManager.Instance.Log("Analytics saved: " + analyticsPath, this.gameObject);
 		}
 
 		#endregion
@@ -116,13 +148,16 @@ namespace GameManager
 			DllPath = dllPath;
 			AgentNbrWins = 0;
 
+			string csvDir = Path.Combine(dllPath, "CommandLogs", dllName);
+			Directory.CreateDirectory(csvDir);
+
 			string baseName = "PlanningAgent_" + dllName + "_" + agentName;
-			logFileName = dllPath + Path.AltDirectorySeparatorChar + baseName + ".csv";
+			logFileName = Path.Combine(csvDir, baseName + ".csv");
 
 			// Create a new file by appending a number if it already exists
 			if (File.Exists(logFileName))
 			{
-				string[] files = Directory.GetFiles(dllPath + Path.AltDirectorySeparatorChar, baseName + "*.csv");
+				string[] files = Directory.GetFiles(csvDir, baseName + "*.csv");
 				int max = 0;
 
 				Regex rx = new Regex(Regex.Escape(baseName) + @"_(\d)\.csv",
@@ -141,7 +176,7 @@ namespace GameManager
 						}
 					}
 				}
-				logFileName = dllPath + Path.AltDirectorySeparatorChar + baseName + "_" + (++max) + ".csv";
+				logFileName = Path.Combine(csvDir, baseName + "_" + (++max) + ".csv");
 			}
 			GameManager.Instance.Log("Creating: " + logFileName, this.gameObject);
 			//LogFileStream = File.Create(logFileName);
@@ -186,6 +221,16 @@ namespace GameManager
 		/// Command logger for recording all commands and their outcomes
 		/// </summary>
 		internal CommandLogger CmdLog { get; set; }
+
+		/// <summary>
+		/// Match-level analytics tracker — collects per-round performance data
+		/// </summary>
+		internal MatchAnalytics Analytics { get; set; }
+
+		/// <summary>
+		/// Timestamp used to correlate the command log and analytics files for a match
+		/// </summary>
+		private string matchTimestamp;
 
 		/// <summary>
 		/// Screen color of the agent

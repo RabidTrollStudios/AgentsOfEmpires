@@ -8,6 +8,7 @@ namespace GameManager
 	/// <summary>
 	/// Logs all agent commands and their outcomes to a human-readable text file
 	/// and to the Unity console. One file per agent per match, containing all rounds.
+	/// Also feeds per-round analytics into the owning agent's MatchAnalytics.
 	/// </summary>
 	public class CommandLogger
 	{
@@ -15,6 +16,12 @@ namespace GameManager
 		private readonly string agentName;
 		private readonly GameObject logContext;
 		private int roundNbr;
+
+		/// <summary>
+		/// Optional analytics tracker. When set, every LogCommand call also
+		/// records structured data into the current RoundStats.
+		/// </summary>
+		public MatchAnalytics Analytics { get; set; }
 
 		public CommandLogger(string agentName, string filePath, GameObject logContext)
 		{
@@ -41,6 +48,7 @@ namespace GameManager
 
 		/// <summary>
 		/// Logs a command to both the file and the Unity console.
+		/// Also records structured analytics when a MatchAnalytics is attached.
 		/// </summary>
 		/// <param name="command">Command type (e.g. MOVE, BUILD, GATHER, TRAIN, ATTACK)</param>
 		/// <param name="details">What/who is involved</param>
@@ -52,6 +60,44 @@ namespace GameManager
 			string line = $"[F{frame} T={time:F1}s] {command}: {details} -> {result}";
 			writer.WriteLine(line);
 			GameManager.Instance.Log($"{agentName} {line}", logContext);
+
+			RecordAnalytics(command, result, time);
+		}
+
+		/// <summary>
+		/// Feeds command outcome data into the current RoundStats.
+		/// </summary>
+		private void RecordAnalytics(string command, string result, float gameTime)
+		{
+			var round = Analytics?.CurrentRound;
+			if (round == null) return;
+
+			if (result.StartsWith("THROTTLED"))
+			{
+				round.RecordThrottle();
+				return;
+			}
+
+			// DEATH is an observation event, not a command outcome
+			if (command == "DEATH")
+				return;
+
+			bool succeeded = result.StartsWith("SUCCESS") || result.StartsWith("STARTED");
+			round.RecordCommand(command, succeeded);
+
+			// Track milestone timing on first successful dispatch
+			if (succeeded)
+			{
+				switch (command)
+				{
+					case "BUILD":
+						round.RecordMilestone("BUILD", gameTime);
+						break;
+					case "ATTACK":
+						round.RecordMilestone("ATTACK", gameTime);
+						break;
+				}
+			}
 		}
 
 		public void Close()

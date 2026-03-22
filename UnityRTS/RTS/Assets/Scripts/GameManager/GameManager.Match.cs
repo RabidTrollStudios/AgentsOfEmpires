@@ -1,6 +1,7 @@
 using AgentSDK;
 using GameManager.GameElements;
 using Preloader;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -100,6 +101,9 @@ namespace GameManager
 				agent.GetComponent<AgentController>().Agent.OpenCommandLog();
 			}
 
+			// Set opponent DLL names on each agent's analytics
+			SetOpponentDLLNames();
+
 			NbrOfRounds = 0;
 
 			InitializeRound();
@@ -124,6 +128,7 @@ namespace GameManager
 		private void RecreateAgent(string agentName, string agentDLLName, int agentNbr,
 			GameObject playerPrefab, Dictionary<UnitType, GameObject> playerPrefabs, GameObject debuggerPanel)
 		{
+			Agents[agentNbr].GetComponent<AgentController>().Agent.SaveAnalytics();
 			Agents[agentNbr].GetComponent<AgentController>().Agent.CloseCommandLog();
 			Destroy(Agents[agentNbr].GetComponent<AgentController>().Agent.gameObject);
 			Destroy(Agents[agentNbr].GetComponent<AgentController>().gameObject);
@@ -159,9 +164,11 @@ namespace GameManager
 
 			foreach (GameObject agent in Agents.Values)
             {
-	            agent.GetComponent<AgentController>().Agent.gameObject.SetActive(true);
-				agent.GetComponent<AgentController>().Agent.OpenLogFile();
-				agent.GetComponent<AgentController>().Agent.CmdLog?.StartRound(NbrOfRounds);
+	            var agentComp = agent.GetComponent<AgentController>().Agent;
+	            agentComp.gameObject.SetActive(true);
+				agentComp.OpenLogFile();
+				agentComp.CmdLog?.StartRound(NbrOfRounds);
+				agentComp.Analytics?.BeginRound(NbrOfRounds, agentComp.Gold);
 				agent.GetComponent<AgentController>().InitializeRound();
 			}
 
@@ -345,9 +352,76 @@ namespace GameManager
 				}
 			}
 
+			// Finalize analytics for each agent's round
+			FinalizeRoundAnalytics();
+
 			foreach (GameObject agent in Agents.Values)
 			{
 				agent.GetComponent<AgentController>().Agent.CmdLog?.EndRound(winnerName + " wins");
+			}
+		}
+
+		/// <summary>
+		/// Captures end-of-round state into each agent's MatchAnalytics.
+		/// Called from Learn() while units are still alive.
+		/// </summary>
+		private void FinalizeRoundAnalytics()
+		{
+			var allUnits = unitManager.GetAllUnits();
+
+			foreach (GameObject agentGo in Agents.Values)
+			{
+				var agentComp = agentGo.GetComponent<AgentController>().Agent;
+				var analytics = agentComp.Analytics;
+				if (analytics?.CurrentRound == null) continue;
+
+				int agentNbr = agentComp.AgentNbr;
+
+				// Compute unit counts and score for this agent
+				var unitCounts = new Dictionary<UnitType, int>();
+				int score = 0;
+				foreach (UnitType ut in Enum.GetValues(typeof(UnitType)))
+				{
+					int count = 0;
+					foreach (var kvp in allUnits)
+					{
+						var unit = kvp.Value.GetComponent<GameElements.Unit>();
+						if (unit.Agent.GetComponent<AgentController>().Agent.AgentNbr == agentNbr
+							&& unit.UnitType == ut)
+							count++;
+					}
+					unitCounts[ut] = count;
+					score += count * Constants.UNIT_VALUE[ut];
+				}
+
+				bool won = roundWinner != null
+					&& roundWinner.GetComponent<AgentController>().Agent.AgentNbr == agentNbr;
+
+				analytics.TotalRounds++;
+				analytics.EndRound(
+					won ? "WIN" : "LOSS",
+					TotalGameTime,
+					agentComp.Gold,
+					unitCounts,
+					score);
+			}
+		}
+
+		/// <summary>
+		/// Sets the OpponentDLLName on each agent's analytics by finding the other agent.
+		/// </summary>
+		private void SetOpponentDLLNames()
+		{
+			var agentList = new List<Agent>();
+			foreach (GameObject agentGo in Agents.Values)
+				agentList.Add(agentGo.GetComponent<AgentController>().Agent);
+
+			if (agentList.Count == 2)
+			{
+				if (agentList[0].Analytics != null)
+					agentList[0].Analytics.OpponentDLLName = agentList[1].AgentDLLName;
+				if (agentList[1].Analytics != null)
+					agentList[1].Analytics.OpponentDLLName = agentList[0].AgentDLLName;
 			}
 		}
 
