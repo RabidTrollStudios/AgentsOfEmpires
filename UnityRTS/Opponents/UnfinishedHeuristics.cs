@@ -422,6 +422,21 @@ namespace PlanningAgent
 						int target = FindBestPlacedUnit(enemyBarracks, state);
 						if (target >= 0) actions.Attack(warriorNbr, target);
 					}
+					else if (enemyArchery.Count > 0 && !tooClose)
+					{
+						int target = FindBestPlacedUnit(enemyArchery, state);
+						if (target >= 0) actions.Attack(warriorNbr, target);
+					}
+					else if (enemyLancers.Count > 0 && !tooClose)
+					{
+						int target = FindBestPlacedUnit(enemyLancers, state);
+						if (target >= 0) actions.Attack(warriorNbr, target);
+					}
+					else if (enemyTowers.Count > 0 && !tooClose)
+					{
+						int target = FindBestPlacedUnit(enemyTowers, state);
+						if (target >= 0) actions.Attack(warriorNbr, target);
+					}
 				}
 			}
 		}
@@ -459,6 +474,21 @@ namespace PlanningAgent
 					else if (enemyBarracks.Count > 0)
 					{
 						int target = FindBestPlacedUnit(enemyBarracks, state);
+						if (target >= 0) actions.Attack(archerNbr, target);
+					}
+					else if (enemyArchery.Count > 0)
+					{
+						int target = FindBestPlacedUnit(enemyArchery, state);
+						if (target >= 0) actions.Attack(archerNbr, target);
+					}
+					else if (enemyLancers.Count > 0)
+					{
+						int target = FindBestPlacedUnit(enemyLancers, state);
+						if (target >= 0) actions.Attack(archerNbr, target);
+					}
+					else if (enemyTowers.Count > 0)
+					{
+						int target = FindBestPlacedUnit(enemyTowers, state);
 						if (target >= 0) actions.Attack(archerNbr, target);
 					}
 				}
