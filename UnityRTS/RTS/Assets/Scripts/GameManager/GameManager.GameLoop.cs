@@ -52,6 +52,7 @@ namespace GameManager
 					{
 						foreach (GameObject agent in Agents.Values)
 						{
+							agent.GetComponent<AgentController>().Agent.SaveAnalytics();
 							agent.GetComponent<AgentController>().Agent.CloseCommandLog();
 						}
 
