@@ -18,7 +18,6 @@ namespace PlanningAgent
             UpdateGameState(state);
             mainBaseNbr = myBases.Count > 0 ? myBases[0] : -1;
             if (mainMineNbr < 0 || !state.GetUnit(mainMineNbr).HasValue || state.GetUnit(mainMineNbr).Value.Health <= 0)
-                if (mainMineNbr < 0 || !state.GetUnit(mainMineNbr).HasValue || state.GetUnit(mainMineNbr).Value.Health <= 0)
                 mainMineNbr = FindClosestMine(state);
 
             // Build a base first — game starts with only a pawn and a mine
@@ -243,8 +242,8 @@ namespace PlanningAgent
 
             int? bestTarget = null;
             float bestDist = float.MaxValue;
-            foreach (UnitType ut in new[] { UnitType.WARRIOR, UnitType.ARCHER, UnitType.PAWN,
-                                            UnitType.BASE, UnitType.BARRACKS })
+            foreach (UnitType ut in new[] { UnitType.WARRIOR, UnitType.ARCHER, UnitType.LANCER, UnitType.PAWN,
+                                            UnitType.BASE, UnitType.BARRACKS, UnitType.ARCHERY, UnitType.TOWER })
             {
                 var enemies = state.GetEnemyUnits(ut);
                 foreach (int enemyNbr in enemies)

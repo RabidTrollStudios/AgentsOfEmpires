@@ -135,15 +135,6 @@ namespace PlanningAgent
                     actions.Train(barracksNbr, UnitType.WARRIOR);
                     lastFighterWasWarrior = !lastFighterWasWarrior;
                 }
-                else if (lastFighterWasWarrior && barracksUnit.HasValue && barracksUnit.Value.IsBuilt
-                         && barracksUnit.Value.CurrentAction == UnitAction.IDLE
-                         && (myArchers.Count < MAX_NBR_ARCHERS
-                             || myArchers.Count <= enemyArchers.Count * MAX_ARCHER_MULTIPLIER)
-                         && state.MyGold >= GameConstants.COST[UnitType.ARCHER])
-                {
-                    actions.Train(barracksNbr, UnitType.ARCHER);
-                    lastFighterWasWarrior = !lastFighterWasWarrior;
-                }
             }
         }
 
@@ -180,6 +171,18 @@ namespace PlanningAgent
                     {
                         actions.Attack(warriorNbr,
                             enemyBarracks[rng.Next(0, enemyBarracks.Count)]);
+                    }
+                    else if (enemyArchery.Count > 0)
+                    {
+                        actions.Attack(warriorNbr, enemyArchery[rng.Next(0, enemyArchery.Count)]);
+                    }
+                    else if (enemyLancers.Count > 0)
+                    {
+                        actions.Attack(warriorNbr, enemyLancers[rng.Next(0, enemyLancers.Count)]);
+                    }
+                    else if (enemyTowers.Count > 0)
+                    {
+                        actions.Attack(warriorNbr, enemyTowers[rng.Next(0, enemyTowers.Count)]);
                     }
                 }
             }
@@ -218,6 +221,18 @@ namespace PlanningAgent
                     {
                         actions.Attack(archerNbr,
                             enemyBarracks[rng.Next(0, enemyBarracks.Count)]);
+                    }
+                    else if (enemyArchery.Count > 0)
+                    {
+                        actions.Attack(archerNbr, enemyArchery[rng.Next(0, enemyArchery.Count)]);
+                    }
+                    else if (enemyLancers.Count > 0)
+                    {
+                        actions.Attack(archerNbr, enemyLancers[rng.Next(0, enemyLancers.Count)]);
+                    }
+                    else if (enemyTowers.Count > 0)
+                    {
+                        actions.Attack(archerNbr, enemyTowers[rng.Next(0, enemyTowers.Count)]);
                     }
                 }
             }

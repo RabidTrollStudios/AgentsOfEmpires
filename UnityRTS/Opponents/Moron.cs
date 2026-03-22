@@ -128,6 +128,18 @@ namespace PlanningAgent
                         {
                             actions.Attack(troopNbr, enemyBarracks[_rng.Next(0, enemyBarracks.Count)]);
                         }
+                        else if (enemyArchery.Count > 0)
+                        {
+                            actions.Attack(troopNbr, enemyArchery[_rng.Next(0, enemyArchery.Count)]);
+                        }
+                        else if (enemyLancers.Count > 0)
+                        {
+                            actions.Attack(troopNbr, enemyLancers[_rng.Next(0, enemyLancers.Count)]);
+                        }
+                        else if (enemyTowers.Count > 0)
+                        {
+                            actions.Attack(troopNbr, enemyTowers[_rng.Next(0, enemyTowers.Count)]);
+                        }
                     }
                 }
             }
@@ -236,13 +248,6 @@ namespace PlanningAgent
                 // Get the barracks
                 UnitInfo? barracksInfo = state.GetUnit(barracksNbr);
 
-                // If this barracks still exists, is idle, we need archers, and have gold
-                if (barracksInfo.HasValue && barracksInfo.Value.IsBuilt
-                         && barracksInfo.Value.CurrentAction == UnitAction.IDLE
-                         && state.MyGold >= GameConstants.COST[UnitType.ARCHER])
-                {
-                    actions.Train(barracksNbr, UnitType.ARCHER);
-                }
                 // If this barracks still exists, is idle, we need warriors, and have gold
                 if (barracksInfo.HasValue && barracksInfo.Value.IsBuilt
                     && barracksInfo.Value.CurrentAction == UnitAction.IDLE
