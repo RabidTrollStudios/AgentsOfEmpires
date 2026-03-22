@@ -10,7 +10,7 @@ namespace GameManager.GameElements
 	public class CameraController : MonoBehaviour {
 
 		const float dragMultiplier = 40f;
-		const float scrollMultiplier = 10f;
+		const float scrollMultiplier = 500f;
 		const float minZoom = 1f;
 		const float maxZoom = 23f;
 
