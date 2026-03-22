@@ -1,4 +1,5 @@
 GetPathToUnit FAILED
+<<<<<<< HEAD
   from=(56, 26, 0) to=BASE at (57, 26, 0)
   mapSize=(77, 46, 1)
   totalNeighbors=24 buildableNeighbors=19
@@ -60,3 +61,65 @@ Start cell neighbors:
   (57, 25, 0) buildable=False
   (57, 26, 0) buildable=False
   (57, 27, 0) buildable=False
+=======
+  from=(36, 5, 0) to=BASE at (35, 9, 0)
+  mapSize=(77, 46, 1)
+  totalNeighbors=24 buildableNeighbors=18
+
+All neighbors:
+  (34, 10, 0) buildable=True
+  (34, 5, 0) buildable=False
+  (35, 10, 0) buildable=True
+  (35, 5, 0) buildable=False
+  (36, 10, 0) buildable=True
+  (36, 5, 0) buildable=False
+  (37, 10, 0) buildable=True
+  (37, 5, 0) buildable=False
+  (38, 10, 0) buildable=True
+  (38, 5, 0) buildable=True
+  (39, 10, 0) buildable=True
+  (39, 5, 0) buildable=True
+  (40, 10, 0) buildable=True
+  (40, 5, 0) buildable=True
+  (41, 10, 0) buildable=False
+  (41, 5, 0) buildable=True
+  (34, 6, 0) buildable=False
+  (41, 6, 0) buildable=True
+  (34, 7, 0) buildable=True
+  (41, 7, 0) buildable=True
+  (34, 8, 0) buildable=True
+  (41, 8, 0) buildable=True
+  (34, 9, 0) buildable=True
+  (41, 9, 0) buildable=True
+
+A* attempts (buildable neighbors only):
+  (36, 5, 0) -> (38, 5, 0): result=found expansions=3
+  (36, 5, 0) -> (34, 7, 0): result=found expansions=4
+  (36, 5, 0) -> (39, 5, 0): result=found expansions=4
+  (36, 5, 0) -> (34, 8, 0): result=found expansions=5
+  (36, 5, 0) -> (40, 5, 0): result=found expansions=5
+  (36, 5, 0) -> (34, 9, 0): result=found expansions=6
+  (36, 5, 0) -> (36, 10, 0): result=found expansions=12
+  (36, 5, 0) -> (41, 5, 0): result=found expansions=6
+  (36, 5, 0) -> (35, 10, 0): result=found expansions=8
+  (36, 5, 0) -> (37, 10, 0): result=found expansions=15
+  (36, 5, 0) -> (41, 6, 0): result=found expansions=6
+  (36, 5, 0) -> (34, 10, 0): result=found expansions=7
+  (36, 5, 0) -> (38, 10, 0): result=found expansions=19
+  (36, 5, 0) -> (41, 7, 0): result=found expansions=8
+  (36, 5, 0) -> (39, 10, 0): result=found expansions=24
+  (36, 5, 0) -> (41, 8, 0): result=found expansions=9
+  (36, 5, 0) -> (40, 10, 0): result=found expansions=14
+  (36, 5, 0) -> (41, 9, 0): result=found expansions=11
+
+Start cell (36, 5, 0) buildable=False
+Start cell neighbors:
+  (35, 4, 0) buildable=False
+  (35, 5, 0) buildable=False
+  (35, 6, 0) buildable=False
+  (36, 4, 0) buildable=False
+  (36, 6, 0) buildable=False
+  (37, 4, 0) buildable=False
+  (37, 5, 0) buildable=False
+  (37, 6, 0) buildable=False
+>>>>>>> main

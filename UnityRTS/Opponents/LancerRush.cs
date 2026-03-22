@@ -19,7 +19,6 @@ namespace PlanningAgent
             UpdateGameState(state);
             mainBaseNbr = myBases.Count > 0 ? myBases[0] : -1;
             if (mainMineNbr < 0 || !state.GetUnit(mainMineNbr).HasValue || state.GetUnit(mainMineNbr).Value.Health <= 0)
-                if (mainMineNbr < 0 || !state.GetUnit(mainMineNbr).HasValue || state.GetUnit(mainMineNbr).Value.Health <= 0)
                 mainMineNbr = FindClosestMine(state);
 
             if (myBases.Count == 0)

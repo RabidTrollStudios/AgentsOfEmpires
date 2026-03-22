@@ -103,8 +103,8 @@ namespace PlanningAgent
 
             TrainPawns(state, actions);
 
-            if (myBarracks.Count == 0 && HasBuiltUnit(myBases, state))
-                BuildStructure(UnitType.BARRACKS, state, actions);
+            if (myArchery.Count == 0 && HasBuiltUnit(myBases, state))
+                BuildStructure(UnitType.ARCHERY, state, actions);
 
             GatherWithIdlePawns(state, actions);
             TrainArchers(state, actions);
@@ -164,7 +164,7 @@ namespace PlanningAgent
         /// </summary>
         private void UpdateArmyPhase(IGameState state)
         {
-            int enemyCombat = enemyWarriors.Count + enemyArchers.Count;
+            int enemyCombat = enemyWarriors.Count + enemyArchers.Count + enemyLancers.Count;
 
             // MOPPING_UP: overwhelming advantage — requires full army to prevent
             // early archers from rushing buildings before enemy warriors spawn
@@ -183,7 +183,7 @@ namespace PlanningAgent
             }
 
             // RALLYING: have built barracks, building army
-            if (myBarracks.Count > 0 && HasBuiltUnit(myBarracks, state))
+            if (myArchery.Count > 0 && HasBuiltUnit(myArchery, state))
             {
                 _armyPhase = ArmyPhase.RALLYING;
                 return;
@@ -328,8 +328,8 @@ namespace PlanningAgent
                 float closestEnemyDist = float.MaxValue;
                 int closestEnemyNbr = -1;
 
-                foreach (UnitType ut in new[] { UnitType.ARCHER, UnitType.PAWN,
-                                                 UnitType.BASE, UnitType.BARRACKS })
+                foreach (UnitType ut in new[] { UnitType.ARCHER, UnitType.LANCER, UnitType.PAWN,
+                                                 UnitType.BASE, UnitType.BARRACKS, UnitType.ARCHERY, UnitType.TOWER })
                 {
                     foreach (int enemyNbr in state.GetEnemyUnits(ut))
                     {
@@ -670,14 +670,14 @@ namespace PlanningAgent
 
         private void TrainArchers(IGameState state, IAgentActions actions)
         {
-            foreach (int barracksNbr in myBarracks)
+            foreach (int archeryNbr in myArchery)
             {
-                var info = state.GetUnit(barracksNbr);
+                var info = state.GetUnit(archeryNbr);
                 if (info.HasValue && info.Value.IsBuilt
                     && info.Value.CurrentAction == UnitAction.IDLE
                     && state.MyGold >= GameConstants.COST[UnitType.ARCHER])
                 {
-                    actions.Train(barracksNbr, UnitType.ARCHER);
+                    actions.Train(archeryNbr, UnitType.ARCHER);
                 }
             }
         }
@@ -794,7 +794,7 @@ namespace PlanningAgent
                     }
                 }
             }
-            else if (type == UnitType.BARRACKS && mainBaseNbr >= 0)
+            else if (type == UnitType.ARCHERY && mainBaseNbr >= 0)
             {
                 var baseInfo = state.GetUnit(mainBaseNbr);
                 if (baseInfo.HasValue)
@@ -833,8 +833,8 @@ namespace PlanningAgent
         private Position ComputeRallyPoint(IGameState state)
         {
             if (_rallyPoint.X >= 0) return _rallyPoint;
-            if (myBarracks.Count == 0) return new Position(-1, -1);
-            var info = state.GetUnit(myBarracks[0]);
+            if (myArchery.Count == 0) return new Position(-1, -1);
+            var info = state.GetUnit(myArchery[0]);
             if (!info.HasValue) return new Position(-1, -1);
 
             Position barracks = info.Value.GridPosition;
@@ -929,8 +929,8 @@ namespace PlanningAgent
             float bestDist = float.MaxValue;
             int bestEnemy = -1;
 
-            foreach (UnitType ut in new[] { UnitType.WARRIOR, UnitType.ARCHER, UnitType.PAWN,
-                                             UnitType.BASE, UnitType.BARRACKS })
+            foreach (UnitType ut in new[] { UnitType.WARRIOR, UnitType.ARCHER, UnitType.LANCER, UnitType.PAWN,
+                                             UnitType.BASE, UnitType.BARRACKS, UnitType.ARCHERY, UnitType.TOWER })
             {
                 float range = GameConstants.EffectiveAttackRange(attackerType, ut);
                 foreach (int enemyNbr in state.GetEnemyUnits(ut))
@@ -958,8 +958,8 @@ namespace PlanningAgent
             float bestDist = float.MaxValue;
             int bestEnemy = -1;
 
-            foreach (UnitType ut in new[] { UnitType.WARRIOR, UnitType.ARCHER, UnitType.PAWN,
-                                             UnitType.BASE, UnitType.BARRACKS })
+            foreach (UnitType ut in new[] { UnitType.WARRIOR, UnitType.ARCHER, UnitType.LANCER, UnitType.PAWN,
+                                             UnitType.BASE, UnitType.BARRACKS, UnitType.ARCHERY, UnitType.TOWER })
             {
                 foreach (int enemyNbr in state.GetEnemyUnits(ut))
                 {
@@ -992,10 +992,10 @@ namespace PlanningAgent
             int? bestBuilding = null;
             float bestBuildingDist = float.MaxValue;
 
-            foreach (UnitType ut in new[] { UnitType.WARRIOR, UnitType.ARCHER, UnitType.PAWN,
-                                            UnitType.BASE, UnitType.BARRACKS })
+            foreach (UnitType ut in new[] { UnitType.WARRIOR, UnitType.ARCHER, UnitType.LANCER, UnitType.PAWN,
+                                            UnitType.BASE, UnitType.BARRACKS, UnitType.ARCHERY, UnitType.TOWER })
             {
-                bool isCombat = ut == UnitType.WARRIOR || ut == UnitType.ARCHER;
+                bool isCombat = ut == UnitType.WARRIOR || ut == UnitType.ARCHER || ut == UnitType.LANCER;
                 bool isPawn = ut == UnitType.PAWN;
                 var enemies = state.GetEnemyUnits(ut);
                 foreach (int enemyNbr in enemies)

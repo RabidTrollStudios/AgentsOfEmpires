@@ -37,6 +37,7 @@ namespace GameManager.GameElements
 				if (damage > 1)
 				{
 					int dmg = (int)damage;
+<<<<<<< HEAD
 					if (!attackTarget.IsBuilt)
 					{
 						// Unbuilt buildings: damage reduces construction progress.
@@ -55,6 +56,16 @@ namespace GameManager.GameElements
 					}
 					totalDamage += damage;
 					damage -= dmg;
+=======
+					attackTarget.Health -= dmg;
+					totalDamage += damage;
+					damage -= dmg;
+
+					// Record damage analytics for attacker and defender
+					GetRoundStats()?.RecordDamageDealt(dmg);
+					var defenderStats = attackTarget.Agent?.GetComponent<AgentController>()?.Agent?.Analytics?.CurrentRound;
+					defenderStats?.RecordDamageReceived(dmg);
+>>>>>>> main
 				}
 
 				// Spawn arrow projectile on frame 5 of the shoot animation (once per loop)
@@ -333,6 +344,7 @@ namespace GameManager.GameElements
 				{
 					buildUnit.IsBuilt = true;
 					buildUnit.buildPulseFrames = BUILD_PULSE_TOTAL;
+					GetRoundStats()?.RecordBuildingConstructed(taskUnitType);
 					// Set full opacity on completion
 					if (buildSprite != null)
 					{
@@ -416,6 +428,10 @@ namespace GameManager.GameElements
 				{
 					Vector3Int spawnPos = positions[UnityEngine.Random.Range(0, positions.Count)];
 					GameManager.Instance.Units.PlaceUnit(Agent, spawnPos, taskUnitType, Color);
+					var prodStats = GetRoundStats();
+					prodStats?.RecordUnitProduced(taskUnitType);
+					if (Constants.CAN_ATTACK[taskUnitType])
+						prodStats?.RecordMilestone("MILITARY", GameManager.Instance.TotalGameTime);
 					path.Clear();
 					CurrentAction = UnitAction.IDLE;
 				}
@@ -521,6 +537,9 @@ namespace GameManager.GameElements
 					&& GameManager.Instance.Map.IsNeighborOfUnit(GridPosition, TargetUnitType, TargetGridPos))
 				{
 					Agent.GetComponent<AgentController>().Agent.Gold += totalGold;
+					var gatherStats = GetRoundStats();
+					gatherStats?.RecordGoldGathered(totalGold);
+					gatherStats?.UpdatePeakGold(Agent.GetComponent<AgentController>().Agent.Gold);
 					totalGold = 0;
 
 					// Go back to the mine

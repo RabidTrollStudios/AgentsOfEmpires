@@ -145,7 +145,7 @@ namespace PlanningAgent
         /// </summary>
         private void UpdateArmyPhase(IGameState state)
         {
-            int enemyCombat = enemyWarriors.Count + enemyArchers.Count;
+            int enemyCombat = enemyWarriors.Count + enemyArchers.Count + enemyLancers.Count;
 
             if (myWarriors.Count >= ATTACK_THRESHOLD
                 && (enemyCombat == 0 || myWarriors.Count >= 4 * enemyCombat))
@@ -280,8 +280,8 @@ namespace PlanningAgent
                 float closestEnemyDist = float.MaxValue;
                 int closestEnemyNbr = -1;
 
-                foreach (UnitType ut in new[] { UnitType.WARRIOR, UnitType.ARCHER, UnitType.PAWN,
-                                                 UnitType.BASE, UnitType.BARRACKS })
+                foreach (UnitType ut in new[] { UnitType.WARRIOR, UnitType.ARCHER, UnitType.LANCER, UnitType.PAWN,
+                                                 UnitType.BASE, UnitType.BARRACKS, UnitType.ARCHERY, UnitType.TOWER })
                 {
                     foreach (int enemyNbr in state.GetEnemyUnits(ut))
                     {
@@ -388,8 +388,8 @@ namespace PlanningAgent
             int? bestTarget = null;
             float bestDist = float.MaxValue;
 
-            foreach (UnitType ut in new[] { UnitType.WARRIOR, UnitType.ARCHER, UnitType.PAWN,
-                                            UnitType.BASE, UnitType.BARRACKS })
+            foreach (UnitType ut in new[] { UnitType.WARRIOR, UnitType.ARCHER, UnitType.LANCER, UnitType.PAWN,
+                                            UnitType.BASE, UnitType.BARRACKS, UnitType.ARCHERY, UnitType.TOWER })
             {
                 foreach (int enemyNbr in state.GetEnemyUnits(ut))
                 {
@@ -409,8 +409,8 @@ namespace PlanningAgent
             if (!bestTarget.HasValue)
             {
                 bestDist = float.MaxValue;
-                foreach (UnitType ut in new[] { UnitType.WARRIOR, UnitType.ARCHER, UnitType.PAWN,
-                                                UnitType.BASE, UnitType.BARRACKS })
+                foreach (UnitType ut in new[] { UnitType.WARRIOR, UnitType.ARCHER, UnitType.LANCER, UnitType.PAWN,
+                                                UnitType.BASE, UnitType.BARRACKS, UnitType.ARCHERY, UnitType.TOWER })
                 {
                     foreach (int enemyNbr in state.GetEnemyUnits(ut))
                     {
@@ -808,8 +808,8 @@ namespace PlanningAgent
             float bestDist = float.MaxValue;
             int bestEnemy = -1;
 
-            foreach (UnitType ut in new[] { UnitType.WARRIOR, UnitType.ARCHER, UnitType.PAWN,
-                                             UnitType.BASE, UnitType.BARRACKS })
+            foreach (UnitType ut in new[] { UnitType.WARRIOR, UnitType.ARCHER, UnitType.LANCER, UnitType.PAWN,
+                                             UnitType.BASE, UnitType.BARRACKS, UnitType.ARCHERY, UnitType.TOWER })
             {
                 float range = GameConstants.EffectiveAttackRange(attackerType, ut);
                 foreach (int enemyNbr in state.GetEnemyUnits(ut))
@@ -837,8 +837,8 @@ namespace PlanningAgent
             float bestDist = float.MaxValue;
             int bestEnemy = -1;
 
-            foreach (UnitType ut in new[] { UnitType.WARRIOR, UnitType.ARCHER, UnitType.PAWN,
-                                             UnitType.BASE, UnitType.BARRACKS })
+            foreach (UnitType ut in new[] { UnitType.WARRIOR, UnitType.ARCHER, UnitType.LANCER, UnitType.PAWN,
+                                             UnitType.BASE, UnitType.BARRACKS, UnitType.ARCHERY, UnitType.TOWER })
             {
                 foreach (int enemyNbr in state.GetEnemyUnits(ut))
                 {
@@ -877,10 +877,10 @@ namespace PlanningAgent
             int? bestBuilding = null;
             float bestBuildingDist = float.MaxValue;
 
-            foreach (UnitType ut in new[] { UnitType.WARRIOR, UnitType.ARCHER, UnitType.PAWN,
-                                            UnitType.BASE, UnitType.BARRACKS })
+            foreach (UnitType ut in new[] { UnitType.WARRIOR, UnitType.ARCHER, UnitType.LANCER, UnitType.PAWN,
+                                            UnitType.BASE, UnitType.BARRACKS, UnitType.ARCHERY, UnitType.TOWER })
             {
-                bool isCombat = ut == UnitType.WARRIOR || ut == UnitType.ARCHER;
+                bool isCombat = ut == UnitType.WARRIOR || ut == UnitType.ARCHER || ut == UnitType.LANCER;
                 bool isPawn = ut == UnitType.PAWN;
                 var enemies = state.GetEnemyUnits(ut);
                 foreach (int enemyNbr in enemies)

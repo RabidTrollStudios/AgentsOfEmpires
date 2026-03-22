@@ -221,6 +221,9 @@ namespace PlanningAgent
             enemyUnits.AddRange(enemyArchers);
             enemyBuildings.AddRange(enemyBases);
             enemyBuildings.AddRange(enemyBarracks);
+            enemyUnits.AddRange(enemyLancers);
+            enemyBuildings.AddRange(enemyArchery);
+            enemyBuildings.AddRange(enemyTowers);
 
 			// If we have at least one base, assume the first one is our "main" base
 			if (myBases.Count > 0)
