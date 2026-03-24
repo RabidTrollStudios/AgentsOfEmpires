@@ -313,12 +313,27 @@ namespace GameManager
 		}
 
 		/// <summary>
-		/// Determines if the gridPosition is a neighbor of the unit
+		/// Determines if the gridPosition is a neighbor of the unit.
+		/// For buildings with a walkable top row, the top row passage cells also count
+		/// as neighbors (they're adjacent to the building's non-walkable body).
 		/// </summary>
 		public bool IsNeighborOfUnit(Vector3Int gridPosition, UnitType unitType, Vector3Int unitGridPosition)
 		{
 			var neighbors = GetGridPositionsNearUnit(unitType, unitGridPosition);
-			return neighbors.Contains(gridPosition);
+			if (neighbors.Contains(gridPosition))
+				return true;
+
+			// Accept walkable top-row passage cells as neighbors
+			Vector3Int size = Constants.UNIT_SIZE[unitType];
+			if (!Constants.CAN_MOVE[unitType] && size.y > 1)
+			{
+				int y = unitGridPosition.y; // top row
+				if (gridPosition.y == y
+				    && gridPosition.x >= unitGridPosition.x
+				    && gridPosition.x < unitGridPosition.x + size.x)
+					return true;
+			}
+			return false;
 		}
 
 		/// <summary>
@@ -355,12 +370,28 @@ namespace GameManager
 		}
 
 		/// <summary>
-		/// Find all of the buildable grid positions near this unit
+		/// Find all approachable grid positions near this unit — buildable ring cells plus
+		/// any walkable top-row passage cells (so units can stand right next to the body).
 		/// </summary>
 		public List<Vector3Int> GetBuildableGridPositionsNearUnit(UnitType unitType, Vector3Int gridPosition)
 		{
 			List<Vector3Int> positions = GetGridPositionsNearUnit(unitType, gridPosition);
-			return positions.Where(IsGridPositionBuildable).ToList();
+			var result = positions.Where(IsGridPositionBuildable).ToList();
+
+			// Include passage cells (building top row) as valid approach positions
+			Vector3Int size = Constants.UNIT_SIZE[unitType];
+			if (!Constants.CAN_MOVE[unitType] && size.y > 1)
+			{
+				int y = gridPosition.y; // top row
+				for (int i = 0; i < size.x; i++)
+				{
+					var pos = new Vector3Int(gridPosition.x + i, y, 0);
+					if (Utility.IsValidGridLocation(pos, MapSize) && IsGridPositionPassage(pos))
+						result.Add(pos);
+				}
+			}
+
+			return result;
 		}
 
 		/// <summary>

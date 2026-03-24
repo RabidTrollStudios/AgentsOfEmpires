@@ -246,8 +246,9 @@ namespace GameManager.GameElements
 			sr.sortingOrder = 0;
 
 			// Pickaxe tip at frame 3 downswing: pixel (150,115) in 192x192 frame, PPU=80, center pivot
+			// Y offset raised so the coin's bottom edge aligns with the tip of the pickaxe
 			float tipX = facingRight ? 0.675f : -0.675f;
-			Vector3 spawnPos = WorldPosition + new Vector3(tipX, -0.24f, 0);
+			Vector3 spawnPos = WorldPosition + new Vector3(tipX, -0.14f, 0);
 
 			// Target: pawn's center (slightly above feet)
 			Vector3 targetPos = WorldPosition + new Vector3(0f, 0.2f, 0);

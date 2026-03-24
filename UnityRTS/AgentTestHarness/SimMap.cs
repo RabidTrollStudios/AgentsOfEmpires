@@ -187,13 +187,28 @@ namespace AgentTestHarness
         }
 
         /// <summary>
-        /// Get all buildable positions in the ring around a unit's footprint.
+        /// Get all approachable positions near a unit — buildable ring cells plus
+        /// any walkable top-row passage cells (so units can stand next to the body).
         /// </summary>
         public List<Position> GetBuildablePositionsNearUnit(UnitType unitType, Position anchor)
         {
-            return GetPositionsNearUnit(unitType, anchor)
+            var result = GetPositionsNearUnit(unitType, anchor)
                 .Where(p => buildable[p.X, p.Y])
                 .ToList();
+
+            // Include passage cells (building top row) as valid approach positions
+            var size = GameConstants.UNIT_SIZE[unitType];
+            if (!GameConstants.CAN_MOVE[unitType] && size.Y > 1)
+            {
+                for (int i = 0; i < size.X; i++)
+                {
+                    var pos = new Position(anchor.X + i, anchor.Y);
+                    if (IsPositionValid(pos) && passage[pos.X, pos.Y])
+                        result.Add(pos);
+                }
+            }
+
+            return result;
         }
 
         /// <summary>

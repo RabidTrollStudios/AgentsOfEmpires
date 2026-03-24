@@ -243,7 +243,17 @@ namespace AgentTestHarness
         private bool IsAdjacentToUnit(Position pos, UnitType unitType, Position unitAnchor)
         {
             var neighbors = Map.GetPositionsNearUnit(unitType, unitAnchor);
-            return neighbors.Any(n => n == pos);
+            if (neighbors.Any(n => n == pos))
+                return true;
+
+            // Accept passage cells (building top row) as adjacent
+            var size = GameConstants.UNIT_SIZE[unitType];
+            if (!GameConstants.CAN_MOVE[unitType] && size.Y > 1
+                && pos.Y == unitAnchor.Y
+                && pos.X >= unitAnchor.X && pos.X < unitAnchor.X + size.X)
+                return true;
+
+            return false;
         }
 
         #endregion
