@@ -42,11 +42,13 @@ namespace PlanningAgent
         #region Constants
 
         private const int MAX_PAWNS = 5;
+        private const int MAX_MONKS = 2;
         private const int ATTACK_THRESHOLD = 8;
         private const float RALLY_DISTANCE = 10f;
         private const float AGGRO_RANGE = 10f;
         private const float RALLY_PROXIMITY = 3.0f;
         private const float DEFEND_RADIUS = 5.0f;
+        private const float MONK_FOLLOW_DISTANCE = 3.0f;
 
         #endregion
 
@@ -95,10 +97,21 @@ namespace PlanningAgent
             if (myArchery.Count == 0 && HasBuiltUnit(myBases, state))
                 BuildStructure(UnitType.ARCHERY, state, actions);
 
-            AssistConstruction(state, actions);
+            // Build monastery once archery is up
+            if (myMonasteries.Count == 0 && HasBuiltUnit(myArchery, state))
+                BuildStructure(UnitType.MONASTERY, state, actions);
+
             RepairDamagedBuildings(state, actions);
             GatherWithIdlePawns(state, actions);
-            TrainArchers(state, actions);
+
+            // Hold off on archers while saving for the monastery
+            bool savingForMonastery = myMonasteries.Count == 0
+                && HasBuiltUnit(myArchery, state)
+                && state.MyGold < GameConstants.COST[UnitType.MONASTERY];
+            if (!savingForMonastery)
+                TrainArchers(state, actions);
+
+            TrainMonks(state, actions);
 
             // ---- Phase 2: Evaluate army phase ----
             Position rallyPoint = ComputeRallyPoint(state);
@@ -109,6 +122,9 @@ namespace PlanningAgent
 
             // ---- Phase 4: Execute actions for each archer ----
             ExecuteArcherActions(state, actions, rallyPoint);
+
+            // ---- Phase 4b: Monks heal wounded archers, then follow army ----
+            ExecuteMonkActions(state, actions, rallyPoint);
 
             // ---- Phase 5: Clean up dead archers ----
             CleanDeadArchers();
@@ -324,8 +340,8 @@ namespace PlanningAgent
             int? bestTarget = null;
             float bestDist = float.MaxValue;
 
-            foreach (UnitType ut in new[] { UnitType.WARRIOR, UnitType.ARCHER, UnitType.LANCER, UnitType.PAWN,
-                                            UnitType.BASE, UnitType.BARRACKS, UnitType.ARCHERY, UnitType.TOWER })
+            foreach (UnitType ut in new[] { UnitType.WARRIOR, UnitType.ARCHER, UnitType.LANCER, UnitType.MONK, UnitType.PAWN,
+                                            UnitType.BASE, UnitType.BARRACKS, UnitType.ARCHERY, UnitType.TOWER, UnitType.MONASTERY })
             {
                 foreach (int enemyNbr in state.GetEnemyUnits(ut))
                 {
@@ -345,8 +361,8 @@ namespace PlanningAgent
             if (!bestTarget.HasValue)
             {
                 bestDist = float.MaxValue;
-                foreach (UnitType ut in new[] { UnitType.WARRIOR, UnitType.ARCHER, UnitType.LANCER, UnitType.PAWN,
-                                                UnitType.BASE, UnitType.BARRACKS, UnitType.ARCHERY, UnitType.TOWER })
+                foreach (UnitType ut in new[] { UnitType.WARRIOR, UnitType.ARCHER, UnitType.LANCER, UnitType.MONK, UnitType.PAWN,
+                                                UnitType.BASE, UnitType.BARRACKS, UnitType.ARCHERY, UnitType.TOWER, UnitType.MONASTERY })
                 {
                     foreach (int enemyNbr in state.GetEnemyUnits(ut))
                     {
@@ -453,7 +469,8 @@ namespace PlanningAgent
             sb.Append("Phase: ").AppendLine(_armyPhase.ToString());
             sb.Append("Gold: ").AppendLine(state.MyGold.ToString());
             sb.Append("Pawns: ").Append(myPawns.Count)
-              .Append("  Archers: ").AppendLine(myArchers.Count.ToString());
+              .Append("  Archers: ").Append(myArchers.Count)
+              .Append("  Monks: ").AppendLine(myMonks.Count.ToString());
             sb.Append("  Rally: ").Append(rallying)
               .Append("  Defend: ").Append(defending)
               .Append("  Assault: ").Append(assaulting);
@@ -494,34 +511,11 @@ namespace PlanningAgent
             }
         }
 
-        private void AssistConstruction(IGameState state, IAgentActions actions)
-        {
-            // Find any unfinished barracks or archery and send idle pawns to help build
-            foreach (UnitType buildingType in new[] { UnitType.BASE, UnitType.ARCHERY })
-            {
-                var buildingList = buildingType == UnitType.BASE ? myBases : myArchery;
-                foreach (int buildingNbr in buildingList)
-                {
-                    var info = state.GetUnit(buildingNbr);
-                    if (!info.HasValue || info.Value.IsBuilt) continue;
-
-                    // Send idle pawns to help build this structure
-                    foreach (int pawn in myPawns)
-                    {
-                        var wInfo = state.GetUnit(pawn);
-                        if (wInfo.HasValue && wInfo.Value.CurrentAction == UnitAction.IDLE)
-                            actions.Build(pawn, info.Value.GridPosition, buildingType);
-                    }
-                    return; // Only assist one building at a time
-                }
-            }
-        }
-
         private void RepairDamagedBuildings(IGameState state, IAgentActions actions)
         {
             if (state.MyGold <= 1000) return;
 
-            foreach (var buildingList in new[] { myBases, myArchery })
+            foreach (var buildingList in new[] { myBases, myArchery, myMonasteries })
             {
                 foreach (int buildingNbr in buildingList)
                 {
@@ -611,82 +605,61 @@ namespace PlanningAgent
 
         private void BuildStructure(UnitType type, IGameState state, IAgentActions actions)
         {
+            if (state.MyGold < GameConstants.COST[type]) return;
+
+            // Prefer idle pawns, fall back to gathering pawns
+            int chosenPawn = -1;
             foreach (int pawn in myPawns)
             {
                 var info = state.GetUnit(pawn);
-                if (info.HasValue && info.Value.CurrentAction == UnitAction.IDLE
-                    && state.MyGold >= GameConstants.COST[type])
+                if (!info.HasValue) continue;
+                if (info.Value.CurrentAction == UnitAction.IDLE)
                 {
-                    Position buildPos = FindBestBuildPosition(type, state);
-                    if (buildPos.X >= 0)
-                    {
-                        actions.Build(pawn, buildPos, type);
-                        return;
-                    }
+                    chosenPawn = pawn;
+                    break;
                 }
+                if (chosenPawn < 0 && info.Value.CurrentAction == UnitAction.GATHER)
+                    chosenPawn = pawn;
             }
-        }
+            if (chosenPawn < 0) return;
 
-        private Position FindBestBuildPosition(UnitType type, IGameState state)
-        {
-            var freshPositions = state.FindProspectiveBuildPositions(type);
+            // Try multiple positions — the best one may be blocked by a mobile unit
+            var positions = state.FindProspectiveBuildPositions(type);
+            if (positions.Count == 0) return;
 
+            var baseInfo = mainBaseNbr >= 0 ? state.GetUnit(mainBaseNbr) : null;
+            Position baseCenter = baseInfo.HasValue ? baseInfo.Value.CenterPosition : new Position(-1, -1);
+
+            var sorted = new List<Position>(positions);
             if (type == UnitType.BASE && mainMineNbr >= 0)
             {
+                // Place base near the mine
                 var mineInfo = state.GetUnit(mainMineNbr);
                 if (mineInfo.HasValue)
                 {
-                    Position minePos = mineInfo.Value.GridPosition;
-                    var mineNeighbors = state.GetBuildablePositionsNearUnit(UnitType.MINE, minePos);
-                    if (mineNeighbors.Count > 0)
-                    {
-                        Position mineRef = mineNeighbors[0];
-                        var sorted = new System.Collections.Generic.List<Position>(freshPositions);
-                        sorted.Sort((a, b) => Position.Distance(a, mineRef).CompareTo(Position.Distance(b, mineRef)));
-                        int bestPathLen = int.MaxValue;
-                        Position bestPos = new Position(-1, -1);
-                        foreach (Position pos in sorted)
-                        {
-                            int pathLen = state.GetPathBetween(pos, mineRef).Count;
-                            if (pathLen > 0 && pathLen < bestPathLen)
-                            {
-                                bestPathLen = pathLen;
-                                bestPos = pos;
-                            }
-                        }
-                        if (bestPos.X >= 0) return bestPos;
-                    }
+                    Position mineCenter = mineInfo.Value.CenterPosition;
+                    sorted.Sort((a, b) => Position.Distance(a, mineCenter).CompareTo(Position.Distance(b, mineCenter)));
                 }
             }
-            else if (type == UnitType.ARCHERY && mainBaseNbr >= 0)
+            else if (baseCenter.X >= 0)
             {
-                var baseInfo = state.GetUnit(mainBaseNbr);
-                if (baseInfo.HasValue)
-                {
-                    Position basePos = baseInfo.Value.GridPosition;
-                    Position mapCenter = new Position(state.MapSize.X / 2, state.MapSize.Y / 2);
-                    Position target = new Position((basePos.X + mapCenter.X) / 2, (basePos.Y + mapCenter.Y) / 2);
-                    float minClear = GameConstants.UNIT_SIZE[UnitType.BASE].X + 1f;
-                    float bestDist = float.MaxValue;
-                    Position bestPos = new Position(-1, -1);
-                    foreach (Position pos in freshPositions)
-                    {
-                        float distToBase = Position.Distance(pos, baseInfo.Value.CenterPosition);
-                        if (distToBase >= minClear)
-                        {
-                            float dist = Position.Distance(pos, target);
-                            if (dist < bestDist)
-                            {
-                                bestDist = dist;
-                                bestPos = pos;
-                            }
-                        }
-                    }
-                    if (bestPos.X >= 0) return bestPos;
-                }
+                // Place other buildings near the base
+                sorted.Sort((a, b) => Position.Distance(a, baseCenter).CompareTo(Position.Distance(b, baseCenter)));
             }
 
-            return freshPositions.Count > 0 ? freshPositions[0] : new Position(-1, -1);
+            foreach (Position pos in sorted)
+            {
+                if (type != UnitType.BASE && baseCenter.X >= 0
+                    && Position.Distance(pos, baseCenter) < 2f)
+                    continue;
+
+                // Pre-check buildability to avoid triggering cooldown on a blocked cell
+                if (!state.IsAreaBuildable(type, pos))
+                    continue;
+
+                actions.Build(chosenPawn, pos, type);
+                return;
+            }
         }
 
         /// <summary>
@@ -771,6 +744,78 @@ namespace PlanningAgent
 
         #endregion
 
+        #region Monk Support
+
+        private void TrainMonks(IGameState state, IAgentActions actions)
+        {
+            if (myMonks.Count >= MAX_MONKS) return;
+
+            foreach (int monasteryNbr in myMonasteries)
+            {
+                var info = state.GetUnit(monasteryNbr);
+                if (info.HasValue && info.Value.IsBuilt
+                    && info.Value.CurrentAction == UnitAction.IDLE
+                    && state.MyGold >= GameConstants.COST[UnitType.MONK])
+                {
+                    actions.Train(monasteryNbr, UnitType.MONK);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Monks heal the most-wounded archer within heal range, then follow
+        /// the army toward the rally point staying behind the front line.
+        /// </summary>
+        private void ExecuteMonkActions(IGameState state, IAgentActions actions, Position rallyPoint)
+        {
+            foreach (int monkNbr in myMonks)
+            {
+                var monkInfo = state.GetUnit(monkNbr);
+                if (!monkInfo.HasValue) continue;
+
+                // Skip busy monks (already healing / moving to heal)
+                if (monkInfo.Value.CurrentAction == UnitAction.HEAL) continue;
+
+                Position monkPos = monkInfo.Value.CenterPosition;
+
+                // Priority 1: heal the most-wounded allied mobile unit in range
+                if (monkInfo.Value.Mana >= GameConstants.MANA_COST)
+                {
+                    int bestTarget = -1;
+                    float lowestRatio = GameConstants.HEAL_THRESHOLD;
+
+                    foreach (int archerNbr in myArchers)
+                    {
+                        var archerInfo = state.GetUnit(archerNbr);
+                        if (!archerInfo.HasValue) continue;
+                        float maxHp = GameConstants.HEALTH[archerInfo.Value.UnitType];
+                        float ratio = archerInfo.Value.Health / maxHp;
+                        if (ratio <= lowestRatio)
+                        {
+                            lowestRatio = ratio;
+                            bestTarget = archerNbr;
+                        }
+                    }
+
+                    if (bestTarget >= 0)
+                    {
+                        actions.Heal(monkNbr, bestTarget);
+                        continue;
+                    }
+                }
+
+                // Priority 2: follow army — move toward rally point
+                if (monkInfo.Value.CurrentAction == UnitAction.IDLE && rallyPoint.X >= 0)
+                {
+                    float distToRally = Position.Distance(monkPos, rallyPoint);
+                    if (distToRally > MONK_FOLLOW_DISTANCE)
+                        actions.Move(monkNbr, rallyPoint);
+                }
+            }
+        }
+
+        #endregion
+
         #region Targeting Helpers
 
         /// <summary>
@@ -782,8 +827,8 @@ namespace PlanningAgent
             float bestDist = float.MaxValue;
             int bestEnemy = -1;
 
-            foreach (UnitType ut in new[] { UnitType.WARRIOR, UnitType.ARCHER, UnitType.LANCER, UnitType.PAWN,
-                                             UnitType.BASE, UnitType.BARRACKS, UnitType.ARCHERY, UnitType.TOWER })
+            foreach (UnitType ut in new[] { UnitType.WARRIOR, UnitType.ARCHER, UnitType.LANCER, UnitType.MONK, UnitType.PAWN,
+                                             UnitType.BASE, UnitType.BARRACKS, UnitType.ARCHERY, UnitType.TOWER, UnitType.MONASTERY })
             {
                 foreach (int enemyNbr in state.GetEnemyUnits(ut))
                 {
@@ -818,8 +863,8 @@ namespace PlanningAgent
             int? bestBuilding = null;
             float bestBuildingDist = float.MaxValue;
 
-            foreach (UnitType ut in new[] { UnitType.WARRIOR, UnitType.ARCHER, UnitType.LANCER, UnitType.PAWN,
-                                            UnitType.BASE, UnitType.BARRACKS, UnitType.ARCHERY, UnitType.TOWER })
+            foreach (UnitType ut in new[] { UnitType.WARRIOR, UnitType.ARCHER, UnitType.LANCER, UnitType.MONK, UnitType.PAWN,
+                                            UnitType.BASE, UnitType.BARRACKS, UnitType.ARCHERY, UnitType.TOWER, UnitType.MONASTERY })
             {
                 bool isCombat = ut == UnitType.WARRIOR || ut == UnitType.ARCHER || ut == UnitType.LANCER;
                 bool isPawn = ut == UnitType.PAWN;

@@ -1,6 +1,8 @@
 using System;
+using System.Collections.Generic;
 using AgentSDK;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 namespace GameManager
@@ -24,10 +26,10 @@ namespace GameManager
 		}
 
 		/// <summary>
-		/// Maps a pair of keycodes (alpha row + numpad) to the debug action they trigger.
+		/// Maps an InputAction to the debug action it triggers.
 		/// Populated by InitializeDebugToggles; consumed by ProcessUserInput.
 		/// </summary>
-		private (KeyCode Main, KeyCode Numpad, Action Execute)[] _debugBindings;
+		private (InputAction Action, Action Execute)[] _debugBindings;
 
 		private void InitializeDebugToggles()
 		{
@@ -85,17 +87,21 @@ namespace GameManager
 				TargetLineTintToggle.onValueChanged.AddListener(OnTargetLineTintToggleChanged);
 				TargetLineTintToggle.isOn = true;
 			}
-			_debugBindings = new (KeyCode, KeyCode, Action)[]
+
+			if (_input == null) return;
+
+			var gp = _input.Gameplay;
+			_debugBindings = new (InputAction, Action)[]
 			{
-				(KeyCode.Alpha1, KeyCode.Keypad1, () => { HasAgentDebugging = !HasAgentDebugging; if (AgentToggle != null) AgentToggle.isOn = HasAgentDebugging; }),
-				(KeyCode.Alpha2, KeyCode.Keypad2, () => { HasUnitDebugging = !HasUnitDebugging; if (UnitToggle != null) UnitToggle.isOn = HasUnitDebugging; }),
-				(KeyCode.Alpha3, KeyCode.Keypad3, () => { bool v = !mapManager.InfluenceMap.gameObject.activeSelf; mapManager.InfluenceMap.gameObject.SetActive(v); if (InfluenceToggle != null) InfluenceToggle.isOn = v; }),
-				(KeyCode.Alpha4, KeyCode.Keypad4, () => { HasMoveTint = !HasMoveTint; if (MoveTintToggle != null) MoveTintToggle.isOn = HasMoveTint; }),
-				(KeyCode.Alpha5, KeyCode.Keypad5, () => { HasGatherTint = !HasGatherTint; if (GatherTintToggle != null) GatherTintToggle.isOn = HasGatherTint; }),
-				(KeyCode.Alpha6, KeyCode.Keypad6, () => { HasBuildTint = !HasBuildTint; if (BuildTintToggle != null) BuildTintToggle.isOn = HasBuildTint; }),
-				(KeyCode.Alpha7, KeyCode.Keypad7, () => { HasAttackTint = !HasAttackTint; if (AttackTintToggle != null) AttackTintToggle.isOn = HasAttackTint; }),
-				(KeyCode.Alpha8, KeyCode.Keypad8, () => { HasPathTint = !HasPathTint; if (PathTintToggle != null) PathTintToggle.isOn = HasPathTint; }),
-				(KeyCode.Alpha9, KeyCode.Keypad9, () => { HasTargetLineTint = !HasTargetLineTint; if (TargetLineTintToggle != null) TargetLineTintToggle.isOn = HasTargetLineTint; }),
+				(gp.DebugToggle1, () => { HasAgentDebugging = !HasAgentDebugging; if (AgentToggle != null) AgentToggle.isOn = HasAgentDebugging; }),
+				(gp.DebugToggle2, () => { HasUnitDebugging = !HasUnitDebugging; if (UnitToggle != null) UnitToggle.isOn = HasUnitDebugging; }),
+				(gp.DebugToggle3, () => { bool v = !mapManager.InfluenceMap.gameObject.activeSelf; mapManager.InfluenceMap.gameObject.SetActive(v); if (InfluenceToggle != null) InfluenceToggle.isOn = v; }),
+				(gp.DebugToggle4, () => { HasMoveTint = !HasMoveTint; if (MoveTintToggle != null) MoveTintToggle.isOn = HasMoveTint; }),
+				(gp.DebugToggle5, () => { HasGatherTint = !HasGatherTint; if (GatherTintToggle != null) GatherTintToggle.isOn = HasGatherTint; }),
+				(gp.DebugToggle6, () => { HasBuildTint = !HasBuildTint; if (BuildTintToggle != null) BuildTintToggle.isOn = HasBuildTint; }),
+				(gp.DebugToggle7, () => { HasAttackTint = !HasAttackTint; if (AttackTintToggle != null) AttackTintToggle.isOn = HasAttackTint; }),
+				(gp.DebugToggle8, () => { HasPathTint = !HasPathTint; if (PathTintToggle != null) PathTintToggle.isOn = HasPathTint; }),
+				(gp.DebugToggle9, () => { HasTargetLineTint = !HasTargetLineTint; if (TargetLineTintToggle != null) TargetLineTintToggle.isOn = HasTargetLineTint; }),
 			};
 		}
 
@@ -109,41 +115,75 @@ namespace GameManager
 		public void OnBuildTintToggleChanged(bool val) { HasBuildTint = val; }
 		public void OnTargetLineTintToggleChanged(bool val) { HasTargetLineTint = val; }
 
-		private static bool IsKeyDown(KeyCode main, KeyCode numpad)
-			=> Input.GetKeyDown(main) || Input.GetKeyDown(numpad);
-
 		private void ProcessUserInput()
 		{
 			if (_debugBindings == null) return;
 
-			foreach (var (main, numpad, execute) in _debugBindings)
-				if (IsKeyDown(main, numpad))
+			foreach (var (action, execute) in _debugBindings)
+			{
+				if (action.WasPressedThisFrame())
 					execute();
+			}
 
 			HandleSpeedInput();
 		}
 
 		private void HandleSpeedInput()
 		{
-			bool speedUp = Input.GetKeyDown(KeyCode.Equals)
-			            || Input.GetKeyDown(KeyCode.Plus)
-			            || Input.GetKeyDown(KeyCode.KeypadPlus);
+			if (_input == null) return;
 
-			bool speedDown = Input.GetKeyDown(KeyCode.Minus)
-			              || Input.GetKeyDown(KeyCode.KeypadMinus);
+			bool speedUp = _input.Gameplay.SpeedUp.WasPressedThisFrame();
+			bool speedDown = _input.Gameplay.SpeedDown.WasPressedThisFrame();
 
 			if (speedUp && Constants.GAME_SPEED < Constants.MAX_GAME_SPEED)
 			{
+				var oldCreationTimes = new Dictionary<UnitType, float>(Constants.CREATION_TIME);
 				Constants.GAME_SPEED++;
 				Log("Increasing GameSpeed: " + Constants.GAME_SPEED, gameObject);
 				Constants.CalculateGameConstants();
+				RescaleBuildProgress(oldCreationTimes);
 			}
 
 			if (speedDown && Constants.GAME_SPEED > 1)
 			{
+				var oldCreationTimes = new Dictionary<UnitType, float>(Constants.CREATION_TIME);
 				Constants.GAME_SPEED--;
 				Log("Decreasing GameSpeed: " + Constants.GAME_SPEED, gameObject);
 				Constants.CalculateGameConstants();
+				RescaleBuildProgress(oldCreationTimes);
+			}
+		}
+
+		/// <summary>
+		/// When game speed changes, rescale BuildProgress and taskTime on all units
+		/// so progress bar ratios stay the same. Without this, changing speed makes
+		/// bars jump because progress / newCreationTime ≠ progress / oldCreationTime.
+		/// </summary>
+		private void RescaleBuildProgress(Dictionary<UnitType, float> oldCreationTimes)
+		{
+			foreach (var kvp in unitManager.GetAllUnits())
+			{
+				var unit = kvp.Value.GetComponent<GameElements.Unit>();
+				if (unit == null) continue;
+
+				// Rescale building construction progress
+				if (!unit.IsBuilt)
+				{
+					float oldTime = oldCreationTimes.ContainsKey(unit.UnitType) ? oldCreationTimes[unit.UnitType] : 1f;
+					float newTime = Constants.CREATION_TIME.ContainsKey(unit.UnitType) ? Constants.CREATION_TIME[unit.UnitType] : 1f;
+					if (oldTime > 0f)
+						unit.BuildProgress = unit.BuildProgress / oldTime * newTime;
+				}
+
+				// Rescale training timer (taskTime uses taskUnitType's creation time)
+				if (unit.CurrentAction == UnitAction.TRAIN)
+				{
+					var tt = unit.taskUnitType;
+					float oldTime = oldCreationTimes.ContainsKey(tt) ? oldCreationTimes[tt] : 1f;
+					float newTime = Constants.CREATION_TIME.ContainsKey(tt) ? Constants.CREATION_TIME[tt] : 1f;
+					if (oldTime > 0f)
+						unit.taskTime = unit.taskTime / oldTime * newTime;
+				}
 			}
 		}
 
@@ -226,12 +266,12 @@ namespace GameManager
 
 		private void UpdateCustomDebugUI()
 		{
-			if (BlueCustomDebugText == null && RedCustomDebugText == null) return;
+			if (blueCustomDebugText == null && redCustomDebugText == null) return;
 
 			if (!HasAgentDebugging || Agents == null || Agents.Count == 0)
 			{
-				if (BlueCustomDebugText != null) BlueCustomDebugText.text = "";
-				if (RedCustomDebugText != null) RedCustomDebugText.text = "";
+				if (blueCustomDebugText != null) blueCustomDebugText.text = "";
+				if (redCustomDebugText != null) redCustomDebugText.text = "";
 				return;
 			}
 
@@ -247,10 +287,10 @@ namespace GameManager
 					? ""
 					: controller.Agent.AgentDLLName + "\n" + debugText;
 
-				if (controller.Agent.AgentName == Constants.BLUE_ABBR && BlueCustomDebugText != null)
-					BlueCustomDebugText.text = display;
-				else if (controller.Agent.AgentName == Constants.RED_ABBR && RedCustomDebugText != null)
-					RedCustomDebugText.text = display;
+				if (controller.Agent.AgentName == Constants.BLUE_ABBR && blueCustomDebugText != null)
+					blueCustomDebugText.text = display;
+				else if (controller.Agent.AgentName == Constants.RED_ABBR && redCustomDebugText != null)
+					redCustomDebugText.text = display;
 			}
 		}
 

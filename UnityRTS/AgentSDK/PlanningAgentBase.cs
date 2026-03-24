@@ -42,6 +42,10 @@ namespace AgentSDK
         protected List<int> myLancers;
         /// <summary>Your towers</summary>
         protected List<int> myTowers;
+        /// <summary>Your monasteries</summary>
+        protected List<int> myMonasteries;
+        /// <summary>Your monks</summary>
+        protected List<int> myMonks;
 
         /// <summary>Enemy pawns</summary>
         protected List<int> enemyPawns;
@@ -59,6 +63,10 @@ namespace AgentSDK
         protected List<int> enemyLancers;
         /// <summary>Enemy towers</summary>
         protected List<int> enemyTowers;
+        /// <summary>Enemy monasteries</summary>
+        protected List<int> enemyMonasteries;
+        /// <summary>Enemy monks</summary>
+        protected List<int> enemyMonks;
 
         /// <summary>Pre-computed valid build positions for 3x3 structures</summary>
         protected List<Position> buildPositions;
@@ -97,6 +105,8 @@ namespace AgentSDK
             myArchery = new List<int>();
             myLancers = new List<int>();
             myTowers = new List<int>();
+            myMonasteries = new List<int>();
+            myMonks = new List<int>();
 
             enemyPawns = new List<int>();
             enemyWarriors = new List<int>();
@@ -106,6 +116,8 @@ namespace AgentSDK
             enemyArchery = new List<int>();
             enemyLancers = new List<int>();
             enemyTowers = new List<int>();
+            enemyMonasteries = new List<int>();
+            enemyMonks = new List<int>();
         }
 
         /// <summary>
@@ -153,6 +165,8 @@ namespace AgentSDK
             myArchery = new List<int>(state.GetMyUnits(UnitType.ARCHERY));
             myLancers = new List<int>(state.GetMyUnits(UnitType.LANCER));
             myTowers = new List<int>(state.GetMyUnits(UnitType.TOWER));
+            myMonasteries = new List<int>(state.GetMyUnits(UnitType.MONASTERY));
+            myMonks = new List<int>(state.GetMyUnits(UnitType.MONK));
             myBases = new List<int>(state.GetMyUnits(UnitType.BASE));
             enemyAgentNbr = state.EnemyAgentNbr;
             enemyPawns = new List<int>(state.GetEnemyUnits(UnitType.PAWN));
@@ -162,6 +176,8 @@ namespace AgentSDK
             enemyArchery = new List<int>(state.GetEnemyUnits(UnitType.ARCHERY));
             enemyLancers = new List<int>(state.GetEnemyUnits(UnitType.LANCER));
             enemyTowers = new List<int>(state.GetEnemyUnits(UnitType.TOWER));
+            enemyMonasteries = new List<int>(state.GetEnemyUnits(UnitType.MONASTERY));
+            enemyMonks = new List<int>(state.GetEnemyUnits(UnitType.MONK));
             enemyBases = new List<int>(state.GetEnemyUnits(UnitType.BASE));
         }
     }

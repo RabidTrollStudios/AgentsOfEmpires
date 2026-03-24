@@ -89,6 +89,8 @@ namespace GameManager
                 unit.CanTrain,
                 unit.CanAttack,
                 unit.CanGather,
+                unit.CanHeal,
+                unit.Mana,
                 ownerNbr
             );
         }

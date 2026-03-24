@@ -79,14 +79,23 @@ namespace GameManager.GameElements
 		public Vector3Int GridPosition { get; internal set; }
 
 		/// <summary>
-		/// Center cell of this unit's footprint. Use for distance calculations.
-		/// For 1x1 units equals GridPosition; for 3x3 structures returns GridPosition+(1,-1).
+		/// Center cell of this unit's non-walkable footprint. For buildings with a walkable
+		/// top row, this is the center of the lower (sizeY-1) rows. For 1x1 mobile units
+		/// this equals GridPosition. Used for distance calculations and targeting.
 		/// </summary>
 		internal Vector3Int CenterGridPosition
 		{
 			get
 			{
 				var size = Constants.UNIT_SIZE[UnitType];
+				if (!Constants.CAN_MOVE[UnitType] && size.y > 1)
+				{
+					// Building: center on non-walkable rows (j=1..sizeY-1)
+					// Top-left of non-walkable area is (x, y-1)
+					int nwHeight = size.y - 1;
+					return new Vector3Int(GridPosition.x + (size.x - 1) / 2,
+					                      GridPosition.y - 1 - (nwHeight - 1) / 2, 0);
+				}
 				return new Vector3Int(GridPosition.x + (size.x - 1) / 2,
 				                      GridPosition.y - (size.y - 1) / 2, 0);
 			}
@@ -117,7 +126,7 @@ namespace GameManager.GameElements
 		#region Data Members
 
 		// State Variables
-		private float taskTime;
+		internal float taskTime;
 		private Animator animator;
 
 		// Mining Variables
@@ -128,9 +137,12 @@ namespace GameManager.GameElements
 
 		// Training Variables
 		// Building Variables
-		private UnitType taskUnitType;
+		internal UnitType taskUnitType;
 		private BuildPhase buildPhase;
 		private GameObject currentBuilding;
+
+		// Healing Variables
+		private int healTargetNbr = -1;
 
 		// Attacking Variables
 		private int attackUnitNbr = -1;
@@ -154,6 +166,9 @@ namespace GameManager.GameElements
 		// Red line from attacker to its target
 		private LineRenderer targetLineRenderer;
 		private GameObject targetArrowhead;
+		// Green line from monk to its heal target
+		private LineRenderer healLineRenderer;
+		private GameObject healArrowhead;
 
 		// State indicator squares under unit
 		private SpriteRenderer unitSprite;
@@ -201,9 +216,29 @@ namespace GameManager.GameElements
 		private Transform trainingBarFill;
 		private const float TRAIN_BAR_Y_GAP = 0.35f; // gap below health bar
 
+		// Mana bar (monks only) — positioned below health bar
+		private Transform manaBarFrame;
+		private Transform manaBarFill;
+		private const float MANA_BAR_Y_GAP = 0.22f; // gap below health bar for small bar
+
 		private static Sprite _squareSprite;
 		private static Sprite _healthFillSprite;
 		private static Sprite _bigHealthFillSprite;
+
+		private SpriteRenderer CreateIndicator(string name, Color color, Vector3 center, float size)
+		{
+			var obj = new GameObject(name) { layer = LayerMask.NameToLayer("Units") };
+			obj.transform.SetParent(transform);
+			obj.transform.localPosition = center;
+			obj.transform.localScale = new Vector3(size, size, 1f);
+			var sr = obj.AddComponent<SpriteRenderer>();
+			sr.sprite = GetSquareSprite();
+			sr.color = color;
+			sr.sortingLayerName = "Agents";
+			sr.sortingOrder = 1;
+			sr.enabled = false;
+			return sr;
+		}
 
 		/// <summary>
 		/// Lazily create a shared filled-square sprite for state indicators.
@@ -318,6 +353,21 @@ namespace GameManager.GameElements
 		/// Can this unit gather
 		/// </summary>
 		public bool CanGather => Constants.CAN_GATHER[UnitType];
+
+		/// <summary>
+		/// Can this unit heal allied units
+		/// </summary>
+		public bool CanHeal => Constants.CAN_HEAL[UnitType];
+
+		/// <summary>
+		/// Current mana (0 for units without mana)
+		/// </summary>
+		public float Mana { get; internal set; }
+
+		/// <summary>
+		/// Maximum mana for this unit type
+		/// </summary>
+		public float MaxMana => Constants.MAX_MANA[UnitType];
 
 		/// <summary>
 		/// Which Units does this unit Train
@@ -473,6 +523,7 @@ namespace GameManager.GameElements
 
 			GridPosition = gridPosition;
 			Health = Constants.HEALTH[UnitType];
+			Mana = Constants.MAX_MANA[UnitType];
 			animator = gameObject.GetComponent<Animator>();
 
 			if (animator != null && animator.runtimeAnimatorController != null)
@@ -521,56 +572,65 @@ namespace GameManager.GameElements
 			targetLineRenderer.positionCount = 0;
 			targetArrowhead = CreateArrowhead("TargetArrowhead", Color.red, "UnitUI", 11);
 
+			var healLineObj = new GameObject("HealLine");
+			healLineObj.transform.SetParent(transform);
+			healLineObj.transform.localPosition = Vector3.zero;
+			healLineRenderer = healLineObj.AddComponent<LineRenderer>();
+			healLineRenderer.startWidth = 0.05f;
+			healLineRenderer.endWidth = 0.05f;
+			healLineRenderer.material = new Material(Shader.Find("Sprites/Default"));
+			healLineRenderer.startColor = Color.green;
+			healLineRenderer.endColor = Color.green;
+			healLineRenderer.useWorldSpace = true;
+			healLineRenderer.sortingLayerName = "UnitUI";
+			healLineRenderer.sortingOrder = 1;
+			healLineRenderer.positionCount = 0;
+			healArrowhead = CreateArrowhead("HealArrowhead", Color.green, "UnitUI", 11);
+
 			// Determine indicator colors by agent faction (semi-transparent overlays)
 			bool isRed = agent.GetComponent<AgentController>()?.Agent?.AgentName == Constants.RED_ABBR;
 			moveColor   = isRed ? new Color(0f, 1f, 1f, 0.5f)      : new Color(0f, 0f, 1f, 0.5f);      // cyan / blue
 			actionColor = isRed ? new Color(1f, 0f, 1f, 0.5f)      : new Color(1f, 0f, 0f, 0.5f);      // magenta / red
 			buildColor  = isRed ? new Color(1f, 0.65f, 0f, 0.5f) : new Color(0.8f, 0.25f, 0f, 0.5f);  // light orange / dark orange
 
-			// Square indicator overlays rendered ABOVE the unit sprite (sortingOrder 1 > unit's 0)
-			var attackObj = new GameObject("AttackIndicator") { layer = LayerMask.NameToLayer("Units") };
-			attackObj.transform.SetParent(transform);
-			attackObj.transform.localPosition = Vector3.zero;
-			attackObj.transform.localScale = new Vector3(0.9f, 0.9f, 1f);
-			attackIndicator = attackObj.AddComponent<SpriteRenderer>();
-			attackIndicator.sprite = GetSquareSprite();
-			attackIndicator.color = actionColor;
-			attackIndicator.sortingLayerName = "Agents";
-			attackIndicator.sortingOrder = 1;
-			attackIndicator.enabled = false;
+			// Square indicator overlays: fixed 1x1 world-unit size, centered on the
+			// visible character body (head to feet, excluding shadow/weapons).
+			// The sprite pivot Y varies by unit type, so we compute the visible-body
+			// center as a local-space offset from the pivot (transform origin).
+			Vector3 visibleCenter;
+			if (unitSprite != null)
+			{
+				var sprite = unitSprite.sprite;
+				float ppu = sprite.pixelsPerUnit;
+				var pivot = sprite.pivot;           // in pixels from bottom-left
+				var rect = sprite.rect;             // pixel rect in the texture
 
-			var moveObj = new GameObject("MoveIndicator") { layer = LayerMask.NameToLayer("Units") };
-			moveObj.transform.SetParent(transform);
-			moveObj.transform.localPosition = Vector3.zero;
-			moveObj.transform.localScale = new Vector3(0.9f, 0.9f, 1f);
-			moveIndicator = moveObj.AddComponent<SpriteRenderer>();
-			moveIndicator.sprite = GetSquareSprite();
-			moveIndicator.color = moveColor;
-			moveIndicator.sortingLayerName = "Agents";
-			moveIndicator.sortingOrder = 1;
-			moveIndicator.enabled = false;
+				// Visible-body vertical extent (approximate, excluding shadow at bottom
+				// and weapon overhang at top). These ratios are tuned for TinySwords art.
+				// For 192x192 mobile units (Pawn/Warrior/Archer): body ≈ rows 20-170
+				// For 320x320 Lancer: body ≈ rows 40-280
+				// For buildings: full sprite is fine (pivot y=0.5)
+				float bodyBottomFrac = CanMove ? 0.10f : 0f;
+				float bodyTopFrac    = CanMove ? 0.88f : 1f;
 
-			var gatherObj = new GameObject("GatherIndicator") { layer = LayerMask.NameToLayer("Units") };
-			gatherObj.transform.SetParent(transform);
-			gatherObj.transform.localPosition = Vector3.zero;
-			gatherObj.transform.localScale = new Vector3(0.9f, 0.9f, 1f);
-			gatherIndicator = gatherObj.AddComponent<SpriteRenderer>();
-			gatherIndicator.sprite = GetSquareSprite();
-			gatherIndicator.color = actionColor;
-			gatherIndicator.sortingLayerName = "Agents";
-			gatherIndicator.sortingOrder = 1;
-			gatherIndicator.enabled = false;
+				float bodyBottomPx = rect.height * bodyBottomFrac;
+				float bodyTopPx    = rect.height * bodyTopFrac;
+				float bodyCenterPx = (bodyBottomPx + bodyTopPx) * 0.5f;
 
-			var buildObj = new GameObject("BuildIndicator") { layer = LayerMask.NameToLayer("Units") };
-			buildObj.transform.SetParent(transform);
-			buildObj.transform.localPosition = Vector3.zero;
-			buildObj.transform.localScale = new Vector3(0.9f, 0.9f, 1f);
-			buildIndicator = buildObj.AddComponent<SpriteRenderer>();
-			buildIndicator.sprite = GetSquareSprite();
-			buildIndicator.color = buildColor;
-			buildIndicator.sortingLayerName = "Agents";
-			buildIndicator.sortingOrder = 1;
-			buildIndicator.enabled = false;
+				// Local Y offset: positive = above pivot
+				float localY = (bodyCenterPx - pivot.y) / ppu;
+				visibleCenter = new Vector3(0f, localY, 0f);
+			}
+			else
+			{
+				visibleCenter = Vector3.zero;
+			}
+			float indicatorSize = 1f;
+
+			attackIndicator  = CreateIndicator("AttackIndicator",  actionColor, visibleCenter, indicatorSize);
+			moveIndicator    = CreateIndicator("MoveIndicator",    moveColor,   visibleCenter, indicatorSize);
+			gatherIndicator  = CreateIndicator("GatherIndicator",  actionColor, visibleCenter, indicatorSize);
+			buildIndicator   = CreateIndicator("BuildIndicator",   buildColor,  visibleCenter, indicatorSize);
 
 			// Health bar — small bar for mobile units, big bar for buildings/mines
 			maxHealth = Health;
@@ -598,6 +658,34 @@ namespace GameManager.GameElements
 				fillSr.sortingLayerName = "AgentUI";
 				fillSr.sortingOrder = 31;
 				healthBarFill = fillObj.transform;
+
+				// Mana bar (only for units with mana, e.g. Monk)
+				if (MaxMana > 0)
+				{
+					float manaBarY = SM_BAR_Y_OFFSET - MANA_BAR_Y_GAP;
+					float manaFillY = SM_BAR_FILL_Y_OFFSET - MANA_BAR_Y_GAP;
+
+					var manaBgObj = new GameObject("ManaBarFrame");
+					manaBgObj.transform.SetParent(transform);
+					manaBgObj.transform.localPosition = new Vector3(0f, manaBarY, 0f);
+					manaBgObj.transform.localScale = new Vector3(SM_BAR_SCALE, SM_BAR_SCALE, 1f);
+					var manaBgSr = manaBgObj.AddComponent<SpriteRenderer>();
+					manaBgSr.sprite = GameManager.Instance.SmallBarBase;
+					manaBgSr.sortingLayerName = "AgentUI";
+					manaBgSr.sortingOrder = 30;
+					manaBarFrame = manaBgObj.transform;
+
+					var manaFillObj = new GameObject("ManaBarFill");
+					manaFillObj.transform.SetParent(transform);
+					manaFillObj.transform.localPosition = new Vector3(SM_BAR_FILL_X_OFFSET, manaFillY, 0f);
+					manaFillObj.transform.localScale = new Vector3(SM_BAR_FILL_SCALE_X, SM_BAR_FILL_SCALE_Y, 1f);
+					var manaFillSr = manaFillObj.AddComponent<SpriteRenderer>();
+					manaFillSr.sprite = GetHealthFillSprite();
+					manaFillSr.color = new Color(0.3f, 0.3f, 1f); // blue/purple for mana
+					manaFillSr.sortingLayerName = "AgentUI";
+					manaFillSr.sortingOrder = 31;
+					manaBarFill = manaFillObj.transform;
+				}
 			}
 			else
 			{

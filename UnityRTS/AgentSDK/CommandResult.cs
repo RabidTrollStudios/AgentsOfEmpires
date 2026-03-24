@@ -53,6 +53,9 @@ namespace AgentSDK
 
         /// <summary>The command was throttled because the same unit recently failed
         /// a similar command. Try again after a short delay.</summary>
-        ON_COOLDOWN
+        ON_COOLDOWN,
+
+        /// <summary>The unit does not have enough mana to perform this action.</summary>
+        INSUFFICIENT_MANA
     }
 }

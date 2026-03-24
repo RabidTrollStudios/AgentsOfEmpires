@@ -142,6 +142,21 @@ namespace GameManager.GameElements
 	}
 
 	/// <summary>
+	/// Arguments for the Heal action
+	/// </summary>
+	internal class HealEventArgs : EventArgs
+	{
+		internal HealEventArgs(Unit monk, Unit target)
+		{
+			Monk = monk;
+			Target = target;
+		}
+
+		internal Unit Monk { get; set; }
+		internal Unit Target { get; set; }
+	}
+
+	/// <summary>
 	/// Arguments for the Build action
 	/// </summary>
 	internal class BuildEventArgs : EventArgs

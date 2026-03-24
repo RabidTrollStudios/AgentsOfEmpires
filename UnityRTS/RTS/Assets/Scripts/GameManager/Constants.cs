@@ -178,6 +178,26 @@ namespace GameManager
 		public static readonly Dictionary<UnitType, float> ATTACK_RANGE = new Dictionary<UnitType, float>(GameConstants.ATTACK_RANGE);
 
 		/// <summary>
+		/// Which Units can heal (delegated from SDK)
+		/// </summary>
+		public static readonly Dictionary<UnitType, bool> CAN_HEAL = new Dictionary<UnitType, bool>(GameConstants.CAN_HEAL);
+
+		/// <summary>
+		/// Heal range for each unit (delegated from SDK)
+		/// </summary>
+		public static readonly Dictionary<UnitType, float> HEAL_RANGE = new Dictionary<UnitType, float>(GameConstants.HEAL_RANGE);
+
+		/// <summary>
+		/// Maximum mana for each unit (delegated from SDK)
+		/// </summary>
+		public static readonly Dictionary<UnitType, float> MAX_MANA = new Dictionary<UnitType, float>(GameConstants.MAX_MANA);
+
+		/// <summary>
+		/// Mana regeneration rate per second (scaled by game speed at runtime)
+		/// </summary>
+		internal static float MANA_REGEN;
+
+		/// <summary>
 		/// Raw unit sizes as Vector3Int (converted from SDK Position)
 		/// </summary>
 		public static readonly Dictionary<UnitType, Vector3Int> UNIT_SIZE = ToVector3IntDict(GameConstants.UNIT_SIZE);
@@ -202,6 +222,9 @@ namespace GameManager
 
 		/// <summary>Lancer moves at 3.45x pawn speed (fastest combat unit, cavalry).</summary>
 		private const float LANCER_SPEED_MULTIPLIER = 3.45f;
+
+		/// <summary>Monk moves at 0.85x pawn speed (slow support unit).</summary>
+		private const float MONK_SPEED_MULTIPLIER = 0.85f;
 
 		/// <summary>
         /// Base moving speed (= pawn speed). Multiply by unit speed multipliers for other units.
@@ -282,6 +305,8 @@ namespace GameManager
 			{ UnitType.ARCHERY,     3 },
 			{ UnitType.LANCER,      5 },
 			{ UnitType.TOWER,       3 },
+			{ UnitType.MONASTERY,   3 },
+			{ UnitType.MONK,        3 },
 		};
 
         /// <summary>
@@ -305,6 +330,8 @@ namespace GameManager
 		        { UnitType.ARCHERY,     0.0f },
 		        { UnitType.LANCER,      SCALAR_MOVING_SPEED * LANCER_SPEED_MULTIPLIER },
 		        { UnitType.TOWER,       0.0f },
+		        { UnitType.MONASTERY,   0.0f },
+		        { UnitType.MONK,        SCALAR_MOVING_SPEED * MONK_SPEED_MULTIPLIER },
 	        };
 
 	        SCALAR_MINING_SPEED = GAME_SPEED;
@@ -319,6 +346,8 @@ namespace GameManager
 		        { UnitType.ARCHERY,     0.0f },
 		        { UnitType.LANCER,      0.0f },
 		        { UnitType.TOWER,       0.0f },
+		        { UnitType.MONASTERY,   0.0f },
+		        { UnitType.MONK,        0.0f },
 	        };
 
 	        COST = new Dictionary<UnitType, float>(GameConstants.COST);
@@ -335,6 +364,7 @@ namespace GameManager
 	        foreach (var kvp in GameConstants.BASE_DAMAGE)
 		        DAMAGE[kvp.Key] = kvp.Value * SCALAR_DAMAGE;
 
+	        MANA_REGEN = GameConstants.BASE_MANA_REGEN * GAME_SPEED;
         }
 
         /// <summary>

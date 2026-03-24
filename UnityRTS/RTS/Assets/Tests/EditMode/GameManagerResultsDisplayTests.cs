@@ -33,8 +33,8 @@ namespace GameManager.Tests
 			SetField("Prefabs", null);
 			SetProp("Agents", null);
 			SetProp("AgentWins", null);
-			SetField("BlueCustomDebugText", null);
-			SetField("RedCustomDebugText", null);
+			SetField("blueCustomDebugText", null);
+			SetField("redCustomDebugText", null);
 
 			var stateField = typeof(GameManager).GetField("gameState",
 				BindingFlags.NonPublic | BindingFlags.Instance);
@@ -225,8 +225,8 @@ namespace GameManager.Tests
 			var redText   = MakeText("RedText");
 			blueText.text = "stale";
 			redText.text   = "stale";
-			SetField("BlueCustomDebugText", blueText);
-			SetField("RedCustomDebugText",   redText);
+			SetField("blueCustomDebugText", blueText);
+			SetField("redCustomDebugText",   redText);
 			gm.OnAgentToggleChanged(true); // HasAgentDebugging = true
 
 			var blueGo = MakeAgentGo(Constants.BLUE_ABBR, 0);
@@ -246,8 +246,8 @@ namespace GameManager.Tests
 			var redText   = MakeText("RedText");
 			blueText.text = "stale";
 			redText.text   = "stale";
-			SetField("BlueCustomDebugText", blueText);
-			SetField("RedCustomDebugText",   redText);
+			SetField("blueCustomDebugText", blueText);
+			SetField("redCustomDebugText",   redText);
 			gm.OnAgentToggleChanged(true);
 
 			var redGo = MakeAgentGo(Constants.RED_ABBR, 1);
@@ -264,8 +264,8 @@ namespace GameManager.Tests
 		{
 			var blueText = MakeText("BlueText");
 			blueText.text = "unchanged";
-			SetField("BlueCustomDebugText", blueText);
-			SetField("RedCustomDebugText",   null);
+			SetField("blueCustomDebugText", blueText);
+			SetField("redCustomDebugText",   null);
 			gm.OnAgentToggleChanged(true);
 
 			// Create a GO with AgentController but leave Agent field null (not set via reflection)

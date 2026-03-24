@@ -14,6 +14,7 @@ namespace GameManager.GameElements
 
 		private bool isBuildable;
 		private bool isWalkable;
+		private bool isPassage;
 
 		#region Interface Implementations
 		public void ChangeColor(Color color)
@@ -38,6 +39,20 @@ namespace GameManager.GameElements
 		public void SetWalkable(bool isWalkable)
 		{
 			this.isWalkable = isWalkable;
+		}
+
+		/// <summary>
+		/// A passage cell is walkable but not buildable, and units should move through
+		/// it freely without triggering collision avoidance (e.g., building top rows).
+		/// </summary>
+		public bool IsPassage()
+		{
+			return this.isPassage;
+		}
+
+		public void SetPassage(bool isPassage)
+		{
+			this.isPassage = isPassage;
 		}
 
 		public Vector3 GetPosition()

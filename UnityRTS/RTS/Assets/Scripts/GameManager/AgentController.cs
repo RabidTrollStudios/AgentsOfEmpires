@@ -44,21 +44,85 @@ namespace GameManager
             _debugUpdaters = new Dictionary<string, Func<string>>
             {
                 ["Agent Name"]     = () => $"{Agent.AgentName} {Agent.AgentDLLName}",
-                ["Agent Nbr"]      = () => Agent.AgentNbr.ToString(),
+                ["Agent Nbr"]      = () => $"#{Agent.AgentNbr}",
                 ["Gold Value"]     = () => Agent.Gold.ToString(),
                 ["Pawns Value"]    = () => Count(UnitType.PAWN),
                 ["Warriors Value"] = () => Count(UnitType.WARRIOR),
                 ["Archers Value"]  = () => Count(UnitType.ARCHER),
-                ["Bases Value"]    = () => Count(UnitType.BASE),
+                ["Castles Value"]  = () => Count(UnitType.BASE),
                 ["Barracks Value"] = () => Count(UnitType.BARRACKS),
                 ["Archeries Value"]= () => Count(UnitType.ARCHERY),
                 ["Lancers Value"]  = () => Count(UnitType.LANCER),
                 ["Towers Value"]   = () => Count(UnitType.TOWER),
+                ["Monasteries Value"] = () => Count(UnitType.MONASTERY),
+                ["Monks Value"]    = () => Count(UnitType.MONK),
                 ["Custom Debug"]    = () => (Agent as AgentBridge)?.PlanningAgentDebugText ?? "",
             };
+            // Rename "Category Value" texts to "{RowName} Value" so the updater
+            // dictionary can match them (all rows share the same child names).
+            if (debuggerPanel != null)
+            {
+                var agentData = debuggerPanel.transform.Find("Agent Data");
+                if (agentData != null)
+                {
+                    foreach (Transform row in agentData)
+                    {
+                        var valText = row.Find("Category Value");
+                        if (valText != null)
+                            valText.name = row.name + " Value";
+                    }
+                }
+            }
+
             _debugTextAreas = debuggerPanel != null
                 ? debuggerPanel.GetComponentsInChildren<Text>()
                 : System.Array.Empty<Text>();
+
+            SwapDebugPanelIcons(agentName);
+        }
+
+        private void SwapDebugPanelIcons(string agentName)
+        {
+            if (debuggerPanel == null) return;
+
+            var icons = GameManager.Instance.GetDebugPanelIcons(agentName);
+
+            int swapped = 0;
+            // Walk all descendants — Category Data Row instances are nested inside
+            // "Agent Data" container. Each row's name matches a key in the icons dict.
+            foreach (Transform row in debuggerPanel.GetComponentsInChildren<Transform>())
+            {
+                if (!icons.TryGetValue(row.name, out var sprite))
+                    continue;
+
+                if (sprite == null)
+                {
+                    Debug.LogWarning($"[AgentController] Icon sprite for '{row.name}' is null — assign it on PrefabLoader.");
+                    continue;
+                }
+
+                // The icon is the Image component on the first child (the icon container)
+                if (row.childCount > 0)
+                {
+                    var iconImage = row.GetChild(0).GetComponent<Image>();
+                    if (iconImage != null)
+                    {
+                        iconImage.sprite = sprite;
+                        iconImage.type = Image.Type.Simple;
+                        iconImage.preserveAspect = true;
+
+                        // Keep the container at 20x20; preserveAspect centres and
+                        // aspect-fits the visible pixels within that box.
+                        var rt = iconImage.GetComponent<RectTransform>();
+                        rt.sizeDelta = new Vector2(20f, 20f);
+
+                        swapped++;
+                    }
+                }
+            }
+
+            if (swapped == 0)
+                Debug.LogWarning($"[AgentController] No icons were swapped for {agentName}. Check PrefabLoader sprite assignments.");
         }
 
         /// <summary>

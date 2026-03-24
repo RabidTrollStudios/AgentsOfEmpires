@@ -114,13 +114,26 @@ namespace PlanningAgent.Tests
         // ------------------------------------------------------------------
 
         [Fact]
-        public void SetAreaBuildability_Building_BlocksWalkability()
+        public void SetAreaBuildability_Building_BodyBlocksWalkability()
+        {
+            var map = new SimMap(30, 30);
+            // BASE is 6x4, anchor at (10, 10). Top row = y=10, body rows = y=9,8,7.
+            map.SetAreaBuildability(UnitType.BASE, new Position(10, 10), false);
+
+            // Body row (j=1, y=9) — not buildable and not walkable
+            Assert.False(map.IsPositionBuildable(new Position(10, 9)));
+            Assert.False(map.IsPositionWalkable(new Position(10, 9)));
+        }
+
+        [Fact]
+        public void SetAreaBuildability_Building_TopRowStaysWalkable()
         {
             var map = new SimMap(30, 30);
             map.SetAreaBuildability(UnitType.BASE, new Position(10, 10), false);
 
+            // Top row (j=0, y=10) — not buildable but walkable (units walk behind)
             Assert.False(map.IsPositionBuildable(new Position(10, 10)));
-            Assert.False(map.IsPositionWalkable(new Position(10, 10)));
+            Assert.True(map.IsPositionWalkable(new Position(10, 10)));
         }
 
         [Fact]

@@ -110,6 +110,16 @@ namespace GameManager.GameElements
 				{
 					UpdateRepair();
 				}
+				else if (CurrentAction == UnitAction.HEAL && CanHeal)
+				{
+					UpdateHeal();
+				}
+			}
+
+			// Passive mana regeneration
+			if (MaxMana > 0 && Mana < MaxMana)
+			{
+				Mana = Mathf.Min(Mana + Constants.MANA_REGEN * Time.deltaTime, MaxMana);
 			}
 
 		}
@@ -147,6 +157,7 @@ namespace GameManager.GameElements
 			UpdateStateColor();
 			UpdateHealthBar();
 			UpdateTrainingBar();
+			UpdateManaBar();
 			UpdateBuildPulse();
 		}
 
@@ -201,7 +212,16 @@ namespace GameManager.GameElements
 
 			float ratio;
 			if (!IsBuilt)
+			{
 				ratio = Mathf.Clamp01(BuildProgress / Constants.CREATION_TIME[UnitType]);
+				// Keep sprite opacity in sync with build progress (damage can reduce it)
+				if (unitSprite != null)
+				{
+					var c = unitSprite.color;
+					c.a = 0.3f + ratio * 0.4f;
+					unitSprite.color = c;
+				}
+			}
 			else
 				ratio = Mathf.Clamp01(Health / maxHealth);
 
@@ -330,6 +350,24 @@ namespace GameManager.GameElements
 			trainingBarFill.localScale = new Vector3(fillScaleX, BIG_BAR_FILL_SCALE_Y, 1f);
 			trainingBarFill.localPosition = new Vector3(
 				BIG_BAR_FILL_X_OFFSET + leftEdgeOffset, trainFillY, 0f);
+		}
+
+		/// <summary>
+		/// Scale the mana bar fill based on current mana (monks only).
+		/// </summary>
+		private void UpdateManaBar()
+		{
+			if (manaBarFill == null) return;
+
+			float ratio = MaxMana > 0 ? Mathf.Clamp01(Mana / MaxMana) : 0f;
+			float fillScaleX = SM_BAR_FILL_SCALE_X * ratio;
+			float fullFillW = SM_BAR_FILL_SCALE_X * (82f / 64f);
+			float leftEdgeOffset = fullFillW * (ratio - 1f) * 0.5f;
+
+			float manaFillY = SM_BAR_FILL_Y_OFFSET - MANA_BAR_Y_GAP;
+			manaBarFill.localScale = new Vector3(fillScaleX, SM_BAR_FILL_SCALE_Y, 1f);
+			manaBarFill.localPosition = new Vector3(
+				SM_BAR_FILL_X_OFFSET + leftEdgeOffset, manaFillY, 0f);
 		}
 
 		/// <summary>
@@ -473,6 +511,23 @@ namespace GameManager.GameElements
 				if (unitSprite != null)
 					unitSprite.flipX = !facingRight;
 				return;
+			}
+			else if (UnitType == UnitType.MONK)
+			{
+				switch (CurrentAction)
+				{
+					case UnitAction.MOVE:
+						if (path.Count > 0)
+							state = 1; // Run
+						break;
+
+					case UnitAction.HEAL:
+						if (path.Count > 0)
+							state = 1; // Run (moving toward target)
+						else
+							state = 2; // Heal (in range)
+						break;
+				}
 			}
 			else // PAWN
 			{
@@ -675,9 +730,10 @@ namespace GameManager.GameElements
 			// If we have a path, move along it
 			if (path.Count > 0)
 			{
-				// If the next cell in the path is buildable (truly empty), move forward
+				// If the next cell is free to traverse (buildable or a building-top passage), move forward
 				Vector3Int nextTarget = path[0];
-				if (GameManager.Instance.Map.IsGridPositionBuildable(nextTarget))
+				if (GameManager.Instance.Map.IsGridPositionBuildable(nextTarget)
+				    || GameManager.Instance.Map.IsGridPositionPassage(nextTarget))
 				{
 					localAvoidWaitFrames = 0;
 
@@ -693,8 +749,15 @@ namespace GameManager.GameElements
 					// Move to the target and then move toward the next point
 					if (distToTarget <= Speed)
 					{
-						GameManager.Instance.Map.SetAreaBuildability(gameObject.GetComponent<Unit>().UnitType, nextTarget, false);
-						GameManager.Instance.Map.SetAreaBuildability(gameObject.GetComponent<Unit>().UnitType, GridPosition, true);
+						bool enteringPassage = GameManager.Instance.Map.IsGridPositionPassage(nextTarget);
+						bool leavingPassage = GameManager.Instance.Map.IsGridPositionPassage(GridPosition);
+
+						// Don't claim passage cells (they belong to the building)
+						if (!enteringPassage)
+							GameManager.Instance.Map.SetAreaBuildability(gameObject.GetComponent<Unit>().UnitType, nextTarget, false);
+						// Don't release passage cells (they stay as building top rows)
+						if (!leavingPassage)
+							GameManager.Instance.Map.SetAreaBuildability(gameObject.GetComponent<Unit>().UnitType, GridPosition, true);
 						GridPosition = nextTarget;
 						WorldPosition = nextCenter;
 						path.RemoveAt(0);
@@ -849,6 +912,9 @@ namespace GameManager.GameElements
 								else
 									textArea.text = "";
 								break;
+							case UnitAction.HEAL:
+								textArea.text = Mana.ToString("0");
+								break;
 						}
 					}
 					else if (textArea.name == "Health Value")
@@ -978,30 +1044,57 @@ namespace GameManager.GameElements
 		}
 
 		/// <summary>
-		/// Draw a red line from this unit to its attack target when target line tint is enabled.
+		/// Draw a red line from this unit to its attack target, or a green line
+		/// from a monk to its heal target, when target line tint is enabled.
 		/// </summary>
 		private void UpdateTargetVisualization()
 		{
-			if (targetLineRenderer == null) return;
-
-			bool showLine = GameManager.Instance.HasTargetLineTint
-			             && CurrentAction == UnitAction.ATTACK
-			             && AttackUnit != null;
-
-			// Deactivate/activate the child GameObject — stronger than toggling
-			// the component, ensures no residual rendering in any Unity render path.
-			targetLineRenderer.gameObject.SetActive(showLine);
-			if (!showLine)
+			// --- Attack line (red) ---
+			if (targetLineRenderer != null)
 			{
-				if (targetArrowhead != null) targetArrowhead.SetActive(false);
-				return;
+				bool showAttack = GameManager.Instance.HasTargetLineTint
+				                  && CurrentAction == UnitAction.ATTACK
+				                  && AttackUnit != null;
+
+				targetLineRenderer.gameObject.SetActive(showAttack);
+				if (showAttack)
+				{
+					Vector3 targetPos = AttackUnit.WorldPosition;
+					targetLineRenderer.positionCount = 2;
+					targetLineRenderer.SetPosition(0, WorldPosition);
+					targetLineRenderer.SetPosition(1, targetPos);
+					PositionArrowhead(targetArrowhead, WorldPosition, targetPos);
+				}
+				else if (targetArrowhead != null)
+				{
+					targetArrowhead.SetActive(false);
+				}
 			}
 
-			Vector3 targetPos = AttackUnit.WorldPosition;
-			targetLineRenderer.positionCount = 2;
-			targetLineRenderer.SetPosition(0, WorldPosition);
-			targetLineRenderer.SetPosition(1, targetPos);
-			PositionArrowhead(targetArrowhead, WorldPosition, targetPos);
+			// --- Heal line (green) ---
+			if (healLineRenderer != null)
+			{
+				Unit healTarget = null;
+				if (CurrentAction == UnitAction.HEAL && healTargetNbr >= 0)
+					healTarget = GameManager.Instance.Units.GetUnit(healTargetNbr);
+
+				bool showHeal = GameManager.Instance.HasTargetLineTint
+				                && healTarget != null;
+
+				healLineRenderer.gameObject.SetActive(showHeal);
+				if (showHeal)
+				{
+					Vector3 targetPos = healTarget.WorldPosition;
+					healLineRenderer.positionCount = 2;
+					healLineRenderer.SetPosition(0, WorldPosition);
+					healLineRenderer.SetPosition(1, targetPos);
+					PositionArrowhead(healArrowhead, WorldPosition, targetPos);
+				}
+				else if (healArrowhead != null)
+				{
+					healArrowhead.SetActive(false);
+				}
+			}
 		}
 
 		/// <summary>

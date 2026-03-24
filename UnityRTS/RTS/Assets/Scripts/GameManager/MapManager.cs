@@ -231,6 +231,16 @@ namespace GameManager
 		}
 
 		/// <summary>
+		/// A passage cell is walkable but not buildable, and units should move through
+		/// it freely (e.g., building top rows). Used by movement to distinguish from
+		/// cells temporarily blocked by mobile units.
+		/// </summary>
+		public bool IsGridPositionPassage(Vector3Int position)
+		{
+			return GridCells[position.x, position.y].IsPassage();
+		}
+
+		/// <summary>
 		/// Determines if the unit can be built in that area (based on size of unit)
 		/// </summary>
 		public bool IsAreaBuildable(UnitType unitType, Vector3Int gridPosition)
@@ -474,6 +484,7 @@ namespace GameManager
 		{
 			Vector3Int gridPos = Vector3Int.zero;
 			Vector3Int size = Constants.UNIT_SIZE[unitType];
+			bool canMove = Constants.CAN_MOVE[unitType];
 
 			for (int i = 0; i < size.x; ++i)
 			{
@@ -484,10 +495,22 @@ namespace GameManager
 					if (Utility.IsValidGridLocation(gridPos, MapSize))
 					{
 						GridCells[gridPos.x, gridPos.y].SetBuildable(isBuildable);
-						// Mobile units don't block pathfinding — keep cell walkable
-						if (isBuildable || !Constants.CAN_MOVE[unitType])
+
+						// Walkability rules:
+						// - Clearing (isBuildable=true): restore walkable for all cells
+						// - Mobile units: keep walkable (units can path through each other)
+						// - Building top row (j==0, multi-row): keep walkable (units walk behind the top)
+						// - Building body (remaining rows): block walkability
+						bool isTopRow = j == 0 && size.y > 1;
+						if (isBuildable || (!canMove && !isTopRow))
 							GridCells[gridPos.x, gridPos.y].SetWalkable(isBuildable);
-						// else: mobile unit occupying cell → isBuildable=false, isWalkable stays true
+
+						// Mark building top rows as passages so movement treats them as
+						// free to traverse (not as mobile-unit blockages).
+						if (!canMove && isTopRow)
+							GridCells[gridPos.x, gridPos.y].SetPassage(!isBuildable);
+						else
+							GridCells[gridPos.x, gridPos.y].SetPassage(false);
 					}
 				}
 			}
