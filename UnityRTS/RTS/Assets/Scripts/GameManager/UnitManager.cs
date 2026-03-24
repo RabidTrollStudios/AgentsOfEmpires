@@ -76,12 +76,13 @@ namespace GameManager
 			}
 			else
 			{
-				// Buildings: transform at center of footprint
-				position = gridPosition + new Vector3(Constants.UNIT_SIZE[unitType].x * 0.5f,
-									   1f - Constants.UNIT_SIZE[unitType].y * 0.5f);
-				// Shift mine sprite so the stone bottom (excluding shadow) aligns with the grid bottom
-				if (unitType == UnitType.MINE)
-					position.y -= 1.01f;
+				// Buildings: pivot centered on the non-walkable footprint (lower rows).
+				// Top row (j=0) is walkable so units can walk behind the building's top.
+				// Non-walkable rows: j=1..sizeY-1, spanning y offsets -1 to -(sizeY-1).
+				// Center X: sizeX / 2
+				// Center Y: 0.5 - sizeY / 2  (half cell lower than full-footprint center)
+				var size = Constants.UNIT_SIZE[unitType];
+				position = gridPosition + new Vector3(size.x * 0.5f, 0.5f - size.y * 0.5f);
 			}
 
 			GameObject unit = Object.Instantiate(

@@ -14,6 +14,7 @@ namespace AgentTestHarness
     {
         private readonly bool[,] buildable;
         private readonly bool[,] walkable;
+        private readonly bool[,] passage;
 
         public int Width { get; }
         public int Height { get; }
@@ -25,6 +26,7 @@ namespace AgentTestHarness
             Height = height;
             buildable = new bool[width, height];
             walkable = new bool[width, height];
+            passage = new bool[width, height];
 
             for (int x = 0; x < width; x++)
             {
@@ -51,6 +53,15 @@ namespace AgentTestHarness
         public bool IsPositionWalkable(Position p)
         {
             return IsPositionValid(p) && walkable[p.X, p.Y];
+        }
+
+        /// <summary>
+        /// A passage cell is walkable but not buildable, and units move through it
+        /// freely (e.g., building top rows). Not treated as a mobile-unit blockage.
+        /// </summary>
+        public bool IsPositionPassage(Position p)
+        {
+            return IsPositionValid(p) && passage[p.X, p.Y];
         }
 
         /// <summary>
@@ -112,9 +123,18 @@ namespace AgentTestHarness
                     if (IsPositionValid(cell))
                     {
                         buildable[cell.X, cell.Y] = isBuildable;
-                        // Mobile units don't block pathfinding
-                        if (isBuildable || !canMove)
+
+                        // Walkability rules:
+                        // - Clearing (isBuildable=true): restore walkable for all cells
+                        // - Mobile units: keep walkable (units can path through each other)
+                        // - Building top row (j==0, multi-row): keep walkable (walk behind top)
+                        // - Building body (remaining rows): block walkability
+                        bool isTopRow = j == 0 && size.Y > 1;
+                        if (isBuildable || (!canMove && !isTopRow))
                             walkable[cell.X, cell.Y] = isBuildable;
+
+                        // Mark building top rows as passages so movement treats them as free
+                        passage[cell.X, cell.Y] = !canMove && isTopRow && !isBuildable;
                     }
                 }
             }

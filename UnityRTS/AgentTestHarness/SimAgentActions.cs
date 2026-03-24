@@ -15,6 +15,7 @@ namespace AgentTestHarness
         Train,
         Attack,
         Repair,
+        Heal,
         Log
     }
 
@@ -190,6 +191,30 @@ namespace AgentTestHarness
                 Type = CommandType.Repair,
                 UnitNbr = pawnNbr,
                 TargetUnitNbr = buildingNbr
+            });
+            return CommandResult.SUCCESS;
+        }
+
+        public CommandResult Heal(int monkNbr, int targetNbr)
+        {
+            if (!game.Units.TryGetValue(monkNbr, out var monk)) return CommandResult.UNIT_NOT_FOUND;
+            if (monk.OwnerAgentNbr != agentNbr) return CommandResult.UNIT_NOT_FOUND;
+            if (!GameConstants.CAN_HEAL[monk.UnitType]) return CommandResult.UNIT_CANNOT_PERFORM_ACTION;
+
+            if (monk.Mana < GameConstants.MANA_COST) return CommandResult.INSUFFICIENT_MANA;
+
+            if (!game.Units.TryGetValue(targetNbr, out var target)) return CommandResult.TARGET_NOT_FOUND;
+            if (target.OwnerAgentNbr != agentNbr) return CommandResult.INVALID_TARGET;
+            if (!GameConstants.CAN_MOVE[target.UnitType]) return CommandResult.INVALID_TARGET;
+
+            float targetMaxHealth = GameConstants.HEALTH[target.UnitType];
+            if (target.Health / targetMaxHealth > GameConstants.HEAL_THRESHOLD) return CommandResult.INVALID_TARGET;
+
+            PendingCommands.Add(new SimCommand
+            {
+                Type = CommandType.Heal,
+                UnitNbr = monkNbr,
+                TargetUnitNbr = targetNbr
             });
             return CommandResult.SUCCESS;
         }

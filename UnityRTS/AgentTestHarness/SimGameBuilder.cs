@@ -17,7 +17,7 @@ namespace AgentTestHarness
     /// <summary>
     /// Fluent builder for constructing SimGame test scenarios.
     ///
-    /// Usage:
+    /// Usage (manual map):
     ///   var game = new SimGameBuilder()
     ///       .WithMapSize(30, 30)
     ///       .WithGold(0, 5000)
@@ -25,6 +25,13 @@ namespace AgentTestHarness
     ///       .WithMine(new Position(15, 15))
     ///       .WithAgent(0, myAgent)
     ///       .WithAgent(1, new DoNothingAgent())
+    ///       .Build();
+    ///
+    /// Usage (generated map):
+    ///   var game = new SimGameBuilder()
+    ///       .WithGeneratedMap(42, MapTemplate.OpenField)
+    ///       .WithGold(0, 5000)
+    ///       .WithAgent(0, myAgent)
     ///       .Build();
     /// </summary>
     public class SimGameBuilder
@@ -35,6 +42,7 @@ namespace AgentTestHarness
         private readonly List<(Position from, Position to)> walls = new List<(Position, Position)>();
         private int? gold0;
         private int? gold1;
+        private MapGeneratorConfig generatedMapConfig;
 
         private struct UnitSpec
         {
@@ -114,17 +122,59 @@ namespace AgentTestHarness
             return this;
         }
 
+        /// <summary>
+        /// Use a procedurally generated map. Automatically places starting pawns and mines.
+        /// Map size is taken from the generator config (defaults to the builder's map size).
+        /// Additional units can still be placed via WithUnit after this call.
+        /// </summary>
+        public SimGameBuilder WithGeneratedMap(int seed, MapTemplate template)
+        {
+            generatedMapConfig = new MapGeneratorConfig
+            {
+                Seed = seed,
+                Template = template,
+                Width = config.MapWidth,
+                Height = config.MapHeight
+            };
+            return this;
+        }
+
+        /// <summary>
+        /// Use a procedurally generated map with full configuration control.
+        /// </summary>
+        public SimGameBuilder WithGeneratedMap(MapGeneratorConfig mapConfig)
+        {
+            generatedMapConfig = mapConfig;
+            return this;
+        }
+
         /// <summary>Build the SimGame with all configured state.</summary>
         public SimGame Build()
         {
-            var map = new SimMap(config.MapWidth, config.MapHeight);
+            SimMap map;
+            MapGeneratorResult genResult = null;
+
+            if (generatedMapConfig != null)
+            {
+                // Sync config dimensions with the generator config
+                config.MapWidth = generatedMapConfig.Width;
+                config.MapHeight = generatedMapConfig.Height;
+
+                genResult = new MapGenerator().Generate(generatedMapConfig);
+                map = genResult.Map;
+            }
+            else
+            {
+                map = new SimMap(config.MapWidth, config.MapHeight);
+            }
+
             var game = new SimGame(config, map);
 
             // Override gold if specified
             if (gold0.HasValue) game.Gold[0] = gold0.Value;
             if (gold1.HasValue) game.Gold[1] = gold1.Value;
 
-            // Place walls
+            // Place walls (for manual maps)
             foreach (var (from, to) in walls)
             {
                 int minX = from.X < to.X ? from.X : to.X;
@@ -137,7 +187,19 @@ namespace AgentTestHarness
                         map.SetCellBlocked(new Position(x, y));
             }
 
-            // Place units
+            // Place spawns and mines from generated map
+            if (genResult != null)
+            {
+                for (int i = 0; i < genResult.SpawnPositions.Length; i++)
+                    game.PlaceUnit(i, UnitType.PAWN, genResult.SpawnPositions[i],
+                        GameConstants.HEALTH[UnitType.PAWN], true);
+
+                for (int i = 0; i < genResult.MinePositions.Length; i++)
+                    game.PlaceUnit(-1, UnitType.MINE, genResult.MinePositions[i],
+                        config.StartingMineGold, true);
+            }
+
+            // Place additional manually-specified units
             foreach (var spec in unitSpecs)
             {
                 game.PlaceUnit(spec.OwnerAgentNbr, spec.UnitType, spec.Position, spec.Health, spec.IsBuilt);

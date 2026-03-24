@@ -16,7 +16,7 @@ namespace Preloader
     /// </summary>
 	public class PrefabLoader : MonoBehaviour
 	{
-		#region Prefabs
+		#region Unit & Player Prefabs
 
 		/// <summary>
         /// Blue Player Prefab
@@ -69,6 +69,14 @@ namespace Preloader
 		/// Blue Tower Prefab
 		/// </summary>
 		public GameObject BlueTowerPrefab;
+		/// <summary>
+		/// Blue Monastery Prefab
+		/// </summary>
+		public GameObject BlueMonasteryPrefab;
+		/// <summary>
+		/// Blue Monk Prefab
+		/// </summary>
+		public GameObject BlueMonkPrefab;
 
 		/// <summary>
         /// Red Pawn prefab
@@ -111,11 +119,23 @@ namespace Preloader
 		/// Red Tower Prefab
 		/// </summary>
 		public GameObject RedTowerPrefab;
+		/// <summary>
+		/// Red Monastery Prefab
+		/// </summary>
+		public GameObject RedMonasteryPrefab;
+		/// <summary>
+		/// Red Monk Prefab
+		/// </summary>
+		public GameObject RedMonkPrefab;
 
 		/// <summary>
         /// Mine Prefab
         /// </summary>
 		public GameObject MinePrefab;
+
+		#endregion
+
+		#region VFX & Sprites
 
 		/// <summary>
 		/// Arrow sprite for archer projectiles
@@ -138,6 +158,11 @@ namespace Preloader
 		public RuntimeAnimatorController Fire1AnimatorController;
 		public RuntimeAnimatorController Fire2AnimatorController;
 		public RuntimeAnimatorController Fire3AnimatorController;
+
+		/// <summary>
+		/// Heal effect animator controller for monk healing
+		/// </summary>
+		public RuntimeAnimatorController HealEffectAnimatorController;
 
 		/// <summary>
 		/// Dust 2 animator controller for unit death effect
@@ -164,46 +189,100 @@ namespace Preloader
 		/// </summary>
 		public Sprite BigBarBase;
 
-		/// <summary>
-        /// Speed Textbox
-        /// </summary>
-		public Text SpeedText;
-        /// <summary>
-        /// Timer Textbox
-        /// </summary>
-		public Text TimerText;
-        /// <summary>
-        /// Blue label textbox (displays DLL name)
-        /// </summary>
-		[FormerlySerializedAs("HumanLabel")]
-        public Text BlueLabelText;
-        /// <summary>
-        /// Blue score textbox
-        /// </summary>
-		[FormerlySerializedAs("HumanScoreText")]
-        public Text BlueScoreText;
-        /// <summary>
-        /// Red label textbox (displays DLL name)
-        /// </summary>
-		[FormerlySerializedAs("OrcLabel")]
-        public Text RedLabelText;
-        /// <summary>
-        /// Red Score textbox
-        /// </summary>
-		[FormerlySerializedAs("OrcScoreText")]
-        public Text RedScoreText;
-        /// <summary>
-        /// Game Over UI
-        /// </summary>
+		#endregion
+
+		#region Procedural Map Tiles
+
+		[Header("Procedural Map Tiles")]
+		[Tooltip("Ground tile for procedural generation (e.g. FlatGround_color1 RuleTile)")]
+		public TileBase GroundTile;
+
+		[Tooltip("Tree tile variants (1–4) for procedural grove rendering")]
+		public TileBase[] TreeTiles = new TileBase[0];
+
+		[Tooltip("Optional water background tile for procedural maps")]
+		public TileBase WaterTile;
+
+		[Tooltip("Animated shore/foam tile placed under edge ground tiles (e.g. Water Tile animated)")]
+		public TileBase WaterEffectTile;
+
+		#endregion
+
+		#region HUD UI
+
+		[NonSerialized] public Text SpeedText;
+		[NonSerialized] public Text TimerText;
 		public GameObject GameOverUI;
-        /// <summary>
-        /// Grid
-        /// </summary>
 		public GameObject Grid;
-        /// <summary>
-        /// Unit Debugger Prefab
-        /// </summary>
+
+		[Header("Score Ribbons")]
+		public Sprite BlueSmallRibbon;
+		public Sprite BlueSmallRibbonInner;
+		public Sprite RedSmallRibbon;
+		public Sprite RedSmallRibbonInner;
+		public Sprite BlackSmallRibbon;
+		public Sprite BlackSmallRibbonInner;
+
+		// Runtime-populated by InstantiateScoreboard
+		[NonSerialized] public Text BlueLabelText;
+		[NonSerialized] public Text BlueScoreText;
+		[NonSerialized] public Text RedLabelText;
+		[NonSerialized] public Text RedScoreText;
+
+		#endregion
+
+		#region Agent Debugging Panel
+
+		[Header("Agent Debugging Panel")]
+		public GameObject AgentDebuggingPanelPrefab;
+		public Transform UnitInfoCanvas;
 		public GameObject UnitDebuggerPrefab;
+
+		[Header("Blue Debug Panel Icons")]
+		public Sprite BluePawnIcon;
+		public Sprite BlueWarriorIcon;
+		public Sprite BlueArcherIcon;
+		public Sprite BlueLancerIcon;
+		public Sprite BlueCastleIcon;
+		public Sprite BlueBarracksIcon;
+		public Sprite BlueArcheryIcon;
+		public Sprite BlueTowerIcon;
+		public Sprite BlueMonasteryIcon;
+		public Sprite BlueMonkIcon;
+
+		[Header("Red Debug Panel Icons")]
+		public Sprite RedPawnIcon;
+		public Sprite RedWarriorIcon;
+		public Sprite RedArcherIcon;
+		public Sprite RedLancerIcon;
+		public Sprite RedCastleIcon;
+		public Sprite RedBarracksIcon;
+		public Sprite RedArcheryIcon;
+		public Sprite RedTowerIcon;
+		public Sprite RedMonasteryIcon;
+		public Sprite RedMonkIcon;
+
+		/// <summary>
+		/// Returns the icon sprite mapping for the given agent color.
+		/// Keys match the Category Data Row names in the Agent Debugging Panel.
+		/// </summary>
+		public Dictionary<string, Sprite> GetIconsForAgent(string agentName)
+		{
+			bool isBlue = agentName == GameManager.Constants.BLUE_ABBR;
+			return new Dictionary<string, Sprite>
+			{
+				["Pawns"]    = isBlue ? BluePawnIcon    : RedPawnIcon,
+				["Warriors"] = isBlue ? BlueWarriorIcon : RedWarriorIcon,
+				["Archers"]  = isBlue ? BlueArcherIcon  : RedArcherIcon,
+				["Lancers"]  = isBlue ? BlueLancerIcon  : RedLancerIcon,
+				["Castles"]  = isBlue ? BlueCastleIcon  : RedCastleIcon,
+				["Barracks"] = isBlue ? BlueBarracksIcon: RedBarracksIcon,
+				["Archeries"]= isBlue ? BlueArcheryIcon : RedArcheryIcon,
+				["Towers"]   = isBlue ? BlueTowerIcon   : RedTowerIcon,
+				["Monasteries"] = isBlue ? BlueMonasteryIcon : RedMonasteryIcon,
+				["Monks"]    = isBlue ? BlueMonkIcon    : RedMonkIcon,
+			};
+		}
 
 		#endregion
 	}

@@ -38,6 +38,9 @@ namespace AgentTestHarness
                     case UnitAction.REPAIR:
                         AdvanceRepair(unit);
                         break;
+                    case UnitAction.HEAL:
+                        AdvanceHeal(unit);
+                        break;
                 }
             }
         }
@@ -75,19 +78,24 @@ namespace AgentTestHarness
 
             Position nextPos = unit.Path[unit.PathIndex];
 
-            // Phase 1: Next cell is buildable (truly empty) — move forward normally
-            if (Map.IsPositionBuildable(nextPos))
+            // Phase 1: Next cell is free to traverse (buildable or a building-top passage)
+            if (Map.IsPositionBuildable(nextPos) || Map.IsPositionPassage(nextPos))
             {
                 unit.MoveAccumulator -= 1.0f;
                 unit.LocalAvoidWaitTicks = 0;
 
-                if (GameConstants.CAN_MOVE[unit.UnitType])
+                bool leavingPassage = Map.IsPositionPassage(unit.GridPosition);
+                bool enteringPassage = Map.IsPositionPassage(nextPos);
+
+                // Don't release passage cells (they belong to the building)
+                if (!leavingPassage && GameConstants.CAN_MOVE[unit.UnitType])
                     Map.SetAreaBuildability(unit.UnitType, unit.GridPosition, true);
 
                 unit.GridPosition = nextPos;
                 unit.PathIndex++;
 
-                if (GameConstants.CAN_MOVE[unit.UnitType])
+                // Don't claim passage cells
+                if (!enteringPassage && GameConstants.CAN_MOVE[unit.UnitType])
                     Map.SetAreaBuildability(unit.UnitType, unit.GridPosition, false);
 
                 if (unit.PathIndex >= unit.Path.Count)
@@ -182,7 +190,7 @@ namespace AgentTestHarness
             int resumeIndex = -1;
             for (int i = unit.PathIndex + 1; i < unit.Path.Count; i++)
             {
-                if (Map.IsPositionBuildable(unit.Path[i]))
+                if (Map.IsPositionBuildable(unit.Path[i]) || Map.IsPositionPassage(unit.Path[i]))
                 {
                     resumeIndex = i;
                     break;
@@ -514,6 +522,68 @@ namespace AgentTestHarness
                 }
             }
             return closest;
+        }
+
+        #endregion
+
+        #region Healing
+
+        private void AdvanceHeal(SimUnit monk)
+        {
+            if (!Units.TryGetValue(monk.HealTargetNbr, out var target) || target.Health <= 0)
+            {
+                monk.CurrentAction = UnitAction.IDLE;
+                monk.Path = null;
+                return;
+            }
+
+            float healRange = GameConstants.HEAL_RANGE[monk.UnitType];
+            float dist = Position.Distance(monk.CenterPosition, target.CenterPosition);
+
+            if (dist <= healRange + 0.5f)
+            {
+                // In range — check mana and threshold
+                if (monk.Mana < GameConstants.MANA_COST)
+                {
+                    monk.CurrentAction = UnitAction.IDLE;
+                    monk.Path = null;
+                    return;
+                }
+
+                float targetMaxHealth = GameConstants.HEALTH[target.UnitType];
+                if (target.Health / targetMaxHealth > GameConstants.HEAL_THRESHOLD)
+                {
+                    monk.CurrentAction = UnitAction.IDLE;
+                    monk.Path = null;
+                    return;
+                }
+
+                // Apply heal
+                float healAmount = targetMaxHealth * GameConstants.HEAL_FRACTION;
+                target.Health = Math.Min(target.Health + healAmount, targetMaxHealth);
+                monk.Mana -= GameConstants.MANA_COST;
+
+                monk.CurrentAction = UnitAction.IDLE;
+                monk.Path = null;
+            }
+            else
+            {
+                // Out of range — move closer
+                if (monk.Path != null && monk.PathIndex < monk.Path.Count)
+                {
+                    MoveUnitOneStep(monk);
+                    monk.CurrentAction = UnitAction.HEAL;
+                }
+                else
+                {
+                    var path = Map.FindPathToUnit(monk.GridPosition, target.UnitType, target.GridPosition);
+                    if (path.Count > 0)
+                    {
+                        monk.Path = path;
+                        monk.PathIndex = 0;
+                    }
+                }
+            }
         }
 
         #endregion

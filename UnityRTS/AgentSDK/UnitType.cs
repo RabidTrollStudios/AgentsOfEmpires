@@ -23,5 +23,9 @@ namespace AgentSDK
         LANCER,
         /// <summary>Defensive tower structure - unlocks lancer training</summary>
         TOWER,
+        /// <summary>Religious structure - trains monks</summary>
+        MONASTERY,
+        /// <summary>Support healer unit - heals allied units, cannot attack</summary>
+        MONK,
     }
 }

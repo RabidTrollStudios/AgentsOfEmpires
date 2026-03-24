@@ -59,6 +59,10 @@ namespace AgentTestHarness
         // Local avoidance state — how many ticks the unit has waited for a blocker to clear
         internal int LocalAvoidWaitTicks;
 
+        // Heal state
+        internal int HealTargetNbr;
+        public float Mana { get; set; }
+
         public SimUnit(int unitNbr, UnitType unitType, int ownerAgentNbr, Position gridPosition, float health, bool isBuilt)
         {
             UnitNbr = unitNbr;
@@ -72,6 +76,8 @@ namespace AgentTestHarness
             RepairBuildingNbr = -1;
             GatherMineNbr = -1;
             GatherBaseNbr = -1;
+            HealTargetNbr = -1;
+            Mana = GameConstants.MAX_MANA[unitType];
         }
 
         /// <summary>
@@ -83,6 +89,13 @@ namespace AgentTestHarness
             get
             {
                 var size = GameConstants.UNIT_SIZE[UnitType];
+                if (!GameConstants.CAN_MOVE[UnitType] && size.Y > 1)
+                {
+                    // Building: center on non-walkable rows (skip walkable top row)
+                    var nwAnchor = new Position(GridPosition.X, GridPosition.Y - 1);
+                    var nwSize = new Position(size.X, size.Y - 1);
+                    return Position.Center(nwAnchor, nwSize);
+                }
                 return Position.Center(GridPosition, size);
             }
         }
@@ -104,6 +117,8 @@ namespace AgentTestHarness
                 GameConstants.CAN_TRAIN[UnitType],
                 GameConstants.CAN_ATTACK[UnitType],
                 GameConstants.CAN_GATHER[UnitType],
+                GameConstants.CAN_HEAL[UnitType],
+                Mana,
                 OwnerAgentNbr
             );
         }

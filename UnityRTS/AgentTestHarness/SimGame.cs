@@ -43,6 +43,7 @@ namespace AgentTestHarness
         internal Dictionary<UnitType, float> damage;
         internal float miningSpeed; // gold per second for PAWN
         internal float miningCapacity; // gold per trip
+        internal float manaRegen; // mana per second
 
         internal SimGame(SimConfig config, SimMap map)
         {
@@ -76,6 +77,7 @@ namespace AgentTestHarness
 
             miningSpeed = gs * 20f; // gold per second
             miningCapacity = GameConstants.MINING_CAPACITY[UnitType.PAWN];
+            manaRegen = GameConstants.BASE_MANA_REGEN * gs;
         }
 
         #region Agent Setup
@@ -164,6 +166,14 @@ namespace AgentTestHarness
 
             // 3. Advance in-progress tasks
             AdvanceAllUnits();
+
+            // 3b. Regenerate mana for units with mana pools
+            foreach (var unit in Units.Values)
+            {
+                float maxMana = GameConstants.MAX_MANA[unit.UnitType];
+                if (maxMana > 0 && unit.Mana < maxMana)
+                    unit.Mana = System.Math.Min(unit.Mana + manaRegen * Config.TickDuration, maxMana);
+            }
 
             // 4. Remove dead units
             RemoveDeadUnits();

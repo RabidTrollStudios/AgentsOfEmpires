@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using AgentSDK;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -136,16 +137,53 @@ namespace GameManager
 
 			if (speedUp && Constants.GAME_SPEED < Constants.MAX_GAME_SPEED)
 			{
+				var oldCreationTimes = new Dictionary<UnitType, float>(Constants.CREATION_TIME);
 				Constants.GAME_SPEED++;
 				Log("Increasing GameSpeed: " + Constants.GAME_SPEED, gameObject);
 				Constants.CalculateGameConstants();
+				RescaleBuildProgress(oldCreationTimes);
 			}
 
 			if (speedDown && Constants.GAME_SPEED > 1)
 			{
+				var oldCreationTimes = new Dictionary<UnitType, float>(Constants.CREATION_TIME);
 				Constants.GAME_SPEED--;
 				Log("Decreasing GameSpeed: " + Constants.GAME_SPEED, gameObject);
 				Constants.CalculateGameConstants();
+				RescaleBuildProgress(oldCreationTimes);
+			}
+		}
+
+		/// <summary>
+		/// When game speed changes, rescale BuildProgress and taskTime on all units
+		/// so progress bar ratios stay the same. Without this, changing speed makes
+		/// bars jump because progress / newCreationTime ≠ progress / oldCreationTime.
+		/// </summary>
+		private void RescaleBuildProgress(Dictionary<UnitType, float> oldCreationTimes)
+		{
+			foreach (var kvp in unitManager.GetAllUnits())
+			{
+				var unit = kvp.Value.GetComponent<GameElements.Unit>();
+				if (unit == null) continue;
+
+				// Rescale building construction progress
+				if (!unit.IsBuilt)
+				{
+					float oldTime = oldCreationTimes.ContainsKey(unit.UnitType) ? oldCreationTimes[unit.UnitType] : 1f;
+					float newTime = Constants.CREATION_TIME.ContainsKey(unit.UnitType) ? Constants.CREATION_TIME[unit.UnitType] : 1f;
+					if (oldTime > 0f)
+						unit.BuildProgress = unit.BuildProgress / oldTime * newTime;
+				}
+
+				// Rescale training timer (taskTime uses taskUnitType's creation time)
+				if (unit.CurrentAction == UnitAction.TRAIN)
+				{
+					var tt = unit.taskUnitType;
+					float oldTime = oldCreationTimes.ContainsKey(tt) ? oldCreationTimes[tt] : 1f;
+					float newTime = Constants.CREATION_TIME.ContainsKey(tt) ? Constants.CREATION_TIME[tt] : 1f;
+					if (oldTime > 0f)
+						unit.taskTime = unit.taskTime / oldTime * newTime;
+				}
 			}
 		}
 
@@ -228,12 +266,12 @@ namespace GameManager
 
 		private void UpdateCustomDebugUI()
 		{
-			if (BlueCustomDebugText == null && RedCustomDebugText == null) return;
+			if (blueCustomDebugText == null && redCustomDebugText == null) return;
 
 			if (!HasAgentDebugging || Agents == null || Agents.Count == 0)
 			{
-				if (BlueCustomDebugText != null) BlueCustomDebugText.text = "";
-				if (RedCustomDebugText != null) RedCustomDebugText.text = "";
+				if (blueCustomDebugText != null) blueCustomDebugText.text = "";
+				if (redCustomDebugText != null) redCustomDebugText.text = "";
 				return;
 			}
 
@@ -249,10 +287,10 @@ namespace GameManager
 					? ""
 					: controller.Agent.AgentDLLName + "\n" + debugText;
 
-				if (controller.Agent.AgentName == Constants.BLUE_ABBR && BlueCustomDebugText != null)
-					BlueCustomDebugText.text = display;
-				else if (controller.Agent.AgentName == Constants.RED_ABBR && RedCustomDebugText != null)
-					RedCustomDebugText.text = display;
+				if (controller.Agent.AgentName == Constants.BLUE_ABBR && blueCustomDebugText != null)
+					blueCustomDebugText.text = display;
+				else if (controller.Agent.AgentName == Constants.RED_ABBR && redCustomDebugText != null)
+					redCustomDebugText.text = display;
 			}
 		}
 
