@@ -59,6 +59,9 @@
             <summary>The command was throttled because the same unit recently failed
             a similar command. Try again after a short delay.</summary>
         </member>
+        <member name="F:AgentSDK.CommandResult.INSUFFICIENT_MANA">
+            <summary>The unit does not have enough mana to perform this action.</summary>
+        </member>
         <member name="T:AgentSDK.GameConstants">
             <summary>
             Game balance constants. These are the authoritative values used by the game engine.
@@ -144,6 +147,27 @@
         <member name="F:AgentSDK.GameConstants.CAN_GATHER">
             <summary>Which unit types can gather resources</summary>
         </member>
+        <member name="F:AgentSDK.GameConstants.CAN_HEAL">
+            <summary>Which unit types can heal allied units</summary>
+        </member>
+        <member name="F:AgentSDK.GameConstants.HEAL_RANGE">
+            <summary>Heal range for each unit type (in grid units)</summary>
+        </member>
+        <member name="F:AgentSDK.GameConstants.MAX_MANA">
+            <summary>Maximum mana pool for each unit type</summary>
+        </member>
+        <member name="F:AgentSDK.GameConstants.MANA_COST">
+            <summary>Mana cost per heal action (25% of max mana)</summary>
+        </member>
+        <member name="F:AgentSDK.GameConstants.BASE_MANA_REGEN">
+            <summary>Base mana regeneration rate (scaled by game speed)</summary>
+        </member>
+        <member name="F:AgentSDK.GameConstants.HEAL_FRACTION">
+            <summary>Fraction of target's max health restored per heal</summary>
+        </member>
+        <member name="F:AgentSDK.GameConstants.HEAL_THRESHOLD">
+            <summary>Target must be at or below this fraction of max health to be healed</summary>
+        </member>
         <member name="M:AgentSDK.GameConstants.EffectiveAttackRange(AgentSDK.UnitType,AgentSDK.UnitType)">
             <summary>
             Compute effective attack range against a target, accounting for target unit size.
@@ -217,6 +241,16 @@
             </summary>
             <param name="pawnNbr">The pawn unit that will repair</param>
             <param name="buildingNbr">The building to repair</param>
+            <returns>Success if the command was dispatched, or a failure code.</returns>
+        </member>
+        <member name="M:AgentSDK.IAgentActions.Heal(System.Int32,System.Int32)">
+            <summary>
+            Command a monk to heal a friendly unit.
+            The target must be a friendly mobile unit at or below 80% health.
+            The monk must have sufficient mana.
+            </summary>
+            <param name="monkNbr">Your monk unit</param>
+            <param name="targetNbr">The friendly unit to heal</param>
             <returns>Success if the command was dispatched, or a failure code.</returns>
         </member>
         <member name="M:AgentSDK.IAgentActions.Log(System.String)">
@@ -404,6 +438,12 @@
         <member name="F:AgentSDK.PlanningAgentBase.myTowers">
             <summary>Your towers</summary>
         </member>
+        <member name="F:AgentSDK.PlanningAgentBase.myMonasteries">
+            <summary>Your monasteries</summary>
+        </member>
+        <member name="F:AgentSDK.PlanningAgentBase.myMonks">
+            <summary>Your monks</summary>
+        </member>
         <member name="F:AgentSDK.PlanningAgentBase.enemyPawns">
             <summary>Enemy pawns</summary>
         </member>
@@ -427,6 +467,12 @@
         </member>
         <member name="F:AgentSDK.PlanningAgentBase.enemyTowers">
             <summary>Enemy towers</summary>
+        </member>
+        <member name="F:AgentSDK.PlanningAgentBase.enemyMonasteries">
+            <summary>Enemy monasteries</summary>
+        </member>
+        <member name="F:AgentSDK.PlanningAgentBase.enemyMonks">
+            <summary>Enemy monks</summary>
         </member>
         <member name="F:AgentSDK.PlanningAgentBase.buildPositions">
             <summary>Pre-computed valid build positions for 3x3 structures</summary>
@@ -552,6 +598,9 @@
         <member name="F:AgentSDK.UnitAction.REPAIR">
             <summary>Repairing a damaged building</summary>
         </member>
+        <member name="F:AgentSDK.UnitAction.HEAL">
+            <summary>Healing an allied unit</summary>
+        </member>
         <member name="T:AgentSDK.UnitInfo">
             <summary>
             Read-only snapshot of a unit's current state.
@@ -591,6 +640,12 @@
         <member name="P:AgentSDK.UnitInfo.CanGather">
             <summary>Whether this unit type can gather resources</summary>
         </member>
+        <member name="P:AgentSDK.UnitInfo.CanHeal">
+            <summary>Whether this unit type can heal allied units</summary>
+        </member>
+        <member name="P:AgentSDK.UnitInfo.Mana">
+            <summary>Current mana (0 for units without mana)</summary>
+        </member>
         <member name="P:AgentSDK.UnitInfo.OwnerAgentNbr">
             <summary>Agent number of the unit's owner</summary>
         </member>
@@ -602,7 +657,7 @@
             For 3x3 structures (bases, barracks, mines, refineries) this is GridPosition+(1,-1).
             </summary>
         </member>
-        <member name="M:AgentSDK.UnitInfo.#ctor(System.Int32,AgentSDK.UnitType,AgentSDK.Position,System.Single,System.Boolean,AgentSDK.UnitAction,System.Boolean,System.Boolean,System.Boolean,System.Boolean,System.Boolean,System.Int32)">
+        <member name="M:AgentSDK.UnitInfo.#ctor(System.Int32,AgentSDK.UnitType,AgentSDK.Position,System.Single,System.Boolean,AgentSDK.UnitAction,System.Boolean,System.Boolean,System.Boolean,System.Boolean,System.Boolean,System.Boolean,System.Single,System.Int32)">
             <summary>Create a new UnitInfo snapshot</summary>
         </member>
         <member name="T:AgentSDK.UnitType">
@@ -636,6 +691,12 @@
         </member>
         <member name="F:AgentSDK.UnitType.TOWER">
             <summary>Defensive tower structure - unlocks lancer training</summary>
+        </member>
+        <member name="F:AgentSDK.UnitType.MONASTERY">
+            <summary>Religious structure - trains monks</summary>
+        </member>
+        <member name="F:AgentSDK.UnitType.MONK">
+            <summary>Support healer unit - heals allied units, cannot attack</summary>
         </member>
     </members>
 </doc>

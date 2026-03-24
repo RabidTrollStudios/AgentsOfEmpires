@@ -15,6 +15,15 @@ using Random = UnityEngine.Random;
 
 namespace GameManager
 {
+	/// <summary>Whether to use a hand-made tilemap or a procedurally generated map.</summary>
+	public enum MapMode { HandMade, Procedural }
+
+	/// <summary>Procedural map layout template.</summary>
+	public enum MapTemplate { OpenField, Maze, Forest }
+
+	/// <summary>Symmetry enforcement for procedural maps.</summary>
+	public enum MapSymmetryMode { None, Mirror, Rotational }
+
 	/// <summary>
 	/// Orchestrates the game: manages match/round lifecycle, agents, and delegates
 	/// to specialized managers for map, units, events, and DLL loading.
@@ -91,6 +100,53 @@ namespace GameManager
 		[SerializeField] public bool EnableLearning = true;
 
 		/// <summary>
+		/// Whether to use a hand-made tilemap or procedural generation.
+		/// </summary>
+		[Header("Map Configuration")]
+		[SerializeField] private MapMode mapMode = MapMode.HandMade;
+
+		/// <summary>
+		/// Index into MapPrefabs for hand-made mode. 0 = scene Grid (default).
+		/// </summary>
+		[SerializeField] private int selectedMapIndex;
+
+		/// <summary>
+		/// Grid prefabs available for hand-made map selection.
+		/// </summary>
+		[SerializeField] private GameObject[] mapPrefabs = new GameObject[0];
+
+		/// <summary>
+		/// Width of the procedural map in cells.
+		/// </summary>
+		[SerializeField] private int mapWidth = 30;
+
+		/// <summary>
+		/// Height of the procedural map in cells.
+		/// </summary>
+		[SerializeField] private int mapHeight = 30;
+
+		/// <summary>
+		/// Procedural map layout template.
+		/// </summary>
+		[SerializeField] private MapTemplate mapTemplate = MapTemplate.OpenField;
+
+		/// <summary>
+		/// Fraction of the map covered by tree obstacles.
+		/// Max depends on template: OpenField=0.20, Forest=0.35, Maze=0.35.
+		/// </summary>
+		[SerializeField] private float treeDensity = 0.15f;
+
+		/// <summary>
+		/// Random seed for deterministic procedural generation.
+		/// </summary>
+		[SerializeField] private int mapSeed = 42;
+
+		/// <summary>
+		/// Symmetry enforcement for procedural maps.
+		/// </summary>
+		[SerializeField] private MapSymmetryMode mapSymmetry = MapSymmetryMode.Mirror;
+
+		/// <summary>
 		/// Loader for all the game prefabs
 		/// </summary>
 		[Header("Prefabs")]
@@ -107,23 +163,11 @@ namespace GameManager
 		[SerializeField] private Toggle PathTintToggle;
 		[SerializeField] private Toggle TargetLineTintToggle;
 
-		[Header("Debug Info")]
-		/// <summary>
-		/// Blue Debugger Panel
-		/// </summary>
-		[FormerlySerializedAs("HumanDebuggerPanel")]
-		[SerializeField] private GameObject BlueDebuggerPanel;
-
-		/// <summary>
-		/// Red Debugger Panel
-		/// </summary>
-		[FormerlySerializedAs("OrcDebuggerPanel")]
-		[SerializeField] private GameObject RedDebuggerPanel;
-
-		[FormerlySerializedAs("HumanCustomDebugText")]
-		[SerializeField] private Text BlueCustomDebugText;
-		[FormerlySerializedAs("OrcCustomDebugText")]
-		[SerializeField] private Text RedCustomDebugText;
+		// Runtime-instantiated debug panels (created in InitializeMatch)
+		private GameObject blueDebuggerPanel;
+		private GameObject redDebuggerPanel;
+		private Text blueCustomDebugText;
+		private Text redCustomDebugText;
 
 		#endregion
 
@@ -220,6 +264,11 @@ namespace GameManager
 		};
 
 		/// <summary>
+		/// Heal effect animator controller for monk healing
+		/// </summary>
+		public RuntimeAnimatorController HealEffectAnimatorController => Prefabs.HealEffectAnimatorController;
+
+		/// <summary>
 		/// Dust 2 animator controller for unit death effect
 		/// </summary>
 		public RuntimeAnimatorController Dust2AnimatorController => Prefabs.Dust2AnimatorController;
@@ -232,6 +281,8 @@ namespace GameManager
 		public Sprite SmallBarBase => Prefabs.SmallBarBase;
 		public Sprite SmallBarFill => Prefabs.SmallBarFill;
 		public Sprite BigBarBase => Prefabs.BigBarBase;
+
+		public Dictionary<string, Sprite> GetDebugPanelIcons(string agentName) => Prefabs.GetIconsForAgent(agentName);
 
 		#endregion
 
@@ -284,6 +335,10 @@ namespace GameManager
 		private UnitManager unitManager;
 		private EventDispatcher eventDispatcher;
 		private AgentLoader agentLoader;
+
+		// Procedural map state (set during InitializeMatch if mapMode == Procedural)
+		private ProceduralMapResult proceduralMapResult;
+		private GameObject runtimeGrid; // The Grid created/instantiated at runtime (if any)
 
 		// Input
 		private InputSystem_Actions _input;
@@ -347,6 +402,8 @@ namespace GameManager
 				{ UnitType.ARCHERY, Prefabs.RedArcheryPrefab },
 				{ UnitType.LANCER, Prefabs.RedLancerPrefab },
 				{ UnitType.TOWER, Prefabs.RedTowerPrefab },
+				{ UnitType.MONASTERY, Prefabs.RedMonasteryPrefab },
+				{ UnitType.MONK, Prefabs.RedMonkPrefab },
 			};
 
 			unitManager.BlueUnitPrefabs = new Dictionary<UnitType, GameObject>()
@@ -360,6 +417,8 @@ namespace GameManager
 				{ UnitType.ARCHERY, Prefabs.BlueArcheryPrefab },
 				{ UnitType.LANCER, Prefabs.BlueLancerPrefab },
 				{ UnitType.TOWER, Prefabs.BlueTowerPrefab },
+				{ UnitType.MONASTERY, Prefabs.BlueMonasteryPrefab },
+				{ UnitType.MONK, Prefabs.BlueMonkPrefab },
 			};
 
 			InitializeMatch();

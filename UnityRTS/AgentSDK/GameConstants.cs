@@ -30,6 +30,8 @@ namespace AgentSDK
                 { UnitType.ARCHERY,     SCALAR_COST * 7 },
                 { UnitType.LANCER,      70f },
                 { UnitType.TOWER,       SCALAR_COST * 6 },
+                { UnitType.MONASTERY,   SCALAR_COST * 7 },
+                { UnitType.MONK,        90f },
             });
 
         /// <summary>
@@ -49,6 +51,8 @@ namespace AgentSDK
                 { UnitType.ARCHERY,     4000.0f },
                 { UnitType.LANCER,      900.0f },
                 { UnitType.TOWER,       3000.0f },
+                { UnitType.MONASTERY,   3500.0f },
+                { UnitType.MONK,        400.0f },
             });
 
         /// <summary>
@@ -66,6 +70,8 @@ namespace AgentSDK
                 { UnitType.ARCHERY,     0.0f },
                 { UnitType.LANCER,      0.0f },
                 { UnitType.TOWER,       0.0f },
+                { UnitType.MONASTERY,   0.0f },
+                { UnitType.MONK,        0.0f },
             });
 
         /// <summary>
@@ -83,6 +89,8 @@ namespace AgentSDK
                 { UnitType.ARCHERY,     0f },
                 { UnitType.LANCER,      42f },
                 { UnitType.TOWER,       0f },
+                { UnitType.MONASTERY,   0f },
+                { UnitType.MONK,        0f },
             });
 
         /// <summary>
@@ -100,6 +108,8 @@ namespace AgentSDK
                 { UnitType.ARCHERY,     18f },
                 { UnitType.LANCER,      4f },
                 { UnitType.TOWER,       15f },
+                { UnitType.MONASTERY,   18f },
+                { UnitType.MONK,        5f },
             });
 
         /// <summary>
@@ -117,6 +127,8 @@ namespace AgentSDK
                 { UnitType.ARCHERY,     0.0f },
                 { UnitType.LANCER,      2.5f },
                 { UnitType.TOWER,       0.0f },
+                { UnitType.MONASTERY,   0.0f },
+                { UnitType.MONK,        0.0f },
             });
 
         /// <summary>
@@ -135,6 +147,8 @@ namespace AgentSDK
                 { UnitType.ARCHERY,     0.0f },
                 { UnitType.LANCER,      1.15f },
                 { UnitType.TOWER,       0.0f },
+                { UnitType.MONASTERY,   0.0f },
+                { UnitType.MONK,        0.85f },
             });
 
         /// <summary>
@@ -152,6 +166,8 @@ namespace AgentSDK
                 { UnitType.ARCHERY,     new Position(3, 3) },
                 { UnitType.LANCER,      new Position(1, 1) },
                 { UnitType.TOWER,       new Position(2, 2) },
+                { UnitType.MONASTERY,   new Position(3, 3) },
+                { UnitType.MONK,        new Position(1, 1) },
             });
 
         /// <summary>
@@ -169,6 +185,8 @@ namespace AgentSDK
                 { UnitType.ARCHERY,     new List<UnitType>() { UnitType.BASE } },
                 { UnitType.LANCER,      new List<UnitType>() { UnitType.TOWER } },
                 { UnitType.TOWER,       new List<UnitType>() { UnitType.BASE } },
+                { UnitType.MONASTERY,   new List<UnitType>() { UnitType.BASE } },
+                { UnitType.MONK,        new List<UnitType>() { UnitType.MONASTERY } },
             });
 
         /// <summary>
@@ -178,7 +196,7 @@ namespace AgentSDK
             new ReadOnlyDictionary<UnitType, IReadOnlyList<UnitType>>(new Dictionary<UnitType, IReadOnlyList<UnitType>>()
             {
                 { UnitType.MINE,        new List<UnitType>() },
-                { UnitType.PAWN,      new List<UnitType>() { UnitType.BASE, UnitType.BARRACKS, UnitType.ARCHERY, UnitType.TOWER } },
+                { UnitType.PAWN,      new List<UnitType>() { UnitType.BASE, UnitType.BARRACKS, UnitType.ARCHERY, UnitType.TOWER, UnitType.MONASTERY } },
                 { UnitType.WARRIOR,     new List<UnitType>() },
                 { UnitType.ARCHER,      new List<UnitType>() },
                 { UnitType.BASE,        new List<UnitType>() },
@@ -186,6 +204,8 @@ namespace AgentSDK
                 { UnitType.ARCHERY,     new List<UnitType>() },
                 { UnitType.LANCER,      new List<UnitType>() },
                 { UnitType.TOWER,       new List<UnitType>() },
+                { UnitType.MONASTERY,   new List<UnitType>() },
+                { UnitType.MONK,        new List<UnitType>() },
             });
 
         /// <summary>
@@ -203,6 +223,8 @@ namespace AgentSDK
                 { UnitType.ARCHERY,     new List<UnitType>() { UnitType.ARCHER } },
                 { UnitType.LANCER,      new List<UnitType>() },
                 { UnitType.TOWER,       new List<UnitType>() { UnitType.LANCER } },
+                { UnitType.MONASTERY,   new List<UnitType>() { UnitType.MONK } },
+                { UnitType.MONK,        new List<UnitType>() },
             });
 
         /// <summary>Which unit types can move</summary>
@@ -212,6 +234,7 @@ namespace AgentSDK
                 { UnitType.MINE, false }, { UnitType.PAWN, true }, { UnitType.WARRIOR, true },
                 { UnitType.ARCHER, true }, { UnitType.BASE, false }, { UnitType.BARRACKS, false },
                 { UnitType.ARCHERY, false }, { UnitType.LANCER, true }, { UnitType.TOWER, false },
+                { UnitType.MONASTERY, false }, { UnitType.MONK, true },
             });
 
         /// <summary>Which unit types can build structures</summary>
@@ -221,6 +244,7 @@ namespace AgentSDK
                 { UnitType.MINE, false }, { UnitType.PAWN, true }, { UnitType.WARRIOR, false },
                 { UnitType.ARCHER, false }, { UnitType.BASE, false }, { UnitType.BARRACKS, false },
                 { UnitType.ARCHERY, false }, { UnitType.LANCER, false }, { UnitType.TOWER, false },
+                { UnitType.MONASTERY, false }, { UnitType.MONK, false },
             });
 
         /// <summary>Which unit types can train units</summary>
@@ -230,6 +254,7 @@ namespace AgentSDK
                 { UnitType.MINE, false }, { UnitType.PAWN, false }, { UnitType.WARRIOR, false },
                 { UnitType.ARCHER, false }, { UnitType.BASE, true }, { UnitType.BARRACKS, true },
                 { UnitType.ARCHERY, true }, { UnitType.LANCER, false }, { UnitType.TOWER, true },
+                { UnitType.MONASTERY, true }, { UnitType.MONK, false },
             });
 
         /// <summary>Which unit types can attack</summary>
@@ -239,6 +264,7 @@ namespace AgentSDK
                 { UnitType.MINE, false }, { UnitType.PAWN, false }, { UnitType.WARRIOR, true },
                 { UnitType.ARCHER, true }, { UnitType.BASE, false }, { UnitType.BARRACKS, false },
                 { UnitType.ARCHERY, false }, { UnitType.LANCER, true }, { UnitType.TOWER, false },
+                { UnitType.MONASTERY, false }, { UnitType.MONK, false },
             });
 
         /// <summary>Which unit types can gather resources</summary>
@@ -248,7 +274,51 @@ namespace AgentSDK
                 { UnitType.MINE, false }, { UnitType.PAWN, true }, { UnitType.WARRIOR, false },
                 { UnitType.ARCHER, false }, { UnitType.BASE, false }, { UnitType.BARRACKS, false },
                 { UnitType.ARCHERY, false }, { UnitType.LANCER, false }, { UnitType.TOWER, false },
+                { UnitType.MONASTERY, false }, { UnitType.MONK, false },
             });
+
+        /// <summary>Which unit types can heal allied units</summary>
+        public static readonly ReadOnlyDictionary<UnitType, bool> CAN_HEAL =
+            new ReadOnlyDictionary<UnitType, bool>(new Dictionary<UnitType, bool>()
+            {
+                { UnitType.MINE, false }, { UnitType.PAWN, false }, { UnitType.WARRIOR, false },
+                { UnitType.ARCHER, false }, { UnitType.BASE, false }, { UnitType.BARRACKS, false },
+                { UnitType.ARCHERY, false }, { UnitType.LANCER, false }, { UnitType.TOWER, false },
+                { UnitType.MONASTERY, false }, { UnitType.MONK, true },
+            });
+
+        /// <summary>Heal range for each unit type (in grid units)</summary>
+        public static readonly ReadOnlyDictionary<UnitType, float> HEAL_RANGE =
+            new ReadOnlyDictionary<UnitType, float>(new Dictionary<UnitType, float>()
+            {
+                { UnitType.MINE, 0f }, { UnitType.PAWN, 0f }, { UnitType.WARRIOR, 0f },
+                { UnitType.ARCHER, 0f }, { UnitType.BASE, 0f }, { UnitType.BARRACKS, 0f },
+                { UnitType.ARCHERY, 0f }, { UnitType.LANCER, 0f }, { UnitType.TOWER, 0f },
+                { UnitType.MONASTERY, 0f }, { UnitType.MONK, 4.0f },
+            });
+
+        /// <summary>Maximum mana pool for each unit type</summary>
+        public static readonly ReadOnlyDictionary<UnitType, float> MAX_MANA =
+            new ReadOnlyDictionary<UnitType, float>(new Dictionary<UnitType, float>()
+            {
+                { UnitType.MINE, 0f }, { UnitType.PAWN, 0f }, { UnitType.WARRIOR, 0f },
+                { UnitType.ARCHER, 0f }, { UnitType.BASE, 0f }, { UnitType.BARRACKS, 0f },
+                { UnitType.ARCHERY, 0f }, { UnitType.LANCER, 0f }, { UnitType.TOWER, 0f },
+                { UnitType.MONASTERY, 0f }, { UnitType.MONK, 100f },
+            });
+
+        /// <summary>Mana cost per heal action (25% of max mana)</summary>
+        public static readonly float MANA_COST = 25f;
+
+        /// <summary>Base mana regeneration rate (scaled by game speed)</summary>
+        /// <summary>Base mana regeneration rate (scaled by game speed). Full pool (100) in ~3s at speed 20.</summary>
+        public static readonly float BASE_MANA_REGEN = 100f / 60f;
+
+        /// <summary>Fraction of target's max health restored per heal</summary>
+        public static readonly float HEAL_FRACTION = 0.50f;
+
+        /// <summary>Target must be at or below this fraction of max health to be healed</summary>
+        public static readonly float HEAL_THRESHOLD = 0.80f;
 
         /// <summary>
         /// Compute effective attack range against a target, accounting for target unit size.

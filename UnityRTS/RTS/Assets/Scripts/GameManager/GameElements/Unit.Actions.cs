@@ -360,6 +360,71 @@ namespace GameManager.GameElements
 			}
 		}
 
+		/// <summary>
+		/// Start healing an allied unit
+		/// </summary>
+		internal void StartHealing(HealEventArgs args)
+		{
+			if (CurrentAction == UnitAction.BUILD || CurrentAction == UnitAction.REPAIR)
+			{
+				GetCmdLog()?.LogCommand("HEAL", $"MONK#{UnitNbr} -> target#{args.Target?.GetComponent<Unit>()?.UnitNbr}",
+					$"EXEC_FAILED: unit is {CurrentAction}");
+				return;
+			}
+
+			if (!CanHeal)
+			{
+				GetCmdLog()?.LogCommand("HEAL", $"{UnitType}#{UnitNbr} -> target#{args.Target?.GetComponent<Unit>()?.UnitNbr}",
+					"EXEC_FAILED: unit can't heal");
+				return;
+			}
+
+			if (Mana < GameConstants.MANA_COST)
+			{
+				GetCmdLog()?.LogCommand("HEAL", $"MONK#{UnitNbr} -> target#{args.Target?.GetComponent<Unit>()?.UnitNbr}",
+					$"EXEC_FAILED: insufficient mana ({Mana:F0}/{GameConstants.MANA_COST})");
+				return;
+			}
+
+			var targetUnit = args.Target.GetComponent<Unit>();
+			pathFailCount = 0;
+			pathBackoffMultiplier = 1;
+
+			// Check if already within heal range
+			float dist = DistanceToClosestCell(targetUnit);
+			float healRange = Constants.HEAL_RANGE[UnitType];
+
+			if (dist < healRange + 0.5f)
+			{
+				path.Clear();
+				TargetGridPos = targetUnit.GridPosition;
+				TargetUnitType = targetUnit.UnitType;
+				CurrentAction = UnitAction.HEAL;
+				healTargetNbr = targetUnit.UnitNbr;
+				GetCmdLog()?.LogCommand("HEAL", $"MONK#{UnitNbr} at {GridPosition} -> {targetUnit.UnitType}#{targetUnit.UnitNbr} at {targetUnit.GridPosition}",
+					$"STARTED (already in range, dist={dist:F1})");
+			}
+			else
+			{
+				UpdatePath(GridPosition, targetUnit.UnitType, targetUnit.GridPosition, forceImmediate: true);
+
+				if (path.Count > 0)
+				{
+					TargetGridPos = targetUnit.GridPosition;
+					TargetUnitType = targetUnit.UnitType;
+					CurrentAction = UnitAction.HEAL;
+					healTargetNbr = targetUnit.UnitNbr;
+					GetCmdLog()?.LogCommand("HEAL", $"MONK#{UnitNbr} at {GridPosition} -> {targetUnit.UnitType}#{targetUnit.UnitNbr} at {targetUnit.GridPosition}",
+						$"STARTED (path={path.Count} steps)");
+				}
+				else
+				{
+					GetCmdLog()?.LogCommand("HEAL", $"MONK#{UnitNbr} at {GridPosition} -> {targetUnit.UnitType}#{targetUnit.UnitNbr} at {targetUnit.GridPosition}",
+						"EXEC_FAILED: no path found to target");
+				}
+			}
+		}
+
 		#endregion
 	}
 }

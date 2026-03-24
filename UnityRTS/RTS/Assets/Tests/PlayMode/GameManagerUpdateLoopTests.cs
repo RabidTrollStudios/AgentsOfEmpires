@@ -258,8 +258,8 @@ namespace GameManager.Tests.PlayMode
 			GM.TotalGameTime = 0f;
 			GM.MaxNbrOfSeconds = 300;
 
-			SetField("BlueCustomDebugText", null);
-			SetField("RedCustomDebugText", null);
+			SetField("blueCustomDebugText", null);
+			SetField("redCustomDebugText", null);
 
 			InvokePrivate("InitializeDebugToggles");
 			SetGameState(1); // PLAYING
@@ -321,8 +321,8 @@ namespace GameManager.Tests.PlayMode
 			GM.MaxNbrOfSeconds = 300;
 			GM.EnableLearning = true;
 
-			SetField("BlueCustomDebugText", null);
-			SetField("RedCustomDebugText", null);
+			SetField("blueCustomDebugText", null);
+			SetField("redCustomDebugText", null);
 
 			InvokePrivate("InitializeDebugToggles");
 			SetGameState(1); // PLAYING
@@ -775,8 +775,8 @@ namespace GameManager.Tests.PlayMode
 			var redText = MakeText("RedDebug");
 			blueText.text = "stale";
 			redText.text = "stale";
-			SetField("BlueCustomDebugText", blueText);
-			SetField("RedCustomDebugText", redText);
+			SetField("blueCustomDebugText", blueText);
+			SetField("redCustomDebugText", redText);
 
 			GM.OnAgentToggleChanged(true);
 
@@ -790,8 +790,8 @@ namespace GameManager.Tests.PlayMode
 			Assert.AreEqual("", redText.text,
 				"RedCustomDebugText should be empty when PlanningAgentDebugText is empty");
 
-			SetField("BlueCustomDebugText", null);
-			SetField("RedCustomDebugText", null);
+			SetField("blueCustomDebugText", null);
+			SetField("redCustomDebugText", null);
 		}
 
 		// ── SetAllAgentsInactive ─────────────────────────────────────────────
@@ -1005,8 +1005,8 @@ namespace GameManager.Tests.PlayMode
 
 			var blueText = MakeText("BlueDebug");
 			var redText = MakeText("RedDebug");
-			SetField("BlueCustomDebugText", blueText);
-			SetField("RedCustomDebugText", redText);
+			SetField("blueCustomDebugText", blueText);
+			SetField("redCustomDebugText", redText);
 
 			GM.OnAgentToggleChanged(true);
 
@@ -1024,8 +1024,8 @@ namespace GameManager.Tests.PlayMode
 			Assert.AreEqual("", redText.text,
 				"RedCustomDebugText should be empty when PlanningAgentDebugText is empty");
 
-			SetField("BlueCustomDebugText", null);
-			SetField("RedCustomDebugText", null);
+			SetField("blueCustomDebugText", null);
+			SetField("redCustomDebugText", null);
 		}
 
 		/// <summary>

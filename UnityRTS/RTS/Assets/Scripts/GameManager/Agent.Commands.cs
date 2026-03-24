@@ -256,6 +256,56 @@ namespace GameManager
 			return CommandResult.SUCCESS;
 		}
 
+		/// <summary>
+		/// Command a monk to heal a friendly unit
+		/// </summary>
+		/// <param name="unit">the monk unit</param>
+		/// <param name="target">the friendly unit to heal</param>
+		public CommandResult Heal(Unit unit, Unit target)
+		{
+			if (unit == null)
+			{
+				CmdLog?.LogCommand("HEAL", "unit=null", "FAILED: unit is null");
+				return CommandResult.UNIT_NOT_FOUND;
+			}
+			if (target == null)
+			{
+				CmdLog?.LogCommand("HEAL", $"{unit.UnitType}#{unit.UnitNbr}", "FAILED: target is null");
+				return CommandResult.TARGET_NOT_FOUND;
+			}
+			if (!unit.CanHeal)
+			{
+				CmdLog?.LogCommand("HEAL", $"{unit.UnitType}#{unit.UnitNbr} -> {target.UnitType}#{target.UnitNbr}", "FAILED: unit can't heal");
+				return CommandResult.UNIT_CANNOT_PERFORM_ACTION;
+			}
+			if (!target.CanMove)
+			{
+				CmdLog?.LogCommand("HEAL", $"{unit.UnitType}#{unit.UnitNbr} -> {target.UnitType}#{target.UnitNbr}", "FAILED: can only heal mobile units");
+				return CommandResult.INVALID_TARGET;
+			}
+			if (unit.Agent.GetComponent<AgentController>().Agent.AgentNbr
+				!= target.Agent.GetComponent<AgentController>().Agent.AgentNbr)
+			{
+				CmdLog?.LogCommand("HEAL", $"{unit.UnitType}#{unit.UnitNbr} -> {target.UnitType}#{target.UnitNbr}", "FAILED: can only heal own units");
+				return CommandResult.INVALID_TARGET;
+			}
+			if (unit.Mana < GameConstants.MANA_COST)
+			{
+				CmdLog?.LogCommand("HEAL", $"{unit.UnitType}#{unit.UnitNbr} -> {target.UnitType}#{target.UnitNbr}", $"FAILED: insufficient mana ({unit.Mana:F0}/{GameConstants.MANA_COST})");
+				return CommandResult.INSUFFICIENT_MANA;
+			}
+			float targetMaxHealth = Constants.HEALTH[target.UnitType];
+			if (target.Health / targetMaxHealth > GameConstants.HEAL_THRESHOLD)
+			{
+				CmdLog?.LogCommand("HEAL", $"{unit.UnitType}#{unit.UnitNbr} -> {target.UnitType}#{target.UnitNbr}", $"FAILED: target health above {GameConstants.HEAL_THRESHOLD * 100}%");
+				return CommandResult.INVALID_TARGET;
+			}
+
+			CmdLog?.LogCommand("HEAL", $"MONK#{unit.UnitNbr} at {unit.GridPosition} -> {target.UnitType}#{target.UnitNbr} at {target.GridPosition}", "SUCCESS (dispatched)");
+			GameManager.Instance.Events.HealEventHandler(this, new HealEventArgs(unit, target));
+			return CommandResult.SUCCESS;
+		}
+
 		#endregion
 	}
 }

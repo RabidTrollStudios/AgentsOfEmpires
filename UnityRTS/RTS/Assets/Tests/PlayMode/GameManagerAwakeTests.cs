@@ -289,8 +289,8 @@ namespace GameManager.Tests.PlayMode
 			var grid = MakeGrid(72, 42);
 			var prefabs = MakeFullPrefabLoader(grid);
 			SetField(gm, "Prefabs", prefabs);
-			SetField(gm, "BlueCustomDebugText", MakeText("BlueDebug_" + goName));
-			SetField(gm, "RedCustomDebugText", MakeText("RedDebug_" + goName));
+			SetField(gm, "blueCustomDebugText", MakeText("BlueDebug_" + goName));
+			SetField(gm, "redCustomDebugText", MakeText("RedDebug_" + goName));
 
 			return (gmGo, gm, prefabs);
 		}

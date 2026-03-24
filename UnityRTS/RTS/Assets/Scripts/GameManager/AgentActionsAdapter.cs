@@ -189,6 +189,25 @@ namespace GameManager
             return ProcessResult(pawnNbr, agent.Repair(pawn, building));
         }
 
+        public CommandResult Heal(int monkNbr, int targetNbr)
+        {
+            if (IsOnCooldown(monkNbr))
+            {
+                agent.CmdLog?.LogCommand("HEAL", $"monk#{monkNbr} -> target#{targetNbr}", "THROTTLED: on cooldown");
+                return CommandResult.ON_COOLDOWN;
+            }
+            var monk = unitManager.GetUnit(monkNbr);
+            var target = unitManager.GetUnit(targetNbr);
+            if (monk == null || target == null)
+                return ProcessResult(monkNbr, monk == null ? CommandResult.UNIT_NOT_FOUND : CommandResult.TARGET_NOT_FOUND);
+
+            // Skip redundant heal commands
+            if (monk.CurrentAction == UnitAction.HEAL)
+                return CommandResult.SUCCESS;
+
+            return ProcessResult(monkNbr, agent.Heal(monk, target));
+        }
+
         public void Log(string message)
         {
             agent.Log(message);

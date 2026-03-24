@@ -18,6 +18,8 @@ namespace AgentSDK
         /// <summary>Attacking a target</summary>
         ATTACK,
         /// <summary>Repairing a damaged building</summary>
-        REPAIR
+        REPAIR,
+        /// <summary>Healing an allied unit</summary>
+        HEAL
     }
 }

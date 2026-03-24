@@ -37,7 +37,6 @@ namespace GameManager.GameElements
 				if (damage > 1)
 				{
 					int dmg = (int)damage;
-<<<<<<< HEAD
 					if (!attackTarget.IsBuilt)
 					{
 						// Unbuilt buildings: damage reduces construction progress.
@@ -56,16 +55,11 @@ namespace GameManager.GameElements
 					}
 					totalDamage += damage;
 					damage -= dmg;
-=======
-					attackTarget.Health -= dmg;
-					totalDamage += damage;
-					damage -= dmg;
 
 					// Record damage analytics for attacker and defender
 					GetRoundStats()?.RecordDamageDealt(dmg);
 					var defenderStats = attackTarget.Agent?.GetComponent<AgentController>()?.Agent?.Analytics?.CurrentRound;
 					defenderStats?.RecordDamageReceived(dmg);
->>>>>>> main
 				}
 
 				// Spawn arrow projectile on frame 5 of the shoot animation (once per loop)
@@ -568,6 +562,83 @@ namespace GameManager.GameElements
 					CurrentAction = UnitAction.IDLE;
 				}
 			}
+		}
+
+		/// <summary>
+		/// Update the heal task — move toward target then apply heal when in range.
+		/// </summary>
+		private void UpdateHeal()
+		{
+			var healTarget = GameManager.Instance.Units.GetUnit(healTargetNbr);
+			if (healTarget == null || healTarget.Health <= 0)
+			{
+				path.Clear();
+				CurrentAction = UnitAction.IDLE;
+				healTargetNbr = -1;
+				return;
+			}
+
+			float dist = DistanceToClosestCell(healTarget);
+			float healRange = Constants.HEAL_RANGE[UnitType];
+
+			if (dist < healRange + 0.5f)
+			{
+				path.Clear();
+
+				// Check mana before healing
+				if (Mana < GameConstants.MANA_COST)
+				{
+					CurrentAction = UnitAction.IDLE;
+					healTargetNbr = -1;
+					return;
+				}
+
+				// Check target health threshold (must be at or below 80%)
+				float targetMaxHealth = Constants.HEALTH[healTarget.UnitType];
+				if (healTarget.Health / targetMaxHealth > GameConstants.HEAL_THRESHOLD)
+				{
+					CurrentAction = UnitAction.IDLE;
+					healTargetNbr = -1;
+					return;
+				}
+
+				// Apply heal
+				float healAmount = targetMaxHealth * GameConstants.HEAL_FRACTION;
+				healTarget.Health = Mathf.Min(healTarget.Health + healAmount, targetMaxHealth);
+				Mana -= GameConstants.MANA_COST;
+
+				// Spawn heal VFX on target
+				SpawnHealEffect(healTarget);
+
+				GetCmdLog()?.LogCommand("HEAL", $"MONK#{UnitNbr} -> {healTarget.UnitType}#{healTarget.UnitNbr}",
+					$"HEALED ({healAmount:F0} HP, target now {healTarget.Health:F0}/{targetMaxHealth:F0}, mana={Mana:F0})");
+
+				CurrentAction = UnitAction.IDLE;
+				healTargetNbr = -1;
+			}
+		}
+
+		/// <summary>
+		/// Spawn a heal VFX on the target unit.
+		/// </summary>
+		private void SpawnHealEffect(Unit target)
+		{
+			var controller = GameManager.Instance.HealEffectAnimatorController;
+			if (controller == null) return;
+
+			var healGo = new GameObject("HealEffect");
+			healGo.transform.position = target.transform.position + new Vector3(0f, 0.5f, 0f);
+			healGo.transform.localScale = Vector3.one;
+
+			var sr = healGo.AddComponent<SpriteRenderer>();
+			sr.sortingLayerName = "UnitUI";
+			sr.sortingOrder = 25;
+
+			var anim = healGo.AddComponent<Animator>();
+			anim.runtimeAnimatorController = controller;
+
+			// Auto-destroy after 1 second (animation duration)
+			Object.Destroy(healGo, 1.1f);
 		}
 	}
 }
