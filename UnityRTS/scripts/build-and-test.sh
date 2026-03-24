@@ -12,4 +12,8 @@ echo "=== Running tests ==="
 "$SCRIPT_DIR/run-tests.sh"
 echo ""
 
+echo "=== Running parity tests (sim ↔ engine sync) ==="
+"$SCRIPT_DIR/run-parity.sh"
+echo ""
+
 echo "=== Build and test complete ==="
