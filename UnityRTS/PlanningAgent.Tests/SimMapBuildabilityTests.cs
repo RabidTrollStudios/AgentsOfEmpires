@@ -101,12 +101,14 @@ namespace PlanningAgent.Tests
             var allNeighbors = map.GetPositionsNearUnit(UnitType.BASE, new Position(10, 10));
             var buildableNeighbors = map.GetBuildablePositionsNearUnit(UnitType.BASE, new Position(10, 10));
 
-            Assert.Equal(allNeighbors.Count, buildableNeighbors.Count);
+            // Buildable neighbors = ring cells + passage cells (top row of BASE = 6 cells)
+            int passageCells = GameConstants.UNIT_SIZE[UnitType.BASE].X; // top row width
+            Assert.Equal(allNeighbors.Count + passageCells, buildableNeighbors.Count);
 
-            // Block one neighbor
+            // Block one ring neighbor
             map.SetCellBlocked(allNeighbors[0]);
             buildableNeighbors = map.GetBuildablePositionsNearUnit(UnitType.BASE, new Position(10, 10));
-            Assert.Equal(allNeighbors.Count - 1, buildableNeighbors.Count);
+            Assert.Equal(allNeighbors.Count - 1 + passageCells, buildableNeighbors.Count);
         }
 
         // ------------------------------------------------------------------
