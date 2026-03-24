@@ -127,6 +127,7 @@ namespace AgentTestHarness
                     actions = actions * 31 + (int)u.CurrentAction;
                     actions = actions * 31 + u.AttackTargetNbr;
                     actions = actions * 31 + u.RepairBuildingNbr;
+                    actions = actions * 31 + u.HealTargetNbr;
                     actions = actions * 31 + u.GatherMineNbr;
                     actions = actions * 31 + u.GatherBaseNbr;
                     actions = actions * 31 + (int)u.GatherPhase;
@@ -144,6 +145,7 @@ namespace AgentTestHarness
                     timers = timers * 31 + FloatToStableBits(u.TrainTimer);
                     timers = timers * 31 + FloatToStableBits(u.BuildTimer);
                     timers = timers * 31 + FloatToStableBits(u.MiningTimer);
+                    timers = timers * 31 + FloatToStableBits(u.Mana);
                     timers = timers * 31 + u.LocalAvoidWaitTicks;
                 }
 
@@ -193,6 +195,8 @@ namespace AgentTestHarness
                 hash = hash * 31 + FloatToStableBits(u.MiningTimer);
                 hash = hash * 31 + u.AttackTargetNbr;
                 hash = hash * 31 + u.RepairBuildingNbr;
+                hash = hash * 31 + u.HealTargetNbr;
+                hash = hash * 31 + FloatToStableBits(u.Mana);
                 hash = hash * 31 + u.LocalAvoidWaitTicks;
                 return hash;
             }

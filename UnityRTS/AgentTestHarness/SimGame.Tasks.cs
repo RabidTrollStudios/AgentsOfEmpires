@@ -533,6 +533,7 @@ namespace AgentTestHarness
             if (!Units.TryGetValue(monk.HealTargetNbr, out var target) || target.Health <= 0)
             {
                 monk.CurrentAction = UnitAction.IDLE;
+                monk.HealTargetNbr = -1;
                 monk.Path = null;
                 return;
             }
@@ -546,6 +547,7 @@ namespace AgentTestHarness
                 if (monk.Mana < GameConstants.MANA_COST)
                 {
                     monk.CurrentAction = UnitAction.IDLE;
+                    monk.HealTargetNbr = -1;
                     monk.Path = null;
                     return;
                 }
@@ -554,6 +556,7 @@ namespace AgentTestHarness
                 if (target.Health / targetMaxHealth > GameConstants.HEAL_THRESHOLD)
                 {
                     monk.CurrentAction = UnitAction.IDLE;
+                    monk.HealTargetNbr = -1;
                     monk.Path = null;
                     return;
                 }
@@ -564,6 +567,7 @@ namespace AgentTestHarness
                 monk.Mana -= GameConstants.MANA_COST;
 
                 monk.CurrentAction = UnitAction.IDLE;
+                monk.HealTargetNbr = -1;
                 monk.Path = null;
             }
             else
