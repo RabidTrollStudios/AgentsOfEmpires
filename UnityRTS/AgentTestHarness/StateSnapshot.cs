@@ -33,6 +33,8 @@ namespace AgentTestHarness
         public float MiningTimer;
         public int AttackTargetNbr;
         public int RepairBuildingNbr;
+        public int HealTargetNbr;
+        public float Mana;
         public int LocalAvoidWaitTicks;
 
         internal static UnitSnapshot FromSimUnit(SimUnit u)
@@ -61,6 +63,8 @@ namespace AgentTestHarness
                 MiningTimer = u.MiningTimer,
                 AttackTargetNbr = u.AttackTargetNbr,
                 RepairBuildingNbr = u.RepairBuildingNbr,
+                HealTargetNbr = u.HealTargetNbr,
+                Mana = u.Mana,
                 LocalAvoidWaitTicks = u.LocalAvoidWaitTicks
             };
         }
@@ -187,6 +191,8 @@ namespace AgentTestHarness
             Check("MiningTimer", a.MiningTimer, b.MiningTimer);
             Check("AttackTargetNbr", a.AttackTargetNbr, b.AttackTargetNbr);
             Check("RepairBuildingNbr", a.RepairBuildingNbr, b.RepairBuildingNbr);
+            Check("HealTargetNbr", a.HealTargetNbr, b.HealTargetNbr);
+            Check("Mana", a.Mana, b.Mana);
             Check("LocalAvoidWaitTicks", a.LocalAvoidWaitTicks, b.LocalAvoidWaitTicks);
 
             return sb.ToString();

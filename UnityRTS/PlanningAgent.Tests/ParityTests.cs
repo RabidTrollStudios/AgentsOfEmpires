@@ -108,6 +108,15 @@ namespace PlanningAgent.Tests
             yield return new object[] { Scenarios.HeadOnCollision() };
             yield return new object[] { Scenarios.CorridorCongestion() };
             yield return new object[] { Scenarios.AttackerBlockedByAlly() };
+            // New unit types
+            yield return new object[] { Scenarios.TrainLancerFromTower() };
+            yield return new object[] { Scenarios.TrainMonkFromMonastery() };
+            yield return new object[] { Scenarios.LancerVsWarrior() };
+            yield return new object[] { Scenarios.LancerVsArcher() };
+            yield return new object[] { Scenarios.MonkHealsWarrior() };
+            yield return new object[] { Scenarios.MixedArmyCombat() };
+            yield return new object[] { Scenarios.BuildTower() };
+            yield return new object[] { Scenarios.BuildMonastery() };
         }
 
         #endregion
@@ -390,6 +399,14 @@ namespace PlanningAgent.Tests
                 HeadOnCollision(),
                 CorridorCongestion(),
                 AttackerBlockedByAlly(),
+                TrainLancerFromTower(),
+                TrainMonkFromMonastery(),
+                LancerVsWarrior(),
+                LancerVsArcher(),
+                MonkHealsWarrior(),
+                MixedArmyCombat(),
+                BuildTower(),
+                BuildMonastery(),
             };
         }
 
@@ -617,6 +634,100 @@ namespace PlanningAgent.Tests
             300);
 
         #endregion
+
+        #region New unit type scenarios (LANCER, TOWER, MONK, MONASTERY)
+
+        public static ParityScenario TrainLancerFromTower() => new ParityScenario(
+            "TrainLancerFromTower",
+            () => new SimGameBuilder()
+                .WithMapSize(20, 20)
+                .WithGold(0, 500)
+                .WithUnit(0, UnitType.BASE, new Position(3, 10), isBuilt: true)
+                .WithUnit(0, UnitType.TOWER, new Position(10, 10), isBuilt: true),
+            () => new TrainFromTowerAgent(UnitType.LANCER),
+            () => new DoNothingAgent(),
+            100);
+
+        public static ParityScenario TrainMonkFromMonastery() => new ParityScenario(
+            "TrainMonkFromMonastery",
+            () => new SimGameBuilder()
+                .WithMapSize(20, 20)
+                .WithGold(0, 500)
+                .WithUnit(0, UnitType.BASE, new Position(3, 10), isBuilt: true)
+                .WithUnit(0, UnitType.MONASTERY, new Position(10, 10), isBuilt: true),
+            () => new TrainFromMonasteryAgent(UnitType.MONK),
+            () => new DoNothingAgent(),
+            100);
+
+        public static ParityScenario LancerVsWarrior() => new ParityScenario(
+            "LancerVsWarrior",
+            () => new SimGameBuilder()
+                .WithMapSize(30, 30)
+                .WithUnit(0, UnitType.LANCER, new Position(5, 15))
+                .WithUnit(1, UnitType.WARRIOR, new Position(25, 15)),
+            () => new LancerAttackAgent(),
+            () => new AttackFirstEnemyAgent(),
+            300);
+
+        public static ParityScenario LancerVsArcher() => new ParityScenario(
+            "LancerVsArcher",
+            () => new SimGameBuilder()
+                .WithMapSize(30, 30)
+                .WithUnit(0, UnitType.LANCER, new Position(5, 15))
+                .WithUnit(1, UnitType.ARCHER, new Position(25, 15)),
+            () => new LancerAttackAgent(),
+            () => new AttackFirstEnemyAgent(),
+            300);
+
+        public static ParityScenario MonkHealsWarrior() => new ParityScenario(
+            "MonkHealsWarrior",
+            () => new SimGameBuilder()
+                .WithMapSize(20, 20)
+                .WithUnit(0, UnitType.WARRIOR, new Position(10, 10))
+                .WithUnit(0, UnitType.MONK, new Position(8, 10))
+                .WithUnit(1, UnitType.ARCHER, new Position(18, 10)),
+            () => new HealAndFightAgent(),
+            () => new AttackFirstEnemyAgent(),
+            400);
+
+        public static ParityScenario MixedArmyCombat() => new ParityScenario(
+            "MixedArmyCombat",
+            () => new SimGameBuilder()
+                .WithMapSize(30, 30)
+                .WithUnit(0, UnitType.WARRIOR, new Position(5, 12))
+                .WithUnit(0, UnitType.ARCHER, new Position(3, 15))
+                .WithUnit(0, UnitType.LANCER, new Position(5, 18))
+                .WithUnit(0, UnitType.MONK, new Position(2, 15))
+                .WithUnit(1, UnitType.WARRIOR, new Position(25, 12))
+                .WithUnit(1, UnitType.ARCHER, new Position(27, 15))
+                .WithUnit(1, UnitType.LANCER, new Position(25, 18)),
+            () => new HealAndFightAgent(),
+            () => new AttackAllEnemiesAgent(),
+            500);
+
+        public static ParityScenario BuildTower() => new ParityScenario(
+            "BuildTower",
+            () => new SimGameBuilder()
+                .WithMapSize(30, 30)
+                .WithGold(0, 5000)
+                .WithUnit(0, UnitType.BASE, new Position(3, 8), isBuilt: true)
+                .WithUnit(0, UnitType.PAWN, new Position(6, 5)),
+            () => new BuildOnceAgent(UnitType.TOWER, new Position(15, 15)),
+            () => new DoNothingAgent(),
+            500);
+
+        public static ParityScenario BuildMonastery() => new ParityScenario(
+            "BuildMonastery",
+            () => new SimGameBuilder()
+                .WithMapSize(30, 30)
+                .WithGold(0, 5000)
+                .WithUnit(0, UnitType.BASE, new Position(3, 8), isBuilt: true)
+                .WithUnit(0, UnitType.PAWN, new Position(6, 5)),
+            () => new BuildOnceAgent(UnitType.MONASTERY, new Position(15, 15)),
+            () => new DoNothingAgent(),
+            500);
+
+        #endregion
     }
 
     #region Scenario-specific test agents
@@ -753,6 +864,62 @@ namespace PlanningAgent.Tests
             {
                 actions.Repair(pawns[0], bases[0]);
                 repairing = true;
+            }
+        }
+    }
+
+    /// <summary>
+    /// Combined agent: monks heal wounded allies, combat units attack enemies.
+    /// </summary>
+    internal class HealAndFightAgent : IPlanningAgent
+    {
+        public void InitializeMatch() { }
+        public void InitializeRound(IGameState state) { }
+        public void Learn(IGameState state) { }
+
+        public void Update(IGameState state, IAgentActions actions)
+        {
+            // Monks heal the most-wounded friendly unit
+            foreach (int monkNbr in state.GetMyUnits(UnitType.MONK))
+            {
+                var monkInfo = state.GetUnit(monkNbr);
+                if (!monkInfo.HasValue || monkInfo.Value.CurrentAction == UnitAction.HEAL) continue;
+                if (monkInfo.Value.Mana < GameConstants.MANA_COST) continue;
+
+                int bestTarget = -1;
+                float lowestRatio = GameConstants.HEAL_THRESHOLD;
+                foreach (UnitType ut in new[] { UnitType.WARRIOR, UnitType.ARCHER, UnitType.LANCER })
+                {
+                    foreach (int unitNbr in state.GetMyUnits(ut))
+                    {
+                        var info = state.GetUnit(unitNbr);
+                        if (!info.HasValue) continue;
+                        float ratio = info.Value.Health / GameConstants.HEALTH[ut];
+                        if (ratio <= lowestRatio) { lowestRatio = ratio; bestTarget = unitNbr; }
+                    }
+                }
+                if (bestTarget >= 0)
+                    actions.Heal(monkNbr, bestTarget);
+            }
+
+            // Combat units attack first visible enemy
+            int? target = null;
+            foreach (UnitType ut in new[] { UnitType.WARRIOR, UnitType.ARCHER, UnitType.LANCER, UnitType.MONK, UnitType.PAWN,
+                                            UnitType.BASE, UnitType.BARRACKS, UnitType.ARCHERY, UnitType.TOWER, UnitType.MONASTERY })
+            {
+                var enemies = state.GetEnemyUnits(ut);
+                if (enemies.Count > 0) { target = enemies[0]; break; }
+            }
+            if (!target.HasValue) return;
+
+            foreach (UnitType ut in new[] { UnitType.WARRIOR, UnitType.ARCHER, UnitType.LANCER })
+            {
+                foreach (int unitNbr in state.GetMyUnits(ut))
+                {
+                    var info = state.GetUnit(unitNbr);
+                    if (info.HasValue && info.Value.CurrentAction == UnitAction.IDLE)
+                        actions.Attack(unitNbr, target.Value);
+                }
             }
         }
     }

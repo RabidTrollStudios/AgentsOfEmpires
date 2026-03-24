@@ -410,8 +410,8 @@ namespace PlanningAgent.Tests
         public void Update(IGameState state, IAgentActions actions)
         {
             int? target = null;
-            foreach (UnitType ut in new[] { UnitType.WARRIOR, UnitType.ARCHER, UnitType.PAWN,
-                                            UnitType.BASE, UnitType.BARRACKS })
+            foreach (UnitType ut in new[] { UnitType.WARRIOR, UnitType.ARCHER, UnitType.LANCER, UnitType.PAWN,
+                                            UnitType.BASE, UnitType.BARRACKS, UnitType.ARCHERY, UnitType.TOWER, UnitType.MONASTERY })
             {
                 var enemies = state.GetEnemyUnits(ut);
                 if (enemies.Count > 0) { target = enemies[0]; break; }
@@ -419,7 +419,7 @@ namespace PlanningAgent.Tests
 
             if (!target.HasValue) return;
 
-            foreach (UnitType ut in new[] { UnitType.WARRIOR, UnitType.ARCHER })
+            foreach (UnitType ut in new[] { UnitType.WARRIOR, UnitType.ARCHER, UnitType.LANCER })
             {
                 foreach (int unitNbr in state.GetMyUnits(ut))
                 {
@@ -427,6 +427,134 @@ namespace PlanningAgent.Tests
                     if (info.HasValue && info.Value.CurrentAction == UnitAction.IDLE)
                         actions.Attack(unitNbr, target.Value);
                 }
+            }
+        }
+    }
+
+    // ==================================================================
+    // Tower / Lancer agents
+    // ==================================================================
+
+    internal class TrainFromTowerAgent : IPlanningAgent
+    {
+        private readonly UnitType trainType;
+        private bool trained;
+
+        public TrainFromTowerAgent(UnitType trainType) { this.trainType = trainType; }
+        public void InitializeMatch() { trained = false; }
+        public void InitializeRound(IGameState state) { }
+        public void Learn(IGameState state) { }
+
+        public void Update(IGameState state, IAgentActions actions)
+        {
+            if (trained) return;
+            var towers = state.GetMyUnits(UnitType.TOWER);
+            if (towers.Count > 0)
+            {
+                var info = state.GetUnit(towers[0]);
+                if (info.HasValue && info.Value.IsBuilt && info.Value.CurrentAction == UnitAction.IDLE
+                    && state.MyGold >= GameConstants.COST[trainType])
+                {
+                    actions.Train(towers[0], trainType);
+                    trained = true;
+                }
+            }
+        }
+    }
+
+    // ==================================================================
+    // Monastery / Monk / Heal agents
+    // ==================================================================
+
+    internal class TrainFromMonasteryAgent : IPlanningAgent
+    {
+        private readonly UnitType trainType;
+        private bool trained;
+
+        public TrainFromMonasteryAgent(UnitType trainType) { this.trainType = trainType; }
+        public void InitializeMatch() { trained = false; }
+        public void InitializeRound(IGameState state) { }
+        public void Learn(IGameState state) { }
+
+        public void Update(IGameState state, IAgentActions actions)
+        {
+            if (trained) return;
+            var monasteries = state.GetMyUnits(UnitType.MONASTERY);
+            if (monasteries.Count > 0)
+            {
+                var info = state.GetUnit(monasteries[0]);
+                if (info.HasValue && info.Value.IsBuilt && info.Value.CurrentAction == UnitAction.IDLE
+                    && state.MyGold >= GameConstants.COST[trainType])
+                {
+                    actions.Train(monasteries[0], trainType);
+                    trained = true;
+                }
+            }
+        }
+    }
+
+    internal class HealWoundedAgent : IPlanningAgent
+    {
+        public void InitializeMatch() { }
+        public void InitializeRound(IGameState state) { }
+        public void Learn(IGameState state) { }
+
+        public void Update(IGameState state, IAgentActions actions)
+        {
+            var monks = state.GetMyUnits(UnitType.MONK);
+            foreach (int monkNbr in monks)
+            {
+                var monkInfo = state.GetUnit(monkNbr);
+                if (!monkInfo.HasValue || monkInfo.Value.CurrentAction == UnitAction.HEAL) continue;
+                if (monkInfo.Value.Mana < GameConstants.MANA_COST) continue;
+
+                // Find most-wounded friendly mobile unit
+                int bestTarget = -1;
+                float lowestRatio = GameConstants.HEAL_THRESHOLD;
+
+                foreach (UnitType ut in new[] { UnitType.WARRIOR, UnitType.ARCHER, UnitType.LANCER, UnitType.PAWN })
+                {
+                    foreach (int unitNbr in state.GetMyUnits(ut))
+                    {
+                        var info = state.GetUnit(unitNbr);
+                        if (!info.HasValue) continue;
+                        float ratio = info.Value.Health / GameConstants.HEALTH[ut];
+                        if (ratio <= lowestRatio)
+                        {
+                            lowestRatio = ratio;
+                            bestTarget = unitNbr;
+                        }
+                    }
+                }
+
+                if (bestTarget >= 0)
+                    actions.Heal(monkNbr, bestTarget);
+            }
+        }
+    }
+
+    internal class LancerAttackAgent : IPlanningAgent
+    {
+        public void InitializeMatch() { }
+        public void InitializeRound(IGameState state) { }
+        public void Learn(IGameState state) { }
+
+        public void Update(IGameState state, IAgentActions actions)
+        {
+            int? target = null;
+            foreach (UnitType ut in new[] { UnitType.WARRIOR, UnitType.ARCHER, UnitType.LANCER, UnitType.MONK, UnitType.PAWN,
+                                            UnitType.BASE, UnitType.BARRACKS, UnitType.ARCHERY, UnitType.TOWER, UnitType.MONASTERY })
+            {
+                var enemies = state.GetEnemyUnits(ut);
+                if (enemies.Count > 0) { target = enemies[0]; break; }
+            }
+            if (!target.HasValue) return;
+
+            foreach (int lancerNbr in state.GetMyUnits(UnitType.LANCER))
+            {
+                var info = state.GetUnit(lancerNbr);
+                if (info.HasValue && info.Value.CurrentAction == UnitAction.IDLE)
+                    actions.Attack(lancerNbr, target.Value);
             }
         }
     }

@@ -66,6 +66,9 @@ namespace AgentTestHarness
                 case CommandType.Repair:
                     actions.Repair(r.UnitNbr, r.RepairBuildingNbr);
                     break;
+                case CommandType.Heal:
+                    actions.Heal(r.UnitNbr, r.TargetUnitNbr);
+                    break;
                 case CommandType.Log:
                     actions.Log(r.LogMessage);
                     break;
