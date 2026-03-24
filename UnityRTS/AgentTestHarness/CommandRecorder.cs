@@ -106,6 +106,19 @@ namespace AgentTestHarness
             return inner.Repair(pawnNbr, buildingNbr);
         }
 
+        public CommandResult Heal(int monkNbr, int targetNbr)
+        {
+            Records.Add(new CommandRecord
+            {
+                Tick = getCurrentTick(),
+                AgentNbr = agentNbr,
+                Type = CommandType.Heal,
+                UnitNbr = monkNbr,
+                TargetUnitNbr = targetNbr
+            });
+            return inner.Heal(monkNbr, targetNbr);
+        }
+
         public void Log(string message)
         {
             Records.Add(new CommandRecord

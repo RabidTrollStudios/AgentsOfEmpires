@@ -63,6 +63,16 @@ namespace AgentSDK
         CommandResult Repair(int pawnNbr, int buildingNbr);
 
         /// <summary>
+        /// Command a monk to heal a friendly unit.
+        /// The target must be a friendly mobile unit at or below 80% health.
+        /// The monk must have sufficient mana.
+        /// </summary>
+        /// <param name="monkNbr">Your monk unit</param>
+        /// <param name="targetNbr">The friendly unit to heal</param>
+        /// <returns>Success if the command was dispatched, or a failure code.</returns>
+        CommandResult Heal(int monkNbr, int targetNbr);
+
+        /// <summary>
         /// Log a message to your agent's CSV output file.
         /// Useful for debugging and learning data.
         /// </summary>

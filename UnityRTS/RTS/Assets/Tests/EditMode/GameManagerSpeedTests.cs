@@ -28,8 +28,8 @@ namespace GameManager.Tests
 		{
 			Constants.GAME_SPEED = 1;
 			Constants.CalculateGameConstants();
-			SetPrivateField("BlueCustomDebugText", null);
-			SetPrivateField("RedCustomDebugText", null);
+			SetPrivateField("blueCustomDebugText", null);
+			SetPrivateField("redCustomDebugText", null);
 		}
 
 		// ── Helpers ───────────────────────────────────────────────────────────
@@ -112,8 +112,8 @@ namespace GameManager.Tests
 		[Test]
 		public void UpdateCustomDebugUI_BothTextsNull_DoesNotThrow()
 		{
-			SetPrivateField("BlueCustomDebugText", null);
-			SetPrivateField("RedCustomDebugText", null);
+			SetPrivateField("blueCustomDebugText", null);
+			SetPrivateField("redCustomDebugText", null);
 			Assert.DoesNotThrow(() => InvokePrivate("UpdateCustomDebugUI"),
 				"UpdateCustomDebugUI must not throw when both text fields are null");
 		}
@@ -127,8 +127,8 @@ namespace GameManager.Tests
 			var redText = go2.AddComponent<Text>();
 			blueText.text = "some agent data";
 			redText.text = "some agent data";
-			SetPrivateField("BlueCustomDebugText", blueText);
-			SetPrivateField("RedCustomDebugText", redText);
+			SetPrivateField("blueCustomDebugText", blueText);
+			SetPrivateField("redCustomDebugText", redText);
 
 			gm.OnAgentToggleChanged(false);
 			InvokePrivate("UpdateCustomDebugUI");
@@ -136,8 +136,8 @@ namespace GameManager.Tests
 			Assert.AreEqual("", blueText.text, "BlueCustomDebugText should be cleared when debugging is off");
 			Assert.AreEqual("", redText.text, "RedCustomDebugText should be cleared when debugging is off");
 
-			SetPrivateField("BlueCustomDebugText", null);
-			SetPrivateField("RedCustomDebugText", null);
+			SetPrivateField("blueCustomDebugText", null);
+			SetPrivateField("redCustomDebugText", null);
 			Object.DestroyImmediate(go1);
 			Object.DestroyImmediate(go2);
 		}
@@ -152,8 +152,8 @@ namespace GameManager.Tests
 			var redText = go2.AddComponent<Text>();
 			blueText.text = "some agent data";
 			redText.text = "some agent data";
-			SetPrivateField("BlueCustomDebugText", blueText);
-			SetPrivateField("RedCustomDebugText", redText);
+			SetPrivateField("blueCustomDebugText", blueText);
+			SetPrivateField("redCustomDebugText", redText);
 
 			gm.OnAgentToggleChanged(true);
 			InvokePrivate("UpdateCustomDebugUI");
@@ -161,8 +161,8 @@ namespace GameManager.Tests
 			Assert.AreEqual("", blueText.text, "BlueCustomDebugText should be cleared with no agents present");
 			Assert.AreEqual("", redText.text, "RedCustomDebugText should be cleared with no agents present");
 
-			SetPrivateField("BlueCustomDebugText", null);
-			SetPrivateField("RedCustomDebugText", null);
+			SetPrivateField("blueCustomDebugText", null);
+			SetPrivateField("redCustomDebugText", null);
 			Object.DestroyImmediate(go1);
 			Object.DestroyImmediate(go2);
 		}

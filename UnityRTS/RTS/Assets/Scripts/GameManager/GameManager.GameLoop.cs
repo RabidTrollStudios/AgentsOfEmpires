@@ -82,7 +82,7 @@ namespace GameManager
 			else if (gameState == GameState.FINISHED)
 			{
 				TimeToDisplayBanner -= Time.deltaTime;
-				if (TimeToDisplayBanner < 0.0f && (Input.anyKeyDown || Input.GetMouseButtonDown(0)))
+				if (TimeToDisplayBanner < 0.0f && _input != null && _input.Gameplay.DismissGameOver.WasPressedThisFrame())
 				{
 #if UNITY_EDITOR
 					UnityEditor.EditorApplication.isPlaying = false;

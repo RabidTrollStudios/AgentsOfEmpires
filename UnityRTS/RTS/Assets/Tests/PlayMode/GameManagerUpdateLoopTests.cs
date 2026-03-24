@@ -258,8 +258,8 @@ namespace GameManager.Tests.PlayMode
 			GM.TotalGameTime = 0f;
 			GM.MaxNbrOfSeconds = 300;
 
-			SetField("BlueCustomDebugText", null);
-			SetField("RedCustomDebugText", null);
+			SetField("blueCustomDebugText", null);
+			SetField("redCustomDebugText", null);
 
 			InvokePrivate("InitializeDebugToggles");
 			SetGameState(1); // PLAYING
@@ -321,8 +321,8 @@ namespace GameManager.Tests.PlayMode
 			GM.MaxNbrOfSeconds = 300;
 			GM.EnableLearning = true;
 
-			SetField("BlueCustomDebugText", null);
-			SetField("RedCustomDebugText", null);
+			SetField("blueCustomDebugText", null);
+			SetField("redCustomDebugText", null);
 
 			InvokePrivate("InitializeDebugToggles");
 			SetGameState(1); // PLAYING
@@ -722,6 +722,11 @@ namespace GameManager.Tests.PlayMode
 			ctx.MapManager.InfluenceMap = influenceGo.GetComponent<Tilemap>();
 			influenceGo.SetActive(false);
 
+			// Inject InputSystem_Actions so InitializeDebugToggles can populate _debugBindings
+			var inputActions = new InputSystem_Actions();
+			inputActions.Gameplay.Enable();
+			SetField("_input", inputActions);
+
 			InvokePrivate("InitializeDebugToggles");
 
 			yield return null;
@@ -731,7 +736,8 @@ namespace GameManager.Tests.PlayMode
 				"_debugBindings", BindingFlags.NonPublic | BindingFlags.Instance);
 			var bindings = bindingsField.GetValue(GM) as Array;
 			var binding = bindings.GetValue(2);
-			var execute = (Action)binding.GetType().GetField("Item3").GetValue(binding);
+			// Named tuple fields: (InputAction Action, Action Execute) → Item2 is Execute
+			var execute = (Action)binding.GetType().GetField("Item2").GetValue(binding);
 
 			// Execute: should toggle InfluenceMap from false to true
 			execute();
@@ -742,6 +748,9 @@ namespace GameManager.Tests.PlayMode
 			execute();
 			Assert.IsFalse(influenceGo.activeSelf,
 				"Second execute should deactivate InfluenceMap");
+
+			inputActions.Dispose();
+			SetField("_input", null);
 		}
 
 		// ── UpdateCustomDebugUI with agents ─────────────────────────────────
@@ -766,8 +775,8 @@ namespace GameManager.Tests.PlayMode
 			var redText = MakeText("RedDebug");
 			blueText.text = "stale";
 			redText.text = "stale";
-			SetField("BlueCustomDebugText", blueText);
-			SetField("RedCustomDebugText", redText);
+			SetField("blueCustomDebugText", blueText);
+			SetField("redCustomDebugText", redText);
 
 			GM.OnAgentToggleChanged(true);
 
@@ -781,8 +790,8 @@ namespace GameManager.Tests.PlayMode
 			Assert.AreEqual("", redText.text,
 				"RedCustomDebugText should be empty when PlanningAgentDebugText is empty");
 
-			SetField("BlueCustomDebugText", null);
-			SetField("RedCustomDebugText", null);
+			SetField("blueCustomDebugText", null);
+			SetField("redCustomDebugText", null);
 		}
 
 		// ── SetAllAgentsInactive ─────────────────────────────────────────────
@@ -996,8 +1005,8 @@ namespace GameManager.Tests.PlayMode
 
 			var blueText = MakeText("BlueDebug");
 			var redText = MakeText("RedDebug");
-			SetField("BlueCustomDebugText", blueText);
-			SetField("RedCustomDebugText", redText);
+			SetField("blueCustomDebugText", blueText);
+			SetField("redCustomDebugText", redText);
 
 			GM.OnAgentToggleChanged(true);
 
@@ -1015,8 +1024,8 @@ namespace GameManager.Tests.PlayMode
 			Assert.AreEqual("", redText.text,
 				"RedCustomDebugText should be empty when PlanningAgentDebugText is empty");
 
-			SetField("BlueCustomDebugText", null);
-			SetField("RedCustomDebugText", null);
+			SetField("blueCustomDebugText", null);
+			SetField("redCustomDebugText", null);
 		}
 
 		/// <summary>

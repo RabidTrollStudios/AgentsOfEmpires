@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using AgentSDK;
+using GameManager.GameElements;
 using UnityEngine;
 
 namespace GameManager
@@ -101,7 +102,13 @@ namespace GameManager
             }
             var unit = unitManager.GetUnit(unitNbr);
             if (unit == null) return ProcessResult(unitNbr, CommandResult.UNIT_NOT_FOUND);
-            return ProcessResult(unitNbr, agent.Move(unit, new Vector3Int(target.X, target.Y, 0)));
+
+            // Skip redundant move commands to the same destination
+            var targetVec = new Vector3Int(target.X, target.Y, 0);
+            if (unit.CurrentAction == UnitAction.MOVE && unit.TargetGridPos == targetVec)
+                return CommandResult.SUCCESS;
+
+            return ProcessResult(unitNbr, agent.Move(unit, targetVec));
         }
 
         public CommandResult Build(int unitNbr, Position target, AgentSDK.UnitType unitType)
@@ -155,6 +162,16 @@ namespace GameManager
             var target = unitManager.GetUnit(targetNbr);
             if (unit == null || target == null)
                 return ProcessResult(unitNbr, unit == null ? CommandResult.UNIT_NOT_FOUND : CommandResult.TARGET_NOT_FOUND);
+
+            // Skip redundant attack commands — the unit is already pursuing/attacking this target.
+            // This avoids expensive A* pathfinding on every frame when agents re-issue commands.
+            if (unit.CurrentAction == UnitAction.ATTACK
+                && unit.AttackUnit != null
+                && unit.AttackUnit.UnitNbr == targetNbr)
+            {
+                return CommandResult.SUCCESS;
+            }
+
             return ProcessResult(unitNbr, agent.Attack(unit, target));
         }
 
@@ -170,6 +187,25 @@ namespace GameManager
             if (pawn == null || building == null)
                 return ProcessResult(pawnNbr, pawn == null ? CommandResult.UNIT_NOT_FOUND : CommandResult.TARGET_NOT_FOUND);
             return ProcessResult(pawnNbr, agent.Repair(pawn, building));
+        }
+
+        public CommandResult Heal(int monkNbr, int targetNbr)
+        {
+            if (IsOnCooldown(monkNbr))
+            {
+                agent.CmdLog?.LogCommand("HEAL", $"monk#{monkNbr} -> target#{targetNbr}", "THROTTLED: on cooldown");
+                return CommandResult.ON_COOLDOWN;
+            }
+            var monk = unitManager.GetUnit(monkNbr);
+            var target = unitManager.GetUnit(targetNbr);
+            if (monk == null || target == null)
+                return ProcessResult(monkNbr, monk == null ? CommandResult.UNIT_NOT_FOUND : CommandResult.TARGET_NOT_FOUND);
+
+            // Skip redundant heal commands
+            if (monk.CurrentAction == UnitAction.HEAL)
+                return CommandResult.SUCCESS;
+
+            return ProcessResult(monkNbr, agent.Heal(monk, target));
         }
 
         public void Log(string message)

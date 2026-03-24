@@ -320,5 +320,55 @@ namespace GameManager
 
 			unit.GetComponent<Unit>().StartAttacking(args);
 		}
+
+		/// <summary>
+		/// Validates and dispatches a heal command
+		/// </summary>
+		public void HealEventHandler(object sender, EventArgs e)
+		{
+			Agent agent = (Agent)sender;
+			HealEventArgs args = (HealEventArgs)e;
+			GameObject logContext = GameManager.Instance.gameObject;
+
+			if (agent == null || args.Monk == null || args.Target == null)
+			{
+				GameManager.Instance.Log(agent.AgentName + " ERROR: null parameters to heal event", logContext);
+				return;
+			}
+
+			GameObject unit = unitManager.GetUnit(args.Monk.UnitNbr)?.gameObject;
+			if (unit == null)
+			{
+				GameManager.Instance.Log(agent.AgentName + " ERROR: unit not found for heal event", logContext);
+				return;
+			}
+
+			if (agent.AgentNbr != unit.GetComponent<Unit>().Agent.GetComponent<AgentController>().Agent.AgentNbr)
+			{
+				GameManager.Instance.Log(agent.AgentName + " CHEATER attempting to send events for the other agent", logContext);
+				return;
+			}
+
+			if (!unit.GetComponent<Unit>().CanHeal)
+			{
+				GameManager.Instance.Log(agent.AgentName + " ERROR: unit cannot heal " + unit.GetComponent<Unit>().UnitType, logContext);
+				return;
+			}
+
+			Unit targetUnit = unitManager.GetUnit(args.Target.UnitNbr);
+			if (targetUnit == null)
+			{
+				GameManager.Instance.Log(agent.AgentName + " ERROR: target unit not found for heal event", logContext);
+				return;
+			}
+
+			if (agent.AgentNbr != targetUnit.Agent.GetComponent<AgentController>().Agent.AgentNbr)
+			{
+				GameManager.Instance.Log(agent.AgentName + " ERROR: can only heal own units", logContext);
+				return;
+			}
+
+			unit.GetComponent<Unit>().StartHealing(args);
+		}
 	}
 }
