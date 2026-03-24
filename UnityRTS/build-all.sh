@@ -40,4 +40,8 @@ echo "=== Running DLL smoke tests ==="
 dotnet test PlanningAgent.Tests/PlanningAgent.Tests.csproj --filter "FullyQualifiedName~DllSmokeTests" --no-build -v q
 
 echo ""
+echo "=== Running parity tests (sim ↔ engine sync) ==="
+dotnet test PlanningAgent.Tests/PlanningAgent.Tests.csproj --filter "FullyQualifiedName~Parity" --no-build -v q
+
+echo ""
 echo "All builds and tests succeeded."
