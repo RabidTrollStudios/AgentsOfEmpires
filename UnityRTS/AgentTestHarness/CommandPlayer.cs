@@ -33,15 +33,12 @@ namespace AgentTestHarness
 
         public void Update(IGameState state, IAgentActions actions)
         {
-            // SimGame.Tick() increments CurrentTick before calling Update,
-            // so the first Update sees tick 1. Match that by pre-incrementing.
-            currentTick++;
-
             while (nextIndex < records.Count && records[nextIndex].Tick == currentTick)
             {
                 Replay(records[nextIndex], actions);
                 nextIndex++;
             }
+            currentTick++;
         }
 
         private static void Replay(CommandRecord r, IAgentActions actions)

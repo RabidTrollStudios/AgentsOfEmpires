@@ -37,13 +37,15 @@ namespace AgentTestHarness
         // Optional command recording (null when disabled)
         private CommandRecorder[] recorders;
 
-        // Derived timing constants (computed from Config.GameSpeed)
-        internal float scalarCreationTime;
-        internal Dictionary<UnitType, float> creationTime;
-        internal Dictionary<UnitType, float> damage;
-        internal float miningSpeed; // gold per second for PAWN
-        internal float miningCapacity; // gold per trip
-        internal float manaRegen; // mana per second
+        // Derived timing constants (computed from Config.GameSpeed via shared DerivedGameConstants)
+        internal DerivedGameConstants derived;
+        internal float scalarCreationTime => derived.ScalarCreationTime;
+        internal Dictionary<UnitType, float> creationTime => derived.CreationTime;
+        internal Dictionary<UnitType, float> damage => derived.Damage;
+        internal Dictionary<UnitType, float> movingSpeed => derived.MovingSpeed;
+        internal float miningSpeed => derived.MiningSpeed;
+        internal float miningCapacity => derived.MiningCapacity;
+        internal float manaRegen => derived.ManaRegen;
 
         internal SimGame(SimConfig config, SimMap map)
         {
@@ -63,21 +65,17 @@ namespace AgentTestHarness
 
         private void ComputeDerivedConstants()
         {
-            int gs = Config.GameSpeed;
-            scalarCreationTime = gs > 0 ? 1f / gs : float.PositiveInfinity;
+            derived = DerivedGameConstants.Compute(Config.GameSpeed);
+        }
 
-            creationTime = new Dictionary<UnitType, float>();
-            foreach (var kvp in GameConstants.CREATION_TIME_MULTIPLIER)
-                creationTime[kvp.Key] = kvp.Value * scalarCreationTime;
-
-            float scalarDamage = gs;
-            damage = new Dictionary<UnitType, float>();
-            foreach (var kvp in GameConstants.BASE_DAMAGE)
-                damage[kvp.Key] = kvp.Value * scalarDamage;
-
-            miningSpeed = gs * 20f; // gold per second
-            miningCapacity = GameConstants.MINING_CAPACITY[UnitType.PAWN];
-            manaRegen = GameConstants.BASE_MANA_REGEN * gs;
+        /// <summary>
+        /// Recalculate all game-speed-dependent constants. Call when game speed changes mid-game.
+        /// Mirrors Unity's Constants.CalculateGameConstants().
+        /// </summary>
+        public void SetGameSpeed(int newSpeed)
+        {
+            Config.GameSpeed = newSpeed;
+            ComputeDerivedConstants();
         }
 
         #region Agent Setup
@@ -148,11 +146,44 @@ namespace AgentTestHarness
         /// <summary>
         /// Advance the simulation by one tick.
         /// </summary>
+        /// <summary>
+        /// Advance the simulation by one tick.
+        ///
+        /// Tick order matches Unity's FixedUpdate → Update lifecycle:
+        /// 1. Advance in-progress tasks (FixedUpdate: movement, building, training, combat)
+        /// 2. Regenerate mana
+        /// 3. Remove dead units
+        /// 4. Call agent Update (agents see post-advance state, same as Unity)
+        /// 5. Process queued commands
+        /// </summary>
         public void Tick()
         {
-            CurrentTick++;
+            // Tick order per Tick Engine GDD:
+            //   Phase 1: Process commands queued during PREVIOUS tick's Phase 5
+            //   Phase 2: Advance in-progress tasks
+            //   Phase 3: Regenerate mana
+            //   Phase 4: Remove dead units
+            //   Phase 5: Agent Update (agents see post-advance state, queue commands for NEXT tick)
+            //
+            // CurrentTick starts at 0, matching Unity's 0-based numbering.
 
-            // 1. Call agent Update (pass recorders if recording is enabled)
+            // Phase 1: Process commands queued during the PREVIOUS tick's Agent Update.
+            ProcessCommandsSorted();
+
+            // Phase 2: Advance in-progress tasks (movement, build, train, gather, attack, heal)
+            AdvanceAllUnits();
+
+            // Phase 3: Regenerate mana (shared formula)
+            foreach (var unit in Units.Values)
+            {
+                float maxMana = GameConstants.MAX_MANA[unit.UnitType];
+                unit.Mana = TaskEngine.RegenMana(unit.Mana, maxMana, manaRegen, Config.TickDuration);
+            }
+
+            // Phase 4: Remove dead units
+            RemoveDeadUnits();
+
+            // Phase 5: Agent Update (agents see post-advance state, queue commands for NEXT tick)
             for (int a = 0; a < 2; a++)
             {
                 actions[a].ClearPending();
@@ -160,23 +191,7 @@ namespace AgentTestHarness
                 agents[a]?.Update(states[a], agentActions);
             }
 
-            // 2. Process queued commands
-            for (int a = 0; a < 2; a++)
-                ProcessCommands(actions[a]);
-
-            // 3. Advance in-progress tasks
-            AdvanceAllUnits();
-
-            // 3b. Regenerate mana for units with mana pools
-            foreach (var unit in Units.Values)
-            {
-                float maxMana = GameConstants.MAX_MANA[unit.UnitType];
-                if (maxMana > 0 && unit.Mana < maxMana)
-                    unit.Mana = System.Math.Min(unit.Mana + manaRegen * Config.TickDuration, maxMana);
-            }
-
-            // 4. Remove dead units
-            RemoveDeadUnits();
+            CurrentTick++;
         }
 
         /// <summary>Run the simulation for a fixed number of ticks.</summary>
