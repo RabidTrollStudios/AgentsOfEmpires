@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using UnityEngine;
 using AgentSDK;
 using GameManager.EnumTypes;
@@ -6,7 +6,10 @@ using GameManager.EnumTypes;
 namespace GameManager
 {
     /// <summary>
-    /// Constants - set of game-defining constants.
+    /// Constants - thin pass-through to AgentSDK.GameConstants and DerivedGameConstants.
+    /// All gameplay values are owned by AgentSDK. This file provides Unity-compatible
+    /// accessors and Unity-only values (colors, directions, game speed control).
+    /// See ADR-0001: Dual-Engine Parity.
     /// </summary>
     public class Constants
     {
@@ -23,39 +26,39 @@ namespace GameManager
         public const string RED_ABBR = "(RED)";
 
         /// <summary>
-		/// Health associated with each unit (Mine health is amount of gold)
-		/// </summary>
-		public Dictionary<UnitType, float> Health => HEALTH;
+        /// Health associated with each unit (Mine health is amount of gold)
+        /// </summary>
+        public Dictionary<UnitType, float> Health => HEALTH;
 
         /// <summary>
         /// Damage associated with each unit
         /// </summary>
-        public Dictionary<UnitType, float> Damage => DAMAGE;
+        public IReadOnlyDictionary<UnitType, float> Damage => DAMAGE;
 
         /// <summary>
         /// Moving speed associated with each unit
         /// </summary>
-        public Dictionary<UnitType, float> MovingSpeed => MOVING_SPEED;
+        public IReadOnlyDictionary<UnitType, float> MovingSpeed => MOVING_SPEED;
 
         /// <summary>
         /// Mining speed associated with each unit
         /// </summary>
-        public Dictionary<UnitType, float> MiningSpeed => MINING_SPEED;
+        public IReadOnlyDictionary<UnitType, float> MiningSpeed => MINING_SPEED;
 
         /// <summary>
-        /// Mining time associated with each unit
+        /// Mining capacity associated with each unit
         /// </summary>
-        public Dictionary<UnitType, float> MiningCapacity => MINING_CAPACITY;
+        public IReadOnlyDictionary<UnitType, float> MiningCapacity => MINING_CAPACITY;
 
         /// <summary>
         /// Cost associated with each unit
         /// </summary>
-        public Dictionary<UnitType, float> Cost => COST;
+        public IReadOnlyDictionary<UnitType, float> Cost => COST;
 
         /// <summary>
         /// Creation time associated with each unit
         /// </summary>
-        public Dictionary<UnitType, float> CreationTime => CREATION_TIME;
+        public IReadOnlyDictionary<UnitType, float> CreationTime => CREATION_TIME;
 
         /// <summary>
         /// Dependencies associated with each unit
@@ -75,32 +78,32 @@ namespace GameManager
         /// <summary>
         /// Can unit move
         /// </summary>
-        public Dictionary<UnitType, bool> CanMove => CAN_MOVE;
+        public IReadOnlyDictionary<UnitType, bool> CanMove => CAN_MOVE;
 
         /// <summary>
         /// Can unit build
         /// </summary>
-        public Dictionary<UnitType, bool> CanBuild => CAN_BUILD;
+        public IReadOnlyDictionary<UnitType, bool> CanBuild => CAN_BUILD;
 
         /// <summary>
         /// Can unit train
         /// </summary>
-        public Dictionary<UnitType, bool> CanTrain => CAN_TRAIN;
+        public IReadOnlyDictionary<UnitType, bool> CanTrain => CAN_TRAIN;
 
         /// <summary>
         /// Can unit attack
         /// </summary>
-        public Dictionary<UnitType, bool> CanAttack => CAN_ATTACK;
+        public IReadOnlyDictionary<UnitType, bool> CanAttack => CAN_ATTACK;
 
         /// <summary>
         /// Can unit gather
         /// </summary>
-        public Dictionary<UnitType, bool> CanGather => CAN_GATHER;
+        public IReadOnlyDictionary<UnitType, bool> CanGather => CAN_GATHER;
 
         /// <summary>
         /// Unit Attack range
         /// </summary>
-        public Dictionary<UnitType, float> AttackRange => ATTACK_RANGE;
+        public IReadOnlyDictionary<UnitType, float> AttackRange => ATTACK_RANGE;
 
         /// <summary>
         /// Unit size
@@ -109,162 +112,174 @@ namespace GameManager
 
         #endregion
 
-		#region Static Arrays
+		#region Static Values — Pass-throughs to AgentSDK
 
-		/// <summary>
-		/// Initial damage associated with each unit
-		/// </summary>
-		public static Dictionary<UnitType, float> DAMAGE;
+        // =====================================================================
+        // Static dictionaries: direct references to GameConstants (single source
+        // of truth). No copies — these ARE the SDK dictionaries.
+        // =====================================================================
 
         /// <summary>
-        /// Initial health associated with each unit
+        /// Initial health associated with each unit.
+        /// Note: HEALTH[MINE] is overwritten at runtime with StartingMineGold.
+        /// We must keep a mutable copy for this one mutation.
         /// </summary>
         public static readonly Dictionary<UnitType, float> HEALTH = new Dictionary<UnitType, float>(GameConstants.HEALTH);
 
-
         /// <summary>
-        /// Time to mine a resource in seconds
+        /// Which Units can move (pass-through to SDK)
         /// </summary>
-        public static Dictionary<UnitType, float> MINING_CAPACITY;
+        public static readonly IReadOnlyDictionary<UnitType, bool> CAN_MOVE = GameConstants.CAN_MOVE;
 
         /// <summary>
-        /// Cost to build each unit
+        /// Which Units can build (pass-through to SDK)
         /// </summary>
-        public static Dictionary<UnitType, float> COST;
+        public static readonly IReadOnlyDictionary<UnitType, bool> CAN_BUILD = GameConstants.CAN_BUILD;
 
-		/// <summary>
-		/// Dependencies of each unit in order to build/train them (delegated from SDK)
-		/// </summary>
-		public static readonly Dictionary<UnitType, List<UnitType>> DEPENDENCY = ToMutableListDict(GameConstants.DEPENDENCY);
-
-		/// <summary>
-		/// Set of Units built by each unit (delegated from SDK)
-		/// </summary>
-		public static readonly Dictionary<UnitType, List<UnitType>> BUILDS = ToMutableListDict(GameConstants.BUILDS);
-
-		/// <summary>
-		/// Set of Units trained by each unit (delegated from SDK)
-		/// </summary>
-		public static readonly Dictionary<UnitType, List<UnitType>> TRAINS = ToMutableListDict(GameConstants.TRAINS);
-
-		/// <summary>
-		/// Which Units can move (delegated from SDK)
-		/// </summary>
-		public static readonly Dictionary<UnitType, bool> CAN_MOVE = new Dictionary<UnitType, bool>(GameConstants.CAN_MOVE);
-
-		/// <summary>
-		/// Which Units can build (delegated from SDK)
-		/// </summary>
-		public static readonly Dictionary<UnitType, bool> CAN_BUILD = new Dictionary<UnitType, bool>(GameConstants.CAN_BUILD);
-
-		/// <summary>
-		/// Which Units can train (delegated from SDK)
-		/// </summary>
-		public static readonly Dictionary<UnitType, bool> CAN_TRAIN = new Dictionary<UnitType, bool>(GameConstants.CAN_TRAIN);
-
-		/// <summary>
-		/// Which Units can attack (delegated from SDK)
-		/// </summary>
-		public static readonly Dictionary<UnitType, bool> CAN_ATTACK = new Dictionary<UnitType, bool>(GameConstants.CAN_ATTACK);
-
-		/// <summary>
-		/// Which Units can gather (delegated from SDK)
-		/// </summary>
-		public static readonly Dictionary<UnitType, bool> CAN_GATHER = new Dictionary<UnitType, bool>(GameConstants.CAN_GATHER);
-
-		/// <summary>
-		/// Attack range for each unit (delegated from SDK)
-		/// </summary>
-		public static readonly Dictionary<UnitType, float> ATTACK_RANGE = new Dictionary<UnitType, float>(GameConstants.ATTACK_RANGE);
-
-		/// <summary>
-		/// Which Units can heal (delegated from SDK)
-		/// </summary>
-		public static readonly Dictionary<UnitType, bool> CAN_HEAL = new Dictionary<UnitType, bool>(GameConstants.CAN_HEAL);
-
-		/// <summary>
-		/// Heal range for each unit (delegated from SDK)
-		/// </summary>
-		public static readonly Dictionary<UnitType, float> HEAL_RANGE = new Dictionary<UnitType, float>(GameConstants.HEAL_RANGE);
-
-		/// <summary>
-		/// Maximum mana for each unit (delegated from SDK)
-		/// </summary>
-		public static readonly Dictionary<UnitType, float> MAX_MANA = new Dictionary<UnitType, float>(GameConstants.MAX_MANA);
-
-		/// <summary>
-		/// Mana regeneration rate per second (scaled by game speed at runtime)
-		/// </summary>
-		internal static float MANA_REGEN;
-
-		/// <summary>
-		/// Raw unit sizes as Vector3Int (converted from SDK Position)
-		/// </summary>
-		public static readonly Dictionary<UnitType, Vector3Int> UNIT_SIZE = ToVector3IntDict(GameConstants.UNIT_SIZE);
-
-
-		/// <summary>
-		/// Primary damage value
-		/// </summary>
-		internal static float SCALAR_DAMAGE;
-
-		/// <summary>
-		/// Base move speed factor applied to GAME_SPEED to get pawn speed.
-		/// Pawn speed = GAME_SPEED * BASE_MOVE_SPEED.
-		/// </summary>
-		private const float BASE_MOVE_SPEED = 0.05f;
-
-		/// <summary>Warrior moves at 2.1x pawn speed (slowest combat unit, heavy armored).</summary>
-		private const float WARRIOR_SPEED_MULTIPLIER = 2.1f;
-
-		/// <summary>Archer moves at 3.0x pawn speed (light, fast).</summary>
-		private const float ARCHER_SPEED_MULTIPLIER = 3.0f;
-
-		/// <summary>Lancer moves at 3.45x pawn speed (fastest combat unit, cavalry).</summary>
-		private const float LANCER_SPEED_MULTIPLIER = 3.45f;
-
-		/// <summary>Monk moves at 0.85x pawn speed (slow support unit).</summary>
-		private const float MONK_SPEED_MULTIPLIER = 0.85f;
-
-		/// <summary>
-        /// Base moving speed (= pawn speed). Multiply by unit speed multipliers for other units.
+        /// <summary>
+        /// Which Units can train (pass-through to SDK)
         /// </summary>
-        internal static float SCALAR_MOVING_SPEED;
+        public static readonly IReadOnlyDictionary<UnitType, bool> CAN_TRAIN = GameConstants.CAN_TRAIN;
 
         /// <summary>
-        /// Speed at which each unit moves
+        /// Which Units can attack (pass-through to SDK)
         /// </summary>
-        internal static Dictionary<UnitType, float> MOVING_SPEED;
+        public static readonly IReadOnlyDictionary<UnitType, bool> CAN_ATTACK = GameConstants.CAN_ATTACK;
 
         /// <summary>
-        /// Mining speed constants (per second)
-        /// </summary>		
-        internal static float SCALAR_MINING_SPEED;
-
-        /// <summary>
-        /// Speed at which each unit mines resources
+        /// Which Units can gather (pass-through to SDK)
         /// </summary>
-        internal static Dictionary<UnitType, float> MINING_SPEED;
+        public static readonly IReadOnlyDictionary<UnitType, bool> CAN_GATHER = GameConstants.CAN_GATHER;
 
         /// <summary>
-        /// Time constants (delegated from SDK)
+        /// Attack range for each unit (pass-through to SDK)
         /// </summary>
-        internal static float SCALAR_MINING_CAPACITY = GameConstants.SCALAR_MINING_CAPACITY;
+        public static readonly IReadOnlyDictionary<UnitType, float> ATTACK_RANGE = GameConstants.ATTACK_RANGE;
 
         /// <summary>
-        /// Cost constants (delegated from SDK)
+        /// Which Units can heal (pass-through to SDK)
+        /// </summary>
+        public static readonly IReadOnlyDictionary<UnitType, bool> CAN_HEAL = GameConstants.CAN_HEAL;
+
+        /// <summary>
+        /// Heal range for each unit (pass-through to SDK)
+        /// </summary>
+        public static readonly IReadOnlyDictionary<UnitType, float> HEAL_RANGE = GameConstants.HEAL_RANGE;
+
+        /// <summary>
+        /// Maximum mana for each unit (pass-through to SDK)
+        /// </summary>
+        public static readonly IReadOnlyDictionary<UnitType, float> MAX_MANA = GameConstants.MAX_MANA;
+
+        /// <summary>
+        /// Dependencies of each unit in order to build/train them.
+        /// Mutable copy needed because Unity code may modify the lists.
+        /// TODO: Make Unity code use IReadOnlyList and remove this copy.
+        /// </summary>
+        public static readonly Dictionary<UnitType, List<UnitType>> DEPENDENCY = ToMutableListDict(GameConstants.DEPENDENCY);
+
+        /// <summary>
+        /// Set of Units built by each unit.
+        /// Mutable copy — see DEPENDENCY note above.
+        /// </summary>
+        public static readonly Dictionary<UnitType, List<UnitType>> BUILDS = ToMutableListDict(GameConstants.BUILDS);
+
+        /// <summary>
+        /// Set of Units trained by each unit.
+        /// Mutable copy — see DEPENDENCY note above.
+        /// </summary>
+        public static readonly Dictionary<UnitType, List<UnitType>> TRAINS = ToMutableListDict(GameConstants.TRAINS);
+
+        /// <summary>
+        /// Raw unit sizes as Vector3Int (converted from SDK Position — Unity-specific type)
+        /// </summary>
+        public static readonly Dictionary<UnitType, Vector3Int> UNIT_SIZE = ToVector3IntDict(GameConstants.UNIT_SIZE);
+
+        // =====================================================================
+        // Runtime-computed values: stored from DerivedGameConstants instance.
+        // Recomputed when game speed changes via CalculateGameConstants().
+        // =====================================================================
+
+        /// <summary>
+        /// Cached DerivedGameConstants instance for current game speed
+        /// </summary>
+        internal static DerivedGameConstants Derived { get; private set; }
+
+        /// <summary>
+        /// Damage per unit (speed-scaled)
+        /// </summary>
+        public static IReadOnlyDictionary<UnitType, float> DAMAGE => Derived?.Damage;
+
+        /// <summary>
+        /// Moving speed per unit (speed-scaled)
+        /// </summary>
+        internal static IReadOnlyDictionary<UnitType, float> MOVING_SPEED => Derived?.MovingSpeed;
+
+        /// <summary>
+        /// Mining speed per unit (speed-scaled)
+        /// </summary>
+        internal static IReadOnlyDictionary<UnitType, float> MINING_SPEED => Derived?.MiningSpeedPerUnit;
+
+        /// <summary>
+        /// Mining capacity per unit
+        /// </summary>
+        public static IReadOnlyDictionary<UnitType, float> MINING_CAPACITY => Derived?.MiningCapacityPerUnit;
+
+        /// <summary>
+        /// Cost per unit
+        /// </summary>
+        public static IReadOnlyDictionary<UnitType, float> COST => Derived?.Cost;
+
+        /// <summary>
+        /// Creation time per unit (speed-scaled)
+        /// </summary>
+        internal static IReadOnlyDictionary<UnitType, float> CREATION_TIME => Derived?.CreationTime;
+
+        /// <summary>
+        /// Scalar damage value
+        /// </summary>
+        internal static float SCALAR_DAMAGE => Derived?.ScalarDamage ?? 0f;
+
+        /// <summary>
+        /// Base moving speed (= pawn speed)
+        /// </summary>
+        internal static float SCALAR_MOVING_SPEED => Derived?.ScalarMovingSpeed ?? 0f;
+
+        /// <summary>
+        /// Mining speed scalar
+        /// </summary>
+        internal static float SCALAR_MINING_SPEED => Derived?.ScalarMiningSpeed ?? 0f;
+
+        /// <summary>
+        /// Creation time scalar
+        /// </summary>
+        internal static float SCALAR_CREATION_TIME => Derived?.ScalarCreationTime ?? 0f;
+
+        /// <summary>
+        /// Mana regeneration rate per second (speed-scaled)
+        /// </summary>
+        internal static float MANA_REGEN => Derived?.ManaRegen ?? 0f;
+
+        /// <summary>
+        /// Cost scalar (pass-through to SDK)
         /// </summary>
         internal static float SCALAR_COST = GameConstants.SCALAR_COST;
 
         /// <summary>
-        /// Creation time constants
+        /// Mining capacity scalar (pass-through to SDK)
         /// </summary>
-        internal static float SCALAR_CREATION_TIME;
+        internal static float SCALAR_MINING_CAPACITY = GameConstants.SCALAR_MINING_CAPACITY;
+
+        // =====================================================================
+        // Unity-only values (not in AgentSDK)
+        // =====================================================================
 
         /// <summary>
-        /// Time to create each unit in seconds
+        /// Stores the values for units to compute the "winner" on timeout.
+        /// Pass-through to shared DerivedGameConstants.UNIT_VALUE.
         /// </summary>
-        internal static Dictionary<UnitType, float> CREATION_TIME;
+        internal static readonly IReadOnlyDictionary<UnitType, int> UNIT_VALUE =
+			AgentSDK.DerivedGameConstants.UNIT_VALUE;
 
         /// <summary>
         /// GAME_SPEED - increase this value to make the game go faster
@@ -291,84 +306,26 @@ namespace GameManager
 	        { Direction.SW, (new Vector3Int(-1, -1, 0)) }
         };
 
-		/// <summary>
-		/// Stores the values for units to compute the "winner" if no one destroys the other agent
-		/// </summary>
-		internal static readonly Dictionary<UnitType, int> UNIT_VALUE = new Dictionary<UnitType, int>()
-		{
-			{ UnitType.MINE,        0 },
-			{ UnitType.PAWN,      1 },
-			{ UnitType.WARRIOR,     4 },
-			{ UnitType.ARCHER,      5 },
-			{ UnitType.BASE,        2 },
-			{ UnitType.BARRACKS,    3 },
-			{ UnitType.ARCHERY,     3 },
-			{ UnitType.LANCER,      5 },
-			{ UnitType.TOWER,       3 },
-			{ UnitType.MONASTERY,   3 },
-			{ UnitType.MONK,        3 },
-		};
+        // =====================================================================
+        // Initialization
+        // =====================================================================
 
         /// <summary>
-		/// InitializeRound the game constants
+		/// Recompute speed-scaled constants from AgentSDK.
+		/// Called when game speed changes.
 		/// </summary>
 		internal static void CalculateGameConstants()
         {
-	        // Update mine health from GameManager (can't do this in the static initializer
-	        // because the singleton may not exist yet when the type initializer runs)
+	        // Update mine health from GameManager config
 	        HEALTH[UnitType.MINE] = GameManager.Instance.StartingMineGold;
 
-	        SCALAR_MOVING_SPEED = GAME_SPEED * BASE_MOVE_SPEED;
-	        MOVING_SPEED = new Dictionary<UnitType, float>()
-	        {
-		        { UnitType.MINE,        0.0f },
-		        { UnitType.PAWN,      SCALAR_MOVING_SPEED },
-		        { UnitType.WARRIOR,     SCALAR_MOVING_SPEED * WARRIOR_SPEED_MULTIPLIER },
-		        { UnitType.ARCHER,      SCALAR_MOVING_SPEED * ARCHER_SPEED_MULTIPLIER },
-		        { UnitType.BASE,        0.0f },
-		        { UnitType.BARRACKS,    0.0f },
-		        { UnitType.ARCHERY,     0.0f },
-		        { UnitType.LANCER,      SCALAR_MOVING_SPEED * LANCER_SPEED_MULTIPLIER },
-		        { UnitType.TOWER,       0.0f },
-		        { UnitType.MONASTERY,   0.0f },
-		        { UnitType.MONK,        SCALAR_MOVING_SPEED * MONK_SPEED_MULTIPLIER },
-	        };
-
-	        SCALAR_MINING_SPEED = GAME_SPEED;
-	        MINING_SPEED = new Dictionary<UnitType, float>()
-	        {
-		        { UnitType.MINE,        0.0f},
-		        { UnitType.PAWN,      SCALAR_MINING_SPEED * 20.0f},
-		        { UnitType.WARRIOR,     0.0f },
-		        { UnitType.ARCHER,      0.0f },
-		        { UnitType.BASE,        0.0f },
-		        { UnitType.BARRACKS,    0.0f },
-		        { UnitType.ARCHERY,     0.0f },
-		        { UnitType.LANCER,      0.0f },
-		        { UnitType.TOWER,       0.0f },
-		        { UnitType.MONASTERY,   0.0f },
-		        { UnitType.MONK,        0.0f },
-	        };
-
-	        COST = new Dictionary<UnitType, float>(GameConstants.COST);
-
-			MINING_CAPACITY = new Dictionary<UnitType, float>(GameConstants.MINING_CAPACITY);
-
-			SCALAR_CREATION_TIME = GAME_SPEED > 0 ? 1f / GAME_SPEED : float.PositiveInfinity;
-	        CREATION_TIME = new Dictionary<UnitType, float>();
-	        foreach (var kvp in GameConstants.CREATION_TIME_MULTIPLIER)
-		        CREATION_TIME[kvp.Key] = kvp.Value * SCALAR_CREATION_TIME;
-
-	        SCALAR_DAMAGE = GAME_SPEED;
-	        DAMAGE = new Dictionary<UnitType, float>();
-	        foreach (var kvp in GameConstants.BASE_DAMAGE)
-		        DAMAGE[kvp.Key] = kvp.Value * SCALAR_DAMAGE;
-
-	        MANA_REGEN = GameConstants.BASE_MANA_REGEN * GAME_SPEED;
+	        // Compute all speed-scaled values from AgentSDK (single source of truth)
+	        Derived = AgentSDK.DerivedGameConstants.Compute(GAME_SPEED);
         }
 
         /// <summary>
-        /// Converts SDK ReadOnlyDictionary with IReadOnlyList values to mutable Dictionary with List values
+        /// Converts SDK ReadOnlyDictionary with IReadOnlyList values to mutable Dictionary with List values.
+        /// TODO: Remove when Unity code is updated to use IReadOnlyList.
         /// </summary>
         private static Dictionary<UnitType, List<UnitType>> ToMutableListDict(IReadOnlyDictionary<UnitType, IReadOnlyList<UnitType>> source)
         {
@@ -379,7 +336,8 @@ namespace GameManager
         }
 
         /// <summary>
-        /// Converts SDK Position-based unit sizes to Unity Vector3Int
+        /// Converts SDK Position-based unit sizes to Unity Vector3Int.
+        /// Required because Unity uses Vector3Int, SDK uses Position.
         /// </summary>
         private static Dictionary<UnitType, Vector3Int> ToVector3IntDict(IReadOnlyDictionary<UnitType, Position> source)
         {

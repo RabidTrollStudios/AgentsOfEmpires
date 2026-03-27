@@ -107,9 +107,15 @@ namespace GameManager.GameElements
 		public float Health { get; internal set; }
 
 		/// <summary>
-		/// Agent that owns this unit
+		/// Agent that owns this unit. Null for neutral units (mines).
 		/// </summary>
 		public GameObject Agent { get; internal set; }
+
+		/// <summary>
+		/// Owner agent number. Returns -1 for neutral units (mines with no agent).
+		/// </summary>
+		public int OwnerAgentNbr =>
+			Agent != null ? Agent.GetComponent<AgentController>().Agent.AgentNbr : -1;
 
 		/// <summary>
 		/// Grid position that this unit is targetting
@@ -485,6 +491,53 @@ namespace GameManager.GameElements
 
 		#endregion
 
+		#region Parity (read-only accessors for state hashing — must match SimUnit fields)
+
+		/// <summary>Move accumulator for fractional movement.</summary>
+		internal float MoveAccumulator { get; set; }
+		/// <summary>Current index into the path list.</summary>
+		internal int PathIndex => path != null && path.Count > 0 ? pathUpdateCounter : 0;
+		/// <summary>Number of cells remaining in the current path, or -1 if no path.</summary>
+		internal int PathCount => path != null ? path.Count : -1;
+		/// <summary>Build timer progress (alias for taskTime during BUILD).</summary>
+		internal float BuildTimer => taskTime;
+		/// <summary>Unit type being built by this pawn.</summary>
+		internal UnitType BuildTargetType => taskUnitType;
+		/// <summary>Build site X coordinate.</summary>
+		internal int BuildSiteX => currentBuilding != null
+			? currentBuilding.GetComponent<Unit>().GridPosition.x : 0;
+		/// <summary>Build site Y coordinate.</summary>
+		internal int BuildSiteY => currentBuilding != null
+			? currentBuilding.GetComponent<Unit>().GridPosition.y : 0;
+		/// <summary>Whether the building object has been placed.</summary>
+		internal bool IsBuildPlaced => currentBuilding != null;
+		/// <summary>Mine unit number for gathering.</summary>
+		internal int GatherMineNbr => mineUnit;
+		/// <summary>Base unit number for gathering.</summary>
+		internal int GatherBaseNbr => baseUnit;
+		/// <summary>Current gather phase.</summary>
+		internal GatherPhase CurrentGatherPhase => gatherPhase;
+		/// <summary>Mining timer (accumulated gold this cycle).</summary>
+		internal float MiningTimer => minedGold;
+		/// <summary>Attack target unit number (-1 if none).</summary>
+		internal int AttackTargetNbr => attackUnitNbr;
+		/// <summary>Repair target building number (-1 if none).</summary>
+		internal int RepairTargetNbr
+		{
+			get
+			{
+				if (CurrentAction == UnitAction.REPAIR && currentBuilding != null)
+					return currentBuilding.GetComponent<Unit>().UnitNbr;
+				return -1;
+			}
+		}
+		/// <summary>Heal target unit number (-1 if none).</summary>
+		internal int HealTargetNbr => healTargetNbr;
+		/// <summary>Local avoidance wait frame counter.</summary>
+		internal int LocalAvoidWaitCount => localAvoidWaitFrames;
+
+		#endregion
+
 		#region Initializers
 
 		/// <summary>
@@ -588,7 +641,7 @@ namespace GameManager.GameElements
 			healArrowhead = CreateArrowhead("HealArrowhead", Color.green, "UnitUI", 11);
 
 			// Determine indicator colors by agent faction (semi-transparent overlays)
-			bool isRed = agent.GetComponent<AgentController>()?.Agent?.AgentName == Constants.RED_ABBR;
+			bool isRed = agent != null && agent.GetComponent<AgentController>()?.Agent?.AgentName == Constants.RED_ABBR;
 			moveColor   = isRed ? new Color(0f, 1f, 1f, 0.5f)      : new Color(0f, 0f, 1f, 0.5f);      // cyan / blue
 			actionColor = isRed ? new Color(1f, 0f, 1f, 0.5f)      : new Color(1f, 0f, 0f, 0.5f);      // magenta / red
 			buildColor  = isRed ? new Color(1f, 0.65f, 0f, 0.5f) : new Color(0.8f, 0.25f, 0f, 0.5f);  // light orange / dark orange

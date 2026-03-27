@@ -21,6 +21,12 @@ namespace GameManager
 		public Vector3Int MapSize { get; private set; }
 
 		/// <summary>
+		/// Shared GameGrid for grid state and pathfinding.
+		/// Stays in sync with GridCells; both sides and SimGame use the same logic.
+		/// </summary>
+		public AgentSDK.GameGrid Grid { get; private set; }
+
+		/// <summary>
 		/// The tilemap that renders the Influence Map on top of the game grid
 		/// </summary>
 		public Tilemap InfluenceMap { get; set; }
@@ -89,6 +95,7 @@ namespace GameManager
 
 			// Create the nodes; cells with no ground tile are obstacles
 			GridCells = new GridCell[MapSize.x, MapSize.y];
+			Grid = new AgentSDK.GameGrid(MapSize.x, MapSize.y);
 			for (int i = 0; i < MapSize.x; ++i)
 			{
 				for (int j = 0; j < MapSize.y; ++j)
@@ -101,6 +108,7 @@ namespace GameManager
 					{
 						GridCells[i, j].SetBuildable(false);
 						GridCells[i, j].SetWalkable(false);
+						Grid.SetCellBlocked(i, j);
 					}
 				}
 			}
@@ -133,6 +141,7 @@ namespace GameManager
 						{
 							GridCells[i, j].SetBuildable(false);
 							GridCells[i, j].SetWalkable(false);
+							Grid.SetCellBlocked(i, j);
 						}
 					}
 				}
@@ -410,109 +419,51 @@ namespace GameManager
 		}
 
 		/// <summary>
-		/// Get the path from a gridPosition to a position near the unit on any side of it
+		/// Get the path from a gridPosition to a position near the unit on any side of it.
+		/// Delegates to shared GameGrid.FindPathToUnit for parity with SimGame (ADR-0001).
 		/// </summary>
 		public List<Vector3Int> GetPathToUnit(Vector3Int gridPosition, UnitType unitType, Vector3Int unitGridPosition, bool avoidUnits = false)
 		{
-			List<Vector3Int> path = new List<Vector3Int>();
-			List<Vector3Int> allNeighbors = GetGridPositionsNearUnit(unitType, unitGridPosition);
-			List<Vector3Int> positions = GetBuildableGridPositionsNearUnit(unitType, unitGridPosition);
+			var start = new AgentSDK.Position(gridPosition.x, gridPosition.y);
+			var anchor = new AgentSDK.Position(unitGridPosition.x, unitGridPosition.y);
 
-			// Sort neighbors by distance to the requesting unit so it targets the closest open cell first
-			positions.Sort((a, b) =>
-			{
-				float distA = (a - gridPosition).sqrMagnitude;
-				float distB = (b - gridPosition).sqrMagnitude;
-				return distA.CompareTo(distB);
-			});
+			var posPath = Grid.FindPathToUnit(start, unitType, anchor);
 
-			// One-time diagnostic dump for failed BUILD pathfinding
-			bool shouldLog = !hasLoggedPathDiag;
-
-			foreach (var position in positions)
-			{
-				path = GetPathBetweenGridPositions(gridPosition, position, avoidUnits);
-				if (path.Count > 0)
-				{
-					return path;
-				}
-				if (shouldLog)
-				{
-					GameManager.Instance.Log($"PATH_DIAG: {gridPosition}->{position} failed: {Graph.LastSearchResult} expansions={Graph.LastSearchExpansions}",
-						GameManager.Instance.gameObject);
-				}
-			}
-
-			if (shouldLog && path.Count == 0)
-			{
-				hasLoggedPathDiag = true;
-				string diagPath = Application.dataPath + "/../PathDiag.txt";
-				using (var w = new StreamWriter(diagPath, false))
-				{
-					w.WriteLine($"GetPathToUnit FAILED");
-					w.WriteLine($"  from={gridPosition} to={unitType} at {unitGridPosition}");
-					w.WriteLine($"  mapSize={MapSize}");
-					w.WriteLine($"  totalNeighbors={allNeighbors.Count} buildableNeighbors={positions.Count}");
-					w.WriteLine();
-					w.WriteLine("All neighbors:");
-					foreach (var n in allNeighbors)
-					{
-						bool buildable = IsGridPositionBuildable(n);
-						w.WriteLine($"  {n} buildable={buildable}");
-					}
-					w.WriteLine();
-					w.WriteLine("A* attempts (buildable neighbors only):");
-					// Re-run to capture per-attempt diagnostics
-					foreach (var position in positions)
-					{
-						GetPathBetweenGridPositions(gridPosition, position);
-						w.WriteLine($"  {gridPosition} -> {position}: result={Graph.LastSearchResult} expansions={Graph.LastSearchExpansions}");
-					}
-					w.WriteLine();
-					w.WriteLine($"Start cell {gridPosition} buildable={IsGridPositionBuildable(gridPosition)}");
-					// Check if start cell's immediate neighbors are buildable
-					w.WriteLine("Start cell neighbors:");
-					for (int dx = -1; dx <= 1; dx++)
-					{
-						for (int dy = -1; dy <= 1; dy++)
-						{
-							if (dx == 0 && dy == 0) continue;
-							var neighbor = gridPosition + new Vector3Int(dx, dy, 0);
-							if (Utility.IsValidGridLocation(neighbor, MapSize))
-								w.WriteLine($"  {neighbor} buildable={IsGridPositionBuildable(neighbor)}");
-						}
-					}
-				}
-				GameManager.Instance.Log($"PATH_DIAG: wrote diagnostics to {diagPath}", GameManager.Instance.gameObject);
-			}
+			var path = new List<Vector3Int>(posPath.Count);
+			foreach (var pos in posPath)
+				path.Add(new Vector3Int(pos.X, pos.Y, 0));
 			return path;
 		}
 
 		/// <summary>
-		/// Gets the path between two grid positions
+		/// Gets the path between two grid positions using the shared GameGrid.
+		/// This ensures identical pathfinding with SimGame for parity.
 		/// </summary>
 		public List<Vector3Int> GetPathBetweenGridPositions(Vector3Int startGridPosition, Vector3Int endGridPosition, bool avoidUnits = false)
 		{
-			List<Vector3Int> path = new List<Vector3Int>();
+			var start = new AgentSDK.Position(startGridPosition.x, startGridPosition.y);
+			var end = new AgentSDK.Position(endGridPosition.x, endGridPosition.y);
 
-			int start = Utility.GridToInt(startGridPosition, MapSize);
-			int end = Utility.GridToInt(endGridPosition, MapSize);
+			var posPath = Grid.FindPath(start, end, avoidUnits);
 
-			List<int> pathOfInts = Graph.AStarSearch(start, end, avoidUnits: avoidUnits);
-
-			foreach (var nodeNbr in pathOfInts)
-			{
-				path.Add(Utility.IntToGrid(nodeNbr, MapSize));
-			}
+			var path = new List<Vector3Int>(posPath.Count);
+			foreach (var pos in posPath)
+				path.Add(new Vector3Int(pos.X, pos.Y, 0));
 
 			return path;
 		}
 
 		/// <summary>
-		/// Set the unit's current cell(s) to buildable or not
+		/// Set the unit's current cell(s) to buildable or not.
+		/// Updates both the shared GameGrid and the legacy GridCells.
 		/// </summary>
 		public void SetAreaBuildability(UnitType unitType, Vector3Int gridPosition, bool isBuildable)
 		{
+			// Delegate core logic to shared GameGrid
+			var pos = new AgentSDK.Position(gridPosition.x, gridPosition.y);
+			Grid.SetAreaBuildability(unitType, pos, isBuildable);
+
+			// Keep legacy GridCells in sync
 			Vector3Int gridPos = Vector3Int.zero;
 			Vector3Int size = Constants.UNIT_SIZE[unitType];
 			bool canMove = Constants.CAN_MOVE[unitType];
@@ -527,17 +478,10 @@ namespace GameManager
 					{
 						GridCells[gridPos.x, gridPos.y].SetBuildable(isBuildable);
 
-						// Walkability rules:
-						// - Clearing (isBuildable=true): restore walkable for all cells
-						// - Mobile units: keep walkable (units can path through each other)
-						// - Building top row (j==0, multi-row): keep walkable (units walk behind the top)
-						// - Building body (remaining rows): block walkability
 						bool isTopRow = j == 0 && size.y > 1;
 						if (isBuildable || (!canMove && !isTopRow))
 							GridCells[gridPos.x, gridPos.y].SetWalkable(isBuildable);
 
-						// Mark building top rows as passages so movement treats them as
-						// free to traverse (not as mobile-unit blockages).
 						if (!canMove && isTopRow)
 							GridCells[gridPos.x, gridPos.y].SetPassage(!isBuildable);
 						else
