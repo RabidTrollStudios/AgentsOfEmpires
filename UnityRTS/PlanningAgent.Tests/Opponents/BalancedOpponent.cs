@@ -36,11 +36,9 @@ namespace PlanningAgent.Tests
                 if (!info.HasValue || !info.Value.IsBuilt || info.Value.CurrentAction != UnitAction.IDLE)
                     continue;
 
-                UnitType toTrain = trainWarriorNext ? UnitType.WARRIOR : UnitType.ARCHER;
-                if (state.MyGold >= GameConstants.COST[toTrain])
+                if (state.MyGold >= GameConstants.COST[UnitType.WARRIOR])
                 {
-                    actions.Train(barracksNbr, toTrain);
-                    trainWarriorNext = !trainWarriorNext;
+                    actions.Train(barracksNbr, UnitType.WARRIOR);
                 }
             }
 

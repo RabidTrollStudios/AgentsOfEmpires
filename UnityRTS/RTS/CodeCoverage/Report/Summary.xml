@@ -1,55 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
 <CoverageReport scope="Summary">
   <Summary>
-    <Generatedon>3/19/2026 - 12:31:36 AM</Generatedon>
-    <Parser>MultiReportParser (923x OpenCoverParser)</Parser>
+    <Generatedon>3/28/2026 - 9:04:23 PM</Generatedon>
+    <Parser>MultiReportParser (391x OpenCoverParser)</Parser>
     <Assemblies>1</Assemblies>
-    <Classes>31</Classes>
-    <Files>32</Files>
-    <Coveredlines>3529</Coveredlines>
-    <Uncoveredlines>432</Uncoveredlines>
-    <Coverablelines>3961</Coverablelines>
-    <Totallines>7646</Totallines>
-    <Linecoverage>89</Linecoverage>
+    <Classes>40</Classes>
+    <Files>39</Files>
+    <Coveredlines>1132</Coveredlines>
+    <Uncoveredlines>4961</Uncoveredlines>
+    <Coverablelines>6093</Coverablelines>
+    <Totallines>13838</Totallines>
+    <Linecoverage>18.5</Linecoverage>
     <Coveredbranches>0</Coveredbranches>
     <Totalbranches>0</Totalbranches>
-    <Coveredmethods>408</Coveredmethods>
-    <Totalmethods>455</Totalmethods>
-    <Methodcoverage>89.6</Methodcoverage>
+    <Coveredmethods>212</Coveredmethods>
+    <Totalmethods>733</Totalmethods>
+    <Methodcoverage>28.9</Methodcoverage>
   </Summary>
   <Coverage>
-    <Assembly name="GameManager" classes="31" coverage="89" coveredlines="3529" coverablelines="3961" totallines="8695" branchcoverage="" coveredbranches="0" totalbranches="0" coveredmethods="408" totalmethods="455" methodcoverage="89.6">
-      <Class name="GameManager.Agent" coverage="99.5" coveredlines="223" coverablelines="224" totallines="475" branchcoverage="" coveredbranches="0" totalbranches="0" coveredmethods="35" totalmethods="35" methodcoverage="100" />
-      <Class name="GameManager.AgentActionsAdapter" coverage="100" coveredlines="98" coverablelines="98" totallines="180" branchcoverage="" coveredbranches="0" totalbranches="0" coveredmethods="12" totalmethods="12" methodcoverage="100" />
-      <Class name="GameManager.AgentBridge" coverage="100" coveredlines="29" coverablelines="29" totallines="66" branchcoverage="" coveredbranches="0" totalbranches="0" coveredmethods="8" totalmethods="8" methodcoverage="100" />
-      <Class name="GameManager.AgentController" coverage="73.3" coveredlines="33" coverablelines="45" totallines="117" branchcoverage="" coveredbranches="0" totalbranches="0" coveredmethods="5" totalmethods="6" methodcoverage="83.3" />
-      <Class name="GameManager.AgentLoader" coverage="81.4" coveredlines="44" coverablelines="54" totallines="107" branchcoverage="" coveredbranches="0" totalbranches="0" coveredmethods="4" totalmethods="4" methodcoverage="100" />
+    <Assembly name="GameManager" classes="40" coverage="18.5" coveredlines="1132" coverablelines="6093" totallines="15638" branchcoverage="" coveredbranches="0" totalbranches="0" coveredmethods="212" totalmethods="733" methodcoverage="28.9">
+      <Class name="GameManager.Agent" coverage="20.9" coveredlines="58" coverablelines="277" totallines="578" branchcoverage="" coveredbranches="0" totalbranches="0" coveredmethods="24" totalmethods="40" methodcoverage="60" />
+      <Class name="GameManager.AgentActionsAdapter" coverage="47.4" coveredlines="56" coverablelines="118" totallines="234" branchcoverage="" coveredbranches="0" totalbranches="0" coveredmethods="9" totalmethods="14" methodcoverage="64.2" />
+      <Class name="GameManager.AgentBridge" coverage="20" coveredlines="7" coverablelines="35" totallines="76" branchcoverage="" coveredbranches="0" totalbranches="0" coveredmethods="3" totalmethods="10" methodcoverage="30" />
+      <Class name="GameManager.AgentController" coverage="7.7" coveredlines="7" coverablelines="90" totallines="181" branchcoverage="" coveredbranches="0" totalbranches="0" coveredmethods="2" totalmethods="7" methodcoverage="28.5" />
+      <Class name="GameManager.AgentLoader" coverage="55.5" coveredlines="30" coverablelines="54" totallines="107" branchcoverage="" coveredbranches="0" totalbranches="0" coveredmethods="4" totalmethods="4" methodcoverage="100" />
       <Class name="GameManager.AssemblyLoader" coverage="0" coveredlines="0" coverablelines="11" totallines="41" branchcoverage="" coveredbranches="0" totalbranches="0" coveredmethods="0" totalmethods="4" methodcoverage="0" />
-      <Class name="GameManager.CommandLogger" coverage="63.3" coveredlines="19" coverablelines="30" totallines="64" branchcoverage="" coveredbranches="0" totalbranches="0" coveredmethods="3" totalmethods="5" methodcoverage="60" />
-      <Class name="GameManager.Constants" coverage="73" coveredlines="46" coverablelines="63" totallines="364" branchcoverage="" coveredbranches="0" totalbranches="0" coveredmethods="4" totalmethods="21" methodcoverage="19" />
-      <Class name="GameManager.EventDispatcher" coverage="89" coveredlines="178" coverablelines="200" totallines="324" branchcoverage="" coveredbranches="0" totalbranches="0" coveredmethods="7" totalmethods="7" methodcoverage="100" />
+      <Class name="GameManager.CommandLogger" coverage="0" coveredlines="0" coverablelines="52" totallines="110" branchcoverage="" coveredbranches="0" totalbranches="0" coveredmethods="0" totalmethods="8" methodcoverage="0" />
+      <Class name="GameManager.Constants" coverage="63" coveredlines="41" coverablelines="65" totallines="352" branchcoverage="" coveredbranches="0" totalbranches="0" coveredmethods="10" totalmethods="34" methodcoverage="29.4" />
+      <Class name="GameManager.DeferredCommandQueue" coverage="0" coveredlines="0" coverablelines="49" totallines="137" branchcoverage="" coveredbranches="0" totalbranches="0" coveredmethods="0" totalmethods="5" methodcoverage="0" />
+      <Class name="GameManager.EventDispatcher" coverage="2.1" coveredlines="5" coverablelines="237" totallines="379" branchcoverage="" coveredbranches="0" totalbranches="0" coveredmethods="1" totalmethods="8" methodcoverage="12.5" />
       <Class name="GameManager.GameElements.ArrowProjectile" coverage="0" coveredlines="0" coverablelines="172" totallines="292" branchcoverage="" coveredbranches="0" totalbranches="0" coveredmethods="0" totalmethods="12" methodcoverage="0" />
-      <Class name="GameManager.GameElements.AttackEventArgs" coverage="100" coveredlines="7" coverablelines="7" totallines="178" branchcoverage="" coveredbranches="0" totalbranches="0" coveredmethods="5" totalmethods="5" methodcoverage="100" />
-      <Class name="GameManager.GameElements.BuildEventArgs" coverage="100" coveredlines="9" coverablelines="9" totallines="178" branchcoverage="" coveredbranches="0" totalbranches="0" coveredmethods="7" totalmethods="7" methodcoverage="100" />
-      <Class name="GameManager.GameElements.CameraController" coverage="32.5" coveredlines="14" coverablelines="43" totallines="84" branchcoverage="" coveredbranches="0" totalbranches="0" coveredmethods="2" totalmethods="2" methodcoverage="100" />
-      <Class name="GameManager.GameElements.GatherEventArgs" coverage="100" coveredlines="9" coverablelines="9" totallines="178" branchcoverage="" coveredbranches="0" totalbranches="0" coveredmethods="7" totalmethods="7" methodcoverage="100" />
-      <Class name="GameManager.GameElements.GoldNuggetProjectile" coverage="100" coveredlines="21" coverablelines="21" totallines="53" branchcoverage="" coveredbranches="0" totalbranches="0" coveredmethods="2" totalmethods="2" methodcoverage="100" />
-      <Class name="GameManager.GameElements.GridCell" coverage="92.8" coveredlines="26" coverablelines="28" totallines="59" branchcoverage="" coveredbranches="0" totalbranches="0" coveredmethods="12" totalmethods="13" methodcoverage="92.3" />
-      <Class name="GameManager.GameElements.MoveEventArgs" coverage="100" coveredlines="9" coverablelines="9" totallines="178" branchcoverage="" coveredbranches="0" totalbranches="0" coveredmethods="7" totalmethods="7" methodcoverage="100" />
-      <Class name="GameManager.GameElements.RepairEventArgs" coverage="100" coveredlines="7" coverablelines="7" totallines="178" branchcoverage="" coveredbranches="0" totalbranches="0" coveredmethods="5" totalmethods="5" methodcoverage="100" />
-      <Class name="GameManager.GameElements.TrainEventArgs" coverage="100" coveredlines="7" coverablelines="7" totallines="178" branchcoverage="" coveredbranches="0" totalbranches="0" coveredmethods="5" totalmethods="5" methodcoverage="100" />
-      <Class name="GameManager.GameElements.Unit" coverage="95.7" coveredlines="1448" coverablelines="1512" totallines="2562" branchcoverage="" coveredbranches="0" totalbranches="0" coveredmethods="99" totalmethods="100" methodcoverage="99" />
-      <Class name="GameManager.GameElements.Utility" coverage="95.8" coveredlines="46" coverablelines="48" totallines="126" branchcoverage="" coveredbranches="0" totalbranches="0" coveredmethods="8" totalmethods="10" methodcoverage="80" />
-      <Class name="GameManager.GameManager" coverage="96" coveredlines="542" coverablelines="564" totallines="1192" branchcoverage="" coveredbranches="0" totalbranches="0" coveredmethods="75" totalmethods="78" methodcoverage="96.1" />
-      <Class name="GameManager.GameStateAdapter" coverage="100" coveredlines="115" coverablelines="115" totallines="222" branchcoverage="" coveredbranches="0" totalbranches="0" coveredmethods="23" totalmethods="23" methodcoverage="100" />
+      <Class name="GameManager.GameElements.AttackEventArgs" coverage="0" coveredlines="0" coverablelines="7" totallines="193" branchcoverage="" coveredbranches="0" totalbranches="0" coveredmethods="0" totalmethods="5" methodcoverage="0" />
+      <Class name="GameManager.GameElements.BuildEventArgs" coverage="0" coveredlines="0" coverablelines="9" totallines="193" branchcoverage="" coveredbranches="0" totalbranches="0" coveredmethods="0" totalmethods="7" methodcoverage="0" />
+      <Class name="GameManager.GameElements.CameraController" coverage="7.5" coveredlines="10" coverablelines="133" totallines="244" branchcoverage="" coveredbranches="0" totalbranches="0" coveredmethods="3" totalmethods="7" methodcoverage="42.8" />
+      <Class name="GameManager.GameElements.GatherEventArgs" coverage="0" coveredlines="0" coverablelines="9" totallines="193" branchcoverage="" coveredbranches="0" totalbranches="0" coveredmethods="0" totalmethods="7" methodcoverage="0" />
+      <Class name="GameManager.GameElements.GoldNuggetProjectile" coverage="0" coveredlines="0" coverablelines="21" totallines="53" branchcoverage="" coveredbranches="0" totalbranches="0" coveredmethods="0" totalmethods="2" methodcoverage="0" />
+      <Class name="GameManager.GameElements.GridCell" coverage="94.1" coveredlines="32" coverablelines="34" totallines="74" branchcoverage="" coveredbranches="0" totalbranches="0" coveredmethods="14" totalmethods="15" methodcoverage="93.3" />
+      <Class name="GameManager.GameElements.HealEventArgs" coverage="0" coveredlines="0" coverablelines="7" totallines="193" branchcoverage="" coveredbranches="0" totalbranches="0" coveredmethods="0" totalmethods="5" methodcoverage="0" />
+      <Class name="GameManager.GameElements.MoveEventArgs" coverage="0" coveredlines="0" coverablelines="9" totallines="193" branchcoverage="" coveredbranches="0" totalbranches="0" coveredmethods="0" totalmethods="7" methodcoverage="0" />
+      <Class name="GameManager.GameElements.RepairEventArgs" coverage="0" coveredlines="0" coverablelines="7" totallines="193" branchcoverage="" coveredbranches="0" totalbranches="0" coveredmethods="0" totalmethods="5" methodcoverage="0" />
+      <Class name="GameManager.GameElements.TrainEventArgs" coverage="0" coveredlines="0" coverablelines="7" totallines="193" branchcoverage="" coveredbranches="0" totalbranches="0" coveredmethods="0" totalmethods="5" methodcoverage="0" />
+      <Class name="GameManager.GameElements.Unit" coverage="0" coveredlines="0" coverablelines="1749" totallines="2979" branchcoverage="" coveredbranches="0" totalbranches="0" coveredmethods="0" totalmethods="130" methodcoverage="0" />
+      <Class name="GameManager.GameElements.Utility" coverage="93.7" coveredlines="45" coverablelines="48" totallines="126" branchcoverage="" coveredbranches="0" totalbranches="0" coveredmethods="7" totalmethods="10" methodcoverage="70" />
+      <Class name="GameManager.GameManager" coverage="24.7" coveredlines="269" coverablelines="1088" totallines="2066" branchcoverage="" coveredbranches="0" totalbranches="0" coveredmethods="55" totalmethods="108" methodcoverage="50.9" />
+      <Class name="GameManager.GameStateAdapter" coverage="0" coveredlines="0" coverablelines="125" totallines="244" branchcoverage="" coveredbranches="0" totalbranches="0" coveredmethods="0" totalmethods="26" methodcoverage="0" />
       <Class name="GameManager.Graph.Edge[V]" coverage="64.7" coveredlines="11" coverablelines="17" totallines="30" branchcoverage="" coveredbranches="0" totalbranches="0" coveredmethods="2" totalmethods="3" methodcoverage="66.6" />
       <Class name="GameManager.Graph.Graph[T]" coverage="100" coveredlines="127" coverablelines="127" totallines="203" branchcoverage="" coveredbranches="0" totalbranches="0" coveredmethods="13" totalmethods="13" methodcoverage="100" />
       <Class name="GameManager.Graph.Node[V]" coverage="100" coveredlines="19" coverablelines="19" totallines="35" branchcoverage="" coveredbranches="0" totalbranches="0" coveredmethods="3" totalmethods="3" methodcoverage="100" />
       <Class name="GameManager.Graph.PriorityNode[V]" coverage="100" coveredlines="19" coverablelines="19" totallines="159" branchcoverage="" coveredbranches="0" totalbranches="0" coveredmethods="3" totalmethods="3" methodcoverage="100" />
       <Class name="GameManager.Graph.PriorityQueue[T]" coverage="89.4" coveredlines="76" coverablelines="85" totallines="159" branchcoverage="" coveredbranches="0" totalbranches="0" coveredmethods="8" totalmethods="9" methodcoverage="88.8" />
       <Class name="GameManager.InfluenceTile" coverage="0" coveredlines="0" coverablelines="4" totallines="20" branchcoverage="" coveredbranches="0" totalbranches="0" coveredmethods="0" totalmethods="2" methodcoverage="0" />
-      <Class name="GameManager.MapManager" coverage="87.3" coveredlines="262" coverablelines="300" totallines="496" branchcoverage="" coveredbranches="0" totalbranches="0" coveredmethods="24" totalmethods="24" methodcoverage="100" />
-      <Class name="GameManager.UnitManager" coverage="100" coveredlines="85" coverablelines="85" totallines="197" branchcoverage="" coveredbranches="0" totalbranches="0" coveredmethods="20" totalmethods="20" methodcoverage="100" />
+      <Class name="GameManager.InputSystem_Actions" coverage="15" coveredlines="67" coverablelines="446" totallines="2783" branchcoverage="" coveredbranches="0" totalbranches="0" coveredmethods="16" totalmethods="101" methodcoverage="15.8" />
+      <Class name="GameManager.MapManager" coverage="84.1" coveredlines="234" coverablelines="278" totallines="494" branchcoverage="" coveredbranches="0" totalbranches="0" coveredmethods="27" totalmethods="27" methodcoverage="100" />
+      <Class name="GameManager.MatchAnalytics" coverage="0" coveredlines="0" coverablelines="112" totallines="226" branchcoverage="" coveredbranches="0" totalbranches="0" coveredmethods="0" totalmethods="16" methodcoverage="0" />
+      <Class name="GameManager.ParityExporter" coverage="0" coveredlines="0" coverablelines="108" totallines="201" branchcoverage="" coveredbranches="0" totalbranches="0" coveredmethods="0" totalmethods="7" methodcoverage="0" />
+      <Class name="GameManager.ProceduralGrove" coverage="0" coveredlines="0" coverablelines="2" totallines="483" branchcoverage="" coveredbranches="0" totalbranches="0" coveredmethods="0" totalmethods="1" methodcoverage="0" />
+      <Class name="GameManager.ProceduralMapGenerator" coverage="0" coveredlines="0" coverablelines="250" totallines="483" branchcoverage="" coveredbranches="0" totalbranches="0" coveredmethods="0" totalmethods="18" methodcoverage="0" />
+      <Class name="GameManager.RoundStats" coverage="0" coveredlines="0" coverablelines="101" totallines="213" branchcoverage="" coveredbranches="0" totalbranches="0" coveredmethods="0" totalmethods="22" methodcoverage="0" />
+      <Class name="GameManager.UnitManager" coverage="16.8" coveredlines="18" coverablelines="107" totallines="236" branchcoverage="" coveredbranches="0" totalbranches="0" coveredmethods="7" totalmethods="21" methodcoverage="33.3" />
+      <Class name="Preloader.PrefabLoader" coverage="20" coveredlines="1" coverablelines="5" totallines="289" branchcoverage="" coveredbranches="0" totalbranches="0" coveredmethods="1" totalmethods="2" methodcoverage="50" />
     </Assembly>
   </Coverage>
 </CoverageReport>

@@ -5,21 +5,6 @@ using AgentSDK;
 namespace AgentTestHarness
 {
     /// <summary>
-    /// Types of commands an agent can issue.
-    /// </summary>
-    public enum CommandType
-    {
-        Move,
-        Build,
-        Gather,
-        Train,
-        Attack,
-        Repair,
-        Heal,
-        Log
-    }
-
-    /// <summary>
     /// A validated command queued for execution.
     /// </summary>
     internal class SimCommand
@@ -34,9 +19,8 @@ namespace AgentTestHarness
     }
 
     /// <summary>
-    /// Implements IAgentActions for the simulation. Validates commands against
-    /// game rules and queues them for execution by SimGame.
-    /// Invalid commands are silently ignored (matching real game behavior).
+    /// Implements IAgentActions for the simulation. Uses shared CommandValidator
+    /// for game-rule validation, then queues commands for execution by SimGame.
     /// </summary>
     public class SimAgentActions : IAgentActions
     {
@@ -63,8 +47,9 @@ namespace AgentTestHarness
         {
             if (!game.Units.TryGetValue(unitNbr, out var unit)) return CommandResult.UNIT_NOT_FOUND;
             if (unit.OwnerAgentNbr != agentNbr) return CommandResult.UNIT_NOT_FOUND;
-            if (!GameConstants.CAN_MOVE[unit.UnitType]) return CommandResult.UNIT_CANNOT_PERFORM_ACTION;
-            if (!game.Map.IsPositionValid(target)) return CommandResult.INVALID_POSITION;
+
+            var result = CommandValidator.ValidateMove(unit.UnitType, game.Map.IsPositionValid(target));
+            if (result != CommandResult.SUCCESS) return result;
 
             PendingCommands.Add(new SimCommand
             {
@@ -82,20 +67,10 @@ namespace AgentTestHarness
             if (!GameConstants.CAN_BUILD[unit.UnitType]) return CommandResult.UNIT_CANNOT_PERFORM_ACTION;
             if (!GameConstants.BUILDS[unit.UnitType].Contains(unitType)) return CommandResult.UNIT_CANNOT_PERFORM_ACTION;
             if (!game.Map.IsPositionValid(target)) return CommandResult.INVALID_POSITION;
-            if (!game.Map.IsAreaBuildable(unitType, target)) return CommandResult.AREA_NOT_BUILDABLE;
 
-            // Check gold
-            float cost = GameConstants.COST[unitType];
-            if (game.GetGold(agentNbr) < cost) return CommandResult.INSUFFICIENT_GOLD;
-
-            // Check dependencies
-            foreach (UnitType dep in GameConstants.DEPENDENCY[unitType])
-            {
-                bool hasDep = game.Units.Values.Any(u =>
-                    u.OwnerAgentNbr == agentNbr && u.UnitType == dep && u.IsBuilt);
-                if (!hasDep) return CommandResult.MISSING_DEPENDENCY;
-            }
-
+            // Heavy validation (gold, dependencies, area) is deferred to ProcessBuild,
+            // matching Unity's two-phase approach where AgentActionsAdapter does light
+            // checks and EventDispatcher does heavy checks at dispatch time.
             PendingCommands.Add(new SimCommand
             {
                 Type = CommandType.Build,
@@ -110,14 +85,14 @@ namespace AgentTestHarness
         {
             if (!game.Units.TryGetValue(pawnNbr, out var pawn)) return CommandResult.UNIT_NOT_FOUND;
             if (pawn.OwnerAgentNbr != agentNbr) return CommandResult.UNIT_NOT_FOUND;
-            if (!GameConstants.CAN_GATHER[pawn.UnitType]) return CommandResult.UNIT_CANNOT_PERFORM_ACTION;
 
             if (!game.Units.TryGetValue(mineNbr, out var mine)) return CommandResult.TARGET_NOT_FOUND;
-            if (mine.UnitType != UnitType.MINE) return CommandResult.INVALID_TARGET;
-
             if (!game.Units.TryGetValue(baseNbr, out var baseUnit)) return CommandResult.TARGET_NOT_FOUND;
-            if (baseUnit.UnitType != UnitType.BASE) return CommandResult.INVALID_TARGET;
-            if (baseUnit.OwnerAgentNbr != agentNbr) return CommandResult.INVALID_TARGET;
+
+            var result = CommandValidator.ValidateGather(
+                pawn.UnitType, mine.UnitType, baseUnit.UnitType,
+                baseUnit.OwnerAgentNbr, agentNbr);
+            if (result != CommandResult.SUCCESS) return result;
 
             PendingCommands.Add(new SimCommand
             {
@@ -134,13 +109,9 @@ namespace AgentTestHarness
             if (!game.Units.TryGetValue(buildingNbr, out var building)) return CommandResult.UNIT_NOT_FOUND;
             if (building.OwnerAgentNbr != agentNbr) return CommandResult.UNIT_NOT_FOUND;
             if (!GameConstants.CAN_TRAIN[building.UnitType]) return CommandResult.UNIT_CANNOT_PERFORM_ACTION;
-            if (!building.IsBuilt) return CommandResult.BUILDING_NOT_FINISHED;
-            if (building.CurrentAction != UnitAction.IDLE) return CommandResult.UNIT_BUSY;
             if (!GameConstants.TRAINS[building.UnitType].Contains(unitType)) return CommandResult.UNIT_CANNOT_PERFORM_ACTION;
 
-            float cost = GameConstants.COST[unitType];
-            if (game.GetGold(agentNbr) < cost) return CommandResult.INSUFFICIENT_GOLD;
-
+            // Heavy validation (gold, isBuilt, idle) deferred to ProcessTrain
             PendingCommands.Add(new SimCommand
             {
                 Type = CommandType.Train,
@@ -154,13 +125,12 @@ namespace AgentTestHarness
         {
             if (!game.Units.TryGetValue(unitNbr, out var unit)) return CommandResult.UNIT_NOT_FOUND;
             if (unit.OwnerAgentNbr != agentNbr) return CommandResult.UNIT_NOT_FOUND;
-            if (!GameConstants.CAN_ATTACK[unit.UnitType]) return CommandResult.UNIT_CANNOT_PERFORM_ACTION;
 
             if (!game.Units.TryGetValue(targetNbr, out var target)) return CommandResult.TARGET_NOT_FOUND;
-            // Can't attack own units
-            if (target.OwnerAgentNbr == agentNbr) return CommandResult.FRIENDLY_FIRE;
-            // Can't attack mines
-            if (target.UnitType == UnitType.MINE) return CommandResult.INVALID_TARGET;
+
+            var result = CommandValidator.ValidateAttack(
+                unit.UnitType, target.OwnerAgentNbr, agentNbr, target.UnitType);
+            if (result != CommandResult.SUCCESS) return result;
 
             PendingCommands.Add(new SimCommand
             {
@@ -175,16 +145,13 @@ namespace AgentTestHarness
         {
             if (!game.Units.TryGetValue(pawnNbr, out var pawn)) return CommandResult.UNIT_NOT_FOUND;
             if (pawn.OwnerAgentNbr != agentNbr) return CommandResult.UNIT_NOT_FOUND;
-            if (!GameConstants.CAN_BUILD[pawn.UnitType]) return CommandResult.UNIT_CANNOT_PERFORM_ACTION;
 
             if (!game.Units.TryGetValue(buildingNbr, out var building)) return CommandResult.TARGET_NOT_FOUND;
-            // Target must be a non-mobile, non-mine building
-            if (GameConstants.CAN_MOVE[building.UnitType]) return CommandResult.INVALID_TARGET;
-            if (building.UnitType == UnitType.MINE) return CommandResult.INVALID_TARGET;
-            // Building must be finished
-            if (!building.IsBuilt) return CommandResult.BUILDING_NOT_FINISHED;
-            // Must belong to the same agent
-            if (building.OwnerAgentNbr != agentNbr) return CommandResult.FRIENDLY_FIRE;
+
+            var result = CommandValidator.ValidateRepair(
+                pawn.UnitType, building.UnitType, building.IsBuilt,
+                building.OwnerAgentNbr, agentNbr);
+            if (result != CommandResult.SUCCESS) return result;
 
             PendingCommands.Add(new SimCommand
             {
@@ -199,16 +166,14 @@ namespace AgentTestHarness
         {
             if (!game.Units.TryGetValue(monkNbr, out var monk)) return CommandResult.UNIT_NOT_FOUND;
             if (monk.OwnerAgentNbr != agentNbr) return CommandResult.UNIT_NOT_FOUND;
-            if (!GameConstants.CAN_HEAL[monk.UnitType]) return CommandResult.UNIT_CANNOT_PERFORM_ACTION;
-
-            if (monk.Mana < GameConstants.MANA_COST) return CommandResult.INSUFFICIENT_MANA;
 
             if (!game.Units.TryGetValue(targetNbr, out var target)) return CommandResult.TARGET_NOT_FOUND;
-            if (target.OwnerAgentNbr != agentNbr) return CommandResult.INVALID_TARGET;
-            if (!GameConstants.CAN_MOVE[target.UnitType]) return CommandResult.INVALID_TARGET;
 
-            float targetMaxHealth = GameConstants.HEALTH[target.UnitType];
-            if (target.Health / targetMaxHealth > GameConstants.HEAL_THRESHOLD) return CommandResult.INVALID_TARGET;
+            var result = CommandValidator.ValidateHeal(
+                monk.UnitType, monk.Mana,
+                target.UnitType, target.Health,
+                target.OwnerAgentNbr, agentNbr);
+            if (result != CommandResult.SUCCESS) return result;
 
             PendingCommands.Add(new SimCommand
             {

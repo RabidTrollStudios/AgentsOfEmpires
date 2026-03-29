@@ -821,11 +821,12 @@ namespace GameManager.Tests.PlayMode
 		{
 			Unit warrior = PlaceUnit(UnitType.WARRIOR, new Vector3Int(5, 5, 0));
 
-			// Create a wall that blocks pathing to all enemies
+			// Create a wall that blocks pathing to all enemies (both legacy GridCells and shared GameGrid)
 			for (int y = 0; y < 30; y++)
 			{
 				ctx.MapManager.GridCells[10, y].SetWalkable(false);
 				ctx.MapManager.GridCells[10, y].SetBuildable(false);
+				ctx.MapManager.Grid.SetCellBlocked(10, y);
 			}
 
 			// Place 4+ enemies on the other side of the wall

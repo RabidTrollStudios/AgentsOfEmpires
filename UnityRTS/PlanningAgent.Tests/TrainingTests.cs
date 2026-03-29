@@ -178,8 +178,8 @@ namespace PlanningAgent.Tests
             game.InitializeRound();
 
             int goldBefore = game.GetGold(0);
-            // Run just a few ticks (training is still in progress)
-            game.Run(1);
+            // Run 2 ticks: tick 1 = agent queues TRAIN, tick 2 = command dispatched
+            game.Run(2);
 
             // Should deduct for exactly one pawn
             int expectedGold = goldBefore - (int)GameConstants.COST[UnitType.PAWN];

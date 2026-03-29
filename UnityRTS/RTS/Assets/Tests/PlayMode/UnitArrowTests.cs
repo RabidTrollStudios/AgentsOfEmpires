@@ -15,6 +15,28 @@ namespace GameManager.Tests.PlayMode
 	[TestFixture]
 	public class UnitArrowTests : PlayModeTestBase
 	{
+		/// <summary>
+		/// Force the archer animator into attack (Shoot) state and advance it.
+		/// In PlayMode tests the animation system may not advance normalizedTime
+		/// on its own, so we manually drive the animator.
+		/// </summary>
+		private static void ForceArcherAttackState(Unit archer)
+		{
+			var anim = archer.GetComponent<Animator>();
+			if (anim != null && anim.runtimeAnimatorController != null)
+			{
+				anim.SetInteger("State", 2); // Shoot state for Archer
+				anim.Update(0f); // Apply state change
+			}
+		}
+
+		private static void AdvanceAnimator(Unit unit, float dt)
+		{
+			var anim = unit.GetComponent<Animator>();
+			if (anim != null)
+				anim.Update(dt);
+		}
+
 		#region Arrow Spawning
 
 		/// <summary>
@@ -35,12 +57,14 @@ namespace GameManager.Tests.PlayMode
 			// Start attack — archer should be in range (attack range 9 > distance 3)
 			archer.StartAttacking(new AttackEventArgs(archer, enemy));
 			Assert.AreEqual(UnitAction.ATTACK, archer.CurrentAction);
+			ForceArcherAttackState(archer);
 
 			// Tick many frames to let the animator reach frame 5 (normalizedTime >= 0.625)
 			// and trigger SpawnArrow
 			bool arrowFound = false;
 			for (int i = 0; i < 120; i++)
 			{
+				AdvanceAnimator(archer, Time.fixedDeltaTime);
 				BuildingTestHelper.Tick(archer);
 				yield return null;
 
@@ -69,8 +93,20 @@ namespace GameManager.Tests.PlayMode
 
 			archer.StartAttacking(new AttackEventArgs(archer, enemy));
 
+			// Force the animator into attack state and advance past the arrow fire point
+			var anim = archer.GetComponent<Animator>();
+			if (anim != null && anim.runtimeAnimatorController != null)
+			{
+				anim.SetInteger("State", 2); // Shoot state for Archer
+				anim.Update(0f); // Apply state change
+			}
+
 			for (int i = 0; i < 120; i++)
 			{
+				// Advance animator to ensure normalizedTime progresses past 0.625
+				if (anim != null)
+					anim.Update(Time.fixedDeltaTime);
+
 				BuildingTestHelper.Tick(archer);
 				yield return null;
 
@@ -106,10 +142,12 @@ namespace GameManager.Tests.PlayMode
 			yield return null;
 
 			archer.StartAttacking(new AttackEventArgs(archer, barracks));
+			ForceArcherAttackState(archer);
 
 			bool arrowFound = false;
 			for (int i = 0; i < 120; i++)
 			{
+				AdvanceAnimator(archer, Time.fixedDeltaTime);
 				BuildingTestHelper.Tick(archer);
 				yield return null;
 
@@ -136,9 +174,11 @@ namespace GameManager.Tests.PlayMode
 			yield return null;
 
 			archer.StartAttacking(new AttackEventArgs(archer, enemy));
+			ForceArcherAttackState(archer);
 
 			for (int i = 0; i < 60; i++)
 			{
+				AdvanceAnimator(archer, Time.fixedDeltaTime);
 				BuildingTestHelper.Tick(archer);
 				yield return null;
 			}
@@ -166,11 +206,13 @@ namespace GameManager.Tests.PlayMode
 			yield return null;
 
 			archer.StartAttacking(new AttackEventArgs(archer, enemy));
+			ForceArcherAttackState(archer);
 
 			// Wait for arrow to spawn
 			GameObject arrowGo = null;
 			for (int i = 0; i < 120; i++)
 			{
+				AdvanceAnimator(archer, Time.fixedDeltaTime);
 				BuildingTestHelper.Tick(archer);
 				yield return null;
 				arrowGo = GameObject.Find("Arrow");

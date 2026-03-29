@@ -71,144 +71,103 @@ namespace AgentTestHarness
         {
             if (unit.Path == null || unit.PathIndex >= unit.Path.Count) return;
 
-            // Fractional movement: accumulate speed each tick, move when >= 1.0
-            float speed = GameConstants.MOVEMENT_SPEED[unit.UnitType];
+            // Movement matches Unity's FixedUpdate model:
+            //   Unity Speed = GAME_SPEED * 0.05 * speedMultiplier
+            //   Per tick: accumulate Speed, consume cells costing their Euclidean distance
+            //   (1.0 for cardinal, sqrt(2) for diagonal — matching Unity's distance check)
+            float speed = movingSpeed[unit.UnitType];
             unit.MoveAccumulator += speed;
-            if (unit.MoveAccumulator < 1.0f) return;
 
-            Position nextPos = unit.Path[unit.PathIndex];
-
-            // Phase 1: Next cell is free to traverse (buildable or a building-top passage)
-            if (Map.IsPositionBuildable(nextPos) || Map.IsPositionPassage(nextPos))
+            while (unit.Path != null && unit.PathIndex < unit.Path.Count)
             {
-                unit.MoveAccumulator -= 1.0f;
-                unit.LocalAvoidWaitTicks = 0;
+                // Check if we have enough accumulated movement to reach the next cell
+                float dist = Position.Distance(unit.GridPosition, unit.Path[unit.PathIndex]);
+                if (dist < 0.01f) dist = 1.0f; // safety: same-cell fallback
+                if (unit.MoveAccumulator < dist) break;
 
-                bool leavingPassage = Map.IsPositionPassage(unit.GridPosition);
-                bool enteringPassage = Map.IsPositionPassage(nextPos);
-
-                // Don't release passage cells (they belong to the building)
-                if (!leavingPassage && GameConstants.CAN_MOVE[unit.UnitType])
-                    Map.SetAreaBuildability(unit.UnitType, unit.GridPosition, true);
-
-                unit.GridPosition = nextPos;
-                unit.PathIndex++;
-
-                // Don't claim passage cells
-                if (!enteringPassage && GameConstants.CAN_MOVE[unit.UnitType])
-                    Map.SetAreaBuildability(unit.UnitType, unit.GridPosition, false);
-
-                if (unit.PathIndex >= unit.Path.Count)
-                {
-                    if (unit.CurrentAction == UnitAction.MOVE)
-                    {
-                        unit.CurrentAction = UnitAction.IDLE;
-                        unit.Path = null;
-                    }
-                }
-            }
-            // Phase 2: Walkable but not buildable — blocked by a mobile unit (temporary)
-            else if (Map.IsPositionWalkable(nextPos))
-            {
-                unit.MoveAccumulator -= 1.0f; // consume to prevent catch-up
-
-                // For MOVE: if close to destination or only 1 step left, stop here
-                if (unit.CurrentAction == UnitAction.MOVE)
-                {
-                    int stepsRemaining = unit.Path.Count - unit.PathIndex;
-                    Position target = unit.Path[unit.Path.Count - 1];
-                    float distToTarget = Position.Distance(unit.GridPosition, target);
-                    if (stepsRemaining == 1 || distToTarget <= 3.0f)
-                    {
-                        unit.Path = null;
-                        unit.CurrentAction = UnitAction.IDLE;
-                        unit.LocalAvoidWaitTicks = 0;
-                        return;
-                    }
-                }
-
-                unit.LocalAvoidWaitTicks++;
-
-                // Wait 3 ticks for the blocker to move (MOVE actions skip the wait)
-                if (unit.CurrentAction != UnitAction.MOVE && unit.LocalAvoidWaitTicks <= 3)
-                    return;
-
-                // Try to find a detour around the blocker
-                var detour = FindDetourAroundBlocker(unit);
-                if (detour != null)
-                {
-                    unit.Path = detour;
-                    unit.PathIndex = 0;
-                    unit.LocalAvoidWaitTicks = 0;
-                }
-                else if (unit.LocalAvoidWaitTicks > 10)
-                {
-                    // Fallback: full re-path to original target avoiding units
-                    Position target = unit.Path[unit.Path.Count - 1];
-                    var newPath = Map.FindPath(unit.GridPosition, target, avoidUnits: true);
-                    if (newPath.Count > 0)
-                    {
-                        unit.Path = newPath;
-                        unit.PathIndex = 0;
-                    }
-                    // If re-path fails, keep old path (blocker may clear)
-                    unit.LocalAvoidWaitTicks = 0;
-                }
-            }
-            // Phase 3: Not walkable — terrain or building, re-path immediately
-            else
-            {
-                unit.MoveAccumulator -= 1.0f;
-                unit.LocalAvoidWaitTicks = 0;
-                Position target = unit.Path[unit.Path.Count - 1];
-                var newPath = Map.FindPath(unit.GridPosition, target);
-                if (newPath.Count > 0)
-                {
-                    unit.Path = newPath;
-                    unit.PathIndex = 0;
-                }
-                else
-                {
-                    unit.Path = null;
-                    if (unit.CurrentAction == UnitAction.MOVE)
-                        unit.CurrentAction = UnitAction.IDLE;
-                }
+                if (!MoveToNextCell(unit, dist)) break;
             }
         }
 
         /// <summary>
-        /// Scan ahead in the current path to find the next buildable (unoccupied) cell,
-        /// then re-path from the unit's current position to that cell avoiding units.
-        /// Returns the spliced detour + remainder path, or null if no detour found.
-        /// Mirrors Unity's FindDetourAroundBlocker().
+        /// Attempt to move the unit to the next cell in its path.
+        /// Uses shared TaskEngine.TryMoveToCell for the 3-phase check, then
+        /// applies the result to SimUnit state.
+        /// Returns true if the move succeeded, false if blocked.
         /// </summary>
-        private List<Position> FindDetourAroundBlocker(SimUnit unit)
+        private bool MoveToNextCell(SimUnit unit, float dist)
         {
-            if (unit.Path == null) return null;
+            Position nextPos = unit.Path[unit.PathIndex];
 
-            // Find first buildable cell further along the path
-            int resumeIndex = -1;
-            for (int i = unit.PathIndex + 1; i < unit.Path.Count; i++)
+            var result = TaskEngine.TryMoveToCell(
+                unit.GridPosition, nextPos, unit.MoveAccumulator, Map.Grid, out float distCost);
+
+            switch (result)
             {
-                if (Map.IsPositionBuildable(unit.Path[i]) || Map.IsPositionPassage(unit.Path[i]))
-                {
-                    resumeIndex = i;
-                    break;
-                }
+                case TaskEngine.MoveResult.Moved:
+                    unit.MoveAccumulator -= distCost;
+                    unit.LocalAvoidWaitTicks = 0;
+
+                    bool leavingPassage = Map.IsPositionPassage(unit.GridPosition);
+                    bool enteringPassage = Map.IsPositionPassage(nextPos);
+
+                    if (!leavingPassage && GameConstants.CAN_MOVE[unit.UnitType])
+                        Map.SetAreaBuildability(unit.UnitType, unit.GridPosition, true);
+
+                    unit.GridPosition = nextPos;
+                    unit.PathIndex++;
+
+                    if (!enteringPassage && GameConstants.CAN_MOVE[unit.UnitType])
+                        Map.SetAreaBuildability(unit.UnitType, unit.GridPosition, false);
+
+                    if (unit.PathIndex >= unit.Path.Count)
+                    {
+                        if (unit.CurrentAction == UnitAction.MOVE)
+                        {
+                            unit.CurrentAction = UnitAction.IDLE;
+                            unit.Path = null;
+                        }
+                    }
+                    return true;
+
+                case TaskEngine.MoveResult.BlockedByUnit:
+                    // Final cell occupied — don't overlap
+                    if (unit.PathIndex == unit.Path.Count - 1)
+                    {
+                        // MOVE: stop here (close enough)
+                        // Other actions (GATHER, BUILD, ATTACK, etc.): consume path
+                        // so the task system can check adjacency and re-path if needed
+                        if (unit.CurrentAction == UnitAction.MOVE)
+                        {
+                            unit.CurrentAction = UnitAction.IDLE;
+                        }
+                        unit.Path = null;
+                        return false;
+                    }
+                    // Mid-path: pass through
+                    goto case TaskEngine.MoveResult.Moved;
+
+                case TaskEngine.MoveResult.BlockedByTerrain:
+                    unit.MoveAccumulator -= distCost;
+                    unit.LocalAvoidWaitTicks = 0;
+                    Position dest = unit.Path[unit.Path.Count - 1];
+                    var repath = Map.FindPath(unit.GridPosition, dest);
+                    if (repath.Count > 0)
+                    {
+                        unit.Path = repath;
+                        unit.PathIndex = 0;
+                    }
+                    else
+                    {
+                        unit.Path = null;
+                        if (unit.CurrentAction == UnitAction.MOVE)
+                            unit.CurrentAction = UnitAction.IDLE;
+                    }
+                    return false;
+
+                default: // InsufficientMovement
+                    return false;
             }
-
-            if (resumeIndex < 0) return null;
-
-            Position waypoint = unit.Path[resumeIndex];
-            var detour = Map.FindPath(unit.GridPosition, waypoint, avoidUnits: true);
-            if (detour.Count == 0) return null;
-
-            // Splice: detour to the waypoint + remainder of original path after it
-            for (int i = resumeIndex + 1; i < unit.Path.Count; i++)
-            {
-                detour.Add(unit.Path[i]);
-            }
-            return detour;
         }
 
         #endregion
@@ -217,25 +176,21 @@ namespace AgentTestHarness
 
         private void AdvanceTrain(SimUnit building)
         {
-            building.TrainTimer -= Config.TickDuration;
+            if (!TaskEngine.AdvanceTrainTimer(ref building.TrainTimer, Config.TickDuration))
+                return;
 
-            if (building.TrainTimer <= 0f)
+            // Training complete — find a buildable cell to spawn the unit
+            var spawnPositions = Map.GetBuildablePositionsNearUnit(building.UnitType, building.GridPosition);
+            if (spawnPositions.Count == 0)
             {
-                // Find a buildable cell adjacent to the building to spawn the unit
-                var spawnPositions = Map.GetBuildablePositionsNearUnit(building.UnitType, building.GridPosition);
-                if (spawnPositions.Count == 0)
-                {
-                    // No room — stay in TRAIN state, retry next tick
-                    building.TrainTimer = 0.001f;
-                    return;
-                }
-
-                Position spawnPos = spawnPositions[0];
-                float health = GameConstants.HEALTH[building.TrainTarget];
-                PlaceUnit(building.OwnerAgentNbr, building.TrainTarget, spawnPos, health, true);
-
-                building.CurrentAction = UnitAction.IDLE;
+                building.TrainTimer = 0.001f; // retry next tick
+                return;
             }
+
+            Position spawnPos = spawnPositions[0];
+            float health = GameConstants.HEALTH[building.TrainTarget];
+            PlaceUnit(building.OwnerAgentNbr, building.TrainTarget, spawnPos, health, true);
+            building.CurrentAction = UnitAction.IDLE;
         }
 
         #endregion
@@ -254,26 +209,23 @@ namespace AgentTestHarness
             }
 
             // Phase 2: count down build timer
-            pawn.BuildTimer -= Config.TickDuration;
+            if (!TaskEngine.AdvanceBuildTimer(ref pawn.BuildTimer, Config.TickDuration))
+                return;
 
-            if (pawn.BuildTimer <= 0f)
+            // Build complete — mark building as built
+            foreach (var u in Units.Values)
             {
-                // Mark building as built
-                foreach (var u in Units.Values)
+                if (u.UnitType == pawn.BuildTarget
+                    && u.GridPosition == pawn.BuildSite
+                    && u.OwnerAgentNbr == pawn.OwnerAgentNbr
+                    && !u.IsBuilt)
                 {
-                    if (u.UnitType == pawn.BuildTarget
-                        && u.GridPosition == pawn.BuildSite
-                        && u.OwnerAgentNbr == pawn.OwnerAgentNbr
-                        && !u.IsBuilt)
-                    {
-                        u.IsBuilt = true;
-                        break;
-                    }
+                    u.IsBuilt = true;
+                    break;
                 }
-
-                pawn.CurrentAction = UnitAction.IDLE;
-                pawn.Path = null;
             }
+            pawn.CurrentAction = UnitAction.IDLE;
+            pawn.Path = null;
         }
 
         #endregion
@@ -316,8 +268,7 @@ namespace AgentTestHarness
 
             // Arrived adjacent to mine — start mining
             pawn.GatherPhase = GatherPhase.MINING;
-            float miningTime = miningSpeed > 0 ? miningCapacity / miningSpeed : 1f;
-            pawn.MiningTimer = miningTime;
+            pawn.MiningTimer = TaskEngine.ComputeMiningTime(miningCapacity, miningSpeed);
         }
 
         private void AdvanceGatherMining(SimUnit pawn)
@@ -333,7 +284,7 @@ namespace AgentTestHarness
             if (pawn.MiningTimer <= 0f)
             {
                 // Deduct gold from mine
-                float goldMined = Math.Min(miningCapacity, mine.Health);
+                float goldMined = TaskEngine.ComputeGoldMined(miningCapacity, mine.Health);
                 mine.Health -= goldMined;
 
                 // Path to base
@@ -410,10 +361,9 @@ namespace AgentTestHarness
                 return;
             }
 
-            // Phase 2: heal at 110% of the build rate
+            // Phase 2: heal at 110% of the build rate (shared formula)
             float maxHp = GameConstants.HEALTH[building.UnitType];
 
-            // Already at full health
             if (building.Health >= maxHp)
             {
                 pawn.CurrentAction = UnitAction.IDLE;
@@ -421,10 +371,9 @@ namespace AgentTestHarness
                 return;
             }
 
-            float repairRate = 1.1f * maxHp / creationTime[building.UnitType];
-            building.Health += repairRate * Config.TickDuration;
-            if (building.Health > maxHp)
-                building.Health = maxHp;
+            float repairAmount = TaskEngine.ComputeRepairPerTick(
+                building.UnitType, creationTime[building.UnitType], Config.TickDuration);
+            building.Health = Math.Min(building.Health + repairAmount, maxHp);
 
             // Done — building is at full health
             if (building.Health >= maxHp)
@@ -448,14 +397,13 @@ namespace AgentTestHarness
                 return;
             }
 
-            float range = GameConstants.EffectiveAttackRange(attacker.UnitType, target.UnitType);
-            float dist = Position.Distance(attacker.CenterPosition, target.CenterPosition);
-
-            if (dist <= range + 0.1f)
+            if (TaskEngine.IsInAttackRange(attacker.UnitType, attacker.CenterPosition,
+                    target.UnitType, target.CenterPosition))
             {
-                // In range — deal damage (apply armor/damage-type multiplier)
-                float dmg = damage[attacker.UnitType] * Config.TickDuration
-                    * GameConstants.DamageMultiplier(attacker.UnitType, target.UnitType);
+                // In range — deal damage via shared formula
+                float dmg = TaskEngine.ComputeDamagePerTick(
+                    attacker.UnitType, target.UnitType,
+                    damage[attacker.UnitType], Config.TickDuration);
                 target.Health -= dmg;
 
                 // Target killed — return to idle immediately
@@ -538,13 +486,10 @@ namespace AgentTestHarness
                 return;
             }
 
-            float healRange = GameConstants.HEAL_RANGE[monk.UnitType];
-            float dist = Position.Distance(monk.CenterPosition, target.CenterPosition);
-
-            if (dist <= healRange + 0.5f)
+            if (TaskEngine.IsInHealRange(monk.UnitType, monk.CenterPosition, target.CenterPosition))
             {
-                // In range — check mana and threshold
-                if (monk.Mana < GameConstants.MANA_COST)
+                // In range — check mana and threshold via shared logic
+                if (!TaskEngine.CanHeal(monk.Mana, target.Health, target.UnitType))
                 {
                     monk.CurrentAction = UnitAction.IDLE;
                     monk.HealTargetNbr = -1;
@@ -552,17 +497,9 @@ namespace AgentTestHarness
                     return;
                 }
 
+                // Apply heal via shared formula
+                float healAmount = TaskEngine.ComputeHealAmount(target.UnitType);
                 float targetMaxHealth = GameConstants.HEALTH[target.UnitType];
-                if (target.Health / targetMaxHealth > GameConstants.HEAL_THRESHOLD)
-                {
-                    monk.CurrentAction = UnitAction.IDLE;
-                    monk.HealTargetNbr = -1;
-                    monk.Path = null;
-                    return;
-                }
-
-                // Apply heal
-                float healAmount = targetMaxHealth * GameConstants.HEAL_FRACTION;
                 target.Health = Math.Min(target.Health + healAmount, targetMaxHealth);
                 monk.Mana -= GameConstants.MANA_COST;
 

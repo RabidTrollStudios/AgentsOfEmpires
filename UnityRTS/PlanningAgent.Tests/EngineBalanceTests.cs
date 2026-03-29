@@ -22,6 +22,15 @@ namespace PlanningAgent.Tests
             _output = output;
         }
 
+        [Fact]
+        public void GameConstants_AllDictionariesCoverAllUnitTypes()
+        {
+            var errors = GameConstants.ValidateDictionaries();
+            foreach (var error in errors)
+                _output.WriteLine(error);
+            Assert.Empty(errors);
+        }
+
         #region Test Agents
 
         /// <summary>

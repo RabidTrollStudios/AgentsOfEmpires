@@ -19,6 +19,11 @@ namespace GameManager.GameElements
 			return Agent?.GetComponent<AgentController>()?.Agent?.Analytics?.CurrentRound;
 		}
 
+		private Agent GetOwnerAgent()
+		{
+			return Agent?.GetComponent<AgentController>()?.Agent;
+		}
+
 		/// <summary>
 		/// Start training another unit
 		/// </summary>
@@ -50,6 +55,8 @@ namespace GameManager.GameElements
 						? $"can't train {args.UnitType}"
 						: $"not enough gold (have {Agent.GetComponent<AgentController>().Agent.Gold}, need {(int)Constants.COST[args.UnitType]})";
 					GetCmdLog()?.LogCommand("TRAIN", $"{UnitType}#{UnitNbr} -> {args.UnitType}", $"EXEC_FAILED: {reason}");
+					GetOwnerAgent()?.RecordFailedCommand(new FailedCommand(UnitNbr, CommandType.Train,
+						!Constants.TRAINS[UnitType].Contains(args.UnitType) ? CommandResult.UNIT_CANNOT_PERFORM_ACTION : CommandResult.INSUFFICIENT_GOLD));
 				}
 			}
 			else
@@ -58,6 +65,10 @@ namespace GameManager.GameElements
 					: !CanTrain ? "unit can't train"
 					: "building not finished";
 				GetCmdLog()?.LogCommand("TRAIN", $"{UnitType}#{UnitNbr} -> {args.UnitType}", $"EXEC_FAILED: {reason}");
+				GetOwnerAgent()?.RecordFailedCommand(new FailedCommand(UnitNbr, CommandType.Train,
+					CurrentAction != UnitAction.IDLE ? CommandResult.UNIT_BUSY
+					: !CanTrain ? CommandResult.UNIT_CANNOT_PERFORM_ACTION
+					: CommandResult.BUILDING_NOT_FINISHED));
 			}
 		}
 
@@ -148,10 +159,16 @@ namespace GameManager.GameElements
 				{
 					GetCmdLog()?.LogCommand("BUILD", $"pawn#{UnitNbr} -> {args.UnitType} at {args.TargetPosition}",
 						"EXEC_FAILED: no path found to build site");
+					GetOwnerAgent()?.RecordFailedCommand(new FailedCommand(UnitNbr, CommandType.Build, CommandResult.NO_PATH_FOUND));
 				}
 			}
 			else
 			{
+				var buildFailReason = CurrentAction == UnitAction.BUILD ? CommandResult.UNIT_BUSY
+					: !CanBuild ? CommandResult.UNIT_CANNOT_PERFORM_ACTION
+					: !CanBuildUnit(args.UnitType) ? CommandResult.UNIT_CANNOT_PERFORM_ACTION
+					: !GameManager.Instance.Map.IsAreaBuildable(args.UnitType, args.TargetPosition, pawnExclusion) ? CommandResult.AREA_NOT_BUILDABLE
+					: CommandResult.INSUFFICIENT_GOLD;
 				string reason = CurrentAction == UnitAction.BUILD ? "already building"
 					: !CanBuild ? "unit can't build"
 					: !CanBuildUnit(args.UnitType) ? $"can't build {args.UnitType}"
@@ -159,6 +176,7 @@ namespace GameManager.GameElements
 					: $"not enough gold (have {Agent.GetComponent<AgentController>().Agent.Gold}, need {(int)Constants.COST[args.UnitType]})";
 				GetCmdLog()?.LogCommand("BUILD", $"pawn#{UnitNbr} at {GridPosition} -> {args.UnitType} at {args.TargetPosition}",
 					$"EXEC_FAILED: {reason}");
+				GetOwnerAgent()?.RecordFailedCommand(new FailedCommand(UnitNbr, CommandType.Build, buildFailReason));
 			}
 		}
 
@@ -186,10 +204,18 @@ namespace GameManager.GameElements
 				// Try avoidUnits first — this produces a path through truly empty cells
 				// that FixedUpdate can follow immediately without local-avoidance delays.
 				path = GameManager.Instance.Map.GetPathBetweenGridPositions(GridPosition, args.Target, avoidUnits: true);
+				pathIndex = 0;
+				MoveAccumulator = 0f;
+				visualWaypoints.Clear();
+				visualSegmentT = 1.0f;
+				WorldPosition = (Vector3)GridPosition + new Vector3(0.5f, 0f, 0);
 
 				// Fall back to walkable path if surrounded (avoidUnits can't expand any neighbors)
 				if (path.Count == 0)
+				{
 					path = GameManager.Instance.Map.GetPathBetweenGridPositions(GridPosition, args.Target);
+					pathIndex = 0;
+				}
 
 				if (path.Count > 0)
 				{
@@ -278,6 +304,8 @@ namespace GameManager.GameElements
 				if (dist < Constants.ATTACK_RANGE[UnitType] + 0.5f)
 				{
 					path.Clear();
+					pathIndex = 0;
+					MoveAccumulator = 0f;
 					TargetGridPos = targetUnit.GridPosition;
 					TargetUnitType = targetUnit.UnitType;
 					CurrentAction = UnitAction.ATTACK;
@@ -397,6 +425,8 @@ namespace GameManager.GameElements
 			if (dist < healRange + 0.5f)
 			{
 				path.Clear();
+				pathIndex = 0;
+				MoveAccumulator = 0f;
 				TargetGridPos = targetUnit.GridPosition;
 				TargetUnitType = targetUnit.UnitType;
 				CurrentAction = UnitAction.HEAL;

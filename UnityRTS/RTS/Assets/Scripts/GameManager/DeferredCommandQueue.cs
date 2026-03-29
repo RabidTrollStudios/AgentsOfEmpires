@@ -1,0 +1,137 @@
+using System.Collections.Generic;
+using AgentSDK;
+using GameManager.GameElements;
+using UnityEngine;
+
+namespace GameManager
+{
+    internal enum DeferredCommandType
+    {
+        Move, Build, Gather, Train, Attack, Repair, Heal
+    }
+
+    /// <summary>
+    /// A command validated by AgentActionsAdapter but not yet dispatched.
+    /// Queued during Update(), dispatched in deterministic order at the start of FixedUpdate.
+    /// </summary>
+    internal struct DeferredCommand
+    {
+        public int AgentNbr;
+        public DeferredCommandType Type;
+        public int UnitNbr;
+        public Agent Agent;      // Owning agent (passed as sender to EventDispatcher)
+
+        // Move / Build
+        public Vector3Int Target;
+        public UnitType BuildingType;
+
+        // Pre-resolved references (validated at queue time)
+        public Unit Unit;
+        public Unit TargetUnit;  // Attack target, Repair building, Heal target
+        public Unit MineUnit;    // Gather mine
+        public Unit BaseUnit;    // Gather base
+    }
+
+    /// <summary>
+    /// Central queue for deferred commands. Commands are enqueued during agent Update()
+    /// and processed at the start of the next FixedUpdate in deterministic order.
+    ///
+    /// Sort order: (AgentNbr, CommandType, UnitNbr) — ensures both agents' commands
+    /// are interleaved consistently, matching SimGame's processing order.
+    /// </summary>
+    internal static class DeferredCommandQueue
+    {
+        private static readonly List<DeferredCommand> pending = new List<DeferredCommand>();
+
+        private static readonly HashSet<int> unitsSeen = new HashSet<int>();
+
+        /// <summary>
+        /// Enqueue a command. Returns true if accepted, false if a command for this
+        /// unit was already queued this tick (duplicate suppressed).
+        /// </summary>
+        public static bool Enqueue(DeferredCommand cmd)
+        {
+            // Only accept the first command per unit per tick.
+            // With deferred dispatch, agents may re-issue the same command on
+            // consecutive frames before the first one executes.
+            if (!unitsSeen.Add(cmd.UnitNbr)) return false;
+            pending.Add(cmd);
+            return true;
+        }
+
+        public static int Count => pending.Count;
+
+        /// <summary>
+        /// Drain all pending commands in deterministic order and dispatch them.
+        /// Called once per FixedUpdate before unit advancement.
+        /// </summary>
+        public static void ProcessAll()
+        {
+            if (pending.Count == 0) return;
+
+            // Sort: agent 0 before agent 1, then by command type, then by unit number.
+            // This ensures identical ordering with SimGame's ProcessCommands.
+            pending.Sort((a, b) =>
+            {
+                int cmp = a.AgentNbr.CompareTo(b.AgentNbr);
+                if (cmp != 0) return cmp;
+                cmp = a.Type.CompareTo(b.Type);
+                if (cmp != 0) return cmp;
+                return a.UnitNbr.CompareTo(b.UnitNbr);
+            });
+
+            var events = GameManager.Instance.Events;
+
+            foreach (var cmd in pending)
+            {
+                // Units may have died between queue time and dispatch time
+                if (cmd.Unit == null) continue;
+
+                switch (cmd.Type)
+                {
+                    case DeferredCommandType.Move:
+                        events.MoveEventHandler(cmd.Agent,
+                            new MoveEventArgs(cmd.Unit, cmd.Unit.UnitType, cmd.Target));
+                        break;
+                    case DeferredCommandType.Build:
+                        events.BuildEventHandler(cmd.Agent,
+                            new BuildEventArgs(cmd.Unit, cmd.Target, cmd.BuildingType));
+                        break;
+                    case DeferredCommandType.Gather:
+                        if (cmd.MineUnit != null && cmd.BaseUnit != null)
+                            events.GatherEventHandler(cmd.Agent,
+                                new GatherEventArgs(cmd.Unit, cmd.MineUnit, cmd.BaseUnit));
+                        break;
+                    case DeferredCommandType.Train:
+                        events.TrainEventHandler(cmd.Agent,
+                            new TrainEventArgs(cmd.Unit, cmd.BuildingType));
+                        break;
+                    case DeferredCommandType.Attack:
+                        if (cmd.TargetUnit != null)
+                            events.AttackEventHandler(cmd.Agent,
+                                new AttackEventArgs(cmd.Unit, cmd.TargetUnit));
+                        break;
+                    case DeferredCommandType.Repair:
+                        if (cmd.TargetUnit != null)
+                            events.RepairEventHandler(cmd.Agent,
+                                new RepairEventArgs(cmd.Unit, cmd.TargetUnit));
+                        break;
+                    case DeferredCommandType.Heal:
+                        if (cmd.TargetUnit != null)
+                            events.HealEventHandler(cmd.Agent,
+                                new HealEventArgs(cmd.Unit, cmd.TargetUnit));
+                        break;
+                }
+            }
+
+            pending.Clear();
+            unitsSeen.Clear();
+        }
+
+        public static void Clear()
+        {
+            pending.Clear();
+            unitsSeen.Clear();
+        }
+    }
+}

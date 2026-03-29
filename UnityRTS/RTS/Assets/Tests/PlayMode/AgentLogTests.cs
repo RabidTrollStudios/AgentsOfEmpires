@@ -42,6 +42,13 @@ namespace GameManager.Tests.PlayMode
 			return bridge;
 		}
 
+		/// <summary>Path where the agent actually writes its log CSV.</summary>
+		private string AgentLogPath(string dllName, string agentName)
+		{
+			return Path.Combine(tempDir, "CommandLogs", dllName,
+				"PlanningAgent_" + dllName + "_" + agentName + ".csv");
+		}
+
 		// ── InitializeAgent ───────────────────────────────────────────────────
 
 		[UnityTest]
@@ -61,20 +68,20 @@ namespace GameManager.Tests.PlayMode
 		{
 			yield return null;
 
-			// Create the initial CSV so the collision-numbering logic triggers
+			// Create the initial CSV in the subdirectory the agent uses
 			string baseName = "PlanningAgent_TestDLL_Blue";
-			string csvPath = Path.Combine(tempDir, baseName + ".csv");
-			File.WriteAllText(csvPath, "dummy");
+			string csvDir = Path.Combine(tempDir, "CommandLogs", "TestDLL");
+			Directory.CreateDirectory(csvDir);
+			File.WriteAllText(Path.Combine(csvDir, baseName + ".csv"), "dummy");
 
 			var bridge = CreateAgentBridge("Blue", "TestDLL", 0);
 
 			// The agent should have chosen a new filename with _1 suffix
-			// Verify by opening+closing the log file (which uses the computed logFileName)
 			bridge.OpenLogFile();
 			bridge.Log("test");
 			bridge.CloseLogFile();
 
-			string expected = Path.Combine(tempDir, baseName + "_1.csv");
+			string expected = Path.Combine(csvDir, baseName + "_1.csv");
 			Assert.IsTrue(File.Exists(expected),
 				$"Expected collision-numbered file at {expected}");
 		}
@@ -85,9 +92,11 @@ namespace GameManager.Tests.PlayMode
 			yield return null;
 
 			string baseName = "PlanningAgent_TestDLL_Blue";
-			File.WriteAllText(Path.Combine(tempDir, baseName + ".csv"), "dummy");
-			File.WriteAllText(Path.Combine(tempDir, baseName + "_1.csv"), "dummy");
-			File.WriteAllText(Path.Combine(tempDir, baseName + "_2.csv"), "dummy");
+			string csvDir = Path.Combine(tempDir, "CommandLogs", "TestDLL");
+			Directory.CreateDirectory(csvDir);
+			File.WriteAllText(Path.Combine(csvDir, baseName + ".csv"), "dummy");
+			File.WriteAllText(Path.Combine(csvDir, baseName + "_1.csv"), "dummy");
+			File.WriteAllText(Path.Combine(csvDir, baseName + "_2.csv"), "dummy");
 
 			var bridge = CreateAgentBridge("Blue", "TestDLL", 0);
 
@@ -95,7 +104,7 @@ namespace GameManager.Tests.PlayMode
 			bridge.Log("test");
 			bridge.CloseLogFile();
 
-			string expected = Path.Combine(tempDir, baseName + "_3.csv");
+			string expected = Path.Combine(csvDir, baseName + "_3.csv");
 			Assert.IsTrue(File.Exists(expected),
 				$"Expected collision-numbered file at {expected}");
 		}
@@ -114,10 +123,8 @@ namespace GameManager.Tests.PlayMode
 			bridge.EndLogLine();
 			bridge.CloseLogFile();
 
-			// Read back the file
-			string baseName = "PlanningAgent_TestDLL_Blue";
-			string csvPath = Path.Combine(tempDir, baseName + ".csv");
-			string content = File.ReadAllText(csvPath);
+			// Read back the file from the subdirectory the agent uses
+			string content = File.ReadAllText(AgentLogPath("TestDLL", "Blue"));
 
 			StringAssert.Contains("hello,", content);
 			StringAssert.Contains("world,", content);
@@ -134,9 +141,7 @@ namespace GameManager.Tests.PlayMode
 			bridge.Log("has,comma");
 			bridge.CloseLogFile();
 
-			string baseName = "PlanningAgent_TestDLL_Blue";
-			string csvPath = Path.Combine(tempDir, baseName + ".csv");
-			string content = File.ReadAllText(csvPath);
+			string content = File.ReadAllText(AgentLogPath("TestDLL", "Blue"));
 
 			// String containing comma should be wrapped in quotes
 			StringAssert.Contains("\"has,comma\"", content);
@@ -160,9 +165,7 @@ namespace GameManager.Tests.PlayMode
 			bridge.EndLogLine();
 			bridge.CloseLogFile();
 
-			string baseName = "PlanningAgent_TestDLL_Blue";
-			string csvPath = Path.Combine(tempDir, baseName + ".csv");
-			string content = File.ReadAllText(csvPath);
+			string content = File.ReadAllText(AgentLogPath("TestDLL", "Blue"));
 
 			StringAssert.Contains("first,", content);
 			StringAssert.Contains("second,", content);
@@ -178,9 +181,13 @@ namespace GameManager.Tests.PlayMode
 
 			bridge.OpenCommandLog();
 
-			string expectedPath = Path.Combine(tempDir, "CommandLog_TestDLL_Blue.txt");
-			Assert.IsTrue(File.Exists(expectedPath),
-				$"CommandLog file should exist at {expectedPath}");
+			// Command log goes to CommandLogs/{DLL}/{timestamp}_{AgentName}_commands.txt
+			string logsDir = Path.Combine(tempDir, "CommandLogs", "TestDLL");
+			string[] files = Directory.Exists(logsDir)
+				? Directory.GetFiles(logsDir, "*_Blue_commands.txt")
+				: new string[0];
+			Assert.AreEqual(1, files.Length,
+				$"Expected exactly one command log file in {logsDir}");
 
 			bridge.CloseCommandLog();
 		}

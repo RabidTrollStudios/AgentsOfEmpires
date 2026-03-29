@@ -97,6 +97,7 @@ namespace GameManager
 				|| !Constants.BUILDS[unit.GetComponent<Unit>().UnitType].Contains(args.UnitType))
 			{
 				GameManager.Instance.Log(agent.AgentName + " ERROR: unit cannot build " + args.UnitType, logContext);
+				agent.RecordFailedCommand(new AgentSDK.FailedCommand(args.Unit.UnitNbr, AgentSDK.CommandType.Build, AgentSDK.CommandResult.UNIT_CANNOT_PERFORM_ACTION));
 				return;
 			}
 
@@ -105,6 +106,7 @@ namespace GameManager
 			if (!Utility.IsValidGridLocation(args.TargetPosition) || !mapManager.IsAreaBuildable(args.UnitType, args.TargetPosition, pawnExclusion))
 			{
 				GameManager.Instance.Log(agent.AgentName + " ERROR: invalid target grid position " + args.TargetPosition, logContext);
+				agent.RecordFailedCommand(new AgentSDK.FailedCommand(args.Unit.UnitNbr, AgentSDK.CommandType.Build, AgentSDK.CommandResult.AREA_NOT_BUILDABLE));
 				return;
 			}
 
@@ -123,6 +125,7 @@ namespace GameManager
 			if (!hasDependencies)
 			{
 				GameManager.Instance.Log(agent.AgentName + " ERROR: Missing dependencies " + dependencyName + "for building " + args.UnitType, logContext);
+				agent.RecordFailedCommand(new AgentSDK.FailedCommand(args.Unit.UnitNbr, AgentSDK.CommandType.Build, AgentSDK.CommandResult.MISSING_DEPENDENCY));
 				return;
 			}
 			unit.GetComponent<Unit>().StartBuilding(args);
@@ -210,6 +213,7 @@ namespace GameManager
 				|| !unit.GetComponent<Unit>().CanTrainUnit(args.UnitType))
 			{
 				GameManager.Instance.Log(agent.AgentName + " ERROR: unit cannot train " + args.UnitType, logContext);
+				agent.RecordFailedCommand(new AgentSDK.FailedCommand(args.Unit.UnitNbr, AgentSDK.CommandType.Train, AgentSDK.CommandResult.UNIT_CANNOT_PERFORM_ACTION));
 				return;
 			}
 
@@ -227,6 +231,7 @@ namespace GameManager
 			if (!hasTrainDeps)
 			{
 				GameManager.Instance.Log(agent.AgentName + " ERROR: Missing dependencies " + missingDeps + "for training " + args.UnitType, logContext);
+				agent.RecordFailedCommand(new AgentSDK.FailedCommand(args.Unit.UnitNbr, AgentSDK.CommandType.Train, AgentSDK.CommandResult.MISSING_DEPENDENCY));
 				return;
 			}
 

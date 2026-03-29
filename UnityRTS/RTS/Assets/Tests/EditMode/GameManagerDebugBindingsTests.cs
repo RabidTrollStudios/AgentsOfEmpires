@@ -1,6 +1,7 @@
 using System;
 using System.Reflection;
 using NUnit.Framework;
+using UnityEngine.TestTools;
 
 namespace GameManager.Tests
 {
@@ -19,6 +20,10 @@ namespace GameManager.Tests
 		[SetUp]
 		public void SetUp()
 		{
+			// InputSystem_Actions.Dispose() calls Object.Destroy() internally,
+			// which is invalid in edit mode. Suppress the error for all tests.
+			LogAssert.ignoreFailingMessages = true;
+
 			gm = GameManager.Instance;
 			Constants.GAME_SPEED = 1;
 			Constants.CalculateGameConstants();
@@ -41,10 +46,15 @@ namespace GameManager.Tests
 			// Ensure bindings are restored for other tests
 			InvokePrivate("InitializeDebugToggles");
 
-			inputActions?.Dispose();
+			// Disable before discarding to avoid finalizer leak warning.
+			// We can't call Dispose() because it calls Object.Destroy()
+			// which is invalid in edit mode.
+			inputActions?.Gameplay.Disable();
 			typeof(GameManager)
 				.GetField("_input", BindingFlags.NonPublic | BindingFlags.Instance)
 				.SetValue(gm, null);
+
+			LogAssert.ignoreFailingMessages = false;
 		}
 
 		// ── Helpers ───────────────────────────────────────────────────────────

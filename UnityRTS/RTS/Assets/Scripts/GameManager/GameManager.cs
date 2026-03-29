@@ -28,6 +28,7 @@ namespace GameManager
 	/// Orchestrates the game: manages match/round lifecycle, agents, and delegates
 	/// to specialized managers for map, units, events, and DLL loading.
 	/// </summary>
+	[DefaultExecutionOrder(-100)] // Run FixedUpdate before Unit components
 	public partial class GameManager : MonoBehaviour
 	{
 		#region Public GameObjects
@@ -284,6 +285,15 @@ namespace GameManager
 
 		public Dictionary<string, Sprite> GetDebugPanelIcons(string agentName) => Prefabs.GetIconsForAgent(agentName);
 
+		/// <summary>Expose map configuration for parity export.</summary>
+		internal MapMode MapConfigMode => mapMode;
+		internal MapTemplate MapConfigTemplate => mapTemplate;
+		internal int MapConfigWidth => mapWidth;
+		internal int MapConfigHeight => mapHeight;
+		internal float MapConfigDensity => treeDensity;
+		internal int MapConfigSeed => mapSeed;
+		internal MapSymmetryMode MapConfigSymmetry => mapSymmetry;
+
 		#endregion
 
 		#region Private Fields
@@ -373,6 +383,10 @@ namespace GameManager
 			if (TotalNbrOfRounds % 2 == 0) TotalNbrOfRounds++;
 			Constants.GAME_SPEED = StartingGameSpeed;
 			Constants.CalculateGameConstants();
+
+			// Fixed timestep matching SimGame's TickDuration for exact parity.
+			// All game logic runs in FixedUpdate at this rate (20 Hz).
+			Time.fixedDeltaTime = 0.05f;
 
 			string pathToDLLs = Application.dataPath + Path.AltDirectorySeparatorChar + ".."
 				+ Path.AltDirectorySeparatorChar + ".." + Path.AltDirectorySeparatorChar

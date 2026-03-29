@@ -295,9 +295,9 @@ namespace GameManager
 				return CommandResult.INSUFFICIENT_MANA;
 			}
 			float targetMaxHealth = Constants.HEALTH[target.UnitType];
-			if (target.Health / targetMaxHealth > GameConstants.HEAL_THRESHOLD)
+			if (target.Health > targetMaxHealth - GameConstants.HEAL_AMOUNT)
 			{
-				CmdLog?.LogCommand("HEAL", $"{unit.UnitType}#{unit.UnitNbr} -> {target.UnitType}#{target.UnitNbr}", $"FAILED: target health above {GameConstants.HEAL_THRESHOLD * 100}%");
+				CmdLog?.LogCommand("HEAL", $"{unit.UnitType}#{unit.UnitNbr} -> {target.UnitType}#{target.UnitNbr}", $"FAILED: target not missing enough HP (needs {GameConstants.HEAL_AMOUNT}+ missing)");
 				return CommandResult.INVALID_TARGET;
 			}
 

@@ -15,7 +15,8 @@ namespace GameManager.Tests
 		private static readonly UnitType[] AllUnitTypes = {
 			UnitType.MINE, UnitType.PAWN, UnitType.WARRIOR,
 			UnitType.ARCHER, UnitType.LANCER, UnitType.BASE,
-			UnitType.BARRACKS, UnitType.ARCHERY, UnitType.TOWER
+			UnitType.BARRACKS, UnitType.ARCHERY, UnitType.TOWER,
+			UnitType.MONASTERY, UnitType.MONK
 		};
 
 		#region ATTACK_RANGE Completeness
@@ -26,7 +27,7 @@ namespace GameManager.Tests
 		[Test]
 		public void AttackRange_HasAllNineUnitTypes()
 		{
-			Assert.AreEqual(9, Constants.ATTACK_RANGE.Count,
+			Assert.AreEqual(11, Constants.ATTACK_RANGE.Count,
 				"ATTACK_RANGE should have 9 entries");
 			foreach (var type in AllUnitTypes)
 				Assert.IsTrue(Constants.ATTACK_RANGE.ContainsKey(type),
@@ -111,7 +112,7 @@ namespace GameManager.Tests
 		[Test]
 		public void UnitSize_HasAllNineUnitTypes()
 		{
-			Assert.AreEqual(9, Constants.UNIT_SIZE.Count,
+			Assert.AreEqual(11, Constants.UNIT_SIZE.Count,
 				"UNIT_SIZE should have 9 entries");
 			foreach (var type in AllUnitTypes)
 				Assert.IsTrue(Constants.UNIT_SIZE.ContainsKey(type),

@@ -12,6 +12,27 @@ namespace GameManager
 		#region Game Loop
 
 		/// <summary>
+		/// Fixed-timestep tick: process deferred commands before units advance.
+		/// Runs at 0.05s intervals (matching SimGame's tick rate).
+		/// Must run BEFORE individual Unit.FixedUpdate() calls — set via
+		/// [DefaultExecutionOrder(-100)] on the GameManager class.
+		/// </summary>
+		private void FixedUpdate()
+		{
+			if (gameState != GameState.PLAYING) return;
+
+			// Clear failed commands from previous tick before processing new commands
+			foreach (var agentGo in Agents.Values)
+			{
+				var bridge = agentGo.GetComponent<AgentController>()?.Agent as AgentBridge;
+				if (bridge != null)
+					bridge.ClearFailedCommands();
+			}
+
+			DeferredCommandQueue.ProcessAll();
+		}
+
+		/// <summary>
 		/// Main game loop - checks for winners, manages state transitions
 		/// </summary>
 		internal void Update()
@@ -143,7 +164,7 @@ namespace GameManager
 			foreach (GameObject agent in Agents.Values)
 			{
 				agentUnits.Add(agent, allUnits.Values.Where(
-                    y => (y.GetComponent<Unit>().Agent.GetComponent<AgentController>().Agent.AgentNbr
+                    y => (y.GetComponent<Unit>().OwnerAgentNbr
 							== agent.GetComponent<AgentController>().Agent.AgentNbr
 						  && y.GetComponent<Unit>().UnitType != UnitType.MINE)).ToList());
 				if (agentUnits[agent].Count > 0)

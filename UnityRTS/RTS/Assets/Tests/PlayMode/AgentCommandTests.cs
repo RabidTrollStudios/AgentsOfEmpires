@@ -65,11 +65,12 @@ namespace GameManager.Tests.PlayMode
 			yield return null;
 			var a = SetUpAgent();
 			var pawn = PlaceUnit(UnitType.PAWN, new Vector3Int(5, 5, 0));
-			// Place a building to make a cell unwalkable
+			// Place a building to make a cell unwalkable. BASE is 6x4 at anchor (8,8).
+			// Top row (y=8) is walkable (passage). Body row (y=7) is not walkable.
 			var blocker = PlaceUnit(UnitType.BASE, new Vector3Int(8, 8, 0));
 			blocker.IsBuilt = true;
 
-			var result = a.Move(pawn, new Vector3Int(8, 8, 0));
+			var result = a.Move(pawn, new Vector3Int(8, 7, 0));
 			Assert.AreEqual(CommandResult.POSITION_NOT_WALKABLE, result);
 		}
 

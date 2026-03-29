@@ -887,15 +887,16 @@ namespace PlanningAgent.Tests
                 if (monkInfo.Value.Mana < GameConstants.MANA_COST) continue;
 
                 int bestTarget = -1;
-                float lowestRatio = GameConstants.HEAL_THRESHOLD;
+                float lowestHealth = float.MaxValue;
                 foreach (UnitType ut in new[] { UnitType.WARRIOR, UnitType.ARCHER, UnitType.LANCER })
                 {
                     foreach (int unitNbr in state.GetMyUnits(ut))
                     {
                         var info = state.GetUnit(unitNbr);
                         if (!info.HasValue) continue;
-                        float ratio = info.Value.Health / GameConstants.HEALTH[ut];
-                        if (ratio <= lowestRatio) { lowestRatio = ratio; bestTarget = unitNbr; }
+                        float maxHp = GameConstants.HEALTH[ut];
+                        if (info.Value.Health > maxHp - GameConstants.HEAL_AMOUNT) continue;
+                        if (info.Value.Health < lowestHealth) { lowestHealth = info.Value.Health; bestTarget = unitNbr; }
                     }
                 }
                 if (bestTarget >= 0)

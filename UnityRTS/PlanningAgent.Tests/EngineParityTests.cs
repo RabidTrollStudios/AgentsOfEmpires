@@ -175,20 +175,13 @@ namespace PlanningAgent.Tests
                 game.Tick();
                 int tick = t + 1;
 
-                // Detailed trace around build completion
-                if (tick >= 1 && tick <= 50)
+                // Compact trace for debugging parity divergences
+                if (tick <= 60 && tick % 10 == 0)
                 {
-                    var u0 = game.GetUnit(0);
-                    var u4 = game.GetUnit(4);
-                    var u5 = game.GetUnit(5);
-                    var u6 = game.GetUnit(6);
-                    var u7 = game.GetUnit(7);
-                    string u0info = u0 != null ? $"u0:{u0.CurrentAction} pos=({u0.GridPosition.X},{u0.GridPosition.Y}) built={u0.IsBuilt}" : "u0:null";
-                    string u4info = u4 != null ? $"u4:{u4.UnitType}:{u4.CurrentAction} built={u4.IsBuilt}" : "u4:--";
-                    string u5info = u5 != null ? $"u5:{u5.UnitType}:{u5.CurrentAction} built={u5.IsBuilt}" : "u5:--";
-                    string u6info = u6 != null ? $"u6:{u6.UnitType}:{u6.CurrentAction}" : "u6:--";
-                    string u7info = u7 != null ? $"u7:{u7.UnitType}:{u7.CurrentAction}" : "u7:--";
-                    _output.WriteLine($"  [t{tick}] g={game.GetGold(0)}/{game.GetGold(1)} {u0info} | {u4info} {u5info} {u6info} {u7info}");
+                    int unitCount = 0;
+                    for (int i = 0; i < 50; i++)
+                        if (game.GetUnit(i) != null) unitCount++;
+                    _output.WriteLine($"  [t{tick}] g={game.GetGold(0)}/{game.GetGold(1)} units={unitCount}");
                 }
 
                 if (snapshotIdx < snapshots.Count && snapshots[snapshotIdx].Tick == t + 1)

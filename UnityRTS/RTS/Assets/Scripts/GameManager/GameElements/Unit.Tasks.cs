@@ -19,6 +19,7 @@ namespace GameManager.GameElements
 				|| attackTarget.Health <= 0)
 			{
 				path.Clear();
+				pathIndex = 0;
 				CurrentAction = UnitAction.IDLE;
 				damage = 0.0f;
 				return;
@@ -30,10 +31,12 @@ namespace GameManager.GameElements
 			if (distToTarget < Constants.ATTACK_RANGE[UnitType] + 0.5f)
 			{
 				path.Clear();
+				pathIndex = 0;
 
-				// Attack this unit (apply armor/damage-type multiplier)
-				damage += (Time.deltaTime * Constants.DAMAGE[UnitType]
-					* GameConstants.DamageMultiplier(UnitType, attackTarget.UnitType));
+				// Attack this unit (shared damage formula for parity with SimGame)
+				damage += AgentSDK.TaskEngine.ComputeDamagePerTick(
+					UnitType, attackTarget.UnitType,
+					Constants.DAMAGE[UnitType], Time.fixedDeltaTime);
 				if (damage > 1)
 				{
 					int dmg = (int)damage;
@@ -263,14 +266,14 @@ namespace GameManager.GameElements
 		/// </summary>
 		private Unit FindClosestReachableEnemy(Unit excluding)
 		{
-			int myAgentNbr = Agent.GetComponent<AgentController>().Agent.AgentNbr;
+			int myAgentNbr = OwnerAgentNbr;
 			var enemies = new List<(Unit unit, float dist)>();
 
 			foreach (var kvp in GameManager.Instance.Units.GetAllUnits())
 			{
 				Unit enemy = kvp.Value.GetComponent<Unit>();
 				if (enemy == excluding) continue;
-				if (enemy.Agent.GetComponent<AgentController>().Agent.AgentNbr == myAgentNbr) continue;
+				if (enemy.OwnerAgentNbr == myAgentNbr) continue;
 				if (enemy.UnitType == UnitType.MINE) continue;
 				if (enemy.Health <= 0) continue;
 
@@ -309,6 +312,7 @@ namespace GameManager.GameElements
 				if (path.Count == 0)
 				{
 					path.Clear();
+				pathIndex = 0;
 					// Don't reset progress — resume from where the building left off
 					buildPhase = BuildPhase.BUILDING;
 				}
@@ -322,7 +326,7 @@ namespace GameManager.GameElements
 				}
 
 				var buildUnit = currentBuilding.GetComponent<Unit>();
-				buildUnit.BuildProgress += Time.deltaTime;
+				buildUnit.BuildProgress += Time.fixedDeltaTime;
 
 				// Lerp building opacity from 30% to 70% based on progress
 				var buildSprite = currentBuilding.GetComponent<SpriteRenderer>();
@@ -351,6 +355,7 @@ namespace GameManager.GameElements
 					if (buildAnimator != null && buildAnimator.runtimeAnimatorController != null)
 						buildAnimator.SetBool("IsBuilt", buildUnit.IsBuilt);
 					path.Clear();
+				pathIndex = 0;
 					CurrentAction = UnitAction.IDLE;
 					currentBuilding = null;
 				}
@@ -370,6 +375,7 @@ namespace GameManager.GameElements
 				if (path.Count == 0)
 				{
 					path.Clear();
+				pathIndex = 0;
 					buildPhase = BuildPhase.BUILDING;
 				}
 			}
@@ -392,14 +398,16 @@ namespace GameManager.GameElements
 					return;
 				}
 
-				// Heal at 110% of the build rate
-				float repairRate = 1.1f * maxHp / Constants.CREATION_TIME[buildUnit.UnitType];
-				buildUnit.Health = Mathf.Min(buildUnit.Health + repairRate * Time.deltaTime, maxHp);
+				// Heal at 110% of the build rate (shared formula for parity)
+				float repairAmount = AgentSDK.TaskEngine.ComputeRepairPerTick(
+					buildUnit.UnitType, Constants.CREATION_TIME[buildUnit.UnitType], Time.fixedDeltaTime);
+				buildUnit.Health = Mathf.Min(buildUnit.Health + repairAmount, maxHp);
 
 				// Done — building is at full health
 				if (buildUnit.Health >= maxHp)
 				{
 					path.Clear();
+				pathIndex = 0;
 					CurrentAction = UnitAction.IDLE;
 					currentBuilding = null;
 				}
@@ -411,23 +419,24 @@ namespace GameManager.GameElements
 		/// </summary>
 		private void UpdateTrain()
 		{
-			taskTime += Time.deltaTime;
+			taskTime += Time.fixedDeltaTime;
 
 			// if we're training an agent and we have finished the task
 			if (taskTime >= Constants.CREATION_TIME[taskUnitType])
 			{
 				var positions = GameManager.Instance.Map.GetBuildableGridPositionsNearUnit(UnitType, GridPosition);
 
-				// Find a random cell near us to spawn the trained troop
+				// Spawn at the first available cell (deterministic, matches SimGame)
 				if (positions.Count > 0)
 				{
-					Vector3Int spawnPos = positions[UnityEngine.Random.Range(0, positions.Count)];
+					Vector3Int spawnPos = positions[0];
 					GameManager.Instance.Units.PlaceUnit(Agent, spawnPos, taskUnitType, Color);
 					var prodStats = GetRoundStats();
 					prodStats?.RecordUnitProduced(taskUnitType);
 					if (Constants.CAN_ATTACK[taskUnitType])
 						prodStats?.RecordMilestone("MILITARY", GameManager.Instance.TotalGameTime);
 					path.Clear();
+				pathIndex = 0;
 					CurrentAction = UnitAction.IDLE;
 				}
 			}
@@ -443,6 +452,7 @@ namespace GameManager.GameElements
 				&& (MineUnit == null || MineUnit.GetComponent<Unit>().Health <= 0))
 			{
 				path.Clear();
+				pathIndex = 0;
 				CurrentAction = UnitAction.IDLE;
 				return;
 			}
@@ -462,7 +472,7 @@ namespace GameManager.GameElements
 				}
 				else
 				{
-					UpdatePath(GridPosition, TargetUnitType, TargetGridPos);
+					UpdatePath(GridPosition, TargetUnitType, TargetGridPos, forceImmediate: true);
 				}
 			}
 			// if we're currently mining
@@ -474,6 +484,7 @@ namespace GameManager.GameElements
 					if (BaseUnit == null)
 					{
 						path.Clear();
+				pathIndex = 0;
 						CurrentAction = UnitAction.IDLE;
 						return;
 					}
@@ -486,8 +497,8 @@ namespace GameManager.GameElements
 				// Otherwise if there is a mine, collect totalGold
 				else if (MineUnit.GetComponent<Unit>().Health > 0)
 				{
-					taskTime += Time.deltaTime;
-					minedGold += Time.deltaTime * MiningSpeed;
+					taskTime += Time.fixedDeltaTime;
+					minedGold += Time.fixedDeltaTime * MiningSpeed;
 					if (minedGold >= 1)
 					{
 						MineUnit.GetComponent<Unit>().Health -= (int)minedGold;
@@ -521,6 +532,7 @@ namespace GameManager.GameElements
 					else if (totalGold >= MiningCapacity && BaseUnit == null)
 					{
 						path.Clear();
+				pathIndex = 0;
 						CurrentAction = UnitAction.IDLE;
 					}
 				}
@@ -543,11 +555,12 @@ namespace GameManager.GameElements
 						gatherPhase = GatherPhase.TO_MINE;
 						TargetUnitType = UnitType.MINE;
 						TargetGridPos = MineUnit.GetComponent<Unit>().GridPosition;
-						UpdatePath(GridPosition, TargetUnitType, TargetGridPos);
+						UpdatePath(GridPosition, TargetUnitType, TargetGridPos, forceImmediate: true);
 					}
 					else
 					{
 						path.Clear();
+				pathIndex = 0;
 						CurrentAction = UnitAction.IDLE;
 					}
 				}
@@ -555,11 +568,12 @@ namespace GameManager.GameElements
 				{
 					TargetUnitType = UnitType.BASE;
 					TargetGridPos = BaseUnit.GetComponent<Unit>().GridPosition;
-					UpdatePath(GridPosition, TargetUnitType, TargetGridPos);
+					UpdatePath(GridPosition, TargetUnitType, TargetGridPos, forceImmediate: true);
 				}
 				else if (BaseUnit == null)
 				{
 					path.Clear();
+				pathIndex = 0;
 					CurrentAction = UnitAction.IDLE;
 				}
 			}
@@ -574,6 +588,7 @@ namespace GameManager.GameElements
 			if (healTarget == null || healTarget.Health <= 0)
 			{
 				path.Clear();
+				pathIndex = 0;
 				CurrentAction = UnitAction.IDLE;
 				healTargetNbr = -1;
 				return;
@@ -585,26 +600,19 @@ namespace GameManager.GameElements
 			if (dist < healRange + 0.5f)
 			{
 				path.Clear();
+				pathIndex = 0;
 
-				// Check mana before healing
-				if (Mana < GameConstants.MANA_COST)
+				// Check mana and threshold via shared logic
+				if (!AgentSDK.TaskEngine.CanHeal(Mana, healTarget.Health, healTarget.UnitType))
 				{
 					CurrentAction = UnitAction.IDLE;
 					healTargetNbr = -1;
 					return;
 				}
 
-				// Check target health threshold (must be at or below 80%)
+				// Apply heal via shared formula
+				float healAmount = AgentSDK.TaskEngine.ComputeHealAmount(healTarget.UnitType);
 				float targetMaxHealth = Constants.HEALTH[healTarget.UnitType];
-				if (healTarget.Health / targetMaxHealth > GameConstants.HEAL_THRESHOLD)
-				{
-					CurrentAction = UnitAction.IDLE;
-					healTargetNbr = -1;
-					return;
-				}
-
-				// Apply heal
-				float healAmount = targetMaxHealth * GameConstants.HEAL_FRACTION;
 				healTarget.Health = Mathf.Min(healTarget.Health + healAmount, targetMaxHealth);
 				Mana -= GameConstants.MANA_COST;
 

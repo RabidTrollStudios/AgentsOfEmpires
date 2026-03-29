@@ -18,28 +18,82 @@ namespace GameManager.GameElements
 		#region Update Methods
 
 		/// <summary>
-		/// Update this unit
+		/// Per-frame update: animations, debug visualization, and visual effects only.
+		/// Game logic runs in FixedUpdate for deterministic parity with SimGame.
 		/// </summary>
 		internal void Update()
 		{
+			// Walk the visual through queued waypoints at the unit's speed.
+			// FixedUpdate enqueues grid positions; we smoothly traverse them here.
+			if (CanMove)
+			{
+				// Advance current segment
+				if (visualSegmentT < 1.0f)
+				{
+					float segDist = Vector3.Distance(visualMoveFrom, visualMoveTo);
+					if (segDist > 0.001f && visualSpeed > 0.001f)
+					{
+						float segDuration = segDist / visualSpeed; // seconds for this segment
+						visualSegmentT += Time.deltaTime / segDuration;
+					}
+					else
+					{
+						visualSegmentT = 1.0f;
+					}
+					if (visualSegmentT >= 1.0f)
+					{
+						visualSegmentT = 1.0f;
+						WorldPosition = visualMoveTo;
+					}
+					else
+					{
+						WorldPosition = Vector3.Lerp(visualMoveFrom, visualMoveTo, visualSegmentT);
+					}
+					velocity = Utility.SafeNormalize(visualMoveTo - visualMoveFrom);
+				}
+
+				// If current segment is done, pop next waypoint
+				if (visualSegmentT >= 1.0f && visualWaypoints.Count > 0)
+				{
+					Vector3Int nextWp = visualWaypoints.Dequeue();
+					visualMoveFrom = WorldPosition;
+					visualMoveTo = (Vector3)nextWp + new Vector3(0.5f, 0f, 0);
+					visualSegmentT = 0f;
+					velocity = Utility.SafeNormalize(visualMoveTo - visualMoveFrom);
+				}
+
+				// If no segments active and no waypoints, snap to grid
+				if (visualSegmentT >= 1.0f && visualWaypoints.Count == 0)
+				{
+					WorldPosition = (Vector3)GridPosition + new Vector3(0.5f, 0f, 0);
+				}
+			}
+
 			UpdateAnimation();
 
 			if (GameManager.Instance == null || !GameManager.Instance.IsPlaying) return;
 
-			MineUnit = GameManager.Instance.Units.GetUnit(mineUnit);
-			BaseUnit = GameManager.Instance.Units.GetUnit(baseUnit);
-
-			pathUpdateCounter++;
 			HasDebugging = GameManager.Instance.HasUnitDebugging;
-
 			UpdateDebuggingInfo();
 			UpdatePathVisualization();
 			UpdateTargetVisualization();
+		}
+
+		/// <summary>
+		/// Fixed-timestep game logic: task dispatch, death, mana regen, and movement.
+		/// Runs at Time.fixedDeltaTime (0.05s = 20 Hz) matching SimGame's tick rate.
+		/// </summary>
+		internal void GameLogicTick()
+		{
+			if (GameManager.Instance == null || !GameManager.Instance.IsPlaying) return;
+
+			MineUnit = GameManager.Instance.Units.GetUnit(mineUnit);
+			BaseUnit = GameManager.Instance.Units.GetUnit(baseUnit);
+			pathUpdateCounter++;
 
 			// If this unit is dead, destroy it
 			if (Health <= 0)
 			{
-				// Log the death to the owning agent's command log
 				var cmdLog = GetCmdLog();
 				string killedBy = "";
 				if (attackUnitNbr >= 0)
@@ -51,7 +105,6 @@ namespace GameManager.GameElements
 				cmdLog?.LogCommand("DEATH", $"{UnitType}#{UnitNbr} at {GridPosition} (action={CurrentAction}){killedBy}",
 					$"DESTROYED (health={Health:F0})");
 
-				// Record death analytics: loss for owner, kill for attacker
 				GetRoundStats()?.RecordUnitLost(UnitType);
 				if (attackUnitNbr >= 0)
 				{
@@ -60,68 +113,43 @@ namespace GameManager.GameElements
 					killerStats?.RecordEnemyKill(UnitType);
 				}
 
-				// Spawn dust 2 death effect at unit position
 				SpawnDeathDust();
 
-				// Release building reference — progress is safely on the building itself
 				if (currentBuilding != null)
 					currentBuilding.GetComponent<Unit>().ActiveBuilders.Remove(UnitNbr);
 				currentBuilding = null;
 				GameManager.Instance.Units.DestroyUnit(gameObject);
 			}
-			// Otherwise, if this unit is idle
 			else if (CurrentAction == UnitAction.IDLE)
 			{
 				if (currentBuilding != null)
 					currentBuilding.GetComponent<Unit>().ActiveBuilders.Remove(UnitNbr);
 				currentBuilding = null;
 				path.Clear();
-				TargetGridPos = GridPosition; // TODO
+				pathIndex = 0;
+				MoveAccumulator = 0f;
+				visualWaypoints.Clear();
+				visualSegmentT = 1.0f;
+				TargetGridPos = GridPosition;
 				TargetUnitType = UnitType.PAWN;
 				AttackUnit = null;
 				MineUnit = null;
 				BaseUnit = null;
 				arrowFiredThisCycle = false;
 			}
-			else //if (!isWandering)
+			else
 			{
-				// If we were ordered to gather and we can gather
-				if (CurrentAction == UnitAction.GATHER && CanGather)
-				{
-					UpdateGather();
-				}
-				else if (CurrentAction == UnitAction.ATTACK && CanAttack)
-				{
-					UpdateAttack();
-				}
-				else if (CurrentAction == UnitAction.BUILD && CanBuild)
-				{
-					UpdateBuild();
-				}
-				else if (CurrentAction == UnitAction.MOVE && CanMove)
-				{
-					UpdateMove();
-				}
-				else if (CurrentAction == UnitAction.TRAIN && CanTrain)
-				{
-					UpdateTrain();
-				}
-				else if (CurrentAction == UnitAction.REPAIR && CanBuild)
-				{
-					UpdateRepair();
-				}
-				else if (CurrentAction == UnitAction.HEAL && CanHeal)
-				{
-					UpdateHeal();
-				}
+				if (CurrentAction == UnitAction.GATHER && CanGather) UpdateGather();
+				else if (CurrentAction == UnitAction.ATTACK && CanAttack) UpdateAttack();
+				else if (CurrentAction == UnitAction.BUILD && CanBuild) UpdateBuild();
+				else if (CurrentAction == UnitAction.MOVE && CanMove) UpdateMove();
+				else if (CurrentAction == UnitAction.TRAIN && CanTrain) UpdateTrain();
+				else if (CurrentAction == UnitAction.REPAIR && CanBuild) UpdateRepair();
+				else if (CurrentAction == UnitAction.HEAL && CanHeal) UpdateHeal();
 			}
 
-			// Passive mana regeneration
-			if (MaxMana > 0 && Mana < MaxMana)
-			{
-				Mana = Mathf.Min(Mana + Constants.MANA_REGEN * Time.deltaTime, MaxMana);
-			}
-
+			// Passive mana regeneration (shared formula for parity)
+			Mana = AgentSDK.TaskEngine.RegenMana(Mana, MaxMana, Constants.MANA_REGEN, Time.fixedDeltaTime);
 		}
 
 		/// <summary>
@@ -341,7 +369,9 @@ namespace GameManager.GameElements
 
 			if (!isTraining) return;
 
-			float ratio = Mathf.Clamp01(taskTime / Constants.CREATION_TIME[taskUnitType]);
+			float creationTime = Constants.CREATION_TIME != null && Constants.CREATION_TIME.ContainsKey(taskUnitType)
+				? Constants.CREATION_TIME[taskUnitType] : 0f;
+			float ratio = creationTime > 0f ? Mathf.Clamp01(taskTime / creationTime) : 0f;
 			float fillScaleX = BIG_BAR_FILL_SCALE_X * ratio;
 			float fullFillW = BIG_BAR_FILL_SCALE_X * (90f / 64f);
 			float leftEdgeOffset = fullFillW * (ratio - 1f) * 0.5f;
@@ -727,143 +757,115 @@ namespace GameManager.GameElements
 		{
 			if (GameManager.Instance == null || !GameManager.Instance.IsPlaying) return;
 
-			// If we have a path, move along it
-			if (path.Count > 0)
+			// Run all game logic at fixed timestep for SimGame parity
+			GameLogicTick();
+
+			// Discrete accumulator-based movement matching SimGame exactly.
+			// GridPosition transitions are deterministic; WorldPosition is interpolated in Update().
+			if (path != null && pathIndex < path.Count)
 			{
-				// If the next cell is free to traverse (buildable or a building-top passage), move forward
-				Vector3Int nextTarget = path[0];
-				if (GameManager.Instance.Map.IsGridPositionBuildable(nextTarget)
-				    || GameManager.Instance.Map.IsGridPositionPassage(nextTarget))
+				Vector3Int tickStartPos = GridPosition;
+				float speed = Speed; // = Constants.MOVING_SPEED[UnitType]
+				MoveAccumulator += speed;
+
+				while (path != null && pathIndex < path.Count)
 				{
-					localAvoidWaitFrames = 0;
+					Vector3Int nextPos = path[pathIndex];
+					var curSDK = new AgentSDK.Position(GridPosition.x, GridPosition.y);
+					var nxtSDK = new AgentSDK.Position(nextPos.x, nextPos.y);
 
-					// Units snap to cell bottom-center: grid cell (i,j) has foot position (i+0.5, j)
-					Vector3 nextCenter = (Vector3)nextTarget + new Vector3(0.5f, 0f, 0);
-					velocity = nextCenter - WorldPosition;
-					velocity = Utility.SafeNormalize(velocity);
+					var result = AgentSDK.TaskEngine.TryMoveToCell(
+						curSDK, nxtSDK, MoveAccumulator,
+						GameManager.Instance.Map.Grid, out float distCost);
 
-					// Determine how far we are from our current target
-					float distToTarget = Vector3.Distance(nextCenter, WorldPosition);
-
-					// If we're close to our target but we're in the middle of the path
-					// Move to the target and then move toward the next point
-					if (distToTarget <= Speed)
+					switch (result)
 					{
-						bool enteringPassage = GameManager.Instance.Map.IsGridPositionPassage(nextTarget);
-						bool leavingPassage = GameManager.Instance.Map.IsGridPositionPassage(GridPosition);
+						case AgentSDK.TaskEngine.MoveResult.Moved:
+							MoveAccumulator -= distCost;
+							localAvoidWaitFrames = 0;
 
-						// Don't claim passage cells (they belong to the building)
-						if (!enteringPassage)
-							GameManager.Instance.Map.SetAreaBuildability(gameObject.GetComponent<Unit>().UnitType, nextTarget, false);
-						// Don't release passage cells (they stay as building top rows)
-						if (!leavingPassage)
-							GameManager.Instance.Map.SetAreaBuildability(gameObject.GetComponent<Unit>().UnitType, GridPosition, true);
-						GridPosition = nextTarget;
-						WorldPosition = nextCenter;
-						path.RemoveAt(0);
-						if (path.Count > 0)
-						{
-							nextTarget = path[0];
-							nextCenter = (Vector3)nextTarget + new Vector3(0.5f, 0f, 0);
-							velocity = Utility.SafeNormalize(nextCenter - WorldPosition);
-							WorldPosition += velocity * (Speed - distToTarget);
-						}
-					}
-					// Otherwise, we're just moving along the path and not close to our target
-					else
-					{
-						WorldPosition += velocity * Speed;
-					}
-				}
-				// Next cell is occupied — use local avoidance for mobile units, full re-path for terrain/buildings
-				else
-				{
-					// Walkable but not buildable = blocked by a mobile unit (temporary obstacle)
-					if (GameManager.Instance.Map.IsGridPositionWalkable(nextTarget))
-					{
-						// For MOVE commands: if close to the destination and blocked by a mobile
-						// unit, stop here rather than endlessly re-pathing.
-						if (CurrentAction == UnitAction.MOVE)
-						{
-							float distToTarget = Vector3.Distance((Vector3)GridPosition, (Vector3)TargetGridPos);
-							if (path.Count == 1 || distToTarget <= 3.0f)
+							bool leavingPassage = GameManager.Instance.Map.IsGridPositionPassage(GridPosition);
+							bool enteringPassage = GameManager.Instance.Map.IsGridPositionPassage(nextPos);
+
+							if (!leavingPassage)
+								GameManager.Instance.Map.SetAreaBuildability(UnitType, GridPosition, true);
+
+							GridPosition = nextPos;
+							pathIndex++;
+
+							if (!enteringPassage)
+								GameManager.Instance.Map.SetAreaBuildability(UnitType, GridPosition, false);
+
+							// Path consumed — clear immediately.
+							// Visual queue handles smooth catch-up independently.
+							if (pathIndex >= path.Count)
 							{
 								path.Clear();
-								localAvoidWaitFrames = 0;
-								return;
+								pathIndex = 0;
+								if (CurrentAction == UnitAction.MOVE)
+									CurrentAction = UnitAction.IDLE;
 							}
-						}
+							continue; // try to consume more cells this tick
 
-						localAvoidWaitFrames++;
+						case AgentSDK.TaskEngine.MoveResult.BlockedByUnit:
+							// Final cell occupied — don't overlap
+							if (pathIndex == path.Count - 1)
+							{
+								// MOVE: stop here (close enough)
+								// Other actions: consume path so task system can
+								// check adjacency and re-path to a different neighbor
+								path.Clear();
+								pathIndex = 0;
+								if (CurrentAction == UnitAction.MOVE)
+									CurrentAction = UnitAction.IDLE;
+								goto doneMoving;
+							}
+							// Mid-path: pass through
+							goto case AgentSDK.TaskEngine.MoveResult.Moved;
 
-						// Wait a few frames — the blocker may move on its own.
-						// MOVE actions skip the wait so retreating units aren't pinned down.
-						if (CurrentAction != UnitAction.MOVE && localAvoidWaitFrames <= 3)
-							return;
-
-						// Find the next free cell further along the path and detour around the blocker
-						var detour = FindDetourAroundBlocker();
-						if (detour != null)
-						{
-							path = detour;
+						case AgentSDK.TaskEngine.MoveResult.BlockedByTerrain:
+							MoveAccumulator -= distCost;
 							localAvoidWaitFrames = 0;
-						}
-						else if (localAvoidWaitFrames > 10)
-						{
-							// Fallback: full re-path to the original target avoiding units
-							var savedPath = new List<Vector3Int>(path);
-							UpdatePath(GridPosition, TargetUnitType, TargetGridPos, forceImmediate: true, avoidUnits: true);
-							if (path.Count == 0)
-								path = savedPath;
-							localAvoidWaitFrames = 0;
-						}
-					}
-					else
-					{
-						// Not walkable = terrain or building — full re-path immediately
-						localAvoidWaitFrames = 0;
-						UpdatePath(GridPosition, TargetUnitType, TargetGridPos);
+							UpdatePath(GridPosition, TargetUnitType, TargetGridPos);
+							goto doneMoving;
+
+						default: // InsufficientMovement
+							goto doneMoving;
 					}
 				}
-			}
-			else if (CanMove)
-			{
-				// Snap to cell bottom-center when not actively moving
-				WorldPosition = (Vector3)GridPosition + new Vector3(0.5f, 0f, 0);
-			}
-		}
+				doneMoving:
 
-		/// <summary>
-		/// Scan ahead in the current path to find the next buildable (unoccupied) cell,
-		/// then re-path from our current position to that cell avoiding units.
-		/// Returns the spliced detour + remainder path, or null if no detour found.
-		/// </summary>
-		private List<Vector3Int> FindDetourAroundBlocker()
-		{
-			// Find the first buildable cell further along the path
-			int resumeIndex = -1;
-			for (int i = 1; i < path.Count; i++)
-			{
-				if (GameManager.Instance.Map.IsGridPositionBuildable(path[i]))
+				// Visual speed = cells per second. Speed is per-fixedUpdate,
+				// so cells/sec = Speed / fixedDeltaTime.
+				visualSpeed = speed / Time.fixedDeltaTime;
+
+				// Determine what cell the visual is currently heading toward.
+				Vector3Int visualCurrentTarget = GridPosition;
+				if (visualWaypoints.Count > 0)
+					visualCurrentTarget = visualWaypoints.Peek();
+				else if (visualSegmentT < 1.0f)
+					visualCurrentTarget = new Vector3Int(
+						Mathf.RoundToInt(visualMoveTo.x - 0.5f),
+						Mathf.RoundToInt(visualMoveTo.y), 0);
+
+				if (GridPosition != tickStartPos)
 				{
-					resumeIndex = i;
-					break;
+					// Grid moved this tick. Only enqueue if the visual isn't
+					// already heading to this cell (proactive enqueue from prior tick).
+					if (visualCurrentTarget != GridPosition)
+						visualWaypoints.Enqueue(GridPosition);
+				}
+				else if (path != null && pathIndex < path.Count
+					&& visualWaypoints.Count == 0 && visualSegmentT >= 1.0f)
+				{
+					// Grid hasn't moved yet but there's a next cell coming.
+					// Enqueue it now so the visual starts moving immediately.
+					visualWaypoints.Enqueue(path[pathIndex]);
 				}
 			}
-
-			if (resumeIndex < 0) return null;
-
-			Vector3Int waypoint = path[resumeIndex];
-			var detour = GameManager.Instance.Map.GetPathBetweenGridPositions(GridPosition, waypoint, avoidUnits: true);
-			if (detour.Count == 0) return null;
-
-			// Splice: detour to the waypoint + remainder of original path after it
-			for (int i = resumeIndex + 1; i < path.Count; i++)
-			{
-				detour.Add(path[i]);
-			}
-			return detour;
 		}
+
+	
 
 		private void UpdateDebuggingInfo()
 		{
@@ -901,7 +903,7 @@ namespace GameManager.GameElements
 								textArea.text = totalGold.ToString("0.0");
 								break;
 							case UnitAction.MOVE:
-								textArea.text = path.Count.ToString();
+								textArea.text = (path.Count - pathIndex).ToString();
 								break;
 							case UnitAction.TRAIN:
 								textArea.text = taskTime.ToString("0.0");
@@ -938,6 +940,10 @@ namespace GameManager.GameElements
 			{
 				pathUpdateCounter = 0;
 				path = GameManager.Instance.Map.GetPathToUnit(gridPosition, targetUnitType, targetGridPos, avoidUnits);
+				pathIndex = 0;
+				visualWaypoints.Clear();
+				visualSegmentT = 1.0f;
+				WorldPosition = (Vector3)GridPosition + new Vector3(0.5f, 0f, 0);
 
 				if (path.Count == 0)
 				{
@@ -982,13 +988,14 @@ namespace GameManager.GameElements
 				return;
 			}
 
-			if (path != null && path.Count > 0)
+			if (path != null && pathIndex < path.Count)
 			{
-				pathLineRenderer.positionCount = path.Count + 1;
+				int remaining = path.Count - pathIndex;
+				pathLineRenderer.positionCount = remaining + 1;
 				pathLineRenderer.SetPosition(0, WorldPosition);
-				for (int i = 0; i < path.Count; i++)
+				for (int i = 0; i < remaining; i++)
 				{
-					Vector3 cellCenter = (Vector3)path[i] + new Vector3(0.5f, 0f, 0);
+					Vector3 cellCenter = (Vector3)path[pathIndex + i] + new Vector3(0.5f, 0f, 0);
 					pathLineRenderer.SetPosition(i + 1, cellCenter);
 				}
 			}

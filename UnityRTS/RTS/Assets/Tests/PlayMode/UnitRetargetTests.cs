@@ -24,7 +24,10 @@ namespace GameManager.Tests.PlayMode
 			for (int dx = -1; dx <= 1; dx++)
 				for (int dy = -1; dy <= 1; dy++)
 					if (dx != 0 || dy != 0)
+					{
 						ctx.MapManager.GridCells[cx + dx, cy + dy].SetWalkable(false);
+						ctx.MapManager.Grid.SetCellBlocked(cx + dx, cy + dy);
+					}
 		}
 
 		#region FindClosestReachableEnemy

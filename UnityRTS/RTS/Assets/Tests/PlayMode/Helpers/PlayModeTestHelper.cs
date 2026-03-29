@@ -193,6 +193,12 @@ namespace GameManager.Tests.PlayMode
 				.GetProperty("GridCells", BindingFlags.NonPublic | BindingFlags.Instance)
 				.SetValue(manager, cells);
 
+			// Create shared GameGrid
+			var grid = new AgentSDK.GameGrid(width, height);
+			typeof(MapManager)
+				.GetProperty("Grid", BindingFlags.Public | BindingFlags.Instance)
+				.SetValue(manager, grid);
+
 			// Build graph with edges
 			var graph = new Graph<GridCell>();
 			for (int x = 0; x < width; x++)

@@ -96,5 +96,10 @@ namespace AgentTestHarness
         {
             return game.Map.FindProspectiveBuildPositions(unitType);
         }
+
+        public IReadOnlyList<FailedCommand> GetFailedCommands()
+        {
+            return game.FailedCommands[agentNbr];
+        }
     }
 }

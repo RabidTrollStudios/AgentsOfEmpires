@@ -79,6 +79,7 @@ namespace GameManager.Tests.PlayMode
 					Vector3Int pos = pawnPos + new Vector3Int(dx, dy, 0);
 					ctx.MapManager.GridCells[pos.x, pos.y].SetBuildable(false);
 					ctx.MapManager.GridCells[pos.x, pos.y].SetWalkable(false);
+					ctx.MapManager.Grid.SetCellBlocked(pos.x, pos.y);
 				}
 			}
 

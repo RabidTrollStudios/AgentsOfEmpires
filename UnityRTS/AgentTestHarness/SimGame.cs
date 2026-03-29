@@ -37,6 +37,14 @@ namespace AgentTestHarness
         // Optional command recording (null when disabled)
         private CommandRecorder[] recorders;
 
+
+        // Commands that failed during Phase 1 processing (cleared each tick)
+        internal List<FailedCommand>[] FailedCommands = new List<FailedCommand>[2]
+        {
+            new List<FailedCommand>(),
+            new List<FailedCommand>(),
+        };
+
         // Derived timing constants (computed from Config.GameSpeed via shared DerivedGameConstants)
         internal DerivedGameConstants derived;
         internal float scalarCreationTime => derived.ScalarCreationTime;
@@ -222,6 +230,8 @@ namespace AgentTestHarness
         public int GetGold(int agentNbr) => Gold[agentNbr];
         public int GetWins(int agentNbr) => Wins[agentNbr];
 
+        public int CountUnits() => Units.Count;
+
         public SimUnit GetUnit(int unitNbr)
         {
             Units.TryGetValue(unitNbr, out var unit);
@@ -244,15 +254,18 @@ namespace AgentTestHarness
 
         #region Helpers
 
+        private void RemoveUnit(SimUnit unit)
+        {
+            Map.SetAreaBuildability(unit.UnitType, unit.GridPosition, true);
+            Units.Remove(unit.UnitNbr);
+        }
+
         private void RemoveDeadUnits()
         {
             var dead = Units.Values.Where(u => u.Health <= 0).ToList();
 
             foreach (var unit in dead)
-            {
-                Map.SetAreaBuildability(unit.UnitType, unit.GridPosition, true);
-                Units.Remove(unit.UnitNbr);
-            }
+                RemoveUnit(unit);
         }
 
         private bool IsAdjacentToUnit(Position pos, UnitType unitType, Position unitAnchor)

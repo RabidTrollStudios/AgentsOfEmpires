@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
@@ -13,6 +14,9 @@ namespace AgentSDK
 
         /// <summary>Base mining capacity scalar</summary>
         public static readonly float SCALAR_MINING_CAPACITY = 10f;
+
+        /// <summary>Scoring divisor: UNIT_VALUE = ceil(COST / SCORING_SCALAR)</summary>
+        public static readonly float SCORING_SCALAR = 20f;
 
         /// <summary>
         /// Cost to build or train each unit type.
@@ -131,25 +135,6 @@ namespace AgentSDK
                 { UnitType.MONK,        0.0f },
             });
 
-        /// <summary>
-        /// Movement speed multiplier for each unit type (1.0 = baseline).
-        /// Warriors are slower (armored/heavy), archers are faster (light).
-        /// </summary>
-        public static readonly ReadOnlyDictionary<UnitType, float> MOVEMENT_SPEED =
-            new ReadOnlyDictionary<UnitType, float>(new Dictionary<UnitType, float>()
-            {
-                { UnitType.MINE,        0.0f },
-                { UnitType.PAWN,      1.0f },
-                { UnitType.WARRIOR,     0.70f },
-                { UnitType.ARCHER,      1.0f },
-                { UnitType.BASE,        0.0f },
-                { UnitType.BARRACKS,    0.0f },
-                { UnitType.ARCHERY,     0.0f },
-                { UnitType.LANCER,      1.15f },
-                { UnitType.TOWER,       0.0f },
-                { UnitType.MONASTERY,   0.0f },
-                { UnitType.MONK,        0.85f },
-            });
 
         /// <summary>
         /// Size of each unit on the grid (width, height)
@@ -307,18 +292,15 @@ namespace AgentSDK
                 { UnitType.MONASTERY, 0f }, { UnitType.MONK, 100f },
             });
 
-        /// <summary>Mana cost per heal action (25% of max mana)</summary>
-        public static readonly float MANA_COST = 25f;
+        /// <summary>Mana cost per heal action (10% of max mana)</summary>
+        public static readonly float MANA_COST = 10f;
 
         /// <summary>Base mana regeneration rate (scaled by game speed)</summary>
         /// <summary>Base mana regeneration rate (scaled by game speed). Full pool (100) in ~3s at speed 20.</summary>
         public static readonly float BASE_MANA_REGEN = 100f / 60f;
 
-        /// <summary>Fraction of target's max health restored per heal</summary>
-        public static readonly float HEAL_FRACTION = 0.50f;
-
-        /// <summary>Target must be at or below this fraction of max health to be healed</summary>
-        public static readonly float HEAL_THRESHOLD = 0.80f;
+        /// <summary>Flat HP restored per heal action</summary>
+        public static readonly float HEAL_AMOUNT = 100f;
 
         /// <summary>
         /// Compute effective attack range against a target, accounting for target unit size.
@@ -355,6 +337,49 @@ namespace AgentSDK
             if (attacker == UnitType.WARRIOR && defender == UnitType.LANCER)
                 return 0.75f;
             return 1.0f;
+        }
+
+        /// <summary>
+        /// Validate that every UnitType-keyed dictionary covers all enum values.
+        /// Returns a list of error messages (empty if all dictionaries are complete).
+        /// Call at game startup or in tests to catch missing entries early.
+        /// </summary>
+        public static List<string> ValidateDictionaries()
+        {
+            var errors = new List<string>();
+            var allTypes = (UnitType[])Enum.GetValues(typeof(UnitType));
+
+            void Check<T>(IReadOnlyDictionary<UnitType, T> dict, string name)
+            {
+                foreach (var ut in allTypes)
+                {
+                    if (!dict.ContainsKey(ut))
+                        errors.Add($"{name} missing entry for {ut}");
+                }
+            }
+
+            Check(COST, nameof(COST));
+            Check(HEALTH, nameof(HEALTH));
+            Check(MINING_CAPACITY, nameof(MINING_CAPACITY));
+            Check(BASE_DAMAGE, nameof(BASE_DAMAGE));
+            Check(CREATION_TIME_MULTIPLIER, nameof(CREATION_TIME_MULTIPLIER));
+            Check(ATTACK_RANGE, nameof(ATTACK_RANGE));
+            Check(UNIT_SIZE, nameof(UNIT_SIZE));
+            Check(DEPENDENCY, nameof(DEPENDENCY));
+            Check(BUILDS, nameof(BUILDS));
+            Check(TRAINS, nameof(TRAINS));
+            Check(CAN_MOVE, nameof(CAN_MOVE));
+            Check(CAN_BUILD, nameof(CAN_BUILD));
+            Check(CAN_TRAIN, nameof(CAN_TRAIN));
+            Check(CAN_ATTACK, nameof(CAN_ATTACK));
+            Check(CAN_GATHER, nameof(CAN_GATHER));
+            Check(CAN_HEAL, nameof(CAN_HEAL));
+            Check(HEAL_RANGE, nameof(HEAL_RANGE));
+            Check(MAX_MANA, nameof(MAX_MANA));
+            Check(DerivedGameConstants.SPEED_MULTIPLIER, "SPEED_MULTIPLIER");
+            Check(DerivedGameConstants.UNIT_VALUE, "UNIT_VALUE");
+
+            return errors;
         }
     }
 }
