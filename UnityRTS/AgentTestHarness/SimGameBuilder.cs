@@ -77,15 +77,16 @@ namespace AgentTestHarness
         }
 
         /// <summary>Place a unit owned by an agent.</summary>
-        public SimGameBuilder WithUnit(int agentNbr, UnitType unitType, Position position, bool isBuilt = true)
+        public SimGameBuilder WithUnit(int agentNbr, UnitType unitType, Position position,
+            bool isBuilt = true, float health = -1)
         {
-            float health = GameConstants.HEALTH[unitType];
+            float hp = health >= 0 ? health : GameConstants.HEALTH[unitType];
             unitSpecs.Add(new UnitSpec
             {
                 OwnerAgentNbr = agentNbr,
                 UnitType = unitType,
                 Position = position,
-                Health = health,
+                Health = hp,
                 IsBuilt = isBuilt
             });
             return this;

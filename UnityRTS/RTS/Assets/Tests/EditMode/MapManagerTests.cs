@@ -106,10 +106,15 @@ namespace GameManager.Tests
 		[Test]
 		public void SetAreaBuildability_Building_WalkableFalse()
 		{
-			// BASE is immobile (6x4) — both buildable and walkable should be false
+			// BASE is immobile (6x4). Anchor (2,5) is the top row — stays walkable (passage).
+			// Body cells (e.g. row y=4) become not walkable and not buildable.
 			manager.SetAreaBuildability(UnitType.BASE, new Vector3Int(2, 5, 0), false);
-			Assert.IsFalse(manager.IsGridPositionBuildable(new Vector3Int(2, 5, 0)));
-			Assert.IsFalse(manager.IsGridPositionWalkable(new Vector3Int(2, 5, 0)));
+			Assert.IsFalse(manager.IsGridPositionBuildable(new Vector3Int(2, 5, 0)),
+				"Top row should not be buildable");
+			Assert.IsTrue(manager.IsGridPositionWalkable(new Vector3Int(2, 5, 0)),
+				"Top row should remain walkable (passage)");
+			Assert.IsFalse(manager.IsGridPositionWalkable(new Vector3Int(2, 4, 0)),
+				"Body row should not be walkable");
 		}
 
 		[Test]
@@ -346,7 +351,8 @@ namespace GameManager.Tests
 		[Test]
 		public void SetAreaBuildability_Barracks_MultiCellBlocked()
 		{
-			// BARRACKS is 3x3 — all 9 cells should become non-buildable and non-walkable
+			// BARRACKS is 3x3. All 9 cells become not buildable.
+			// Top row (j=0) stays walkable (passage). Body rows (j=1,2) become not walkable.
 			manager.SetAreaBuildability(UnitType.BARRACKS, new Vector3Int(3, 5, 0), false);
 			for (int i = 0; i < 3; i++)
 			{
@@ -355,8 +361,12 @@ namespace GameManager.Tests
 					var pos = new Vector3Int(3 + i, 5 - j, 0);
 					Assert.IsFalse(manager.IsGridPositionBuildable(pos),
 						$"Cell {pos} should not be buildable");
-					Assert.IsFalse(manager.IsGridPositionWalkable(pos),
-						$"Cell {pos} should not be walkable");
+					if (j == 0)
+						Assert.IsTrue(manager.IsGridPositionWalkable(pos),
+							$"Top row cell {pos} should remain walkable (passage)");
+					else
+						Assert.IsFalse(manager.IsGridPositionWalkable(pos),
+							$"Body cell {pos} should not be walkable");
 				}
 			}
 		}

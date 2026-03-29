@@ -33,7 +33,7 @@ namespace GameManager.Tests.PlayMode
 			// MINE is 3x3 at (15,15), occupying (15..17, 15..13)
 			Unit mine = PlaceUnit(UnitType.MINE, new Vector3Int(15, 15, 0));
 
-			// Block all neighbor cells around the mine with individual pawns from agent 1.
+			// Block all neighbor cells around the mine with terrain walls.
 			// The mine occupies x=[15,16,17], y=[15,14,13].
 			// Neighbors: ring around that 3x3 area.
 			int[] xs = { 14, 15, 16, 17, 18 };
@@ -43,14 +43,22 @@ namespace GameManager.Tests.PlayMode
 				foreach (int y in blockYs)
 				{
 					if (x >= 0 && x < 30 && y >= 0 && y < 30)
-						PlaceUnit(UnitType.PAWN, new Vector3Int(x, y, 0), ctx.Agent1Go);
+					{
+						ctx.MapManager.GridCells[x, y].SetWalkable(false);
+						ctx.MapManager.GridCells[x, y].SetBuildable(false);
+						ctx.MapManager.Grid.SetCellBlocked(x, y);
+					}
 				}
 			}
 			// Left and right columns
 			for (int y = 13; y <= 15; y++)
 			{
-				PlaceUnit(UnitType.PAWN, new Vector3Int(14, y, 0), ctx.Agent1Go);
-				PlaceUnit(UnitType.PAWN, new Vector3Int(18, y, 0), ctx.Agent1Go);
+				ctx.MapManager.GridCells[14, y].SetWalkable(false);
+				ctx.MapManager.GridCells[14, y].SetBuildable(false);
+				ctx.MapManager.Grid.SetCellBlocked(14, y);
+				ctx.MapManager.GridCells[18, y].SetWalkable(false);
+				ctx.MapManager.GridCells[18, y].SetBuildable(false);
+				ctx.MapManager.Grid.SetCellBlocked(18, y);
 			}
 
 			Unit pawn = PlaceUnit(UnitType.PAWN, new Vector3Int(7, 5, 0));
@@ -122,6 +130,7 @@ namespace GameManager.Tests.PlayMode
 				{
 					if (dx == 0 && dy == 0) continue;
 					ctx.MapManager.GridCells[3 + dx, 3 + dy].SetWalkable(false);
+					ctx.MapManager.Grid.SetCellBlocked(3 + dx, 3 + dy);
 				}
 			}
 			yield return null;

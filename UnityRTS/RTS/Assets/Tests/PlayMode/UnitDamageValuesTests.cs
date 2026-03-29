@@ -121,8 +121,8 @@ namespace GameManager.Tests.PlayMode
 		[UnityTest]
 		public IEnumerator Runtime_Damage_HasAllUnitTypes()
 		{
-			Assert.AreEqual(9, Constants.DAMAGE.Count,
-				"DAMAGE dictionary should have 9 entries at runtime");
+			Assert.AreEqual(11, Constants.DAMAGE.Count,
+				"DAMAGE dictionary should have 11 entries at runtime");
 			yield return null;
 		}
 

@@ -223,7 +223,7 @@ namespace PlanningAgent
                 if (monkInfo.Value.Mana >= GameConstants.MANA_COST)
                 {
                     int bestTarget = -1;
-                    float lowestRatio = GameConstants.HEAL_THRESHOLD;
+                    float lowestHealth = float.MaxValue;
 
                     // Prioritise warriors (front line, high HP pool)
                     foreach (var unitList in new[] { myWarriors, myArchers, myLancers })
@@ -233,10 +233,10 @@ namespace PlanningAgent
                             var info = state.GetUnit(unitNbr);
                             if (!info.HasValue) continue;
                             float maxHp = GameConstants.HEALTH[info.Value.UnitType];
-                            float ratio = info.Value.Health / maxHp;
-                            if (ratio <= lowestRatio)
+                            if (info.Value.Health > maxHp - GameConstants.HEAL_AMOUNT) continue;
+                            if (info.Value.Health < lowestHealth)
                             {
-                                lowestRatio = ratio;
+                                lowestHealth = info.Value.Health;
                                 bestTarget = unitNbr;
                             }
                         }

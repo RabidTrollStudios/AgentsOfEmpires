@@ -75,12 +75,14 @@ namespace GameManager
 
 		internal void CloseLogFile()
 		{
-			LogFileStream.Close();
+			LogFileStream?.Close();
+			LogFileStream = null;
 		}
 
 		internal void OpenLogFile()
 		{
-			LogFileStream = File.Open(logFileName,FileMode.Append);
+			LogFileStream?.Close();
+			LogFileStream = new FileStream(logFileName, FileMode.Append, FileAccess.Write, FileShare.ReadWrite);
 		}
 
 		internal void OpenCommandLog()
@@ -245,6 +247,12 @@ namespace GameManager
 		/// Updates the agent each frame
 		/// </summary>
 		public virtual void Update() { }
+
+		/// <summary>
+		/// Record a command that failed during Phase 1 dispatch.
+		/// Overridden in AgentBridge to route to GameStateAdapter.
+		/// </summary>
+		internal virtual void RecordFailedCommand(AgentSDK.FailedCommand failure) { }
 
 		/// <summary>
 		/// Clean up file handles when the editor stops or the object is destroyed

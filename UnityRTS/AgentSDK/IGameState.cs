@@ -97,5 +97,12 @@ namespace AgentSDK
         /// Checks bounded area buildability (clearance around the unit).
         /// </summary>
         IReadOnlyList<Position> FindProspectiveBuildPositions(UnitType unitType);
+
+        /// <summary>
+        /// Get commands from the previous tick that passed queue-time validation
+        /// but failed during Phase 1 processing. Gold for failed Build/Train
+        /// commands is automatically refunded.
+        /// </summary>
+        IReadOnlyList<FailedCommand> GetFailedCommands();
     }
 }

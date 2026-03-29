@@ -117,6 +117,44 @@ namespace GameManager
 		}
 
 		/// <summary>
+		/// Place a neutral unit (no owning agent). Uses agent 0's prefab for visuals.
+		/// Used for mines which are not owned by either player.
+		/// </summary>
+		public GameObject PlaceNeutralUnit(Vector3Int gridPosition, UnitType unitType, Color color)
+		{
+			var size = Constants.UNIT_SIZE[unitType];
+			Vector3 position = gridPosition + new Vector3(size.x * 0.5f, 0.5f - size.y * 0.5f);
+
+			// Use agent 0's prefab (mines look the same regardless)
+			GameObject unit = Object.Instantiate(
+				UnitPrefabs[0][unitType],
+				position, Quaternion.identity);
+			unit.AddComponent<Unit>();
+
+			var sr = unit.GetComponent<SpriteRenderer>();
+			if (sr != null)
+				sr.spriteSortPoint = SpriteSortPoint.Pivot;
+			unit.GetComponent<Unit>().Initialize(null, gridPosition, unitType, NbrOfUnits++);
+
+			if (!Constants.CAN_MOVE[unitType])
+			{
+				int buildingsLayer = LayerMask.NameToLayer("Buildings");
+				unit.layer = buildingsLayer;
+				foreach (Transform child in unit.transform)
+					child.gameObject.layer = buildingsLayer;
+			}
+
+			GameObject unitDebugger = Object.Instantiate(prefabs.UnitDebuggerPrefab, gridPosition, Quaternion.identity);
+			unitDebugger.gameObject.GetComponentInChildren<Canvas>().enabled = false;
+			unitDebugger.transform.SetParent(unit.transform);
+
+			Units.Add(unit.GetComponent<Unit>().UnitNbr, unit);
+			mapManager.SetAreaBuildability(unit.GetComponent<Unit>().UnitType, gridPosition, false);
+
+			return unit;
+		}
+
+		/// <summary>
 		/// Destroys a specific unit and clears its area
 		/// </summary>
 		public void DestroyUnit(GameObject unit)
@@ -151,7 +189,7 @@ namespace GameManager
 		public List<int> GetUnitNbrsOfType(UnitType unitType, int agentNbr)
 		{
 			return Units.Keys.Where(key => Units[key].GetComponent<Unit>().UnitType == unitType
-								&& Units[key].GetComponent<Unit>().Agent.GetComponent<AgentController>().Agent.AgentNbr == agentNbr).ToList();
+								&& Units[key].GetComponent<Unit>().OwnerAgentNbr == agentNbr).ToList();
 		}
 
 		/// <summary>

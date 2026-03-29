@@ -137,8 +137,8 @@ namespace PlanningAgent.Tests
             game.InitializeMatch();
             game.InitializeRound();
 
-            // Run just 1 tick — spam agent sends train, but base can only process one
-            game.Run(1);
+            // Run 2 ticks: tick 1 = agent queues TRAIN, tick 2 = command dispatched
+            game.Run(2);
 
             // Base should now be training (not idle)
             var bases = game.GetUnitsByType(0, UnitType.BASE);

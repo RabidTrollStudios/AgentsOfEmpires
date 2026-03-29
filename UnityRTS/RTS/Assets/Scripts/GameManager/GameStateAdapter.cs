@@ -41,7 +41,7 @@ namespace GameManager
         }
 
         /// <summary>
-        /// Clears the cache if we're on a new frame
+        /// Clears the path cache if we're on a new frame.
         /// </summary>
         private void ResetCacheIfNewFrame()
         {
@@ -76,7 +76,7 @@ namespace GameManager
             var unit = unitManager.GetUnit(unitNbr);
             if (unit == null) return null;
 
-            int ownerNbr = unit.Agent.GetComponent<AgentController>().Agent.AgentNbr;
+            int ownerNbr = unit.OwnerAgentNbr;
             return new UnitInfo(
                 unit.UnitNbr,
                 unit.UnitType,
@@ -219,6 +219,26 @@ namespace GameManager
                 }
             }
             return result;
+        }
+
+        // Failed commands from Phase 1 processing, cleared each frame
+        private readonly List<AgentSDK.FailedCommand> failedCommands = new List<AgentSDK.FailedCommand>();
+
+        /// <summary>Record a command that failed during dispatch/execution.</summary>
+        internal void AddFailedCommand(AgentSDK.FailedCommand failure)
+        {
+            failedCommands.Add(failure);
+        }
+
+        /// <summary>Clear failed commands at the start of each tick.</summary>
+        internal void ClearFailedCommands()
+        {
+            failedCommands.Clear();
+        }
+
+        public IReadOnlyList<AgentSDK.FailedCommand> GetFailedCommands()
+        {
+            return failedCommands;
         }
     }
 }

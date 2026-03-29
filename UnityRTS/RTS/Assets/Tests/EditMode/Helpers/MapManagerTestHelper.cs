@@ -1,4 +1,5 @@
 using System.Reflection;
+using AgentSDK;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 using GameManager.GameElements;
@@ -35,6 +36,9 @@ namespace GameManager.Tests
 				for (int y = 0; y < height; y++)
 					cells[x, y] = new GridCell(tilemap, new Vector3Int(x, y, 0));
 
+			// Create shared GameGrid and set it via reflection
+			var grid = new GameGrid(width, height);
+
 			// Apply blocked cells
 			if (blockedCells != null)
 			{
@@ -42,6 +46,7 @@ namespace GameManager.Tests
 				{
 					cells[bx, by].SetBuildable(false);
 					cells[bx, by].SetWalkable(false);
+					grid.SetCellBlocked(bx, by);
 				}
 			}
 
@@ -49,6 +54,11 @@ namespace GameManager.Tests
 			typeof(MapManager)
 				.GetProperty("GridCells", BindingFlags.NonPublic | BindingFlags.Instance)
 				.SetValue(manager, cells);
+
+			// Set Grid via reflection (public with private set)
+			typeof(MapManager)
+				.GetProperty("Grid", BindingFlags.Public | BindingFlags.Instance)
+				.SetValue(manager, grid);
 
 			// Build a Graph<GridCell> matching the grid
 			var graph = new Graph<GridCell>();

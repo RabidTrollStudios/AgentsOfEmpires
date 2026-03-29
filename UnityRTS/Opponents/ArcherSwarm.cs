@@ -782,17 +782,17 @@ namespace PlanningAgent
                 if (monkInfo.Value.Mana >= GameConstants.MANA_COST)
                 {
                     int bestTarget = -1;
-                    float lowestRatio = GameConstants.HEAL_THRESHOLD;
+                    float lowestHealth = float.MaxValue;
 
                     foreach (int archerNbr in myArchers)
                     {
                         var archerInfo = state.GetUnit(archerNbr);
                         if (!archerInfo.HasValue) continue;
                         float maxHp = GameConstants.HEALTH[archerInfo.Value.UnitType];
-                        float ratio = archerInfo.Value.Health / maxHp;
-                        if (ratio <= lowestRatio)
+                        if (archerInfo.Value.Health > maxHp - GameConstants.HEAL_AMOUNT) continue;
+                        if (archerInfo.Value.Health < lowestHealth)
                         {
-                            lowestRatio = ratio;
+                            lowestHealth = archerInfo.Value.Health;
                             bestTarget = archerNbr;
                         }
                     }

@@ -42,6 +42,7 @@ namespace GameManager.Tests.PlayMode
 			{
 				ctx.MapManager.GridCells[x, y].SetWalkable(false);
 				ctx.MapManager.GridCells[x, y].SetBuildable(false);
+				ctx.MapManager.Grid.SetCellBlocked(x, y);
 			}
 		}
 
@@ -128,10 +129,10 @@ namespace GameManager.Tests.PlayMode
 			var args = new GatherEventArgs(pawn, mine, baseUnit);
 			yield return null;
 
-			// Kill the base via its Update() — this removes it from UnitManager dict
-			// (Object.Destroy is deferred, so args.BaseUnit is still accessible this frame)
+			// Kill the base via FixedUpdate() — death check runs in FixedUpdate,
+			// which removes it from UnitManager
 			baseUnit.Health = 0;
-			baseUnit.Update();
+			baseUnit.FixedUpdate();
 
 			// Call StartGathering in the SAME frame — GetUnit returns null but
 			// args.BaseUnit.UnitNbr is still accessible

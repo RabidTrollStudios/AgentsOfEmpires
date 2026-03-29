@@ -82,10 +82,10 @@ namespace PlanningAgent.Tests
         // ------------------------------------------------------------------
 
         [Fact]
-        public void Move_WarriorSlowerThanPawn()
+        public void Move_WarriorFasterThanPawn()
         {
-            // Pawn speed = 1.0, Warrior speed = 0.75
-            // Over the same distance, warrior should take more ticks
+            // Pawn speed = 1.0x, Warrior speed = 2.1x
+            // Over the same distance, warrior should take fewer ticks
             int distance = 10;
             var target = new Position(2 + distance, 5);
 
@@ -121,14 +121,14 @@ namespace PlanningAgent.Tests
             }, 500);
             int warriorTicks = warriorGame.CurrentTick;
 
-            Assert.True(warriorTicks > pawnTicks,
-                $"Warrior ({warriorTicks} ticks) should be slower than pawn ({pawnTicks} ticks)");
+            Assert.True(warriorTicks < pawnTicks,
+                $"Warrior ({warriorTicks} ticks) should be faster than pawn ({pawnTicks} ticks)");
         }
 
         [Fact]
-        public void Move_PawnAndArcherSameSpeed()
+        public void Move_ArcherFasterThanPawn()
         {
-            // Pawn speed = 1.0, Archer speed = 1.0
+            // Pawn speed = 1.0x, Archer speed = 3.0x
             int distance = 10;
             var target = new Position(2 + distance, 5);
 
@@ -164,7 +164,8 @@ namespace PlanningAgent.Tests
             }, 500);
             int archerTicks = archerGame.CurrentTick;
 
-            Assert.Equal(pawnTicks, archerTicks);
+            Assert.True(archerTicks < pawnTicks,
+                $"Archer ({archerTicks} ticks) should be faster than pawn ({pawnTicks} ticks)");
         }
 
         // ------------------------------------------------------------------

@@ -59,6 +59,130 @@
             <summary>The command was throttled because the same unit recently failed
             a similar command. Try again after a short delay.</summary>
         </member>
+        <member name="F:AgentSDK.CommandResult.INSUFFICIENT_MANA">
+            <summary>The unit does not have enough mana to perform this action.</summary>
+        </member>
+        <member name="T:AgentSDK.CommandType">
+            <summary>
+            Types of commands that agents can issue to units.
+            </summary>
+        </member>
+        <member name="T:AgentSDK.CommandValidator">
+            <summary>
+            Shared command validation rules. Both the Unity game engine and SimGame
+            call these to ensure identical acceptance/rejection of agent commands.
+            </summary>
+        </member>
+        <member name="M:AgentSDK.CommandValidator.ValidateMove(AgentSDK.UnitType,System.Boolean)">
+            <summary>
+            Validate a Move command.
+            </summary>
+        </member>
+        <member name="M:AgentSDK.CommandValidator.ValidateBuild(AgentSDK.UnitType,AgentSDK.UnitType,System.Int32,System.Boolean,System.Collections.Generic.IEnumerable{AgentSDK.UnitType})">
+            <summary>
+            Validate a Build command.
+            </summary>
+        </member>
+        <member name="M:AgentSDK.CommandValidator.ValidateGather(AgentSDK.UnitType,AgentSDK.UnitType,AgentSDK.UnitType,System.Int32,System.Int32)">
+            <summary>
+            Validate a Gather command.
+            </summary>
+        </member>
+        <member name="M:AgentSDK.CommandValidator.ValidateTrain(AgentSDK.UnitType,AgentSDK.UnitType,System.Boolean,AgentSDK.UnitAction,System.Int32)">
+            <summary>
+            Validate a Train command.
+            </summary>
+        </member>
+        <member name="M:AgentSDK.CommandValidator.ValidateAttack(AgentSDK.UnitType,System.Int32,System.Int32,AgentSDK.UnitType)">
+            <summary>
+            Validate an Attack command.
+            </summary>
+        </member>
+        <member name="M:AgentSDK.CommandValidator.ValidateRepair(AgentSDK.UnitType,AgentSDK.UnitType,System.Boolean,System.Int32,System.Int32)">
+            <summary>
+            Validate a Repair command.
+            </summary>
+        </member>
+        <member name="M:AgentSDK.CommandValidator.ValidateHeal(AgentSDK.UnitType,System.Single,AgentSDK.UnitType,System.Single,System.Int32,System.Int32)">
+            <summary>
+            Validate a Heal command.
+            </summary>
+        </member>
+        <member name="T:AgentSDK.DerivedGameConstants">
+            <summary>
+            Game-speed-dependent constants computed from <see cref="T:AgentSDK.GameConstants"/> base values.
+            Both the Unity engine and the SimGame test harness use this single implementation
+            so derived values are guaranteed identical at any game speed.
+            </summary>
+        </member>
+        <member name="F:AgentSDK.DerivedGameConstants.BASE_MOVE_SPEED">
+            <summary>Base move speed factor: pawn speed = gameSpeed * BASE_MOVE_SPEED.</summary>
+        </member>
+        <member name="F:AgentSDK.DerivedGameConstants.SPEED_MULTIPLIER">
+            <summary>Speed multipliers relative to pawn (1.0). Matches both Unity and SimGame.</summary>
+        </member>
+        <member name="F:AgentSDK.DerivedGameConstants.UNIT_VALUE">
+            <summary>Unit scoring for timeout win condition: ceil(COST / SCORING_SCALAR).</summary>
+        </member>
+        <member name="P:AgentSDK.DerivedGameConstants.ScalarCreationTime">
+            <summary>Creation time scalar: 1 / gameSpeed.</summary>
+        </member>
+        <member name="P:AgentSDK.DerivedGameConstants.ScalarDamage">
+            <summary>Damage scalar: gameSpeed.</summary>
+        </member>
+        <member name="P:AgentSDK.DerivedGameConstants.ScalarMovingSpeed">
+            <summary>Base moving speed (pawn): gameSpeed * BASE_MOVE_SPEED.</summary>
+        </member>
+        <member name="P:AgentSDK.DerivedGameConstants.ScalarMiningSpeed">
+            <summary>Mining speed scalar: gameSpeed.</summary>
+        </member>
+        <member name="P:AgentSDK.DerivedGameConstants.ManaRegen">
+            <summary>Mana regen per second (scaled by game speed).</summary>
+        </member>
+        <member name="P:AgentSDK.DerivedGameConstants.MiningSpeed">
+            <summary>Gold per second for PAWN mining.</summary>
+        </member>
+        <member name="P:AgentSDK.DerivedGameConstants.MiningCapacity">
+            <summary>Gold per trip for PAWN.</summary>
+        </member>
+        <member name="P:AgentSDK.DerivedGameConstants.CreationTime">
+            <summary>Time to create each unit in seconds at current game speed.</summary>
+        </member>
+        <member name="P:AgentSDK.DerivedGameConstants.Damage">
+            <summary>Damage per second for each unit at current game speed.</summary>
+        </member>
+        <member name="P:AgentSDK.DerivedGameConstants.MovingSpeed">
+            <summary>Movement speed (cells/tick) for each unit at current game speed.</summary>
+        </member>
+        <member name="P:AgentSDK.DerivedGameConstants.MiningSpeedPerUnit">
+            <summary>Mining speed for each unit type.</summary>
+        </member>
+        <member name="P:AgentSDK.DerivedGameConstants.MiningCapacityPerUnit">
+            <summary>Mining capacity for each unit type.</summary>
+        </member>
+        <member name="P:AgentSDK.DerivedGameConstants.Cost">
+            <summary>Cost for each unit type (direct copy from GameConstants).</summary>
+        </member>
+        <member name="M:AgentSDK.DerivedGameConstants.Compute(System.Int32)">
+            <summary>
+            Compute all game-speed-dependent constants for the given game speed.
+            </summary>
+        </member>
+        <member name="T:AgentSDK.FailedCommand">
+            <summary>
+            A command that passed queue-time validation but failed during Phase 1 processing.
+            Returned by <see cref="M:AgentSDK.IGameState.GetFailedCommands"/>.
+            </summary>
+        </member>
+        <member name="F:AgentSDK.FailedCommand.UnitNbr">
+            <summary>The unit that was issued the command.</summary>
+        </member>
+        <member name="F:AgentSDK.FailedCommand.Type">
+            <summary>The type of command that failed.</summary>
+        </member>
+        <member name="F:AgentSDK.FailedCommand.Reason">
+            <summary>The reason the command failed.</summary>
+        </member>
         <member name="T:AgentSDK.GameConstants">
             <summary>
             Game balance constants. These are the authoritative values used by the game engine.
@@ -69,6 +193,9 @@
         </member>
         <member name="F:AgentSDK.GameConstants.SCALAR_MINING_CAPACITY">
             <summary>Base mining capacity scalar</summary>
+        </member>
+        <member name="F:AgentSDK.GameConstants.SCORING_SCALAR">
+            <summary>Scoring divisor: UNIT_VALUE = ceil(COST / SCORING_SCALAR)</summary>
         </member>
         <member name="F:AgentSDK.GameConstants.COST">
             <summary>
@@ -101,12 +228,6 @@
         <member name="F:AgentSDK.GameConstants.ATTACK_RANGE">
             <summary>
             Attack range for each unit type (in grid units)
-            </summary>
-        </member>
-        <member name="F:AgentSDK.GameConstants.MOVEMENT_SPEED">
-            <summary>
-            Movement speed multiplier for each unit type (1.0 = baseline).
-            Warriors are slower (armored/heavy), archers are faster (light).
             </summary>
         </member>
         <member name="F:AgentSDK.GameConstants.UNIT_SIZE">
@@ -144,6 +265,25 @@
         <member name="F:AgentSDK.GameConstants.CAN_GATHER">
             <summary>Which unit types can gather resources</summary>
         </member>
+        <member name="F:AgentSDK.GameConstants.CAN_HEAL">
+            <summary>Which unit types can heal allied units</summary>
+        </member>
+        <member name="F:AgentSDK.GameConstants.HEAL_RANGE">
+            <summary>Heal range for each unit type (in grid units)</summary>
+        </member>
+        <member name="F:AgentSDK.GameConstants.MAX_MANA">
+            <summary>Maximum mana pool for each unit type</summary>
+        </member>
+        <member name="F:AgentSDK.GameConstants.MANA_COST">
+            <summary>Mana cost per heal action (10% of max mana)</summary>
+        </member>
+        <member name="F:AgentSDK.GameConstants.BASE_MANA_REGEN">
+            <summary>Base mana regeneration rate (scaled by game speed)</summary>
+            <summary>Base mana regeneration rate (scaled by game speed). Full pool (100) in ~3s at speed 20.</summary>
+        </member>
+        <member name="F:AgentSDK.GameConstants.HEAL_AMOUNT">
+            <summary>Flat HP restored per heal action</summary>
+        </member>
         <member name="M:AgentSDK.GameConstants.EffectiveAttackRange(AgentSDK.UnitType,AgentSDK.UnitType)">
             <summary>
             Compute effective attack range against a target, accounting for target unit size.
@@ -155,6 +295,98 @@
             Damage multiplier based on attacker/defender type interaction.
             Rock-paper-scissors triangle: Warrior→Archer→Lancer→Warrior.
             Strong matchup = 1.25x damage, weak matchup = 0.75x damage.
+            </summary>
+        </member>
+        <member name="M:AgentSDK.GameConstants.ValidateDictionaries">
+            <summary>
+            Validate that every UnitType-keyed dictionary covers all enum values.
+            Returns a list of error messages (empty if all dictionaries are complete).
+            Call at game startup or in tests to catch missing entries early.
+            </summary>
+        </member>
+        <member name="T:AgentSDK.GameGrid">
+             <summary>
+             Pure-C# grid for an RTS map. Tracks three boolean layers per cell:
+               buildable — can a new unit/building be placed here?
+               walkable  — can a mobile unit path through here?
+               passage   — building top-row (walkable, not buildable, units move freely).
+            
+             Both the Unity game engine and the AgentTestHarness SimGame share this
+             single implementation so grid state and queries are guaranteed identical.
+            
+             Coordinate system: (0,0) bottom-left; +X right, +Y up.
+             Building footprints extend from anchor (x,y) rightward and downward:
+               cells = (x+i, y-j) for i in [0..sizeX), j in [0..sizeY).
+             </summary>
+        </member>
+        <member name="M:AgentSDK.GameGrid.IsAreaBuildable(AgentSDK.UnitType,AgentSDK.Position)">
+            <summary>
+            Check if the full footprint for a unit type is buildable at the given anchor.
+            </summary>
+        </member>
+        <member name="M:AgentSDK.GameGrid.IsAreaBuildable(AgentSDK.UnitType,AgentSDK.Position,AgentSDK.Position)">
+            <summary>
+            Check if the full footprint is buildable, excluding one position
+            (e.g., the building pawn's cell which it will vacate).
+            </summary>
+        </member>
+        <member name="M:AgentSDK.GameGrid.IsBoundedAreaBuildable(AgentSDK.UnitType,AgentSDK.Position)">
+            <summary>
+            Check if the unit footprint plus a 1-cell border is all buildable.
+            </summary>
+        </member>
+        <member name="M:AgentSDK.GameGrid.SetAreaBuildability(AgentSDK.UnitType,AgentSDK.Position,System.Boolean)">
+            <summary>
+            Set buildability/walkability for the footprint of a unit.
+            Mobile units keep cells walkable when placed. Building top rows are
+            marked as passage cells (walkable but not buildable).
+            </summary>
+        </member>
+        <member name="M:AgentSDK.GameGrid.SetCellBlocked(AgentSDK.Position)">
+            <summary>Mark a single cell as unbuildable/unwalkable (terrain wall).</summary>
+        </member>
+        <member name="M:AgentSDK.GameGrid.SetCellBlocked(System.Int32,System.Int32)">
+            <summary>Mark a single cell as unbuildable/unwalkable (terrain wall).</summary>
+        </member>
+        <member name="M:AgentSDK.GameGrid.GetPositionsNearUnit(AgentSDK.UnitType,AgentSDK.Position)">
+            <summary>
+            Get all grid positions in the ring around a unit's footprint.
+            </summary>
+        </member>
+        <member name="M:AgentSDK.GameGrid.GetBuildablePositionsNearUnit(AgentSDK.UnitType,AgentSDK.Position)">
+            <summary>
+            Get buildable positions near a unit, plus any walkable passage cells
+            (building top row) as valid approach positions.
+            </summary>
+        </member>
+        <member name="M:AgentSDK.GameGrid.IsNeighborOfUnit(AgentSDK.Position,AgentSDK.UnitType,AgentSDK.Position)">
+            <summary>
+            Check if a position is adjacent to a unit (in the neighbor ring or
+            on a passage cell of the building's top row).
+            </summary>
+        </member>
+        <member name="M:AgentSDK.GameGrid.FindProspectiveBuildPositions(AgentSDK.UnitType)">
+            <summary>
+            Find all valid build positions on the map for a given unit type.
+            </summary>
+        </member>
+        <member name="M:AgentSDK.GameGrid.FindPath(AgentSDK.Position,AgentSDK.Position)">
+            <summary>
+            Find shortest path using walkable grid.
+            Returns empty list if no path exists. Excludes start, includes end.
+            </summary>
+        </member>
+        <member name="M:AgentSDK.GameGrid.FindPath(AgentSDK.Position,AgentSDK.Position,System.Boolean)">
+            <summary>
+            Find shortest path. When avoidUnits=true, uses buildable grid
+            (treats mobile-unit-occupied cells as impassable).
+            </summary>
+        </member>
+        <member name="M:AgentSDK.GameGrid.FindPathToUnit(AgentSDK.Position,AgentSDK.UnitType,AgentSDK.Position)">
+            <summary>
+            Find a path from start to any walkable cell adjacent to the given unit.
+            Neighbors are sorted by distance to the start position so the closest
+            reachable cell is tried first. Returns the first successful path.
             </summary>
         </member>
         <member name="T:AgentSDK.IAgentActions">
@@ -217,6 +449,16 @@
             </summary>
             <param name="pawnNbr">The pawn unit that will repair</param>
             <param name="buildingNbr">The building to repair</param>
+            <returns>Success if the command was dispatched, or a failure code.</returns>
+        </member>
+        <member name="M:AgentSDK.IAgentActions.Heal(System.Int32,System.Int32)">
+            <summary>
+            Command a monk to heal a friendly unit.
+            The target must be a friendly mobile unit at or below 80% health.
+            The monk must have sufficient mana.
+            </summary>
+            <param name="monkNbr">Your monk unit</param>
+            <param name="targetNbr">The friendly unit to heal</param>
             <returns>Success if the command was dispatched, or a failure code.</returns>
         </member>
         <member name="M:AgentSDK.IAgentActions.Log(System.String)">
@@ -322,6 +564,13 @@
             Checks bounded area buildability (clearance around the unit).
             </summary>
         </member>
+        <member name="M:AgentSDK.IGameState.GetFailedCommands">
+            <summary>
+            Get commands from the previous tick that passed queue-time validation
+            but failed during Phase 1 processing. Gold for failed Build/Train
+            commands is automatically refunded.
+            </summary>
+        </member>
         <member name="T:AgentSDK.IPlanningAgent">
             <summary>
             The interface your AI agent must implement.
@@ -357,6 +606,40 @@
             Use this to observe the win/loss state and learn from it.
             </summary>
             <param name="state">The final game state for this round</param>
+        </member>
+        <member name="T:AgentSDK.Pathfinder">
+             <summary>
+             Shared A* pathfinder for grid-based maps. Used by both the Unity game engine
+             and the AgentTestHarness simulation to ensure identical pathfinding results.
+            
+             Algorithm: A* with Euclidean heuristic, 8-directional movement.
+             Edge costs: 1.0 for cardinal, sqrt(2) for diagonal.
+             Tie-breaking: lowest f, then highest g (prefer progress), then lowest key (deterministic).
+             </summary>
+        </member>
+        <member name="T:AgentSDK.Pathfinder.CellPassable">
+            <summary>
+            Callback to check if a cell is passable.
+            </summary>
+            <param name="x">Grid X coordinate</param>
+            <param name="y">Grid Y coordinate</param>
+            <returns>True if the cell can be traversed</returns>
+        </member>
+        <member name="M:AgentSDK.Pathfinder.FindPath(AgentSDK.Position,AgentSDK.Position,System.Int32,System.Int32,AgentSDK.Pathfinder.CellPassable,System.Int32)">
+             <summary>
+             Find the shortest path between two positions on a grid.
+            
+             The start position is allowed to be impassable (unit may be inside a building).
+             The end position must be passable.
+             Returns the path excluding the start position, including the end position.
+             Returns an empty list if no path exists.
+             </summary>
+             <param name="start">Start position</param>
+             <param name="end">End position</param>
+             <param name="width">Grid width</param>
+             <param name="height">Grid height</param>
+             <param name="isPassable">Callback to check cell passability</param>
+             <param name="maxExpansions">Maximum node expansions before giving up</param>
         </member>
         <member name="T:AgentSDK.PlanningAgentBase">
              <summary>
@@ -404,6 +687,12 @@
         <member name="F:AgentSDK.PlanningAgentBase.myTowers">
             <summary>Your towers</summary>
         </member>
+        <member name="F:AgentSDK.PlanningAgentBase.myMonasteries">
+            <summary>Your monasteries</summary>
+        </member>
+        <member name="F:AgentSDK.PlanningAgentBase.myMonks">
+            <summary>Your monks</summary>
+        </member>
         <member name="F:AgentSDK.PlanningAgentBase.enemyPawns">
             <summary>Enemy pawns</summary>
         </member>
@@ -427,6 +716,12 @@
         </member>
         <member name="F:AgentSDK.PlanningAgentBase.enemyTowers">
             <summary>Enemy towers</summary>
+        </member>
+        <member name="F:AgentSDK.PlanningAgentBase.enemyMonasteries">
+            <summary>Enemy monasteries</summary>
+        </member>
+        <member name="F:AgentSDK.PlanningAgentBase.enemyMonks">
+            <summary>Enemy monks</summary>
         </member>
         <member name="F:AgentSDK.PlanningAgentBase.buildPositions">
             <summary>Pre-computed valid build positions for 3x3 structures</summary>
@@ -526,6 +821,116 @@
         <member name="M:AgentSDK.Position.ToString">
             <inheritdoc/>
         </member>
+        <member name="T:AgentSDK.TaskEngine">
+             <summary>
+             Shared game-rule logic for unit tasks. Both the Unity engine and SimGame
+             call these methods so task behavior is guaranteed identical.
+            
+             Methods are pure functions of their inputs — no Unity dependencies.
+             </summary>
+        </member>
+        <member name="T:AgentSDK.TaskEngine.MoveResult">
+            <summary>
+            Result of attempting to move a unit one cell along its path.
+            </summary>
+        </member>
+        <member name="F:AgentSDK.TaskEngine.MoveResult.Moved">
+            <summary>Successfully moved to the next cell.</summary>
+        </member>
+        <member name="F:AgentSDK.TaskEngine.MoveResult.BlockedByUnit">
+            <summary>Blocked by a mobile unit (walkable but not buildable).</summary>
+        </member>
+        <member name="F:AgentSDK.TaskEngine.MoveResult.BlockedByTerrain">
+            <summary>Blocked by terrain/building (not walkable). Needs re-path.</summary>
+        </member>
+        <member name="F:AgentSDK.TaskEngine.MoveResult.InsufficientMovement">
+            <summary>Not enough accumulated movement to reach next cell.</summary>
+        </member>
+        <member name="M:AgentSDK.TaskEngine.TryMoveToCell(AgentSDK.Position,AgentSDK.Position,System.Single,AgentSDK.GameGrid,System.Single@)">
+            <summary>
+            Attempt to move to the next cell in a path. Checks grid state and deducts
+            movement from the accumulator. Does NOT modify position or grid state —
+            the caller is responsible for applying the result.
+            </summary>
+            <param name="currentPos">Unit's current grid position</param>
+            <param name="nextPos">Next cell in the path</param>
+            <param name="moveAccumulator">Current accumulated movement budget</param>
+            <param name="grid">The shared game grid</param>
+            <param name="distCost">Euclidean distance cost to move (output)</param>
+            <returns>The move result indicating what happened.</returns>
+        </member>
+        <member name="M:AgentSDK.TaskEngine.FindDetourAroundBlocker(AgentSDK.Position,System.Collections.Generic.List{AgentSDK.Position},System.Int32,AgentSDK.GameGrid)">
+            <summary>
+            Scan ahead in a path to find the first buildable/passage cell past the blocker,
+            then re-path from current position to that cell avoiding units.
+            Returns the spliced detour + remainder, or null if no detour found.
+            </summary>
+        </member>
+        <member name="M:AgentSDK.TaskEngine.ComputeDamagePerTick(AgentSDK.UnitType,AgentSDK.UnitType,System.Single,System.Single)">
+            <summary>
+            Compute damage dealt per tick by an attacker to a target.
+            </summary>
+        </member>
+        <member name="M:AgentSDK.TaskEngine.IsInAttackRange(AgentSDK.UnitType,AgentSDK.Position,AgentSDK.UnitType,AgentSDK.Position)">
+            <summary>
+            Check if an attacker is within effective attack range of a target.
+            </summary>
+        </member>
+        <member name="M:AgentSDK.TaskEngine.ComputeCenterPosition(AgentSDK.UnitType,AgentSDK.Position)">
+            <summary>
+            Compute the center position of a unit for range calculations.
+            For 1x1 units, returns the grid position.
+            For multi-cell buildings, returns center of the non-walkable footprint
+            (excluding the top passage row).
+            </summary>
+        </member>
+        <member name="M:AgentSDK.TaskEngine.AdvanceTrainTimer(System.Single@,System.Single)">
+            <summary>
+            Advance training timer. Returns true when training is complete.
+            </summary>
+        </member>
+        <member name="M:AgentSDK.TaskEngine.AdvanceBuildTimer(System.Single@,System.Single)">
+            <summary>
+            Advance build timer. Returns true when construction is complete.
+            </summary>
+        </member>
+        <member name="M:AgentSDK.TaskEngine.ComputeMiningTime(System.Single,System.Single)">
+            <summary>
+            Compute mining time for a full mining capacity trip.
+            </summary>
+        </member>
+        <member name="M:AgentSDK.TaskEngine.ComputeGoldMined(System.Single,System.Single)">
+            <summary>
+            Compute gold mined from a mine, capped at mine health and mining capacity.
+            </summary>
+        </member>
+        <member name="M:AgentSDK.TaskEngine.CanHeal(System.Single,System.Single,AgentSDK.UnitType)">
+            <summary>
+            Check if a heal action can be performed.
+            Returns true if the monk has enough mana and the target is missing at least HEAL_AMOUNT HP.
+            </summary>
+        </member>
+        <member name="M:AgentSDK.TaskEngine.ComputeHealAmount(AgentSDK.UnitType)">
+            <summary>
+            Compute the heal amount for a target unit type.
+            Returns the flat HEAL_AMOUNT, capped at missing HP.
+            </summary>
+        </member>
+        <member name="M:AgentSDK.TaskEngine.IsInHealRange(AgentSDK.UnitType,AgentSDK.Position,AgentSDK.Position)">
+            <summary>
+            Check if a healer is within heal range of a target.
+            </summary>
+        </member>
+        <member name="M:AgentSDK.TaskEngine.ComputeRepairPerTick(AgentSDK.UnitType,System.Single,System.Single)">
+            <summary>
+            Compute repair amount per tick. Repair rate is 110% of build rate.
+            </summary>
+        </member>
+        <member name="M:AgentSDK.TaskEngine.RegenMana(System.Single,System.Single,System.Single,System.Single)">
+            <summary>
+            Regenerate mana for a unit per tick.
+            </summary>
+        </member>
         <member name="T:AgentSDK.UnitAction">
             <summary>
             Actions a unit can be performing
@@ -551,6 +956,9 @@
         </member>
         <member name="F:AgentSDK.UnitAction.REPAIR">
             <summary>Repairing a damaged building</summary>
+        </member>
+        <member name="F:AgentSDK.UnitAction.HEAL">
+            <summary>Healing an allied unit</summary>
         </member>
         <member name="T:AgentSDK.UnitInfo">
             <summary>
@@ -591,6 +999,12 @@
         <member name="P:AgentSDK.UnitInfo.CanGather">
             <summary>Whether this unit type can gather resources</summary>
         </member>
+        <member name="P:AgentSDK.UnitInfo.CanHeal">
+            <summary>Whether this unit type can heal allied units</summary>
+        </member>
+        <member name="P:AgentSDK.UnitInfo.Mana">
+            <summary>Current mana (0 for units without mana)</summary>
+        </member>
         <member name="P:AgentSDK.UnitInfo.OwnerAgentNbr">
             <summary>Agent number of the unit's owner</summary>
         </member>
@@ -602,7 +1016,7 @@
             For 3x3 structures (bases, barracks, mines, refineries) this is GridPosition+(1,-1).
             </summary>
         </member>
-        <member name="M:AgentSDK.UnitInfo.#ctor(System.Int32,AgentSDK.UnitType,AgentSDK.Position,System.Single,System.Boolean,AgentSDK.UnitAction,System.Boolean,System.Boolean,System.Boolean,System.Boolean,System.Boolean,System.Int32)">
+        <member name="M:AgentSDK.UnitInfo.#ctor(System.Int32,AgentSDK.UnitType,AgentSDK.Position,System.Single,System.Boolean,AgentSDK.UnitAction,System.Boolean,System.Boolean,System.Boolean,System.Boolean,System.Boolean,System.Boolean,System.Single,System.Int32)">
             <summary>Create a new UnitInfo snapshot</summary>
         </member>
         <member name="T:AgentSDK.UnitType">
@@ -636,6 +1050,12 @@
         </member>
         <member name="F:AgentSDK.UnitType.TOWER">
             <summary>Defensive tower structure - unlocks lancer training</summary>
+        </member>
+        <member name="F:AgentSDK.UnitType.MONASTERY">
+            <summary>Religious structure - trains monks</summary>
+        </member>
+        <member name="F:AgentSDK.UnitType.MONK">
+            <summary>Support healer unit - heals allied units, cannot attack</summary>
         </member>
     </members>
 </doc>

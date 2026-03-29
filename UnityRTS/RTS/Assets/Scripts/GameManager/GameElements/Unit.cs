@@ -161,11 +161,19 @@ namespace GameManager.GameElements
 		private int baseUnit = -1;
 		private int mineUnit = -1;
 		private List<Vector3Int> path;
+		private int pathIndex = 0;
 		private Vector3 velocity;
 		private int pathUpdateCounter = 0;
 		private int pathFailCount = 0;
 		private int pathBackoffMultiplier = 1;
 		private int localAvoidWaitFrames = 0;
+
+		// Visual interpolation: FixedUpdate enqueues grid positions, Update walks through them.
+		private Queue<Vector3Int> visualWaypoints = new Queue<Vector3Int>();
+		private Vector3 visualMoveFrom;       // start of current segment
+		private Vector3 visualMoveTo;         // end of current segment
+		private float visualSegmentT = 1.0f;  // 0..1 progress along current segment
+		private float visualSpeed;            // cells per second for current movement
 
 		// Path visualization
 		private LineRenderer pathLineRenderer;
@@ -496,9 +504,9 @@ namespace GameManager.GameElements
 		/// <summary>Move accumulator for fractional movement.</summary>
 		internal float MoveAccumulator { get; set; }
 		/// <summary>Current index into the path list.</summary>
-		internal int PathIndex => path != null && path.Count > 0 ? pathUpdateCounter : 0;
+		internal int PathIndex => pathIndex;
 		/// <summary>Number of cells remaining in the current path, or -1 if no path.</summary>
-		internal int PathCount => path != null ? path.Count : -1;
+		internal int PathCount => path != null && path.Count > 0 ? path.Count : -1;
 		/// <summary>Build timer progress (alias for taskTime during BUILD).</summary>
 		internal float BuildTimer => taskTime;
 		/// <summary>Unit type being built by this pawn.</summary>
@@ -556,6 +564,8 @@ namespace GameManager.GameElements
 			this.velocity = Vector3.zero;
 			this.CurrentAction = UnitAction.IDLE;
 			path = new List<Vector3Int>();
+			pathIndex = 0;
+			MoveAccumulator = 0f;
 			pathFailCount = 0;
 			pathBackoffMultiplier = 1;
 			UnitType = unitType;
@@ -575,6 +585,8 @@ namespace GameManager.GameElements
 			}
 
 			GridPosition = gridPosition;
+			visualWaypoints.Clear();
+			visualSegmentT = 1.0f;
 			Health = Constants.HEALTH[UnitType];
 			Mana = Constants.MAX_MANA[UnitType];
 			animator = gameObject.GetComponent<Animator>();
@@ -651,7 +663,7 @@ namespace GameManager.GameElements
 			// The sprite pivot Y varies by unit type, so we compute the visible-body
 			// center as a local-space offset from the pivot (transform origin).
 			Vector3 visibleCenter;
-			if (unitSprite != null)
+			if (unitSprite != null && unitSprite.sprite != null)
 			{
 				var sprite = unitSprite.sprite;
 				float ppu = sprite.pixelsPerUnit;

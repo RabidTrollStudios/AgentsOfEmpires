@@ -16,7 +16,8 @@ namespace GameManager.Tests
 		private static readonly UnitType[] AllUnitTypes = {
 			UnitType.MINE, UnitType.PAWN, UnitType.WARRIOR,
 			UnitType.ARCHER, UnitType.LANCER, UnitType.BASE,
-			UnitType.BARRACKS, UnitType.ARCHERY, UnitType.TOWER
+			UnitType.BARRACKS, UnitType.ARCHERY, UnitType.TOWER,
+			UnitType.MONASTERY, UnitType.MONK
 		};
 
 		#region CAN_MOVE Completeness
@@ -27,7 +28,7 @@ namespace GameManager.Tests
 		[Test]
 		public void CanMove_HasAllNineUnitTypes()
 		{
-			Assert.AreEqual(9, Constants.CAN_MOVE.Count,
+			Assert.AreEqual(11, Constants.CAN_MOVE.Count,
 				"CAN_MOVE should have 9 entries");
 			foreach (var type in AllUnitTypes)
 				Assert.IsTrue(Constants.CAN_MOVE.ContainsKey(type),
@@ -44,7 +45,7 @@ namespace GameManager.Tests
 		[Test]
 		public void CanBuild_HasAllNineUnitTypes()
 		{
-			Assert.AreEqual(9, Constants.CAN_BUILD.Count,
+			Assert.AreEqual(11, Constants.CAN_BUILD.Count,
 				"CAN_BUILD should have 9 entries");
 			foreach (var type in AllUnitTypes)
 				Assert.IsTrue(Constants.CAN_BUILD.ContainsKey(type),
@@ -61,7 +62,7 @@ namespace GameManager.Tests
 		[Test]
 		public void CanTrain_HasAllNineUnitTypes()
 		{
-			Assert.AreEqual(9, Constants.CAN_TRAIN.Count,
+			Assert.AreEqual(11, Constants.CAN_TRAIN.Count,
 				"CAN_TRAIN should have 9 entries");
 			foreach (var type in AllUnitTypes)
 				Assert.IsTrue(Constants.CAN_TRAIN.ContainsKey(type),
@@ -78,7 +79,7 @@ namespace GameManager.Tests
 		[Test]
 		public void CanAttack_HasAllNineUnitTypes()
 		{
-			Assert.AreEqual(9, Constants.CAN_ATTACK.Count,
+			Assert.AreEqual(11, Constants.CAN_ATTACK.Count,
 				"CAN_ATTACK should have 9 entries");
 			foreach (var type in AllUnitTypes)
 				Assert.IsTrue(Constants.CAN_ATTACK.ContainsKey(type),
@@ -95,7 +96,7 @@ namespace GameManager.Tests
 		[Test]
 		public void CanGather_HasAllNineUnitTypes()
 		{
-			Assert.AreEqual(9, Constants.CAN_GATHER.Count,
+			Assert.AreEqual(11, Constants.CAN_GATHER.Count,
 				"CAN_GATHER should have 9 entries");
 			foreach (var type in AllUnitTypes)
 				Assert.IsTrue(Constants.CAN_GATHER.ContainsKey(type),

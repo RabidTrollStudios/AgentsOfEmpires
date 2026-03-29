@@ -62,5 +62,15 @@ namespace GameManager
         {
             planningAgent?.Learn(gameState);
         }
+
+        internal override void RecordFailedCommand(AgentSDK.FailedCommand failure)
+        {
+            gameState?.AddFailedCommand(failure);
+        }
+
+        internal void ClearFailedCommands()
+        {
+            gameState?.ClearFailedCommands();
+        }
     }
 }

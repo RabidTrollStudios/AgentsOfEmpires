@@ -471,7 +471,7 @@ namespace GameManager
         private Vector3Int FindMirroredLocation(Vector3Int position, UnitType unitType)
         {
 			return new Vector3Int(mapManager.MapSize.x - Constants.UNIT_SIZE[unitType].x - position.x,
-								  mapManager.MapSize.y - 1 + Constants.UNIT_SIZE[unitType].y - position.y, 0);
+								  mapManager.MapSize.y - 2 + Constants.UNIT_SIZE[unitType].y - position.y, 0);
         }
 
         #region Map Setup
@@ -760,6 +760,7 @@ namespace GameManager
 		        {
 			        mapManager.GridCells[pos.x, pos.y].SetBuildable(false);
 			        mapManager.GridCells[pos.x, pos.y].SetWalkable(false);
+			        mapManager.Grid.SetCellBlocked(pos.x, pos.y);
 		        }
 	        }
 
@@ -870,9 +871,9 @@ namespace GameManager
 	        unitManager.PlaceUnit(Agents[blueAgentNbr], r.SpawnPositions[0], UnitType.PAWN, Color.white);
 	        unitManager.PlaceUnit(Agents[redAgentNbr], r.SpawnPositions[1], UnitType.PAWN, Color.white);
 
-	        // Mine 0 = near blue, Mine 1 = near red
-	        unitManager.PlaceUnit(Agents[blueAgentNbr], r.MinePositions[0], UnitType.MINE, Color.white);
-	        unitManager.PlaceUnit(Agents[redAgentNbr], r.MinePositions[1], UnitType.MINE, Color.white);
+	        // Mines are neutral (not owned by either agent)
+	        unitManager.PlaceNeutralUnit(r.MinePositions[0], UnitType.MINE, Color.white);
+	        unitManager.PlaceNeutralUnit(r.MinePositions[1], UnitType.MINE, Color.white);
         }
 
         /// <summary>Place pawns and mines using the original hand-made map placement logic.</summary>
@@ -925,9 +926,9 @@ namespace GameManager
 	        || IsInCorner(mine1Loc, 5)
 	        || IsInCorner(mine2Loc, 5)
 	        || (Mathf.Abs(mine1Loc.x - mine2Loc.x) <= 2 && Mathf.Abs(mine1Loc.y - mine2Loc.y) <= 2)) && mineAttempts < 1000);
-        // mine1 is near BLU spawn (lower-left); mine2 is its symmetric mirror near RED spawn (upper-right)
-        unitManager.PlaceUnit(Agents[blueAgentNbr], mine1Loc, UnitType.MINE, Color.white);
-        unitManager.PlaceUnit(Agents[redAgentNbr], mine2Loc, UnitType.MINE, Color.white);
+        // Mines are neutral (not owned by either agent)
+        unitManager.PlaceNeutralUnit(mine1Loc, UnitType.MINE, Color.white);
+        unitManager.PlaceNeutralUnit(mine2Loc, UnitType.MINE, Color.white);
         }
 
         /// <summary>
@@ -1015,6 +1016,8 @@ namespace GameManager
 		/// </summary>
 		private void FinalizeRoundAnalytics()
 		{
+			if (Agents == null || unitManager == null) return;
+
 			var allUnits = unitManager.GetAllUnits();
 
 			foreach (GameObject agentGo in Agents.Values)
@@ -1034,7 +1037,7 @@ namespace GameManager
 					foreach (var kvp in allUnits)
 					{
 						var unit = kvp.Value.GetComponent<GameElements.Unit>();
-						if (unit.Agent.GetComponent<AgentController>().Agent.AgentNbr == agentNbr
+						if (unit.OwnerAgentNbr == agentNbr
 							&& unit.UnitType == ut)
 							count++;
 					}

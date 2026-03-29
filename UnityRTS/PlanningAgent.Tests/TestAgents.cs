@@ -510,7 +510,7 @@ namespace PlanningAgent.Tests
 
                 // Find most-wounded friendly mobile unit
                 int bestTarget = -1;
-                float lowestRatio = GameConstants.HEAL_THRESHOLD;
+                float lowestHealth = float.MaxValue;
 
                 foreach (UnitType ut in new[] { UnitType.WARRIOR, UnitType.ARCHER, UnitType.LANCER, UnitType.PAWN })
                 {
@@ -518,10 +518,11 @@ namespace PlanningAgent.Tests
                     {
                         var info = state.GetUnit(unitNbr);
                         if (!info.HasValue) continue;
-                        float ratio = info.Value.Health / GameConstants.HEALTH[ut];
-                        if (ratio <= lowestRatio)
+                        float maxHp = GameConstants.HEALTH[ut];
+                        if (info.Value.Health > maxHp - GameConstants.HEAL_AMOUNT) continue;
+                        if (info.Value.Health < lowestHealth)
                         {
-                            lowestRatio = ratio;
+                            lowestHealth = info.Value.Health;
                             bestTarget = unitNbr;
                         }
                     }

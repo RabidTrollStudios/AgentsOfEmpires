@@ -69,8 +69,12 @@ namespace GameManager.Tests.PlayMode
 					Vector3Int cell = buildPos + new Vector3Int(i, -j, 0);
 					Assert.IsFalse(ctx.MapManager.IsGridPositionBuildable(cell),
 						$"Cell {cell} in building footprint should not be buildable");
-					Assert.IsFalse(ctx.MapManager.IsGridPositionWalkable(cell),
-						$"Cell {cell} in building footprint should not be walkable");
+					if (j == 0 && size.y > 1)
+						Assert.IsTrue(ctx.MapManager.IsGridPositionWalkable(cell),
+							$"Top row cell {cell} should remain walkable (passage)");
+					else
+						Assert.IsFalse(ctx.MapManager.IsGridPositionWalkable(cell),
+							$"Body cell {cell} in building footprint should not be walkable");
 				}
 			}
 		}

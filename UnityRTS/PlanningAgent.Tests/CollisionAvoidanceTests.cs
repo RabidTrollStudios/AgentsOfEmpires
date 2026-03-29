@@ -73,9 +73,11 @@ namespace PlanningAgent.Tests
         }
 
         [Fact]
-        public void HeadOnMovement_UnitsDoNotOverlap()
+        public void HeadOnMovement_UnitsPassThroughButDontOverlapAtRest()
         {
-            // Two pawns moving toward each other on the same row
+            // Two pawns moving toward each other on the same row.
+            // Mobile units pass through each other mid-path but stop at
+            // the last free cell before an occupied destination.
             var game = new SimGameBuilder()
                 .WithMapSize(20, 20)
                 .WithUnit(0, UnitType.PAWN, new Position(2, 10))
@@ -86,22 +88,16 @@ namespace PlanningAgent.Tests
             game.InitializeMatch();
             game.InitializeRound();
 
-            // Run and check that no two units occupy the same cell at any tick
-            bool overlap = false;
-            for (int i = 0; i < 300; i++)
-            {
-                game.Tick();
+            for (int i = 0; i < 300; i++) game.Tick();
 
-                var p0 = game.GetUnitsByType(0, UnitType.PAWN);
-                var p1 = game.GetUnitsByType(1, UnitType.PAWN);
-                if (p0.Count > 0 && p1.Count > 0
-                    && p0[0].GridPosition == p1[0].GridPosition)
-                {
-                    overlap = true;
-                    break;
-                }
-            }
-            Assert.False(overlap, "Units should not occupy the same cell");
+            // Both units should be IDLE and not on the same cell
+            var p0 = game.GetUnitsByType(0, UnitType.PAWN);
+            var p1 = game.GetUnitsByType(1, UnitType.PAWN);
+            Assert.True(p0.Count > 0 && p0[0].CurrentAction == UnitAction.IDLE,
+                "Agent 0 pawn should be IDLE");
+            Assert.True(p1.Count > 0 && p1[0].CurrentAction == UnitAction.IDLE,
+                "Agent 1 pawn should be IDLE");
+            Assert.NotEqual(p0[0].GridPosition, p1[0].GridPosition);
         }
 
         [Fact]

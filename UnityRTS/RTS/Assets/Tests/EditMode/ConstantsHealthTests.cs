@@ -22,19 +22,20 @@ namespace GameManager.Tests
 		private static readonly UnitType[] AllUnitTypes = {
 			UnitType.MINE, UnitType.PAWN, UnitType.WARRIOR,
 			UnitType.ARCHER, UnitType.LANCER, UnitType.BASE,
-			UnitType.BARRACKS, UnitType.ARCHERY, UnitType.TOWER
+			UnitType.BARRACKS, UnitType.ARCHERY, UnitType.TOWER,
+			UnitType.MONASTERY, UnitType.MONK
 		};
 
 		#region Completeness
 
 		/// <summary>
-		/// HEALTH dictionary contains entries for all 9 unit types.
+		/// HEALTH dictionary contains entries for all 11 unit types.
 		/// </summary>
 		[Test]
-		public void Health_HasAllNineUnitTypes()
+		public void Health_HasAllElevenUnitTypes()
 		{
-			Assert.AreEqual(9, Constants.HEALTH.Count,
-				"HEALTH should have exactly 9 entries");
+			Assert.AreEqual(11, Constants.HEALTH.Count,
+				"HEALTH should have exactly 11 entries");
 			foreach (var type in AllUnitTypes)
 				Assert.IsTrue(Constants.HEALTH.ContainsKey(type),
 					$"HEALTH missing entry for {type}");

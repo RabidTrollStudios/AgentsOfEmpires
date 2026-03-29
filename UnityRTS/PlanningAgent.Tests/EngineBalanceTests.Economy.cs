@@ -126,7 +126,7 @@ namespace PlanningAgent.Tests
                 float hp = GameConstants.HEALTH[ut];
                 float dmg = GameConstants.BASE_DAMAGE[ut];
                 float range = GameConstants.ATTACK_RANGE[ut];
-                float speed = GameConstants.MOVEMENT_SPEED[ut];
+                float speed = DerivedGameConstants.SPEED_MULTIPLIER[ut];
 
                 float dpsPerGold = dmg / cost;
                 float hpPerGold = hp / cost;
