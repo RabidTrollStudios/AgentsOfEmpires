@@ -199,22 +199,22 @@ namespace PlanningAgent.Tests
                         _output.WriteLine($"  u0 path: {pathStr}");
                     }
                 }
-                // Trace who's at (63,19) around tick 40
-                if (tick >= 38 && tick <= 44)
+                // Trace u10 and u8 around tick 53 (near mine 2 at (12,14))
+                if (tick >= 48 && tick <= 55)
                 {
+                    var u10 = game.GetUnit(10) as SimUnit;
+                    var u8 = game.GetUnit(8) as SimUnit;
+                    string u10s = u10 != null ? $"u10:({u10.GridPosition.X},{u10.GridPosition.Y}):{u10.GatherPhase} g={u10.GoldCarried}" : "";
+                    string u8s = u8 != null ? $"u8:({u8.GridPosition.X},{u8.GridPosition.Y}):{u8.GatherPhase} g={u8.GoldCarried}" : "";
+                    // Who's at (11,11)?
                     string who = "";
                     for (int uid = 0; uid < 20; uid++)
                     {
                         var u = game.GetUnit(uid);
-                        if (u != null && u.GridPosition.X == 63 && u.GridPosition.Y == 19)
-                        {
-                            string phase = u.CurrentAction == UnitAction.GATHER ? $":{((SimUnit)u).GatherPhase}" : "";
-                            who += $" u{uid}:{u.CurrentAction}{phase}";
-                        }
+                        if (u != null && u.GridPosition.X == 11 && u.GridPosition.Y == 11)
+                            who += $" u{uid}";
                     }
-                    var u11 = game.GetUnit(11) as SimUnit;
-                    string u11s = u11 != null ? $" u11:({u11.GridPosition.X},{u11.GridPosition.Y}):{u11.CurrentAction}" : "";
-                    _output.WriteLine($"  [t{tick}] (63,19)={game.Map.Grid.GetCell(63,19)}{who} |{u11s}");
+                    _output.WriteLine($"  [t{tick}] {u10s} | {u8s} | (11,11)={game.Map.Grid.GetCell(11,11)}{who}");
                 }
 
                 if (snapshotIdx < snapshots.Count && snapshots[snapshotIdx].Tick == t + 1)

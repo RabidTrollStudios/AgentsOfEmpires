@@ -263,15 +263,30 @@ namespace AgentTestHarness
 
             // Walk toward the mine
             if (pawn.Path != null && pawn.PathIndex < pawn.Path.Count)
-            {
-                // Movement handled by Pass 2
                 return;
-            }
 
-            // Arrived adjacent to mine — start mining
-            pawn.GatherPhase = GatherPhase.MINING;
-            pawn.MiningTimer = 0f;      // fractional gold accumulator
-            pawn.GoldCarried = 0;       // total gold this trip
+            // Check adjacency to mine (matches Unity's IsNeighborOfUnit check)
+            if (Map.Grid.IsNeighborOfUnit(pawn.GridPosition, UnitType.MINE, mine.GridPosition))
+            {
+                // Arrived adjacent to mine — start mining
+                pawn.GatherPhase = GatherPhase.MINING;
+                pawn.MiningTimer = 0f;
+                pawn.GoldCarried = 0;
+            }
+            else
+            {
+                // Not adjacent — re-path to a different mine neighbor
+                var repath = Map.FindPathToUnit(pawn.GridPosition, UnitType.MINE, mine.GridPosition);
+                if (repath.Count > 0)
+                {
+                    pawn.Path = repath;
+                    pawn.PathIndex = 0;
+                }
+                else
+                {
+                    pawn.CurrentAction = UnitAction.IDLE;
+                }
+            }
         }
 
         private void AdvanceGatherMining(SimUnit pawn)
@@ -339,21 +354,39 @@ namespace AgentTestHarness
             if (pawn.Path != null && pawn.PathIndex < pawn.Path.Count)
                 return;
 
-            // Arrived at base — deposit gold
-            Gold[pawn.OwnerAgentNbr] += pawn.GoldCarried;
-            pawn.GoldCarried = 0;
-
-            // Cycle back to mine
-            if (!Units.TryGetValue(pawn.GatherMineNbr, out var mine) || mine.Health <= 0)
+            // Check adjacency to base (matches Unity's IsNeighborOfUnit check)
+            if (Map.Grid.IsNeighborOfUnit(pawn.GridPosition, UnitType.BASE, baseUnit.GridPosition))
             {
-                pawn.CurrentAction = UnitAction.IDLE;
-                return;
-            }
+                // Arrived at base — deposit gold
+                Gold[pawn.OwnerAgentNbr] += pawn.GoldCarried;
+                pawn.GoldCarried = 0;
 
-            var path = Map.FindPathToUnit(pawn.GridPosition, UnitType.MINE, mine.GridPosition);
-            pawn.GatherPhase = GatherPhase.TO_MINE;
-            pawn.Path = path;
-            pawn.PathIndex = 0;
+                // Cycle back to mine
+                if (!Units.TryGetValue(pawn.GatherMineNbr, out var mine) || mine.Health <= 0)
+                {
+                    pawn.CurrentAction = UnitAction.IDLE;
+                    return;
+                }
+
+                var path = Map.FindPathToUnit(pawn.GridPosition, UnitType.MINE, mine.GridPosition);
+                pawn.GatherPhase = GatherPhase.TO_MINE;
+                pawn.Path = path;
+                pawn.PathIndex = 0;
+            }
+            else
+            {
+                // Not adjacent yet — re-path to a different base neighbor
+                var path = Map.FindPathToUnit(pawn.GridPosition, UnitType.BASE, baseUnit.GridPosition);
+                if (path.Count > 0)
+                {
+                    pawn.Path = path;
+                    pawn.PathIndex = 0;
+                }
+                else
+                {
+                    pawn.CurrentAction = UnitAction.IDLE;
+                }
+            }
         }
 
         #endregion
