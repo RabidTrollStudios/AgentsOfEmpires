@@ -17,6 +17,9 @@ namespace GameManager
 		/// Must run BEFORE individual Unit.FixedUpdate() calls — set via
 		/// [DefaultExecutionOrder(-100)] on the GameManager class.
 		/// </summary>
+		private UnityTickWorld unityTickWorld;
+		private UnityTickCallbacks unityTickCallbacks;
+
 		private void FixedUpdate()
 		{
 			if (gameState != GameState.PLAYING) return;
@@ -32,18 +35,28 @@ namespace GameManager
 			// Phase 1: Process queued commands in deterministic order
 			DeferredCommandQueue.ProcessAll();
 
-			// Phase 2+3: Advance all units in deterministic UnitNbr order.
-			// This ensures cell claiming/releasing happens in the same order as SimGame.
+			// Phase 2+3: Advance all units via shared TickEngine.
+			// This runs identical logic to SimGame, guaranteeing parity.
+			if (unityTickWorld == null)
+			{
+				unityTickWorld = new UnityTickWorld();
+				unityTickCallbacks = new UnityTickCallbacks();
+			}
+
+			// Run per-unit IDLE cleanup and mana regen before TickEngine
+			// (these are Unity-specific and not in the shared logic)
 			var allUnits = unitManager.GetAllUnits();
-			var sortedKeys = new List<int>(allUnits.Keys);
+			var sortedKeys = new System.Collections.Generic.List<int>(allUnits.Keys);
 			sortedKeys.Sort();
 			foreach (int key in sortedKeys)
 			{
 				if (!allUnits.TryGetValue(key, out var go)) continue;
 				var unit = go.GetComponent<GameElements.Unit>();
 				if (unit != null)
-					unit.TickFixedUpdate();
+					unit.PreTickUpdate();
 			}
+
+			AgentSDK.TickEngine.AdvanceAllUnits(unityTickWorld, unityTickCallbacks);
 		}
 
 		/// <summary>
