@@ -1,0 +1,56 @@
+﻿{
+  "agentName": "(BLU)",
+  "agentDLLName": "ArcherSwarm",
+  "opponentDLLName": "Commander",
+  "matchStarted": "2026-03-30T11:08:06.1955110-06:00",
+  "totalRounds": 1,
+  "roundsWon": 0,
+  "roundsLost": 1,
+  "overallWinRate": 0.000,
+  "avgCommandSuccessRate": 0.995,
+  "avgGoldGathered": 4000.0,
+  "avgUnitsProduced": 40.0,
+  "avgKillDeathRatio": 0.15,
+  "avgRoundDuration": 218.7,
+  "rounds": [
+    {
+      "roundNumber": 1,
+      "result": "LOSS",
+      "durationSeconds": 218.7,
+      "commands": {
+        "issued": { "BUILD": 5, "TRAIN": 42, "GATHER": 9, "ATTACK": 124, "HEAL": 26 },
+        "succeeded": { "BUILD": 5, "TRAIN": 41, "GATHER": 9, "ATTACK": 124, "HEAL": 26 },
+        "failed": { "TRAIN": 1 },
+        "throttled": 0,
+        "totalIssued": 206,
+        "successRate": 0.995
+      },
+      "economy": {
+        "startingGold": 0,
+        "goldGathered": 4000,
+        "goldSpent": 4970,
+        "peakGold": 1020,
+        "endingGold": 30
+      },
+      "military": {
+        "unitsProduced": { "PAWN": 8, "ARCHER": 30, "MONK": 2 },
+        "unitsLost": { "ARCHER": 30, "PAWN": 9, "MONK": 2 },
+        "enemyUnitsKilled": { "WARRIOR": 7 },
+        "damageDealt": 16818.0,
+        "damageReceived": 36582.0,
+        "killDeathRatio": 0.15
+      },
+      "buildings": {
+        "constructed": { "BASE": 1, "ARCHERY": 1, "MONASTERY": 1 },
+        "lost": { "MONASTERY": 3, "BASE": 1, "ARCHERY": 1 }
+      },
+      "milestones": {
+        "timeToFirstBuild": 0.4,
+        "timeToFirstMilitary": 46.7,
+        "timeToFirstAttack": 77.6
+      },
+      "finalUnitCounts": { "MINE": 0, "PAWN": 0, "WARRIOR": 0, "ARCHER": 0, "BASE": 0, "BARRACKS": 0, "ARCHERY": 0, "LANCER": 0, "TOWER": 0, "MONASTERY": 0, "MONK": 0 },
+      "finalScore": 0
+    }
+  ]
+}
