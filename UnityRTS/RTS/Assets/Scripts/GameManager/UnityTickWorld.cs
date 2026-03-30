@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using AgentSDK;
 using GameManager.GameElements;
+using GameConstants = GameManager.Constants;
 
 namespace GameManager
 {
@@ -84,7 +85,7 @@ namespace GameManager
                 GameManager.Instance.Units.DestroyUnit(u.gameObject);
         }
 
-        DerivedGameConstants ITickWorld.Constants => GameManager.Constants.Derived;
+        DerivedGameConstants ITickWorld.Constants => GameConstants.Derived;
 
         public float TickDuration => UnityEngine.Time.fixedDeltaTime;
     }
