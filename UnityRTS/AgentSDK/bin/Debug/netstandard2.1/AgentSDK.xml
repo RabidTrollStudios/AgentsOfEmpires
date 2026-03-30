@@ -4,6 +4,17 @@
         <name>AgentSDK</name>
     </assembly>
     <members>
+        <member name="T:AgentSDK.BuildPhase">
+            <summary>
+            Phases of the building action.
+            </summary>
+        </member>
+        <member name="F:AgentSDK.BuildPhase.TO_POSITION">
+            <summary>Walking to the build site.</summary>
+        </member>
+        <member name="F:AgentSDK.BuildPhase.BUILDING">
+            <summary>Constructing the building.</summary>
+        </member>
         <member name="T:AgentSDK.CommandResult">
             <summary>
             Result codes returned by IAgentActions command methods.
@@ -434,6 +445,20 @@
         <member name="M:AgentSDK.GameGrid.SetCellStandable(AgentSDK.Position,System.Boolean)">
             <summary>Legacy alias for SetCellOccupied.</summary>
         </member>
+        <member name="T:AgentSDK.GatherPhase">
+            <summary>
+            Phases of the gathering action cycle.
+            </summary>
+        </member>
+        <member name="F:AgentSDK.GatherPhase.TO_MINE">
+            <summary>Walking to the mine.</summary>
+        </member>
+        <member name="F:AgentSDK.GatherPhase.MINING">
+            <summary>Mining gold at the mine.</summary>
+        </member>
+        <member name="F:AgentSDK.GatherPhase.TO_BASE">
+            <summary>Returning gold to the base.</summary>
+        </member>
         <member name="T:AgentSDK.IAgentActions">
             <summary>
             Interface for issuing commands to your units.
@@ -651,6 +676,69 @@
             Use this to observe the win/loss state and learn from it.
             </summary>
             <param name="state">The final game state for this round</param>
+        </member>
+        <member name="T:AgentSDK.ITickCallbacks">
+            <summary>
+            Callback interface for engine-specific side effects during tick processing.
+            Unity implements this for visual effects, sounds, analytics.
+            SimGame uses <see cref="T:AgentSDK.NullTickCallbacks"/> (no-op).
+            </summary>
+        </member>
+        <member name="T:AgentSDK.NullTickCallbacks">
+            <summary>
+            No-op implementation of <see cref="T:AgentSDK.ITickCallbacks"/> for headless simulation.
+            </summary>
+        </member>
+        <member name="T:AgentSDK.ITickUnit">
+            <summary>
+            Abstraction over a game unit for the shared TickEngine.
+            Both SimUnit (headless) and Unity's Unit (MonoBehaviour) implement this.
+            </summary>
+        </member>
+        <member name="T:AgentSDK.ITickWorld">
+            <summary>
+            World abstraction for the shared TickEngine.
+            Provides unit lookup, pathfinding, gold management, and unit spawning.
+            </summary>
+        </member>
+        <member name="M:AgentSDK.ITickWorld.GetUnit(System.Int32)">
+            <summary>Look up a unit by number. Returns null if not found or dead.</summary>
+        </member>
+        <member name="P:AgentSDK.ITickWorld.AllUnits">
+            <summary>All live units, for iteration.</summary>
+        </member>
+        <member name="P:AgentSDK.ITickWorld.Grid">
+            <summary>The shared game grid.</summary>
+        </member>
+        <member name="M:AgentSDK.ITickWorld.FindPath(AgentSDK.Position,AgentSDK.Position)">
+            <summary>Find path between two positions.</summary>
+        </member>
+        <member name="M:AgentSDK.ITickWorld.FindPathToUnit(AgentSDK.Position,AgentSDK.UnitType,AgentSDK.Position)">
+            <summary>Find path to a neighbor of the target unit.</summary>
+        </member>
+        <member name="M:AgentSDK.ITickWorld.GetBuildablePositionsNearUnit(AgentSDK.UnitType,AgentSDK.Position)">
+            <summary>Get OPEN positions adjacent to a unit (for spawning, adjacency checks).</summary>
+        </member>
+        <member name="M:AgentSDK.ITickWorld.IsNeighborOfUnit(AgentSDK.Position,AgentSDK.UnitType,AgentSDK.Position)">
+            <summary>Check if a position is adjacent to a unit.</summary>
+        </member>
+        <member name="M:AgentSDK.ITickWorld.AddGold(System.Int32,System.Int32)">
+            <summary>Add gold to an agent's stockpile.</summary>
+        </member>
+        <member name="M:AgentSDK.ITickWorld.GetGold(System.Int32)">
+            <summary>Get an agent's current gold.</summary>
+        </member>
+        <member name="M:AgentSDK.ITickWorld.SpawnUnit(System.Int32,AgentSDK.UnitType,AgentSDK.Position,System.Single,System.Boolean)">
+            <summary>Spawn a new unit on the map.</summary>
+        </member>
+        <member name="M:AgentSDK.ITickWorld.RemoveUnit(AgentSDK.ITickUnit)">
+            <summary>Remove a unit from the map (death).</summary>
+        </member>
+        <member name="P:AgentSDK.ITickWorld.Constants">
+            <summary>Game-speed-dependent constants.</summary>
+        </member>
+        <member name="P:AgentSDK.ITickWorld.TickDuration">
+            <summary>Seconds per tick (0.05 at 20Hz).</summary>
         </member>
         <member name="T:AgentSDK.Pathfinder">
              <summary>

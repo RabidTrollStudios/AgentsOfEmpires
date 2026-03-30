@@ -4,6 +4,17 @@
         <name>AgentSDK</name>
     </assembly>
     <members>
+        <member name="T:AgentSDK.BuildPhase">
+            <summary>
+            Phases of the building action.
+            </summary>
+        </member>
+        <member name="F:AgentSDK.BuildPhase.TO_POSITION">
+            <summary>Walking to the build site.</summary>
+        </member>
+        <member name="F:AgentSDK.BuildPhase.BUILDING">
+            <summary>Constructing the building.</summary>
+        </member>
         <member name="T:AgentSDK.CommandResult">
             <summary>
             Result codes returned by IAgentActions command methods.
@@ -433,6 +444,20 @@
         </member>
         <member name="M:AgentSDK.GameGrid.SetCellStandable(AgentSDK.Position,System.Boolean)">
             <summary>Legacy alias for SetCellOccupied.</summary>
+        </member>
+        <member name="T:AgentSDK.GatherPhase">
+            <summary>
+            Phases of the gathering action cycle.
+            </summary>
+        </member>
+        <member name="F:AgentSDK.GatherPhase.TO_MINE">
+            <summary>Walking to the mine.</summary>
+        </member>
+        <member name="F:AgentSDK.GatherPhase.MINING">
+            <summary>Mining gold at the mine.</summary>
+        </member>
+        <member name="F:AgentSDK.GatherPhase.TO_BASE">
+            <summary>Returning gold to the base.</summary>
         </member>
         <member name="T:AgentSDK.IAgentActions">
             <summary>
