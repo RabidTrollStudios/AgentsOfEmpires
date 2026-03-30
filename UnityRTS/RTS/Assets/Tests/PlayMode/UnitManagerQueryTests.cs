@@ -97,7 +97,7 @@ namespace GameManager.Tests.PlayMode
 			int nbr = pawn.UnitNbr;
 
 			pawn.Health = 0;
-			pawn.FixedUpdate();
+			pawn.TickFixedUpdate();
 			yield return null;
 
 			Assert.IsNull(ctx.UnitManager.GetUnit(nbr),
@@ -176,7 +176,7 @@ namespace GameManager.Tests.PlayMode
 			Assert.AreEqual(2, ctx.UnitManager.GetUnitNbrsOfType(UnitType.PAWN).Count);
 
 			w1.Health = 0;
-			w1.FixedUpdate();
+			w1.TickFixedUpdate();
 			yield return null;
 
 			Assert.AreEqual(1, ctx.UnitManager.GetUnitNbrsOfType(UnitType.PAWN).Count,

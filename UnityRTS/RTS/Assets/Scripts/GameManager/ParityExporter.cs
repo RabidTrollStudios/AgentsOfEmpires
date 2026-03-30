@@ -120,8 +120,8 @@ namespace GameManager
 
             currentTick++;
 
-            // Write state snapshot at intervals
-            if (currentTick % SnapshotInterval == 0)
+            // Write state snapshot: every tick for first 55, then at intervals
+            if (currentTick <= 55 || currentTick % SnapshotInterval == 0)
                 WriteStateSnapshot();
 
             if (MaxTicks > 0 && currentTick >= MaxTicks)

@@ -20,7 +20,7 @@ namespace GameManager.Tests.PlayMode
 		/// </summary>
 		public static void Tick(Unit unit)
 		{
-			unit.FixedUpdate();
+			unit.TickFixedUpdate();
 			unit.Update();
 		}
 

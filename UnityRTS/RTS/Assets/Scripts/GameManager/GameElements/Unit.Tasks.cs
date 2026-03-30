@@ -313,11 +313,13 @@ namespace GameManager.GameElements
 				{
 					path.Clear();
 				pathIndex = 0;
-					// Don't reset progress — resume from where the building left off
+					// Transition to BUILDING and fall through to start the timer
+					// on the same tick (matches SimGame's AdvanceBuild which
+					// decrements immediately after path consumption).
 					buildPhase = BuildPhase.BUILDING;
 				}
 			}
-			else if (buildPhase == BuildPhase.BUILDING)
+			if (buildPhase == BuildPhase.BUILDING)
 			{
 				if (currentBuilding == null)
 				{
@@ -379,7 +381,7 @@ namespace GameManager.GameElements
 					buildPhase = BuildPhase.BUILDING;
 				}
 			}
-			else if (buildPhase == BuildPhase.BUILDING)
+			if (buildPhase == BuildPhase.BUILDING)
 			{
 				if (currentBuilding == null)
 				{

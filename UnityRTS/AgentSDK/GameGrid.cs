@@ -160,6 +160,8 @@ namespace AgentSDK
         /// <summary>Set a single cell's state.</summary>
         public void SetCell(Position p, CellState state)
         {
+            if (p.X == 63 && p.Y == 19)
+                CellDebugLog?.Invoke($"SetCell(63,19, {state}) was={cells[p.X, p.Y]}");
             if (IsPositionValid(p))
                 cells[p.X, p.Y] = state;
         }
@@ -383,9 +385,14 @@ namespace AgentSDK
         /// Mark a mobile unit as occupying (occupy=true) or leaving (occupy=false) a cell.
         /// On leave, restores to WALKABLE if the cell is a building passage, otherwise OPEN.
         /// </summary>
+        /// <summary>Optional debug callback for cell state changes.</summary>
+        public static System.Action<string> CellDebugLog;
+
         public void SetCellOccupied(Position p, bool occupy)
         {
             if (!IsPositionValid(p)) return;
+            if (p.X == 63 && p.Y == 19)
+                CellDebugLog?.Invoke($"SetCellOccupied(63,19, {occupy}) was={cells[p.X, p.Y]}");
             if (occupy)
                 cells[p.X, p.Y] = CellState.WALKABLE;
             else
