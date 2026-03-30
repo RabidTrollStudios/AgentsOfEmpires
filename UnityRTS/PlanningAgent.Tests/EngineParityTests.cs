@@ -199,14 +199,33 @@ namespace PlanningAgent.Tests
                         _output.WriteLine($"  u0 path: {pathStr}");
                     }
                 }
-                // Trace u1 and u10 around tick 200 (combat)
-                if (tick >= 195 && tick <= 205)
+                // Trace u23 + nearby cell states at tick 176-177
+                if (tick == 176 || tick == 177)
                 {
-                    var u1 = game.GetUnit(1);
-                    var u10 = game.GetUnit(10);
-                    string u1s = u1 != null ? $"u1:({u1.GridPosition.X},{u1.GridPosition.Y}):{u1.CurrentAction} hp={u1.Health:F0}" : "u1:dead";
-                    string u10s = u10 != null ? $"u10:({u10.GridPosition.X},{u10.GridPosition.Y}):{u10.CurrentAction} hp={u10.Health:F0}" : "u10:dead";
-                    _output.WriteLine($"  [t{tick}] {u1s} | {u10s}");
+                    var u23 = game.GetUnit(23) as SimUnit;
+                    string u23s = u23 != null ? $"u23:({u23.GridPosition.X},{u23.GridPosition.Y})" : "";
+                    // Check cells (29,14) and (29,15)
+                    var c29_14 = game.Map.Grid.GetCell(29, 14);
+                    var c29_15 = game.Map.Grid.GetCell(29, 15);
+                    // Who's at those cells?
+                    string at14 = "", at15 = "";
+                    for (int uid = 0; uid < 40; uid++)
+                    {
+                        var u = game.GetUnit(uid);
+                        if (u != null)
+                        {
+                            if (u.GridPosition.X == 29 && u.GridPosition.Y == 14) at14 += $" u{uid}";
+                            if (u.GridPosition.X == 29 && u.GridPosition.Y == 15) at15 += $" u{uid}";
+                        }
+                    }
+                    string pathInfo = "";
+                    if (u23?.Path != null && u23.PathIndex < u23.Path.Count)
+                    {
+                        pathInfo = $" next=({u23.Path[u23.PathIndex].X},{u23.Path[u23.PathIndex].Y})";
+                        if (u23.PathIndex + 1 < u23.Path.Count)
+                            pathInfo += $" then=({u23.Path[u23.PathIndex+1].X},{u23.Path[u23.PathIndex+1].Y})";
+                    }
+                    _output.WriteLine($"  [t{tick}] {u23s}{pathInfo} (29,14)={c29_14}{at14} (29,15)={c29_15}{at15}");
                 }
 
                 if (false && (tick == 49 || tick == 50))
