@@ -4,16 +4,6 @@ using AgentSDK;
 namespace AgentTestHarness
 {
     /// <summary>
-    /// Tracks which phase of the gather cycle a unit is in.
-    /// </summary>
-    public enum GatherPhase
-    {
-        TO_MINE,
-        MINING,
-        TO_BASE
-    }
-
-    /// <summary>
     /// Mutable unit state in the simulation. Mirrors the real game's Unit class
     /// but without MonoBehaviour/Unity dependencies.
     /// </summary>
