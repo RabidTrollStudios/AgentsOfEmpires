@@ -70,12 +70,11 @@ namespace GameManager.GameElements
             velocity = Utility.SafeNormalize(velocity);
         }
 
-        // Properties that need explicit interface implementation because
-        // the Unity type (Vector3Int) differs from the interface type (Position).
-        // Properties where Unity already has matching public signatures
-        // (UnitNbr, UnitType, OwnerAgentNbr, Health, IsBuilt, CurrentAction, Mana,
-        //  CanMove, CanBuild, CanTrain, CanAttack, CanGather, CanHeal)
-        // are satisfied implicitly.
+        // Explicit implementations for properties with non-public setters
+        float ITickUnit.Health { get => Health; set => Health = value; }
+        bool ITickUnit.IsBuilt { get => IsBuilt; set => IsBuilt = value; }
+        UnitAction ITickUnit.CurrentAction { get => CurrentAction; set => CurrentAction = value; }
+        float ITickUnit.Mana { get => Mana; set => Mana = value; }
 
         // GridPosition — convert between Vector3Int and Position
         Position ITickUnit.GridPosition
@@ -149,10 +148,10 @@ namespace GameManager.GameElements
         // Gathering
         int ITickUnit.GatherMineNbr { get => mineUnit; set => mineUnit = value; }
         int ITickUnit.GatherBaseNbr { get => baseUnit; set => baseUnit = value; }
-        AgentSDK.GatherPhase ITickUnit.GatherPhase
+        GatherPhase ITickUnit.GatherPhase
         {
-            get => (AgentSDK.GatherPhase)(int)gatherPhase;
-            set => gatherPhase = (EnumTypes.GatherPhase)(int)value;
+            get => gatherPhase;
+            set => gatherPhase = value;
         }
         float ITickUnit.MiningTimer { get => minedGold; set => minedGold = value; }
         int ITickUnit.GoldCarried { get => totalGold; set => totalGold = value; }
