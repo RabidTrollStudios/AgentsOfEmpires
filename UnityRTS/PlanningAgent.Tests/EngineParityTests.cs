@@ -199,22 +199,55 @@ namespace PlanningAgent.Tests
                         _output.WriteLine($"  u0 path: {pathStr}");
                     }
                 }
-                // Trace u10 and u8 around tick 53 (near mine 2 at (12,14))
-                if (tick >= 48 && tick <= 55)
+                // At t50: dump base neighbors and u10's path
+                if (tick == 49 || tick == 50)
                 {
                     var u10 = game.GetUnit(10) as SimUnit;
-                    var u8 = game.GetUnit(8) as SimUnit;
-                    string u10s = u10 != null ? $"u10:({u10.GridPosition.X},{u10.GridPosition.Y}):{u10.GatherPhase} g={u10.GoldCarried}" : "";
-                    string u8s = u8 != null ? $"u8:({u8.GridPosition.X},{u8.GridPosition.Y}):{u8.GatherPhase} g={u8.GoldCarried}" : "";
-                    // Who's at (11,11)?
-                    string who = "";
-                    for (int uid = 0; uid < 20; uid++)
+                    if (u10 != null)
                     {
-                        var u = game.GetUnit(uid);
-                        if (u != null && u.GridPosition.X == 11 && u.GridPosition.Y == 11)
-                            who += $" u{uid}";
+                        // Get base neighbor list (same call FindPathToUnit uses)
+                        var basePos = new AgentSDK.Position(7, 8);
+                        var neighbors = game.Map.Grid.GetBuildablePositionsNearUnit(UnitType.BASE, basePos);
+                        // Sort by distance to u10 (same as FindPathToUnit)
+                        var start = u10.GridPosition;
+                        neighbors.Sort((a, b) =>
+                        {
+                            int dxA = a.X - start.X, dyA = a.Y - start.Y;
+                            int dxB = b.X - start.X, dyB = b.Y - start.Y;
+                            int distA = dxA * dxA + dyA * dyA;
+                            int distB = dxB * dxB + dyB * dyB;
+                            int cmp = distA.CompareTo(distB);
+                            if (cmp != 0) return cmp;
+                            cmp = b.Y.CompareTo(a.Y);
+                            if (cmp != 0) return cmp;
+                            return a.X.CompareTo(b.X);
+                        });
+                        string nbrs = "";
+                        foreach (var n in neighbors.GetRange(0, System.Math.Min(5, neighbors.Count)))
+                            nbrs += $"({n.X},{n.Y}) ";
+                        _output.WriteLine($"  [t{tick}] u10 at ({start.X},{start.Y}) base neighbors (top 5): {nbrs}");
+
+                        // Call FindPathToUnit exactly as AdvanceGatherMining does
+                        var baseNbr = u10.GatherBaseNbr;
+                        if (game.GetUnit(baseNbr) != null)
+                        {
+                            var baseGridPos = game.GetUnit(baseNbr).GridPosition;
+                            var testResult = game.Map.FindPathToUnit(start, UnitType.BASE, baseGridPos);
+                            string testPathStr = "";
+                            for (int i = 0; i < testResult.Count; i++)
+                                testPathStr += $"({testResult[i].X},{testResult[i].Y}) ";
+                            _output.WriteLine($"  [t{tick}] FindPathToUnit test: {testPathStr}len={testResult.Count}");
+                        }
+
+                        _output.WriteLine($"  [t{tick}] u10 phase={u10.GatherPhase} gold={u10.GoldCarried}");
+                        if (u10.Path != null && u10.Path.Count > 0)
+                        {
+                            string fullPath = "";
+                            for (int i = 0; i < u10.Path.Count; i++)
+                                fullPath += $"({u10.Path[i].X},{u10.Path[i].Y}) ";
+                            _output.WriteLine($"  [t{tick}] u10 path: {fullPath}");
+                        }
                     }
-                    _output.WriteLine($"  [t{tick}] {u10s} | {u8s} | (11,11)={game.Map.Grid.GetCell(11,11)}{who}");
                 }
 
                 if (snapshotIdx < snapshots.Count && snapshots[snapshotIdx].Tick == t + 1)
