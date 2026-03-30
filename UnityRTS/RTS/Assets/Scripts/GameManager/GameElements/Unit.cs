@@ -200,7 +200,7 @@ namespace GameManager.GameElements
 		private int healthBarColorTier = -1; // 0=red, 1=yellow, 2=green; -1=unset
 		private int tierChangeFrames;       // countdown for tier-change effects
 		private const int TIER_FLASH_FRAMES = 24; // total frames for flash/pulse/shake
-		private int buildPulseFrames;             // countdown for build-complete pulse
+		internal int buildPulseFrames;             // countdown for build-complete pulse
 		private const int BUILD_PULSE_TOTAL = 24; // 3 pulses over 24 frames (8 frames each)
 		// Building fire: spawn a fire every 2% health lost
 		private int lastFireThreshold = 50; // starts at 100% = 50 (100/2)

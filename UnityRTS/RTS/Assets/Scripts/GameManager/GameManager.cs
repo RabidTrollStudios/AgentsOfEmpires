@@ -309,7 +309,7 @@ namespace GameManager
 		/// <summary>
 		/// Collection of Agents in the game
 		/// </summary>
-		private Dictionary<int, GameObject> Agents { get; set; }
+		internal Dictionary<int, GameObject> Agents { get; set; }
 
 		/// <summary>
 		/// Number of wins per agent

@@ -70,10 +70,12 @@ namespace GameManager.GameElements
             velocity = Utility.SafeNormalize(velocity);
         }
 
-        // Identity — delegate to existing properties
-        int ITickUnit.UnitNbr => UnitNbr;
-        UnitType ITickUnit.UnitType => UnitType;
-        int ITickUnit.OwnerAgentNbr => OwnerAgentNbr;
+        // Properties that need explicit interface implementation because
+        // the Unity type (Vector3Int) differs from the interface type (Position).
+        // Properties where Unity already has matching public signatures
+        // (UnitNbr, UnitType, OwnerAgentNbr, Health, IsBuilt, CurrentAction, Mana,
+        //  CanMove, CanBuild, CanTrain, CanAttack, CanGather, CanHeal)
+        // are satisfied implicitly.
 
         // GridPosition — convert between Vector3Int and Position
         Position ITickUnit.GridPosition
@@ -84,12 +86,6 @@ namespace GameManager.GameElements
 
         Position ITickUnit.CenterPosition => new Position(
             (int)CenterGridPosition.x, (int)CenterGridPosition.y);
-
-        // Health, IsBuilt, CurrentAction, Mana — direct
-        float ITickUnit.Health { get => Health; set => Health = value; }
-        bool ITickUnit.IsBuilt { get => IsBuilt; set => IsBuilt = value; }
-        UnitAction ITickUnit.CurrentAction { get => CurrentAction; set => CurrentAction = value; }
-        float ITickUnit.Mana { get => Mana; set => Mana = value; }
 
         // Movement — TickPath converts between List<Position> and List<Vector3Int>
         List<Position> ITickUnit.TickPath
