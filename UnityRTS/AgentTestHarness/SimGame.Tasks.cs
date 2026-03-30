@@ -184,14 +184,17 @@ namespace AgentTestHarness
 
         private void AdvanceTrain(SimUnit building)
         {
-            if (!TaskEngine.AdvanceTrainTimer(ref building.TrainTimer, Config.TickDuration))
+            // Count up (matches Unity's taskTime += fixedDeltaTime)
+            building.TrainTimer += Config.TickDuration;
+            if (building.TrainTimer < creationTime[building.TrainTarget])
                 return;
 
             // Training complete — find a buildable cell to spawn the unit
             var spawnPositions = Map.GetBuildablePositionsNearUnit(building.UnitType, building.GridPosition);
             if (spawnPositions.Count == 0)
             {
-                building.TrainTimer = 0.001f; // retry next tick
+                // Can't spawn — back off timer slightly so we retry next tick
+                building.TrainTimer = creationTime[building.TrainTarget] - Config.TickDuration;
                 return;
             }
 
@@ -211,8 +214,9 @@ namespace AgentTestHarness
             if (pawn.Path != null && pawn.PathIndex < pawn.Path.Count)
                 return;
 
-            // Phase 2: count down build timer
-            if (!TaskEngine.AdvanceBuildTimer(ref pawn.BuildTimer, Config.TickDuration))
+            // Phase 2: count up build timer (matches Unity's BuildProgress += fixedDeltaTime)
+            pawn.BuildTimer += Config.TickDuration;
+            if (pawn.BuildTimer < creationTime[pawn.BuildTarget])
                 return;
 
             // Build complete — mark building as built

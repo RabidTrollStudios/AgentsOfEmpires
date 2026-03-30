@@ -158,7 +158,7 @@ namespace AgentTestHarness
             pawn.BuildTarget = buildingType;
             pawn.BuildSite = target;
             pawn.BuildPlaced = true;
-            pawn.BuildTimer = creationTime[buildingType];
+            pawn.BuildTimer = 0f; // count up (matches Unity's BuildProgress)
             pawn.Path = path;
             pawn.PathIndex = 0;
         }
@@ -200,7 +200,7 @@ namespace AgentTestHarness
 
             building.CurrentAction = UnitAction.TRAIN;
             building.TrainTarget = unitType;
-            building.TrainTimer = creationTime[unitType];
+            building.TrainTimer = 0f; // count up (matches Unity's taskTime)
         }
 
         private void ProcessAttack(SimUnit attacker, int targetNbr)

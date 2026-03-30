@@ -199,8 +199,17 @@ namespace PlanningAgent.Tests
                         _output.WriteLine($"  u0 path: {pathStr}");
                     }
                 }
-                // At t50: dump base neighbors and u10's path
-                if (tick == 49 || tick == 50)
+                // Trace u1 and u10 around tick 200 (combat)
+                if (tick >= 195 && tick <= 205)
+                {
+                    var u1 = game.GetUnit(1);
+                    var u10 = game.GetUnit(10);
+                    string u1s = u1 != null ? $"u1:({u1.GridPosition.X},{u1.GridPosition.Y}):{u1.CurrentAction} hp={u1.Health:F0}" : "u1:dead";
+                    string u10s = u10 != null ? $"u10:({u10.GridPosition.X},{u10.GridPosition.Y}):{u10.CurrentAction} hp={u10.Health:F0}" : "u10:dead";
+                    _output.WriteLine($"  [t{tick}] {u1s} | {u10s}");
+                }
+
+                if (false && (tick == 49 || tick == 50))
                 {
                     var u10 = game.GetUnit(10) as SimUnit;
                     if (u10 != null)
