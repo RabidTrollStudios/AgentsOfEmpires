@@ -260,6 +260,9 @@ namespace AgentTestHarness
             Units.Remove(unit.UnitNbr);
         }
 
+        /// <summary>Public wrapper for ITickWorld.RemoveUnit.</summary>
+        internal void RemoveUnitPublic(SimUnit unit) => RemoveUnit(unit);
+
         private void RemoveDeadUnits()
         {
             var dead = Units.Values.Where(u => u.Health <= 0).ToList();

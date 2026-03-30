@@ -6,53 +6,71 @@ namespace AgentTestHarness
     /// <summary>
     /// Mutable unit state in the simulation. Mirrors the real game's Unit class
     /// but without MonoBehaviour/Unity dependencies.
+    /// Implements <see cref="ITickUnit"/> for the shared TickEngine.
     /// </summary>
-    public class SimUnit
+    public class SimUnit : ITickUnit
     {
+        // Identity
         public int UnitNbr { get; }
         public UnitType UnitType { get; }
         public int OwnerAgentNbr { get; }
+        public bool CanMove => GameConstants.CAN_MOVE[UnitType];
+        public bool CanAttack => GameConstants.CAN_ATTACK[UnitType];
+        public bool CanBuild => GameConstants.CAN_BUILD[UnitType];
+        public bool CanGather => GameConstants.CAN_GATHER[UnitType];
+        public bool CanTrain => GameConstants.CAN_TRAIN[UnitType];
+        public bool CanHeal => GameConstants.CAN_HEAL[UnitType];
+
+        // Core state
         public Position GridPosition { get; set; }
         public float Health { get; set; }
         public bool IsBuilt { get; set; }
         public UnitAction CurrentAction { get; set; }
+        public float Mana { get; set; }
 
-        // Movement state
-        internal List<Position> Path;
-        internal int PathIndex;
+        // Movement
+        public List<Position> TickPath { get; set; }
+        public int PathIndex { get; set; }
+        public float MoveAccumulator { get; set; }
 
-        // Training state
-        internal float TrainTimer;
-        internal UnitType TrainTarget;
+        // Training
+        public float TrainTimer { get; set; }
+        public UnitType TrainTarget { get; set; }
 
-        // Building state — pawn walks to site, then counts down build timer
-        internal float BuildTimer;
-        internal UnitType BuildTarget;
-        internal Position BuildSite;
-        internal bool BuildPlaced; // whether the building has been placed on the map
+        // Building
+        public float BuildTimer { get; set; }
+        public UnitType BuildTarget { get; set; }
+        public Position BuildSite { get; set; }
+        public int BuildTargetNbr { get; set; }
 
-        // Gathering state
-        internal int GatherMineNbr;
-        internal int GatherBaseNbr;
-        internal GatherPhase GatherPhase;
-        internal float MiningTimer;  // fractional gold accumulator during MINING phase
-        internal int GoldCarried;    // total gold mined this trip
+        // Gathering
+        public int GatherMineNbr { get; set; }
+        public int GatherBaseNbr { get; set; }
+        public GatherPhase GatherPhase { get; set; }
+        public float MiningTimer { get; set; }
+        public int GoldCarried { get; set; }
 
-        // Movement speed accumulator (for fractional movement)
-        internal float MoveAccumulator;
+        // Combat
+        public int AttackTargetNbr { get; set; }
 
-        // Attack state
-        internal int AttackTargetNbr;
+        // Repair
+        public int RepairBuildingNbr { get; set; }
 
-        // Repair state
-        internal int RepairBuildingNbr;
+        // Heal
+        public int HealTargetNbr { get; set; }
 
-        // Local avoidance state — how many ticks the unit has waited for a blocker to clear
+        // Local avoidance (not in ITickUnit but kept for backward compat)
         internal int LocalAvoidWaitTicks;
 
-        // Heal state
-        internal int HealTargetNbr;
-        public float Mana { get; set; }
+        // Legacy alias for code that still uses "Path"
+        internal List<Position> Path
+        {
+            get => TickPath;
+            set => TickPath = value;
+        }
+
+        // Legacy alias for BuildPlaced
+        internal bool BuildPlaced { get; set; }
 
         public SimUnit(int unitNbr, UnitType unitType, int ownerAgentNbr, Position gridPosition, float health, bool isBuilt)
         {
@@ -65,6 +83,7 @@ namespace AgentTestHarness
             CurrentAction = UnitAction.IDLE;
             AttackTargetNbr = -1;
             RepairBuildingNbr = -1;
+            BuildTargetNbr = -1;
             GatherMineNbr = -1;
             GatherBaseNbr = -1;
             HealTargetNbr = -1;
@@ -73,7 +92,6 @@ namespace AgentTestHarness
 
         /// <summary>
         /// Center cell of this unit's footprint. Use for distance calculations.
-        /// For 1x1 units equals GridPosition; for 3x3 structures returns GridPosition+(1,-1).
         /// </summary>
         public Position CenterPosition
         {
@@ -82,7 +100,6 @@ namespace AgentTestHarness
                 var size = GameConstants.UNIT_SIZE[UnitType];
                 if (!GameConstants.CAN_MOVE[UnitType] && size.Y > 1)
                 {
-                    // Building: center on non-walkable rows (skip walkable top row)
                     var nwAnchor = new Position(GridPosition.X, GridPosition.Y - 1);
                     var nwSize = new Position(size.X, size.Y - 1);
                     return Position.Center(nwAnchor, nwSize);
@@ -97,21 +114,9 @@ namespace AgentTestHarness
         public UnitInfo ToUnitInfo()
         {
             return new UnitInfo(
-                UnitNbr,
-                UnitType,
-                GridPosition,
-                Health,
-                IsBuilt,
-                CurrentAction,
-                GameConstants.CAN_MOVE[UnitType],
-                GameConstants.CAN_BUILD[UnitType],
-                GameConstants.CAN_TRAIN[UnitType],
-                GameConstants.CAN_ATTACK[UnitType],
-                GameConstants.CAN_GATHER[UnitType],
-                GameConstants.CAN_HEAL[UnitType],
-                Mana,
-                OwnerAgentNbr
-            );
+                UnitNbr, UnitType, GridPosition, Health, IsBuilt,
+                CurrentAction, CanMove, CanBuild, CanTrain, CanAttack,
+                CanGather, CanHeal, Mana, OwnerAgentNbr);
         }
     }
 }

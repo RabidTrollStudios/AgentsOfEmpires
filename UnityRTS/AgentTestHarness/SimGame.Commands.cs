@@ -158,6 +158,7 @@ namespace AgentTestHarness
             pawn.BuildTarget = buildingType;
             pawn.BuildSite = target;
             pawn.BuildPlaced = true;
+            pawn.BuildTargetNbr = building.UnitNbr;
             pawn.BuildTimer = 0f; // count up (matches Unity's BuildProgress)
             pawn.Path = path;
             pawn.PathIndex = 0;

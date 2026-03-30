@@ -1072,6 +1072,19 @@
             Regenerate mana for a unit per tick.
             </summary>
         </member>
+        <member name="T:AgentSDK.TickEngine">
+            <summary>
+            Shared game tick engine. Processes all unit tasks and movement
+            in deterministic order. Both Unity and SimGame call this to
+            guarantee identical game logic.
+            </summary>
+        </member>
+        <member name="M:AgentSDK.TickEngine.AdvanceAllUnits(AgentSDK.ITickWorld,AgentSDK.ITickCallbacks)">
+            <summary>
+            Advance all units one tick: task logic + movement per unit,
+            in deterministic UnitNbr order.
+            </summary>
+        </member>
         <member name="T:AgentSDK.UnitAction">
             <summary>
             Actions a unit can be performing
