@@ -425,12 +425,11 @@
         <member name="M:AgentSDK.GameGrid.SetAreaBuildability(AgentSDK.UnitType,AgentSDK.Position,System.Boolean)">
             <summary>Alias for SetUnitFootprint. Matches old API used by callers.</summary>
         </member>
-        <member name="F:AgentSDK.GameGrid.CellDebugLog">
+        <member name="M:AgentSDK.GameGrid.SetCellOccupied(AgentSDK.Position,System.Boolean)">
             <summary>
             Mark a mobile unit as occupying (occupy=true) or leaving (occupy=false) a cell.
             On leave, restores to WALKABLE if the cell is a building passage, otherwise OPEN.
             </summary>
-            <summary>Optional debug callback for cell state changes.</summary>
         </member>
         <member name="M:AgentSDK.GameGrid.SetCellStandable(AgentSDK.Position,System.Boolean)">
             <summary>Legacy alias for SetCellOccupied.</summary>
@@ -874,9 +873,6 @@
             
              Methods are pure functions of their inputs — no Unity dependencies.
              </summary>
-        </member>
-        <member name="F:AgentSDK.TaskEngine.DebugLog">
-            <summary>Optional debug log callback. Set from Unity to route to Debug.Log.</summary>
         </member>
         <member name="T:AgentSDK.TaskEngine.MoveResult">
             <summary>

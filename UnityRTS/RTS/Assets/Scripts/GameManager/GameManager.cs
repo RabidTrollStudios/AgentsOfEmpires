@@ -384,10 +384,7 @@ namespace GameManager
 			Constants.GAME_SPEED = StartingGameSpeed;
 			Constants.CalculateGameConstants();
 
-			// Route debug logs to Unity console
-			AgentSDK.TaskEngine.DebugLog = msg => Debug.Log(msg);
-			AgentSDK.GameGrid.CellDebugLog = msg => Debug.Log(msg);
-
+	
 			// Fixed timestep matching SimGame's TickDuration for exact parity.
 			// All game logic runs in FixedUpdate at this rate (20 Hz).
 			Time.fixedDeltaTime = 0.05f;
