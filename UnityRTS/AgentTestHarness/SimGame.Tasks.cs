@@ -11,49 +11,14 @@ namespace AgentTestHarness
     /// </summary>
     public partial class SimGame
     {
+        /// <summary>Lazy-initialized world adapter for TickEngine.</summary>
+        private SimTickWorld tickWorld;
+
         private void AdvanceAllUnits()
         {
-            // Process each unit's task logic + movement together before
-            // moving to the next unit. This matches Unity's TickFixedUpdate
-            // which runs GameLogicTick then movement for each unit in the
-            // deterministic sorted loop.
-            var unitKeys = Units.Keys.ToList();
-            unitKeys.Sort(); // deterministic order matching Unity
-
-            foreach (int key in unitKeys)
-            {
-                if (!Units.TryGetValue(key, out var unit)) continue;
-
-                // Task logic (matches Unity's GameLogicTick)
-                switch (unit.CurrentAction)
-                {
-                    case UnitAction.MOVE:
-                        AdvanceMove(unit);
-                        break;
-                    case UnitAction.TRAIN:
-                        AdvanceTrain(unit);
-                        break;
-                    case UnitAction.BUILD:
-                        AdvanceBuild(unit);
-                        break;
-                    case UnitAction.GATHER:
-                        AdvanceGather(unit);
-                        break;
-                    case UnitAction.ATTACK:
-                        AdvanceAttack(unit);
-                        break;
-                    case UnitAction.REPAIR:
-                        AdvanceRepair(unit);
-                        break;
-                    case UnitAction.HEAL:
-                        AdvanceHeal(unit);
-                        break;
-                }
-
-                // Movement (matches Unity's movement loop within TickFixedUpdate)
-                if (unit.Path != null && unit.PathIndex < unit.Path.Count)
-                    MoveUnitOneStep(unit);
-            }
+            if (tickWorld == null)
+                tickWorld = new SimTickWorld(this);
+            TickEngine.AdvanceAllUnits(tickWorld, NullTickCallbacks.Instance);
         }
 
         #region Movement
