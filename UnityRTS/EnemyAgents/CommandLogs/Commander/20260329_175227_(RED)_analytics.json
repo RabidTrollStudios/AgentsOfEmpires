@@ -1,0 +1,134 @@
+﻿{
+  "agentName": "(RED)",
+  "agentDLLName": "Commander",
+  "opponentDLLName": "ArcherSwarm",
+  "matchStarted": "2026-03-29T17:52:27.8639327-06:00",
+  "totalRounds": 3,
+  "roundsWon": 1,
+  "roundsLost": 2,
+  "overallWinRate": 0.333,
+  "avgCommandSuccessRate": 0.696,
+  "avgGoldGathered": 6916.7,
+  "avgUnitsProduced": 37.7,
+  "avgKillDeathRatio": 0.31,
+  "avgRoundDuration": 203.3,
+  "rounds": [
+    {
+      "roundNumber": 1,
+      "result": "WIN",
+      "durationSeconds": 244.2,
+      "commands": {
+        "issued": { "BUILD": 4, "TRAIN": 58, "GATHER": 19, "MOVE": 45, "ATTACK": 926, "HEAL": 79 },
+        "succeeded": { "BUILD": 4, "TRAIN": 58, "GATHER": 19, "ATTACK": 926, "MOVE": 10, "HEAL": 53 },
+        "failed": { "MOVE": 35, "HEAL": 26 },
+        "throttled": 0,
+        "totalIssued": 1131,
+        "successRate": 0.946
+      },
+      "economy": {
+        "startingGold": 0,
+        "goldGathered": 9850,
+        "goldSpent": 6410,
+        "peakGold": 4930,
+        "endingGold": 4440
+      },
+      "military": {
+        "unitsProduced": { "PAWN": 11, "WARRIOR": 23, "ARCHER": 20, "MONK": 2 },
+        "unitsLost": { "PAWN": 6, "WARRIOR": 12, "ARCHER": 2 },
+        "enemyUnitsKilled": { "ARCHER": 13 },
+        "damageDealt": 42484.0,
+        "damageReceived": 23265.0,
+        "killDeathRatio": 0.65
+      },
+      "buildings": {
+        "constructed": { "BASE": 1, "BARRACKS": 1, "ARCHERY": 1, "MONASTERY": 1 },
+        "lost": {}
+      },
+      "milestones": {
+        "timeToFirstBuild": 0.4,
+        "timeToFirstMilitary": 40.7,
+        "timeToFirstAttack": 97.1
+      },
+      "finalUnitCounts": { "MINE": 0, "PAWN": 6, "WARRIOR": 11, "ARCHER": 18, "BASE": 1, "BARRACKS": 1, "ARCHERY": 1, "LANCER": 0, "TOWER": 0, "MONASTERY": 1, "MONK": 2 },
+      "finalScore": 236
+    },
+    {
+      "roundNumber": 2,
+      "result": "LOSS",
+      "durationSeconds": 233.9,
+      "commands": {
+        "issued": { "BUILD": 16, "TRAIN": 45, "GATHER": 29, "MOVE": 6, "ATTACK": 201, "HEAL": 30 },
+        "succeeded": { "BUILD": 16, "TRAIN": 45, "GATHER": 29, "MOVE": 1, "ATTACK": 201, "HEAL": 17 },
+        "failed": { "MOVE": 5, "HEAL": 13 },
+        "throttled": 0,
+        "totalIssued": 327,
+        "successRate": 0.945
+      },
+      "economy": {
+        "startingGold": 4440,
+        "goldGathered": 8050,
+        "goldSpent": 8760,
+        "peakGold": 4890,
+        "endingGold": 290
+      },
+      "military": {
+        "unitsProduced": { "PAWN": 30, "ARCHER": 5, "MONK": 3, "WARRIOR": 5 },
+        "unitsLost": { "PAWN": 31, "MONK": 3, "WARRIOR": 5, "ARCHER": 5 },
+        "enemyUnitsKilled": { "ARCHER": 17 },
+        "damageDealt": 13467.0,
+        "damageReceived": 40550.0,
+        "killDeathRatio": 0.28
+      },
+      "buildings": {
+        "constructed": { "BASE": 1, "BARRACKS": 1, "ARCHERY": 1, "MONASTERY": 1 },
+        "lost": { "MONASTERY": 10, "ARCHERY": 3, "BASE": 2, "BARRACKS": 1 }
+      },
+      "milestones": {
+        "timeToFirstBuild": 0.0,
+        "timeToFirstMilitary": 92.7,
+        "timeToFirstAttack": 100.8
+      },
+      "finalUnitCounts": { "MINE": 0, "PAWN": 0, "WARRIOR": 0, "ARCHER": 0, "BASE": 0, "BARRACKS": 0, "ARCHERY": 0, "LANCER": 0, "TOWER": 0, "MONASTERY": 0, "MONK": 0 },
+      "finalScore": 0
+    },
+    {
+      "roundNumber": 3,
+      "result": "LOSS",
+      "durationSeconds": 131.8,
+      "commands": {
+        "issued": { "BUILD": 163, "TRAIN": 14, "GATHER": 16 },
+        "succeeded": { "BUILD": 8, "TRAIN": 14, "GATHER": 16 },
+        "failed": { "BUILD": 155 },
+        "throttled": 0,
+        "totalIssued": 193,
+        "successRate": 0.197
+      },
+      "economy": {
+        "startingGold": 290,
+        "goldGathered": 2850,
+        "goldSpent": 3850,
+        "peakGold": 3050,
+        "endingGold": 0
+      },
+      "military": {
+        "unitsProduced": { "PAWN": 14 },
+        "unitsLost": { "PAWN": 15 },
+        "enemyUnitsKilled": {},
+        "damageDealt": 0.0,
+        "damageReceived": 11875.0,
+        "killDeathRatio": 0.00
+      },
+      "buildings": {
+        "constructed": { "BASE": 1 },
+        "lost": { "BARRACKS": 4, "ARCHERY": 3, "BASE": 1 }
+      },
+      "milestones": {
+        "timeToFirstBuild": 0.0,
+        "timeToFirstMilitary": null,
+        "timeToFirstAttack": null
+      },
+      "finalUnitCounts": { "MINE": 0, "PAWN": 0, "WARRIOR": 0, "ARCHER": 0, "BASE": 0, "BARRACKS": 0, "ARCHERY": 0, "LANCER": 0, "TOWER": 0, "MONASTERY": 0, "MONK": 0 },
+      "finalScore": 0
+    }
+  ]
+}

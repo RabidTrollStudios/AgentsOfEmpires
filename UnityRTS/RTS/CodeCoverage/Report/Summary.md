@@ -1,25 +1,25 @@
 ﻿# Summary
 |||
 |:---|:---|
-| Generated on: | 3/28/2026 - 9:04:23 PM |
+| Generated on: | 3/29/2026 - 5:44:18 PM |
 | Parser: | MultiReportParser (391x OpenCoverParser) |
 | Assemblies: | 1 |
 | Classes: | 40 |
 | Files: | 39 |
-| Covered lines: | 1132 |
-| Uncovered lines: | 4961 |
-| Coverable lines: | 6093 |
-| Total lines: | 13838 |
-| Line coverage: | 18.5% (1132 of 6093) |
+| Covered lines: | 1147 |
+| Uncovered lines: | 5015 |
+| Coverable lines: | 6162 |
+| Total lines: | 13921 |
+| Line coverage: | 18.6% (1147 of 6162) |
 | Covered branches: | 0 |
 | Total branches: | 0 |
-| Covered methods: | 212 |
+| Covered methods: | 214 |
 | Total methods: | 733 |
-| Method coverage: | 28.9% (212 of 733) |
+| Method coverage: | 29.1% (214 of 733) |
 
 |**Name**|**Covered**|**Uncovered**|**Coverable**|**Total**|**Line coverage**|**Covered**|**Total**|**Branch coverage**|**Covered**|**Total**|**Method coverage**|
 |:---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
-|**GameManager**|**1132**|**4961**|**6093**|**15638**|**18.5%**|**0**|**0**|****|**212**|**733**|**28.9%**|
+|**GameManager**|**1147**|**5015**|**6162**|**15721**|**18.6%**|**0**|**0**|****|**214**|**733**|**29.1%**|
 |GameManager.Agent|58|219|277|578|20.9%|0|0||24|40|60%|
 |GameManager.AgentActionsAdapter|56|62|118|234|47.4%|0|0||9|14|64.2%|
 |GameManager.AgentBridge|7|28|35|76|20%|0|0||3|10|30%|
@@ -41,7 +41,7 @@
 |GameManager.GameElements.MoveEventArgs|0|9|9|193|0%|0|0||0|7|0%|
 |GameManager.GameElements.RepairEventArgs|0|7|7|193|0%|0|0||0|5|0%|
 |GameManager.GameElements.TrainEventArgs|0|7|7|193|0%|0|0||0|5|0%|
-|GameManager.GameElements.Unit|0|1749|1749|2979|0%|0|0||0|130|0%|
+|GameManager.GameElements.Unit|0|1808|1808|3051|0%|0|0||0|129|0%|
 |GameManager.GameElements.Utility|45|3|48|126|93.7%|0|0||7|10|70%|
 |GameManager.GameManager|269|819|1088|2066|24.7%|0|0||55|108|50.9%|
 |GameManager.GameStateAdapter|0|125|125|244|0%|0|0||0|26|0%|
@@ -51,12 +51,12 @@
 |GameManager.Graph.PriorityNode[V]|19|0|19|159|100%|0|0||3|3|100%|
 |GameManager.Graph.PriorityQueue[T]|76|9|85|159|89.4%|0|0||8|9|88.8%|
 |GameManager.InfluenceTile|0|4|4|20|0%|0|0||0|2|0%|
-|GameManager.InputSystem_Actions|67|379|446|2783|15%|0|0||16|101|15.8%|
-|GameManager.MapManager|234|44|278|494|84.1%|0|0||27|27|100%|
+|GameManager.InputSystem_Actions|73|373|446|2783|16.3%|0|0||17|101|16.8%|
+|GameManager.MapManager|243|44|287|504|84.6%|0|0||28|28|100%|
 |GameManager.MatchAnalytics|0|112|112|226|0%|0|0||0|16|0%|
 |GameManager.ParityExporter|0|108|108|201|0%|0|0||0|7|0%|
 |GameManager.ProceduralGrove|0|2|2|483|0%|0|0||0|1|0%|
 |GameManager.ProceduralMapGenerator|0|250|250|483|0%|0|0||0|18|0%|
 |GameManager.RoundStats|0|101|101|213|0%|0|0||0|22|0%|
-|GameManager.UnitManager|18|89|107|236|16.8%|0|0||7|21|33.3%|
+|GameManager.UnitManager|18|90|108|237|16.6%|0|0||7|21|33.3%|
 |Preloader.PrefabLoader|1|4|5|289|20%|0|0||1|2|50%|

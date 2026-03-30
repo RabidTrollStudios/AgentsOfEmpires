@@ -100,7 +100,7 @@ namespace AgentTestHarness
         {
             var unit = new SimUnit(NextUnitNbr++, unitType, ownerAgentNbr, position, health, isBuilt);
             Units[unit.UnitNbr] = unit;
-            Map.SetAreaBuildability(unitType, position, false);
+            Map.Grid.SetUnitFootprint(unitType, position, true);
             return unit;
         }
 
@@ -256,7 +256,7 @@ namespace AgentTestHarness
 
         private void RemoveUnit(SimUnit unit)
         {
-            Map.SetAreaBuildability(unit.UnitType, unit.GridPosition, true);
+            Map.Grid.SetUnitFootprint(unit.UnitType, unit.GridPosition, false);
             Units.Remove(unit.UnitNbr);
         }
 

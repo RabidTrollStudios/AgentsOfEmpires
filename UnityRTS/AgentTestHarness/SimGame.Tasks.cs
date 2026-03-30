@@ -108,17 +108,14 @@ namespace AgentTestHarness
                     unit.MoveAccumulator -= distCost;
                     unit.LocalAvoidWaitTicks = 0;
 
-                    bool leavingPassage = Map.IsPositionPassage(unit.GridPosition);
-                    bool enteringPassage = Map.IsPositionPassage(nextPos);
-
-                    if (!leavingPassage && GameConstants.CAN_MOVE[unit.UnitType])
-                        Map.SetAreaBuildability(unit.UnitType, unit.GridPosition, true);
+                    if (GameConstants.CAN_MOVE[unit.UnitType])
+                    {
+                        Map.Grid.SetCellOccupied(unit.GridPosition, false); // leave old cell
+                        Map.Grid.SetCellOccupied(nextPos, true);            // claim new cell
+                    }
 
                     unit.GridPosition = nextPos;
                     unit.PathIndex++;
-
-                    if (!enteringPassage && GameConstants.CAN_MOVE[unit.UnitType])
-                        Map.SetAreaBuildability(unit.UnitType, unit.GridPosition, false);
 
                     if (unit.PathIndex >= unit.Path.Count)
                     {
@@ -268,7 +265,8 @@ namespace AgentTestHarness
 
             // Arrived adjacent to mine — start mining
             pawn.GatherPhase = GatherPhase.MINING;
-            pawn.MiningTimer = TaskEngine.ComputeMiningTime(miningCapacity, miningSpeed);
+            pawn.MiningTimer = 0f;      // fractional gold accumulator
+            pawn.GoldCarried = 0;       // total gold this trip
         }
 
         private void AdvanceGatherMining(SimUnit pawn)
@@ -279,15 +277,36 @@ namespace AgentTestHarness
                 return;
             }
 
-            pawn.MiningTimer -= Config.TickDuration;
-
-            if (pawn.MiningTimer <= 0f)
+            if (mine.Health <= 0)
             {
-                // Deduct gold from mine
-                float goldMined = TaskEngine.ComputeGoldMined(miningCapacity, mine.Health);
-                mine.Health -= goldMined;
+                // Mine depleted — head to base with whatever we have, or go idle
+                if (!Units.TryGetValue(pawn.GatherBaseNbr, out var baseForEmpty))
+                {
+                    pawn.CurrentAction = UnitAction.IDLE;
+                    return;
+                }
+                var emptyPath = Map.FindPathToUnit(pawn.GridPosition, UnitType.BASE, baseForEmpty.GridPosition);
+                pawn.GatherPhase = GatherPhase.TO_BASE;
+                pawn.Path = emptyPath;
+                pawn.PathIndex = 0;
+                return;
+            }
 
-                // Path to base
+            // Accumulate gold each tick (matches Unity's continuous mining)
+            pawn.MiningTimer += Config.TickDuration * miningSpeed;
+
+            // Deduct from mine 1 gold at a time (matches Unity's per-integer deduction)
+            if (pawn.MiningTimer >= 1f)
+            {
+                int goldChunk = (int)pawn.MiningTimer;
+                mine.Health -= goldChunk;
+                pawn.GoldCarried += goldChunk;
+                pawn.MiningTimer -= goldChunk;
+            }
+
+            // Reached capacity — head to base
+            if (pawn.GoldCarried >= (int)miningCapacity)
+            {
                 if (!Units.TryGetValue(pawn.GatherBaseNbr, out var baseUnit))
                 {
                     pawn.CurrentAction = UnitAction.IDLE;
@@ -298,9 +317,6 @@ namespace AgentTestHarness
                 pawn.GatherPhase = GatherPhase.TO_BASE;
                 pawn.Path = path;
                 pawn.PathIndex = 0;
-
-                // Store gold carried as a small temporary value on the mining timer
-                pawn.MiningTimer = goldMined;
             }
         }
 
@@ -323,8 +339,8 @@ namespace AgentTestHarness
             }
 
             // Arrived at base — deposit gold
-            float goldCarried = pawn.MiningTimer;
-            Gold[pawn.OwnerAgentNbr] += (int)goldCarried;
+            Gold[pawn.OwnerAgentNbr] += pawn.GoldCarried;
+            pawn.GoldCarried = 0;
 
             // Cycle back to mine
             if (!Units.TryGetValue(pawn.GatherMineNbr, out var mine) || mine.Health <= 0)

@@ -49,16 +49,19 @@ namespace AgentSDK
             if (moveAccumulator < distCost)
                 return MoveResult.InsufficientMovement;
 
-            // Free cell (buildable or passage) — move forward
-            if (grid.IsPositionBuildable(nextPos) || grid.IsPositionPassage(nextPos))
+            var state = grid.GetCell(nextPos);
+
+            // OPEN = free cell, can move and stand
+            if (state == CellState.OPEN)
                 return MoveResult.Moved;
 
-            // Walkable but not buildable = occupied by a mobile unit.
-            // Callers should pass through mid-path but stop at the final cell.
-            if (grid.IsPositionWalkable(nextPos))
-                return MoveResult.BlockedByUnit;
+            // WALKABLE: either a building passage or a mobile-unit-occupied cell.
+            // Both are walkable, but only unit-occupied cells allow pass-through.
+            // Passage cells (building top rows) are normal movement — return Moved.
+            if (state == CellState.WALKABLE)
+                return grid.IsPassageCell(nextPos) ? MoveResult.Moved : MoveResult.BlockedByUnit;
 
-            // Not walkable (terrain/building body)
+            // BLOCKED = terrain or building body
             return MoveResult.BlockedByTerrain;
         }
 
@@ -155,7 +158,7 @@ namespace AgentSDK
         /// reaching exactly zero. 1e-4 is safely above worst-case drift (~1e-6)
         /// but well below the smallest tick duration (0.05).
         /// </summary>
-        private const float TimerEpsilon = 1e-4f;
+        public const float TimerEpsilon = 1e-4f;
 
         /// <summary>
         /// Advance training timer. Returns true when training is complete.

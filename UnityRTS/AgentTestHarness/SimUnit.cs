@@ -45,7 +45,8 @@ namespace AgentTestHarness
         internal int GatherMineNbr;
         internal int GatherBaseNbr;
         internal GatherPhase GatherPhase;
-        internal float MiningTimer;
+        internal float MiningTimer;  // fractional gold accumulator during MINING phase
+        internal int GoldCarried;    // total gold mined this trip
 
         // Movement speed accumulator (for fractional movement)
         internal float MoveAccumulator;

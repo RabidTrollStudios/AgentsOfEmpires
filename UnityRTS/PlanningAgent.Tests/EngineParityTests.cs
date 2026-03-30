@@ -175,13 +175,45 @@ namespace PlanningAgent.Tests
                 game.Tick();
                 int tick = t + 1;
 
-                // Compact trace for debugging parity divergences
-                if (tick <= 60 && tick % 10 == 0)
+                // Trace pawn positions + grid state near base at (7,8)
+                if (tick == 1 || tick == 2)
                 {
-                    int unitCount = 0;
-                    for (int i = 0; i < 50; i++)
-                        if (game.GetUnit(i) != null) unitCount++;
-                    _output.WriteLine($"  [t{tick}] g={game.GetGold(0)}/{game.GetGold(1)} units={unitCount}");
+                    _output.WriteLine($"  Grid near (7,8) at t{tick}:");
+                    for (int y = 10; y >= 4; y--)
+                    {
+                        string row = $"    y={y}: ";
+                        for (int x = 5; x <= 14; x++)
+                        {
+                            var st = game.Map.Grid.GetCell(x, y);
+                            row += st == CellState.OPEN ? "." : st == CellState.WALKABLE ? "W" : "X";
+                        }
+                        _output.WriteLine(row);
+                    }
+                    // Also show path for u0
+                    var u0path = game.GetUnit(0) as SimUnit;
+                    if (u0path?.Path != null)
+                    {
+                        string pathStr = "";
+                        for (int i = u0path.PathIndex; i < System.Math.Min(u0path.PathIndex + 5, u0path.Path.Count); i++)
+                            pathStr += $"({u0path.Path[i].X},{u0path.Path[i].Y}) ";
+                        _output.WriteLine($"  u0 path: {pathStr}");
+                    }
+                }
+                // Trace u10 spawn + gather path target
+                if (tick >= 33 && tick <= 36)
+                {
+                    var u10 = game.GetUnit(10) as SimUnit;
+                    string u10s = "u10:--";
+                    if (u10 != null)
+                    {
+                        u10s = $"u10:({u10.GridPosition.X},{u10.GridPosition.Y}):{u10.CurrentAction}";
+                        if (u10.Path != null && u10.Path.Count > 0)
+                        {
+                            var dest = u10.Path[u10.Path.Count - 1];
+                            u10s += $" dest=({dest.X},{dest.Y}) len={u10.Path.Count}";
+                        }
+                    }
+                    _output.WriteLine($"  [t{tick}] {u10s}");
                 }
 
                 if (snapshotIdx < snapshots.Count && snapshots[snapshotIdx].Tick == t + 1)
@@ -324,11 +356,10 @@ namespace PlanningAgent.Tests
                 if (parts.Length < 10) continue;
                 commands.Add(new ExportedCommand
                 {
-                    // Unity's ParityExporter stamps commands with its currentTick, which
-                    // was incremented at the start of the preceding FixedUpdate. The command
-                    // is processed in the NEXT FixedUpdate. In SimGame, commands issued in
-                    // Phase 5 of tick N process in Phase 1 of tick N+1. Subtract 1 so
-                    // exported tick N is issued at SimGame tick N-1 and processed at tick N.
+                    // Offset -1: aligns command processing between SimGame and Unity.
+                    // ParityExporter records at currentTick (post-increment). Commands
+                    // issued at exported tick N are processed at tick N+1 in Unity.
+                    // In SimGame, issuing at tick N-1 means processing at tick N.
                     Tick = int.Parse(parts[0]) - 1,
                     Agent = int.Parse(parts[1]),
                     Type = parts[2],
