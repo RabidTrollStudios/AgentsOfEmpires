@@ -784,17 +784,21 @@ namespace GameManager.GameElements
 							MoveAccumulator -= distCost;
 							localAvoidWaitFrames = 0;
 
-							bool leavingPassage = GameManager.Instance.Map.IsGridPositionPassage(GridPosition);
-							bool enteringPassage = GameManager.Instance.Map.IsGridPositionPassage(nextPos);
-
-							if (!leavingPassage)
-								GameManager.Instance.Map.SetAreaBuildability(UnitType, GridPosition, true);
+							if (CanMove)
+							{
+								var map = GameManager.Instance.Map;
+								var oldP = new AgentSDK.Position(GridPosition.x, GridPosition.y);
+								var newP = new AgentSDK.Position(nextPos.x, nextPos.y);
+								map.Grid.SetCellOccupied(oldP, false);
+								map.Grid.SetCellOccupied(newP, true);
+								// Sync legacy GridCells: restore old cell unless it's a passage
+								if (!map.GridCells[GridPosition.x, GridPosition.y].IsPassage())
+									map.GridCells[GridPosition.x, GridPosition.y].SetBuildable(true);
+								map.GridCells[nextPos.x, nextPos.y].SetBuildable(false);
+							}
 
 							GridPosition = nextPos;
 							pathIndex++;
-
-							if (!enteringPassage)
-								GameManager.Instance.Map.SetAreaBuildability(UnitType, GridPosition, false);
 
 							// Path consumed — clear immediately.
 							// Visual queue handles smooth catch-up independently.

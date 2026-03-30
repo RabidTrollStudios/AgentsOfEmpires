@@ -111,7 +111,7 @@ namespace GameManager
 
 			Units.Add(unit.GetComponent<Unit>().UnitNbr, unit);
 
-			mapManager.SetAreaBuildability(unit.GetComponent<Unit>().UnitType, gridPosition, false);
+			mapManager.SetUnitFootprint(unitType, gridPosition, true);
 
 			return unit;
 		}
@@ -149,7 +149,7 @@ namespace GameManager
 			unitDebugger.transform.SetParent(unit.transform);
 
 			Units.Add(unit.GetComponent<Unit>().UnitNbr, unit);
-			mapManager.SetAreaBuildability(unit.GetComponent<Unit>().UnitType, gridPosition, false);
+			mapManager.SetUnitFootprint(unitType, gridPosition, true);
 
 			return unit;
 		}
@@ -159,8 +159,9 @@ namespace GameManager
 		/// </summary>
 		public void DestroyUnit(GameObject unit)
 		{
-			mapManager.SetAreaBuildability(unit.GetComponent<Unit>().UnitType, unit.GetComponent<Unit>().GridPosition, true);
-			Units.Remove(unit.GetComponent<Unit>().UnitNbr);
+			var u = unit.GetComponent<Unit>();
+			mapManager.SetUnitFootprint(u.UnitType, u.GridPosition, false);
+			Units.Remove(u.UnitNbr);
 			Object.Destroy(unit);
 		}
 

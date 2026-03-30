@@ -577,9 +577,9 @@ namespace GameManager.Tests.PlayMode
 			PlaceBuiltBase(new Vector3Int(0, 0, 0));
 			BuildingTestHelper.PlaceBuiltTower(ctx, new Vector3Int(8, 8, 0));
 
-			// Test Up attack (enemy directly above)
+			// Test Up attack (enemy directly above — high HP so it survives 5 ticks)
 			Unit lancer = PlaceUnit(UnitType.LANCER, new Vector3Int(15, 15, 0));
-			Unit enemyUp = PlaceUnit(UnitType.PAWN, new Vector3Int(15, 17, 0), ctx.Agent1Go);
+			Unit enemyUp = PlaceUnit(UnitType.WARRIOR, new Vector3Int(15, 17, 0), ctx.Agent1Go);
 			VisualTestHelper.SetupLancerAnimator(lancer);
 			yield return null;
 
@@ -593,9 +593,9 @@ namespace GameManager.Tests.PlayMode
 			// Verify lancer is attacking (directional index exercised)
 			Assert.AreEqual(UnitAction.ATTACK, lancer.CurrentAction);
 
-			// Test Down attack (enemy directly below)
+			// Test Down attack (enemy directly below — high HP so it survives 5 ticks)
 			Unit lancer2 = PlaceUnit(UnitType.LANCER, new Vector3Int(20, 17, 0));
-			Unit enemyDown = PlaceUnit(UnitType.PAWN, new Vector3Int(20, 15, 0), ctx.Agent1Go);
+			Unit enemyDown = PlaceUnit(UnitType.WARRIOR, new Vector3Int(20, 15, 0), ctx.Agent1Go);
 			VisualTestHelper.SetupLancerAnimator(lancer2);
 			yield return null;
 

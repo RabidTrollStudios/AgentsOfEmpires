@@ -138,22 +138,21 @@ namespace AgentTestHarness
             int cost = (int)GameConstants.COST[buildingType];
             Gold[pawn.OwnerAgentNbr] -= cost;
 
-            // Place the building immediately (unbuilt)
-            var building = PlaceUnit(pawn.OwnerAgentNbr, buildingType, target,
-                GameConstants.HEALTH[buildingType], false);
-
-            // Path pawn to a cell adjacent to the building
+            // Path pawn BEFORE placing building (matches Unity's StartBuilding order).
+            // This ensures the pathfinder sees the same grid state in both engines.
             var path = Map.FindPathToUnit(pawn.GridPosition, buildingType, target);
 
             if (path.Count == 0 && !IsAdjacentToUnit(pawn.GridPosition, buildingType, target))
             {
-                // Pawn can't reach the building — refund gold, remove building, record failure
                 Gold[pawn.OwnerAgentNbr] += cost;
-                RemoveUnit(building);
                 FailedCommands[pawn.OwnerAgentNbr].Add(
                     new FailedCommand(pawn.UnitNbr, CommandType.Build, CommandResult.NO_PATH_FOUND));
                 return;
             }
+
+            // Place the building immediately (unbuilt) — after pathfinding
+            var building = PlaceUnit(pawn.OwnerAgentNbr, buildingType, target,
+                GameConstants.HEALTH[buildingType], false);
 
             pawn.CurrentAction = UnitAction.BUILD;
             pawn.BuildTarget = buildingType;

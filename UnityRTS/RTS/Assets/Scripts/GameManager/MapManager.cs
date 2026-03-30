@@ -454,17 +454,15 @@ namespace GameManager
 		}
 
 		/// <summary>
-		/// Set the unit's current cell(s) to buildable or not.
-		/// Updates both the shared GameGrid and the legacy GridCells.
+		/// Place or remove a unit's footprint on the grid.
+		/// Updates both the shared GameGrid (CellState) and legacy GridCells.
 		/// </summary>
-		public void SetAreaBuildability(UnitType unitType, Vector3Int gridPosition, bool isBuildable)
+		public void SetUnitFootprint(UnitType unitType, Vector3Int gridPosition, bool occupy)
 		{
-			// Delegate core logic to shared GameGrid
 			var pos = new AgentSDK.Position(gridPosition.x, gridPosition.y);
-			Grid.SetAreaBuildability(unitType, pos, isBuildable);
+			Grid.SetUnitFootprint(unitType, pos, occupy);
 
 			// Keep legacy GridCells in sync
-			Vector3Int gridPos = Vector3Int.zero;
 			Vector3Int size = Constants.UNIT_SIZE[unitType];
 			bool canMove = Constants.CAN_MOVE[unitType];
 
@@ -472,23 +470,35 @@ namespace GameManager
 			{
 				for (int j = 0; j < size.y; ++j)
 				{
-					gridPos = gridPosition + new Vector3Int(i, -j, 0);
+					var gridPos = gridPosition + new Vector3Int(i, -j, 0);
+					if (!Utility.IsValidGridLocation(gridPos, MapSize)) continue;
 
-					if (Utility.IsValidGridLocation(gridPos, MapSize))
+					if (!occupy)
 					{
-						GridCells[gridPos.x, gridPos.y].SetBuildable(isBuildable);
-
+						GridCells[gridPos.x, gridPos.y].SetBuildable(true);
+						GridCells[gridPos.x, gridPos.y].SetWalkable(true);
+						GridCells[gridPos.x, gridPos.y].SetPassage(false);
+					}
+					else if (canMove)
+					{
+						GridCells[gridPos.x, gridPos.y].SetBuildable(false);
+						// walkable stays true (pass-through)
+					}
+					else
+					{
 						bool isTopRow = j == 0 && size.y > 1;
-						if (isBuildable || (!canMove && !isTopRow))
-							GridCells[gridPos.x, gridPos.y].SetWalkable(isBuildable);
-
-						if (!canMove && isTopRow)
-							GridCells[gridPos.x, gridPos.y].SetPassage(!isBuildable);
-						else
-							GridCells[gridPos.x, gridPos.y].SetPassage(false);
+						GridCells[gridPos.x, gridPos.y].SetBuildable(false);
+						GridCells[gridPos.x, gridPos.y].SetWalkable(isTopRow);
+						GridCells[gridPos.x, gridPos.y].SetPassage(isTopRow);
 					}
 				}
 			}
+		}
+
+		/// <summary>Legacy alias — calls SetUnitFootprint with inverted boolean.</summary>
+		public void SetAreaBuildability(UnitType unitType, Vector3Int gridPosition, bool isBuildable)
+		{
+			SetUnitFootprint(unitType, gridPosition, !isBuildable);
 		}
 	}
 }

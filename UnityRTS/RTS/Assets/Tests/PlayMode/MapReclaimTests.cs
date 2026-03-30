@@ -40,7 +40,7 @@ namespace GameManager.Tests.PlayMode
 					$"Cell {cell} should be blocked while BASE is alive");
 
 			building.Health = 0;
-			building.Update();
+			building.FixedUpdate();
 			yield return null;
 
 			foreach (var cell in footprint)
@@ -98,7 +98,7 @@ namespace GameManager.Tests.PlayMode
 			Unit building = PlaceUnit(UnitType.BASE, basePos);
 
 			building.Health = 0;
-			building.Update();
+			building.FixedUpdate();
 			yield return null;
 
 			// Verify buildability is restored
@@ -123,7 +123,7 @@ namespace GameManager.Tests.PlayMode
 				"Pawn's cell should not be buildable while alive");
 
 			pawn.Health = 0;
-			pawn.Update();
+			pawn.FixedUpdate();
 			yield return null;
 
 			Assert.IsTrue(ctx.MapManager.IsGridPositionBuildable(pos),
@@ -176,7 +176,7 @@ namespace GameManager.Tests.PlayMode
 				"BASE footprint cell should not be walkable while building stands");
 
 			building.Health = 0;
-			building.Update();
+			building.FixedUpdate();
 			yield return null;
 
 			Assert.IsTrue(ctx.MapManager.IsGridPositionWalkable(centerCell),

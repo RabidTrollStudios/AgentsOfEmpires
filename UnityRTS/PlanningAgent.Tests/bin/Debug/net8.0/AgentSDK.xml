@@ -304,12 +304,17 @@
             Call at game startup or in tests to catch missing entries early.
             </summary>
         </member>
+        <member name="T:AgentSDK.CellState">
+            <summary>
+            Cell access level for the grid. Each cell is in exactly one state.
+              OPEN     — empty, can walk/build/stand
+              WALKABLE — can walk through but not build or stand (unit occupying, or building top row)
+              BLOCKED  — terrain or building body, impassable
+            </summary>
+        </member>
         <member name="T:AgentSDK.GameGrid">
              <summary>
-             Pure-C# grid for an RTS map. Tracks three boolean layers per cell:
-               buildable — can a new unit/building be placed here?
-               walkable  — can a mobile unit path through here?
-               passage   — building top-row (walkable, not buildable, units move freely).
+             Pure-C# grid for an RTS map. Each cell has a single CellState.
             
              Both the Unity game engine and the AgentTestHarness SimGame share this
              single implementation so grid state and queries are guaranteed identical.
@@ -318,6 +323,27 @@
              Building footprints extend from anchor (x,y) rightward and downward:
                cells = (x+i, y-j) for i in [0..sizeX), j in [0..sizeY).
              </summary>
+        </member>
+        <member name="M:AgentSDK.GameGrid.GetCell(AgentSDK.Position)">
+            <summary>Get the state of a cell. Out-of-bounds returns BLOCKED.</summary>
+        </member>
+        <member name="M:AgentSDK.GameGrid.GetCell(System.Int32,System.Int32)">
+            <summary>Get the state of a cell. Out-of-bounds returns BLOCKED.</summary>
+        </member>
+        <member name="M:AgentSDK.GameGrid.IsPositionBuildable(AgentSDK.Position)">
+            <summary>Can a building be placed on this cell? Only OPEN cells.</summary>
+        </member>
+        <member name="M:AgentSDK.GameGrid.IsPositionWalkable(AgentSDK.Position)">
+            <summary>Can a unit path through this cell? OPEN or WALKABLE cells.</summary>
+        </member>
+        <member name="M:AgentSDK.GameGrid.IsPositionStandable(AgentSDK.Position)">
+            <summary>Can a unit stop on this cell? Only OPEN cells.</summary>
+        </member>
+        <member name="M:AgentSDK.GameGrid.IsPositionPassage(AgentSDK.Position)">
+            <summary>Is this a WALKABLE cell? (building passage or unit-occupied).</summary>
+        </member>
+        <member name="M:AgentSDK.GameGrid.IsPassageCell(AgentSDK.Position)">
+            <summary>Is this specifically a building passage cell (top row)?</summary>
         </member>
         <member name="M:AgentSDK.GameGrid.IsAreaBuildable(AgentSDK.UnitType,AgentSDK.Position)">
             <summary>
@@ -335,18 +361,24 @@
             Check if the unit footprint plus a 1-cell border is all buildable.
             </summary>
         </member>
-        <member name="M:AgentSDK.GameGrid.SetAreaBuildability(AgentSDK.UnitType,AgentSDK.Position,System.Boolean)">
-            <summary>
-            Set buildability/walkability for the footprint of a unit.
-            Mobile units keep cells walkable when placed. Building top rows are
-            marked as passage cells (walkable but not buildable).
-            </summary>
+        <member name="M:AgentSDK.GameGrid.SetCell(AgentSDK.Position,AgentSDK.CellState)">
+            <summary>Set a single cell's state.</summary>
+        </member>
+        <member name="M:AgentSDK.GameGrid.SetCell(System.Int32,System.Int32,AgentSDK.CellState)">
+            <summary>Set a single cell's state.</summary>
         </member>
         <member name="M:AgentSDK.GameGrid.SetCellBlocked(AgentSDK.Position)">
-            <summary>Mark a single cell as unbuildable/unwalkable (terrain wall).</summary>
+            <summary>Mark a single cell as BLOCKED (terrain wall).</summary>
         </member>
         <member name="M:AgentSDK.GameGrid.SetCellBlocked(System.Int32,System.Int32)">
-            <summary>Mark a single cell as unbuildable/unwalkable (terrain wall).</summary>
+            <summary>Mark a single cell as BLOCKED (terrain wall).</summary>
+        </member>
+        <member name="M:AgentSDK.GameGrid.SetUnitFootprint(AgentSDK.UnitType,AgentSDK.Position,System.Boolean)">
+            <summary>
+            Update grid state for a unit's footprint.
+            When placing (occupy=true): building body→BLOCKED, building top row→WALKABLE, mobile unit→WALKABLE.
+            When removing (occupy=false): all cells→OPEN.
+            </summary>
         </member>
         <member name="M:AgentSDK.GameGrid.GetPositionsNearUnit(AgentSDK.UnitType,AgentSDK.Position)">
             <summary>
@@ -355,8 +387,9 @@
         </member>
         <member name="M:AgentSDK.GameGrid.GetBuildablePositionsNearUnit(AgentSDK.UnitType,AgentSDK.Position)">
             <summary>
-            Get buildable positions near a unit, plus any walkable passage cells
-            (building top row) as valid approach positions.
+            Get OPEN positions near a unit where a mobile unit can stand.
+            Used for spawn positions, pathfinding targets, and adjacency checks.
+            Only returns cells in the neighbor ring (not passage cells inside the footprint).
             </summary>
         </member>
         <member name="M:AgentSDK.GameGrid.IsNeighborOfUnit(AgentSDK.Position,AgentSDK.UnitType,AgentSDK.Position)">
@@ -372,14 +405,14 @@
         </member>
         <member name="M:AgentSDK.GameGrid.FindPath(AgentSDK.Position,AgentSDK.Position)">
             <summary>
-            Find shortest path using walkable grid.
+            Find shortest path using walkable grid (OPEN or WALKABLE cells).
             Returns empty list if no path exists. Excludes start, includes end.
             </summary>
         </member>
         <member name="M:AgentSDK.GameGrid.FindPath(AgentSDK.Position,AgentSDK.Position,System.Boolean)">
             <summary>
-            Find shortest path. When avoidUnits=true, uses buildable grid
-            (treats mobile-unit-occupied cells as impassable).
+            Find shortest path. When avoidUnits=true, only uses OPEN cells
+            (treats WALKABLE cells as impassable to avoid mobile units).
             </summary>
         </member>
         <member name="M:AgentSDK.GameGrid.FindPathToUnit(AgentSDK.Position,AgentSDK.UnitType,AgentSDK.Position)">
@@ -388,6 +421,18 @@
             Neighbors are sorted by distance to the start position so the closest
             reachable cell is tried first. Returns the first successful path.
             </summary>
+        </member>
+        <member name="M:AgentSDK.GameGrid.SetAreaBuildability(AgentSDK.UnitType,AgentSDK.Position,System.Boolean)">
+            <summary>Alias for SetUnitFootprint. Matches old API used by callers.</summary>
+        </member>
+        <member name="M:AgentSDK.GameGrid.SetCellOccupied(AgentSDK.Position,System.Boolean)">
+            <summary>
+            Mark a mobile unit as occupying (occupy=true) or leaving (occupy=false) a cell.
+            On leave, restores to WALKABLE if the cell is a building passage, otherwise OPEN.
+            </summary>
+        </member>
+        <member name="M:AgentSDK.GameGrid.SetCellStandable(AgentSDK.Position,System.Boolean)">
+            <summary>Legacy alias for SetCellOccupied.</summary>
         </member>
         <member name="T:AgentSDK.IAgentActions">
             <summary>

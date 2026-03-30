@@ -3,10 +3,20 @@ using System.Collections.Generic;
 namespace AgentSDK
 {
     /// <summary>
-    /// Pure-C# grid for an RTS map. Tracks three boolean layers per cell:
-    ///   buildable — can a new unit/building be placed here?
-    ///   walkable  — can a mobile unit path through here?
-    ///   passage   — building top-row (walkable, not buildable, units move freely).
+    /// Cell access level for the grid. Each cell is in exactly one state.
+    ///   OPEN     — empty, can walk/build/stand
+    ///   WALKABLE — can walk through but not build or stand (unit occupying, or building top row)
+    ///   BLOCKED  — terrain or building body, impassable
+    /// </summary>
+    public enum CellState : byte
+    {
+        OPEN = 0,
+        WALKABLE = 1,
+        BLOCKED = 2,
+    }
+
+    /// <summary>
+    /// Pure-C# grid for an RTS map. Each cell has a single CellState.
     ///
     /// Both the Unity game engine and the AgentTestHarness SimGame share this
     /// single implementation so grid state and queries are guaranteed identical.
@@ -17,9 +27,8 @@ namespace AgentSDK
     /// </summary>
     public class GameGrid
     {
-        private readonly bool[,] buildable;
-        private readonly bool[,] walkable;
-        private readonly bool[,] passage;
+        private readonly CellState[,] cells;
+        private readonly bool[,] isPassage; // true for building top-row cells (permanent while building exists)
 
         public int Width { get; }
         public int Height { get; }
@@ -29,18 +38,9 @@ namespace AgentSDK
         {
             Width = width;
             Height = height;
-            buildable = new bool[width, height];
-            walkable = new bool[width, height];
-            passage = new bool[width, height];
-
-            for (int x = 0; x < width; x++)
-            {
-                for (int y = 0; y < height; y++)
-                {
-                    buildable[x, y] = true;
-                    walkable[x, y] = true;
-                }
-            }
+            cells = new CellState[width, height];
+            isPassage = new bool[width, height];
+            // All cells start OPEN, no passages
         }
 
         #region Cell Queries
@@ -55,19 +55,46 @@ namespace AgentSDK
             return x >= 0 && x < Width && y >= 0 && y < Height;
         }
 
+        /// <summary>Get the state of a cell. Out-of-bounds returns BLOCKED.</summary>
+        public CellState GetCell(Position p)
+        {
+            return IsPositionValid(p) ? cells[p.X, p.Y] : CellState.BLOCKED;
+        }
+
+        /// <summary>Get the state of a cell. Out-of-bounds returns BLOCKED.</summary>
+        public CellState GetCell(int x, int y)
+        {
+            return IsPositionValid(x, y) ? cells[x, y] : CellState.BLOCKED;
+        }
+
+        /// <summary>Can a building be placed on this cell? Only OPEN cells.</summary>
         public bool IsPositionBuildable(Position p)
         {
-            return IsPositionValid(p) && buildable[p.X, p.Y];
+            return IsPositionValid(p) && cells[p.X, p.Y] == CellState.OPEN;
         }
 
+        /// <summary>Can a unit path through this cell? OPEN or WALKABLE cells.</summary>
         public bool IsPositionWalkable(Position p)
         {
-            return IsPositionValid(p) && walkable[p.X, p.Y];
+            return IsPositionValid(p) && cells[p.X, p.Y] != CellState.BLOCKED;
         }
 
+        /// <summary>Can a unit stop on this cell? Only OPEN cells.</summary>
+        public bool IsPositionStandable(Position p)
+        {
+            return IsPositionValid(p) && cells[p.X, p.Y] == CellState.OPEN;
+        }
+
+        /// <summary>Is this a WALKABLE cell? (building passage or unit-occupied).</summary>
         public bool IsPositionPassage(Position p)
         {
-            return IsPositionValid(p) && passage[p.X, p.Y];
+            return IsPositionValid(p) && cells[p.X, p.Y] == CellState.WALKABLE;
+        }
+
+        /// <summary>Is this specifically a building passage cell (top row)?</summary>
+        public bool IsPassageCell(Position p)
+        {
+            return IsPositionValid(p) && isPassage[p.X, p.Y];
         }
 
         /// <summary>
@@ -81,7 +108,7 @@ namespace AgentSDK
                 for (int j = 0; j < size.Y; j++)
                 {
                     var cell = new Position(anchor.X + i, anchor.Y - j);
-                    if (!IsPositionValid(cell) || !buildable[cell.X, cell.Y])
+                    if (!IsPositionBuildable(cell))
                         return false;
                 }
             }
@@ -101,7 +128,7 @@ namespace AgentSDK
                 {
                     var cell = new Position(anchor.X + i, anchor.Y - j);
                     if (cell == exclude) continue;
-                    if (!IsPositionValid(cell) || !buildable[cell.X, cell.Y])
+                    if (!IsPositionBuildable(cell))
                         return false;
                 }
             }
@@ -119,7 +146,7 @@ namespace AgentSDK
                 for (int j = -1; j <= size.Y; j++)
                 {
                     var cell = new Position(anchor.X + i, anchor.Y - j);
-                    if (!IsPositionValid(cell) || !buildable[cell.X, cell.Y])
+                    if (!IsPositionBuildable(cell))
                         return false;
                 }
             }
@@ -130,12 +157,38 @@ namespace AgentSDK
 
         #region Cell Modification
 
+        /// <summary>Set a single cell's state.</summary>
+        public void SetCell(Position p, CellState state)
+        {
+            if (IsPositionValid(p))
+                cells[p.X, p.Y] = state;
+        }
+
+        /// <summary>Set a single cell's state.</summary>
+        public void SetCell(int x, int y, CellState state)
+        {
+            if (IsPositionValid(x, y))
+                cells[x, y] = state;
+        }
+
+        /// <summary>Mark a single cell as BLOCKED (terrain wall).</summary>
+        public void SetCellBlocked(Position p)
+        {
+            SetCell(p, CellState.BLOCKED);
+        }
+
+        /// <summary>Mark a single cell as BLOCKED (terrain wall).</summary>
+        public void SetCellBlocked(int x, int y)
+        {
+            SetCell(x, y, CellState.BLOCKED);
+        }
+
         /// <summary>
-        /// Set buildability/walkability for the footprint of a unit.
-        /// Mobile units keep cells walkable when placed. Building top rows are
-        /// marked as passage cells (walkable but not buildable).
+        /// Update grid state for a unit's footprint.
+        /// When placing (occupy=true): building body→BLOCKED, building top row→WALKABLE, mobile unit→WALKABLE.
+        /// When removing (occupy=false): all cells→OPEN.
         /// </summary>
-        public void SetAreaBuildability(UnitType unitType, Position anchor, bool isBuildable)
+        public void SetUnitFootprint(UnitType unitType, Position anchor, bool occupy)
         {
             var size = GameConstants.UNIT_SIZE[unitType];
             bool canMove = GameConstants.CAN_MOVE[unitType];
@@ -145,37 +198,27 @@ namespace AgentSDK
                 for (int j = 0; j < size.Y; j++)
                 {
                     var cell = new Position(anchor.X + i, anchor.Y - j);
-                    if (IsPositionValid(cell))
+                    if (!IsPositionValid(cell)) continue;
+
+                    if (!occupy)
                     {
-                        buildable[cell.X, cell.Y] = isBuildable;
-
-                        bool isTopRow = j == 0 && size.Y > 1;
-                        if (isBuildable || (!canMove && !isTopRow))
-                            walkable[cell.X, cell.Y] = isBuildable;
-
-                        passage[cell.X, cell.Y] = !canMove && isTopRow && !isBuildable;
+                        cells[cell.X, cell.Y] = CellState.OPEN;
+                        if (!canMove)
+                            isPassage[cell.X, cell.Y] = false;
+                    }
+                    else if (canMove)
+                    {
+                        // Mobile unit: WALKABLE (others can walk through, can't stand/build)
+                        cells[cell.X, cell.Y] = CellState.WALKABLE;
+                    }
+                    else
+                    {
+                        // Building: top row = WALKABLE (passage), body = BLOCKED
+                        bool topRow = j == 0 && size.Y > 1;
+                        cells[cell.X, cell.Y] = topRow ? CellState.WALKABLE : CellState.BLOCKED;
+                        isPassage[cell.X, cell.Y] = topRow;
                     }
                 }
-            }
-        }
-
-        /// <summary>Mark a single cell as unbuildable/unwalkable (terrain wall).</summary>
-        public void SetCellBlocked(Position p)
-        {
-            if (IsPositionValid(p))
-            {
-                buildable[p.X, p.Y] = false;
-                walkable[p.X, p.Y] = false;
-            }
-        }
-
-        /// <summary>Mark a single cell as unbuildable/unwalkable (terrain wall).</summary>
-        public void SetCellBlocked(int x, int y)
-        {
-            if (IsPositionValid(x, y))
-            {
-                buildable[x, y] = false;
-                walkable[x, y] = false;
             }
         }
 
@@ -213,29 +256,18 @@ namespace AgentSDK
         }
 
         /// <summary>
-        /// Get buildable positions near a unit, plus any walkable passage cells
-        /// (building top row) as valid approach positions.
+        /// Get OPEN positions near a unit where a mobile unit can stand.
+        /// Used for spawn positions, pathfinding targets, and adjacency checks.
+        /// Only returns cells in the neighbor ring (not passage cells inside the footprint).
         /// </summary>
         public List<Position> GetBuildablePositionsNearUnit(UnitType unitType, Position anchor)
         {
             var result = new List<Position>();
             foreach (var p in GetPositionsNearUnit(unitType, anchor))
             {
-                if (buildable[p.X, p.Y])
+                if (cells[p.X, p.Y] == CellState.OPEN)
                     result.Add(p);
             }
-
-            var size = GameConstants.UNIT_SIZE[unitType];
-            if (!GameConstants.CAN_MOVE[unitType] && size.Y > 1)
-            {
-                for (int i = 0; i < size.X; i++)
-                {
-                    var pos = new Position(anchor.X + i, anchor.Y);
-                    if (IsPositionValid(pos) && passage[pos.X, pos.Y])
-                        result.Add(pos);
-                }
-            }
-
             return result;
         }
 
@@ -282,18 +314,18 @@ namespace AgentSDK
         #region Pathfinding
 
         /// <summary>
-        /// Find shortest path using walkable grid.
+        /// Find shortest path using walkable grid (OPEN or WALKABLE cells).
         /// Returns empty list if no path exists. Excludes start, includes end.
         /// </summary>
         public List<Position> FindPath(Position start, Position end)
         {
             return Pathfinder.FindPath(start, end, Width, Height,
-                (x, y) => walkable[x, y]);
+                (x, y) => cells[x, y] != CellState.BLOCKED);
         }
 
         /// <summary>
-        /// Find shortest path. When avoidUnits=true, uses buildable grid
-        /// (treats mobile-unit-occupied cells as impassable).
+        /// Find shortest path. When avoidUnits=true, only uses OPEN cells
+        /// (treats WALKABLE cells as impassable to avoid mobile units).
         /// </summary>
         public List<Position> FindPath(Position start, Position end, bool avoidUnits)
         {
@@ -301,7 +333,7 @@ namespace AgentSDK
                 return FindPath(start, end);
 
             return Pathfinder.FindPath(start, end, Width, Height,
-                (x, y) => buildable[x, y]);
+                (x, y) => cells[x, y] == CellState.OPEN);
         }
 
         /// <summary>
@@ -335,6 +367,35 @@ namespace AgentSDK
                     return path;
             }
             return new List<Position>();
+        }
+
+        #endregion
+
+        #region Legacy Compatibility
+
+        /// <summary>Alias for SetUnitFootprint. Matches old API used by callers.</summary>
+        public void SetAreaBuildability(UnitType unitType, Position anchor, bool isBuildable)
+        {
+            SetUnitFootprint(unitType, anchor, !isBuildable);
+        }
+
+        /// <summary>
+        /// Mark a mobile unit as occupying (occupy=true) or leaving (occupy=false) a cell.
+        /// On leave, restores to WALKABLE if the cell is a building passage, otherwise OPEN.
+        /// </summary>
+        public void SetCellOccupied(Position p, bool occupy)
+        {
+            if (!IsPositionValid(p)) return;
+            if (occupy)
+                cells[p.X, p.Y] = CellState.WALKABLE;
+            else
+                cells[p.X, p.Y] = isPassage[p.X, p.Y] ? CellState.WALKABLE : CellState.OPEN;
+        }
+
+        /// <summary>Legacy alias for SetCellOccupied.</summary>
+        public void SetCellStandable(Position p, bool isStandable)
+        {
+            SetCellOccupied(p, !isStandable);
         }
 
         #endregion
