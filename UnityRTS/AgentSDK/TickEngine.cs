@@ -54,14 +54,22 @@ namespace AgentSDK
             }
         }
 
+        /// <summary>Transition a unit to IDLE, clearing movement state.</summary>
+        private static void GoIdle(ITickUnit unit)
+        {
+            unit.CurrentAction = UnitAction.IDLE;
+            unit.TickPath = null;
+            unit.PathIndex = 0;
+            unit.MoveAccumulator = 0f;
+        }
+
         #region Movement
 
         private static void AdvanceMove(ITickUnit unit)
         {
             if (unit.TickPath == null || unit.PathIndex >= unit.TickPath.Count)
             {
-                unit.CurrentAction = UnitAction.IDLE;
-                unit.TickPath = null;
+                GoIdle(unit);
             }
         }
 
@@ -101,8 +109,7 @@ namespace AgentSDK
                         {
                             if (unit.CurrentAction == UnitAction.MOVE)
                             {
-                                unit.CurrentAction = UnitAction.IDLE;
-                                unit.TickPath = null;
+                                GoIdle(unit);
                             }
                         }
                         continue;
@@ -111,8 +118,7 @@ namespace AgentSDK
                         if (unit.PathIndex == unit.TickPath.Count - 1)
                         {
                             if (unit.CurrentAction == UnitAction.MOVE)
-                                unit.CurrentAction = UnitAction.IDLE;
-                            unit.TickPath = null;
+                                GoIdle(unit);
                             return;
                         }
                         goto case TaskEngine.MoveResult.Moved;
@@ -127,11 +133,14 @@ namespace AgentSDK
                             unit.PathIndex = 0;
                             callbacks.OnUnitRepath(unit, repath);
                         }
+                        else if (unit.CurrentAction == UnitAction.MOVE)
+                        {
+                            GoIdle(unit);
+                        }
                         else
                         {
                             unit.TickPath = null;
-                            if (unit.CurrentAction == UnitAction.MOVE)
-                                unit.CurrentAction = UnitAction.IDLE;
+                            unit.PathIndex = 0;
                         }
                         return;
 
@@ -190,8 +199,7 @@ namespace AgentSDK
                 building.IsBuilt = true;
                 callbacks.OnBuildComplete(pawn, building);
             }
-            pawn.CurrentAction = UnitAction.IDLE;
-            pawn.TickPath = null;
+            GoIdle(pawn);
         }
 
         #endregion
@@ -219,8 +227,7 @@ namespace AgentSDK
             var mine = world.GetUnit(pawn.GatherMineNbr);
             if (mine == null || mine.Health <= 0)
             {
-                pawn.CurrentAction = UnitAction.IDLE;
-                pawn.TickPath = null;
+                GoIdle(pawn);
                 return;
             }
 
@@ -312,8 +319,7 @@ namespace AgentSDK
             var baseUnit = world.GetUnit(pawn.GatherBaseNbr);
             if (baseUnit == null)
             {
-                pawn.CurrentAction = UnitAction.IDLE;
-                pawn.TickPath = null;
+                GoIdle(pawn);
                 return;
             }
 
@@ -364,8 +370,7 @@ namespace AgentSDK
             var target = world.GetUnit(attacker.AttackTargetNbr);
             if (target == null || target.Health <= 0)
             {
-                attacker.CurrentAction = UnitAction.IDLE;
-                attacker.TickPath = null;
+                GoIdle(attacker);
                 return;
             }
 
@@ -380,8 +385,7 @@ namespace AgentSDK
 
                 if (target.Health <= 0)
                 {
-                    attacker.CurrentAction = UnitAction.IDLE;
-                    attacker.TickPath = null;
+                    GoIdle(attacker);
                     callbacks.OnUnitKilled(target);
                     return;
                 }
@@ -443,8 +447,7 @@ namespace AgentSDK
             var building = world.GetUnit(pawn.RepairBuildingNbr);
             if (building == null || building.Health <= 0)
             {
-                pawn.CurrentAction = UnitAction.IDLE;
-                pawn.TickPath = null;
+                GoIdle(pawn);
                 return;
             }
 
@@ -454,8 +457,7 @@ namespace AgentSDK
             float maxHp = GameConstants.HEALTH[building.UnitType];
             if (building.Health >= maxHp)
             {
-                pawn.CurrentAction = UnitAction.IDLE;
-                pawn.TickPath = null;
+                GoIdle(pawn);
                 return;
             }
 
@@ -466,8 +468,7 @@ namespace AgentSDK
 
             if (building.Health >= maxHp)
             {
-                pawn.CurrentAction = UnitAction.IDLE;
-                pawn.TickPath = null;
+                GoIdle(pawn);
             }
         }
 
