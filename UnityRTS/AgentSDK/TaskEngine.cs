@@ -11,9 +11,6 @@ namespace AgentSDK
     /// </summary>
     public static class TaskEngine
     {
-        /// <summary>Optional debug log callback. Set from Unity to route to Debug.Log.</summary>
-        public static System.Action<string> DebugLog;
-
         #region Movement
 
         /// <summary>
@@ -54,9 +51,7 @@ namespace AgentSDK
 
             var state = grid.GetCell(nextPos);
 
-            // Debug: log when checking cell (63,19)
-            if (nextPos.X == 63 && nextPos.Y == 19)
-                DebugLog?.Invoke($"TryMoveToCell: (63,19) state={state} from ({currentPos.X},{currentPos.Y}) acc={moveAccumulator:F2}");
+
 
 
             // OPEN = free cell, can move and stand

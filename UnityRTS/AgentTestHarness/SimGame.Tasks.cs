@@ -13,16 +13,23 @@ namespace AgentTestHarness
     {
         private void AdvanceAllUnits()
         {
-            // Snapshot unit keys so we can modify the collection
+            // Process each unit's task logic + movement together before
+            // moving to the next unit. This matches Unity's TickFixedUpdate
+            // which runs GameLogicTick then movement for each unit in the
+            // deterministic sorted loop.
             var unitKeys = Units.Keys.ToList();
             unitKeys.Sort(); // deterministic order matching Unity
 
-            // Pass 1: Task logic (matches Unity's GameLogicTick)
             foreach (int key in unitKeys)
             {
                 if (!Units.TryGetValue(key, out var unit)) continue;
+
+                // Task logic (matches Unity's GameLogicTick)
                 switch (unit.CurrentAction)
                 {
+                    case UnitAction.MOVE:
+                        AdvanceMove(unit);
+                        break;
                     case UnitAction.TRAIN:
                         AdvanceTrain(unit);
                         break;
@@ -42,15 +49,8 @@ namespace AgentTestHarness
                         AdvanceHeal(unit);
                         break;
                 }
-            }
 
-            // Pass 2: Movement (matches Unity's movement loop after GameLogicTick)
-            // Re-snapshot keys since Pass 1 may have spawned new units
-            unitKeys = Units.Keys.ToList();
-            unitKeys.Sort();
-            foreach (int key in unitKeys)
-            {
-                if (!Units.TryGetValue(key, out var unit)) continue;
+                // Movement (matches Unity's movement loop within TickFixedUpdate)
                 if (unit.Path != null && unit.PathIndex < unit.Path.Count)
                     MoveUnitOneStep(unit);
             }
