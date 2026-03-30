@@ -14,7 +14,6 @@ namespace GameManager
 	/// </summary>
 	public class MapManager
 	{
-		private bool hasLoggedPathDiag = false;
 		/// <summary>
 		/// Size of the map, +x is "right", +y is "up", z is ignored
 		/// </summary>
