@@ -132,7 +132,7 @@ namespace GameManager.Tests.PlayMode
 			// Kill the base via FixedUpdate() — death check runs in FixedUpdate,
 			// which removes it from UnitManager
 			baseUnit.Health = 0;
-			baseUnit.FixedUpdate();
+			baseUnit.TickFixedUpdate();
 
 			// Call StartGathering in the SAME frame — GetUnit returns null but
 			// args.BaseUnit.UnitNbr is still accessible
@@ -263,7 +263,7 @@ namespace GameManager.Tests.PlayMode
 			pawn.CurrentAction = UnitAction.IDLE;
 
 			// Tick — the IDLE branch should clean up currentBuilding
-			pawn.FixedUpdate();
+			pawn.TickFixedUpdate();
 			yield return null;
 
 			var afterBuilding = GetPrivateField<GameObject>(pawn, "currentBuilding");
@@ -386,12 +386,12 @@ namespace GameManager.Tests.PlayMode
 
 			// Destroy the base first
 			baseUnit.Health = 0;
-			baseUnit.FixedUpdate();
+			baseUnit.TickFixedUpdate();
 			yield return WaitFrames(2);
 
 			// Now destroy the mine
 			mine.Health = 0;
-			mine.FixedUpdate();
+			mine.TickFixedUpdate();
 			yield return WaitFrames(2);
 
 			// Tick the pawn — should hit the mine dead + no base path
@@ -479,7 +479,7 @@ namespace GameManager.Tests.PlayMode
 
 			// Destroy the base
 			baseUnit.Health = 0;
-			baseUnit.FixedUpdate();
+			baseUnit.TickFixedUpdate();
 			yield return WaitFrames(2);
 
 			// Tick the pawn — should detect base is gone and go IDLE
@@ -520,7 +520,7 @@ namespace GameManager.Tests.PlayMode
 
 			// Destroy the base while mining
 			baseUnit.Health = 0;
-			baseUnit.FixedUpdate();
+			baseUnit.TickFixedUpdate();
 			yield return WaitFrames(2);
 
 			// Continue mining until capacity is reached — pawn should go IDLE
@@ -567,7 +567,7 @@ namespace GameManager.Tests.PlayMode
 
 			// Destroy the mine while pawn is heading to base
 			mine.Health = 0;
-			mine.FixedUpdate();
+			mine.TickFixedUpdate();
 			yield return WaitFrames(2);
 
 			// Let pawn deposit and try to return — should go IDLE since mine is gone
@@ -638,7 +638,7 @@ namespace GameManager.Tests.PlayMode
 
 			// Kill the pawn
 			pawn.Health = 0;
-			pawn.FixedUpdate();
+			pawn.TickFixedUpdate();
 			yield return WaitFrames(2);
 
 			// ActiveBuilders should not contain the dead pawn

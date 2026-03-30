@@ -110,8 +110,10 @@ namespace AgentTestHarness
 
                     if (GameConstants.CAN_MOVE[unit.UnitType])
                     {
-                        Map.Grid.SetCellOccupied(unit.GridPosition, false); // leave old cell
+                        // Claim new cell BEFORE releasing old — prevents
+                        // a window where both cells appear OPEN to other units.
                         Map.Grid.SetCellOccupied(nextPos, true);            // claim new cell
+                        Map.Grid.SetCellOccupied(unit.GridPosition, false); // leave old cell
                     }
 
                     unit.GridPosition = nextPos;

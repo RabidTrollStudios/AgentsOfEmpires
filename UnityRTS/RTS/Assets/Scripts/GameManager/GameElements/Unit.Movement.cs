@@ -753,7 +753,11 @@ namespace GameManager.GameElements
 			}
 		}
 
-		internal void FixedUpdate()
+		/// <summary>
+		/// Called by GameManager in deterministic UnitNbr order.
+		/// NOT a MonoBehaviour callback — named to avoid Unity auto-calling it.
+		/// </summary>
+		internal void TickFixedUpdate()
 		{
 			if (GameManager.Instance == null || !GameManager.Instance.IsPlaying) return;
 
@@ -789,8 +793,10 @@ namespace GameManager.GameElements
 								var map = GameManager.Instance.Map;
 								var oldP = new AgentSDK.Position(GridPosition.x, GridPosition.y);
 								var newP = new AgentSDK.Position(nextPos.x, nextPos.y);
-								map.Grid.SetCellOccupied(oldP, false);
+								// Claim new cell BEFORE releasing old — prevents
+								// a window where both cells appear OPEN to other units.
 								map.Grid.SetCellOccupied(newP, true);
+								map.Grid.SetCellOccupied(oldP, false);
 								// Sync legacy GridCells: restore old cell unless it's a passage
 								if (!map.GridCells[GridPosition.x, GridPosition.y].IsPassage())
 									map.GridCells[GridPosition.x, GridPosition.y].SetBuildable(true);

@@ -29,7 +29,21 @@ namespace GameManager
 					bridge.ClearFailedCommands();
 			}
 
+			// Phase 1: Process queued commands in deterministic order
 			DeferredCommandQueue.ProcessAll();
+
+			// Phase 2+3: Advance all units in deterministic UnitNbr order.
+			// This ensures cell claiming/releasing happens in the same order as SimGame.
+			var allUnits = unitManager.GetAllUnits();
+			var sortedKeys = new List<int>(allUnits.Keys);
+			sortedKeys.Sort();
+			foreach (int key in sortedKeys)
+			{
+				if (!allUnits.TryGetValue(key, out var go)) continue;
+				var unit = go.GetComponent<GameElements.Unit>();
+				if (unit != null)
+					unit.TickFixedUpdate();
+			}
 		}
 
 		/// <summary>

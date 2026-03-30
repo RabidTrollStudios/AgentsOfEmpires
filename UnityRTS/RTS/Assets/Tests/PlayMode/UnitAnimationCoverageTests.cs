@@ -758,7 +758,7 @@ namespace GameManager.Tests.PlayMode
 			// Tick — should attempt full re-path, fail, and restore saved path
 			for (int i = 0; i < 5; i++)
 			{
-				warrior.FixedUpdate();
+				warrior.TickFixedUpdate();
 				yield return new WaitForFixedUpdate();
 			}
 

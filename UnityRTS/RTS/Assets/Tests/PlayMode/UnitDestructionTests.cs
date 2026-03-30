@@ -29,7 +29,7 @@ namespace GameManager.Tests.PlayMode
 
 			// Set health to zero to trigger destruction
 			pawn.Health = 0;
-			pawn.FixedUpdate();
+			pawn.TickFixedUpdate();
 
 			// Yield a frame so Object.Destroy is processed
 			yield return null;
@@ -51,7 +51,7 @@ namespace GameManager.Tests.PlayMode
 				"Cell should not be buildable while pawn is alive on it");
 
 			pawn.Health = 0;
-			pawn.FixedUpdate();
+			pawn.TickFixedUpdate();
 
 			yield return null;
 
@@ -87,7 +87,7 @@ namespace GameManager.Tests.PlayMode
 			}
 
 			building.Health = 0;
-			building.FixedUpdate();
+			building.TickFixedUpdate();
 
 			yield return null;
 
@@ -114,7 +114,7 @@ namespace GameManager.Tests.PlayMode
 			int unitNbr = pawn.UnitNbr;
 
 			pawn.Health = 0f;
-			pawn.FixedUpdate();
+			pawn.TickFixedUpdate();
 
 			yield return null;
 
@@ -134,7 +134,7 @@ namespace GameManager.Tests.PlayMode
 			int unitNbr = pawn.UnitNbr;
 
 			pawn.Health = -1000f;
-			pawn.FixedUpdate();
+			pawn.TickFixedUpdate();
 
 			yield return null;
 
@@ -159,7 +159,7 @@ namespace GameManager.Tests.PlayMode
 				"There should be exactly one WARRIOR before destruction");
 
 			warrior.Health = 0;
-			warrior.FixedUpdate();
+			warrior.TickFixedUpdate();
 
 			yield return null;
 
@@ -195,14 +195,14 @@ namespace GameManager.Tests.PlayMode
 
 			// Externally destroy the target by setting health to 0 and calling Update
 			target.Health = 0;
-			target.FixedUpdate();
+			target.TickFixedUpdate();
 
 			// Yield a frame so Object.Destroy on the target is processed
 			yield return null;
 
 			// Now call the attacker's FixedUpdate; it should detect the dead target and go IDLE
 			// The UpdateAttack method checks AttackUnit == null and Health <= 0.
-			attacker.FixedUpdate();
+			attacker.TickFixedUpdate();
 
 			yield return null;
 
@@ -249,7 +249,7 @@ namespace GameManager.Tests.PlayMode
 				if (unit != null)
 				{
 					unit.Health = 0;
-					unit.FixedUpdate();
+					unit.TickFixedUpdate();
 				}
 			}
 

@@ -199,21 +199,20 @@ namespace PlanningAgent.Tests
                         _output.WriteLine($"  u0 path: {pathStr}");
                     }
                 }
-                // Trace u10 spawn + gather path target
-                if (tick >= 33 && tick <= 36)
+                // At tick 39-40: check (63,19) cell state and who's there
+                if (tick == 39 || tick == 40)
                 {
-                    var u10 = game.GetUnit(10) as SimUnit;
-                    string u10s = "u10:--";
-                    if (u10 != null)
+                    var cellAt = game.Map.Grid.GetCell(63, 19);
+                    string who = "";
+                    for (int uid = 0; uid < 20; uid++)
                     {
-                        u10s = $"u10:({u10.GridPosition.X},{u10.GridPosition.Y}):{u10.CurrentAction}";
-                        if (u10.Path != null && u10.Path.Count > 0)
-                        {
-                            var dest = u10.Path[u10.Path.Count - 1];
-                            u10s += $" dest=({dest.X},{dest.Y}) len={u10.Path.Count}";
-                        }
+                        var u = game.GetUnit(uid);
+                        if (u != null && u.GridPosition.X == 63 && u.GridPosition.Y == 19)
+                            who += $" u{uid}:{u.CurrentAction}";
                     }
-                    _output.WriteLine($"  [t{tick}] {u10s}");
+                    var u11 = game.GetUnit(11);
+                    string u11pos = u11 != null ? $"u11:({u11.GridPosition.X},{u11.GridPosition.Y})" : "";
+                    _output.WriteLine($"  [t{tick}] (63,19)={cellAt}{who} | {u11pos} acc={((SimUnit)u11)?.MoveAccumulator:F2}");
                 }
 
                 if (snapshotIdx < snapshots.Count && snapshots[snapshotIdx].Tick == t + 1)
@@ -223,22 +222,13 @@ namespace PlanningAgent.Tests
 
                     if (diffs.Count > 0)
                     {
-                        _output.WriteLine($"DIVERGED at tick {snap.Tick}:");
-                        foreach (var diff in diffs)
-                            _output.WriteLine($"  {diff}");
-                        failed++;
-
-                        // Fail fast on first divergence with details
-                        if (failed == 1)
+                        if (failed == 0)
                         {
-                            string details = diffs.Count > 0
-                                ? string.Join("\n", diffs.Take(30))
-                                : "(no individual field diffs detected)";
-                            int simCount = CountSimUnits(game, snap);
-                            Assert.Fail($"Engine/sim diverged at tick {snap.Tick} " +
-                                $"(sim: {simCount} units, gold={game.GetGold(0)}/{game.GetGold(1)} | " +
-                                $"engine: {snap.UnitCount} units, gold={snap.Gold0}/{snap.Gold1}):\n{details}");
+                            _output.WriteLine($"FIRST DIVERGENCE at tick {snap.Tick}:");
+                            foreach (var diff in diffs)
+                                _output.WriteLine($"  {diff}");
                         }
+                        failed++;
                     }
                     else
                     {
@@ -356,10 +346,6 @@ namespace PlanningAgent.Tests
                 if (parts.Length < 10) continue;
                 commands.Add(new ExportedCommand
                 {
-                    // Offset -1: aligns command processing between SimGame and Unity.
-                    // ParityExporter records at currentTick (post-increment). Commands
-                    // issued at exported tick N are processed at tick N+1 in Unity.
-                    // In SimGame, issuing at tick N-1 means processing at tick N.
                     Tick = int.Parse(parts[0]) - 1,
                     Agent = int.Parse(parts[1]),
                     Type = parts[2],
