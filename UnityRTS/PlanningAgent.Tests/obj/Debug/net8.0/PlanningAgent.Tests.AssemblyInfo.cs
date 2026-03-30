@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("PlanningAgent.Tests")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+f1bec6431b042df7785f7b1768eded8e1893dd8e")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+3ef95fc4c78cec2c41d8ec488878b1125ec7262d")]
 [assembly: System.Reflection.AssemblyProductAttribute("PlanningAgent.Tests")]
 [assembly: System.Reflection.AssemblyTitleAttribute("PlanningAgent.Tests")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

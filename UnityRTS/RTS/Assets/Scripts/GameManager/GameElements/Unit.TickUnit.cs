@@ -11,29 +11,18 @@ namespace GameManager.GameElements
     public partial class Unit : ITickUnit
     {
         /// <summary>
-        /// Pre-tick update: death check, IDLE cleanup, mana regen.
-        /// Called before TickEngine.AdvanceAllUnits.
+        /// Post-tick update: mana regen and death removal.
+        /// Called AFTER TickEngine.AdvanceAllUnits, matching SimGame's Phase 3+4.
         /// </summary>
-        internal void PreTickUpdate()
+        internal void PostTickUpdate()
         {
             if (GameManager.Instance == null || !GameManager.Instance.IsPlaying) return;
 
+            // Update cached references
             MineUnit = GameManager.Instance.Units.GetUnit(mineUnit);
             BaseUnit = GameManager.Instance.Units.GetUnit(baseUnit);
-            pathUpdateCounter++;
 
-            // Death check
-            if (Health <= 0)
-            {
-                SpawnDeathDust();
-                if (currentBuilding != null)
-                    currentBuilding.GetComponent<Unit>().ActiveBuilders.Remove(UnitNbr);
-                currentBuilding = null;
-                GameManager.Instance.Units.DestroyUnit(gameObject);
-                return;
-            }
-
-            // IDLE cleanup
+            // IDLE visual cleanup (Unity-specific, not in TickEngine)
             if (CurrentAction == UnitAction.IDLE)
             {
                 if (currentBuilding != null)
@@ -44,16 +33,20 @@ namespace GameManager.GameElements
                 MoveAccumulator = 0f;
                 visualWaypoints.Clear();
                 visualSegmentT = 1.0f;
-                TargetGridPos = GridPosition;
-                TargetUnitType = UnitType.PAWN;
-                AttackUnit = null;
-                MineUnit = null;
-                BaseUnit = null;
-                arrowFiredThisCycle = false;
             }
 
-            // Mana regen
+            // Phase 3: Mana regen
             Mana = AgentSDK.TaskEngine.RegenMana(Mana, MaxMana, Constants.MANA_REGEN, Time.fixedDeltaTime);
+
+            // Phase 4: Remove dead units
+            if (Health <= 0)
+            {
+                SpawnDeathDust();
+                if (currentBuilding != null)
+                    currentBuilding.GetComponent<Unit>().ActiveBuilders.Remove(UnitNbr);
+                currentBuilding = null;
+                GameManager.Instance.Units.DestroyUnit(gameObject);
+            }
         }
 
         /// <summary>Enqueue a visual waypoint for smooth movement interpolation.</summary>

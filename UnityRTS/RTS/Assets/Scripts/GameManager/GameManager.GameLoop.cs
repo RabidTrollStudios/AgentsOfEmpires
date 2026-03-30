@@ -32,19 +32,20 @@ namespace GameManager
 					bridge.ClearFailedCommands();
 			}
 
-			// Phase 1: Process queued commands in deterministic order
+			// Phase 1: Process commands queued during previous tick's Agent Update
 			DeferredCommandQueue.ProcessAll();
 
-			// Phase 2+3: Advance all units via shared TickEngine.
-			// This runs identical logic to SimGame, guaranteeing parity.
 			if (unityTickWorld == null)
 			{
 				unityTickWorld = new UnityTickWorld();
 				unityTickCallbacks = new UnityTickCallbacks();
 			}
 
-			// Run per-unit IDLE cleanup and mana regen before TickEngine
-			// (these are Unity-specific and not in the shared logic)
+			// Phase 2: Advance all units via shared TickEngine
+			AgentSDK.TickEngine.AdvanceAllUnits(unityTickWorld, unityTickCallbacks);
+
+			// Phase 3: Mana regen + Phase 4: Remove dead units
+			// Must run AFTER TickEngine (matching SimGame's phase ordering)
 			var allUnits = unitManager.GetAllUnits();
 			var sortedKeys = new System.Collections.Generic.List<int>(allUnits.Keys);
 			sortedKeys.Sort();
@@ -53,10 +54,8 @@ namespace GameManager
 				if (!allUnits.TryGetValue(key, out var go)) continue;
 				var unit = go.GetComponent<GameElements.Unit>();
 				if (unit != null)
-					unit.PreTickUpdate();
+					unit.PostTickUpdate();
 			}
-
-			AgentSDK.TickEngine.AdvanceAllUnits(unityTickWorld, unityTickCallbacks);
 		}
 
 		/// <summary>

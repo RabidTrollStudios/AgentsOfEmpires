@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("PlanningAgent_WarriorRush")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+e725a245d45528bfb818c9075f5c5f7c6ee872b7")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+3ef95fc4c78cec2c41d8ec488878b1125ec7262d")]
 [assembly: System.Reflection.AssemblyProductAttribute("PlanningAgent_WarriorRush")]
 [assembly: System.Reflection.AssemblyTitleAttribute("PlanningAgent_WarriorRush")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
