@@ -15,14 +15,14 @@ namespace AgentTestHarness
         {
             // Snapshot unit keys so we can modify the collection
             var unitKeys = Units.Keys.ToList();
+            unitKeys.Sort(); // deterministic order matching Unity
+
+            // Pass 1: Task logic (matches Unity's GameLogicTick)
             foreach (int key in unitKeys)
             {
                 if (!Units.TryGetValue(key, out var unit)) continue;
                 switch (unit.CurrentAction)
                 {
-                    case UnitAction.MOVE:
-                        AdvanceMove(unit);
-                        break;
                     case UnitAction.TRAIN:
                         AdvanceTrain(unit);
                         break;
@@ -43,20 +43,29 @@ namespace AgentTestHarness
                         break;
                 }
             }
+
+            // Pass 2: Movement (matches Unity's movement loop after GameLogicTick)
+            // Re-snapshot keys since Pass 1 may have spawned new units
+            unitKeys = Units.Keys.ToList();
+            unitKeys.Sort();
+            foreach (int key in unitKeys)
+            {
+                if (!Units.TryGetValue(key, out var unit)) continue;
+                if (unit.Path != null && unit.PathIndex < unit.Path.Count)
+                    MoveUnitOneStep(unit);
+            }
         }
 
         #region Movement
 
         private void AdvanceMove(SimUnit unit)
         {
+            // Path exhausted → go IDLE. Movement handled by Pass 2.
             if (unit.Path == null || unit.PathIndex >= unit.Path.Count)
             {
                 unit.CurrentAction = UnitAction.IDLE;
                 unit.Path = null;
-                return;
             }
-
-            MoveUnitOneStep(unit);
         }
 
         /// <summary>
@@ -198,14 +207,9 @@ namespace AgentTestHarness
 
         private void AdvanceBuild(SimUnit pawn)
         {
-            // Phase 1: walk to build site
+            // Phase 1: walk to build site (movement handled by Pass 2)
             if (pawn.Path != null && pawn.PathIndex < pawn.Path.Count)
-            {
-                MoveUnitOneStep(pawn);
-                // Keep action as BUILD even after step
-                pawn.CurrentAction = UnitAction.BUILD;
                 return;
-            }
 
             // Phase 2: count down build timer
             if (!TaskEngine.AdvanceBuildTimer(ref pawn.BuildTimer, Config.TickDuration))
@@ -260,8 +264,7 @@ namespace AgentTestHarness
             // Walk toward the mine
             if (pawn.Path != null && pawn.PathIndex < pawn.Path.Count)
             {
-                MoveUnitOneStep(pawn);
-                pawn.CurrentAction = UnitAction.GATHER;
+                // Movement handled by Pass 2
                 return;
             }
 
@@ -332,13 +335,9 @@ namespace AgentTestHarness
                 return;
             }
 
-            // Walk toward the base
+            // Walk toward the base (movement handled by Pass 2)
             if (pawn.Path != null && pawn.PathIndex < pawn.Path.Count)
-            {
-                MoveUnitOneStep(pawn);
-                pawn.CurrentAction = UnitAction.GATHER;
                 return;
-            }
 
             // Arrived at base — deposit gold
             Gold[pawn.OwnerAgentNbr] += pawn.GoldCarried;
@@ -371,13 +370,9 @@ namespace AgentTestHarness
                 return;
             }
 
-            // Phase 1: walk to building
+            // Phase 1: walk to building (movement handled by Pass 2)
             if (pawn.Path != null && pawn.PathIndex < pawn.Path.Count)
-            {
-                MoveUnitOneStep(pawn);
-                pawn.CurrentAction = UnitAction.REPAIR;
                 return;
-            }
 
             // Phase 2: heal at 110% of the build rate (shared formula)
             float maxHp = GameConstants.HEALTH[building.UnitType];
@@ -444,11 +439,10 @@ namespace AgentTestHarness
                     return;
                 }
 
-                // Out of range — move closer
+                // Out of range — movement handled by Pass 2
                 if (attacker.Path != null && attacker.PathIndex < attacker.Path.Count)
                 {
-                    MoveUnitOneStep(attacker);
-                    attacker.CurrentAction = UnitAction.ATTACK;
+                    // Movement will happen in Pass 2
                 }
                 else
                 {
@@ -527,11 +521,10 @@ namespace AgentTestHarness
             }
             else
             {
-                // Out of range — move closer
+                // Out of range — movement handled by Pass 2
                 if (monk.Path != null && monk.PathIndex < monk.Path.Count)
                 {
-                    MoveUnitOneStep(monk);
-                    monk.CurrentAction = UnitAction.HEAL;
+                    // Movement will happen in Pass 2
                 }
                 else
                 {

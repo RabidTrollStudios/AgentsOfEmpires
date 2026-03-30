@@ -199,20 +199,22 @@ namespace PlanningAgent.Tests
                         _output.WriteLine($"  u0 path: {pathStr}");
                     }
                 }
-                // At tick 39-40: check (63,19) cell state and who's there
-                if (tick == 39 || tick == 40)
+                // Trace who's at (63,19) around tick 40
+                if (tick >= 38 && tick <= 44)
                 {
-                    var cellAt = game.Map.Grid.GetCell(63, 19);
                     string who = "";
                     for (int uid = 0; uid < 20; uid++)
                     {
                         var u = game.GetUnit(uid);
                         if (u != null && u.GridPosition.X == 63 && u.GridPosition.Y == 19)
-                            who += $" u{uid}:{u.CurrentAction}";
+                        {
+                            string phase = u.CurrentAction == UnitAction.GATHER ? $":{((SimUnit)u).GatherPhase}" : "";
+                            who += $" u{uid}:{u.CurrentAction}{phase}";
+                        }
                     }
-                    var u11 = game.GetUnit(11);
-                    string u11pos = u11 != null ? $"u11:({u11.GridPosition.X},{u11.GridPosition.Y})" : "";
-                    _output.WriteLine($"  [t{tick}] (63,19)={cellAt}{who} | {u11pos} acc={((SimUnit)u11)?.MoveAccumulator:F2}");
+                    var u11 = game.GetUnit(11) as SimUnit;
+                    string u11s = u11 != null ? $" u11:({u11.GridPosition.X},{u11.GridPosition.Y}):{u11.CurrentAction}" : "";
+                    _output.WriteLine($"  [t{tick}] (63,19)={game.Map.Grid.GetCell(63,19)}{who} |{u11s}");
                 }
 
                 if (snapshotIdx < snapshots.Count && snapshots[snapshotIdx].Tick == t + 1)
