@@ -15,6 +15,13 @@
         <member name="F:AgentSDK.BuildPhase.BUILDING">
             <summary>Constructing the building.</summary>
         </member>
+        <member name="T:AgentSDK.CommandProcessor">
+            <summary>
+            Shared command processing for both Unity and SimGame.
+            Validates, computes paths, deducts gold, and initializes unit state.
+            Both engines call these methods to guarantee identical command handling.
+            </summary>
+        </member>
         <member name="T:AgentSDK.CommandResult">
             <summary>
             Result codes returned by IAgentActions command methods.

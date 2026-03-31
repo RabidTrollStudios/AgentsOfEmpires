@@ -46,30 +46,35 @@ namespace AgentTestHarness
                 if (!processedUnits.Add(cmd.UnitNbr))
                     continue; // skip — this unit already has a command this tick
 
+                if (tickWorld == null) tickWorld = new SimTickWorld(this);
+                CommandResult result;
                 switch (cmd.Type)
                 {
                     case CommandType.Move:
-                        ProcessMove(unit, cmd.Target);
+                        result = CommandProcessor.ProcessMove(unit, cmd.Target, tickWorld);
                         break;
                     case CommandType.Build:
-                        ProcessBuild(unit, cmd.Target, cmd.UnitType);
+                        result = CommandProcessor.ProcessBuild(unit, cmd.Target, cmd.UnitType, tickWorld);
                         break;
                     case CommandType.Gather:
-                        ProcessGather(unit, cmd.MineNbr, cmd.BaseNbr);
+                        result = CommandProcessor.ProcessGather(unit, cmd.MineNbr, cmd.BaseNbr, tickWorld);
                         break;
                     case CommandType.Train:
-                        ProcessTrain(unit, cmd.UnitType);
+                        result = CommandProcessor.ProcessTrain(unit, cmd.UnitType, tickWorld);
                         break;
                     case CommandType.Attack:
-                        ProcessAttack(unit, cmd.TargetUnitNbr);
+                        result = CommandProcessor.ProcessAttack(unit, cmd.TargetUnitNbr, tickWorld);
                         break;
                     case CommandType.Repair:
-                        ProcessRepair(unit, cmd.TargetUnitNbr);
+                        result = CommandProcessor.ProcessRepair(unit, cmd.TargetUnitNbr, tickWorld);
                         break;
                     case CommandType.Heal:
-                        ProcessHeal(unit, cmd.TargetUnitNbr);
+                        result = CommandProcessor.ProcessHeal(unit, cmd.TargetUnitNbr, tickWorld);
                         break;
+                    default: result = CommandResult.SUCCESS; break;
                 }
+                if (result != CommandResult.SUCCESS)
+                    FailedCommands[agentNbr].Add(new FailedCommand(cmd.UnitNbr, cmd.Type, result));
             }
         }
 

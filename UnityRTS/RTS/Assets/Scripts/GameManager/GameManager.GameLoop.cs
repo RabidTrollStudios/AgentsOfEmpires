@@ -20,6 +20,14 @@ namespace GameManager
 		private UnityTickWorld unityTickWorld;
 		private UnityTickCallbacks unityTickCallbacks;
 
+		/// <summary>Get the shared tick world adapter (lazy-initialized).</summary>
+		internal AgentSDK.ITickWorld GetTickWorld()
+		{
+			if (unityTickWorld == null)
+				unityTickWorld = new UnityTickWorld();
+			return unityTickWorld;
+		}
+
 		private void FixedUpdate()
 		{
 			if (gameState != GameState.PLAYING) return;
