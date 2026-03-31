@@ -76,7 +76,9 @@ namespace AgentSDK
             }
         }
 
-        /// <summary>Transition a unit to IDLE, clearing movement state.</summary>
+        /// <summary>Transition a unit to IDLE, clearing all movement and target state.</summary>
+        public static void SetIdle(ITickUnit unit) => GoIdle(unit);
+
         private static void GoIdle(ITickUnit unit)
         {
             unit.CurrentAction = UnitAction.IDLE;
