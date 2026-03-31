@@ -125,7 +125,7 @@ namespace AgentSDK
         {
             float range = GameConstants.EffectiveAttackRange(attackerType, targetType);
             float dist = Position.Distance(attackerCenter, targetCenter);
-            return dist <= range + 0.1f;
+            return dist < range + 0.5f;
         }
 
         /// <summary>
@@ -242,7 +242,7 @@ namespace AgentSDK
         {
             float range = GameConstants.HEAL_RANGE[healerType];
             float dist = Position.Distance(healerCenter, targetCenter);
-            return dist <= range + 0.5f;
+            return dist < range + 0.5f;
         }
 
         #endregion
