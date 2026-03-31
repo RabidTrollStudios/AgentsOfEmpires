@@ -117,25 +117,33 @@ namespace GameManager.GameElements
         float ITickUnit.TrainTimer { get => taskTime; set => taskTime = value; }
         UnitType ITickUnit.TrainTarget { get => taskUnitType; set => taskUnitType = value; }
 
-        // Building — map to taskTime/taskUnitType/currentBuilding
-        float ITickUnit.BuildTimer
-        {
-            get => currentBuilding != null ? currentBuilding.GetComponent<Unit>().BuildProgress : 0f;
-            set { if (currentBuilding != null) currentBuilding.GetComponent<Unit>().BuildProgress = value; }
-        }
+        // Building — BuildTimer stored on pawn as taskTime (same as training)
+        float ITickUnit.BuildTimer { get => taskTime; set => taskTime = value; }
         UnitType ITickUnit.BuildTarget { get => taskUnitType; set => taskUnitType = value; }
+        private Position _buildSite;
         Position ITickUnit.BuildSite
         {
             get => currentBuilding != null
                 ? new Position(currentBuilding.GetComponent<Unit>().GridPosition.x,
                               currentBuilding.GetComponent<Unit>().GridPosition.y)
-                : new Position(0, 0);
-            set { } // Build site is determined by the building object
+                : _buildSite;
+            set => _buildSite = value;
         }
         int ITickUnit.BuildTargetNbr
         {
             get => currentBuilding != null ? currentBuilding.GetComponent<Unit>().UnitNbr : -1;
-            set { } // Set via currentBuilding reference, not by number
+            set
+            {
+                if (value >= 0)
+                {
+                    var u = GameManager.Instance.Units.GetUnit(value);
+                    currentBuilding = u != null ? u.gameObject : null;
+                }
+                else
+                {
+                    currentBuilding = null;
+                }
+            }
         }
 
         // Gathering
@@ -156,7 +164,18 @@ namespace GameManager.GameElements
         int ITickUnit.RepairBuildingNbr
         {
             get => currentBuilding != null ? currentBuilding.GetComponent<Unit>().UnitNbr : -1;
-            set { } // Set via currentBuilding reference
+            set
+            {
+                if (value >= 0)
+                {
+                    var u = GameManager.Instance.Units.GetUnit(value);
+                    currentBuilding = u != null ? u.gameObject : null;
+                }
+                else
+                {
+                    currentBuilding = null;
+                }
+            }
         }
 
         // Heal
