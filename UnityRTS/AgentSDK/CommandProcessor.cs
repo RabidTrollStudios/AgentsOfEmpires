@@ -16,7 +16,7 @@ namespace AgentSDK
             // Allow MOVE to interrupt BUILD/REPAIR
             if (unit.CurrentAction == UnitAction.BUILD || unit.CurrentAction == UnitAction.REPAIR)
             {
-                unit.CurrentAction = UnitAction.IDLE;
+                TickEngine.SetIdle(unit);
             }
 
             // Try avoidUnits first, fall back to normal
@@ -151,7 +151,7 @@ namespace AgentSDK
         {
             // Allow REPAIR to interrupt BUILD
             if (pawn.CurrentAction == UnitAction.BUILD)
-                pawn.CurrentAction = UnitAction.IDLE;
+                TickEngine.SetIdle(pawn);
 
             if (!pawn.CanBuild) return CommandResult.UNIT_CANNOT_PERFORM_ACTION;
 
