@@ -951,9 +951,12 @@ namespace GameManager.GameElements
 				pathUpdateCounter = 0;
 				path = GameManager.Instance.Map.GetPathToUnit(gridPosition, targetUnitType, targetGridPos, avoidUnits);
 				pathIndex = 0;
-				visualWaypoints.Clear();
-				visualSegmentT = 1.0f;
-				WorldPosition = (Vector3)GridPosition + new Vector3(0.5f, 0f, 0);
+				if (CanMove)
+				{
+					visualWaypoints.Clear();
+					visualSegmentT = 1.0f;
+					WorldPosition = (Vector3)GridPosition + new Vector3(0.5f, 0f, 0);
+				}
 
 				if (path.Count == 0)
 				{
