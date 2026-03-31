@@ -109,7 +109,10 @@ namespace AgentTestHarness
 
         private void ProcessMove(SimUnit unit, Position target)
         {
-            var path = Map.FindPath(unit.GridPosition, target);
+            // Try avoidUnits first, fall back to normal (matches Unity's StartMoving)
+            var path = Map.Grid.FindPath(unit.GridPosition, target, avoidUnits: true);
+            if (path.Count == 0)
+                path = Map.FindPath(unit.GridPosition, target);
             if (path.Count == 0) return;
 
             unit.CurrentAction = UnitAction.MOVE;
@@ -208,15 +211,24 @@ namespace AgentTestHarness
         {
             if (!Units.ContainsKey(targetNbr)) return;
 
-            // Path toward the target (use FindPathToUnit so we path to an adjacent cell,
-            // which handles multi-cell buildings that are unwalkable)
             var target = Units[targetNbr];
-            var path = Map.FindPathToUnit(attacker.GridPosition, target.UnitType, target.GridPosition);
-
             attacker.CurrentAction = UnitAction.ATTACK;
             attacker.AttackTargetNbr = targetNbr;
-            attacker.Path = path;
-            attacker.PathIndex = 0;
+
+            // Check if already in range — skip pathfinding (matches Unity's StartAttacking)
+            if (TaskEngine.IsInAttackRange(attacker.UnitType, attacker.CenterPosition,
+                    target.UnitType, target.CenterPosition))
+            {
+                attacker.Path = null;
+                attacker.PathIndex = 0;
+                attacker.MoveAccumulator = 0f;
+            }
+            else
+            {
+                var path = Map.FindPathToUnit(attacker.GridPosition, target.UnitType, target.GridPosition);
+                attacker.Path = path;
+                attacker.PathIndex = 0;
+            }
         }
 
         private void ProcessRepair(SimUnit pawn, int buildingNbr)
@@ -235,12 +247,22 @@ namespace AgentTestHarness
         {
             if (!Units.TryGetValue(targetNbr, out var target)) return;
 
-            var path = Map.FindPathToUnit(monk.GridPosition, target.UnitType, target.GridPosition);
-
             monk.CurrentAction = UnitAction.HEAL;
             monk.HealTargetNbr = targetNbr;
-            monk.Path = path;
-            monk.PathIndex = 0;
+
+            // Check if already in range — skip pathfinding (matches Unity's StartHealing)
+            if (TaskEngine.IsInHealRange(monk.UnitType, monk.CenterPosition, target.CenterPosition))
+            {
+                monk.Path = null;
+                monk.PathIndex = 0;
+                monk.MoveAccumulator = 0f;
+            }
+            else
+            {
+                var path = Map.FindPathToUnit(monk.GridPosition, target.UnitType, target.GridPosition);
+                monk.Path = path;
+                monk.PathIndex = 0;
+            }
         }
     }
 }
