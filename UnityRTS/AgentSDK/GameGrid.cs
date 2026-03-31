@@ -22,8 +22,9 @@ namespace AgentSDK
     /// single implementation so grid state and queries are guaranteed identical.
     ///
     /// Coordinate system: (0,0) bottom-left; +X right, +Y up.
-    /// Building footprints extend from anchor (x,y) rightward and downward:
-    ///   cells = (x+i, y-j) for i in [0..sizeX), j in [0..sizeY).
+    /// Anchor = bottom-left corner. Building footprints extend RIGHT and UP:
+    ///   cells = (anchor.X + i, anchor.Y + j) for i in [0..sizeX), j in [0..sizeY).
+    /// The top row (j == sizeY-1) of multi-row buildings is the passage row (walkable).
     /// </summary>
     public class GameGrid
     {
@@ -99,6 +100,7 @@ namespace AgentSDK
 
         /// <summary>
         /// Check if the full footprint for a unit type is buildable at the given anchor.
+        /// Anchor is the bottom-left corner; footprint extends right (+X) and up (+Y).
         /// </summary>
         public bool IsAreaBuildable(UnitType unitType, Position anchor)
         {
@@ -107,7 +109,7 @@ namespace AgentSDK
             {
                 for (int j = 0; j < size.Y; j++)
                 {
-                    var cell = new Position(anchor.X + i, anchor.Y - j);
+                    var cell = new Position(anchor.X + i, anchor.Y + j);
                     if (!IsPositionBuildable(cell))
                         return false;
                 }
@@ -126,7 +128,7 @@ namespace AgentSDK
             {
                 for (int j = 0; j < size.Y; j++)
                 {
-                    var cell = new Position(anchor.X + i, anchor.Y - j);
+                    var cell = new Position(anchor.X + i, anchor.Y + j);
                     if (cell == exclude) continue;
                     if (!IsPositionBuildable(cell))
                         return false;
@@ -145,7 +147,7 @@ namespace AgentSDK
             {
                 for (int j = -1; j <= size.Y; j++)
                 {
-                    var cell = new Position(anchor.X + i, anchor.Y - j);
+                    var cell = new Position(anchor.X + i, anchor.Y + j);
                     if (!IsPositionBuildable(cell))
                         return false;
                 }
@@ -185,6 +187,7 @@ namespace AgentSDK
 
         /// <summary>
         /// Update grid state for a unit's footprint.
+        /// Anchor is bottom-left; footprint extends right (+X) and up (+Y).
         /// When placing (occupy=true): building body→BLOCKED, building top row→WALKABLE, mobile unit→WALKABLE.
         /// When removing (occupy=false): all cells→OPEN.
         /// </summary>
@@ -197,7 +200,7 @@ namespace AgentSDK
             {
                 for (int j = 0; j < size.Y; j++)
                 {
-                    var cell = new Position(anchor.X + i, anchor.Y - j);
+                    var cell = new Position(anchor.X + i, anchor.Y + j);
                     if (!IsPositionValid(cell)) continue;
 
                     if (!occupy)
@@ -213,8 +216,8 @@ namespace AgentSDK
                     }
                     else
                     {
-                        // Building: top row = WALKABLE (passage), body = BLOCKED
-                        bool topRow = j == 0 && size.Y > 1;
+                        // Building: top row (highest Y) = WALKABLE (passage), body = BLOCKED
+                        bool topRow = j == size.Y - 1 && size.Y > 1;
                         cells[cell.X, cell.Y] = topRow ? CellState.WALKABLE : CellState.BLOCKED;
                         isPassage[cell.X, cell.Y] = topRow;
                     }
@@ -228,22 +231,25 @@ namespace AgentSDK
 
         /// <summary>
         /// Get all grid positions in the ring around a unit's footprint.
+        /// Anchor is bottom-left; footprint occupies [anchor.X..anchor.X+sizeX-1, anchor.Y..anchor.Y+sizeY-1].
         /// </summary>
         public List<Position> GetPositionsNearUnit(UnitType unitType, Position anchor)
         {
             var size = GameConstants.UNIT_SIZE[unitType];
             var positions = new List<Position>();
 
+            // Top and bottom rows of the ring
             for (int i = anchor.X - 1; i <= anchor.X + size.X; i++)
             {
-                var top = new Position(i, anchor.Y + 1);
+                var top = new Position(i, anchor.Y + size.Y);
                 if (IsPositionValid(top)) positions.Add(top);
 
-                var bottom = new Position(i, anchor.Y - size.Y);
+                var bottom = new Position(i, anchor.Y - 1);
                 if (IsPositionValid(bottom)) positions.Add(bottom);
             }
 
-            for (int j = anchor.Y - size.Y + 1; j <= anchor.Y; j++)
+            // Left and right columns of the ring (excluding corners already added)
+            for (int j = anchor.Y; j <= anchor.Y + size.Y - 1; j++)
             {
                 var left = new Position(anchor.X - 1, j);
                 if (IsPositionValid(left)) positions.Add(left);
@@ -282,9 +288,10 @@ namespace AgentSDK
                 if (n == pos) return true;
             }
 
+            // Also accept passage cells on the building's top row
             var size = GameConstants.UNIT_SIZE[unitType];
             if (!GameConstants.CAN_MOVE[unitType] && size.Y > 1
-                && pos.Y == unitAnchor.Y
+                && pos.Y == unitAnchor.Y + size.Y - 1
                 && pos.X >= unitAnchor.X && pos.X < unitAnchor.X + size.X)
                 return true;
 

@@ -541,7 +541,9 @@ namespace AgentTestHarness
         /// </summary>
         private static Position MirrorUnit(Position pos, int w, int h, int sizeX, int sizeY)
         {
-            return new Position(w - sizeX - pos.X, h - 1 + sizeY - pos.Y);
+            // Bottom-left anchor. Unit occupies [pos.X..pos.X+sizeX-1, pos.Y..pos.Y+sizeY-1].
+            // Mirror across map center: mirrored anchor = (w - sizeX - pos.X, h - sizeY - pos.Y).
+            return new Position(w - sizeX - pos.X, h - sizeY - pos.Y);
         }
 
         #endregion

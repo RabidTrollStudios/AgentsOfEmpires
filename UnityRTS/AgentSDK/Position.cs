@@ -35,11 +35,12 @@ namespace AgentSDK
 
         /// <summary>
         /// Center cell of a unit's footprint given its top-left corner and size.
-        /// For 1x1 units returns the same position; for 3x3 returns topLeft+(1,-1).
+        /// For 1x1 units returns the same position; for 3x3 returns bottomLeft+(1,1).
+        /// Anchor is bottom-left; footprint extends right (+X) and up (+Y).
         /// </summary>
-        public static Position Center(Position topLeft, Position size) =>
-            new Position(topLeft.X + (size.X - 1) / 2,
-                         topLeft.Y - (size.Y - 1) / 2);
+        public static Position Center(Position bottomLeft, Position size) =>
+            new Position(bottomLeft.X + (size.X - 1) / 2,
+                         bottomLeft.Y + (size.Y - 1) / 2);
 
         /// <summary>Add two positions component-wise</summary>
         public static Position operator +(Position a, Position b) => new Position(a.X + b.X, a.Y + b.Y);

@@ -79,7 +79,7 @@ namespace PlanningAgent.Tests
             // None should be inside the footprint
             for (int i = 0; i < 6; i++)
                 for (int j = 0; j < 4; j++)
-                    Assert.DoesNotContain(new Position(10 + i, 10 - j), positions);
+                    Assert.DoesNotContain(new Position(10 + i, 10 + j), positions);
         }
 
         [Fact]
@@ -118,12 +118,12 @@ namespace PlanningAgent.Tests
         public void SetAreaBuildability_Building_BodyBlocksWalkability()
         {
             var map = new SimMap(30, 30);
-            // BASE is 6x4, anchor at (10, 10). Top row = y=10, body rows = y=9,8,7.
+            // BASE is 6x4, anchor at (10, 10). Body rows = y=10,11,12. Top row (passage) = y=13.
             map.SetAreaBuildability(UnitType.BASE, new Position(10, 10), false);
 
-            // Body row (j=1, y=9) — not buildable and not walkable
-            Assert.False(map.IsPositionBuildable(new Position(10, 9)));
-            Assert.False(map.IsPositionWalkable(new Position(10, 9)));
+            // Body row (j=1, y=11) — not buildable and not walkable
+            Assert.False(map.IsPositionBuildable(new Position(10, 11)));
+            Assert.False(map.IsPositionWalkable(new Position(10, 11)));
         }
 
         [Fact]
@@ -132,9 +132,9 @@ namespace PlanningAgent.Tests
             var map = new SimMap(30, 30);
             map.SetAreaBuildability(UnitType.BASE, new Position(10, 10), false);
 
-            // Top row (j=0, y=10) — not buildable but walkable (units walk behind)
-            Assert.False(map.IsPositionBuildable(new Position(10, 10)));
-            Assert.True(map.IsPositionWalkable(new Position(10, 10)));
+            // Top row (j=3, y=13) — not buildable but walkable (units walk behind)
+            Assert.False(map.IsPositionBuildable(new Position(10, 13)));
+            Assert.True(map.IsPositionWalkable(new Position(10, 13)));
         }
 
         [Fact]

@@ -126,10 +126,10 @@ namespace PlanningAgent.Tests
 
             var m0 = result.MinePositions[0];
             var m1 = result.MinePositions[1];
-            // Mines are 3x3 — mirror uses size-aware formula: (w - sizeX - x, h - 2 + sizeY - y)
+            // Mines are 3x3 — bottom-left anchor mirror: (w - sizeX - x, h - sizeY - y)
             var mineSize = GameConstants.UNIT_SIZE[UnitType.MINE];
             Assert.Equal(w - mineSize.X - m0.X, m1.X);
-            Assert.Equal(h - 1 + mineSize.Y - m0.Y, m1.Y);
+            Assert.Equal(h - mineSize.Y - m0.Y, m1.Y);
         }
 
         [Theory]
