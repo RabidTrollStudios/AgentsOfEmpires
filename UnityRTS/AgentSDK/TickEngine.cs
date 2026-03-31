@@ -170,7 +170,7 @@ namespace AgentSDK
             Position spawnPos = spawnPositions[0];
             float health = GameConstants.HEALTH[building.TrainTarget];
             var spawned = world.SpawnUnit(building.OwnerAgentNbr, building.TrainTarget, spawnPos, health, true);
-            building.CurrentAction = UnitAction.IDLE;
+            GoIdle(building);
 
             callbacks.OnTrainingComplete(building, spawned);
         }
@@ -252,7 +252,7 @@ namespace AgentSDK
                 }
                 else
                 {
-                    pawn.CurrentAction = UnitAction.IDLE;
+                    GoIdle(pawn);
                 }
             }
         }
@@ -262,7 +262,7 @@ namespace AgentSDK
             var mine = world.GetUnit(pawn.GatherMineNbr);
             if (mine == null)
             {
-                pawn.CurrentAction = UnitAction.IDLE;
+                GoIdle(pawn);
                 return;
             }
 
@@ -271,7 +271,7 @@ namespace AgentSDK
                 var baseForEmpty = world.GetUnit(pawn.GatherBaseNbr);
                 if (baseForEmpty == null)
                 {
-                    pawn.CurrentAction = UnitAction.IDLE;
+                    GoIdle(pawn);
                     return;
                 }
                 var emptyPath = world.FindPathToUnit(pawn.GridPosition, UnitType.BASE, baseForEmpty.GridPosition);
@@ -301,7 +301,7 @@ namespace AgentSDK
                 var baseUnit = world.GetUnit(pawn.GatherBaseNbr);
                 if (baseUnit == null)
                 {
-                    pawn.CurrentAction = UnitAction.IDLE;
+                    GoIdle(pawn);
                     return;
                 }
 
@@ -335,7 +335,7 @@ namespace AgentSDK
                 var mine = world.GetUnit(pawn.GatherMineNbr);
                 if (mine == null || mine.Health <= 0)
                 {
-                    pawn.CurrentAction = UnitAction.IDLE;
+                    GoIdle(pawn);
                     return;
                 }
 
@@ -356,7 +356,7 @@ namespace AgentSDK
                 }
                 else
                 {
-                    pawn.CurrentAction = UnitAction.IDLE;
+                    GoIdle(pawn);
                 }
             }
         }
@@ -481,9 +481,8 @@ namespace AgentSDK
             var target = world.GetUnit(monk.HealTargetNbr);
             if (target == null || target.Health <= 0)
             {
-                monk.CurrentAction = UnitAction.IDLE;
+                GoIdle(monk);
                 monk.HealTargetNbr = -1;
-                monk.TickPath = null;
                 return;
             }
 
@@ -491,9 +490,8 @@ namespace AgentSDK
             {
                 if (!TaskEngine.CanHeal(monk.Mana, target.Health, target.UnitType))
                 {
-                    monk.CurrentAction = UnitAction.IDLE;
-                    monk.HealTargetNbr = -1;
-                    monk.TickPath = null;
+                    GoIdle(monk);
+                monk.HealTargetNbr = -1;
                     return;
                 }
 
@@ -503,9 +501,8 @@ namespace AgentSDK
                 monk.Mana -= GameConstants.MANA_COST;
                 callbacks.OnHealApplied(monk, target, healAmount);
 
-                monk.CurrentAction = UnitAction.IDLE;
+                GoIdle(monk);
                 monk.HealTargetNbr = -1;
-                monk.TickPath = null;
             }
             else
             {

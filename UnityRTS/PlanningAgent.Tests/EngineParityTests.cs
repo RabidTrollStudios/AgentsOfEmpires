@@ -175,8 +175,19 @@ namespace PlanningAgent.Tests
                 game.Tick();
                 int tick = t + 1;
 
+                // Trace u30 around tick 218
+                if (tick >= 215 && tick <= 220)
+                {
+                    var u30 = game.GetUnit(30) as SimUnit;
+                    if (u30 != null)
+                    {
+                        string pathInfo = u30.TickPath != null ? $" path={u30.TickPath.Count} pi={u30.PathIndex}" : " nopath";
+                        _output.WriteLine($"  [t{tick}] u30:({u30.GridPosition.X},{u30.GridPosition.Y}) {u30.CurrentAction} heal={u30.HealTargetNbr} acc={u30.MoveAccumulator:F2}{pathInfo}");
+                    }
+                }
+
                 // Trace pawn positions + grid state near base at (7,8)
-                if (tick == 1 || tick == 2)
+                if (false && (tick == 1 || tick == 2))
                 {
                     _output.WriteLine($"  Grid near (7,8) at t{tick}:");
                     for (int y = 10; y >= 4; y--)
