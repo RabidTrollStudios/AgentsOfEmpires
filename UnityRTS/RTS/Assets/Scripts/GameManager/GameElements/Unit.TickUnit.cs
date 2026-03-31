@@ -50,8 +50,8 @@ namespace GameManager.GameElements
             set => GridPosition = new Vector3Int(value.X, value.Y, 0);
         }
 
-        Position ITickUnit.CenterPosition => new Position(
-            (int)CenterGridPosition.x, (int)CenterGridPosition.y);
+        Position ITickUnit.CenterPosition =>
+            AgentSDK.TaskEngine.ComputeCenterPosition(UnitType, new Position(GridPosition.x, GridPosition.y));
 
         // Movement — TickPath stores a separate List<Position> that TickEngine uses directly.
         // The old List<Vector3Int> path is kept in sync for visual code.

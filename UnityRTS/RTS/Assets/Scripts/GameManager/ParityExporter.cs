@@ -120,7 +120,7 @@ namespace GameManager
             currentTick++;
 
             // Write state snapshot: every tick for debug windows, then at intervals
-            if (currentTick <= 55 || (currentTick >= 300 && currentTick <= 340) || currentTick % SnapshotInterval == 0)
+            if (currentTick <= 55 || (currentTick >= 300 && currentTick <= 350) || currentTick % SnapshotInterval == 0)
                 WriteStateSnapshot();
 
             if (MaxTicks > 0 && currentTick >= MaxTicks)
@@ -170,8 +170,8 @@ namespace GameManager
                 var u = kvp.Value.GetComponent<Unit>();
                 if (u == null) continue;
                 int owner = u.OwnerAgentNbr;
-                // Format: unitNbr:type:owner:x:y:health:isBuilt:action
-                unitParts.Add($"{u.UnitNbr}:{u.UnitType}:{owner}:{u.GridPosition.x}:{u.GridPosition.y}:{u.Health:F1}:{(u.IsBuilt?1:0)}:{u.CurrentAction}");
+                // Format: unitNbr:type:owner:x:y:health:isBuilt:action:moveAcc
+                unitParts.Add($"{u.UnitNbr}:{u.UnitType}:{owner}:{u.GridPosition.x}:{u.GridPosition.y}:{u.Health:F1}:{(u.IsBuilt?1:0)}:{u.CurrentAction}:{u.MoveAccumulator:F4}");
             }
 
             string units = string.Join("|", unitParts);
