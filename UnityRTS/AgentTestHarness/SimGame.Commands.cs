@@ -237,6 +237,10 @@ namespace AgentTestHarness
 
             var path = Map.FindPathToUnit(pawn.GridPosition, building.UnitType, building.GridPosition);
 
+            // Accept if path found OR already adjacent (matches Unity's StartRepairing)
+            if (path.Count == 0 && !Map.Grid.IsNeighborOfUnit(pawn.GridPosition, building.UnitType, building.GridPosition))
+                return;
+
             pawn.CurrentAction = UnitAction.REPAIR;
             pawn.RepairBuildingNbr = buildingNbr;
             pawn.Path = path;
