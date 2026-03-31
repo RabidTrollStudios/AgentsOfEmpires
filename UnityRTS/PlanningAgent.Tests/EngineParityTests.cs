@@ -175,6 +175,58 @@ namespace PlanningAgent.Tests
                 game.Tick();
                 int tick = t + 1;
 
+                // Trace u58 around tick 300-328 (diverges at 324)
+                if (tick >= 300 && tick <= 328)
+                {
+                    var u58 = game.GetUnit(58) as SimUnit;
+                    if (u58 != null)
+                    {
+                        string pathInfo = u58.TickPath != null ? $" path={u58.TickPath.Count} pi={u58.PathIndex}" : " nopath";
+                        string targetInfo = u58.AttackTargetNbr >= 0 ? $" atk={u58.AttackTargetNbr}" : "";
+                        var atkTarget = u58.AttackTargetNbr >= 0 ? game.GetUnit(u58.AttackTargetNbr) : null;
+                        string atkPos = atkTarget != null ? $"@({atkTarget.GridPosition.X},{atkTarget.GridPosition.Y})" : "";
+                        // Show engine's MoveAcc from snapshot if available for this tick
+                        string engineAcc = "";
+                        if (snapshotIdx < snapshots.Count && snapshots[snapshotIdx].Tick == tick)
+                        {
+                            var eu58 = snapshots[snapshotIdx].Units.FirstOrDefault(u => u.UnitNbr == 58);
+                            if (eu58.HasMoveAcc)
+                                engineAcc = $" engAcc={eu58.MoveAcc:F4}";
+                        }
+                        _output.WriteLine($"  [t{tick}] u58:({u58.GridPosition.X},{u58.GridPosition.Y}) {u58.CurrentAction} acc={u58.MoveAccumulator:F4}{engineAcc}{pathInfo}{targetInfo}{atkPos}");
+                        // Dump path contents (show more for debugging)
+                        if (u58.TickPath != null)
+                        {
+                            string pathDump = "";
+                            int showFrom = Math.Max(0, u58.PathIndex - 1);
+                            int showTo = Math.Min(u58.TickPath.Count, u58.PathIndex + 8);
+                            for (int pi = showFrom; pi < showTo; pi++)
+                                pathDump += $"{(pi == u58.PathIndex ? "*" : "")}{pi}:({u58.TickPath[pi].X},{u58.TickPath[pi].Y}) ";
+                            _output.WriteLine($"         path[{showFrom}..{showTo-1}]: {pathDump}dest=({u58.TickPath[u58.TickPath.Count-1].X},{u58.TickPath[u58.TickPath.Count-1].Y})");
+                        }
+                        // Check cell states ahead on path and nearby units
+                        if (tick >= 322 && tick <= 325)
+                        {
+                            for (int cx = 23; cx <= 27; cx++)
+                            {
+                                var cs = game.Map.Grid.GetCell(cx, 22);
+                                string occ = "";
+                                for (int uid = 0; uid < 100; uid++)
+                                {
+                                    var uu = game.GetUnit(uid);
+                                    if (uu != null && uu.GridPosition.X == cx && uu.GridPosition.Y == 22)
+                                        occ += $" u{uid}({uu.UnitType})";
+                                }
+                                _output.WriteLine($"         cell({cx},22)={cs}{occ}");
+                            }
+                        }
+                    }
+                    // Also check if unit 50 exists
+                    var u50 = game.GetUnit(50) as SimUnit;
+                    if (u50 != null)
+                        _output.WriteLine($"  [t{tick}] u50:({u50.GridPosition.X},{u50.GridPosition.Y}) {u50.CurrentAction} {u50.UnitType} owner={u50.OwnerAgentNbr}");
+                }
+
                 // Trace u30 around tick 218
                 if (tick >= 215 && tick <= 220)
                 {
@@ -375,6 +427,8 @@ namespace PlanningAgent.Tests
                     diffs.Add($"Unit {eu.UnitNbr}: health sim={su.Health:F1} engine={eu.Health:F1}");
                 if (su.IsBuilt != eu.IsBuilt)
                     diffs.Add($"Unit {eu.UnitNbr}: isBuilt sim={su.IsBuilt} engine={eu.IsBuilt}");
+                if (eu.HasMoveAcc && Math.Abs(su.MoveAccumulator - eu.MoveAcc) > 0.001f)
+                    diffs.Add($"Unit {eu.UnitNbr}: moveAcc sim={su.MoveAccumulator:F4} engine={eu.MoveAcc:F4}");
             }
 
             foreach (var su in simUnits)
@@ -409,6 +463,8 @@ namespace PlanningAgent.Tests
             public float Health;
             public bool IsBuilt;
             public UnitAction Action;
+            public float MoveAcc;
+            public bool HasMoveAcc;
         }
 
         private static List<ExportedCommand> ParseCommands(string path)
@@ -559,6 +615,10 @@ namespace PlanningAgent.Tests
                     {
                         var u = unitStr.Split(':');
                         if (u.Length < 8) continue;
+                        float moveAcc = -1f;
+                        bool hasMoveAcc = u.Length >= 9 && float.TryParse(u[8],
+                            System.Globalization.NumberStyles.Float,
+                            System.Globalization.CultureInfo.InvariantCulture, out moveAcc);
                         snap.Units.Add(new UnitSnap
                         {
                             UnitNbr = int.Parse(u[0]),
@@ -569,6 +629,8 @@ namespace PlanningAgent.Tests
                             Health = float.Parse(u[5]),
                             IsBuilt = u[6] == "1",
                             Action = Enum.TryParse(u[7], out UnitAction ua) ? ua : UnitAction.IDLE,
+                            MoveAcc = hasMoveAcc ? moveAcc : -1f,
+                            HasMoveAcc = hasMoveAcc,
                         });
                     }
                 }

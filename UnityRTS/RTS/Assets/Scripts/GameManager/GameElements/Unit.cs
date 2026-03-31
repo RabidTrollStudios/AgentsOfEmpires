@@ -87,12 +87,10 @@ namespace GameManager.GameElements
 		{
 			get
 			{
-				// Bottom-left anchor. Body extends up. Passage at top row.
-				var size = Constants.UNIT_SIZE[UnitType];
-				bool hasPassage = !Constants.CAN_MOVE[UnitType] && size.y > 1;
-				int bodyHeight = hasPassage ? size.y - 1 : size.y;
-				return new Vector3Int(GridPosition.x + (size.x - 1) / 2,
-				                      GridPosition.y + (bodyHeight - 1) / 2, 0);
+				// Delegate to shared formula for parity with SimGame.
+				var center = AgentSDK.TaskEngine.ComputeCenterPosition(
+					UnitType, new AgentSDK.Position(GridPosition.x, GridPosition.y));
+				return new Vector3Int(center.X, center.Y, 0);
 			}
 		}
 

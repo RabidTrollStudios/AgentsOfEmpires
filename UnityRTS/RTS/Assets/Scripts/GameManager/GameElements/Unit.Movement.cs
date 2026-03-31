@@ -80,77 +80,9 @@ namespace GameManager.GameElements
 		}
 
 		/// <summary>
-		/// Fixed-timestep game logic: task dispatch, death, mana regen, and movement.
-		/// Runs at Time.fixedDeltaTime (0.05s = 20 Hz) matching SimGame's tick rate.
-		/// </summary>
-		internal void GameLogicTick()
-		{
-			if (GameManager.Instance == null || !GameManager.Instance.IsPlaying) return;
-
-			MineUnit = GameManager.Instance.Units.GetUnit(mineUnit);
-			BaseUnit = GameManager.Instance.Units.GetUnit(baseUnit);
-			pathUpdateCounter++;
-
-			// If this unit is dead, destroy it
-			if (Health <= 0)
-			{
-				var cmdLog = GetCmdLog();
-				string killedBy = "";
-				if (attackUnitNbr >= 0)
-				{
-					var killer = GameManager.Instance.Units.GetUnit(attackUnitNbr);
-					if (killer != null)
-						killedBy = $" by {killer.UnitType}#{killer.UnitNbr}";
-				}
-				cmdLog?.LogCommand("DEATH", $"{UnitType}#{UnitNbr} at {GridPosition} (action={CurrentAction}){killedBy}",
-					$"DESTROYED (health={Health:F0})");
-
-				GetRoundStats()?.RecordUnitLost(UnitType);
-				if (attackUnitNbr >= 0)
-				{
-					var killerUnit = GameManager.Instance.Units.GetUnit(attackUnitNbr);
-					var killerStats = killerUnit?.Agent?.GetComponent<AgentController>()?.Agent?.Analytics?.CurrentRound;
-					killerStats?.RecordEnemyKill(UnitType);
-				}
-
-				SpawnDeathDust();
-
-				if (currentBuilding != null)
-					currentBuilding.GetComponent<Unit>().ActiveBuilders.Remove(UnitNbr);
-				currentBuilding = null;
-				GameManager.Instance.Units.DestroyUnit(gameObject);
-			}
-			else if (CurrentAction == UnitAction.IDLE)
-			{
-				if (currentBuilding != null)
-					currentBuilding.GetComponent<Unit>().ActiveBuilders.Remove(UnitNbr);
-				currentBuilding = null;
-				path.Clear();
-				pathIndex = 0;
-				MoveAccumulator = 0f;
-				visualWaypoints.Clear();
-				visualSegmentT = 1.0f;
-				TargetGridPos = GridPosition;
-				TargetUnitType = UnitType.PAWN;
-				AttackUnit = null;
-				MineUnit = null;
-				BaseUnit = null;
-				arrowFiredThisCycle = false;
-			}
-			else
-			{
-				if (CurrentAction == UnitAction.GATHER && CanGather) UpdateGather();
-				else if (CurrentAction == UnitAction.ATTACK && CanAttack) UpdateAttack();
-				else if (CurrentAction == UnitAction.BUILD && CanBuild) UpdateBuild();
-				else if (CurrentAction == UnitAction.MOVE && CanMove) UpdateMove();
-				else if (CurrentAction == UnitAction.TRAIN && CanTrain) UpdateTrain();
-				else if (CurrentAction == UnitAction.REPAIR && CanBuild) UpdateRepair();
-				else if (CurrentAction == UnitAction.HEAL && CanHeal) UpdateHeal();
-			}
-
-			// Passive mana regeneration (shared formula for parity)
-			Mana = AgentSDK.TaskEngine.RegenMana(Mana, MaxMana, Constants.MANA_REGEN, Time.fixedDeltaTime);
-		}
+		// All game logic (task dispatch, movement, mana regen, death) is handled
+		// by the shared TickEngine.AdvanceAllUnits() called from GameManager.FixedUpdate().
+		// Visual-only updates (animation, facing, debug UI) remain below.
 
 		/// <summary>
 		/// Spawn a dust 2 poof effect at the unit's position on death.
@@ -754,125 +686,12 @@ namespace GameManager.GameElements
 		}
 
 		/// <summary>
-		/// Called by GameManager in deterministic UnitNbr order.
-		/// NOT a MonoBehaviour callback — named to avoid Unity auto-calling it.
+		/// Simulate one game tick. Delegates to GameManager.SimulateTick() which
+		/// runs TickEngine.AdvanceAllUnits for all units. Used by PlayMode tests.
 		/// </summary>
 		internal void TickFixedUpdate()
 		{
-			if (GameManager.Instance == null || !GameManager.Instance.IsPlaying) return;
-
-			// Run all game logic at fixed timestep for SimGame parity
-			GameLogicTick();
-
-			// Discrete accumulator-based movement matching SimGame exactly.
-			// GridPosition transitions are deterministic; WorldPosition is interpolated in Update().
-			if (path != null && pathIndex < path.Count)
-			{
-				Vector3Int tickStartPos = GridPosition;
-				float speed = Speed; // = Constants.MOVING_SPEED[UnitType]
-				MoveAccumulator += speed;
-
-				while (path != null && pathIndex < path.Count)
-				{
-					Vector3Int nextPos = path[pathIndex];
-					var curSDK = new AgentSDK.Position(GridPosition.x, GridPosition.y);
-					var nxtSDK = new AgentSDK.Position(nextPos.x, nextPos.y);
-
-					var result = AgentSDK.TaskEngine.TryMoveToCell(
-						curSDK, nxtSDK, MoveAccumulator,
-						GameManager.Instance.Map.Grid, out float distCost);
-
-					switch (result)
-					{
-						case AgentSDK.TaskEngine.MoveResult.Moved:
-							MoveAccumulator -= distCost;
-							localAvoidWaitFrames = 0;
-
-							if (CanMove)
-							{
-								var map = GameManager.Instance.Map;
-								var oldP = new AgentSDK.Position(GridPosition.x, GridPosition.y);
-								var newP = new AgentSDK.Position(nextPos.x, nextPos.y);
-								// Claim new cell BEFORE releasing old — prevents
-								// a window where both cells appear OPEN to other units.
-								map.Grid.SetCellOccupied(newP, true);
-								map.Grid.SetCellOccupied(oldP, false);
-								// Sync legacy GridCells: restore old cell unless it's a passage
-								if (!map.GridCells[GridPosition.x, GridPosition.y].IsPassage())
-									map.GridCells[GridPosition.x, GridPosition.y].SetBuildable(true);
-								map.GridCells[nextPos.x, nextPos.y].SetBuildable(false);
-							}
-
-							GridPosition = nextPos;
-							pathIndex++;
-
-							// Path consumed — clear immediately.
-							// Visual queue handles smooth catch-up independently.
-							if (pathIndex >= path.Count)
-							{
-								path.Clear();
-								pathIndex = 0;
-								if (CurrentAction == UnitAction.MOVE)
-									CurrentAction = UnitAction.IDLE;
-							}
-							continue; // try to consume more cells this tick
-
-						case AgentSDK.TaskEngine.MoveResult.BlockedByUnit:
-							// Final cell occupied — don't overlap
-							if (pathIndex == path.Count - 1)
-							{
-								// MOVE: stop here (close enough)
-								// Other actions: consume path so task system can
-								// check adjacency and re-path to a different neighbor
-								path.Clear();
-								pathIndex = 0;
-								if (CurrentAction == UnitAction.MOVE)
-									CurrentAction = UnitAction.IDLE;
-								goto doneMoving;
-							}
-							// Mid-path: pass through
-							goto case AgentSDK.TaskEngine.MoveResult.Moved;
-
-						case AgentSDK.TaskEngine.MoveResult.BlockedByTerrain:
-							MoveAccumulator -= distCost;
-							localAvoidWaitFrames = 0;
-							UpdatePath(GridPosition, TargetUnitType, TargetGridPos);
-							goto doneMoving;
-
-						default: // InsufficientMovement
-							goto doneMoving;
-					}
-				}
-				doneMoving:
-
-				// Visual speed = cells per second. Speed is per-fixedUpdate,
-				// so cells/sec = Speed / fixedDeltaTime.
-				visualSpeed = speed / Time.fixedDeltaTime;
-
-				// Determine what cell the visual is currently heading toward.
-				Vector3Int visualCurrentTarget = GridPosition;
-				if (visualWaypoints.Count > 0)
-					visualCurrentTarget = visualWaypoints.Peek();
-				else if (visualSegmentT < 1.0f)
-					visualCurrentTarget = new Vector3Int(
-						Mathf.RoundToInt(visualMoveTo.x - 0.5f),
-						Mathf.RoundToInt(visualMoveTo.y), 0);
-
-				if (GridPosition != tickStartPos)
-				{
-					// Grid moved this tick. Only enqueue if the visual isn't
-					// already heading to this cell (proactive enqueue from prior tick).
-					if (visualCurrentTarget != GridPosition)
-						visualWaypoints.Enqueue(GridPosition);
-				}
-				else if (path != null && pathIndex < path.Count
-					&& visualWaypoints.Count == 0 && visualSegmentT >= 1.0f)
-				{
-					// Grid hasn't moved yet but there's a next cell coming.
-					// Enqueue it now so the visual starts moving immediately.
-					visualWaypoints.Enqueue(path[pathIndex]);
-				}
-			}
+			GameManager.Instance?.SimulateTick();
 		}
 
 	

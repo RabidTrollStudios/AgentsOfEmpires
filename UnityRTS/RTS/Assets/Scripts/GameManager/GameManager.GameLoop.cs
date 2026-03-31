@@ -28,18 +28,13 @@ namespace GameManager
 			return unityTickWorld;
 		}
 
-		private void FixedUpdate()
+		/// <summary>
+		/// Run one game tick: process commands, advance all units via TickEngine,
+		/// then run post-tick updates. Used by tests to simulate ticks without
+		/// waiting for Unity's FixedUpdate cycle.
+		/// </summary>
+		internal void SimulateTick()
 		{
-			if (gameState != GameState.PLAYING) return;
-
-			// Clear failed commands from previous tick before processing new commands
-			foreach (var agentGo in Agents.Values)
-			{
-				var bridge = agentGo.GetComponent<AgentController>()?.Agent as AgentBridge;
-				if (bridge != null)
-					bridge.ClearFailedCommands();
-			}
-
 			// Phase 1: Process commands queued during previous tick's Agent Update
 			DeferredCommandQueue.ProcessAll();
 
@@ -52,8 +47,7 @@ namespace GameManager
 			// Phase 2: Advance all units via shared TickEngine
 			AgentSDK.TickEngine.AdvanceAllUnits(unityTickWorld, unityTickCallbacks);
 
-			// Phase 3: Mana regen + Phase 4: Remove dead units
-			// Must run AFTER TickEngine (matching SimGame's phase ordering)
+			// Phase 3: Post-tick updates
 			var allUnits = unitManager.GetAllUnits();
 			var sortedKeys = new System.Collections.Generic.List<int>(allUnits.Keys);
 			sortedKeys.Sort();
@@ -64,6 +58,21 @@ namespace GameManager
 				if (unit != null)
 					unit.PostTickUpdate();
 			}
+		}
+
+		private void FixedUpdate()
+		{
+			if (gameState != GameState.PLAYING) return;
+
+			// Clear failed commands from previous tick before processing new commands
+			foreach (var agentGo in Agents.Values)
+			{
+				var bridge = agentGo.GetComponent<AgentController>()?.Agent as AgentBridge;
+				if (bridge != null)
+					bridge.ClearFailedCommands();
+			}
+
+			SimulateTick();
 		}
 
 		/// <summary>
