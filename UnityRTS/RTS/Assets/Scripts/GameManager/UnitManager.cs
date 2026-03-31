@@ -123,8 +123,10 @@ namespace GameManager
 		/// </summary>
 		public GameObject PlaceNeutralUnit(Vector3Int gridPosition, UnitType unitType, Color color)
 		{
+			// Bottom-left anchor. Body center for visual placement.
 			var size = Constants.UNIT_SIZE[unitType];
-			Vector3 position = gridPosition + new Vector3(size.x * 0.5f, 0.5f - size.y * 0.5f);
+			float bodyHeight = size.y > 1 ? size.y - 1 : size.y;
+			Vector3 position = gridPosition + new Vector3(size.x * 0.5f, (bodyHeight - 1) * 0.5f);
 
 			// Use agent 0's prefab (mines look the same regardless)
 			GameObject unit = Object.Instantiate(
