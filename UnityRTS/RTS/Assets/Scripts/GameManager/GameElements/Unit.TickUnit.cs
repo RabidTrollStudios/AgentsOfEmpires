@@ -79,32 +79,23 @@ namespace GameManager.GameElements
         Position ITickUnit.CenterPosition => new Position(
             (int)CenterGridPosition.x, (int)CenterGridPosition.y);
 
-        // Movement — TickPath converts between List<Position> and List<Vector3Int>
+        // Movement — TickPath stores a separate List<Position> that TickEngine uses directly.
+        // The old List<Vector3Int> path is kept in sync for visual code.
+        private List<Position> _tickPath;
         List<Position> ITickUnit.TickPath
         {
-            get
-            {
-                if (path == null || path.Count == 0) return null;
-                var result = new List<Position>(path.Count);
-                foreach (var p in path)
-                    result.Add(new Position(p.x, p.y));
-                return result;
-            }
+            get => _tickPath;
             set
             {
-                if (value == null || value.Count == 0)
+                _tickPath = value;
+                // Sync legacy path for visual code
+                path.Clear();
+                if (value != null)
                 {
-                    path.Clear();
-                    pathIndex = 0;
-                }
-                else
-                {
-                    path.Clear();
                     foreach (var p in value)
                         path.Add(new Vector3Int(p.X, p.Y, 0));
-                    pathIndex = 0;
                 }
-                // Clear visual waypoints when path changes
+                pathIndex = 0;
                 visualWaypoints.Clear();
                 visualSegmentT = 1.0f;
                 WorldPosition = (Vector3)GridPosition + new Vector3(0.5f, 0f, 0);
