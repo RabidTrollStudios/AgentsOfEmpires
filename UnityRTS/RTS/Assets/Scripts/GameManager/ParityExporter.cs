@@ -121,7 +121,7 @@ namespace GameManager
             currentTick++;
 
             // Write state snapshot: every tick for debug windows, then at intervals
-            if (currentTick <= 55 || (currentTick >= 185 && currentTick <= 210) || currentTick % SnapshotInterval == 0)
+            if (currentTick <= 55 || (currentTick >= 210 && currentTick <= 260) || currentTick % SnapshotInterval == 0)
                 WriteStateSnapshot();
 
             if (MaxTicks > 0 && currentTick >= MaxTicks)
