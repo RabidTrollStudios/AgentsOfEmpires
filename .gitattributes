@@ -1,1 +1,31 @@
+# Normalize all text files to LF in the repo, CRLF in working tree on Windows
+* text=auto eol=lf
+
+# Unity-specific binary files
+*.unity binary
+*.prefab binary
+*.asset binary
+*.meta text eol=lf
+*.asmdef text eol=lf
+
+# Compiled binaries
+*.dll binary
+*.pdb binary
+*.exe binary
+
+# Images
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.bmp binary
+*.tga binary
+*.psd binary
+
+# Audio
+*.wav binary
+*.mp3 binary
+*.ogg binary
+
+# Merge strategy
 PlanningAgent.cs merge=ours
