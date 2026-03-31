@@ -178,18 +178,8 @@ namespace AgentTestHarness
             // Phase 1: Process commands queued during the PREVIOUS tick's Agent Update.
             ProcessCommandsSorted();
 
-            // Phase 2: Advance in-progress tasks (movement, build, train, gather, attack, heal)
+            // Phase 2+3+4: Advance tasks/movement, mana regen, remove dead (all in shared TickEngine)
             AdvanceAllUnits();
-
-            // Phase 3: Regenerate mana (shared formula)
-            foreach (var unit in Units.Values)
-            {
-                float maxMana = GameConstants.MAX_MANA[unit.UnitType];
-                unit.Mana = TaskEngine.RegenMana(unit.Mana, maxMana, manaRegen, Config.TickDuration);
-            }
-
-            // Phase 4: Remove dead units
-            RemoveDeadUnits();
 
             // Phase 5: Agent Update (agents see post-advance state, queue commands for NEXT tick)
             for (int a = 0; a < 2; a++)

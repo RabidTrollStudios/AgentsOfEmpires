@@ -155,7 +155,7 @@ namespace GameManager.GameElements
 		/// <summary>
 		/// Spawn a dust 2 poof effect at the unit's position on death.
 		/// </summary>
-		private void SpawnDeathDust()
+		internal void SpawnDeathDust()
 		{
 			var controller = GameManager.Instance.Dust2AnimatorController;
 			if (controller == null) return;
