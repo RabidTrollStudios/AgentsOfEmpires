@@ -82,44 +82,52 @@ namespace GameManager
 
             var events = GameManager.Instance.Events;
 
+            // Use shared CommandProcessor for identical logic with SimGame.
+            var world = GameManager.Instance.GetTickWorld();
+
             foreach (var cmd in pending)
             {
                 // Units may have died between queue time and dispatch time
                 if (cmd.Unit == null) continue;
 
+                AgentSDK.CommandResult result;
                 switch (cmd.Type)
                 {
                     case DeferredCommandType.Move:
-                        events.MoveEventHandler(cmd.Agent,
-                            new MoveEventArgs(cmd.Unit, cmd.Unit.UnitType, cmd.Target));
+                        result = AgentSDK.CommandProcessor.ProcessMove(
+                            cmd.Unit, new AgentSDK.Position(cmd.Target.x, cmd.Target.y), world);
                         break;
                     case DeferredCommandType.Build:
-                        events.BuildEventHandler(cmd.Agent,
-                            new BuildEventArgs(cmd.Unit, cmd.Target, cmd.BuildingType));
+                        result = AgentSDK.CommandProcessor.ProcessBuild(
+                            cmd.Unit, new AgentSDK.Position(cmd.Target.x, cmd.Target.y),
+                            cmd.BuildingType, world);
                         break;
                     case DeferredCommandType.Gather:
-                        if (cmd.MineUnit != null && cmd.BaseUnit != null)
-                            events.GatherEventHandler(cmd.Agent,
-                                new GatherEventArgs(cmd.Unit, cmd.MineUnit, cmd.BaseUnit));
+                        if (cmd.MineUnit == null || cmd.BaseUnit == null) { result = AgentSDK.CommandResult.INVALID_TARGET; break; }
+                        result = AgentSDK.CommandProcessor.ProcessGather(
+                            cmd.Unit, cmd.MineUnit.UnitNbr, cmd.BaseUnit.UnitNbr, world);
                         break;
                     case DeferredCommandType.Train:
-                        events.TrainEventHandler(cmd.Agent,
-                            new TrainEventArgs(cmd.Unit, cmd.BuildingType));
+                        result = AgentSDK.CommandProcessor.ProcessTrain(
+                            cmd.Unit, cmd.BuildingType, world);
                         break;
                     case DeferredCommandType.Attack:
-                        if (cmd.TargetUnit != null)
-                            events.AttackEventHandler(cmd.Agent,
-                                new AttackEventArgs(cmd.Unit, cmd.TargetUnit));
+                        if (cmd.TargetUnit == null) { result = AgentSDK.CommandResult.INVALID_TARGET; break; }
+                        result = AgentSDK.CommandProcessor.ProcessAttack(
+                            cmd.Unit, cmd.TargetUnit.UnitNbr, world);
                         break;
                     case DeferredCommandType.Repair:
-                        if (cmd.TargetUnit != null)
-                            events.RepairEventHandler(cmd.Agent,
-                                new RepairEventArgs(cmd.Unit, cmd.TargetUnit));
+                        if (cmd.TargetUnit == null) { result = AgentSDK.CommandResult.INVALID_TARGET; break; }
+                        result = AgentSDK.CommandProcessor.ProcessRepair(
+                            cmd.Unit, cmd.TargetUnit.UnitNbr, world);
                         break;
                     case DeferredCommandType.Heal:
-                        if (cmd.TargetUnit != null)
-                            events.HealEventHandler(cmd.Agent,
-                                new HealEventArgs(cmd.Unit, cmd.TargetUnit));
+                        if (cmd.TargetUnit == null) { result = AgentSDK.CommandResult.INVALID_TARGET; break; }
+                        result = AgentSDK.CommandProcessor.ProcessHeal(
+                            cmd.Unit, cmd.TargetUnit.UnitNbr, world);
+                        break;
+                    default:
+                        result = AgentSDK.CommandResult.SUCCESS;
                         break;
                 }
             }
