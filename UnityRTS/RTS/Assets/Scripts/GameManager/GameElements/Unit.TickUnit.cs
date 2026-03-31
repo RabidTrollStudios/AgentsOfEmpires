@@ -96,9 +96,12 @@ namespace GameManager.GameElements
                         path.Add(new Vector3Int(p.X, p.Y, 0));
                 }
                 pathIndex = 0;
-                visualWaypoints.Clear();
-                visualSegmentT = 1.0f;
-                WorldPosition = (Vector3)GridPosition + new Vector3(0.5f, 0f, 0);
+                if (CanMove)
+                {
+                    visualWaypoints.Clear();
+                    visualSegmentT = 1.0f;
+                    WorldPosition = (Vector3)GridPosition + new Vector3(0.5f, 0f, 0);
+                }
             }
         }
         int ITickUnit.PathIndex { get => pathIndex; set => pathIndex = value; }
