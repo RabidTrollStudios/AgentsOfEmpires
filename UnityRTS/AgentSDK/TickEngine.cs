@@ -17,6 +17,7 @@ namespace AgentSDK
         /// </summary>
         public static void AdvanceAllUnits(ITickWorld world, ITickCallbacks callbacks)
         {
+            // Phase 2: Task logic + movement per unit in deterministic order
             var units = world.AllUnits.ToList();
             units.Sort((a, b) => a.UnitNbr.CompareTo(b.UnitNbr));
 
@@ -51,6 +52,27 @@ namespace AgentSDK
                 // Movement
                 if (unit.TickPath != null && unit.PathIndex < unit.TickPath.Count)
                     MoveUnitOneStep(unit, world, callbacks);
+            }
+
+            // Phase 3: Mana regen for all units
+            foreach (var unit in units)
+            {
+                float maxMana = GameConstants.MAX_MANA[unit.UnitType];
+                float manaRegen = world.Constants.ManaRegen;
+                unit.Mana = TaskEngine.RegenMana(unit.Mana, maxMana, manaRegen, world.TickDuration);
+            }
+
+            // Phase 4: Remove dead units
+            var deadUnits = new List<ITickUnit>();
+            foreach (var unit in units)
+            {
+                if (unit.Health <= 0)
+                    deadUnits.Add(unit);
+            }
+            foreach (var dead in deadUnits)
+            {
+                callbacks.OnUnitKilled(dead);
+                world.RemoveUnit(dead);
             }
         }
 

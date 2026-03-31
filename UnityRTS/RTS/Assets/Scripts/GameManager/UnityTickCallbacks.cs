@@ -32,7 +32,11 @@ namespace GameManager
         }
 
         public void OnDamageDealt(ITickUnit attacker, ITickUnit target, float damage) { }
-        public void OnUnitKilled(ITickUnit unit) { }
+        public void OnUnitKilled(ITickUnit unit)
+        {
+            if (unit is Unit u)
+                u.SpawnDeathDust();
+        }
 
         public void OnTrainingComplete(ITickUnit building, ITickUnit spawnedUnit) { }
 

@@ -11,29 +11,16 @@ namespace GameManager.GameElements
     public partial class Unit : ITickUnit
     {
         /// <summary>
-        /// Post-tick update: mana regen and death removal.
-        /// Called AFTER TickEngine.AdvanceAllUnits, matching SimGame's Phase 3+4.
+        /// Post-tick visual update. Mana regen and death are now in shared TickEngine.
+        /// Only Unity-specific reference caching remains.
         /// </summary>
         internal void PostTickUpdate()
         {
             if (GameManager.Instance == null || !GameManager.Instance.IsPlaying) return;
 
-            // Update cached references
+            // Update cached Unity references (not in shared TickEngine)
             MineUnit = GameManager.Instance.Units.GetUnit(mineUnit);
             BaseUnit = GameManager.Instance.Units.GetUnit(baseUnit);
-
-            // Phase 3: Mana regen
-            Mana = AgentSDK.TaskEngine.RegenMana(Mana, MaxMana, Constants.MANA_REGEN, Time.fixedDeltaTime);
-
-            // Phase 4: Remove dead units
-            if (Health <= 0)
-            {
-                SpawnDeathDust();
-                if (currentBuilding != null)
-                    currentBuilding.GetComponent<Unit>().ActiveBuilders.Remove(UnitNbr);
-                currentBuilding = null;
-                GameManager.Instance.Units.DestroyUnit(gameObject);
-            }
         }
 
         /// <summary>Enqueue a visual waypoint for smooth movement interpolation.</summary>
