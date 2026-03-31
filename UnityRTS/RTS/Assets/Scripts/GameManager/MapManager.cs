@@ -226,7 +226,7 @@ namespace GameManager
 		/// </summary>
 		public bool IsGridPositionBuildable(Vector3Int position)
 		{
-			return GridCells[position.x, position.y].IsBuildable();
+			return Grid.IsPositionBuildable(new AgentSDK.Position(position.x, position.y));
 		}
 
 		/// <summary>
@@ -235,7 +235,7 @@ namespace GameManager
 		/// </summary>
 		public bool IsGridPositionWalkable(Vector3Int position)
 		{
-			return GridCells[position.x, position.y].IsWalkable();
+			return Grid.IsPositionWalkable(new AgentSDK.Position(position.x, position.y));
 		}
 
 		/// <summary>
@@ -245,7 +245,7 @@ namespace GameManager
 		/// </summary>
 		public bool IsGridPositionPassage(Vector3Int position)
 		{
-			return GridCells[position.x, position.y].IsPassage();
+			return Grid.IsPositionPassage(new AgentSDK.Position(position.x, position.y));
 		}
 
 		/// <summary>
