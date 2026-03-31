@@ -76,13 +76,14 @@ namespace GameManager
 			}
 			else
 			{
-				// Buildings: pivot centered on the non-walkable footprint (lower rows).
-				// Top row (j=0) is walkable so units can walk behind the building's top.
-				// Non-walkable rows: j=1..sizeY-1, spanning y offsets -1 to -(sizeY-1).
+				// Buildings: anchor is bottom-left. Footprint extends right and up.
+				// Passage row (top, j=sizeY-1) is walkable.
+				// Body rows: 0..sizeY-2. Visual pivot at body center.
 				// Center X: sizeX / 2
-				// Center Y: 0.5 - sizeY / 2  (half cell lower than full-footprint center)
+				// Center Y: (sizeY - 1) / 2.0  (center of body, excluding passage)
 				var size = Constants.UNIT_SIZE[unitType];
-				position = gridPosition + new Vector3(size.x * 0.5f, 0.5f - size.y * 0.5f);
+				float bodyHeight = size.y > 1 ? size.y - 1 : size.y;
+				position = gridPosition + new Vector3(size.x * 0.5f, (bodyHeight - 1) * 0.5f);
 			}
 
 			GameObject unit = Object.Instantiate(

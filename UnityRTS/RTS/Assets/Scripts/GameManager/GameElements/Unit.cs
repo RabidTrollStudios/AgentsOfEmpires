@@ -87,17 +87,12 @@ namespace GameManager.GameElements
 		{
 			get
 			{
+				// Bottom-left anchor. Body extends up. Passage at top row.
 				var size = Constants.UNIT_SIZE[UnitType];
-				if (!Constants.CAN_MOVE[UnitType] && size.y > 1)
-				{
-					// Building: center on non-walkable rows (j=1..sizeY-1)
-					// Top-left of non-walkable area is (x, y-1)
-					int nwHeight = size.y - 1;
-					return new Vector3Int(GridPosition.x + (size.x - 1) / 2,
-					                      GridPosition.y - 1 - (nwHeight - 1) / 2, 0);
-				}
+				bool hasPassage = !Constants.CAN_MOVE[UnitType] && size.y > 1;
+				int bodyHeight = hasPassage ? size.y - 1 : size.y;
 				return new Vector3Int(GridPosition.x + (size.x - 1) / 2,
-				                      GridPosition.y - (size.y - 1) / 2, 0);
+				                      GridPosition.y + (bodyHeight - 1) / 2, 0);
 			}
 		}
 

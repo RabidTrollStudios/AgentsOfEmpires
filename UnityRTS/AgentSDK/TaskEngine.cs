@@ -140,14 +140,13 @@ namespace AgentSDK
             if (size.X <= 1 && size.Y <= 1)
                 return gridPosition;
 
-            // For buildings: center of the non-walkable body.
-            // Top row (j=0) is passage for multi-row buildings, so body is rows 1..sizeY-1.
-            // CenterX = anchor.X + sizeX/2.0 - 0.5
-            // CenterY = anchor.Y - sizeY/2.0 + 0.5 (with passage row adjustment)
+            // Anchor is bottom-left. Footprint extends right (+X) and up (+Y).
+            // Top row (j=sizeY-1) is passage for multi-row buildings.
+            // Body = rows 0..sizeY-2. Center of body:
             bool hasPassage = size.Y > 1;
             int bodyHeight = hasPassage ? size.Y - 1 : size.Y;
             float cx = gridPosition.X + (size.X - 1) / 2.0f;
-            float cy = gridPosition.Y - (hasPassage ? 1 : 0) - (bodyHeight - 1) / 2.0f;
+            float cy = gridPosition.Y + (bodyHeight - 1) / 2.0f;
             return new Position((int)Math.Round(cx), (int)Math.Round(cy));
         }
 

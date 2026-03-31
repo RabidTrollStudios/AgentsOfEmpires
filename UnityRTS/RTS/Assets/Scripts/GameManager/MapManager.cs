@@ -269,7 +269,7 @@ namespace GameManager
 			{
 				for (int j = 0; j < size.y; ++j)
 				{
-					gridPos = gridPosition + new Vector3Int(i, -j, 0);
+					gridPos = gridPosition + new Vector3Int(i, j, 0);
 
 					if (excludePositions != null && excludePositions.Contains(gridPos))
 						continue;
@@ -305,7 +305,7 @@ namespace GameManager
 			{
 				for (int j = -1; j <= size.y; ++j)
 				{
-					gridPos = gridPosition + new Vector3Int(i, -j, 0);
+					gridPos = gridPosition + new Vector3Int(i, j, 0);
 
 					if (excludePositions != null && excludePositions.Contains(gridPos))
 						continue;
@@ -469,7 +469,7 @@ namespace GameManager
 			{
 				for (int j = 0; j < size.y; ++j)
 				{
-					var gridPos = gridPosition + new Vector3Int(i, -j, 0);
+					var gridPos = gridPosition + new Vector3Int(i, j, 0);
 					if (!Utility.IsValidGridLocation(gridPos, MapSize)) continue;
 
 					if (!occupy)
@@ -485,7 +485,7 @@ namespace GameManager
 					}
 					else
 					{
-						bool isTopRow = j == 0 && size.y > 1;
+						bool isTopRow = j == size.y - 1 && size.y > 1;
 						GridCells[gridPos.x, gridPos.y].SetBuildable(false);
 						GridCells[gridPos.x, gridPos.y].SetWalkable(isTopRow);
 						GridCells[gridPos.x, gridPos.y].SetPassage(isTopRow);

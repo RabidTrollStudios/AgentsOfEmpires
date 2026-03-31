@@ -470,8 +470,9 @@ namespace GameManager
 
         private Vector3Int FindMirroredLocation(Vector3Int position, UnitType unitType)
         {
+			// Bottom-left anchor mirror across map center
 			return new Vector3Int(mapManager.MapSize.x - Constants.UNIT_SIZE[unitType].x - position.x,
-								  mapManager.MapSize.y - 2 + Constants.UNIT_SIZE[unitType].y - position.y, 0);
+								  mapManager.MapSize.y - Constants.UNIT_SIZE[unitType].y - position.y, 0);
         }
 
         #region Map Setup

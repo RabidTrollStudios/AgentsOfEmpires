@@ -90,10 +90,10 @@ namespace PlanningAgent.Tests
             game.InitializeRound();
             game.Run(500);
 
-            // 3x3 footprint should be unbuildable
+            // 3x3 footprint should be unbuildable (bottom-left anchor, extends up)
             Assert.False(game.Map.IsPositionBuildable(new Position(15, 15)));
             Assert.False(game.Map.IsPositionBuildable(new Position(16, 15)));
-            Assert.False(game.Map.IsPositionBuildable(new Position(15, 14)));
+            Assert.False(game.Map.IsPositionBuildable(new Position(15, 16)));
         }
 
         // ------------------------------------------------------------------

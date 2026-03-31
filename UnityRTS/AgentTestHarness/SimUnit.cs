@@ -93,20 +93,7 @@ namespace AgentTestHarness
         /// <summary>
         /// Center cell of this unit's footprint. Use for distance calculations.
         /// </summary>
-        public Position CenterPosition
-        {
-            get
-            {
-                var size = GameConstants.UNIT_SIZE[UnitType];
-                if (!GameConstants.CAN_MOVE[UnitType] && size.Y > 1)
-                {
-                    var nwAnchor = new Position(GridPosition.X, GridPosition.Y - 1);
-                    var nwSize = new Position(size.X, size.Y - 1);
-                    return Position.Center(nwAnchor, nwSize);
-                }
-                return Position.Center(GridPosition, size);
-            }
-        }
+        public Position CenterPosition => TaskEngine.ComputeCenterPosition(UnitType, GridPosition);
 
         /// <summary>
         /// Create an immutable UnitInfo snapshot for IGameState queries.

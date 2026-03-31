@@ -338,8 +338,9 @@
              single implementation so grid state and queries are guaranteed identical.
             
              Coordinate system: (0,0) bottom-left; +X right, +Y up.
-             Building footprints extend from anchor (x,y) rightward and downward:
-               cells = (x+i, y-j) for i in [0..sizeX), j in [0..sizeY).
+             Anchor = bottom-left corner. Building footprints extend RIGHT and UP:
+               cells = (anchor.X + i, anchor.Y + j) for i in [0..sizeX), j in [0..sizeY).
+             The top row (j == sizeY-1) of multi-row buildings is the passage row (walkable).
              </summary>
         </member>
         <member name="M:AgentSDK.GameGrid.GetCell(AgentSDK.Position)">
@@ -366,6 +367,7 @@
         <member name="M:AgentSDK.GameGrid.IsAreaBuildable(AgentSDK.UnitType,AgentSDK.Position)">
             <summary>
             Check if the full footprint for a unit type is buildable at the given anchor.
+            Anchor is the bottom-left corner; footprint extends right (+X) and up (+Y).
             </summary>
         </member>
         <member name="M:AgentSDK.GameGrid.IsAreaBuildable(AgentSDK.UnitType,AgentSDK.Position,AgentSDK.Position)">
@@ -394,6 +396,7 @@
         <member name="M:AgentSDK.GameGrid.SetUnitFootprint(AgentSDK.UnitType,AgentSDK.Position,System.Boolean)">
             <summary>
             Update grid state for a unit's footprint.
+            Anchor is bottom-left; footprint extends right (+X) and up (+Y).
             When placing (occupy=true): building body→BLOCKED, building top row→WALKABLE, mobile unit→WALKABLE.
             When removing (occupy=false): all cells→OPEN.
             </summary>
@@ -401,6 +404,7 @@
         <member name="M:AgentSDK.GameGrid.GetPositionsNearUnit(AgentSDK.UnitType,AgentSDK.Position)">
             <summary>
             Get all grid positions in the ring around a unit's footprint.
+            Anchor is bottom-left; footprint occupies [anchor.X..anchor.X+sizeX-1, anchor.Y..anchor.Y+sizeY-1].
             </summary>
         </member>
         <member name="M:AgentSDK.GameGrid.GetBuildablePositionsNearUnit(AgentSDK.UnitType,AgentSDK.Position)">
@@ -934,7 +938,8 @@
         <member name="M:AgentSDK.Position.Center(AgentSDK.Position,AgentSDK.Position)">
             <summary>
             Center cell of a unit's footprint given its top-left corner and size.
-            For 1x1 units returns the same position; for 3x3 returns topLeft+(1,-1).
+            For 1x1 units returns the same position; for 3x3 returns bottomLeft+(1,1).
+            Anchor is bottom-left; footprint extends right (+X) and up (+Y).
             </summary>
         </member>
         <member name="M:AgentSDK.Position.op_Addition(AgentSDK.Position,AgentSDK.Position)">
