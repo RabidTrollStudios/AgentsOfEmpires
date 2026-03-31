@@ -85,8 +85,7 @@ namespace GameManager
                 {
                     for (int y = 0; y < gm.Map.MapSize.y; y++)
                     {
-                        var cell = gm.Map.GridCells[x, y];
-                        if (cell != null && !cell.IsWalkable())
+                        if (!gm.Map.Grid.IsPositionWalkable(new AgentSDK.Position(x, y)))
                         {
                             if (!first) blocked.Append(';');
                             blocked.Append(x).Append(',').Append(y);

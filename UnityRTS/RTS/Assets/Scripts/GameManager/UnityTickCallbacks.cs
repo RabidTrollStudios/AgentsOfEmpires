@@ -15,11 +15,11 @@ namespace GameManager
         {
             if (unit is Unit u)
             {
-                // Sync legacy GridCells
+                // Sync legacy GridCells (for visual/debug code that still uses them)
                 var map = GameManager.Instance.Map;
                 var fromV = new Vector3Int(from.X, from.Y, 0);
                 var toV = new Vector3Int(to.X, to.Y, 0);
-                if (!map.GridCells[fromV.x, fromV.y].IsPassage())
+                if (!map.Grid.IsPassageCell(from))
                     map.GridCells[fromV.x, fromV.y].SetBuildable(true);
                 map.GridCells[toV.x, toV.y].SetBuildable(false);
 
