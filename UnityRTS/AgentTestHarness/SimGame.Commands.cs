@@ -251,6 +251,11 @@ namespace AgentTestHarness
         {
             if (!Units.TryGetValue(targetNbr, out var target)) return;
 
+            // Validation matching Unity's StartHealing
+            if (monk.CurrentAction == UnitAction.BUILD || monk.CurrentAction == UnitAction.REPAIR) return;
+            if (!GameConstants.CAN_HEAL[monk.UnitType]) return;
+            if (monk.Mana < GameConstants.MANA_COST) return;
+
             monk.CurrentAction = UnitAction.HEAL;
             monk.HealTargetNbr = targetNbr;
 
