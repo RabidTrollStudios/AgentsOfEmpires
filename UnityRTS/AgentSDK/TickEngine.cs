@@ -61,6 +61,10 @@ namespace AgentSDK
             unit.TickPath = null;
             unit.PathIndex = 0;
             unit.MoveAccumulator = 0f;
+            unit.AttackTargetNbr = -1;
+            unit.HealTargetNbr = -1;
+            unit.BuildTargetNbr = -1;
+            unit.RepairBuildingNbr = -1;
         }
 
         #region Movement

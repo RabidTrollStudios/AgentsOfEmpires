@@ -22,19 +22,6 @@ namespace GameManager.GameElements
             MineUnit = GameManager.Instance.Units.GetUnit(mineUnit);
             BaseUnit = GameManager.Instance.Units.GetUnit(baseUnit);
 
-            // IDLE visual cleanup (Unity-specific, not in TickEngine)
-            if (CurrentAction == UnitAction.IDLE)
-            {
-                if (currentBuilding != null)
-                    currentBuilding.GetComponent<Unit>().ActiveBuilders.Remove(UnitNbr);
-                currentBuilding = null;
-                path.Clear();
-                pathIndex = 0;
-                MoveAccumulator = 0f;
-                visualWaypoints.Clear();
-                visualSegmentT = 1.0f;
-            }
-
             // Phase 3: Mana regen
             Mana = AgentSDK.TaskEngine.RegenMana(Mana, MaxMana, Constants.MANA_REGEN, Time.fixedDeltaTime);
 
