@@ -533,6 +533,104 @@ namespace PlanningAgent.Tests
     }
 
     // ==================================================================
+    // Building-tree overlap — buildable areas must not contain blocked cells
+    // ==================================================================
+
+    public class MapBuildOverlapTests
+    {
+        [Fact]
+        public void Seed1914087774_NoTreeAtMonasteryPosition()
+        {
+            // Reproduce the visual overlap: monastery at anchor (53,26), 3x3 footprint
+            var config = new MapGeneratorConfig
+            {
+                Seed = 1914087774, Width = 75, Height = 30,
+                ObstacleDensity = 0.20f, Template = MapTemplate.OpenField
+            };
+            var result = new MapGenerator().Generate(config);
+
+            // Dump all grove cells near the monastery
+            var output = new System.Text.StringBuilder();
+            output.AppendLine($"Total groves: {result.Groves.Count}, blocked cells: {result.BlockedCells.Count}");
+            foreach (var grove in result.Groves)
+            {
+                foreach (var cell in grove.Cells)
+                {
+                    if (cell.X >= 50 && cell.X <= 58 && cell.Y >= 22 && cell.Y <= 30)
+                        output.AppendLine($"  grove tree at ({cell.X},{cell.Y}) type={grove.TreeType}");
+                }
+            }
+            // Also dump blocked cells near monastery
+            foreach (var cell in result.BlockedCells)
+            {
+                if (cell.X >= 50 && cell.X <= 58 && cell.Y >= 22 && cell.Y <= 30)
+                    output.AppendLine($"  blocked at ({cell.X},{cell.Y})");
+            }
+            output.AppendLine("Footprint (53-55, 26-28) buildability:");
+            for (int x = 53; x <= 55; x++)
+                for (int y = 26; y <= 28; y++)
+                    output.AppendLine($"  ({x},{y}): buildable={result.Map.IsPositionBuildable(new Position(x, y))} walkable={result.Map.IsPositionWalkable(new Position(x, y))}");
+
+            // Check if any grove cell is in the monastery footprint
+            foreach (var grove in result.Groves)
+            {
+                foreach (var cell in grove.Cells)
+                {
+                    if (cell.X >= 53 && cell.X <= 55 && cell.Y >= 26 && cell.Y <= 28)
+                        Assert.Fail($"Tree at ({cell.X},{cell.Y}) overlaps monastery footprint (53-55, 26-28)\n{output}");
+                }
+            }
+
+            // Also verify all footprint cells are open
+            for (int x = 53; x <= 55; x++)
+                for (int y = 26; y <= 28; y++)
+                    Assert.True(result.Map.IsPositionBuildable(new Position(x, y)),
+                        $"Cell ({x},{y}) is not buildable but should be for monastery placement\n{output}");
+
+            // All checks passed — no tree overlaps monastery footprint
+        }
+
+        [Theory]
+        [InlineData(1914087774)]
+        [InlineData(42)]
+        [InlineData(99)]
+        [InlineData(1050142638)]
+        public void BuildableArea_NeverOverlapsBlockedCells(int seed)
+        {
+            var config = new MapGeneratorConfig
+            {
+                Seed = seed, Width = 75, Height = 30,
+                ObstacleDensity = 0.20f, Template = MapTemplate.OpenField
+            };
+            var result = new MapGenerator().Generate(config);
+
+            var buildingTypes = new[] { UnitType.BASE, UnitType.BARRACKS, UnitType.ARCHERY,
+                                       UnitType.TOWER, UnitType.MONASTERY };
+
+            foreach (var bt in buildingTypes)
+            {
+                var size = GameConstants.UNIT_SIZE[bt];
+                for (int x = 0; x < config.Width - size.X + 1; x++)
+                {
+                    for (int y = 0; y < config.Height - size.Y + 1; y++)
+                    {
+                        var anchor = new Position(x, y);
+                        if (!result.Map.IsAreaBuildable(bt, anchor)) continue;
+
+                        for (int dx = 0; dx < size.X; dx++)
+                            for (int dy = 0; dy < size.Y; dy++)
+                            {
+                                var cell = new Position(x + dx, y + dy);
+                                Assert.False(result.BlockedCells.Contains(cell),
+                                    $"Seed {seed}: {bt} buildable at {anchor} but blocked at {cell}");
+                            }
+                    }
+                }
+            }
+        }
+    }
+
+    // ==================================================================
     // SimGameBuilder integration
     // ==================================================================
 

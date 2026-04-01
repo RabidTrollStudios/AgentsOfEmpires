@@ -78,12 +78,11 @@ namespace GameManager
 			{
 				// Buildings: anchor is bottom-left. Footprint extends right and up.
 				// Passage row (top, j=sizeY-1) is walkable.
-				// Body rows: 0..sizeY-2. Visual pivot at body center.
-				// Center X: sizeX / 2
-				// Center Y: (sizeY - 1) / 2.0  (center of body, excluding passage)
+				// Body rows: 0..sizeY-2 (height = sizeY-1).
+				// Visual center of body: anchor + (sizeX/2, bodyHeight/2)
 				var size = Constants.UNIT_SIZE[unitType];
 				float bodyHeight = size.y > 1 ? size.y - 1 : size.y;
-				position = gridPosition + new Vector3(size.x * 0.5f, (bodyHeight - 1) * 0.5f);
+				position = gridPosition + new Vector3(size.x * 0.5f, bodyHeight * 0.5f);
 			}
 
 			GameObject unit = Object.Instantiate(
@@ -126,7 +125,7 @@ namespace GameManager
 			// Bottom-left anchor. Body center for visual placement.
 			var size = Constants.UNIT_SIZE[unitType];
 			float bodyHeight = size.y > 1 ? size.y - 1 : size.y;
-			Vector3 position = gridPosition + new Vector3(size.x * 0.5f, (bodyHeight - 1) * 0.5f);
+			Vector3 position = gridPosition + new Vector3(size.x * 0.5f, bodyHeight * 0.5f);
 
 			// Use agent 0's prefab (mines look the same regardless)
 			GameObject unit = Object.Instantiate(

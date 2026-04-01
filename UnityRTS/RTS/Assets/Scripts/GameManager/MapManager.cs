@@ -322,59 +322,27 @@ namespace GameManager
 
 		/// <summary>
 		/// Determines if the gridPosition is a neighbor of the unit.
-		/// For buildings with a walkable top row, the top row passage cells also count
-		/// as neighbors (they're adjacent to the building's non-walkable body).
+		/// Delegates to shared GameGrid.IsNeighborOfUnit for parity.
 		/// </summary>
 		public bool IsNeighborOfUnit(Vector3Int gridPosition, UnitType unitType, Vector3Int unitGridPosition)
 		{
-			var neighbors = GetGridPositionsNearUnit(unitType, unitGridPosition);
-			if (neighbors.Contains(gridPosition))
-				return true;
-
-			// Accept walkable top-row passage cells as neighbors
-			Vector3Int size = Constants.UNIT_SIZE[unitType];
-			if (!Constants.CAN_MOVE[unitType] && size.y > 1)
-			{
-				int y = unitGridPosition.y; // top row
-				if (gridPosition.y == y
-				    && gridPosition.x >= unitGridPosition.x
-				    && gridPosition.x < unitGridPosition.x + size.x)
-					return true;
-			}
-			return false;
+			var pos = new AgentSDK.Position(gridPosition.x, gridPosition.y);
+			var anchor = new AgentSDK.Position(unitGridPosition.x, unitGridPosition.y);
+			return Grid.IsNeighborOfUnit(pos, unitType, anchor);
 		}
 
 		/// <summary>
-		/// Get all of the grid positions surrounding a particular unit
+		/// Get all of the grid positions surrounding a particular unit.
+		/// Delegates to shared GameGrid.GetPositionsNearUnit for parity.
 		/// </summary>
 		public List<Vector3Int> GetGridPositionsNearUnit(UnitType unitType, Vector3Int gridPosition)
 		{
-			Vector3Int gridPos;
-			List<Vector3Int> positions = new List<Vector3Int>();
-
-			for (int i = gridPosition.x - 1; i <= gridPosition.x + Constants.UNIT_SIZE[unitType].x; ++i)
-			{
-				gridPos = new Vector3Int(i, gridPosition.y + 1, 0);
-				if (Utility.IsValidGridLocation(gridPos, MapSize))
-					positions.Add(gridPos);
-
-				gridPos = new Vector3Int(i, gridPosition.y - Constants.UNIT_SIZE[unitType].y, 0);
-				if (Utility.IsValidGridLocation(gridPos, MapSize))
-					positions.Add(gridPos);
-			}
-
-			for (int j = gridPosition.y - Constants.UNIT_SIZE[unitType].y + 1; j <= gridPosition.y; ++j)
-			{
-				gridPos = new Vector3Int(gridPosition.x - 1, j, 0);
-				if (Utility.IsValidGridLocation(gridPos, MapSize))
-					positions.Add(gridPos);
-
-				gridPos = new Vector3Int(gridPosition.x + Constants.UNIT_SIZE[unitType].x, j, 0);
-				if (Utility.IsValidGridLocation(gridPos, MapSize))
-					positions.Add(gridPos);
-			}
-
-			return positions;
+			var anchor = new AgentSDK.Position(gridPosition.x, gridPosition.y);
+			var positions = Grid.GetPositionsNearUnit(unitType, anchor);
+			var result = new List<Vector3Int>(positions.Count);
+			foreach (var p in positions)
+				result.Add(new Vector3Int(p.X, p.Y, 0));
+			return result;
 		}
 
 		/// <summary>
@@ -387,10 +355,11 @@ namespace GameManager
 			var result = positions.Where(IsGridPositionBuildable).ToList();
 
 			// Include passage cells (building top row) as valid approach positions
+			// Bottom-left anchor: top row is at anchor.Y + sizeY - 1
 			Vector3Int size = Constants.UNIT_SIZE[unitType];
 			if (!Constants.CAN_MOVE[unitType] && size.y > 1)
 			{
-				int y = gridPosition.y; // top row
+				int y = gridPosition.y + size.y - 1; // top row (passage)
 				for (int i = 0; i < size.x; i++)
 				{
 					var pos = new Vector3Int(gridPosition.x + i, y, 0);
