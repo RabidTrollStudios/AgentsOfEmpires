@@ -30,6 +30,7 @@ namespace AgentSDK
     {
         private readonly CellState[,] cells;
         private readonly bool[,] isPassage; // true for building top-row cells (permanent while building exists)
+        private readonly int[,] occupantCount; // number of mobile units on each cell
 
         public int Width { get; }
         public int Height { get; }
@@ -41,7 +42,8 @@ namespace AgentSDK
             Height = height;
             cells = new CellState[width, height];
             isPassage = new bool[width, height];
-            // All cells start OPEN, no passages
+            occupantCount = new int[width, height];
+            // All cells start OPEN, no passages, no occupants
         }
 
         #region Cell Queries
@@ -345,14 +347,20 @@ namespace AgentSDK
 
         /// <summary>
         /// Find a path from start to any walkable cell adjacent to the given unit.
-        /// Neighbors are sorted by distance to the start position so the closest
-        /// reachable cell is tried first. Returns the first successful path.
+        /// Prefers OPEN cells over WALKABLE (occupied) cells, then sorts by distance
+        /// to the start position. Uses start position hash for tiebreaking so different
+        /// units approaching the same building naturally spread to different cells.
+        /// Returns the first successful path.
         /// </summary>
         public List<Position> FindPathToUnit(Position start, UnitType unitType, Position unitAnchor)
         {
             var neighbors = GetBuildablePositionsNearUnit(unitType, unitAnchor);
 
-            // Sort by squared distance to start (closest first, deterministic)
+            // Tiebreak seed based on start position so different pawns prefer different cells
+            int tiebreakSeed = start.X * 397 ^ start.Y;
+
+            // Sort by distance to start, with position-based tiebreaking so
+            // different pawns approaching the same building spread to different cells
             neighbors.Sort((a, b) =>
             {
                 int dxA = a.X - start.X, dyA = a.Y - start.Y;
@@ -361,10 +369,10 @@ namespace AgentSDK
                 int distB = dxB * dxB + dyB * dyB;
                 int cmp = distA.CompareTo(distB);
                 if (cmp != 0) return cmp;
-                // Deterministic tiebreak: Y descending then X ascending
-                cmp = b.Y.CompareTo(a.Y);
-                if (cmp != 0) return cmp;
-                return a.X.CompareTo(b.X);
+                // Deterministic tiebreak using start-position hash
+                int hashA = (a.X * 31 + a.Y) ^ tiebreakSeed;
+                int hashB = (b.X * 31 + b.Y) ^ tiebreakSeed;
+                return hashA.CompareTo(hashB);
             });
 
             foreach (var neighbor in neighbors)
@@ -388,15 +396,29 @@ namespace AgentSDK
 
         /// <summary>
         /// Mark a mobile unit as occupying (occupy=true) or leaving (occupy=false) a cell.
-        /// On leave, restores to WALKABLE if the cell is a building passage, otherwise OPEN.
+        /// Uses reference counting so a cell stays WALKABLE until ALL occupants leave.
+        /// On last leave, restores to WALKABLE if the cell is a building passage, otherwise OPEN.
         /// </summary>
         public void SetCellOccupied(Position p, bool occupy)
         {
             if (!IsPositionValid(p)) return;
             if (occupy)
+            {
+                occupantCount[p.X, p.Y]++;
                 cells[p.X, p.Y] = CellState.WALKABLE;
+            }
             else
-                cells[p.X, p.Y] = isPassage[p.X, p.Y] ? CellState.WALKABLE : CellState.OPEN;
+            {
+                occupantCount[p.X, p.Y] = System.Math.Max(0, occupantCount[p.X, p.Y] - 1);
+                if (occupantCount[p.X, p.Y] == 0)
+                    cells[p.X, p.Y] = isPassage[p.X, p.Y] ? CellState.WALKABLE : CellState.OPEN;
+            }
+        }
+
+        /// <summary>Check how many mobile units occupy a cell.</summary>
+        public int GetOccupantCount(Position p)
+        {
+            return IsPositionValid(p) ? occupantCount[p.X, p.Y] : 0;
         }
 
         /// <summary>Legacy alias for SetCellOccupied.</summary>

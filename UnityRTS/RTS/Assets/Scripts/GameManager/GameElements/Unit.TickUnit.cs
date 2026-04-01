@@ -23,18 +23,33 @@ namespace GameManager.GameElements
             BaseUnit = GameManager.Instance.Units.GetUnit(baseUnit);
         }
 
-        /// <summary>Enqueue a visual waypoint for smooth movement interpolation.</summary>
-        internal void EnqueueVisualWaypoint(Vector3Int pos)
+        /// <summary>
+        /// Start a visual interpolation segment to the given grid cell.
+        /// Called by OnUnitMoved when the TickEngine moves this unit to a new cell.
+        /// If a previous segment is still active, snaps to its target first so
+        /// multi-cell moves within a single tick chain correctly.
+        /// </summary>
+        internal void StartVisualMove(Vector3Int toCell)
         {
-            visualWaypoints.Enqueue(pos);
+            Vector3 target = (Vector3)toCell + new Vector3(0.5f, 0f, 0);
             visualSpeed = Speed / Time.fixedDeltaTime;
-        }
 
-        /// <summary>Set velocity for animation facing from a movement step.</summary>
-        internal void SetVelocityFromMovement(Vector3Int from, Vector3Int to)
-        {
-            velocity = (Vector3)(to - from);
-            velocity = Utility.SafeNormalize(velocity);
+            if (visualT >= 1.0f && visualQueue.Count == 0)
+            {
+                // Not currently interpolating — start a new segment immediately
+                visualFrom = WorldPosition;
+                visualTo = target;
+                visualT = 0f;
+                velocity = Utility.SafeNormalize(visualTo - visualFrom);
+            }
+            else
+            {
+                // Already interpolating — queue this waypoint for smooth chaining
+                visualQueue.Enqueue(target);
+            }
+
+            // Notify state machine so it can snapshot action/phase for run-variant selection
+            _vsm?.NotifyMoveStarted(CurrentAction, gatherPhase, buildPhase);
         }
 
         // Explicit implementations for properties with non-public setters
@@ -70,12 +85,13 @@ namespace GameManager.GameElements
                         path.Add(new Vector3Int(p.X, p.Y, 0));
                 }
                 pathIndex = 0;
+                // Clear visual queue when path changes — old waypoints are invalid
                 if (CanMove)
-                {
-                    visualWaypoints.Clear();
-                    visualSegmentT = 1.0f;
-                    WorldPosition = (Vector3)GridPosition + new Vector3(0.5f, 0f, 0);
-                }
+                    visualQueue.Clear();
+                // Reset build phase when a new non-empty path is assigned for a build command
+                if (value != null && value.Count > 0
+                    && (CurrentAction == UnitAction.BUILD || CurrentAction == UnitAction.REPAIR))
+                    buildPhase = BuildPhase.TO_POSITION;
             }
         }
         int ITickUnit.PathIndex { get => pathIndex; set => pathIndex = value; }
