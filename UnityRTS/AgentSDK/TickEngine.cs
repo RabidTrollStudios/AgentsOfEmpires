@@ -49,9 +49,7 @@ namespace AgentSDK
                         break;
                 }
 
-                // Movement
-                if (unit.TickPath != null && unit.PathIndex < unit.TickPath.Count)
-                    MoveUnitOneStep(unit, world, callbacks);
+                // Movement is now handled by MovementSystem.Advance called separately
             }
 
             // Phase 3: Mana regen for all units
@@ -84,7 +82,7 @@ namespace AgentSDK
             unit.CurrentAction = UnitAction.IDLE;
             unit.TickPath = null;
             unit.PathIndex = 0;
-            unit.MoveAccumulator = 0f;
+            unit.PathProgress = 0f;
             unit.AttackTargetNbr = -1;
             unit.HealTargetNbr = -1;
             unit.BuildTargetNbr = -1;
@@ -101,91 +99,8 @@ namespace AgentSDK
             }
         }
 
-        private static void MoveUnitOneStep(ITickUnit unit, ITickWorld world, ITickCallbacks callbacks)
-        {
-            if (unit.TickPath == null || unit.PathIndex >= unit.TickPath.Count) return;
-
-            float speed = world.Constants.MovingSpeed[unit.UnitType];
-            unit.MoveAccumulator += speed;
-
-            while (unit.TickPath != null && unit.PathIndex < unit.TickPath.Count)
-            {
-                Position nextPos = unit.TickPath[unit.PathIndex];
-
-                var result = TaskEngine.TryMoveToCell(
-                    unit.GridPosition, nextPos, unit.MoveAccumulator,
-                    world.Grid, out float distCost);
-
-                switch (result)
-                {
-                    case TaskEngine.MoveResult.Moved:
-                        unit.MoveAccumulator -= distCost;
-
-                        Position oldPos = unit.GridPosition;
-                        if (unit.CanMove)
-                        {
-                            world.Grid.SetCellOccupied(nextPos, true);
-                            world.Grid.SetCellOccupied(oldPos, false);
-                        }
-
-                        unit.GridPosition = nextPos;
-                        unit.PathIndex++;
-
-                        callbacks.OnUnitMoved(unit, oldPos, nextPos);
-
-                        if (unit.PathIndex >= unit.TickPath.Count)
-                        {
-                            if (unit.CurrentAction == UnitAction.MOVE)
-                            {
-                                GoIdle(unit);
-                            }
-                        }
-                        continue;
-
-                    case TaskEngine.MoveResult.BlockedByUnit:
-                        if (unit.PathIndex == unit.TickPath.Count - 1)
-                        {
-                            if (unit.CurrentAction == UnitAction.MOVE)
-                            {
-                                GoIdle(unit);
-                            }
-                            else
-                            {
-                                // Non-MOVE action (GATHER, BUILD, ATTACK): destination occupied.
-                                // Clear path so the task logic repatches to a different neighbor.
-                                unit.TickPath = null;
-                                unit.PathIndex = 0;
-                            }
-                            return;
-                        }
-                        goto case TaskEngine.MoveResult.Moved;
-
-                    case TaskEngine.MoveResult.BlockedByTerrain:
-                        unit.MoveAccumulator -= distCost;
-                        Position dest = unit.TickPath[unit.TickPath.Count - 1];
-                        var repath = world.FindPath(unit.GridPosition, dest);
-                        if (repath.Count > 0)
-                        {
-                            unit.TickPath = repath;
-                            unit.PathIndex = 0;
-                            callbacks.OnUnitRepath(unit, repath);
-                        }
-                        else if (unit.CurrentAction == UnitAction.MOVE)
-                        {
-                            GoIdle(unit);
-                        }
-                        else
-                        {
-                            unit.TickPath = null;
-                            unit.PathIndex = 0;
-                        }
-                        return;
-
-                    default: // InsufficientMovement
-                        return;
-                }
-            }
-        }
+        // MoveUnitOneStep removed — movement is now handled by MovementSystem.Advance
+        // called separately by Unity (per-frame) and SimGame (per-tick).
 
         #endregion
 

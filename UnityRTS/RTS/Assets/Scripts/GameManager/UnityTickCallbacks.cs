@@ -23,8 +23,8 @@ namespace GameManager
                     map.GridCells[fromV.x, fromV.y].SetBuildable(true);
                 map.GridCells[toV.x, toV.y].SetBuildable(false);
 
-                // Start visual interpolation from current position to new cell
-                u.StartVisualMove(toV);
+                // Notify VSM of cell crossing for animation snapshot
+                u.NotifyVisualCellCrossed();
             }
         }
 

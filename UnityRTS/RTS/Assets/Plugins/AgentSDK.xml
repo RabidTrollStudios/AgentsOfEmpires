@@ -868,6 +868,25 @@
             Mirrored anchor = (w - sizeX - pos.X, h - sizeY - pos.Y).
             </summary>
         </member>
+        <member name="T:AgentSDK.MovementSystem">
+            <summary>
+            Continuous euclidean movement system. Units advance along their path
+            by speed * dt each call, crossing cell boundaries as distance is consumed.
+            Both Unity (per-frame with Time.deltaTime) and SimGame (per-tick with tickDuration)
+            call this with their respective time deltas for identical results.
+            </summary>
+        </member>
+        <member name="M:AgentSDK.MovementSystem.Advance(AgentSDK.ITickUnit,System.Single,AgentSDK.ITickWorld,AgentSDK.ITickCallbacks)">
+            <summary>
+            Advance a unit along its path by speed * dt.
+            Crosses cell boundaries as needed, firing OnUnitMoved for each cell entered.
+            Handles collision: BlockedByTerrain triggers repath, BlockedByUnit at final
+            cell clears path for task logic to handle, mid-path BlockedByUnit passes through.
+            </summary>
+        </member>
+        <member name="M:AgentSDK.MovementSystem.CheckCell(AgentSDK.Position,AgentSDK.GameGrid)">
+            <summary>Check if a cell is passable, without accumulator logic.</summary>
+        </member>
         <member name="T:AgentSDK.Pathfinder">
              <summary>
              Shared A* pathfinder for grid-based maps. Used by both the Unity game engine

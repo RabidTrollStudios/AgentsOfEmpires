@@ -24,31 +24,12 @@ namespace GameManager.GameElements
         }
 
         /// <summary>
-        /// Start a visual interpolation segment to the given grid cell.
-        /// Called by OnUnitMoved when the TickEngine moves this unit to a new cell.
-        /// If a previous segment is still active, snaps to its target first so
-        /// multi-cell moves within a single tick chain correctly.
+        /// Called by OnUnitMoved when the unit crosses into a new cell.
+        /// Notifies the VSM to snapshot action/phase for animation selection.
+        /// Visual position is now derived directly from GridPosition + PathProgress.
         /// </summary>
-        internal void StartVisualMove(Vector3Int toCell)
+        internal void NotifyVisualCellCrossed()
         {
-            Vector3 target = (Vector3)toCell + new Vector3(0.5f, 0f, 0);
-            visualSpeed = Speed / Time.fixedDeltaTime;
-
-            if (visualT >= 1.0f && visualQueue.Count == 0)
-            {
-                // Not currently interpolating — start a new segment immediately
-                visualFrom = WorldPosition;
-                visualTo = target;
-                visualT = 0f;
-                velocity = Utility.SafeNormalize(visualTo - visualFrom);
-            }
-            else
-            {
-                // Already interpolating — queue this waypoint for smooth chaining
-                visualQueue.Enqueue(target);
-            }
-
-            // Notify state machine so it can snapshot action/phase for run-variant selection
             _vsm?.NotifyMoveStarted(CurrentAction, gatherPhase, buildPhase);
         }
 
@@ -85,17 +66,17 @@ namespace GameManager.GameElements
                         path.Add(new Vector3Int(p.X, p.Y, 0));
                 }
                 pathIndex = 0;
-                // Clear visual queue when path changes — old waypoints are invalid
-                if (CanMove)
-                    visualQueue.Clear();
                 // Reset build phase when a new non-empty path is assigned for a build command
                 if (value != null && value.Count > 0
                     && (CurrentAction == UnitAction.BUILD || CurrentAction == UnitAction.REPAIR))
                     buildPhase = BuildPhase.TO_POSITION;
+                // Snapshot action/phase for VSM animation when path starts
+                if (value != null && value.Count > 0)
+                    _vsm?.NotifyMoveStarted(CurrentAction, gatherPhase, buildPhase);
             }
         }
         int ITickUnit.PathIndex { get => pathIndex; set => pathIndex = value; }
-        float ITickUnit.MoveAccumulator { get => MoveAccumulator; set => MoveAccumulator = value; }
+        float ITickUnit.PathProgress { get => PathProgress; set => PathProgress = value; }
 
         // Training — map to taskTime/taskUnitType
         float ITickUnit.TrainTimer { get => taskTime; set => taskTime = value; }

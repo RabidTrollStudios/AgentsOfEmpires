@@ -28,6 +28,14 @@ namespace GameManager
 			return unityTickWorld;
 		}
 
+		/// <summary>Get the shared tick callbacks adapter (lazy-initialized).</summary>
+		internal AgentSDK.ITickCallbacks GetTickCallbacks()
+		{
+			if (unityTickCallbacks == null)
+				unityTickCallbacks = new UnityTickCallbacks();
+			return unityTickCallbacks;
+		}
+
 		/// <summary>
 		/// Run one game tick: process commands, advance all units via TickEngine,
 		/// then run post-tick updates. Used by tests to simulate ticks without

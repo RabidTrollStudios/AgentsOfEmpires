@@ -30,7 +30,7 @@ namespace AgentSDK
         // Movement
         List<Position> TickPath { get; set; }
         int PathIndex { get; set; }
-        float MoveAccumulator { get; set; }
+        float PathProgress { get; set; }
 
         // Training
         float TrainTimer { get; set; }

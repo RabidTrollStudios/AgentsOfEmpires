@@ -28,7 +28,7 @@ namespace AgentSDK
             unit.CurrentAction = UnitAction.MOVE;
             unit.TickPath = path;
             unit.PathIndex = 0;
-            unit.MoveAccumulator = 0f;
+            unit.PathProgress = 0f;
             return CommandResult.SUCCESS;
         }
 
@@ -136,7 +136,7 @@ namespace AgentSDK
             {
                 attacker.TickPath = null;
                 attacker.PathIndex = 0;
-                attacker.MoveAccumulator = 0f;
+                attacker.PathProgress = 0f;
             }
             else
             {
@@ -187,7 +187,7 @@ namespace AgentSDK
             {
                 monk.TickPath = null;
                 monk.PathIndex = 0;
-                monk.MoveAccumulator = 0f;
+                monk.PathProgress = 0f;
             }
             else
             {

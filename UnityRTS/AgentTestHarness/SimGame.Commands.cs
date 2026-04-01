@@ -226,7 +226,7 @@ namespace AgentTestHarness
             {
                 attacker.Path = null;
                 attacker.PathIndex = 0;
-                attacker.MoveAccumulator = 0f;
+                attacker.PathProgress = 0f;
             }
             else
             {
@@ -269,7 +269,7 @@ namespace AgentTestHarness
             {
                 monk.Path = null;
                 monk.PathIndex = 0;
-                monk.MoveAccumulator = 0f;
+                monk.PathProgress = 0f;
             }
             else
             {

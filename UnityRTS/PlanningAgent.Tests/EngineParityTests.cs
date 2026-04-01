@@ -193,7 +193,7 @@ namespace PlanningAgent.Tests
                             if (eu58.HasMoveAcc)
                                 engineAcc = $" engAcc={eu58.MoveAcc:F4}";
                         }
-                        _output.WriteLine($"  [t{tick}] u58:({u58.GridPosition.X},{u58.GridPosition.Y}) {u58.CurrentAction} acc={u58.MoveAccumulator:F4}{engineAcc}{pathInfo}{targetInfo}{atkPos}");
+                        _output.WriteLine($"  [t{tick}] u58:({u58.GridPosition.X},{u58.GridPosition.Y}) {u58.CurrentAction} acc={u58.PathProgress:F4}{engineAcc}{pathInfo}{targetInfo}{atkPos}");
                         // Dump path contents (show more for debugging)
                         if (u58.TickPath != null)
                         {
@@ -234,7 +234,7 @@ namespace PlanningAgent.Tests
                     if (u30 != null)
                     {
                         string pathInfo = u30.TickPath != null ? $" path={u30.TickPath.Count} pi={u30.PathIndex}" : " nopath";
-                        _output.WriteLine($"  [t{tick}] u30:({u30.GridPosition.X},{u30.GridPosition.Y}) {u30.CurrentAction} heal={u30.HealTargetNbr} acc={u30.MoveAccumulator:F2}{pathInfo}");
+                        _output.WriteLine($"  [t{tick}] u30:({u30.GridPosition.X},{u30.GridPosition.Y}) {u30.CurrentAction} heal={u30.HealTargetNbr} acc={u30.PathProgress:F2}{pathInfo}");
                     }
                 }
 
@@ -427,8 +427,8 @@ namespace PlanningAgent.Tests
                     diffs.Add($"Unit {eu.UnitNbr}: health sim={su.Health:F1} engine={eu.Health:F1}");
                 if (su.IsBuilt != eu.IsBuilt)
                     diffs.Add($"Unit {eu.UnitNbr}: isBuilt sim={su.IsBuilt} engine={eu.IsBuilt}");
-                if (eu.HasMoveAcc && Math.Abs(su.MoveAccumulator - eu.MoveAcc) > 0.001f)
-                    diffs.Add($"Unit {eu.UnitNbr}: moveAcc sim={su.MoveAccumulator:F4} engine={eu.MoveAcc:F4}");
+                if (eu.HasMoveAcc && Math.Abs(su.PathProgress - eu.MoveAcc) > 0.001f)
+                    diffs.Add($"Unit {eu.UnitNbr}: moveAcc sim={su.PathProgress:F4} engine={eu.MoveAcc:F4}");
             }
 
             foreach (var su in simUnits)
