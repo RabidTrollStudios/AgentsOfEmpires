@@ -161,23 +161,8 @@ namespace GameManager.GameElements
 		private int pathBackoffMultiplier = 1;
 		private int localAvoidWaitFrames = 0;
 
-		// Visual interpolation: OnUnitMoved enqueues targets, Update lerps through them.
-		private Queue<Vector3> visualQueue = new Queue<Vector3>();
-		private Vector3 visualFrom;           // world pos at start of current segment
-		private Vector3 visualTo;             // world pos target of current segment
-		private float visualT = 1.0f;         // 0..1 progress along current segment (1 = arrived)
-		private float visualSpeed;            // cells per second for current movement
-
-		/// <summary>
-		/// True when the visual has pending movement or the unit has path cells remaining.
-		/// This prevents premature transitions to stationary animations when the visual
-		/// arrives at a cell but the TickEngine hasn't moved the unit to the next cell yet
-		/// (e.g., insufficient MoveAccumulator for a diagonal).
-		/// </summary>
-		internal bool IsVisuallyMoving =>
-			visualT < 1.0f
-			|| visualQueue.Count > 0
-			|| (_tickPath != null && pathIndex < _tickPath.Count);
+		/// <summary>True when the unit has a path to follow (movement in progress).</summary>
+		internal bool IsVisuallyMoving => _tickPath != null && pathIndex < _tickPath.Count;
 
 		// Path visualization
 		private LineRenderer pathLineRenderer;
@@ -510,7 +495,7 @@ namespace GameManager.GameElements
 		#region Parity (read-only accessors for state hashing — must match SimUnit fields)
 
 		/// <summary>Move accumulator for fractional movement.</summary>
-		internal float MoveAccumulator { get; set; }
+		internal float PathProgress { get; set; }
 		/// <summary>Current index into the path list.</summary>
 		internal int PathIndex => pathIndex;
 		/// <summary>Number of cells remaining in the current path, or -1 if no path.</summary>
@@ -573,7 +558,7 @@ namespace GameManager.GameElements
 			this.CurrentAction = UnitAction.IDLE;
 			path = new List<Vector3Int>();
 			pathIndex = 0;
-			MoveAccumulator = 0f;
+			PathProgress = 0f;
 			pathFailCount = 0;
 			pathBackoffMultiplier = 1;
 			UnitType = unitType;
@@ -593,7 +578,6 @@ namespace GameManager.GameElements
 			}
 
 			GridPosition = gridPosition;
-			visualT = 1.0f;
 			Health = Constants.HEALTH[UnitType];
 			Mana = Constants.MAX_MANA[UnitType];
 			animator = gameObject.GetComponent<Animator>();

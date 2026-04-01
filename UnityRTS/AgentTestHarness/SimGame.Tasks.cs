@@ -1,11 +1,11 @@
+using System.Linq;
 using AgentSDK;
 
 namespace AgentTestHarness
 {
     /// <summary>
-    /// Task advancement: delegates entirely to <see cref="TickEngine.AdvanceAllUnits"/>.
-    /// All game logic (movement, training, building, gathering, attack, repair, heal)
-    /// lives in the shared AgentSDK TickEngine — no duplicate implementations here.
+    /// Task advancement and movement. Task logic delegates to TickEngine.AdvanceAllUnits.
+    /// Movement delegates to MovementSystem.Advance per unit per tick.
     /// </summary>
     public partial class SimGame
     {
@@ -16,7 +16,15 @@ namespace AgentTestHarness
         {
             if (tickWorld == null)
                 tickWorld = new SimTickWorld(this);
+
+            // Phase 1: Task logic (action state machines)
             TickEngine.AdvanceAllUnits(tickWorld, NullTickCallbacks.Instance);
+
+            // Phase 2: Movement — advance all units by one tick's worth of distance
+            var units = tickWorld.AllUnits.ToList();
+            units.Sort((a, b) => a.UnitNbr.CompareTo(b.UnitNbr));
+            foreach (var unit in units)
+                MovementSystem.Advance(unit, Config.TickDuration, tickWorld, NullTickCallbacks.Instance);
         }
     }
 }

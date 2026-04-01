@@ -205,10 +205,7 @@ namespace GameManager.GameElements
 				// that FixedUpdate can follow immediately without local-avoidance delays.
 				path = GameManager.Instance.Map.GetPathBetweenGridPositions(GridPosition, args.Target, avoidUnits: true);
 				pathIndex = 0;
-				MoveAccumulator = 0f;
-				visualWaypoints.Clear();
-				visualSegmentT = 1.0f;
-				WorldPosition = (Vector3)GridPosition + new Vector3(0.5f, 0f, 0);
+				PathProgress = 0f;
 
 				// Fall back to walkable path if surrounded (avoidUnits can't expand any neighbors)
 				if (path.Count == 0)
@@ -305,7 +302,7 @@ namespace GameManager.GameElements
 				{
 					path.Clear();
 					pathIndex = 0;
-					MoveAccumulator = 0f;
+					PathProgress = 0f;
 					TargetGridPos = targetUnit.GridPosition;
 					TargetUnitType = targetUnit.UnitType;
 					CurrentAction = UnitAction.ATTACK;
@@ -426,7 +423,7 @@ namespace GameManager.GameElements
 			{
 				path.Clear();
 				pathIndex = 0;
-				MoveAccumulator = 0f;
+				PathProgress = 0f;
 				TargetGridPos = targetUnit.GridPosition;
 				TargetUnitType = targetUnit.UnitType;
 				CurrentAction = UnitAction.HEAL;

@@ -23,47 +23,22 @@ namespace GameManager.GameElements
 		/// </summary>
 		internal void Update()
 		{
-			if (CanMove)
+			if (CanMove && GameManager.Instance != null && GameManager.Instance.IsPlaying)
 			{
-				if (visualT < 1.0f)
+				// Continuous movement: advance along path by speed * deltaTime
+				var world = GameManager.Instance.GetTickWorld();
+				var callbacks = GameManager.Instance.GetTickCallbacks();
+				AgentSDK.MovementSystem.Advance(this, Time.deltaTime, world, callbacks);
+
+				// Derive visual position from grid position + sub-cell progress
+				if (_tickPath != null && pathIndex < _tickPath.Count)
 				{
-					// Interpolate toward the target cell
-					float segDist = Vector3.Distance(visualFrom, visualTo);
-					if (segDist > 0.001f && visualSpeed > 0.001f)
-					{
-						float segDuration = segDist / visualSpeed;
-						visualT += Time.deltaTime / segDuration;
-					}
-					else
-					{
-						visualT = 1.0f;
-					}
-
-					if (visualT >= 1.0f)
-					{
-						visualT = 1.0f;
-						WorldPosition = visualTo;
-					}
-					else
-					{
-						WorldPosition = Vector3.Lerp(visualFrom, visualTo, visualT);
-					}
+					Vector3 from = (Vector3)GridPosition + new Vector3(0.5f, 0f, 0);
+					Vector3 to = new Vector3(_tickPath[pathIndex].X + 0.5f, _tickPath[pathIndex].Y, 0);
+					WorldPosition = Vector3.Lerp(from, to, PathProgress);
+					velocity = Utility.SafeNormalize(to - from);
 				}
-
-				// When current segment completes, pop next queued waypoint
-				if (visualT >= 1.0f && visualQueue.Count > 0)
-				{
-					visualFrom = WorldPosition;
-					visualTo = visualQueue.Dequeue();
-					visualT = 0f;
-					velocity = Utility.SafeNormalize(visualTo - visualFrom);
-				}
-
-				// No active segment and no queued waypoints — snap to grid only
-				// if there are no remaining path cells (otherwise hold position
-				// and let the next OnUnitMoved start a new segment)
-				if (visualT >= 1.0f && visualQueue.Count == 0
-					&& (_tickPath == null || pathIndex >= _tickPath.Count))
+				else
 				{
 					WorldPosition = (Vector3)GridPosition + new Vector3(0.5f, 0f, 0);
 				}
@@ -656,10 +631,7 @@ namespace GameManager.GameElements
 				pathUpdateCounter = 0;
 				path = GameManager.Instance.Map.GetPathToUnit(gridPosition, targetUnitType, targetGridPos, avoidUnits);
 				pathIndex = 0;
-				if (CanMove)
-				{
-					visualT = 1.0f;
-				}
+				// Visual position is now derived from GridPosition + PathProgress
 
 				if (path.Count == 0)
 				{

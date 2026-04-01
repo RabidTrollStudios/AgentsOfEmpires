@@ -18,7 +18,7 @@ namespace AgentTestHarness
         public float Health;
         public bool IsBuilt;
         public UnitAction CurrentAction;
-        public float MoveAccumulator;
+        public float PathProgress;
         public int PathIndex;
         public int PathCount;
         public float TrainTimer;
@@ -48,7 +48,7 @@ namespace AgentTestHarness
                 Health = u.Health,
                 IsBuilt = u.IsBuilt,
                 CurrentAction = u.CurrentAction,
-                MoveAccumulator = u.MoveAccumulator,
+                PathProgress = u.PathProgress,
                 PathIndex = u.PathIndex,
                 PathCount = u.Path != null ? u.Path.Count : -1,
                 TrainTimer = u.TrainTimer,
@@ -176,7 +176,7 @@ namespace AgentTestHarness
             Check("Health", a.Health, b.Health);
             Check("IsBuilt", a.IsBuilt, b.IsBuilt);
             Check("CurrentAction", a.CurrentAction, b.CurrentAction);
-            Check("MoveAccumulator", a.MoveAccumulator, b.MoveAccumulator);
+            Check("PathProgress", a.PathProgress, b.PathProgress);
             Check("PathIndex", a.PathIndex, b.PathIndex);
             Check("PathCount", a.PathCount, b.PathCount);
             Check("TrainTimer", a.TrainTimer, b.TrainTimer);

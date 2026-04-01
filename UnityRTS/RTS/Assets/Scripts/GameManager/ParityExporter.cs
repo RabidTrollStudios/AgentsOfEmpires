@@ -171,7 +171,7 @@ namespace GameManager
                 if (u == null) continue;
                 int owner = u.OwnerAgentNbr;
                 // Format: unitNbr:type:owner:x:y:health:isBuilt:action:moveAcc
-                unitParts.Add($"{u.UnitNbr}:{u.UnitType}:{owner}:{u.GridPosition.x}:{u.GridPosition.y}:{u.Health:F1}:{(u.IsBuilt?1:0)}:{u.CurrentAction}:{u.MoveAccumulator:F4}");
+                unitParts.Add($"{u.UnitNbr}:{u.UnitType}:{owner}:{u.GridPosition.x}:{u.GridPosition.y}:{u.Health:F1}:{(u.IsBuilt?1:0)}:{u.CurrentAction}:{u.PathProgress:F4}");
             }
 
             string units = string.Join("|", unitParts);

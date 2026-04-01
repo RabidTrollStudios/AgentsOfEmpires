@@ -31,7 +31,7 @@ namespace AgentTestHarness
         // Movement
         public List<Position> TickPath { get; set; }
         public int PathIndex { get; set; }
-        public float MoveAccumulator { get; set; }
+        public float PathProgress { get; set; }
 
         // Training
         public float TrainTimer { get; set; }
