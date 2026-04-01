@@ -146,7 +146,16 @@ namespace AgentSDK
                         if (unit.PathIndex == unit.TickPath.Count - 1)
                         {
                             if (unit.CurrentAction == UnitAction.MOVE)
+                            {
                                 GoIdle(unit);
+                            }
+                            else
+                            {
+                                // Non-MOVE action (GATHER, BUILD, ATTACK): destination occupied.
+                                // Clear path so the task logic repatches to a different neighbor.
+                                unit.TickPath = null;
+                                unit.PathIndex = 0;
+                            }
                             return;
                         }
                         goto case TaskEngine.MoveResult.Moved;
@@ -262,7 +271,8 @@ namespace AgentSDK
             if (pawn.TickPath != null && pawn.PathIndex < pawn.TickPath.Count)
                 return;
 
-            if (world.IsNeighborOfUnit(pawn.GridPosition, UnitType.MINE, mine.GridPosition))
+            if (world.IsNeighborOfUnit(pawn.GridPosition, UnitType.MINE, mine.GridPosition)
+                && world.Grid.GetOccupantCount(pawn.GridPosition) <= 1)
             {
                 var oldPhase = pawn.GatherPhase;
                 pawn.GatherPhase = GatherPhase.MINING;
@@ -302,12 +312,23 @@ namespace AgentSDK
                     GoIdle(pawn);
                     return;
                 }
-                var emptyPath = world.FindPathToUnit(pawn.GridPosition, UnitType.BASE, baseForEmpty.GridPosition);
-                var oldPhase = pawn.GatherPhase;
-                pawn.GatherPhase = GatherPhase.TO_BASE;
-                pawn.TickPath = emptyPath;
-                pawn.PathIndex = 0;
-                callbacks.OnGatherPhaseChanged(pawn, oldPhase, GatherPhase.TO_BASE);
+                // If already adjacent to base, deposit immediately
+                if (world.IsNeighborOfUnit(pawn.GridPosition, UnitType.BASE, baseForEmpty.GridPosition))
+                {
+                    world.AddGold(pawn.OwnerAgentNbr, pawn.GoldCarried);
+                    callbacks.OnGoldDeposited(pawn, pawn.GoldCarried);
+                    pawn.GoldCarried = 0;
+                    GoIdle(pawn);
+                }
+                else
+                {
+                    var emptyPath = world.FindPathToUnit(pawn.GridPosition, UnitType.BASE, baseForEmpty.GridPosition);
+                    var oldPhase = pawn.GatherPhase;
+                    pawn.GatherPhase = GatherPhase.TO_BASE;
+                    pawn.TickPath = emptyPath;
+                    pawn.PathIndex = 0;
+                    callbacks.OnGatherPhaseChanged(pawn, oldPhase, GatherPhase.TO_BASE);
+                }
                 return;
             }
 
@@ -333,12 +354,49 @@ namespace AgentSDK
                     return;
                 }
 
-                var path = world.FindPathToUnit(pawn.GridPosition, UnitType.BASE, baseUnit.GridPosition);
-                var oldPhase = pawn.GatherPhase;
-                pawn.GatherPhase = GatherPhase.TO_BASE;
-                pawn.TickPath = path;
-                pawn.PathIndex = 0;
-                callbacks.OnGatherPhaseChanged(pawn, oldPhase, GatherPhase.TO_BASE);
+                // If already adjacent to base, deposit immediately without pathing
+                if (world.IsNeighborOfUnit(pawn.GridPosition, UnitType.BASE, baseUnit.GridPosition))
+                {
+                    world.AddGold(pawn.OwnerAgentNbr, pawn.GoldCarried);
+                    callbacks.OnGoldDeposited(pawn, pawn.GoldCarried);
+                    pawn.GoldCarried = 0;
+
+                    // Re-check mine (same variable from outer scope)
+                    if (mine == null || mine.Health <= 0)
+                    {
+                        GoIdle(pawn);
+                        return;
+                    }
+
+                    // If also adjacent to mine and cell isn't shared, resume mining immediately
+                    if (world.IsNeighborOfUnit(pawn.GridPosition, UnitType.MINE, mine.GridPosition)
+                        && world.Grid.GetOccupantCount(pawn.GridPosition) <= 1)
+                    {
+                        var oldPhase2 = pawn.GatherPhase;
+                        pawn.GatherPhase = GatherPhase.MINING;
+                        pawn.MiningTimer = 0f;
+                        pawn.GoldCarried = 0;
+                        callbacks.OnGatherPhaseChanged(pawn, oldPhase2, GatherPhase.MINING);
+                    }
+                    else
+                    {
+                        var minePath = world.FindPathToUnit(pawn.GridPosition, UnitType.MINE, mine.GridPosition);
+                        var oldPhase2 = pawn.GatherPhase;
+                        pawn.GatherPhase = GatherPhase.TO_MINE;
+                        pawn.TickPath = minePath;
+                        pawn.PathIndex = 0;
+                        callbacks.OnGatherPhaseChanged(pawn, oldPhase2, GatherPhase.TO_MINE);
+                    }
+                }
+                else
+                {
+                    var path = world.FindPathToUnit(pawn.GridPosition, UnitType.BASE, baseUnit.GridPosition);
+                    var oldPhase = pawn.GatherPhase;
+                    pawn.GatherPhase = GatherPhase.TO_BASE;
+                    pawn.TickPath = path;
+                    pawn.PathIndex = 0;
+                    callbacks.OnGatherPhaseChanged(pawn, oldPhase, GatherPhase.TO_BASE);
+                }
             }
         }
 
@@ -354,7 +412,8 @@ namespace AgentSDK
             if (pawn.TickPath != null && pawn.PathIndex < pawn.TickPath.Count)
                 return;
 
-            if (world.IsNeighborOfUnit(pawn.GridPosition, UnitType.BASE, baseUnit.GridPosition))
+            if (world.IsNeighborOfUnit(pawn.GridPosition, UnitType.BASE, baseUnit.GridPosition)
+                && world.Grid.GetOccupantCount(pawn.GridPosition) <= 1)
             {
                 world.AddGold(pawn.OwnerAgentNbr, pawn.GoldCarried);
                 callbacks.OnGoldDeposited(pawn, pawn.GoldCarried);
@@ -367,12 +426,24 @@ namespace AgentSDK
                     return;
                 }
 
-                var path = world.FindPathToUnit(pawn.GridPosition, UnitType.MINE, mine.GridPosition);
-                var oldPhase = pawn.GatherPhase;
-                pawn.GatherPhase = GatherPhase.TO_MINE;
-                pawn.TickPath = path;
-                pawn.PathIndex = 0;
-                callbacks.OnGatherPhaseChanged(pawn, oldPhase, GatherPhase.TO_MINE);
+                // If already adjacent to mine, resume mining immediately
+                if (world.IsNeighborOfUnit(pawn.GridPosition, UnitType.MINE, mine.GridPosition))
+                {
+                    var oldPhase = pawn.GatherPhase;
+                    pawn.GatherPhase = GatherPhase.MINING;
+                    pawn.MiningTimer = 0f;
+                    pawn.GoldCarried = 0;
+                    callbacks.OnGatherPhaseChanged(pawn, oldPhase, GatherPhase.MINING);
+                }
+                else
+                {
+                    var path = world.FindPathToUnit(pawn.GridPosition, UnitType.MINE, mine.GridPosition);
+                    var oldPhase = pawn.GatherPhase;
+                    pawn.GatherPhase = GatherPhase.TO_MINE;
+                    pawn.TickPath = path;
+                    pawn.PathIndex = 0;
+                    callbacks.OnGatherPhaseChanged(pawn, oldPhase, GatherPhase.TO_MINE);
+                }
             }
             else
             {

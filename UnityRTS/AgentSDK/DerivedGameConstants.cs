@@ -22,7 +22,7 @@ namespace AgentSDK
                 { UnitType.WARRIOR, 2.1f },
                 { UnitType.ARCHER, 3.0f },
                 { UnitType.LANCER, 3.45f },
-                { UnitType.MONK, 0.85f },
+                { UnitType.MONK, 2.5f },
             };
 
         /// <summary>Unit scoring for timeout win condition: ceil(COST / SCORING_SCALAR).</summary>

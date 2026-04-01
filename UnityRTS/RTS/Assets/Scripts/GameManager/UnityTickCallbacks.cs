@@ -23,11 +23,8 @@ namespace GameManager
                     map.GridCells[fromV.x, fromV.y].SetBuildable(true);
                 map.GridCells[toV.x, toV.y].SetBuildable(false);
 
-                // Enqueue visual waypoint
-                u.EnqueueVisualWaypoint(toV);
-
-                // Update velocity for animation facing
-                u.SetVelocityFromMovement(fromV, toV);
+                // Start visual interpolation from current position to new cell
+                u.StartVisualMove(toV);
             }
         }
 
@@ -42,6 +39,10 @@ namespace GameManager
 
         public void OnBuildProgress(ITickUnit pawn, ITickUnit building, float progress, float total)
         {
+            // Transition pawn to BUILDING animation phase (path consumed, now hammering)
+            if (pawn is Unit pawnUnit)
+                pawnUnit.buildPhase = BuildPhase.BUILDING;
+
             if (building is Unit buildingUnit)
             {
                 buildingUnit.BuildProgress = progress;
@@ -75,7 +76,11 @@ namespace GameManager
         public void OnMiningTick(ITickUnit pawn, ITickUnit mine, int goldMined) { }
         public void OnGoldDeposited(ITickUnit pawn, int amount) { }
         public void OnGatherPhaseChanged(ITickUnit pawn, GatherPhase oldPhase, GatherPhase newPhase) { }
-        public void OnHealApplied(ITickUnit healer, ITickUnit target, float amount) { }
+        public void OnHealApplied(ITickUnit healer, ITickUnit target, float amount)
+        {
+            if (target is Unit targetUnit && healer is Unit healerUnit)
+                healerUnit.SpawnHealEffect(targetUnit);
+        }
         public void OnRepairTick(ITickUnit pawn, ITickUnit building, float amount) { }
         public void OnUnitRepath(ITickUnit unit, List<Position> newPath) { }
     }

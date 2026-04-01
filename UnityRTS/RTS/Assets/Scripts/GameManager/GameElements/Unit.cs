@@ -137,7 +137,7 @@ namespace GameManager.GameElements
 		// Training Variables
 		// Building Variables
 		internal UnitType taskUnitType;
-		private BuildPhase buildPhase;
+		internal BuildPhase buildPhase;
 		private GameObject currentBuilding;
 
 		// Healing Variables
@@ -161,12 +161,23 @@ namespace GameManager.GameElements
 		private int pathBackoffMultiplier = 1;
 		private int localAvoidWaitFrames = 0;
 
-		// Visual interpolation: FixedUpdate enqueues grid positions, Update walks through them.
-		private Queue<Vector3Int> visualWaypoints = new Queue<Vector3Int>();
-		private Vector3 visualMoveFrom;       // start of current segment
-		private Vector3 visualMoveTo;         // end of current segment
-		private float visualSegmentT = 1.0f;  // 0..1 progress along current segment
+		// Visual interpolation: OnUnitMoved enqueues targets, Update lerps through them.
+		private Queue<Vector3> visualQueue = new Queue<Vector3>();
+		private Vector3 visualFrom;           // world pos at start of current segment
+		private Vector3 visualTo;             // world pos target of current segment
+		private float visualT = 1.0f;         // 0..1 progress along current segment (1 = arrived)
 		private float visualSpeed;            // cells per second for current movement
+
+		/// <summary>
+		/// True when the visual has pending movement or the unit has path cells remaining.
+		/// This prevents premature transitions to stationary animations when the visual
+		/// arrives at a cell but the TickEngine hasn't moved the unit to the next cell yet
+		/// (e.g., insufficient MoveAccumulator for a diagonal).
+		/// </summary>
+		internal bool IsVisuallyMoving =>
+			visualT < 1.0f
+			|| visualQueue.Count > 0
+			|| (_tickPath != null && pathIndex < _tickPath.Count);
 
 		// Path visualization
 		private LineRenderer pathLineRenderer;
@@ -582,8 +593,7 @@ namespace GameManager.GameElements
 			}
 
 			GridPosition = gridPosition;
-			visualWaypoints.Clear();
-			visualSegmentT = 1.0f;
+			visualT = 1.0f;
 			Health = Constants.HEALTH[UnitType];
 			Mana = Constants.MAX_MANA[UnitType];
 			animator = gameObject.GetComponent<Animator>();
@@ -607,6 +617,8 @@ namespace GameManager.GameElements
 					animator.Play(0, 0, 0f);
 				}
 			}
+
+			InitializeVisualStateMachine();
 
 			pathLineRenderer = gameObject.AddComponent<LineRenderer>();
 			pathLineRenderer.startWidth = 0.05f;

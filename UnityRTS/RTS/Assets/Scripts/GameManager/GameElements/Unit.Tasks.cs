@@ -632,18 +632,20 @@ namespace GameManager.GameElements
 		/// <summary>
 		/// Spawn a heal VFX on the target unit.
 		/// </summary>
-		private void SpawnHealEffect(Unit target)
+		internal void SpawnHealEffect(Unit target)
 		{
 			var controller = GameManager.Instance.HealEffectAnimatorController;
 			if (controller == null) return;
 
 			var healGo = new GameObject("HealEffect");
-			healGo.transform.position = target.transform.position + new Vector3(0f, 0.5f, 0f);
+			healGo.transform.SetParent(target.transform);
+			healGo.transform.localPosition = new Vector3(0f, 0.5f, 0f);
 			healGo.transform.localScale = Vector3.one;
 
 			var sr = healGo.AddComponent<SpriteRenderer>();
-			sr.sortingLayerName = "UnitUI";
-			sr.sortingOrder = 25;
+			sr.sortingLayerName = "Agents";
+			sr.sortingOrder = 2; // above units (sortingOrder 0-1) but Y-sorted with them
+			sr.spriteSortPoint = SpriteSortPoint.Pivot;
 
 			var anim = healGo.AddComponent<Animator>();
 			anim.runtimeAnimatorController = controller;

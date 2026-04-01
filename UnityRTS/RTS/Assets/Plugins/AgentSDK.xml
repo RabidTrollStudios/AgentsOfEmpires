@@ -440,8 +440,10 @@
         <member name="M:AgentSDK.GameGrid.FindPathToUnit(AgentSDK.Position,AgentSDK.UnitType,AgentSDK.Position)">
             <summary>
             Find a path from start to any walkable cell adjacent to the given unit.
-            Neighbors are sorted by distance to the start position so the closest
-            reachable cell is tried first. Returns the first successful path.
+            Prefers OPEN cells over WALKABLE (occupied) cells, then sorts by distance
+            to the start position. Uses start position hash for tiebreaking so different
+            units approaching the same building naturally spread to different cells.
+            Returns the first successful path.
             </summary>
         </member>
         <member name="M:AgentSDK.GameGrid.SetAreaBuildability(AgentSDK.UnitType,AgentSDK.Position,System.Boolean)">
@@ -450,8 +452,12 @@
         <member name="M:AgentSDK.GameGrid.SetCellOccupied(AgentSDK.Position,System.Boolean)">
             <summary>
             Mark a mobile unit as occupying (occupy=true) or leaving (occupy=false) a cell.
-            On leave, restores to WALKABLE if the cell is a building passage, otherwise OPEN.
+            Uses reference counting so a cell stays WALKABLE until ALL occupants leave.
+            On last leave, restores to WALKABLE if the cell is a building passage, otherwise OPEN.
             </summary>
+        </member>
+        <member name="M:AgentSDK.GameGrid.GetOccupantCount(AgentSDK.Position)">
+            <summary>Check how many mobile units occupy a cell.</summary>
         </member>
         <member name="M:AgentSDK.GameGrid.SetCellStandable(AgentSDK.Position,System.Boolean)">
             <summary>Legacy alias for SetCellOccupied.</summary>

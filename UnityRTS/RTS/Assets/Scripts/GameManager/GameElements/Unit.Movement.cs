@@ -23,53 +23,56 @@ namespace GameManager.GameElements
 		/// </summary>
 		internal void Update()
 		{
-			// Walk the visual through queued waypoints at the unit's speed.
-			// FixedUpdate enqueues grid positions; we smoothly traverse them here.
 			if (CanMove)
 			{
-				// Advance current segment
-				if (visualSegmentT < 1.0f)
+				if (visualT < 1.0f)
 				{
-					float segDist = Vector3.Distance(visualMoveFrom, visualMoveTo);
+					// Interpolate toward the target cell
+					float segDist = Vector3.Distance(visualFrom, visualTo);
 					if (segDist > 0.001f && visualSpeed > 0.001f)
 					{
-						float segDuration = segDist / visualSpeed; // seconds for this segment
-						visualSegmentT += Time.deltaTime / segDuration;
+						float segDuration = segDist / visualSpeed;
+						visualT += Time.deltaTime / segDuration;
 					}
 					else
 					{
-						visualSegmentT = 1.0f;
+						visualT = 1.0f;
 					}
-					if (visualSegmentT >= 1.0f)
+
+					if (visualT >= 1.0f)
 					{
-						visualSegmentT = 1.0f;
-						WorldPosition = visualMoveTo;
+						visualT = 1.0f;
+						WorldPosition = visualTo;
 					}
 					else
 					{
-						WorldPosition = Vector3.Lerp(visualMoveFrom, visualMoveTo, visualSegmentT);
+						WorldPosition = Vector3.Lerp(visualFrom, visualTo, visualT);
 					}
-					velocity = Utility.SafeNormalize(visualMoveTo - visualMoveFrom);
 				}
 
-				// If current segment is done, pop next waypoint
-				if (visualSegmentT >= 1.0f && visualWaypoints.Count > 0)
+				// When current segment completes, pop next queued waypoint
+				if (visualT >= 1.0f && visualQueue.Count > 0)
 				{
-					Vector3Int nextWp = visualWaypoints.Dequeue();
-					visualMoveFrom = WorldPosition;
-					visualMoveTo = (Vector3)nextWp + new Vector3(0.5f, 0f, 0);
-					visualSegmentT = 0f;
-					velocity = Utility.SafeNormalize(visualMoveTo - visualMoveFrom);
+					visualFrom = WorldPosition;
+					visualTo = visualQueue.Dequeue();
+					visualT = 0f;
+					velocity = Utility.SafeNormalize(visualTo - visualFrom);
 				}
 
-				// If no segments active and no waypoints, snap to grid
-				if (visualSegmentT >= 1.0f && visualWaypoints.Count == 0)
+				// No active segment and no queued waypoints — snap to grid only
+				// if there are no remaining path cells (otherwise hold position
+				// and let the next OnUnitMoved start a new segment)
+				if (visualT >= 1.0f && visualQueue.Count == 0
+					&& (_tickPath == null || pathIndex >= _tickPath.Count))
 				{
 					WorldPosition = (Vector3)GridPosition + new Vector3(0.5f, 0f, 0);
 				}
 			}
 
-			UpdateAnimation();
+			if (_vsm != null)
+				UpdateAnimationVSM();
+			else
+				UpdateAnimation();
 
 			if (GameManager.Instance == null || !GameManager.Instance.IsPlaying) return;
 
@@ -119,6 +122,48 @@ namespace GameManager.GameElements
 			UpdateTrainingBar();
 			UpdateManaBar();
 			UpdateBuildPulse();
+		}
+
+		/// <summary>
+		/// Spawn animation-timed visual effects (gold nuggets, arrows).
+		/// These are purely cosmetic — game logic is handled by TickEngine.
+		/// </summary>
+		private void UpdateVisualEffects()
+		{
+			if (!GameManager.Instance.IsPlaying) return;
+			if (animator == null || animator.runtimeAnimatorController == null) return;
+
+			float loopPos = animator.GetCurrentAnimatorStateInfo(0).normalizedTime % 1f;
+
+			// Gold nugget during mining (pickaxe downswing at frame 3 of 6, ~0.5)
+			if (CurrentAction == UnitAction.GATHER && gatherPhase == GatherPhase.MINING
+				&& MineUnit != null && UnitType == UnitType.PAWN)
+			{
+				if (loopPos >= 0.5f && !goldNuggetSpawnedThisCycle)
+				{
+					goldNuggetSpawnedThisCycle = true;
+					SpawnGoldNugget();
+				}
+				else if (loopPos < 0.5f)
+				{
+					goldNuggetSpawnedThisCycle = false;
+				}
+			}
+
+			// Arrow projectile during ranged attack (frame 5 of 8, ~0.625)
+			if (CurrentAction == UnitAction.ATTACK && UnitType == UnitType.ARCHER
+				&& AttackUnit != null && path.Count == 0)
+			{
+				if (loopPos >= 0.625f && !arrowFiredThisCycle)
+				{
+					arrowFiredThisCycle = true;
+					SpawnArrow(AttackUnit);
+				}
+				else if (loopPos < 0.625f)
+				{
+					arrowFiredThisCycle = false;
+				}
+			}
 		}
 
 		/// <summary>
@@ -405,166 +450,11 @@ namespace GameManager.GameElements
 		///   2=Right_Attack, 3=Up_Attack, 4=Down_Attack, 5=UpRight_Attack, 6=DownRight_Attack,
 		///   7=Right_Defence, 8=Up_Defence, 9=Down_Defence, 10=UpRight_Defence, 11=DownRight_Defence
 		/// </summary>
+		/// <summary>Legacy fallback — only reached for buildings (which bail at CanMove check).</summary>
 		private void UpdateAnimation()
 		{
-			if (animator == null || animator.runtimeAnimatorController == null || !CanMove)
-				return;
-
-			int state = 0; // default: Idle
-
-			if (UnitType == UnitType.WARRIOR)
-			{
-				switch (CurrentAction)
-				{
-					case UnitAction.MOVE:
-						if (path.Count > 0)
-							state = 1; // Run
-						else
-							state = 4; // Guard (arrived at rally point)
-						break;
-
-					case UnitAction.ATTACK:
-						if (path.Count > 0)
-						{
-							state = 1; // Run (chasing)
-							lastAttackNormTime = 0f;
-						}
-						else
-						{
-							state = useAttack2 ? 3 : 2;
-							// Alternate attack animation only after the clip completes one loop
-							var info = animator.GetCurrentAnimatorStateInfo(0);
-							if (lastAttackNormTime < 1.0f && info.normalizedTime >= 1.0f)
-								useAttack2 = !useAttack2;
-							// Reset tracking when normalizedTime drops (new state entered)
-							lastAttackNormTime = info.normalizedTime < lastAttackNormTime
-								? 0f : info.normalizedTime;
-						}
-						break;
-				}
-			}
-			else if (UnitType == UnitType.ARCHER)
-			{
-				switch (CurrentAction)
-				{
-					case UnitAction.MOVE:
-						if (path.Count > 0)
-							state = 1; // Run
-						break;
-
-					case UnitAction.ATTACK:
-						if (path.Count > 0)
-							state = 1; // Run (pursuing target)
-						else
-							state = 2; // Shoot (in range)
-						break;
-				}
-			}
-			else if (UnitType == UnitType.LANCER)
-			{
-				// Lancer uses the same State integer parameter as other units.
-				// The controller's AnyState transitions map:
-				//   0=Idle, 1=Run (unconditional fallback), 2-6=directional attacks.
-				int idx = GetLancerStateIndex();
-				animator.SetInteger("State", idx);
-
-				// Handle facing/flip, then return early (skip generic facing at end)
-				UpdateLancerFacing();
-				if (unitSprite != null)
-					unitSprite.flipX = !facingRight;
-				return;
-			}
-			else if (UnitType == UnitType.MONK)
-			{
-				switch (CurrentAction)
-				{
-					case UnitAction.MOVE:
-						if (path.Count > 0)
-							state = 1; // Run
-						break;
-
-					case UnitAction.HEAL:
-						if (path.Count > 0)
-							state = 1; // Run (moving toward target)
-						else
-							state = 2; // Heal (in range)
-						break;
-				}
-			}
-			else // PAWN
-			{
-				switch (CurrentAction)
-				{
-					case UnitAction.MOVE:
-						if (path.Count > 0)
-							state = 1;
-						break;
-
-					case UnitAction.BUILD:
-					case UnitAction.REPAIR:
-						if (buildPhase == BuildPhase.TO_POSITION && path.Count > 0)
-							state = 4; // running with hammer to build/repair site
-						else if (buildPhase == BuildPhase.BUILDING)
-							state = 3; // swinging the hammer
-						break;
-
-					case UnitAction.GATHER:
-						if (gatherPhase == GatherPhase.TO_BASE && path.Count > 0)
-							state = 2; // carrying gold home (Run Gold)
-						else if (gatherPhase == GatherPhase.MINING)
-							state = 6; // mining at the mine (Interact Pickaxe)
-						else if (path.Count > 0)
-							state = 5; // running to mine (Run Pickaxe)
-						break;
-
-					case UnitAction.ATTACK:
-						if (path.Count > 0)
-							state = 1;
-						break;
-				}
-			}
-
-			// Flip sprite to face the direction of horizontal movement.
-			// Sprite faces right by default; flipX mirrors it to face left.
-			if (velocity.x > 0.05f)
-				facingRight = true;
-			else if (velocity.x < -0.05f)
-				facingRight = false;
-
-			// Face toward building when building or repairing
-			if ((CurrentAction == UnitAction.BUILD || CurrentAction == UnitAction.REPAIR) && buildPhase == BuildPhase.BUILDING && currentBuilding != null)
-			{
-				float dx = currentBuilding.GetComponent<Unit>().CenterGridPosition.x - CenterGridPosition.x;
-				if (dx > 0.01f)
-					facingRight = true;
-				else if (dx < -0.01f)
-					facingRight = false;
-			}
-
-			// Face toward mine when mining
-			if (CurrentAction == UnitAction.GATHER && gatherPhase == GatherPhase.MINING && MineUnit != null)
-			{
-				float dx = MineUnit.GetComponent<Unit>().CenterGridPosition.x - CenterGridPosition.x;
-				if (dx > 0.01f)
-					facingRight = true;
-				else if (dx < -0.01f)
-					facingRight = false;
-			}
-
-			// Face toward attack target when stationary in attack range
-			if (CurrentAction == UnitAction.ATTACK && AttackUnit != null && path.Count == 0)
-			{
-				float dx = AttackUnit.CenterGridPosition.x - CenterGridPosition.x;
-				if (dx > 0.01f)
-					facingRight = true;
-				else if (dx < -0.01f)
-					facingRight = false;
-			}
-
-			if (unitSprite != null)
-				unitSprite.flipX = !facingRight;
-
-			animator.SetInteger("State", state);
+			// All mobile unit animation is handled by UpdateAnimationVSM via the state machine.
+			// Buildings don't have animators that use the State integer parameter.
 		}
 
 		/// <summary>
@@ -632,15 +522,11 @@ namespace GameManager.GameElements
 		/// </summary>
 		private int GetLancerStateIndex()
 		{
-			if (CurrentAction == UnitAction.MOVE && path.Count > 0)
+			if (IsVisuallyMoving)
 				return 1; // Run
 
 			if (CurrentAction == UnitAction.ATTACK)
-			{
-				if (path.Count > 0)
-					return 1; // Run (pursuing)
 				return GetLancerDirectionalAttackIndex();
-			}
 
 			return 0; // Idle
 		}
@@ -772,9 +658,7 @@ namespace GameManager.GameElements
 				pathIndex = 0;
 				if (CanMove)
 				{
-					visualWaypoints.Clear();
-					visualSegmentT = 1.0f;
-					WorldPosition = (Vector3)GridPosition + new Vector3(0.5f, 0f, 0);
+					visualT = 1.0f;
 				}
 
 				if (path.Count == 0)
