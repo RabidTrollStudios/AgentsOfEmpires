@@ -193,10 +193,10 @@ namespace GameManager.GameElements
 
 				healthBarFill.localScale = new Vector3(fillScaleX, BIG_BAR_FILL_SCALE_Y, 1f);
 				healthBarFill.localPosition = new Vector3(
-					BIG_BAR_FILL_X_OFFSET + leftEdgeOffset, BIG_BAR_FILL_Y_OFFSET, 0f);
+					BIG_BAR_FILL_X_OFFSET + leftEdgeOffset, healthFillBaseY, 0f);
 
 				healthBarBg.localScale = new Vector3(BIG_BAR_SCALE_X, BIG_BAR_SCALE_Y, 1f);
-				healthBarBg.localPosition = new Vector3(0f, BIG_BAR_Y_OFFSET, 0f);
+				healthBarBg.localPosition = new Vector3(0f, healthBarBaseY, 0f);
 			}
 			else
 			{
@@ -308,7 +308,7 @@ namespace GameManager.GameElements
 			float fullFillW = BIG_BAR_FILL_SCALE_X * (90f / 64f);
 			float leftEdgeOffset = fullFillW * (ratio - 1f) * 0.5f;
 
-			float trainFillY = BIG_BAR_FILL_Y_OFFSET - TRAIN_BAR_Y_GAP;
+			float trainFillY = trainFillBaseY;
 			trainingBarFill.localScale = new Vector3(fillScaleX, BIG_BAR_FILL_SCALE_Y, 1f);
 			trainingBarFill.localPosition = new Vector3(
 				BIG_BAR_FILL_X_OFFSET + leftEdgeOffset, trainFillY, 0f);

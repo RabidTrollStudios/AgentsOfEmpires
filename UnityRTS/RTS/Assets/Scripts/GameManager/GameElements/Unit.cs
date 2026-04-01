@@ -221,7 +221,11 @@ namespace GameManager.GameElements
 		// Training bar (buildings only) — positioned below health bar
 		private Transform trainingBarFrame;
 		private Transform trainingBarFill;
-		private const float TRAIN_BAR_Y_GAP = 0.35f; // gap below health bar
+		private const float TRAIN_BAR_Y_GAP = 0.35f; // gap between training and health bars
+		private const float BAR_DROP = 0.175f; // drop bars closer to building (half bar height)
+		private float healthBarBaseY;   // stored Y offset for health bar (set at init, read each frame)
+		private float healthFillBaseY;  // stored Y offset for health fill
+		private float trainFillBaseY;   // stored Y offset for training fill
 
 		// Mana bar (monks only) — positioned below health bar
 		private Transform manaBarFrame;
@@ -749,33 +753,19 @@ namespace GameManager.GameElements
 			{
 				usesBigBar = true;
 
-				var bgObj = new GameObject("HealthBarFrame");
-				bgObj.transform.SetParent(transform);
-				bgObj.transform.localPosition = new Vector3(0f, BIG_BAR_Y_OFFSET, 0f);
-				bgObj.transform.localScale = new Vector3(BIG_BAR_SCALE_X, BIG_BAR_SCALE_Y, 1f);
-				var bgSr = bgObj.AddComponent<SpriteRenderer>();
-				bgSr.sprite = GameManager.Instance.BigBarBase;
-				bgSr.sortingLayerName = "UnitUI";
-				bgSr.sortingOrder = 30;
-				healthBarBg = bgObj.transform;
-
-				var fillObj = new GameObject("HealthBarFill");
-				fillObj.transform.SetParent(transform);
-				fillObj.transform.localPosition = new Vector3(BIG_BAR_FILL_X_OFFSET, BIG_BAR_FILL_Y_OFFSET, 0f);
-				fillObj.transform.localScale = new Vector3(BIG_BAR_FILL_SCALE_X, BIG_BAR_FILL_SCALE_Y, 1f);
-				var fillSr = fillObj.AddComponent<SpriteRenderer>();
-				fillSr.sprite = GetBigHealthFillSprite();
-				fillSr.color = Color.green;
-				fillSr.sortingLayerName = "UnitUI";
-				fillSr.sortingOrder = 31;
-				healthBarFill = fillObj.transform;
-
-				// Training bar (only for buildings that can train)
 				if (CanTrain)
 				{
-					float trainBarY = BIG_BAR_Y_OFFSET - TRAIN_BAR_Y_GAP;
-					float trainFillY = BIG_BAR_FILL_Y_OFFSET - TRAIN_BAR_Y_GAP;
+					// Buildings that train: training bar on top, health bar below,
+					// both dropped closer to the building by BAR_DROP.
+					float trainBarY = BIG_BAR_Y_OFFSET - BAR_DROP;
+					float trainFillY = BIG_BAR_FILL_Y_OFFSET - BAR_DROP;
+					float healthBarY = BIG_BAR_Y_OFFSET - BAR_DROP - TRAIN_BAR_Y_GAP;
+					float healthFillY = BIG_BAR_FILL_Y_OFFSET - BAR_DROP - TRAIN_BAR_Y_GAP;
+					healthBarBaseY = healthBarY;
+					healthFillBaseY = healthFillY;
+					trainFillBaseY = trainFillY;
 
+					// Training bar (top)
 					var trainBgObj = new GameObject("TrainingBarFrame");
 					trainBgObj.transform.SetParent(transform);
 					trainBgObj.transform.localPosition = new Vector3(0f, trainBarY, 0f);
@@ -798,6 +788,54 @@ namespace GameManager.GameElements
 					trainFillSr.sortingOrder = 31;
 					trainFillObj.SetActive(false);
 					trainingBarFill = trainFillObj.transform;
+
+					// Health bar (below training bar)
+					var bgObj = new GameObject("HealthBarFrame");
+					bgObj.transform.SetParent(transform);
+					bgObj.transform.localPosition = new Vector3(0f, healthBarY, 0f);
+					bgObj.transform.localScale = new Vector3(BIG_BAR_SCALE_X, BIG_BAR_SCALE_Y, 1f);
+					var bgSr = bgObj.AddComponent<SpriteRenderer>();
+					bgSr.sprite = GameManager.Instance.BigBarBase;
+					bgSr.sortingLayerName = "UnitUI";
+					bgSr.sortingOrder = 30;
+					healthBarBg = bgObj.transform;
+
+					var fillObj = new GameObject("HealthBarFill");
+					fillObj.transform.SetParent(transform);
+					fillObj.transform.localPosition = new Vector3(BIG_BAR_FILL_X_OFFSET, healthFillY, 0f);
+					fillObj.transform.localScale = new Vector3(BIG_BAR_FILL_SCALE_X, BIG_BAR_FILL_SCALE_Y, 1f);
+					var fillSr = fillObj.AddComponent<SpriteRenderer>();
+					fillSr.sprite = GetBigHealthFillSprite();
+					fillSr.color = Color.green;
+					fillSr.sortingLayerName = "UnitUI";
+					fillSr.sortingOrder = 31;
+					healthBarFill = fillObj.transform;
+				}
+				else
+				{
+					// Non-training buildings (mines, towers): health bar only, unchanged position
+					healthBarBaseY = BIG_BAR_Y_OFFSET;
+					healthFillBaseY = BIG_BAR_FILL_Y_OFFSET;
+					var bgObj = new GameObject("HealthBarFrame");
+					bgObj.transform.SetParent(transform);
+					bgObj.transform.localPosition = new Vector3(0f, BIG_BAR_Y_OFFSET, 0f);
+					bgObj.transform.localScale = new Vector3(BIG_BAR_SCALE_X, BIG_BAR_SCALE_Y, 1f);
+					var bgSr = bgObj.AddComponent<SpriteRenderer>();
+					bgSr.sprite = GameManager.Instance.BigBarBase;
+					bgSr.sortingLayerName = "UnitUI";
+					bgSr.sortingOrder = 30;
+					healthBarBg = bgObj.transform;
+
+					var fillObj = new GameObject("HealthBarFill");
+					fillObj.transform.SetParent(transform);
+					fillObj.transform.localPosition = new Vector3(BIG_BAR_FILL_X_OFFSET, BIG_BAR_FILL_Y_OFFSET, 0f);
+					fillObj.transform.localScale = new Vector3(BIG_BAR_FILL_SCALE_X, BIG_BAR_FILL_SCALE_Y, 1f);
+					var fillSr = fillObj.AddComponent<SpriteRenderer>();
+					fillSr.sprite = GetBigHealthFillSprite();
+					fillSr.color = Color.green;
+					fillSr.sortingLayerName = "UnitUI";
+					fillSr.sortingOrder = 31;
+					healthBarFill = fillObj.transform;
 				}
 			}
 		}
