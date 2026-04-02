@@ -122,7 +122,7 @@ namespace GameManager.GameElements
 
 		private void UpdateFlying()
 		{
-			elapsed += Time.deltaTime;
+			elapsed += Time.deltaTime * Constants.GAME_SPEED;
 			float t = Mathf.Clamp01(elapsed / duration);
 
 			// Linear interpolation for base position
@@ -229,9 +229,11 @@ namespace GameManager.GameElements
 
 			var animator = fireGo.AddComponent<Animator>();
 			animator.runtimeAnimatorController = controller;
+			animator.speed = Constants.GAME_SPEED;
 
-			// Self-destruct after one play-through (fire animations are ~4 frames at 12 FPS)
-			UnityEngine.Object.Destroy(fireGo, 0.5f);
+			// Self-destruct after one play-through, scaled by game speed
+			float destroyTime = Constants.GAME_SPEED > 0 ? 0.5f / Constants.GAME_SPEED : 0.5f;
+			UnityEngine.Object.Destroy(fireGo, destroyTime);
 		}
 
 		private void UpdateStuck()
@@ -243,7 +245,7 @@ namespace GameManager.GameElements
 				return;
 			}
 
-			stuckTimer += Time.deltaTime;
+			stuckTimer += Time.deltaTime * Constants.GAME_SPEED;
 			if (stuckTimer >= STUCK_DURATION)
 			{
 				EnterExplodingPhase();
@@ -273,15 +275,17 @@ namespace GameManager.GameElements
 
 				var animator = explosionGo.AddComponent<Animator>();
 				animator.runtimeAnimatorController = explosionController;
+				animator.speed = Constants.GAME_SPEED;
 
 				// Self-destruct after the full animation (8 frames at 12 FPS)
-				Destroy(explosionGo, 0.667f);
+				float explodeTime = Constants.GAME_SPEED > 0 ? 0.667f / Constants.GAME_SPEED : 0.667f;
+				Destroy(explosionGo, explodeTime);
 			}
 		}
 
 		private void UpdateExploding()
 		{
-			stuckTimer += Time.deltaTime;
+			stuckTimer += Time.deltaTime * Constants.GAME_SPEED;
 			if (stuckTimer >= EXPLOSION_DURATION)
 			{
 				// Destroy only the arrow; the explosion lives on independently

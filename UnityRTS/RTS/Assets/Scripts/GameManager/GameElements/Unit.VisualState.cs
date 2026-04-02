@@ -103,6 +103,7 @@ namespace GameManager.GameElements
 	public partial class Unit
 	{
 		private UnitVisualStateMachine _vsm;
+		private int _lastLancerStateInt = -1;
 
 		internal void InitializeVisualStateMachine()
 		{
@@ -185,8 +186,9 @@ namespace GameManager.GameElements
 
 		private void FaceTowardBuilding(Unit u)
 		{
-			if (currentBuilding == null) return;
-			float dx = currentBuilding.GetComponent<Unit>().CenterGridPosition.x - CenterGridPosition.x;
+			var building = GameManager.Instance?.Units?.GetUnit(((ITickUnit)u).BuildTargetNbr);
+			if (building == null) return;
+			float dx = building.CenterGridPosition.x - CenterGridPosition.x;
 			if (dx > 0.01f) facingRight = true;
 			else if (dx < -0.01f) facingRight = false;
 		}
@@ -375,28 +377,34 @@ namespace GameManager.GameElements
 
 			int stateInt = _vsm.Update(this);
 
+			animator.SetInteger("State", stateInt);
+			animator.speed = Constants.GAME_SPEED;
+
 			if (UnitType == UnitType.LANCER)
 			{
-				// Lancer uses animator.Play with state hashes instead of SetInteger
-				if (lancerStateHashes != null && stateInt < lancerStateHashes.Length)
-					animator.Play(lancerStateHashes[stateInt], 0);
 				UpdateLancerFacing();
-			}
-			else
-			{
-				animator.SetInteger("State", stateInt);
+				if (unitSprite != null)
+					unitSprite.flipX = !facingRight;
 			}
 
-			// Facing direction from velocity (set by StartVisualMove)
+			// Facing direction
 			if (UnitType != UnitType.LANCER)
 			{
-				if (velocity.x > 0.05f)
-					facingRight = true;
-				else if (velocity.x < -0.05f)
-					facingRight = false;
+				string stateName = _vsm.CurrentState?.Name;
+
+				// Stationary action states handle their own facing via OnUpdate callbacks
+				// (Building faces toward building, Mining faces toward mine).
+				// Only apply velocity-based facing for movement and other states.
+				if (stateName != "Building" && stateName != "Mining")
+				{
+					if (velocity.x > 0.05f)
+						facingRight = true;
+					else if (velocity.x < -0.05f)
+						facingRight = false;
+				}
 
 				// Face toward mine when mining
-				if (_vsm.CurrentState?.Name == "Mining" && MineUnit != null)
+				if (stateName == "Mining" && MineUnit != null)
 				{
 					float dx = MineUnit.GetComponent<Unit>().CenterGridPosition.x - CenterGridPosition.x;
 					if (dx > 0.01f) facingRight = true;
