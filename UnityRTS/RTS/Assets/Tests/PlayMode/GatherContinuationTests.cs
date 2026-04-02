@@ -39,7 +39,7 @@ namespace GameManager.Tests.PlayMode
 			Agent agent = GetAgent0();
 			int initialGold = agent.Gold;
 
-			pawn.StartGathering(new GatherEventArgs(pawn, mine, baseUnit));
+			AgentSDK.CommandProcessor.ProcessGather(pawn, mine.UnitNbr, baseUnit.UnitNbr, GameManager.Instance.GetTickWorld());
 
 			// Wait for first deposit
 			yield return WaitUntil(
@@ -65,7 +65,7 @@ namespace GameManager.Tests.PlayMode
 
 			Agent agent = GetAgent0();
 			int lastGold = agent.Gold;
-			pawn.StartGathering(new GatherEventArgs(pawn, mine, baseUnit));
+			AgentSDK.CommandProcessor.ProcessGather(pawn, mine.UnitNbr, baseUnit.UnitNbr, GameManager.Instance.GetTickWorld());
 
 			// Wait for 3 deposits
 			int depositCount = 0;
@@ -103,11 +103,11 @@ namespace GameManager.Tests.PlayMode
 			int initialGold = agent.Gold;
 
 			// Start first pawn
-			pawn1.StartGathering(new GatherEventArgs(pawn1, mine, baseUnit));
+			AgentSDK.CommandProcessor.ProcessGather(pawn1, mine.UnitNbr, baseUnit.UnitNbr, GameManager.Instance.GetTickWorld());
 
 			// Wait a few frames before starting second
 			yield return WaitFrames(10);
-			pawn2.StartGathering(new GatherEventArgs(pawn2, mine, baseUnit));
+			AgentSDK.CommandProcessor.ProcessGather(pawn2, mine.UnitNbr, baseUnit.UnitNbr, GameManager.Instance.GetTickWorld());
 
 			// Wait for gold to increase by at least 2 mining capacities
 			int targetGold = initialGold + (int)(Constants.MINING_CAPACITY[UnitType.PAWN] * 2);
@@ -138,7 +138,7 @@ namespace GameManager.Tests.PlayMode
 
 			Agent agent = GetAgent0();
 			int initialGold = agent.Gold;
-			pawn.StartGathering(new GatherEventArgs(pawn, mine, baseUnit));
+			AgentSDK.CommandProcessor.ProcessGather(pawn, mine.UnitNbr, baseUnit.UnitNbr, GameManager.Instance.GetTickWorld());
 
 			// Wait for first deposit (one complete cycle)
 			yield return WaitUntil(
@@ -173,7 +173,7 @@ namespace GameManager.Tests.PlayMode
 
 			Agent agent = GetAgent0();
 			int initialGold = agent.Gold;
-			pawn.StartGathering(new GatherEventArgs(pawn, mine, baseUnit));
+			AgentSDK.CommandProcessor.ProcessGather(pawn, mine.UnitNbr, baseUnit.UnitNbr, GameManager.Instance.GetTickWorld());
 
 			// Wait for first deposit
 			yield return WaitUntil(

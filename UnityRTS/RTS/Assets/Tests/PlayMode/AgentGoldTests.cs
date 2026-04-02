@@ -190,13 +190,14 @@ namespace GameManager.Tests.PlayMode
 			Unit baseUnit = PlaceUnit(UnitType.BASE, new Vector3Int(5, 5, 0));
 			baseUnit.IsBuilt = true;
 			Unit mine = PlaceUnit(UnitType.MINE, new Vector3Int(20, 10, 0));
-			// Pawn must be outside the BASE footprint (6x4: x=[5,10], y=[2,5])
+			// Pawn must be outside the BASE footprint (6x4: x=[5,10], y=[5,8] bottom-left)
 			Unit pawn = PlaceUnit(UnitType.PAWN, new Vector3Int(12, 10, 0));
 
 			Agent agent = GetAgent0();
 			int initialGold = agent.Gold;
 
-			pawn.StartGathering(new GatherEventArgs(pawn, mine, baseUnit));
+			var world = GameManager.Instance.GetTickWorld();
+			AgentSDK.CommandProcessor.ProcessGather(pawn, mine.UnitNbr, baseUnit.UnitNbr, world);
 
 			yield return WaitUntil(
 				() => agent.Gold > initialGold,
@@ -216,13 +217,15 @@ namespace GameManager.Tests.PlayMode
 			Unit baseUnit = PlaceUnit(UnitType.BASE, new Vector3Int(5, 5, 0));
 			baseUnit.IsBuilt = true;
 			Unit mine = PlaceUnit(UnitType.MINE, new Vector3Int(20, 10, 0));
-			// Pawn must be outside the BASE footprint (6x4: x=[5,10], y=[2,5])
+			// Pawn must be outside the BASE footprint (6x4: x=[5,10], y=[5,8] bottom-left)
 			Unit pawn = PlaceUnit(UnitType.PAWN, new Vector3Int(12, 10, 0));
 
 			Agent agent = GetAgent0();
 			int initialGold = agent.Gold;
 
-			pawn.StartGathering(new GatherEventArgs(pawn, mine, baseUnit));
+			// Use shared CommandProcessor for proper TickEngine integration
+			var world = GameManager.Instance.GetTickWorld();
+			AgentSDK.CommandProcessor.ProcessGather(pawn, mine.UnitNbr, baseUnit.UnitNbr, world);
 
 			// Wait for at least two deposits (gold to exceed initial + 1 capacity)
 			int expectedMinGold = initialGold + (int)(Constants.MINING_CAPACITY[UnitType.PAWN] * 2);

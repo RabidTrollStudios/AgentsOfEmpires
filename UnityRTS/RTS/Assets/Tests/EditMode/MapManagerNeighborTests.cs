@@ -92,11 +92,11 @@ namespace GameManager.Tests
 			var basePos = new Vector3Int(5, 5, 0);
 			var size = Constants.UNIT_SIZE[UnitType.BASE];
 
-			// Build the footprint set
+			// Build the footprint set — bottom-left anchor, extends right (+X) and up (+Y)
 			var footprint = new HashSet<Vector3Int>();
 			for (int i = 0; i < size.x; i++)
 				for (int j = 0; j < size.y; j++)
-					footprint.Add(basePos + new Vector3Int(i, -j, 0));
+					footprint.Add(basePos + new Vector3Int(i, j, 0));
 
 			var neighbors = manager.GetGridPositionsNearUnit(UnitType.BASE, basePos);
 			foreach (var pos in neighbors)
@@ -133,9 +133,10 @@ namespace GameManager.Tests
 			var all = manager.GetGridPositionsNearUnit(UnitType.BASE, basePos);
 			int originalCount = manager.GetBuildableGridPositionsNearUnit(UnitType.BASE, basePos).Count;
 
-			// Block the first neighbor
+			// Block the first neighbor in both GridCells and Grid
 			var toBlock = all[0];
 			manager.GridCells[toBlock.x, toBlock.y].SetBuildable(false);
+			manager.Grid.SetCellBlocked(toBlock.x, toBlock.y);
 
 			var afterBlock = manager.GetBuildableGridPositionsNearUnit(UnitType.BASE, basePos);
 			Assert.AreEqual(originalCount - 1, afterBlock.Count,
@@ -151,7 +152,10 @@ namespace GameManager.Tests
 			var basePos = new Vector3Int(5, 5, 0);
 			var all = manager.GetGridPositionsNearUnit(UnitType.BASE, basePos);
 			foreach (var pos in all)
+			{
 				manager.GridCells[pos.x, pos.y].SetBuildable(false);
+				manager.Grid.SetCellBlocked(pos.x, pos.y);
+			}
 
 			var buildable = manager.GetBuildableGridPositionsNearUnit(UnitType.BASE, basePos);
 			Assert.AreEqual(0, buildable.Count,
@@ -199,17 +203,18 @@ namespace GameManager.Tests
 
 		/// <summary>
 		/// Cells adjacent to any side of a BASE are neighbors.
-		/// BASE footprint at (5,5): x=[5,10], y=[2,5] (6x4).
+		/// BASE footprint at (5,5): x=[5,10], y=[5,8] (6x4, bottom-left anchor).
 		/// </summary>
 		[Test]
 		public void IsNeighborOfUnit_Base_VariousSides_AllTrue()
 		{
 			var basePos = new Vector3Int(5, 5, 0);
-			// Cells just outside each side of the 6x4 footprint
+			// Cells just outside each side of the 6x4 footprint (bottom-left anchor)
+			// Footprint: x=[5,10], y=[5,8]
 			var testCells = new[]
 			{
-				new Vector3Int(5, 6, 0),   // north of top row  (y=6 > top y=5)
-				new Vector3Int(5, 1, 0),   // south of bottom row (y=1 < bottom y=2)
+				new Vector3Int(5, 9, 0),   // north of top row  (y=9 > top y=8)
+				new Vector3Int(5, 4, 0),   // south of bottom row (y=4 < bottom y=5)
 				new Vector3Int(4, 5, 0),   // west of leftmost col (x=4 < left x=5)
 				new Vector3Int(11, 5, 0),  // east of rightmost col (x=11 > right x=10)
 			};
@@ -248,11 +253,11 @@ namespace GameManager.Tests
 			var targetPos = new Vector3Int(10, 10, 0);
 			var from = new Vector3Int(9, 10, 0); // directly west, a neighbor of a 3x3 BASE at (10,10)
 
-			// Mark the building footprint as not-buildable (as if a building were there)
+			// Mark the building footprint as not-buildable (bottom-left anchor, extends up)
 			var size = Constants.UNIT_SIZE[UnitType.BASE];
 			for (int i = 0; i < size.x; i++)
 				for (int j = 0; j < size.y; j++)
-					manager.GridCells[targetPos.x + i, targetPos.y - j].SetBuildable(false);
+					manager.GridCells[targetPos.x + i, targetPos.y + j].SetBuildable(false);
 
 			var path = manager.GetPathToUnit(from, UnitType.BASE, targetPos);
 			// Path should end at the adjacent cell (from is already a neighbor)

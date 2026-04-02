@@ -73,11 +73,14 @@ namespace GameManager
 			if (gameState != GameState.PLAYING) return;
 
 			// Clear failed commands from previous tick before processing new commands
-			foreach (var agentGo in Agents.Values)
+			if (Agents != null)
 			{
-				var bridge = agentGo.GetComponent<AgentController>()?.Agent as AgentBridge;
-				if (bridge != null)
-					bridge.ClearFailedCommands();
+				foreach (var agentGo in Agents.Values)
+				{
+					var bridge = agentGo.GetComponent<AgentController>()?.Agent as AgentBridge;
+					if (bridge != null)
+						bridge.ClearFailedCommands();
+				}
 			}
 
 			SimulateTick();

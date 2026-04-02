@@ -21,8 +21,10 @@ namespace AgentSDK
         {
             if (unit.TickPath == null || unit.PathIndex >= unit.TickPath.Count) return;
             if (!unit.CanMove) return;
+            if (dt <= 0f) return;
 
             float speed = world.Constants.MovingSpeed[unit.UnitType] / world.TickDuration;
+            if (speed <= 0f) return;
             float remainingDist = speed * dt;
 
             while (remainingDist > 0f && unit.TickPath != null && unit.PathIndex < unit.TickPath.Count)

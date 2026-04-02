@@ -51,8 +51,9 @@ namespace GameManager.Tests
 		[Test]
 		public void IsAreaBuildable_Base6x4_PartiallyBlocked_False()
 		{
-			// Block one cell within the BASE footprint: (3, 4) is at offset (1, -1) from (2, 5)
-			var (mgr, go) = MapManagerTestHelper.Build(10, 10, new (int, int)[] { (3, 4) });
+			// Block one cell within the BASE footprint: (3, 6) is at offset (1, 1) from anchor (2, 5)
+			// Bottom-left anchor: footprint extends right (+X) and up (+Y)
+			var (mgr, go) = MapManagerTestHelper.Build(10, 10, new (int, int)[] { (3, 6) });
 			Assert.IsFalse(mgr.IsAreaBuildable(UnitType.BASE, new Vector3Int(2, 5, 0)));
 			Object.DestroyImmediate(go);
 		}
@@ -106,14 +107,15 @@ namespace GameManager.Tests
 		[Test]
 		public void SetAreaBuildability_Building_WalkableFalse()
 		{
-			// BASE is immobile (6x4). Anchor (2,5) is the top row — stays walkable (passage).
-			// Body cells (e.g. row y=4) become not walkable and not buildable.
+			// BASE is immobile (6x4). Anchor (2,5) is bottom-left.
+			// Passage row (top) is at y = 5 + 4 - 1 = 8 — stays walkable.
+			// Body cells (e.g. anchor row y=5) become not walkable and not buildable.
 			manager.SetAreaBuildability(UnitType.BASE, new Vector3Int(2, 5, 0), false);
-			Assert.IsFalse(manager.IsGridPositionBuildable(new Vector3Int(2, 5, 0)),
+			Assert.IsFalse(manager.IsGridPositionBuildable(new Vector3Int(2, 8, 0)),
 				"Top row should not be buildable");
-			Assert.IsTrue(manager.IsGridPositionWalkable(new Vector3Int(2, 5, 0)),
+			Assert.IsTrue(manager.IsGridPositionWalkable(new Vector3Int(2, 8, 0)),
 				"Top row should remain walkable (passage)");
-			Assert.IsFalse(manager.IsGridPositionWalkable(new Vector3Int(2, 4, 0)),
+			Assert.IsFalse(manager.IsGridPositionWalkable(new Vector3Int(2, 5, 0)),
 				"Body row should not be walkable");
 		}
 
@@ -351,17 +353,17 @@ namespace GameManager.Tests
 		[Test]
 		public void SetAreaBuildability_Barracks_MultiCellBlocked()
 		{
-			// BARRACKS is 3x3. All 9 cells become not buildable.
-			// Top row (j=0) stays walkable (passage). Body rows (j=1,2) become not walkable.
+			// BARRACKS is 3x3. Bottom-left anchor at (3,5). Footprint extends right and up.
+			// Top row (j=2, y=7) stays walkable (passage). Body rows (j=0,1) become not walkable.
 			manager.SetAreaBuildability(UnitType.BARRACKS, new Vector3Int(3, 5, 0), false);
 			for (int i = 0; i < 3; i++)
 			{
 				for (int j = 0; j < 3; j++)
 				{
-					var pos = new Vector3Int(3 + i, 5 - j, 0);
+					var pos = new Vector3Int(3 + i, 5 + j, 0);
 					Assert.IsFalse(manager.IsGridPositionBuildable(pos),
 						$"Cell {pos} should not be buildable");
-					if (j == 0)
+					if (j == 2) // top row = passage
 						Assert.IsTrue(manager.IsGridPositionWalkable(pos),
 							$"Top row cell {pos} should remain walkable (passage)");
 					else

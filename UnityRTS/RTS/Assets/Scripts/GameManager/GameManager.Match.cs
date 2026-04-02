@@ -17,12 +17,6 @@ namespace GameManager
 
 		IEnumerator DropIntroVersus(string versusText)
 		{
-			// TODO: Re-enable intro banners after testing
-			Prefabs.GameOverUI.GetComponent<Canvas>().enabled = false;
-			gameState = GameState.PLAYING;
-			yield break;
-
-			/*
 			var bannerText = Prefabs.GameOverUI.GetComponentInChildren<Text>();
 
 			// Show game title for 3 seconds
@@ -36,7 +30,6 @@ namespace GameManager
 
 			Prefabs.GameOverUI.GetComponent<Canvas>().enabled = false;
 			gameState = GameState.PLAYING;
-			*/
 		}
 
 		/// <summary>
