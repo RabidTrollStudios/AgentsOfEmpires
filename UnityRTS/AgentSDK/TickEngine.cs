@@ -186,8 +186,7 @@ namespace AgentSDK
             if (pawn.TickPath != null && pawn.PathIndex < pawn.TickPath.Count)
                 return;
 
-            if (world.IsNeighborOfUnit(pawn.GridPosition, UnitType.MINE, mine.GridPosition)
-                && world.Grid.GetOccupantCount(pawn.GridPosition) <= 1)
+            if (world.IsNeighborOfUnit(pawn.GridPosition, UnitType.MINE, mine.GridPosition))
             {
                 var oldPhase = pawn.GatherPhase;
                 pawn.GatherPhase = GatherPhase.MINING;
@@ -283,9 +282,8 @@ namespace AgentSDK
                         return;
                     }
 
-                    // If also adjacent to mine and cell isn't shared, resume mining immediately
-                    if (world.IsNeighborOfUnit(pawn.GridPosition, UnitType.MINE, mine.GridPosition)
-                        && world.Grid.GetOccupantCount(pawn.GridPosition) <= 1)
+                    // If also adjacent to mine, resume mining immediately
+                    if (world.IsNeighborOfUnit(pawn.GridPosition, UnitType.MINE, mine.GridPosition))
                     {
                         var oldPhase2 = pawn.GatherPhase;
                         pawn.GatherPhase = GatherPhase.MINING;
@@ -327,8 +325,7 @@ namespace AgentSDK
             if (pawn.TickPath != null && pawn.PathIndex < pawn.TickPath.Count)
                 return;
 
-            if (world.IsNeighborOfUnit(pawn.GridPosition, UnitType.BASE, baseUnit.GridPosition)
-                && world.Grid.GetOccupantCount(pawn.GridPosition) <= 1)
+            if (world.IsNeighborOfUnit(pawn.GridPosition, UnitType.BASE, baseUnit.GridPosition))
             {
                 world.AddGold(pawn.OwnerAgentNbr, pawn.GoldCarried);
                 callbacks.OnGoldDeposited(pawn, pawn.GoldCarried);

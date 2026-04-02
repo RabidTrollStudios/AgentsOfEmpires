@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <CoverageSession xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="0.0.0.0">
-  <Summary numSequencePoints="140" visitedSequencePoints="80" numBranchPoints="0" visitedBranchPoints="0" sequenceCoverage="57.14" branchCoverage="0.0" maxCyclomaticComplexity="7" minCyclomaticComplexity="0" maxCrapScore="12" minCrapScore="0" visitedClasses="7" numClasses="9" visitedMethods="21" numMethods="30" />
+  <Summary numSequencePoints="83" visitedSequencePoints="79" numBranchPoints="0" visitedBranchPoints="0" sequenceCoverage="95.18" branchCoverage="0.0" maxCyclomaticComplexity="7" minCyclomaticComplexity="0" maxCrapScore="7.34" minCrapScore="0" visitedClasses="7" numClasses="8" visitedMethods="20" numMethods="20" />
   <Modules>
     <Module>
-      <Summary numSequencePoints="140" visitedSequencePoints="80" numBranchPoints="0" visitedBranchPoints="0" sequenceCoverage="57.14" branchCoverage="0.0" maxCyclomaticComplexity="7" minCyclomaticComplexity="0" maxCrapScore="12" minCrapScore="0" visitedClasses="7" numClasses="9" visitedMethods="21" numMethods="30" />
+      <Summary numSequencePoints="83" visitedSequencePoints="79" numBranchPoints="0" visitedBranchPoints="0" sequenceCoverage="95.18" branchCoverage="0.0" maxCyclomaticComplexity="7" minCyclomaticComplexity="0" maxCrapScore="7.34" minCrapScore="0" visitedClasses="7" numClasses="8" visitedMethods="20" numMethods="20" />
       <ModuleTime>0001-01-01T00:00:00</ModuleTime>
       <ModuleName>GameManager</ModuleName>
       <Files>
@@ -32,33 +32,38 @@
         <File uid="23" fullPath="C:/Git/Warcrap/UnityRTS/RTS/Assets/Scripts/GameManager/ProceduralMapGenerator.cs" />
         <File uid="24" fullPath="C:/Git/Warcrap/UnityRTS/RTS/Assets/Scripts/GameManager/RoundStats.cs" />
         <File uid="25" fullPath="C:/Git/Warcrap/UnityRTS/RTS/Assets/Scripts/GameManager/UnitManager.cs" />
-        <File uid="26" fullPath="C:/Git/Warcrap/UnityRTS/RTS/Assets/Scripts/GameManager/Graph/Edge.cs" />
-        <File uid="27" fullPath="C:/Git/Warcrap/UnityRTS/RTS/Assets/Scripts/GameManager/Graph/Graph.cs" />
-        <File uid="28" fullPath="C:/Git/Warcrap/UnityRTS/RTS/Assets/Scripts/GameManager/Graph/Node.cs" />
-        <File uid="29" fullPath="C:/Git/Warcrap/UnityRTS/RTS/Assets/Scripts/GameManager/Graph/PriorityQueue.cs" />
-        <File uid="30" fullPath="C:/Git/Warcrap/UnityRTS/RTS/Assets/Scripts/GameManager/GameElements/AgentEventArgs.cs" />
-        <File uid="31" fullPath="C:/Git/Warcrap/UnityRTS/RTS/Assets/Scripts/GameManager/GameElements/ArrowProjectile.cs" />
-        <File uid="32" fullPath="C:/Git/Warcrap/UnityRTS/RTS/Assets/Scripts/GameManager/GameElements/CameraController.cs" />
-        <File uid="33" fullPath="C:/Git/Warcrap/UnityRTS/RTS/Assets/Scripts/GameManager/GameElements/GoldNuggetProjectile.cs" />
-        <File uid="34" fullPath="C:/Git/Warcrap/UnityRTS/RTS/Assets/Scripts/GameManager/GameElements/GridCell.cs" />
-        <File uid="35" fullPath="C:/Git/Warcrap/UnityRTS/RTS/Assets/Scripts/GameManager/GameElements/Unit.Actions.cs" />
-        <File uid="36" fullPath="C:/Git/Warcrap/UnityRTS/RTS/Assets/Scripts/GameManager/GameElements/Unit.cs" />
-        <File uid="37" fullPath="C:/Git/Warcrap/UnityRTS/RTS/Assets/Scripts/GameManager/GameElements/Unit.Movement.cs" />
-        <File uid="38" fullPath="C:/Git/Warcrap/UnityRTS/RTS/Assets/Scripts/GameManager/GameElements/Unit.Tasks.cs" />
-        <File uid="39" fullPath="C:/Git/Warcrap/UnityRTS/RTS/Assets/Scripts/GameManager/GameElements/Utility.cs" />
+        <File uid="26" fullPath="C:/Git/Warcrap/UnityRTS/RTS/Assets/Scripts/GameManager/UnityTickCallbacks.cs" />
+        <File uid="27" fullPath="C:/Git/Warcrap/UnityRTS/RTS/Assets/Scripts/GameManager/UnityTickWorld.cs" />
+        <File uid="28" fullPath="C:/Git/Warcrap/UnityRTS/RTS/Assets/Scripts/GameManager/Graph/Edge.cs" />
+        <File uid="29" fullPath="C:/Git/Warcrap/UnityRTS/RTS/Assets/Scripts/GameManager/Graph/Graph.cs" />
+        <File uid="30" fullPath="C:/Git/Warcrap/UnityRTS/RTS/Assets/Scripts/GameManager/Graph/Node.cs" />
+        <File uid="31" fullPath="C:/Git/Warcrap/UnityRTS/RTS/Assets/Scripts/GameManager/Graph/PriorityQueue.cs" />
+        <File uid="32" fullPath="C:/Git/Warcrap/UnityRTS/RTS/Assets/Scripts/GameManager/GameElements/AgentEventArgs.cs" />
+        <File uid="33" fullPath="C:/Git/Warcrap/UnityRTS/RTS/Assets/Scripts/GameManager/GameElements/ArrowProjectile.cs" />
+        <File uid="34" fullPath="C:/Git/Warcrap/UnityRTS/RTS/Assets/Scripts/GameManager/GameElements/CameraController.cs" />
+        <File uid="35" fullPath="C:/Git/Warcrap/UnityRTS/RTS/Assets/Scripts/GameManager/GameElements/DelayedAnimStart.cs" />
+        <File uid="36" fullPath="C:/Git/Warcrap/UnityRTS/RTS/Assets/Scripts/GameManager/GameElements/GoldNuggetProjectile.cs" />
+        <File uid="37" fullPath="C:/Git/Warcrap/UnityRTS/RTS/Assets/Scripts/GameManager/GameElements/GridCell.cs" />
+        <File uid="38" fullPath="C:/Git/Warcrap/UnityRTS/RTS/Assets/Scripts/GameManager/GameElements/Unit.Actions.cs" />
+        <File uid="39" fullPath="C:/Git/Warcrap/UnityRTS/RTS/Assets/Scripts/GameManager/GameElements/Unit.cs" />
+        <File uid="40" fullPath="C:/Git/Warcrap/UnityRTS/RTS/Assets/Scripts/GameManager/GameElements/Unit.Movement.cs" />
+        <File uid="41" fullPath="C:/Git/Warcrap/UnityRTS/RTS/Assets/Scripts/GameManager/GameElements/Unit.Tasks.cs" />
+        <File uid="42" fullPath="C:/Git/Warcrap/UnityRTS/RTS/Assets/Scripts/GameManager/GameElements/Unit.TickUnit.cs" />
+        <File uid="43" fullPath="C:/Git/Warcrap/UnityRTS/RTS/Assets/Scripts/GameManager/GameElements/Unit.VisualState.cs" />
+        <File uid="44" fullPath="C:/Git/Warcrap/UnityRTS/RTS/Assets/Scripts/GameManager/GameElements/Utility.cs" />
       </Files>
       <Classes>
         <Class>
-          <Summary numSequencePoints="26" visitedSequencePoints="22" numBranchPoints="0" visitedBranchPoints="0" sequenceCoverage="84.62" branchCoverage="0.0" maxCyclomaticComplexity="7" minCyclomaticComplexity="1" maxCrapScore="7.34" minCrapScore="1" visitedClasses="1" numClasses="1" visitedMethods="6" numMethods="6" />
+          <Summary numSequencePoints="25" visitedSequencePoints="21" numBranchPoints="0" visitedBranchPoints="0" sequenceCoverage="84.00" branchCoverage="0.0" maxCyclomaticComplexity="7" minCyclomaticComplexity="1" maxCrapScore="7.34" minCrapScore="1" visitedClasses="1" numClasses="1" visitedMethods="5" numMethods="5" />
           <FullName>GameManager.MapManager</FullName>
           <Methods>
             <Method visited="true" cyclomaticComplexity="1" nPathComplexity="0" sequenceCoverage="100.0" branchCoverage="0" crapScore="1" isConstructor="false" isStatic="false" isGetter="false" isSetter="true">
               <Summary numSequencePoints="1" visitedSequencePoints="1" numBranchPoints="0" visitedBranchPoints="0" sequenceCoverage="100.0" branchCoverage="0" maxCyclomaticComplexity="1" minCyclomaticComplexity="1" maxCrapScore="1" minCrapScore="1" visitedClasses="0" numClasses="0" visitedMethods="1" numMethods="1" />
-              <MetadataToken>100663632</MetadataToken>
+              <MetadataToken>100663635</MetadataToken>
               <Name>System.Void GameManager.MapManager::set_MapSize(UnityEngine.Vector3Int)</Name>
               <FileRef uid="20" />
               <SequencePoints>
-                <SequencePoint vc="2" uspid="2225440" ordinal="0" offset="0" sl="21" sc="36" el="21" ec="36" bec="0" bev="0" fileid="20">
+                <SequencePoint vc="2" uspid="2260248" ordinal="0" offset="0" sl="20" sc="36" el="20" ec="36" bec="0" bev="0" fileid="20">
                   <TrackedMethodRefs>
                     <TrackedMethodRef uid="0" vc="2" />
                   </TrackedMethodRefs>
@@ -68,11 +73,11 @@
             </Method>
             <Method visited="true" cyclomaticComplexity="1" nPathComplexity="0" sequenceCoverage="100.0" branchCoverage="0" crapScore="1" isConstructor="false" isStatic="false" isGetter="false" isSetter="true">
               <Summary numSequencePoints="1" visitedSequencePoints="1" numBranchPoints="0" visitedBranchPoints="0" sequenceCoverage="100.0" branchCoverage="0" maxCyclomaticComplexity="1" minCyclomaticComplexity="1" maxCrapScore="1" minCrapScore="1" visitedClasses="0" numClasses="0" visitedMethods="1" numMethods="1" />
-              <MetadataToken>100663634</MetadataToken>
+              <MetadataToken>100663637</MetadataToken>
               <Name>System.Void GameManager.MapManager::set_Grid(AgentSDK.GameGrid)</Name>
               <FileRef uid="20" />
               <SequencePoints>
-                <SequencePoint vc="2" uspid="2225442" ordinal="0" offset="0" sl="27" sc="40" el="27" ec="40" bec="0" bev="0" fileid="20">
+                <SequencePoint vc="2" uspid="2260250" ordinal="0" offset="0" sl="26" sc="40" el="26" ec="40" bec="0" bev="0" fileid="20">
                   <TrackedMethodRefs>
                     <TrackedMethodRef uid="0" vc="2" />
                   </TrackedMethodRefs>
@@ -82,11 +87,11 @@
             </Method>
             <Method visited="true" cyclomaticComplexity="1" nPathComplexity="0" sequenceCoverage="100.0" branchCoverage="0" crapScore="1" isConstructor="false" isStatic="false" isGetter="false" isSetter="true">
               <Summary numSequencePoints="1" visitedSequencePoints="1" numBranchPoints="0" visitedBranchPoints="0" sequenceCoverage="100.0" branchCoverage="0" maxCyclomaticComplexity="1" minCyclomaticComplexity="1" maxCrapScore="1" minCrapScore="1" visitedClasses="0" numClasses="0" visitedMethods="1" numMethods="1" />
-              <MetadataToken>100663638</MetadataToken>
+              <MetadataToken>100663641</MetadataToken>
               <Name>System.Void GameManager.MapManager::set_GridCells(GameManager.GameElements.GridCell[,])</Name>
               <FileRef uid="20" />
               <SequencePoints>
-                <SequencePoint vc="2" uspid="2225446" ordinal="0" offset="0" sl="37" sc="41" el="37" ec="41" bec="0" bev="0" fileid="20">
+                <SequencePoint vc="2" uspid="2260254" ordinal="0" offset="0" sl="36" sc="41" el="36" ec="41" bec="0" bev="0" fileid="20">
                   <TrackedMethodRefs>
                     <TrackedMethodRef uid="0" vc="2" />
                   </TrackedMethodRefs>
@@ -96,11 +101,11 @@
             </Method>
             <Method visited="true" cyclomaticComplexity="1" nPathComplexity="0" sequenceCoverage="100.0" branchCoverage="0" crapScore="1" isConstructor="false" isStatic="false" isGetter="false" isSetter="true">
               <Summary numSequencePoints="1" visitedSequencePoints="1" numBranchPoints="0" visitedBranchPoints="0" sequenceCoverage="100.0" branchCoverage="0" maxCyclomaticComplexity="1" minCyclomaticComplexity="1" maxCrapScore="1" minCrapScore="1" visitedClasses="0" numClasses="0" visitedMethods="1" numMethods="1" />
-              <MetadataToken>100663640</MetadataToken>
+              <MetadataToken>100663643</MetadataToken>
               <Name>System.Void GameManager.MapManager::set_Graph(GameManager.Graph.Graph[GridCell])</Name>
               <FileRef uid="20" />
               <SequencePoints>
-                <SequencePoint vc="2" uspid="2225448" ordinal="0" offset="0" sl="42" sc="40" el="42" ec="40" bec="0" bev="0" fileid="20">
+                <SequencePoint vc="2" uspid="2260256" ordinal="0" offset="0" sl="41" sc="40" el="41" ec="40" bec="0" bev="0" fileid="20">
                   <TrackedMethodRefs>
                     <TrackedMethodRef uid="0" vc="2" />
                   </TrackedMethodRefs>
@@ -110,127 +115,113 @@
             </Method>
             <Method visited="true" cyclomaticComplexity="7" nPathComplexity="0" sequenceCoverage="80.95" branchCoverage="0" crapScore="7.34" isConstructor="false" isStatic="false" isGetter="false" isSetter="false">
               <Summary numSequencePoints="21" visitedSequencePoints="17" numBranchPoints="0" visitedBranchPoints="0" sequenceCoverage="80.95" branchCoverage="0" maxCyclomaticComplexity="7" minCyclomaticComplexity="7" maxCrapScore="7.34" minCrapScore="7.34" visitedClasses="0" numClasses="0" visitedMethods="1" numMethods="1" />
-              <MetadataToken>100663647</MetadataToken>
+              <MetadataToken>100663650</MetadataToken>
               <Name>System.Boolean GameManager.MapManager::IsAreaBuildable(AgentSDK.UnitType, UnityEngine.Vector3Int, System.Collections.Generic.HashSet[Vector3Int])</Name>
               <FileRef uid="20" />
               <SequencePoints>
-                <SequencePoint vc="1" uspid="2225613" ordinal="0" offset="0" sl="265" sc="3" el="265" ec="3" bec="0" bev="0" fileid="20">
+                <SequencePoint vc="1" uspid="2260421" ordinal="0" offset="0" sl="264" sc="3" el="264" ec="3" bec="0" bev="0" fileid="20">
                   <TrackedMethodRefs>
                     <TrackedMethodRef uid="0" vc="1" />
                   </TrackedMethodRefs>
                 </SequencePoint>
-                <SequencePoint vc="1" uspid="2225614" ordinal="0" offset="1" sl="266" sc="4" el="266" ec="4" bec="0" bev="0" fileid="20">
+                <SequencePoint vc="1" uspid="2260422" ordinal="0" offset="1" sl="265" sc="4" el="265" ec="4" bec="0" bev="0" fileid="20">
                   <TrackedMethodRefs>
                     <TrackedMethodRef uid="0" vc="1" />
                   </TrackedMethodRefs>
                 </SequencePoint>
-                <SequencePoint vc="1" uspid="2225615" ordinal="0" offset="7" sl="267" sc="4" el="267" ec="4" bec="0" bev="0" fileid="20">
+                <SequencePoint vc="1" uspid="2260423" ordinal="0" offset="7" sl="266" sc="4" el="266" ec="4" bec="0" bev="0" fileid="20">
                   <TrackedMethodRefs>
                     <TrackedMethodRef uid="0" vc="1" />
                   </TrackedMethodRefs>
                 </SequencePoint>
-                <SequencePoint vc="1" uspid="2225616" ordinal="0" offset="19" sl="269" sc="9" el="269" ec="9" bec="0" bev="0" fileid="20">
+                <SequencePoint vc="1" uspid="2260424" ordinal="0" offset="19" sl="268" sc="9" el="268" ec="9" bec="0" bev="0" fileid="20">
                   <TrackedMethodRefs>
                     <TrackedMethodRef uid="0" vc="1" />
                   </TrackedMethodRefs>
                 </SequencePoint>
-                <SequencePoint vc="1" uspid="2225617" ordinal="0" offset="23" sl="270" sc="4" el="270" ec="4" bec="0" bev="0" fileid="20">
+                <SequencePoint vc="1" uspid="2260425" ordinal="0" offset="23" sl="269" sc="4" el="269" ec="4" bec="0" bev="0" fileid="20">
                   <TrackedMethodRefs>
                     <TrackedMethodRef uid="0" vc="1" />
                   </TrackedMethodRefs>
                 </SequencePoint>
-                <SequencePoint vc="1" uspid="2225618" ordinal="0" offset="24" sl="271" sc="10" el="271" ec="10" bec="0" bev="0" fileid="20">
+                <SequencePoint vc="1" uspid="2260426" ordinal="0" offset="24" sl="270" sc="10" el="270" ec="10" bec="0" bev="0" fileid="20">
                   <TrackedMethodRefs>
                     <TrackedMethodRef uid="0" vc="1" />
                   </TrackedMethodRefs>
                 </SequencePoint>
-                <SequencePoint vc="1" uspid="2225619" ordinal="0" offset="28" sl="272" sc="5" el="272" ec="5" bec="0" bev="0" fileid="20">
+                <SequencePoint vc="1" uspid="2260427" ordinal="0" offset="28" sl="271" sc="5" el="271" ec="5" bec="0" bev="0" fileid="20">
                   <TrackedMethodRefs>
                     <TrackedMethodRef uid="0" vc="1" />
                   </TrackedMethodRefs>
                 </SequencePoint>
-                <SequencePoint vc="1" uspid="2225620" ordinal="0" offset="29" sl="273" sc="6" el="273" ec="6" bec="0" bev="0" fileid="20">
+                <SequencePoint vc="1" uspid="2260428" ordinal="0" offset="29" sl="272" sc="6" el="272" ec="6" bec="0" bev="0" fileid="20">
                   <TrackedMethodRefs>
                     <TrackedMethodRef uid="0" vc="1" />
                   </TrackedMethodRefs>
                 </SequencePoint>
-                <SequencePoint vc="1" uspid="2225621" ordinal="0" offset="45" sl="275" sc="6" el="275" ec="6" bec="0" bev="0" fileid="20">
+                <SequencePoint vc="1" uspid="2260429" ordinal="0" offset="44" sl="274" sc="6" el="274" ec="6" bec="0" bev="0" fileid="20">
                   <TrackedMethodRefs>
                     <TrackedMethodRef uid="0" vc="1" />
                   </TrackedMethodRefs>
                 </SequencePoint>
-                <SequencePoint vc="1" uspid="2225622" ordinal="0" offset="64" sl="276" sc="7" el="276" ec="7" bec="0" bev="0" fileid="20">
+                <SequencePoint vc="1" uspid="2260430" ordinal="0" offset="63" sl="275" sc="7" el="275" ec="7" bec="0" bev="0" fileid="20">
                   <TrackedMethodRefs>
                     <TrackedMethodRef uid="0" vc="1" />
                   </TrackedMethodRefs>
                 </SequencePoint>
-                <SequencePoint vc="0" uspid="2225623" ordinal="0" offset="66" sl="278" sc="6" el="278" ec="6" bec="0" bev="0" fileid="20">
+                <SequencePoint vc="0" uspid="2260431" ordinal="0" offset="65" sl="277" sc="6" el="277" ec="6" bec="0" bev="0" fileid="20">
                   <TrackedMethodRefs>
                     <TrackedMethodRef uid="0" vc="0" />
                   </TrackedMethodRefs>
                 </SequencePoint>
-                <SequencePoint vc="0" uspid="2225624" ordinal="0" offset="99" sl="280" sc="6" el="280" ec="6" bec="0" bev="0" fileid="20">
+                <SequencePoint vc="0" uspid="2260432" ordinal="0" offset="98" sl="279" sc="6" el="279" ec="6" bec="0" bev="0" fileid="20">
                   <TrackedMethodRefs>
                     <TrackedMethodRef uid="0" vc="0" />
                   </TrackedMethodRefs>
                 </SequencePoint>
-                <SequencePoint vc="0" uspid="2225625" ordinal="0" offset="100" sl="281" sc="7" el="281" ec="7" bec="0" bev="0" fileid="20">
+                <SequencePoint vc="0" uspid="2260433" ordinal="0" offset="99" sl="280" sc="7" el="280" ec="7" bec="0" bev="0" fileid="20">
                   <TrackedMethodRefs>
                     <TrackedMethodRef uid="0" vc="0" />
                   </TrackedMethodRefs>
                 </SequencePoint>
-                <SequencePoint vc="0" uspid="2225626" ordinal="0" offset="105" sl="283" sc="5" el="283" ec="5" bec="0" bev="0" fileid="20">
+                <SequencePoint vc="0" uspid="2260434" ordinal="0" offset="104" sl="282" sc="5" el="282" ec="5" bec="0" bev="0" fileid="20">
                   <TrackedMethodRefs>
                     <TrackedMethodRef uid="0" vc="0" />
                   </TrackedMethodRefs>
                 </SequencePoint>
-                <SequencePoint vc="1" uspid="2225627" ordinal="0" offset="106" sl="271" sc="33" el="271" ec="33" bec="0" bev="0" fileid="20">
+                <SequencePoint vc="1" uspid="2260435" ordinal="0" offset="105" sl="270" sc="33" el="270" ec="33" bec="0" bev="0" fileid="20">
                   <TrackedMethodRefs>
                     <TrackedMethodRef uid="0" vc="1" />
                   </TrackedMethodRefs>
                 </SequencePoint>
-                <SequencePoint vc="2" uspid="2225628" ordinal="0" offset="110" sl="271" sc="21" el="271" ec="21" bec="0" bev="0" fileid="20">
+                <SequencePoint vc="2" uspid="2260436" ordinal="0" offset="109" sl="270" sc="21" el="270" ec="21" bec="0" bev="0" fileid="20">
                   <TrackedMethodRefs>
                     <TrackedMethodRef uid="0" vc="2" />
                   </TrackedMethodRefs>
                 </SequencePoint>
-                <SequencePoint vc="1" uspid="2225629" ordinal="0" offset="126" sl="284" sc="4" el="284" ec="4" bec="0" bev="0" fileid="20">
+                <SequencePoint vc="1" uspid="2260437" ordinal="0" offset="125" sl="283" sc="4" el="283" ec="4" bec="0" bev="0" fileid="20">
                   <TrackedMethodRefs>
                     <TrackedMethodRef uid="0" vc="1" />
                   </TrackedMethodRefs>
                 </SequencePoint>
-                <SequencePoint vc="1" uspid="2225630" ordinal="0" offset="127" sl="269" sc="32" el="269" ec="32" bec="0" bev="0" fileid="20">
+                <SequencePoint vc="1" uspid="2260438" ordinal="0" offset="126" sl="268" sc="32" el="268" ec="32" bec="0" bev="0" fileid="20">
                   <TrackedMethodRefs>
                     <TrackedMethodRef uid="0" vc="1" />
                   </TrackedMethodRefs>
                 </SequencePoint>
-                <SequencePoint vc="2" uspid="2225631" ordinal="0" offset="131" sl="269" sc="20" el="269" ec="20" bec="0" bev="0" fileid="20">
+                <SequencePoint vc="2" uspid="2260439" ordinal="0" offset="130" sl="268" sc="20" el="268" ec="20" bec="0" bev="0" fileid="20">
                   <TrackedMethodRefs>
                     <TrackedMethodRef uid="0" vc="2" />
                   </TrackedMethodRefs>
                 </SequencePoint>
-                <SequencePoint vc="1" uspid="2225632" ordinal="0" offset="147" sl="285" sc="4" el="285" ec="4" bec="0" bev="0" fileid="20">
+                <SequencePoint vc="1" uspid="2260440" ordinal="0" offset="146" sl="284" sc="4" el="284" ec="4" bec="0" bev="0" fileid="20">
                   <TrackedMethodRefs>
                     <TrackedMethodRef uid="0" vc="1" />
                   </TrackedMethodRefs>
                 </SequencePoint>
-                <SequencePoint vc="1" uspid="2225633" ordinal="0" offset="152" sl="286" sc="3" el="286" ec="3" bec="0" bev="0" fileid="20">
+                <SequencePoint vc="1" uspid="2260441" ordinal="0" offset="151" sl="285" sc="3" el="285" ec="3" bec="0" bev="0" fileid="20">
                   <TrackedMethodRefs>
                     <TrackedMethodRef uid="0" vc="1" />
-                  </TrackedMethodRefs>
-                </SequencePoint>
-              </SequencePoints>
-              <BranchPoints />
-            </Method>
-            <Method visited="true" cyclomaticComplexity="1" nPathComplexity="0" sequenceCoverage="100.0" branchCoverage="0" crapScore="1" isConstructor="true" isStatic="false" isGetter="false" isSetter="false">
-              <Summary numSequencePoints="1" visitedSequencePoints="1" numBranchPoints="0" visitedBranchPoints="0" sequenceCoverage="100.0" branchCoverage="0" maxCyclomaticComplexity="1" minCyclomaticComplexity="1" maxCrapScore="1" minCrapScore="1" visitedClasses="0" numClasses="0" visitedMethods="1" numMethods="1" />
-              <MetadataToken>100663658</MetadataToken>
-              <Name>GameManager.MapManager::MapManager()</Name>
-              <FileRef uid="20" />
-              <SequencePoints>
-                <SequencePoint vc="2" uspid="2225785" ordinal="0" offset="0" sl="17" sc="3" el="17" ec="3" bec="0" bev="0" fileid="20">
-                  <TrackedMethodRefs>
-                    <TrackedMethodRef uid="0" vc="2" />
                   </TrackedMethodRefs>
                 </SequencePoint>
               </SequencePoints>
@@ -239,145 +230,41 @@
           </Methods>
         </Class>
         <Class>
-          <Summary numSequencePoints="11" visitedSequencePoints="0" numBranchPoints="0" visitedBranchPoints="0" sequenceCoverage="0.0" branchCoverage="0.0" maxCyclomaticComplexity="2" minCyclomaticComplexity="2" maxCrapScore="6" minCrapScore="6" visitedClasses="0" numClasses="1" visitedMethods="0" numMethods="1" />
-          <FullName>GameManager.ProceduralMapGenerator</FullName>
-          <Methods>
-            <Method visited="false" cyclomaticComplexity="2" nPathComplexity="0" sequenceCoverage="0.0" branchCoverage="0" crapScore="6" isConstructor="false" isStatic="true" isGetter="false" isSetter="false">
-              <Summary numSequencePoints="11" visitedSequencePoints="0" numBranchPoints="0" visitedBranchPoints="0" sequenceCoverage="0.0" branchCoverage="0" maxCyclomaticComplexity="2" minCyclomaticComplexity="2" maxCrapScore="6" minCrapScore="6" visitedClasses="0" numClasses="0" visitedMethods="0" numMethods="1" />
-              <MetadataToken>100663701</MetadataToken>
-              <Name>static System.Void GameManager.ProceduralMapGenerator::Shuffle[T](System.Collections.Generic.List[T], System.Random)</Name>
-              <FileRef uid="23" />
-              <SequencePoints>
-                <SequencePoint vc="0" uspid="2226393" ordinal="0" offset="0" sl="473" sc="0" el="473" ec="0" bec="0" bev="0" fileid="23">
-                  <TrackedMethodRefs>
-                    <TrackedMethodRef uid="0" vc="0" />
-                  </TrackedMethodRefs>
-                </SequencePoint>
-                <SequencePoint vc="0" uspid="2226394" ordinal="0" offset="1" sl="474" sc="0" el="474" ec="0" bec="0" bev="0" fileid="23">
-                  <TrackedMethodRefs>
-                    <TrackedMethodRef uid="0" vc="0" />
-                  </TrackedMethodRefs>
-                </SequencePoint>
-                <SequencePoint vc="0" uspid="2226395" ordinal="0" offset="12" sl="475" sc="0" el="475" ec="0" bec="0" bev="0" fileid="23">
-                  <TrackedMethodRefs>
-                    <TrackedMethodRef uid="0" vc="0" />
-                  </TrackedMethodRefs>
-                </SequencePoint>
-                <SequencePoint vc="0" uspid="2226396" ordinal="0" offset="13" sl="476" sc="0" el="476" ec="0" bec="0" bev="0" fileid="23">
-                  <TrackedMethodRefs>
-                    <TrackedMethodRef uid="0" vc="0" />
-                  </TrackedMethodRefs>
-                </SequencePoint>
-                <SequencePoint vc="0" uspid="2226397" ordinal="0" offset="23" sl="477" sc="0" el="477" ec="0" bec="0" bev="0" fileid="23">
-                  <TrackedMethodRefs>
-                    <TrackedMethodRef uid="0" vc="0" />
-                  </TrackedMethodRefs>
-                </SequencePoint>
-                <SequencePoint vc="0" uspid="2226398" ordinal="0" offset="31" sl="477" sc="0" el="477" ec="0" bec="0" bev="0" fileid="23">
-                  <TrackedMethodRefs>
-                    <TrackedMethodRef uid="0" vc="0" />
-                  </TrackedMethodRefs>
-                </SequencePoint>
-                <SequencePoint vc="0" uspid="2226399" ordinal="0" offset="46" sl="477" sc="0" el="477" ec="0" bec="0" bev="0" fileid="23">
-                  <TrackedMethodRefs>
-                    <TrackedMethodRef uid="0" vc="0" />
-                  </TrackedMethodRefs>
-                </SequencePoint>
-                <SequencePoint vc="0" uspid="2226400" ordinal="0" offset="55" sl="478" sc="0" el="478" ec="0" bec="0" bev="0" fileid="23">
-                  <TrackedMethodRefs>
-                    <TrackedMethodRef uid="0" vc="0" />
-                  </TrackedMethodRefs>
-                </SequencePoint>
-                <SequencePoint vc="0" uspid="2226401" ordinal="0" offset="56" sl="474" sc="0" el="474" ec="0" bec="0" bev="0" fileid="23">
-                  <TrackedMethodRefs>
-                    <TrackedMethodRef uid="0" vc="0" />
-                  </TrackedMethodRefs>
-                </SequencePoint>
-                <SequencePoint vc="0" uspid="2226402" ordinal="0" offset="60" sl="474" sc="0" el="474" ec="0" bec="0" bev="0" fileid="23">
-                  <TrackedMethodRefs>
-                    <TrackedMethodRef uid="0" vc="0" />
-                  </TrackedMethodRefs>
-                </SequencePoint>
-                <SequencePoint vc="0" uspid="2226403" ordinal="0" offset="68" sl="479" sc="0" el="479" ec="0" bec="0" bev="0" fileid="23">
-                  <TrackedMethodRefs>
-                    <TrackedMethodRef uid="0" vc="0" />
-                  </TrackedMethodRefs>
-                </SequencePoint>
-              </SequencePoints>
-              <BranchPoints />
-            </Method>
-          </Methods>
-        </Class>
-        <Class>
-          <Summary numSequencePoints="11" visitedSequencePoints="6" numBranchPoints="0" visitedBranchPoints="0" sequenceCoverage="54.55" branchCoverage="0.0" maxCyclomaticComplexity="2" minCyclomaticComplexity="1" maxCrapScore="6" minCrapScore="1" visitedClasses="1" numClasses="1" visitedMethods="1" numMethods="2" />
+          <Summary numSequencePoints="6" visitedSequencePoints="6" numBranchPoints="0" visitedBranchPoints="0" sequenceCoverage="100.0" branchCoverage="0.0" maxCyclomaticComplexity="1" minCyclomaticComplexity="1" maxCrapScore="1" minCrapScore="1" visitedClasses="1" numClasses="1" visitedMethods="1" numMethods="1" />
           <FullName>GameManager.Graph.Edge[V]</FullName>
           <Methods>
-            <Method visited="false" cyclomaticComplexity="2" nPathComplexity="0" sequenceCoverage="0.0" branchCoverage="0" crapScore="6" isConstructor="false" isStatic="false" isGetter="false" isSetter="false">
-              <Summary numSequencePoints="5" visitedSequencePoints="0" numBranchPoints="0" visitedBranchPoints="0" sequenceCoverage="0.0" branchCoverage="0" maxCyclomaticComplexity="2" minCyclomaticComplexity="2" maxCrapScore="6" minCrapScore="6" visitedClasses="0" numClasses="0" visitedMethods="0" numMethods="1" />
-              <MetadataToken>100663747</MetadataToken>
-              <Name>GameManager.Graph.Node[V] GameManager.Graph.Edge[V]::GetNeighbor(GameManager.Graph.Node[V])</Name>
-              <FileRef uid="26" />
-              <SequencePoints>
-                <SequencePoint vc="0" uspid="2226635" ordinal="0" offset="0" sl="23" sc="0" el="23" ec="0" bec="0" bev="0" fileid="26">
-                  <TrackedMethodRefs>
-                    <TrackedMethodRef uid="0" vc="0" />
-                  </TrackedMethodRefs>
-                </SequencePoint>
-                <SequencePoint vc="0" uspid="2226636" ordinal="0" offset="1" sl="24" sc="0" el="24" ec="0" bec="0" bev="0" fileid="26">
-                  <TrackedMethodRefs>
-                    <TrackedMethodRef uid="0" vc="0" />
-                  </TrackedMethodRefs>
-                </SequencePoint>
-                <SequencePoint vc="0" uspid="2226637" ordinal="0" offset="14" sl="25" sc="0" el="25" ec="0" bec="0" bev="0" fileid="26">
-                  <TrackedMethodRefs>
-                    <TrackedMethodRef uid="0" vc="0" />
-                  </TrackedMethodRefs>
-                </SequencePoint>
-                <SequencePoint vc="0" uspid="2226638" ordinal="0" offset="23" sl="27" sc="0" el="27" ec="0" bec="0" bev="0" fileid="26">
-                  <TrackedMethodRefs>
-                    <TrackedMethodRef uid="0" vc="0" />
-                  </TrackedMethodRefs>
-                </SequencePoint>
-                <SequencePoint vc="0" uspid="2226639" ordinal="0" offset="32" sl="28" sc="0" el="28" ec="0" bec="0" bev="0" fileid="26">
-                  <TrackedMethodRefs>
-                    <TrackedMethodRef uid="0" vc="0" />
-                  </TrackedMethodRefs>
-                </SequencePoint>
-              </SequencePoints>
-              <BranchPoints />
-            </Method>
             <Method visited="true" cyclomaticComplexity="1" nPathComplexity="0" sequenceCoverage="100.0" branchCoverage="0" crapScore="1" isConstructor="true" isStatic="false" isGetter="false" isSetter="false">
               <Summary numSequencePoints="6" visitedSequencePoints="6" numBranchPoints="0" visitedBranchPoints="0" sequenceCoverage="100.0" branchCoverage="0" maxCyclomaticComplexity="1" minCyclomaticComplexity="1" maxCrapScore="1" minCrapScore="1" visitedClasses="0" numClasses="0" visitedMethods="1" numMethods="1" />
-              <MetadataToken>100663745</MetadataToken>
+              <MetadataToken>100663761</MetadataToken>
               <Name>GameManager.Graph.Edge[V]::Edge(GameManager.Graph.Node[V], GameManager.Graph.Node[V], System.Double)</Name>
-              <FileRef uid="26" />
+              <FileRef uid="28" />
               <SequencePoints>
-                <SequencePoint vc="1368" uspid="2226640" ordinal="0" offset="0" sl="9" sc="0" el="9" ec="0" bec="0" bev="0" fileid="26">
+                <SequencePoint vc="1368" uspid="2261209" ordinal="0" offset="0" sl="9" sc="0" el="9" ec="0" bec="0" bev="0" fileid="28">
                   <TrackedMethodRefs>
                     <TrackedMethodRef uid="0" vc="1368" />
                   </TrackedMethodRefs>
                 </SequencePoint>
-                <SequencePoint vc="1368" uspid="2226641" ordinal="0" offset="7" sl="10" sc="0" el="10" ec="0" bec="0" bev="0" fileid="26">
+                <SequencePoint vc="1368" uspid="2261210" ordinal="0" offset="7" sl="10" sc="0" el="10" ec="0" bec="0" bev="0" fileid="28">
                   <TrackedMethodRefs>
                     <TrackedMethodRef uid="0" vc="1368" />
                   </TrackedMethodRefs>
                 </SequencePoint>
-                <SequencePoint vc="1368" uspid="2226642" ordinal="0" offset="8" sl="11" sc="0" el="11" ec="0" bec="0" bev="0" fileid="26">
+                <SequencePoint vc="1368" uspid="2261211" ordinal="0" offset="8" sl="11" sc="0" el="11" ec="0" bec="0" bev="0" fileid="28">
                   <TrackedMethodRefs>
                     <TrackedMethodRef uid="0" vc="1368" />
                   </TrackedMethodRefs>
                 </SequencePoint>
-                <SequencePoint vc="1368" uspid="2226643" ordinal="0" offset="15" sl="12" sc="0" el="12" ec="0" bec="0" bev="0" fileid="26">
+                <SequencePoint vc="1368" uspid="2261212" ordinal="0" offset="15" sl="12" sc="0" el="12" ec="0" bec="0" bev="0" fileid="28">
                   <TrackedMethodRefs>
                     <TrackedMethodRef uid="0" vc="1368" />
                   </TrackedMethodRefs>
                 </SequencePoint>
-                <SequencePoint vc="1368" uspid="2226644" ordinal="0" offset="22" sl="13" sc="0" el="13" ec="0" bec="0" bev="0" fileid="26">
+                <SequencePoint vc="1368" uspid="2261213" ordinal="0" offset="22" sl="13" sc="0" el="13" ec="0" bec="0" bev="0" fileid="28">
                   <TrackedMethodRefs>
                     <TrackedMethodRef uid="0" vc="1368" />
                   </TrackedMethodRefs>
                 </SequencePoint>
-                <SequencePoint vc="1368" uspid="2226645" ordinal="0" offset="29" sl="14" sc="0" el="14" ec="0" bec="0" bev="0" fileid="26">
+                <SequencePoint vc="1368" uspid="2261214" ordinal="0" offset="29" sl="14" sc="0" el="14" ec="0" bec="0" bev="0" fileid="28">
                   <TrackedMethodRefs>
                     <TrackedMethodRef uid="0" vc="1368" />
                   </TrackedMethodRefs>
@@ -388,31 +275,31 @@
           </Methods>
         </Class>
         <Class>
-          <Summary numSequencePoints="58" visitedSequencePoints="18" numBranchPoints="0" visitedBranchPoints="0" sequenceCoverage="31.03" branchCoverage="0.0" maxCyclomaticComplexity="3" minCyclomaticComplexity="1" maxCrapScore="12" minCrapScore="1" visitedClasses="1" numClasses="1" visitedMethods="3" numMethods="10" />
+          <Summary numSequencePoints="18" visitedSequencePoints="18" numBranchPoints="0" visitedBranchPoints="0" sequenceCoverage="100.0" branchCoverage="0.0" maxCyclomaticComplexity="1" minCyclomaticComplexity="1" maxCrapScore="1" minCrapScore="1" visitedClasses="1" numClasses="1" visitedMethods="3" numMethods="3" />
           <FullName>GameManager.Graph.Graph[T]</FullName>
           <Methods>
             <Method visited="true" cyclomaticComplexity="1" nPathComplexity="0" sequenceCoverage="100.0" branchCoverage="0" crapScore="1" isConstructor="false" isStatic="false" isGetter="false" isSetter="false">
               <Summary numSequencePoints="4" visitedSequencePoints="4" numBranchPoints="0" visitedBranchPoints="0" sequenceCoverage="100.0" branchCoverage="0" maxCyclomaticComplexity="1" minCyclomaticComplexity="1" maxCrapScore="1" minCrapScore="1" visitedClasses="0" numClasses="0" visitedMethods="1" numMethods="1" />
-              <MetadataToken>100663750</MetadataToken>
+              <MetadataToken>100663766</MetadataToken>
               <Name>System.Void GameManager.Graph.Graph[T]::AddNode(System.Int32, T)</Name>
-              <FileRef uid="27" />
+              <FileRef uid="29" />
               <SequencePoints>
-                <SequencePoint vc="200" uspid="2226652" ordinal="0" offset="0" sl="32" sc="0" el="32" ec="0" bec="0" bev="0" fileid="27">
+                <SequencePoint vc="200" uspid="2261221" ordinal="0" offset="0" sl="32" sc="0" el="32" ec="0" bec="0" bev="0" fileid="29">
                   <TrackedMethodRefs>
                     <TrackedMethodRef uid="0" vc="200" />
                   </TrackedMethodRefs>
                 </SequencePoint>
-                <SequencePoint vc="200" uspid="2226653" ordinal="0" offset="1" sl="33" sc="0" el="33" ec="0" bec="0" bev="0" fileid="27">
+                <SequencePoint vc="200" uspid="2261222" ordinal="0" offset="1" sl="33" sc="0" el="33" ec="0" bec="0" bev="0" fileid="29">
                   <TrackedMethodRefs>
                     <TrackedMethodRef uid="0" vc="200" />
                   </TrackedMethodRefs>
                 </SequencePoint>
-                <SequencePoint vc="200" uspid="2226654" ordinal="0" offset="9" sl="34" sc="0" el="34" ec="0" bec="0" bev="0" fileid="27">
+                <SequencePoint vc="200" uspid="2261223" ordinal="0" offset="9" sl="34" sc="0" el="34" ec="0" bec="0" bev="0" fileid="29">
                   <TrackedMethodRefs>
                     <TrackedMethodRef uid="0" vc="200" />
                   </TrackedMethodRefs>
                 </SequencePoint>
-                <SequencePoint vc="200" uspid="2226655" ordinal="0" offset="23" sl="35" sc="0" el="35" ec="0" bec="0" bev="0" fileid="27">
+                <SequencePoint vc="200" uspid="2261224" ordinal="0" offset="23" sl="35" sc="0" el="35" ec="0" bec="0" bev="0" fileid="29">
                   <TrackedMethodRefs>
                     <TrackedMethodRef uid="0" vc="200" />
                   </TrackedMethodRefs>
@@ -422,202 +309,48 @@
             </Method>
             <Method visited="true" cyclomaticComplexity="1" nPathComplexity="0" sequenceCoverage="100.0" branchCoverage="0" crapScore="1" isConstructor="false" isStatic="false" isGetter="false" isSetter="false">
               <Summary numSequencePoints="8" visitedSequencePoints="8" numBranchPoints="0" visitedBranchPoints="0" sequenceCoverage="100.0" branchCoverage="0" maxCyclomaticComplexity="1" minCyclomaticComplexity="1" maxCrapScore="1" minCrapScore="1" visitedClasses="0" numClasses="0" visitedMethods="1" numMethods="1" />
-              <MetadataToken>100663751</MetadataToken>
+              <MetadataToken>100663767</MetadataToken>
               <Name>System.Void GameManager.Graph.Graph[T]::AddEdge(System.Int32, System.Int32, System.Double)</Name>
-              <FileRef uid="27" />
+              <FileRef uid="29" />
               <SequencePoints>
-                <SequencePoint vc="1368" uspid="2226656" ordinal="0" offset="0" sl="38" sc="0" el="38" ec="0" bec="0" bev="0" fileid="27">
+                <SequencePoint vc="1368" uspid="2261225" ordinal="0" offset="0" sl="38" sc="0" el="38" ec="0" bec="0" bev="0" fileid="29">
                   <TrackedMethodRefs>
                     <TrackedMethodRef uid="0" vc="1368" />
                   </TrackedMethodRefs>
                 </SequencePoint>
-                <SequencePoint vc="1368" uspid="2226657" ordinal="0" offset="1" sl="39" sc="0" el="39" ec="0" bec="0" bev="0" fileid="27">
+                <SequencePoint vc="1368" uspid="2261226" ordinal="0" offset="1" sl="39" sc="0" el="39" ec="0" bec="0" bev="0" fileid="29">
                   <TrackedMethodRefs>
                     <TrackedMethodRef uid="0" vc="1368" />
                   </TrackedMethodRefs>
                 </SequencePoint>
-                <SequencePoint vc="1368" uspid="2226658" ordinal="0" offset="14" sl="40" sc="0" el="40" ec="0" bec="0" bev="0" fileid="27">
+                <SequencePoint vc="1368" uspid="2261227" ordinal="0" offset="14" sl="40" sc="0" el="40" ec="0" bec="0" bev="0" fileid="29">
                   <TrackedMethodRefs>
                     <TrackedMethodRef uid="0" vc="1368" />
                   </TrackedMethodRefs>
                 </SequencePoint>
-                <SequencePoint vc="1368" uspid="2226659" ordinal="0" offset="27" sl="41" sc="0" el="41" ec="0" bec="0" bev="0" fileid="27">
+                <SequencePoint vc="1368" uspid="2261228" ordinal="0" offset="27" sl="41" sc="0" el="41" ec="0" bec="0" bev="0" fileid="29">
                   <TrackedMethodRefs>
                     <TrackedMethodRef uid="0" vc="1368" />
                   </TrackedMethodRefs>
                 </SequencePoint>
-                <SequencePoint vc="1368" uspid="2226660" ordinal="0" offset="36" sl="42" sc="0" el="42" ec="0" bec="0" bev="0" fileid="27">
+                <SequencePoint vc="1368" uspid="2261229" ordinal="0" offset="36" sl="42" sc="0" el="42" ec="0" bec="0" bev="0" fileid="29">
                   <TrackedMethodRefs>
                     <TrackedMethodRef uid="0" vc="1368" />
                   </TrackedMethodRefs>
                 </SequencePoint>
-                <SequencePoint vc="1368" uspid="2226661" ordinal="0" offset="49" sl="43" sc="0" el="43" ec="0" bec="0" bev="0" fileid="27">
+                <SequencePoint vc="1368" uspid="2261230" ordinal="0" offset="49" sl="43" sc="0" el="43" ec="0" bec="0" bev="0" fileid="29">
                   <TrackedMethodRefs>
                     <TrackedMethodRef uid="0" vc="1368" />
                   </TrackedMethodRefs>
                 </SequencePoint>
-                <SequencePoint vc="1368" uspid="2226662" ordinal="0" offset="62" sl="44" sc="0" el="44" ec="0" bec="0" bev="0" fileid="27">
+                <SequencePoint vc="1368" uspid="2261231" ordinal="0" offset="62" sl="44" sc="0" el="44" ec="0" bec="0" bev="0" fileid="29">
                   <TrackedMethodRefs>
                     <TrackedMethodRef uid="0" vc="1368" />
                   </TrackedMethodRefs>
                 </SequencePoint>
-                <SequencePoint vc="1368" uspid="2226663" ordinal="0" offset="75" sl="45" sc="0" el="45" ec="0" bec="0" bev="0" fileid="27">
+                <SequencePoint vc="1368" uspid="2261232" ordinal="0" offset="75" sl="45" sc="0" el="45" ec="0" bec="0" bev="0" fileid="29">
                   <TrackedMethodRefs>
                     <TrackedMethodRef uid="0" vc="1368" />
-                  </TrackedMethodRefs>
-                </SequencePoint>
-              </SequencePoints>
-              <BranchPoints />
-            </Method>
-            <Method visited="false" cyclomaticComplexity="2" nPathComplexity="0" sequenceCoverage="0.0" branchCoverage="0" crapScore="6" isConstructor="false" isStatic="false" isGetter="false" isSetter="false">
-              <Summary numSequencePoints="7" visitedSequencePoints="0" numBranchPoints="0" visitedBranchPoints="0" sequenceCoverage="0.0" branchCoverage="0" maxCyclomaticComplexity="2" minCyclomaticComplexity="2" maxCrapScore="6" minCrapScore="6" visitedClasses="0" numClasses="0" visitedMethods="0" numMethods="1" />
-              <MetadataToken>100663754</MetadataToken>
-              <Name>System.Collections.Generic.List[T] GameManager.Graph.Graph[T]::BreadthFirstSearch(System.Int32, System.Int32)</Name>
-              <FileRef uid="27" />
-              <SequencePoints>
-                <SequencePoint vc="0" uspid="2226685" ordinal="0" offset="0" sl="74" sc="0" el="74" ec="0" bec="0" bev="0" fileid="27">
-                  <TrackedMethodRefs>
-                    <TrackedMethodRef uid="0" vc="0" />
-                  </TrackedMethodRefs>
-                </SequencePoint>
-                <SequencePoint vc="0" uspid="2226686" ordinal="0" offset="1" sl="75" sc="0" el="75" ec="0" bec="0" bev="0" fileid="27">
-                  <TrackedMethodRefs>
-                    <TrackedMethodRef uid="0" vc="0" />
-                  </TrackedMethodRefs>
-                </SequencePoint>
-                <SequencePoint vc="0" uspid="2226687" ordinal="0" offset="7" sl="77" sc="0" el="77" ec="0" bec="0" bev="0" fileid="27">
-                  <TrackedMethodRefs>
-                    <TrackedMethodRef uid="0" vc="0" />
-                  </TrackedMethodRefs>
-                </SequencePoint>
-                <SequencePoint vc="0" uspid="2226688" ordinal="0" offset="19" sl="78" sc="0" el="78" ec="0" bec="0" bev="0" fileid="27">
-                  <TrackedMethodRefs>
-                    <TrackedMethodRef uid="0" vc="0" />
-                  </TrackedMethodRefs>
-                </SequencePoint>
-                <SequencePoint vc="0" uspid="2226689" ordinal="0" offset="20" sl="79" sc="0" el="79" ec="0" bec="0" bev="0" fileid="27">
-                  <TrackedMethodRefs>
-                    <TrackedMethodRef uid="0" vc="0" />
-                  </TrackedMethodRefs>
-                </SequencePoint>
-                <SequencePoint vc="0" uspid="2226690" ordinal="0" offset="31" sl="82" sc="0" el="82" ec="0" bec="0" bev="0" fileid="27">
-                  <TrackedMethodRefs>
-                    <TrackedMethodRef uid="0" vc="0" />
-                  </TrackedMethodRefs>
-                </SequencePoint>
-                <SequencePoint vc="0" uspid="2226691" ordinal="0" offset="35" sl="83" sc="0" el="83" ec="0" bec="0" bev="0" fileid="27">
-                  <TrackedMethodRefs>
-                    <TrackedMethodRef uid="0" vc="0" />
-                  </TrackedMethodRefs>
-                </SequencePoint>
-              </SequencePoints>
-              <BranchPoints />
-            </Method>
-            <Method visited="false" cyclomaticComplexity="2" nPathComplexity="0" sequenceCoverage="0.0" branchCoverage="0" crapScore="6" isConstructor="false" isStatic="false" isGetter="false" isSetter="false">
-              <Summary numSequencePoints="9" visitedSequencePoints="0" numBranchPoints="0" visitedBranchPoints="0" sequenceCoverage="0.0" branchCoverage="0" maxCyclomaticComplexity="2" minCyclomaticComplexity="2" maxCrapScore="6" minCrapScore="6" visitedClasses="0" numClasses="0" visitedMethods="0" numMethods="1" />
-              <MetadataToken>100663755</MetadataToken>
-              <Name>System.Void GameManager.Graph.Graph[T]::ResetSearch()</Name>
-              <FileRef uid="27" />
-              <SequencePoints>
-                <SequencePoint vc="0" uspid="2226692" ordinal="0" offset="0" sl="87" sc="0" el="87" ec="0" bec="0" bev="0" fileid="27">
-                  <TrackedMethodRefs>
-                    <TrackedMethodRef uid="0" vc="0" />
-                  </TrackedMethodRefs>
-                </SequencePoint>
-                <SequencePoint vc="0" uspid="2226693" ordinal="0" offset="1" sl="88" sc="0" el="88" ec="0" bec="0" bev="0" fileid="27">
-                  <TrackedMethodRefs>
-                    <TrackedMethodRef uid="0" vc="0" />
-                  </TrackedMethodRefs>
-                </SequencePoint>
-                <SequencePoint vc="0" uspid="2226694" ordinal="0" offset="2" sl="88" sc="0" el="88" ec="0" bec="0" bev="0" fileid="27">
-                  <TrackedMethodRefs>
-                    <TrackedMethodRef uid="0" vc="0" />
-                  </TrackedMethodRefs>
-                </SequencePoint>
-                <SequencePoint vc="0" uspid="2226695" ordinal="0" offset="21" sl="88" sc="0" el="88" ec="0" bec="0" bev="0" fileid="27">
-                  <TrackedMethodRefs>
-                    <TrackedMethodRef uid="0" vc="0" />
-                  </TrackedMethodRefs>
-                </SequencePoint>
-                <SequencePoint vc="0" uspid="2226696" ordinal="0" offset="29" sl="89" sc="0" el="89" ec="0" bec="0" bev="0" fileid="27">
-                  <TrackedMethodRefs>
-                    <TrackedMethodRef uid="0" vc="0" />
-                  </TrackedMethodRefs>
-                </SequencePoint>
-                <SequencePoint vc="0" uspid="2226697" ordinal="0" offset="30" sl="90" sc="0" el="90" ec="0" bec="0" bev="0" fileid="27">
-                  <TrackedMethodRefs>
-                    <TrackedMethodRef uid="0" vc="0" />
-                  </TrackedMethodRefs>
-                </SequencePoint>
-                <SequencePoint vc="0" uspid="2226698" ordinal="0" offset="37" sl="91" sc="0" el="91" ec="0" bec="0" bev="0" fileid="27">
-                  <TrackedMethodRefs>
-                    <TrackedMethodRef uid="0" vc="0" />
-                  </TrackedMethodRefs>
-                </SequencePoint>
-                <SequencePoint vc="0" uspid="2226699" ordinal="0" offset="38" sl="88" sc="0" el="88" ec="0" bec="0" bev="0" fileid="27">
-                  <TrackedMethodRefs>
-                    <TrackedMethodRef uid="0" vc="0" />
-                  </TrackedMethodRefs>
-                </SequencePoint>
-                <SequencePoint vc="0" uspid="2226700" ordinal="0" offset="64" sl="92" sc="0" el="92" ec="0" bec="0" bev="0" fileid="27">
-                  <TrackedMethodRefs>
-                    <TrackedMethodRef uid="0" vc="0" />
-                  </TrackedMethodRefs>
-                </SequencePoint>
-              </SequencePoints>
-              <BranchPoints />
-            </Method>
-            <Method visited="false" cyclomaticComplexity="1" nPathComplexity="0" sequenceCoverage="0.0" branchCoverage="0" crapScore="2" isConstructor="false" isStatic="false" isGetter="true" isSetter="false">
-              <Summary numSequencePoints="1" visitedSequencePoints="0" numBranchPoints="0" visitedBranchPoints="0" sequenceCoverage="0.0" branchCoverage="0" maxCyclomaticComplexity="1" minCyclomaticComplexity="1" maxCrapScore="2" minCrapScore="2" visitedClasses="0" numClasses="0" visitedMethods="0" numMethods="1" />
-              <MetadataToken>100663756</MetadataToken>
-              <Name>System.Int32 GameManager.Graph.Graph[T]::get_LastSearchExpansions()</Name>
-              <FileRef uid="27" />
-              <SequencePoints>
-                <SequencePoint vc="0" uspid="2226701" ordinal="0" offset="0" sl="94" sc="0" el="94" ec="0" bec="0" bev="0" fileid="27">
-                  <TrackedMethodRefs>
-                    <TrackedMethodRef uid="0" vc="0" />
-                  </TrackedMethodRefs>
-                </SequencePoint>
-              </SequencePoints>
-              <BranchPoints />
-            </Method>
-            <Method visited="false" cyclomaticComplexity="1" nPathComplexity="0" sequenceCoverage="0.0" branchCoverage="0" crapScore="2" isConstructor="false" isStatic="false" isGetter="false" isSetter="true">
-              <Summary numSequencePoints="1" visitedSequencePoints="0" numBranchPoints="0" visitedBranchPoints="0" sequenceCoverage="0.0" branchCoverage="0" maxCyclomaticComplexity="1" minCyclomaticComplexity="1" maxCrapScore="2" minCrapScore="2" visitedClasses="0" numClasses="0" visitedMethods="0" numMethods="1" />
-              <MetadataToken>100663757</MetadataToken>
-              <Name>System.Void GameManager.Graph.Graph[T]::set_LastSearchExpansions(System.Int32)</Name>
-              <FileRef uid="27" />
-              <SequencePoints>
-                <SequencePoint vc="0" uspid="2226702" ordinal="0" offset="0" sl="94" sc="0" el="94" ec="0" bec="0" bev="0" fileid="27">
-                  <TrackedMethodRefs>
-                    <TrackedMethodRef uid="0" vc="0" />
-                  </TrackedMethodRefs>
-                </SequencePoint>
-              </SequencePoints>
-              <BranchPoints />
-            </Method>
-            <Method visited="false" cyclomaticComplexity="1" nPathComplexity="0" sequenceCoverage="0.0" branchCoverage="0" crapScore="2" isConstructor="false" isStatic="false" isGetter="true" isSetter="false">
-              <Summary numSequencePoints="1" visitedSequencePoints="0" numBranchPoints="0" visitedBranchPoints="0" sequenceCoverage="0.0" branchCoverage="0" maxCyclomaticComplexity="1" minCyclomaticComplexity="1" maxCrapScore="2" minCrapScore="2" visitedClasses="0" numClasses="0" visitedMethods="0" numMethods="1" />
-              <MetadataToken>100663758</MetadataToken>
-              <Name>System.String GameManager.Graph.Graph[T]::get_LastSearchResult()</Name>
-              <FileRef uid="27" />
-              <SequencePoints>
-                <SequencePoint vc="0" uspid="2226703" ordinal="0" offset="0" sl="97" sc="0" el="97" ec="0" bec="0" bev="0" fileid="27">
-                  <TrackedMethodRefs>
-                    <TrackedMethodRef uid="0" vc="0" />
-                  </TrackedMethodRefs>
-                </SequencePoint>
-              </SequencePoints>
-              <BranchPoints />
-            </Method>
-            <Method visited="false" cyclomaticComplexity="1" nPathComplexity="0" sequenceCoverage="0.0" branchCoverage="0" crapScore="2" isConstructor="false" isStatic="false" isGetter="false" isSetter="true">
-              <Summary numSequencePoints="1" visitedSequencePoints="0" numBranchPoints="0" visitedBranchPoints="0" sequenceCoverage="0.0" branchCoverage="0" maxCyclomaticComplexity="1" minCyclomaticComplexity="1" maxCrapScore="2" minCrapScore="2" visitedClasses="0" numClasses="0" visitedMethods="0" numMethods="1" />
-              <MetadataToken>100663759</MetadataToken>
-              <Name>System.Void GameManager.Graph.Graph[T]::set_LastSearchResult(System.String)</Name>
-              <FileRef uid="27" />
-              <SequencePoints>
-                <SequencePoint vc="0" uspid="2226704" ordinal="0" offset="0" sl="97" sc="0" el="97" ec="0" bec="0" bev="0" fileid="27">
-                  <TrackedMethodRefs>
-                    <TrackedMethodRef uid="0" vc="0" />
                   </TrackedMethodRefs>
                 </SequencePoint>
               </SequencePoints>
@@ -625,147 +358,38 @@
             </Method>
             <Method visited="true" cyclomaticComplexity="1" nPathComplexity="0" sequenceCoverage="100.0" branchCoverage="0" crapScore="1" isConstructor="true" isStatic="false" isGetter="false" isSetter="false">
               <Summary numSequencePoints="6" visitedSequencePoints="6" numBranchPoints="0" visitedBranchPoints="0" sequenceCoverage="100.0" branchCoverage="0" maxCyclomaticComplexity="1" minCyclomaticComplexity="1" maxCrapScore="1" minCrapScore="1" visitedClasses="0" numClasses="0" visitedMethods="1" numMethods="1" />
-              <MetadataToken>100663748</MetadataToken>
+              <MetadataToken>100663764</MetadataToken>
               <Name>GameManager.Graph.Graph[T]::Graph()</Name>
-              <FileRef uid="27" />
+              <FileRef uid="29" />
               <SequencePoints>
-                <SequencePoint vc="2" uspid="2226773" ordinal="0" offset="0" sl="11" sc="0" el="11" ec="0" bec="0" bev="0" fileid="27">
+                <SequencePoint vc="2" uspid="2261342" ordinal="0" offset="0" sl="11" sc="0" el="11" ec="0" bec="0" bev="0" fileid="29">
                   <TrackedMethodRefs>
                     <TrackedMethodRef uid="0" vc="2" />
                   </TrackedMethodRefs>
                 </SequencePoint>
-                <SequencePoint vc="2" uspid="2226774" ordinal="0" offset="11" sl="12" sc="0" el="12" ec="0" bec="0" bev="0" fileid="27">
+                <SequencePoint vc="2" uspid="2261343" ordinal="0" offset="11" sl="12" sc="0" el="12" ec="0" bec="0" bev="0" fileid="29">
                   <TrackedMethodRefs>
                     <TrackedMethodRef uid="0" vc="2" />
                   </TrackedMethodRefs>
                 </SequencePoint>
-                <SequencePoint vc="2" uspid="2226775" ordinal="0" offset="22" sl="13" sc="0" el="13" ec="0" bec="0" bev="0" fileid="27">
+                <SequencePoint vc="2" uspid="2261344" ordinal="0" offset="22" sl="13" sc="0" el="13" ec="0" bec="0" bev="0" fileid="29">
                   <TrackedMethodRefs>
                     <TrackedMethodRef uid="0" vc="2" />
                   </TrackedMethodRefs>
                 </SequencePoint>
-                <SequencePoint vc="2" uspid="2226776" ordinal="0" offset="33" sl="15" sc="0" el="15" ec="0" bec="0" bev="0" fileid="27">
+                <SequencePoint vc="2" uspid="2261345" ordinal="0" offset="33" sl="15" sc="0" el="15" ec="0" bec="0" bev="0" fileid="29">
                   <TrackedMethodRefs>
                     <TrackedMethodRef uid="0" vc="2" />
                   </TrackedMethodRefs>
                 </SequencePoint>
-                <SequencePoint vc="2" uspid="2226777" ordinal="0" offset="40" sl="16" sc="0" el="16" ec="0" bec="0" bev="0" fileid="27">
+                <SequencePoint vc="2" uspid="2261346" ordinal="0" offset="40" sl="16" sc="0" el="16" ec="0" bec="0" bev="0" fileid="29">
                   <TrackedMethodRefs>
                     <TrackedMethodRef uid="0" vc="2" />
                   </TrackedMethodRefs>
                 </SequencePoint>
-                <SequencePoint vc="2" uspid="2226778" ordinal="0" offset="41" sl="17" sc="0" el="17" ec="0" bec="0" bev="0" fileid="27">
+                <SequencePoint vc="2" uspid="2261347" ordinal="0" offset="41" sl="17" sc="0" el="17" ec="0" bec="0" bev="0" fileid="29">
                   <TrackedMethodRefs>
                     <TrackedMethodRef uid="0" vc="2" />
-                  </TrackedMethodRefs>
-                </SequencePoint>
-              </SequencePoints>
-              <BranchPoints />
-            </Method>
-            <Method visited="false" cyclomaticComplexity="3" nPathComplexity="0" sequenceCoverage="0.0" branchCoverage="0" crapScore="12" isConstructor="true" isStatic="false" isGetter="false" isSetter="false">
-              <Summary numSequencePoints="20" visitedSequencePoints="0" numBranchPoints="0" visitedBranchPoints="0" sequenceCoverage="0.0" branchCoverage="0" maxCyclomaticComplexity="3" minCyclomaticComplexity="3" maxCrapScore="12" minCrapScore="12" visitedClasses="0" numClasses="0" visitedMethods="0" numMethods="1" />
-              <MetadataToken>100663749</MetadataToken>
-              <Name>GameManager.Graph.Graph[T]::Graph(GameManager.Graph.Graph[T])</Name>
-              <FileRef uid="27" />
-              <SequencePoints>
-                <SequencePoint vc="0" uspid="2226779" ordinal="0" offset="0" sl="11" sc="0" el="11" ec="0" bec="0" bev="0" fileid="27">
-                  <TrackedMethodRefs>
-                    <TrackedMethodRef uid="0" vc="0" />
-                  </TrackedMethodRefs>
-                </SequencePoint>
-                <SequencePoint vc="0" uspid="2226780" ordinal="0" offset="11" sl="12" sc="0" el="12" ec="0" bec="0" bev="0" fileid="27">
-                  <TrackedMethodRefs>
-                    <TrackedMethodRef uid="0" vc="0" />
-                  </TrackedMethodRefs>
-                </SequencePoint>
-                <SequencePoint vc="0" uspid="2226781" ordinal="0" offset="22" sl="13" sc="0" el="13" ec="0" bec="0" bev="0" fileid="27">
-                  <TrackedMethodRefs>
-                    <TrackedMethodRef uid="0" vc="0" />
-                  </TrackedMethodRefs>
-                </SequencePoint>
-                <SequencePoint vc="0" uspid="2226782" ordinal="0" offset="33" sl="19" sc="0" el="19" ec="0" bec="0" bev="0" fileid="27">
-                  <TrackedMethodRefs>
-                    <TrackedMethodRef uid="0" vc="0" />
-                  </TrackedMethodRefs>
-                </SequencePoint>
-                <SequencePoint vc="0" uspid="2226783" ordinal="0" offset="40" sl="20" sc="0" el="20" ec="0" bec="0" bev="0" fileid="27">
-                  <TrackedMethodRefs>
-                    <TrackedMethodRef uid="0" vc="0" />
-                  </TrackedMethodRefs>
-                </SequencePoint>
-                <SequencePoint vc="0" uspid="2226784" ordinal="0" offset="41" sl="21" sc="0" el="21" ec="0" bec="0" bev="0" fileid="27">
-                  <TrackedMethodRefs>
-                    <TrackedMethodRef uid="0" vc="0" />
-                  </TrackedMethodRefs>
-                </SequencePoint>
-                <SequencePoint vc="0" uspid="2226785" ordinal="0" offset="42" sl="21" sc="0" el="21" ec="0" bec="0" bev="0" fileid="27">
-                  <TrackedMethodRefs>
-                    <TrackedMethodRef uid="0" vc="0" />
-                  </TrackedMethodRefs>
-                </SequencePoint>
-                <SequencePoint vc="0" uspid="2226786" ordinal="0" offset="61" sl="21" sc="0" el="21" ec="0" bec="0" bev="0" fileid="27">
-                  <TrackedMethodRefs>
-                    <TrackedMethodRef uid="0" vc="0" />
-                  </TrackedMethodRefs>
-                </SequencePoint>
-                <SequencePoint vc="0" uspid="2226787" ordinal="0" offset="69" sl="22" sc="0" el="22" ec="0" bec="0" bev="0" fileid="27">
-                  <TrackedMethodRefs>
-                    <TrackedMethodRef uid="0" vc="0" />
-                  </TrackedMethodRefs>
-                </SequencePoint>
-                <SequencePoint vc="0" uspid="2226788" ordinal="0" offset="70" sl="23" sc="0" el="23" ec="0" bec="0" bev="0" fileid="27">
-                  <TrackedMethodRefs>
-                    <TrackedMethodRef uid="0" vc="0" />
-                  </TrackedMethodRefs>
-                </SequencePoint>
-                <SequencePoint vc="0" uspid="2226789" ordinal="0" offset="89" sl="24" sc="0" el="24" ec="0" bec="0" bev="0" fileid="27">
-                  <TrackedMethodRefs>
-                    <TrackedMethodRef uid="0" vc="0" />
-                  </TrackedMethodRefs>
-                </SequencePoint>
-                <SequencePoint vc="0" uspid="2226790" ordinal="0" offset="90" sl="21" sc="0" el="21" ec="0" bec="0" bev="0" fileid="27">
-                  <TrackedMethodRefs>
-                    <TrackedMethodRef uid="0" vc="0" />
-                  </TrackedMethodRefs>
-                </SequencePoint>
-                <SequencePoint vc="0" uspid="2226791" ordinal="0" offset="116" sl="25" sc="0" el="25" ec="0" bec="0" bev="0" fileid="27">
-                  <TrackedMethodRefs>
-                    <TrackedMethodRef uid="0" vc="0" />
-                  </TrackedMethodRefs>
-                </SequencePoint>
-                <SequencePoint vc="0" uspid="2226792" ordinal="0" offset="117" sl="25" sc="0" el="25" ec="0" bec="0" bev="0" fileid="27">
-                  <TrackedMethodRefs>
-                    <TrackedMethodRef uid="0" vc="0" />
-                  </TrackedMethodRefs>
-                </SequencePoint>
-                <SequencePoint vc="0" uspid="2226793" ordinal="0" offset="131" sl="25" sc="0" el="25" ec="0" bec="0" bev="0" fileid="27">
-                  <TrackedMethodRefs>
-                    <TrackedMethodRef uid="0" vc="0" />
-                  </TrackedMethodRefs>
-                </SequencePoint>
-                <SequencePoint vc="0" uspid="2226794" ordinal="0" offset="139" sl="26" sc="0" el="26" ec="0" bec="0" bev="0" fileid="27">
-                  <TrackedMethodRefs>
-                    <TrackedMethodRef uid="0" vc="0" />
-                  </TrackedMethodRefs>
-                </SequencePoint>
-                <SequencePoint vc="0" uspid="2226795" ordinal="0" offset="140" sl="27" sc="0" el="27" ec="0" bec="0" bev="0" fileid="27">
-                  <TrackedMethodRefs>
-                    <TrackedMethodRef uid="0" vc="0" />
-                  </TrackedMethodRefs>
-                </SequencePoint>
-                <SequencePoint vc="0" uspid="2226796" ordinal="0" offset="175" sl="28" sc="0" el="28" ec="0" bec="0" bev="0" fileid="27">
-                  <TrackedMethodRefs>
-                    <TrackedMethodRef uid="0" vc="0" />
-                  </TrackedMethodRefs>
-                </SequencePoint>
-                <SequencePoint vc="0" uspid="2226797" ordinal="0" offset="176" sl="25" sc="0" el="25" ec="0" bec="0" bev="0" fileid="27">
-                  <TrackedMethodRefs>
-                    <TrackedMethodRef uid="0" vc="0" />
-                  </TrackedMethodRefs>
-                </SequencePoint>
-                <SequencePoint vc="0" uspid="2226798" ordinal="0" offset="202" sl="29" sc="0" el="29" ec="0" bec="0" bev="0" fileid="27">
-                  <TrackedMethodRefs>
-                    <TrackedMethodRef uid="0" vc="0" />
                   </TrackedMethodRefs>
                 </SequencePoint>
               </SequencePoints>
@@ -779,51 +403,51 @@
           <Methods>
             <Method visited="true" cyclomaticComplexity="1" nPathComplexity="0" sequenceCoverage="100.0" branchCoverage="0" crapScore="1" isConstructor="true" isStatic="false" isGetter="false" isSetter="false">
               <Summary numSequencePoints="9" visitedSequencePoints="9" numBranchPoints="0" visitedBranchPoints="0" sequenceCoverage="100.0" branchCoverage="0" maxCyclomaticComplexity="1" minCyclomaticComplexity="1" maxCrapScore="1" minCrapScore="1" visitedClasses="0" numClasses="0" visitedMethods="1" numMethods="1" />
-              <MetadataToken>100663767</MetadataToken>
+              <MetadataToken>100663783</MetadataToken>
               <Name>GameManager.Graph.Node[V]::Node(System.Int32, V)</Name>
-              <FileRef uid="28" />
+              <FileRef uid="30" />
               <SequencePoints>
-                <SequencePoint vc="200" uspid="2226804" ordinal="0" offset="0" sl="7" sc="0" el="7" ec="0" bec="0" bev="0" fileid="28">
+                <SequencePoint vc="200" uspid="2261373" ordinal="0" offset="0" sl="7" sc="0" el="7" ec="0" bec="0" bev="0" fileid="30">
                   <TrackedMethodRefs>
                     <TrackedMethodRef uid="0" vc="200" />
                   </TrackedMethodRefs>
                 </SequencePoint>
-                <SequencePoint vc="200" uspid="2226805" ordinal="0" offset="11" sl="12" sc="0" el="12" ec="0" bec="0" bev="0" fileid="28">
+                <SequencePoint vc="200" uspid="2261374" ordinal="0" offset="11" sl="12" sc="0" el="12" ec="0" bec="0" bev="0" fileid="30">
                   <TrackedMethodRefs>
                     <TrackedMethodRef uid="0" vc="200" />
                   </TrackedMethodRefs>
                 </SequencePoint>
-                <SequencePoint vc="200" uspid="2226806" ordinal="0" offset="26" sl="13" sc="0" el="13" ec="0" bec="0" bev="0" fileid="28">
+                <SequencePoint vc="200" uspid="2261375" ordinal="0" offset="26" sl="13" sc="0" el="13" ec="0" bec="0" bev="0" fileid="30">
                   <TrackedMethodRefs>
                     <TrackedMethodRef uid="0" vc="200" />
                   </TrackedMethodRefs>
                 </SequencePoint>
-                <SequencePoint vc="200" uspid="2226807" ordinal="0" offset="33" sl="14" sc="0" el="14" ec="0" bec="0" bev="0" fileid="28">
+                <SequencePoint vc="200" uspid="2261376" ordinal="0" offset="33" sl="14" sc="0" el="14" ec="0" bec="0" bev="0" fileid="30">
                   <TrackedMethodRefs>
                     <TrackedMethodRef uid="0" vc="200" />
                   </TrackedMethodRefs>
                 </SequencePoint>
-                <SequencePoint vc="200" uspid="2226808" ordinal="0" offset="40" sl="16" sc="0" el="16" ec="0" bec="0" bev="0" fileid="28">
+                <SequencePoint vc="200" uspid="2261377" ordinal="0" offset="40" sl="16" sc="0" el="16" ec="0" bec="0" bev="0" fileid="30">
                   <TrackedMethodRefs>
                     <TrackedMethodRef uid="0" vc="200" />
                   </TrackedMethodRefs>
                 </SequencePoint>
-                <SequencePoint vc="200" uspid="2226809" ordinal="0" offset="47" sl="17" sc="0" el="17" ec="0" bec="0" bev="0" fileid="28">
+                <SequencePoint vc="200" uspid="2261378" ordinal="0" offset="47" sl="17" sc="0" el="17" ec="0" bec="0" bev="0" fileid="30">
                   <TrackedMethodRefs>
                     <TrackedMethodRef uid="0" vc="200" />
                   </TrackedMethodRefs>
                 </SequencePoint>
-                <SequencePoint vc="200" uspid="2226810" ordinal="0" offset="48" sl="18" sc="0" el="18" ec="0" bec="0" bev="0" fileid="28">
+                <SequencePoint vc="200" uspid="2261379" ordinal="0" offset="48" sl="18" sc="0" el="18" ec="0" bec="0" bev="0" fileid="30">
                   <TrackedMethodRefs>
                     <TrackedMethodRef uid="0" vc="200" />
                   </TrackedMethodRefs>
                 </SequencePoint>
-                <SequencePoint vc="200" uspid="2226811" ordinal="0" offset="55" sl="19" sc="0" el="19" ec="0" bec="0" bev="0" fileid="28">
+                <SequencePoint vc="200" uspid="2261380" ordinal="0" offset="55" sl="19" sc="0" el="19" ec="0" bec="0" bev="0" fileid="30">
                   <TrackedMethodRefs>
                     <TrackedMethodRef uid="0" vc="200" />
                   </TrackedMethodRefs>
                 </SequencePoint>
-                <SequencePoint vc="200" uspid="2226812" ordinal="0" offset="62" sl="20" sc="0" el="20" ec="0" bec="0" bev="0" fileid="28">
+                <SequencePoint vc="200" uspid="2261381" ordinal="0" offset="62" sl="20" sc="0" el="20" ec="0" bec="0" bev="0" fileid="30">
                   <TrackedMethodRefs>
                     <TrackedMethodRef uid="0" vc="200" />
                   </TrackedMethodRefs>
@@ -844,11 +468,11 @@
           <Methods>
             <Method visited="true" cyclomaticComplexity="1" nPathComplexity="0" sequenceCoverage="100.0" branchCoverage="0" crapScore="1" isConstructor="true" isStatic="false" isGetter="false" isSetter="false">
               <Summary numSequencePoints="1" visitedSequencePoints="1" numBranchPoints="0" visitedBranchPoints="0" sequenceCoverage="100.0" branchCoverage="0" maxCyclomaticComplexity="1" minCyclomaticComplexity="1" maxCrapScore="1" minCrapScore="1" visitedClasses="0" numClasses="0" visitedMethods="1" numMethods="1" />
-              <MetadataToken>100663781</MetadataToken>
+              <MetadataToken>100663797</MetadataToken>
               <Name>GameManager.Graph.PriorityQueue[T]::PriorityQueue()</Name>
-              <FileRef uid="29" />
+              <FileRef uid="31" />
               <SequencePoints>
-                <SequencePoint vc="2" uspid="2226927" ordinal="0" offset="0" sl="38" sc="0" el="38" ec="0" bec="0" bev="0" fileid="29">
+                <SequencePoint vc="2" uspid="2261496" ordinal="0" offset="0" sl="38" sc="0" el="38" ec="0" bec="0" bev="0" fileid="31">
                   <TrackedMethodRefs>
                     <TrackedMethodRef uid="0" vc="2" />
                   </TrackedMethodRefs>
@@ -864,11 +488,11 @@
           <Methods>
             <Method visited="true" cyclomaticComplexity="1" nPathComplexity="0" sequenceCoverage="100.0" branchCoverage="0" crapScore="1" isConstructor="false" isStatic="false" isGetter="true" isSetter="false">
               <Summary numSequencePoints="1" visitedSequencePoints="1" numBranchPoints="0" visitedBranchPoints="0" sequenceCoverage="100.0" branchCoverage="0" maxCyclomaticComplexity="1" minCyclomaticComplexity="1" maxCrapScore="1" minCrapScore="1" visitedClasses="0" numClasses="0" visitedMethods="1" numMethods="1" />
-              <MetadataToken>100663845</MetadataToken>
+              <MetadataToken>100663863</MetadataToken>
               <Name>UnityEngine.Vector3Int GameManager.GameElements.GridCell::get_Position()</Name>
-              <FileRef uid="34" />
+              <FileRef uid="37" />
               <SequencePoints>
-                <SequencePoint vc="2936" uspid="2227347" ordinal="0" offset="0" sl="9" sc="34" el="9" ec="34" bec="0" bev="0" fileid="34">
+                <SequencePoint vc="2936" uspid="2261931" ordinal="0" offset="0" sl="9" sc="34" el="9" ec="34" bec="0" bev="0" fileid="37">
                   <TrackedMethodRefs>
                     <TrackedMethodRef uid="0" vc="2936" />
                   </TrackedMethodRefs>
@@ -878,11 +502,11 @@
             </Method>
             <Method visited="true" cyclomaticComplexity="1" nPathComplexity="0" sequenceCoverage="100.0" branchCoverage="0" crapScore="1" isConstructor="false" isStatic="false" isGetter="false" isSetter="true">
               <Summary numSequencePoints="1" visitedSequencePoints="1" numBranchPoints="0" visitedBranchPoints="0" sequenceCoverage="100.0" branchCoverage="0" maxCyclomaticComplexity="1" minCyclomaticComplexity="1" maxCrapScore="1" minCrapScore="1" visitedClasses="0" numClasses="0" visitedMethods="1" numMethods="1" />
-              <MetadataToken>100663846</MetadataToken>
+              <MetadataToken>100663864</MetadataToken>
               <Name>System.Void GameManager.GameElements.GridCell::set_Position(UnityEngine.Vector3Int)</Name>
-              <FileRef uid="34" />
+              <FileRef uid="37" />
               <SequencePoints>
-                <SequencePoint vc="200" uspid="2227348" ordinal="0" offset="0" sl="9" sc="39" el="9" ec="39" bec="0" bev="0" fileid="34">
+                <SequencePoint vc="200" uspid="2261932" ordinal="0" offset="0" sl="9" sc="39" el="9" ec="39" bec="0" bev="0" fileid="37">
                   <TrackedMethodRefs>
                     <TrackedMethodRef uid="0" vc="200" />
                   </TrackedMethodRefs>
@@ -892,11 +516,11 @@
             </Method>
             <Method visited="true" cyclomaticComplexity="1" nPathComplexity="0" sequenceCoverage="100.0" branchCoverage="0" crapScore="1" isConstructor="false" isStatic="false" isGetter="false" isSetter="true">
               <Summary numSequencePoints="1" visitedSequencePoints="1" numBranchPoints="0" visitedBranchPoints="0" sequenceCoverage="100.0" branchCoverage="0" maxCyclomaticComplexity="1" minCyclomaticComplexity="1" maxCrapScore="1" minCrapScore="1" visitedClasses="0" numClasses="0" visitedMethods="1" numMethods="1" />
-              <MetadataToken>100663848</MetadataToken>
+              <MetadataToken>100663866</MetadataToken>
               <Name>System.Void GameManager.GameElements.GridCell::set_TileMap(UnityEngine.Tilemaps.Tilemap)</Name>
-              <FileRef uid="34" />
+              <FileRef uid="37" />
               <SequencePoints>
-                <SequencePoint vc="200" uspid="2227350" ordinal="0" offset="0" sl="11" sc="35" el="11" ec="35" bec="0" bev="0" fileid="34">
+                <SequencePoint vc="200" uspid="2261934" ordinal="0" offset="0" sl="11" sc="35" el="11" ec="35" bec="0" bev="0" fileid="37">
                   <TrackedMethodRefs>
                     <TrackedMethodRef uid="0" vc="200" />
                   </TrackedMethodRefs>
@@ -906,11 +530,11 @@
             </Method>
             <Method visited="true" cyclomaticComplexity="1" nPathComplexity="0" sequenceCoverage="100.0" branchCoverage="0" crapScore="1" isConstructor="false" isStatic="false" isGetter="false" isSetter="true">
               <Summary numSequencePoints="1" visitedSequencePoints="1" numBranchPoints="0" visitedBranchPoints="0" sequenceCoverage="100.0" branchCoverage="0" maxCyclomaticComplexity="1" minCyclomaticComplexity="1" maxCrapScore="1" minCrapScore="1" visitedClasses="0" numClasses="0" visitedMethods="1" numMethods="1" />
-              <MetadataToken>100663850</MetadataToken>
+              <MetadataToken>100663868</MetadataToken>
               <Name>System.Void GameManager.GameElements.GridCell::set_Tile(UnityEngine.Tilemaps.TileBase)</Name>
-              <FileRef uid="34" />
+              <FileRef uid="37" />
               <SequencePoints>
-                <SequencePoint vc="200" uspid="2227352" ordinal="0" offset="0" sl="13" sc="33" el="13" ec="33" bec="0" bev="0" fileid="34">
+                <SequencePoint vc="200" uspid="2261936" ordinal="0" offset="0" sl="13" sc="33" el="13" ec="33" bec="0" bev="0" fileid="37">
                   <TrackedMethodRefs>
                     <TrackedMethodRef uid="0" vc="200" />
                   </TrackedMethodRefs>
@@ -920,21 +544,21 @@
             </Method>
             <Method visited="true" cyclomaticComplexity="1" nPathComplexity="0" sequenceCoverage="100.0" branchCoverage="0" crapScore="1" isConstructor="false" isStatic="false" isGetter="false" isSetter="false">
               <Summary numSequencePoints="3" visitedSequencePoints="3" numBranchPoints="0" visitedBranchPoints="0" sequenceCoverage="100.0" branchCoverage="0" maxCyclomaticComplexity="1" minCyclomaticComplexity="1" maxCrapScore="1" minCrapScore="1" visitedClasses="0" numClasses="0" visitedMethods="1" numMethods="1" />
-              <MetadataToken>100663853</MetadataToken>
+              <MetadataToken>100663871</MetadataToken>
               <Name>System.Void GameManager.GameElements.GridCell::SetBuildable(System.Boolean)</Name>
-              <FileRef uid="34" />
+              <FileRef uid="37" />
               <SequencePoints>
-                <SequencePoint vc="1" uspid="2227358" ordinal="0" offset="0" sl="30" sc="3" el="30" ec="3" bec="0" bev="0" fileid="34">
+                <SequencePoint vc="1" uspid="2261942" ordinal="0" offset="0" sl="30" sc="3" el="30" ec="3" bec="0" bev="0" fileid="37">
                   <TrackedMethodRefs>
                     <TrackedMethodRef uid="0" vc="1" />
                   </TrackedMethodRefs>
                 </SequencePoint>
-                <SequencePoint vc="1" uspid="2227359" ordinal="0" offset="1" sl="31" sc="4" el="31" ec="4" bec="0" bev="0" fileid="34">
+                <SequencePoint vc="1" uspid="2261943" ordinal="0" offset="1" sl="31" sc="4" el="31" ec="4" bec="0" bev="0" fileid="37">
                   <TrackedMethodRefs>
                     <TrackedMethodRef uid="0" vc="1" />
                   </TrackedMethodRefs>
                 </SequencePoint>
-                <SequencePoint vc="1" uspid="2227360" ordinal="0" offset="8" sl="32" sc="3" el="32" ec="3" bec="0" bev="0" fileid="34">
+                <SequencePoint vc="1" uspid="2261944" ordinal="0" offset="8" sl="32" sc="3" el="32" ec="3" bec="0" bev="0" fileid="37">
                   <TrackedMethodRefs>
                     <TrackedMethodRef uid="0" vc="1" />
                   </TrackedMethodRefs>
@@ -944,21 +568,21 @@
             </Method>
             <Method visited="true" cyclomaticComplexity="1" nPathComplexity="0" sequenceCoverage="100.0" branchCoverage="0" crapScore="1" isConstructor="false" isStatic="false" isGetter="false" isSetter="false">
               <Summary numSequencePoints="3" visitedSequencePoints="3" numBranchPoints="0" visitedBranchPoints="0" sequenceCoverage="100.0" branchCoverage="0" maxCyclomaticComplexity="1" minCyclomaticComplexity="1" maxCrapScore="1" minCrapScore="1" visitedClasses="0" numClasses="0" visitedMethods="1" numMethods="1" />
-              <MetadataToken>100663855</MetadataToken>
+              <MetadataToken>100663873</MetadataToken>
               <Name>System.Void GameManager.GameElements.GridCell::SetWalkable(System.Boolean)</Name>
-              <FileRef uid="34" />
+              <FileRef uid="37" />
               <SequencePoints>
-                <SequencePoint vc="1" uspid="2227364" ordinal="0" offset="0" sl="40" sc="3" el="40" ec="3" bec="0" bev="0" fileid="34">
+                <SequencePoint vc="1" uspid="2261948" ordinal="0" offset="0" sl="40" sc="3" el="40" ec="3" bec="0" bev="0" fileid="37">
                   <TrackedMethodRefs>
                     <TrackedMethodRef uid="0" vc="1" />
                   </TrackedMethodRefs>
                 </SequencePoint>
-                <SequencePoint vc="1" uspid="2227365" ordinal="0" offset="1" sl="41" sc="4" el="41" ec="4" bec="0" bev="0" fileid="34">
+                <SequencePoint vc="1" uspid="2261949" ordinal="0" offset="1" sl="41" sc="4" el="41" ec="4" bec="0" bev="0" fileid="37">
                   <TrackedMethodRefs>
                     <TrackedMethodRef uid="0" vc="1" />
                   </TrackedMethodRefs>
                 </SequencePoint>
-                <SequencePoint vc="1" uspid="2227366" ordinal="0" offset="8" sl="42" sc="3" el="42" ec="3" bec="0" bev="0" fileid="34">
+                <SequencePoint vc="1" uspid="2261950" ordinal="0" offset="8" sl="42" sc="3" el="42" ec="3" bec="0" bev="0" fileid="37">
                   <TrackedMethodRefs>
                     <TrackedMethodRef uid="0" vc="1" />
                   </TrackedMethodRefs>
@@ -968,21 +592,21 @@
             </Method>
             <Method visited="true" cyclomaticComplexity="1" nPathComplexity="0" sequenceCoverage="100.0" branchCoverage="0" crapScore="1" isConstructor="false" isStatic="false" isGetter="false" isSetter="false">
               <Summary numSequencePoints="3" visitedSequencePoints="3" numBranchPoints="0" visitedBranchPoints="0" sequenceCoverage="100.0" branchCoverage="0" maxCyclomaticComplexity="1" minCyclomaticComplexity="1" maxCrapScore="1" minCrapScore="1" visitedClasses="0" numClasses="0" visitedMethods="1" numMethods="1" />
-              <MetadataToken>100663858</MetadataToken>
+              <MetadataToken>100663876</MetadataToken>
               <Name>UnityEngine.Vector3 GameManager.GameElements.GridCell::GetPosition()</Name>
-              <FileRef uid="34" />
+              <FileRef uid="37" />
               <SequencePoints>
-                <SequencePoint vc="2736" uspid="2227373" ordinal="0" offset="0" sl="59" sc="3" el="59" ec="3" bec="0" bev="0" fileid="34">
+                <SequencePoint vc="2736" uspid="2261957" ordinal="0" offset="0" sl="59" sc="3" el="59" ec="3" bec="0" bev="0" fileid="37">
                   <TrackedMethodRefs>
                     <TrackedMethodRef uid="0" vc="2736" />
                   </TrackedMethodRefs>
                 </SequencePoint>
-                <SequencePoint vc="2736" uspid="2227374" ordinal="0" offset="1" sl="60" sc="4" el="60" ec="4" bec="0" bev="0" fileid="34">
+                <SequencePoint vc="2736" uspid="2261958" ordinal="0" offset="1" sl="60" sc="4" el="60" ec="4" bec="0" bev="0" fileid="37">
                   <TrackedMethodRefs>
                     <TrackedMethodRef uid="0" vc="2736" />
                   </TrackedMethodRefs>
                 </SequencePoint>
-                <SequencePoint vc="2736" uspid="2227375" ordinal="0" offset="15" sl="61" sc="3" el="61" ec="3" bec="0" bev="0" fileid="34">
+                <SequencePoint vc="2736" uspid="2261959" ordinal="0" offset="15" sl="61" sc="3" el="61" ec="3" bec="0" bev="0" fileid="37">
                   <TrackedMethodRefs>
                     <TrackedMethodRef uid="0" vc="2736" />
                   </TrackedMethodRefs>
@@ -992,46 +616,46 @@
             </Method>
             <Method visited="true" cyclomaticComplexity="1" nPathComplexity="0" sequenceCoverage="100.0" branchCoverage="0" crapScore="1" isConstructor="true" isStatic="false" isGetter="false" isSetter="false">
               <Summary numSequencePoints="8" visitedSequencePoints="8" numBranchPoints="0" visitedBranchPoints="0" sequenceCoverage="100.0" branchCoverage="0" maxCyclomaticComplexity="1" minCyclomaticComplexity="1" maxCrapScore="1" minCrapScore="1" visitedClasses="0" numClasses="0" visitedMethods="1" numMethods="1" />
-              <MetadataToken>100663859</MetadataToken>
+              <MetadataToken>100663877</MetadataToken>
               <Name>GameManager.GameElements.GridCell::GridCell(UnityEngine.Tilemaps.Tilemap, UnityEngine.Vector3Int)</Name>
-              <FileRef uid="34" />
+              <FileRef uid="37" />
               <SequencePoints>
-                <SequencePoint vc="200" uspid="2227376" ordinal="0" offset="0" sl="65" sc="3" el="65" ec="3" bec="0" bev="0" fileid="34">
+                <SequencePoint vc="200" uspid="2261960" ordinal="0" offset="0" sl="65" sc="3" el="65" ec="3" bec="0" bev="0" fileid="37">
                   <TrackedMethodRefs>
                     <TrackedMethodRef uid="0" vc="200" />
                   </TrackedMethodRefs>
                 </SequencePoint>
-                <SequencePoint vc="200" uspid="2227377" ordinal="0" offset="7" sl="66" sc="3" el="66" ec="3" bec="0" bev="0" fileid="34">
+                <SequencePoint vc="200" uspid="2261961" ordinal="0" offset="7" sl="66" sc="3" el="66" ec="3" bec="0" bev="0" fileid="37">
                   <TrackedMethodRefs>
                     <TrackedMethodRef uid="0" vc="200" />
                   </TrackedMethodRefs>
                 </SequencePoint>
-                <SequencePoint vc="200" uspid="2227378" ordinal="0" offset="8" sl="67" sc="4" el="67" ec="4" bec="0" bev="0" fileid="34">
+                <SequencePoint vc="200" uspid="2261962" ordinal="0" offset="8" sl="67" sc="4" el="67" ec="4" bec="0" bev="0" fileid="37">
                   <TrackedMethodRefs>
                     <TrackedMethodRef uid="0" vc="200" />
                   </TrackedMethodRefs>
                 </SequencePoint>
-                <SequencePoint vc="200" uspid="2227379" ordinal="0" offset="16" sl="68" sc="4" el="68" ec="4" bec="0" bev="0" fileid="34">
+                <SequencePoint vc="200" uspid="2261963" ordinal="0" offset="16" sl="68" sc="4" el="68" ec="4" bec="0" bev="0" fileid="37">
                   <TrackedMethodRefs>
                     <TrackedMethodRef uid="0" vc="200" />
                   </TrackedMethodRefs>
                 </SequencePoint>
-                <SequencePoint vc="200" uspid="2227380" ordinal="0" offset="24" sl="69" sc="4" el="69" ec="4" bec="0" bev="0" fileid="34">
+                <SequencePoint vc="200" uspid="2261964" ordinal="0" offset="24" sl="69" sc="4" el="69" ec="4" bec="0" bev="0" fileid="37">
                   <TrackedMethodRefs>
                     <TrackedMethodRef uid="0" vc="200" />
                   </TrackedMethodRefs>
                 </SequencePoint>
-                <SequencePoint vc="200" uspid="2227381" ordinal="0" offset="43" sl="70" sc="4" el="70" ec="4" bec="0" bev="0" fileid="34">
+                <SequencePoint vc="200" uspid="2261965" ordinal="0" offset="43" sl="70" sc="4" el="70" ec="4" bec="0" bev="0" fileid="37">
                   <TrackedMethodRefs>
                     <TrackedMethodRef uid="0" vc="200" />
                   </TrackedMethodRefs>
                 </SequencePoint>
-                <SequencePoint vc="200" uspid="2227382" ordinal="0" offset="50" sl="71" sc="4" el="71" ec="4" bec="0" bev="0" fileid="34">
+                <SequencePoint vc="200" uspid="2261966" ordinal="0" offset="50" sl="71" sc="4" el="71" ec="4" bec="0" bev="0" fileid="37">
                   <TrackedMethodRefs>
                     <TrackedMethodRef uid="0" vc="200" />
                   </TrackedMethodRefs>
                 </SequencePoint>
-                <SequencePoint vc="200" uspid="2227383" ordinal="0" offset="57" sl="72" sc="3" el="72" ec="3" bec="0" bev="0" fileid="34">
+                <SequencePoint vc="200" uspid="2261967" ordinal="0" offset="57" sl="72" sc="3" el="72" ec="3" bec="0" bev="0" fileid="37">
                   <TrackedMethodRefs>
                     <TrackedMethodRef uid="0" vc="200" />
                   </TrackedMethodRefs>
@@ -1047,21 +671,21 @@
           <Methods>
             <Method visited="true" cyclomaticComplexity="1" nPathComplexity="0" sequenceCoverage="100.0" branchCoverage="0" crapScore="1" isConstructor="false" isStatic="true" isGetter="false" isSetter="false">
               <Summary numSequencePoints="3" visitedSequencePoints="3" numBranchPoints="0" visitedBranchPoints="0" sequenceCoverage="100.0" branchCoverage="0" maxCyclomaticComplexity="1" minCyclomaticComplexity="1" maxCrapScore="1" minCrapScore="1" visitedClasses="0" numClasses="0" visitedMethods="1" numMethods="1" />
-              <MetadataToken>100663994</MetadataToken>
+              <MetadataToken>100664096</MetadataToken>
               <Name>static System.Int32 GameManager.GameElements.Utility::GridToInt(UnityEngine.Vector3Int, UnityEngine.Vector3Int)</Name>
-              <FileRef uid="39" />
+              <FileRef uid="44" />
               <SequencePoints>
-                <SequencePoint vc="2936" uspid="2229308" ordinal="0" offset="0" sl="57" sc="3" el="57" ec="3" bec="0" bev="0" fileid="39">
+                <SequencePoint vc="2936" uspid="2264114" ordinal="0" offset="0" sl="57" sc="3" el="57" ec="3" bec="0" bev="0" fileid="44">
                   <TrackedMethodRefs>
                     <TrackedMethodRef uid="0" vc="2936" />
                   </TrackedMethodRefs>
                 </SequencePoint>
-                <SequencePoint vc="2936" uspid="2229309" ordinal="0" offset="1" sl="58" sc="4" el="58" ec="4" bec="0" bev="0" fileid="39">
+                <SequencePoint vc="2936" uspid="2264115" ordinal="0" offset="1" sl="58" sc="4" el="58" ec="4" bec="0" bev="0" fileid="44">
                   <TrackedMethodRefs>
                     <TrackedMethodRef uid="0" vc="2936" />
                   </TrackedMethodRefs>
                 </SequencePoint>
-                <SequencePoint vc="2936" uspid="2229310" ordinal="0" offset="27" sl="59" sc="3" el="59" ec="3" bec="0" bev="0" fileid="39">
+                <SequencePoint vc="2936" uspid="2264116" ordinal="0" offset="27" sl="59" sc="3" el="59" ec="3" bec="0" bev="0" fileid="44">
                   <TrackedMethodRefs>
                     <TrackedMethodRef uid="0" vc="2936" />
                   </TrackedMethodRefs>

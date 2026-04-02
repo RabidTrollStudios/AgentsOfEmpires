@@ -252,14 +252,19 @@ namespace GameManager.GameElements
 				pathFailCount = 0;
 				pathBackoffMultiplier = 1;
 
-				// Get a safe position to stand near the mine (bypass cooldown for initial path)
-				UpdatePath(GridPosition, args.ResourceUnit.UnitType, TargetGridPos, forceImmediate: true);
-
 				// Set the mine and base for this task
 				MineUnit = GameManager.Instance.Units.GetUnit(args.ResourceUnit.UnitNbr);
 				BaseUnit = GameManager.Instance.Units.GetUnit(args.BaseUnit.UnitNbr);
 				CurrentAction = UnitAction.GATHER;
 				gatherPhase = GatherPhase.TO_MINE;
+
+				// Path to the mine via the shared grid (syncs TickPath for MovementSystem)
+				var tickPath = GameManager.Instance.Map.Grid.FindPathToUnit(
+					new AgentSDK.Position(GridPosition.x, GridPosition.y),
+					args.ResourceUnit.UnitType,
+					new AgentSDK.Position(args.ResourceUnit.GridPosition.x, args.ResourceUnit.GridPosition.y));
+				((AgentSDK.ITickUnit)this).TickPath = tickPath;
+				((AgentSDK.ITickUnit)this).PathIndex = 0;
 				GetCmdLog()?.LogCommand("GATHER", $"pawn#{UnitNbr} at {GridPosition} -> mine#{args.ResourceUnit.UnitNbr} at {args.ResourceUnit.GridPosition}, base#{args.BaseUnit.UnitNbr}",
 					$"STARTED (path={path.Count} steps)");
 			}
