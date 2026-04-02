@@ -46,13 +46,16 @@ namespace GameManager
             if (building is Unit buildingUnit)
             {
                 buildingUnit.BuildProgress = progress;
+                float newRatio = total > 0f ? progress / total : 0f;
+                // Only allow ratio to increase — prevents bar dropping when game speed changes
+                if (newRatio > buildingUnit.buildRatio)
+                    buildingUnit.buildRatio = newRatio;
                 // Lerp opacity
                 var sr = buildingUnit.GetComponent<SpriteRenderer>();
                 if (sr != null)
                 {
-                    float pct = Mathf.Clamp01(progress / total);
                     var c = sr.color;
-                    c.a = 0.3f + pct * 0.4f;
+                    c.a = 0.3f + Mathf.Clamp01(buildingUnit.buildRatio) * 0.4f;
                     sr.color = c;
                 }
             }
@@ -79,7 +82,11 @@ namespace GameManager
         public void OnHealApplied(ITickUnit healer, ITickUnit target, float amount)
         {
             if (target is Unit targetUnit && healer is Unit healerUnit)
+            {
                 healerUnit.SpawnHealEffect(targetUnit);
+                healerUnit.lastHealTargetNbr = targetUnit.UnitNbr;
+                healerUnit.healLineTimer = Unit.HEAL_LINE_DURATION;
+            }
         }
         public void OnRepairTick(ITickUnit pawn, ITickUnit building, float amount) { }
         public void OnUnitRepath(ITickUnit unit, List<Position> newPath) { }

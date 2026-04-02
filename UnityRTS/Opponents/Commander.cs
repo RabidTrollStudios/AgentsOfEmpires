@@ -45,31 +45,37 @@ namespace PlanningAgent
 
             GatherWithIdlePawns(state, actions);
 
-            // Hold off on military training while saving for the monastery
-            bool savingForMonastery = myMonasteries.Count == 0
-                && HasBuiltUnit(myBarracks, state) && HasBuiltUnit(myArchery, state)
-                && state.MyGold < GameConstants.COST[UnitType.MONASTERY];
+            // Train rotation: warrior, warrior, archer, monk (repeat)
+            // Monks cap at MAX_MONKS; if capped, train a warrior instead
+            // Reserve gold for monastery if not yet built, but still train if surplus allows
+            float monasteryReserve = (myMonasteries.Count == 0
+                && HasBuiltUnit(myBarracks, state) && HasBuiltUnit(myArchery, state))
+                ? GameConstants.COST[UnitType.MONASTERY] : 0f;
 
-            if (!savingForMonastery)
+            int slot = trainCount % 4;
+            UnitType trainType;
+            if (slot < 2)
+                trainType = UnitType.WARRIOR;
+            else if (slot == 2)
+                trainType = UnitType.ARCHER;
+            else
+                trainType = (myMonks.Count < MAX_MONKS) ? UnitType.MONK : UnitType.WARRIOR;
+
+            // Only train if we can afford the unit AND still have enough reserved for monastery
+            if (state.MyGold >= GameConstants.COST[trainType] + monasteryReserve)
             {
-                // Train rotation: warrior, warrior, archer, monk (repeat)
-                // Monks cap at MAX_MONKS; if capped, train a warrior instead
-                int slot = trainCount % 4;
-                if (slot < 2)
-                {
-                    TrainFromBarracks(UnitType.WARRIOR, state, actions);
-                }
-                else if (slot == 2)
-                {
-                    TrainFromArchery(UnitType.ARCHER, state, actions);
-                }
+                bool trained = false;
+                if (trainType == UnitType.WARRIOR)
+                    trained = TrainFromBarracks(UnitType.WARRIOR, state, actions);
+                else if (trainType == UnitType.ARCHER)
+                    trained = TrainFromArchery(UnitType.ARCHER, state, actions);
                 else
-                {
-                    if (myMonks.Count < MAX_MONKS)
-                        TrainMonks(state, actions);
-                    else
-                        TrainFromBarracks(UnitType.WARRIOR, state, actions);
-                }
+                    trained = TrainMonks(state, actions);
+
+                // Advance rotation even if building was busy, so we don't get stuck
+                // retrying the same type every tick while other buildings sit idle
+                if (!trained)
+                    trainCount++;
             }
 
             // Monks heal wounded allies
@@ -161,7 +167,7 @@ namespace PlanningAgent
             return bestMine >= 0 ? bestMine : mines[0];
         }
 
-        private void TrainFromBarracks(UnitType unitType, IGameState state, IAgentActions actions)
+        private bool TrainFromBarracks(UnitType unitType, IGameState state, IAgentActions actions)
         {
             foreach (int barracksNbr in myBarracks)
             {
@@ -172,11 +178,13 @@ namespace PlanningAgent
                 {
                     actions.Train(barracksNbr, unitType);
                     trainCount++;
+                    return true;
                 }
             }
+            return false;
         }
 
-        private void TrainFromArchery(UnitType unitType, IGameState state, IAgentActions actions)
+        private bool TrainFromArchery(UnitType unitType, IGameState state, IAgentActions actions)
         {
             foreach (int archeryNbr in myArchery)
             {
@@ -187,11 +195,13 @@ namespace PlanningAgent
                 {
                     actions.Train(archeryNbr, unitType);
                     trainCount++;
+                    return true;
                 }
             }
+            return false;
         }
 
-        private void TrainMonks(IGameState state, IAgentActions actions)
+        private bool TrainMonks(IGameState state, IAgentActions actions)
         {
             foreach (int monasteryNbr in myMonasteries)
             {
@@ -202,8 +212,10 @@ namespace PlanningAgent
                 {
                     actions.Train(monasteryNbr, UnitType.MONK);
                     trainCount++;
+                    return true;
                 }
             }
+            return false;
         }
 
         /// <summary>

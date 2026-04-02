@@ -138,10 +138,14 @@ namespace GameManager.GameElements
 		// Building Variables
 		internal UnitType taskUnitType;
 		internal BuildPhase buildPhase;
+		internal float buildRatio;
 		private GameObject currentBuilding;
 
 		// Healing Variables
 		private int healTargetNbr = -1;
+		internal int lastHealTargetNbr = -1;
+		internal float healLineTimer = 0f;
+		internal const float HEAL_LINE_DURATION = 1.1f;
 
 		// Attacking Variables
 		private int attackUnitNbr = -1;

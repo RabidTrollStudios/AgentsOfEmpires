@@ -193,7 +193,10 @@ namespace GameManager.GameElements
 			float ratio;
 			if (!IsBuilt)
 			{
-				ratio = Mathf.Clamp01(BuildProgress / Constants.CREATION_TIME[UnitType]);
+				// Use the stored build ratio set by OnBuildProgress callback,
+				// which is always progress/total at the time of the callback.
+				// This avoids issues when game speed changes mid-build.
+				ratio = Mathf.Clamp01(buildRatio);
 				// Keep sprite opacity in sync with build progress (damage can reduce it)
 				if (unitSprite != null)
 				{
@@ -369,6 +372,16 @@ namespace GameManager.GameElements
 				lastFireThreshold++;
 				RemoveOneBuildingFire();
 			}
+
+			// Keep fire animation speed in sync with game speed
+			foreach (Transform child in transform)
+			{
+				if (child.name == "BuildingFire")
+				{
+					var anim = child.GetComponent<Animator>();
+					if (anim != null) anim.speed = Constants.GAME_SPEED;
+				}
+			}
 		}
 
 		private void RemoveOneBuildingFire()
@@ -412,6 +425,7 @@ namespace GameManager.GameElements
 
 			var animator = fireGo.AddComponent<Animator>();
 			animator.runtimeAnimatorController = controller;
+			animator.speed = Constants.GAME_SPEED;
 		}
 
 		/// <summary>
@@ -769,9 +783,16 @@ namespace GameManager.GameElements
 			// --- Heal line (green) ---
 			if (healLineRenderer != null)
 			{
+				// Count down heal line timer
+				if (healLineTimer > 0f)
+					healLineTimer -= Time.deltaTime;
+
 				Unit healTarget = null;
+				// Show line while walking to heal target OR while heal animation plays
 				if (CurrentAction == UnitAction.HEAL && healTargetNbr >= 0)
 					healTarget = GameManager.Instance.Units.GetUnit(healTargetNbr);
+				else if (healLineTimer > 0f && lastHealTargetNbr >= 0)
+					healTarget = GameManager.Instance.Units.GetUnit(lastHealTargetNbr);
 
 				bool showHeal = GameManager.Instance.HasTargetLineTint
 				                && healTarget != null;
