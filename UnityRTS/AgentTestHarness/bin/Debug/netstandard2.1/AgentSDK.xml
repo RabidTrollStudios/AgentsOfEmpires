@@ -440,8 +440,10 @@
         <member name="M:AgentSDK.GameGrid.FindPathToUnit(AgentSDK.Position,AgentSDK.UnitType,AgentSDK.Position)">
             <summary>
             Find a path from start to any walkable cell adjacent to the given unit.
-            Neighbors are sorted by distance to the start position so the closest
-            reachable cell is tried first. Returns the first successful path.
+            Prefers OPEN cells over WALKABLE (occupied) cells, then sorts by distance
+            to the start position. Uses start position hash for tiebreaking so different
+            units approaching the same building naturally spread to different cells.
+            Returns the first successful path.
             </summary>
         </member>
         <member name="M:AgentSDK.GameGrid.SetAreaBuildability(AgentSDK.UnitType,AgentSDK.Position,System.Boolean)">
@@ -450,8 +452,12 @@
         <member name="M:AgentSDK.GameGrid.SetCellOccupied(AgentSDK.Position,System.Boolean)">
             <summary>
             Mark a mobile unit as occupying (occupy=true) or leaving (occupy=false) a cell.
-            On leave, restores to WALKABLE if the cell is a building passage, otherwise OPEN.
+            Uses reference counting so a cell stays WALKABLE until ALL occupants leave.
+            On last leave, restores to WALKABLE if the cell is a building passage, otherwise OPEN.
             </summary>
+        </member>
+        <member name="M:AgentSDK.GameGrid.GetOccupantCount(AgentSDK.Position)">
+            <summary>Check how many mobile units occupy a cell.</summary>
         </member>
         <member name="M:AgentSDK.GameGrid.SetCellStandable(AgentSDK.Position,System.Boolean)">
             <summary>Legacy alias for SetCellOccupied.</summary>
@@ -750,6 +756,136 @@
         </member>
         <member name="P:AgentSDK.ITickWorld.TickDuration">
             <summary>Seconds per tick (0.05 at 20Hz).</summary>
+        </member>
+        <member name="T:AgentSDK.SymmetryType">
+            <summary>Symmetry mode for map generation.</summary>
+        </member>
+        <member name="F:AgentSDK.SymmetryType.None">
+            <summary>No symmetry enforcement.</summary>
+        </member>
+        <member name="F:AgentSDK.SymmetryType.Mirror">
+            <summary>Point reflection through the map center (180° rotation).</summary>
+        </member>
+        <member name="F:AgentSDK.SymmetryType.Rotational">
+            <summary>90° rotational symmetry (requires square maps, 4 players).</summary>
+        </member>
+        <member name="T:AgentSDK.MapTemplate">
+            <summary>Predefined map layout templates.</summary>
+        </member>
+        <member name="F:AgentSDK.MapTemplate.OpenField">
+            <summary>Low obstacle density with small scattered tree groves.</summary>
+        </member>
+        <member name="F:AgentSDK.MapTemplate.Maze">
+            <summary>Cave-like terrain generated via cellular automata.</summary>
+        </member>
+        <member name="F:AgentSDK.MapTemplate.Forest">
+            <summary>Medium-high density with large organic tree groves.</summary>
+        </member>
+        <member name="T:AgentSDK.MapGenConfig">
+            <summary>Configuration parameters for procedural map generation.</summary>
+        </member>
+        <member name="P:AgentSDK.MapGenConfig.Seed">
+            <summary>Random seed for deterministic generation.</summary>
+        </member>
+        <member name="P:AgentSDK.MapGenConfig.Width">
+            <summary>Map width in cells.</summary>
+        </member>
+        <member name="P:AgentSDK.MapGenConfig.Height">
+            <summary>Map height in cells.</summary>
+        </member>
+        <member name="P:AgentSDK.MapGenConfig.PlayerCount">
+            <summary>Number of players (currently only 2 supported).</summary>
+        </member>
+        <member name="P:AgentSDK.MapGenConfig.ObstacleDensity">
+            <summary>
+            Target fraction of cells that are obstacles (0.0–1.0).
+            Actual density may vary due to template algorithms and exclusion zones.
+            </summary>
+        </member>
+        <member name="P:AgentSDK.MapGenConfig.MinesPerPlayer">
+            <summary>Number of gold mines per player.</summary>
+        </member>
+        <member name="P:AgentSDK.MapGenConfig.Symmetry">
+            <summary>Symmetry enforcement mode.</summary>
+        </member>
+        <member name="P:AgentSDK.MapGenConfig.Template">
+            <summary>Map layout template.</summary>
+        </member>
+        <member name="T:AgentSDK.GroveData">
+            <summary>A cluster of blocked cells sharing a single visual tree type.</summary>
+        </member>
+        <member name="P:AgentSDK.GroveData.TreeType">
+            <summary>Visual tree type identifier (1–4, matching Tree1–Tree4 sprites).</summary>
+        </member>
+        <member name="P:AgentSDK.GroveData.Cells">
+            <summary>Grid positions belonging to this grove.</summary>
+        </member>
+        <member name="T:AgentSDK.MapGenResult">
+            <summary>Output of map generation: blocked cells, spawn/mine positions, and grove data.</summary>
+        </member>
+        <member name="P:AgentSDK.MapGenResult.Width">
+            <summary>Map width in cells.</summary>
+        </member>
+        <member name="P:AgentSDK.MapGenResult.Height">
+            <summary>Map height in cells.</summary>
+        </member>
+        <member name="P:AgentSDK.MapGenResult.BlockedCells">
+            <summary>All blocked cell positions on the map.</summary>
+        </member>
+        <member name="P:AgentSDK.MapGenResult.SpawnPositions">
+            <summary>Starting pawn positions, one per player (indexed by player number).</summary>
+        </member>
+        <member name="P:AgentSDK.MapGenResult.MinePositions">
+            <summary>Mine positions (player 0's mines first, then player 1's, etc.).</summary>
+        </member>
+        <member name="P:AgentSDK.MapGenResult.Groves">
+            <summary>Tree groves for visual rendering (each grove has a single tree type).</summary>
+        </member>
+        <member name="T:AgentSDK.MapGenCore">
+             <summary>
+             Pure game-logic procedural map generator. No engine dependencies.
+             Shared by Unity and SimGame to guarantee identical map layouts.
+            
+             Fairness guarantees (Mirror symmetry):
+             - Obstacle layout is point-symmetric through the map center.
+             - Mine distance from each player's spawn is identical.
+             - All spawns are connected to each other, their mines, and the map center.
+             </summary>
+        </member>
+        <member name="M:AgentSDK.MapGenCore.Generate(AgentSDK.MapGenConfig)">
+            <summary>
+            Generate a procedural map with the given parameters.
+            Retries on connectivity failure with advancing RNG state.
+            </summary>
+        </member>
+        <member name="M:AgentSDK.MapGenCore.MirrorPos(AgentSDK.Position,System.Int32,System.Int32)">
+            <summary>Point reflection for 1x1 cells: (x, y) -> (W-1-x, H-1-y).</summary>
+        </member>
+        <member name="M:AgentSDK.MapGenCore.MirrorUnit(AgentSDK.Position,System.Int32,System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Mirror a unit anchor accounting for its footprint size.
+            Bottom-left anchor: unit occupies [pos.X..pos.X+sizeX-1, pos.Y..pos.Y+sizeY-1].
+            Mirrored anchor = (w - sizeX - pos.X, h - sizeY - pos.Y).
+            </summary>
+        </member>
+        <member name="T:AgentSDK.MovementSystem">
+            <summary>
+            Continuous euclidean movement system. Units advance along their path
+            by speed * dt each call, crossing cell boundaries as distance is consumed.
+            Both Unity (per-frame with Time.deltaTime) and SimGame (per-tick with tickDuration)
+            call this with their respective time deltas for identical results.
+            </summary>
+        </member>
+        <member name="M:AgentSDK.MovementSystem.Advance(AgentSDK.ITickUnit,System.Single,AgentSDK.ITickWorld,AgentSDK.ITickCallbacks)">
+            <summary>
+            Advance a unit along its path by speed * dt.
+            Crosses cell boundaries as needed, firing OnUnitMoved for each cell entered.
+            Handles collision: BlockedByTerrain triggers repath, BlockedByUnit at final
+            cell clears path for task logic to handle, mid-path BlockedByUnit passes through.
+            </summary>
+        </member>
+        <member name="M:AgentSDK.MovementSystem.CheckCell(AgentSDK.Position,AgentSDK.GameGrid)">
+            <summary>Check if a cell is passable, without accumulator logic.</summary>
         </member>
         <member name="T:AgentSDK.Pathfinder">
              <summary>
