@@ -25,6 +25,14 @@ namespace GameManager.GameElements
 		{
 			if (CanMove && GameManager.Instance != null && GameManager.Instance.IsPlaying)
 			{
+				// Capture movement direction before advancing (path may be consumed)
+				if (_tickPath != null && pathIndex < _tickPath.Count)
+				{
+					Vector3 from = (Vector3)GridPosition + new Vector3(0.5f, 0f, 0);
+					Vector3 to = new Vector3(_tickPath[pathIndex].X + 0.5f, _tickPath[pathIndex].Y, 0);
+					velocity = Utility.SafeNormalize(to - from);
+				}
+
 				// Continuous movement: advance along path by speed * deltaTime
 				var world = GameManager.Instance.GetTickWorld();
 				var callbacks = GameManager.Instance.GetTickCallbacks();
@@ -36,7 +44,6 @@ namespace GameManager.GameElements
 					Vector3 from = (Vector3)GridPosition + new Vector3(0.5f, 0f, 0);
 					Vector3 to = new Vector3(_tickPath[pathIndex].X + 0.5f, _tickPath[pathIndex].Y, 0);
 					WorldPosition = Vector3.Lerp(from, to, PathProgress);
-					velocity = Utility.SafeNormalize(to - from);
 				}
 				else
 				{
@@ -63,25 +70,64 @@ namespace GameManager.GameElements
 		// Visual-only updates (animation, facing, debug UI) remain below.
 
 		/// <summary>
-		/// Spawn a dust 2 poof effect at the unit's position on death.
+		/// Spawn dust poof effects on death. Mobile units get 1 cloud at their position.
+		/// Buildings get one cloud per footprint cell, staggered over a few frames.
 		/// </summary>
 		internal void SpawnDeathDust()
 		{
 			var controller = GameManager.Instance.Dust2AnimatorController;
 			if (controller == null) return;
 
+			if (CanMove)
+			{
+				// Single dust cloud for mobile units
+				SpawnDustAt(WorldPosition, controller, 0f);
+			}
+			else
+			{
+				// One dust cloud per visual cell for buildings (including passage row),
+				// each at a random delay within a short window
+				var size = Constants.UNIT_SIZE[UnitType];
+				// Include the passage row (top row) for visual coverage
+				int visualHeight = size.y > 1 ? size.y + 1 : size.y;
+				float maxDelay = 0.5f; // all dust within ~500ms window
+				for (int dx = 0; dx < size.x; dx++)
+				{
+					for (int dy = 0; dy < visualHeight; dy++)
+					{
+						float x = GridPosition.x + dx + 0.5f;
+						float y = GridPosition.y + dy;
+						float delay = UnityEngine.Random.Range(0f, maxDelay);
+						SpawnDustAt(new Vector3(x, y, 0f), controller, delay);
+					}
+				}
+			}
+		}
+
+		private void SpawnDustAt(Vector3 position, RuntimeAnimatorController controller, float delay)
+		{
 			var dustGo = new GameObject("DeathDust");
-			dustGo.transform.position = WorldPosition;
-			dustGo.transform.localScale = Vector3.one; // 64x64 at PPU 64 = 1x1 cell
+			dustGo.transform.position = position;
+			dustGo.transform.localScale = new Vector3(1.25f, 1.25f, 1f);
 
 			var sr = dustGo.AddComponent<SpriteRenderer>();
 			sr.sortingLayerName = "Agents";
 			sr.sortingOrder = 0;
 
-			var animator = dustGo.AddComponent<Animator>();
-			animator.runtimeAnimatorController = controller;
+			var anim = dustGo.AddComponent<Animator>();
+			anim.runtimeAnimatorController = controller;
+			anim.speed = Constants.GAME_SPEED;
 
-			UnityEngine.Object.Destroy(dustGo, 1.0f); // animation is 1 second
+			if (delay > 0f)
+			{
+				// Start paused, enable after delay
+				anim.speed = 0f;
+				var starter = dustGo.AddComponent<DelayedAnimStart>();
+				starter.delay = delay;
+				starter.targetSpeed = Constants.GAME_SPEED;
+			}
+
+			UnityEngine.Object.Destroy(dustGo, 1.0f + delay);
 		}
 
 		/// <summary>

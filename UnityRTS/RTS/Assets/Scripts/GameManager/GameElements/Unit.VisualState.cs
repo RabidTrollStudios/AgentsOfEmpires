@@ -355,8 +355,8 @@ namespace GameManager.GameElements
 
 			sm.AddTransition(run, idle, u => !u.IsVisuallyMoving);
 
-			sm.AddTransition(idle, heal, u => u.CurrentAction == UnitAction.HEAL);
-			sm.AddTransition(heal, idle, u => u.CurrentAction != UnitAction.HEAL);
+			sm.AddTransition(idle, heal, u => u.CurrentAction == UnitAction.HEAL || u.healLineTimer > 0f);
+			sm.AddTransition(heal, idle, u => u.CurrentAction != UnitAction.HEAL && u.healLineTimer <= 0f);
 
 			sm.SetInitialState(idle);
 			return sm;
