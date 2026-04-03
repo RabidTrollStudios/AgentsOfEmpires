@@ -41,10 +41,7 @@ namespace GameManager
         public void OnUnitKilled(ISimUnit unit)
         {
             if (unit is Unit u)
-            {
-                UnityEngine.Debug.Log($"[OnUnitKilled] unit={u.UnitNbr} type={u.UnitType} hp={u.Health:F2}");
                 u.SpawnDeathDust();
-            }
         }
 
         public void OnTrainingComplete(ISimUnit building, ISimUnit spawnedUnit) { }

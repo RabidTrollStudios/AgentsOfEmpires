@@ -16,7 +16,6 @@ namespace GameManager
     {
         private Agent agent;
         private UnitManager unitManager;
-        private ParityExporter parityExporter;
 
         private readonly Dictionary<int, int> cooldownExpiry = new Dictionary<int, int>();
         private readonly Dictionary<int, int> failureCount = new Dictionary<int, int>();
@@ -27,15 +26,6 @@ namespace GameManager
         {
             this.agent = agent;
             this.unitManager = unitManager;
-            parityExporter = Object.FindFirstObjectByType<ParityExporter>();
-        }
-
-        private void RecordCmd(string type, int unitNbr,
-            int targetX = 0, int targetY = 0, int targetUnit = -1,
-            string buildingType = "", int mineNbr = -1, int baseNbr = -1)
-        {
-            parityExporter?.RecordCommand(agent.AgentNbr, type, unitNbr,
-                targetX, targetY, targetUnit, buildingType, mineNbr, baseNbr);
         }
 
         private bool IsOnCooldown(int unitNbr)
@@ -102,7 +92,7 @@ namespace GameManager
                 Type = DeferredCommandType.Move, UnitNbr = unitNbr,
                 Unit = unit, Target = targetVec
             }, out bool enqueued);
-            if (enqueued) RecordCmd("MOVE", unitNbr, target.X, target.Y);
+
             return result;
         }
 
@@ -120,7 +110,7 @@ namespace GameManager
                 Unit = unit, Target = new Vector3Int(target.X, target.Y, 0),
                 BuildingType = unitType
             }, out bool enqueued);
-            if (enqueued) RecordCmd("BUILD", unitNbr, target.X, target.Y, buildingType: unitType.ToString());
+
             return result;
         }
 
@@ -140,7 +130,7 @@ namespace GameManager
                 Type = DeferredCommandType.Gather, UnitNbr = pawnNbr,
                 Unit = pawn, MineUnit = mine, BaseUnit = baseUnit
             }, out bool enqueued);
-            if (enqueued) RecordCmd("GATHER", pawnNbr, mineNbr: mineNbr, baseNbr: baseNbr);
+
             return result;
         }
 
@@ -157,7 +147,7 @@ namespace GameManager
                 Type = DeferredCommandType.Train, UnitNbr = buildingNbr,
                 Unit = building, BuildingType = unitType
             }, out bool enqueued);
-            if (enqueued) RecordCmd("TRAIN", buildingNbr, buildingType: unitType.ToString());
+
             return result;
         }
 
@@ -181,7 +171,7 @@ namespace GameManager
                 Type = DeferredCommandType.Attack, UnitNbr = unitNbr,
                 Unit = unit, TargetUnit = target
             }, out bool enqueued);
-            if (enqueued) RecordCmd("ATTACK", unitNbr, targetUnit: targetNbr);
+
             return result;
         }
 
@@ -200,7 +190,7 @@ namespace GameManager
                 Type = DeferredCommandType.Repair, UnitNbr = pawnNbr,
                 Unit = pawn, TargetUnit = building
             }, out bool enqueued);
-            if (enqueued) RecordCmd("REPAIR", pawnNbr, targetUnit: buildingNbr);
+
             return result;
         }
 
@@ -222,7 +212,7 @@ namespace GameManager
                 Type = DeferredCommandType.Heal, UnitNbr = monkNbr,
                 Unit = monk, TargetUnit = target
             }, out bool enqueued);
-            if (enqueued) RecordCmd("HEAL", monkNbr, targetUnit: targetNbr);
+
             return result;
         }
 

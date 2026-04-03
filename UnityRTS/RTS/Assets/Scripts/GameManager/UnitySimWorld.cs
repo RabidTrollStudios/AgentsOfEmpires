@@ -82,20 +82,7 @@ namespace GameManager
         public void RemoveUnit(ISimUnit unit)
         {
             if (unit is Unit u)
-            {
-                try
-                {
-                    GameManager.Instance.Units.DestroyUnit(u.gameObject);
-                }
-                catch (System.Exception ex)
-                {
-                    UnityEngine.Debug.LogError($"[RemoveUnit] Failed to remove unit {u.UnitNbr}: {ex}");
-                }
-            }
-            else
-            {
-                UnityEngine.Debug.LogError($"[RemoveUnit] unit is not a Unit: {unit?.GetType().Name ?? "null"}");
-            }
+                GameManager.Instance.Units.DestroyUnit(u.gameObject);
         }
 
         DerivedGameConstants ISimWorld.Constants => GameConstants.Derived;
