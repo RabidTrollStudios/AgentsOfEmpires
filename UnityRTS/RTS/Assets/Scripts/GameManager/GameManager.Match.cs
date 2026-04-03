@@ -19,14 +19,12 @@ namespace GameManager
 		{
 			var bannerText = Prefabs.GameOverUI.GetComponentInChildren<Text>();
 
-			// Show game title for 3 seconds
 			bannerText.text = "Agents of Empires";
 			Prefabs.GameOverUI.GetComponent<Canvas>().enabled = true;
-			yield return new WaitForSeconds(3f);
+			yield return new WaitForSeconds(BannerDuration);
 
-			// Show battle matchup for 3 seconds
 			bannerText.text = versusText;
-			yield return new WaitForSeconds(3f);
+			yield return new WaitForSeconds(BannerDuration);
 
 			Prefabs.GameOverUI.GetComponent<Canvas>().enabled = false;
 			gameState = GameState.PLAYING;

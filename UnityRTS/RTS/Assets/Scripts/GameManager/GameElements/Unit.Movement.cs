@@ -25,7 +25,7 @@ namespace GameManager.GameElements
 		{
 			if (CanMove && GameManager.Instance != null && GameManager.Instance.IsPlaying)
 			{
-				// Capture movement direction before advancing (path may be consumed)
+				// Capture movement direction for animation facing
 				if (_tickPath != null && pathIndex < _tickPath.Count)
 				{
 					Vector3 from = (Vector3)GridPosition + new Vector3(0.5f, 0f, 0);
@@ -33,12 +33,9 @@ namespace GameManager.GameElements
 					velocity = Utility.SafeNormalize(to - from);
 				}
 
-				// Continuous movement: advance along path by speed * deltaTime
-				var world = GameManager.Instance.GetTickWorld();
-				var callbacks = GameManager.Instance.GetTickCallbacks();
-				AgentSDK.MovementSystem.Advance(this, Time.deltaTime, world, callbacks);
-
-				// Derive visual position from grid position + sub-cell progress
+				// Movement is now advanced per-tick in GameManager.SimulateTick()
+				// for deterministic parity with SimGame. Visual position is
+				// interpolated here from the authoritative grid state.
 				if (_tickPath != null && pathIndex < _tickPath.Count)
 				{
 					Vector3 from = (Vector3)GridPosition + new Vector3(0.5f, 0f, 0);
