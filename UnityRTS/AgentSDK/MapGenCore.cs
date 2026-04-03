@@ -8,22 +8,22 @@ namespace AgentSDK
     public enum SymmetryType
     {
         /// <summary>No symmetry enforcement.</summary>
-        None,
+        NONE,
         /// <summary>Point reflection through the map center (180° rotation).</summary>
-        Mirror,
+        MIRROR,
         /// <summary>90° rotational symmetry (requires square maps, 4 players).</summary>
-        Rotational
+        ROTATIONAL
     }
 
     /// <summary>Predefined map layout templates.</summary>
     public enum MapTemplate
     {
         /// <summary>Low obstacle density with small scattered tree groves.</summary>
-        OpenField,
+        OPEN_FIELD,
         /// <summary>Cave-like terrain generated via cellular automata.</summary>
-        Maze,
+        MAZE,
         /// <summary>Medium-high density with large organic tree groves.</summary>
-        Forest
+        FOREST
     }
 
     /// <summary>Configuration parameters for procedural map generation.</summary>
@@ -51,10 +51,10 @@ namespace AgentSDK
         public int MinesPerPlayer { get; set; } = 1;
 
         /// <summary>Symmetry enforcement mode.</summary>
-        public SymmetryType Symmetry { get; set; } = SymmetryType.Mirror;
+        public SymmetryType Symmetry { get; set; } = SymmetryType.MIRROR;
 
         /// <summary>Map layout template.</summary>
-        public MapTemplate Template { get; set; } = MapTemplate.OpenField;
+        public MapTemplate Template { get; set; } = MapTemplate.OPEN_FIELD;
     }
 
     /// <summary>A cluster of blocked cells sharing a single visual tree type.</summary>
@@ -237,26 +237,26 @@ namespace AgentSDK
 
             switch (config.Template)
             {
-                case MapTemplate.OpenField:
+                case MapTemplate.OPEN_FIELD:
                     (blocked, groves) = GenerateGroveBased(config.Width, config.Height,
                         config.ObstacleDensity, exclusions, rng,
                         minGrove: 2, maxGrove: 5, growthProb: 0.80f, growthFalloff: 0.10f,
                         groveSpacing: 0);
                     break;
-                case MapTemplate.Forest:
+                case MapTemplate.FOREST:
                     (blocked, groves) = GenerateGroveBased(config.Width, config.Height,
                         config.ObstacleDensity, exclusions, rng,
                         minGrove: 15, maxGrove: 40, growthProb: 0.90f, growthFalloff: 0.015f,
                         groveSpacing: 3);
                     break;
-                case MapTemplate.Maze:
+                case MapTemplate.MAZE:
                     return GenerateMaze(config.Width, config.Height, config.ObstacleDensity,
                         config.Symmetry, exclusions, rng);
                 default:
                     return (new HashSet<Position>(), new List<GroveData>());
             }
 
-            if (config.Symmetry == SymmetryType.Mirror)
+            if (config.Symmetry == SymmetryType.MIRROR)
                 ApplyMirrorSymmetry(config.Width, config.Height, ref blocked, ref groves);
 
             return (blocked, groves);
@@ -411,7 +411,7 @@ namespace AgentSDK
             }
 
             // Enforce mirror symmetry
-            if (symmetry == SymmetryType.Mirror)
+            if (symmetry == SymmetryType.MIRROR)
             {
                 for (int x = 0; x < w; x++)
                     for (int y = 0; y < h / 2; y++)

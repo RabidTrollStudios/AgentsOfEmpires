@@ -760,25 +760,25 @@
         <member name="T:AgentSDK.SymmetryType">
             <summary>Symmetry mode for map generation.</summary>
         </member>
-        <member name="F:AgentSDK.SymmetryType.None">
+        <member name="F:AgentSDK.SymmetryType.NONE">
             <summary>No symmetry enforcement.</summary>
         </member>
-        <member name="F:AgentSDK.SymmetryType.Mirror">
+        <member name="F:AgentSDK.SymmetryType.MIRROR">
             <summary>Point reflection through the map center (180° rotation).</summary>
         </member>
-        <member name="F:AgentSDK.SymmetryType.Rotational">
+        <member name="F:AgentSDK.SymmetryType.ROTATIONAL">
             <summary>90° rotational symmetry (requires square maps, 4 players).</summary>
         </member>
         <member name="T:AgentSDK.MapTemplate">
             <summary>Predefined map layout templates.</summary>
         </member>
-        <member name="F:AgentSDK.MapTemplate.OpenField">
+        <member name="F:AgentSDK.MapTemplate.OPEN_FIELD">
             <summary>Low obstacle density with small scattered tree groves.</summary>
         </member>
-        <member name="F:AgentSDK.MapTemplate.Maze">
+        <member name="F:AgentSDK.MapTemplate.MAZE">
             <summary>Cave-like terrain generated via cellular automata.</summary>
         </member>
-        <member name="F:AgentSDK.MapTemplate.Forest">
+        <member name="F:AgentSDK.MapTemplate.FOREST">
             <summary>Medium-high density with large organic tree groves.</summary>
         </member>
         <member name="T:AgentSDK.MapGenConfig">
@@ -1115,16 +1115,16 @@
             Result of attempting to move a unit one cell along its path.
             </summary>
         </member>
-        <member name="F:AgentSDK.TaskEngine.MoveResult.Moved">
+        <member name="F:AgentSDK.TaskEngine.MoveResult.MOVED">
             <summary>Successfully moved to the next cell.</summary>
         </member>
-        <member name="F:AgentSDK.TaskEngine.MoveResult.BlockedByUnit">
+        <member name="F:AgentSDK.TaskEngine.MoveResult.BLOCKED_BY_UNIT">
             <summary>Blocked by a mobile unit (walkable but not buildable).</summary>
         </member>
-        <member name="F:AgentSDK.TaskEngine.MoveResult.BlockedByTerrain">
+        <member name="F:AgentSDK.TaskEngine.MoveResult.BLOCKED_BY_TERRAIN">
             <summary>Blocked by terrain/building (not walkable). Needs re-path.</summary>
         </member>
-        <member name="F:AgentSDK.TaskEngine.MoveResult.InsufficientMovement">
+        <member name="F:AgentSDK.TaskEngine.MoveResult.INSUFFICIENT_MOVEMENT">
             <summary>Not enough accumulated movement to reach next cell.</summary>
         </member>
         <member name="M:AgentSDK.TaskEngine.TryMoveToCell(AgentSDK.Position,AgentSDK.Position,System.Single,AgentSDK.GameGrid,System.Single@)">

@@ -48,10 +48,10 @@ namespace AgentTestHarness
         public int MinesPerPlayer { get; set; } = 1;
 
         /// <summary>Symmetry enforcement mode.</summary>
-        public SymmetryType Symmetry { get; set; } = SymmetryType.Mirror;
+        public SymmetryType Symmetry { get; set; } = SymmetryType.MIRROR;
 
         /// <summary>Map layout template.</summary>
-        public MapTemplate Template { get; set; } = MapTemplate.OpenField;
+        public MapTemplate Template { get; set; } = MapTemplate.OPEN_FIELD;
 
         internal MapGenConfig ToCore() => new MapGenConfig
         {

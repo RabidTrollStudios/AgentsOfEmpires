@@ -22,7 +22,7 @@ namespace GameManager.Tests
 			var graph = new Graph<TestCell>();
 			graph.AddNode(7, new TestCell(new Vector3Int(0, 0, 0)));
 
-			Assert.AreEqual(7, graph.nodesDict[7].number,
+			Assert.AreEqual(7, graph.NodesDict[7].Number,
 				"Node number should match the value passed to AddNode");
 		}
 
@@ -36,7 +36,7 @@ namespace GameManager.Tests
 			var cell = new TestCell(new Vector3Int(3, 4, 0));
 			graph.AddNode(0, cell);
 
-			Assert.AreSame(cell, graph.nodesDict[0].item,
+			Assert.AreSame(cell, graph.NodesDict[0].Item,
 				"Node item should be the same reference as the cell passed to AddNode");
 		}
 
@@ -49,7 +49,7 @@ namespace GameManager.Tests
 			var graph = new Graph<TestCell>();
 			graph.AddNode(0, new TestCell(new Vector3Int(0, 0, 0)));
 
-			Assert.AreEqual(double.MaxValue, graph.nodesDict[0].cost,
+			Assert.AreEqual(double.MaxValue, graph.NodesDict[0].Cost,
 				"Fresh node cost should be double.MaxValue before any search");
 		}
 
@@ -62,7 +62,7 @@ namespace GameManager.Tests
 			var graph = new Graph<TestCell>();
 			graph.AddNode(0, new TestCell(new Vector3Int(0, 0, 0)));
 
-			Assert.IsNull(graph.nodesDict[0].backPtr,
+			Assert.IsNull(graph.NodesDict[0].BackPtr,
 				"Fresh node backPtr should be null before any search");
 		}
 
@@ -75,7 +75,7 @@ namespace GameManager.Tests
 			var graph = new Graph<TestCell>();
 			graph.AddNode(0, new TestCell(new Vector3Int(0, 0, 0)));
 
-			Assert.IsNull(graph.nodesDict[0].priorityNode,
+			Assert.IsNull(graph.NodesDict[0].PriorityNode,
 				"Fresh node priorityNode should be null before any search");
 		}
 
@@ -88,7 +88,7 @@ namespace GameManager.Tests
 			var graph = new Graph<TestCell>();
 			graph.AddNode(0, new TestCell(new Vector3Int(0, 0, 0)));
 
-			Assert.AreEqual(0, graph.nodesDict[0].edges.Count,
+			Assert.AreEqual(0, graph.NodesDict[0].Edges.Count,
 				"Fresh node should have no edges before AddEdge is called");
 		}
 
@@ -103,10 +103,10 @@ namespace GameManager.Tests
 		public void NodeCopyCtor_PreservesNumber()
 		{
 			var (graph, _) = GraphTestHelper.BuildGrid(3, 3);
-			var original = graph.nodesDict[GraphTestHelper.NodeNbr(1, 1, 3)];
+			var original = graph.NodesDict[GraphTestHelper.NodeNbr(1, 1, 3)];
 			var copy = new Node<TestCell>(original);
 
-			Assert.AreEqual(original.number, copy.number,
+			Assert.AreEqual(original.Number, copy.Number,
 				"Copy constructor should preserve node number");
 		}
 
@@ -117,10 +117,10 @@ namespace GameManager.Tests
 		public void NodeCopyCtor_PreservesItem()
 		{
 			var (graph, _) = GraphTestHelper.BuildGrid(3, 3);
-			var original = graph.nodesDict[GraphTestHelper.NodeNbr(1, 1, 3)];
+			var original = graph.NodesDict[GraphTestHelper.NodeNbr(1, 1, 3)];
 			var copy = new Node<TestCell>(original);
 
-			Assert.AreSame(original.item, copy.item,
+			Assert.AreSame(original.Item, copy.Item,
 				"Copy constructor should preserve item reference");
 		}
 
@@ -133,12 +133,12 @@ namespace GameManager.Tests
 		{
 			var (graph, _) = GraphTestHelper.BuildGrid(3, 3);
 			// Centre node has 8 edges in an 8-connected 3x3 grid
-			var original = graph.nodesDict[GraphTestHelper.NodeNbr(1, 1, 3)];
-			Assert.Greater(original.edges.Count, 0, "Precondition: original node should have edges");
+			var original = graph.NodesDict[GraphTestHelper.NodeNbr(1, 1, 3)];
+			Assert.Greater(original.Edges.Count, 0, "Precondition: original node should have edges");
 
 			var copy = new Node<TestCell>(original);
 
-			Assert.AreEqual(0, copy.edges.Count,
+			Assert.AreEqual(0, copy.Edges.Count,
 				"Copy constructor should NOT copy edges — new node starts with empty edges list");
 		}
 
@@ -159,10 +159,10 @@ namespace GameManager.Tests
 			graph.AStarSearch(start, end);
 			graph.ResetSearch();
 
-			foreach (var node in graph.nodesDict.Values)
+			foreach (var node in graph.NodesDict.Values)
 			{
-				Assert.AreEqual(double.MaxValue, node.cost,
-					$"Node {node.number} cost should be MaxValue after reset");
+				Assert.AreEqual(double.MaxValue, node.Cost,
+					$"Node {node.Number} cost should be MaxValue after reset");
 			}
 		}
 
@@ -179,10 +179,10 @@ namespace GameManager.Tests
 			graph.AStarSearch(start, end);
 			graph.ResetSearch();
 
-			foreach (var node in graph.nodesDict.Values)
+			foreach (var node in graph.NodesDict.Values)
 			{
-				Assert.IsNull(node.backPtr,
-					$"Node {node.number} backPtr should be null after reset");
+				Assert.IsNull(node.BackPtr,
+					$"Node {node.Number} backPtr should be null after reset");
 			}
 		}
 
@@ -199,10 +199,10 @@ namespace GameManager.Tests
 			graph.AStarSearch(start, end);
 			graph.ResetSearch();
 
-			foreach (var node in graph.nodesDict.Values)
+			foreach (var node in graph.NodesDict.Values)
 			{
-				Assert.IsNull(node.priorityNode,
-					$"Node {node.number} priorityNode should be null after reset");
+				Assert.IsNull(node.PriorityNode,
+					$"Node {node.Number} priorityNode should be null after reset");
 			}
 		}
 

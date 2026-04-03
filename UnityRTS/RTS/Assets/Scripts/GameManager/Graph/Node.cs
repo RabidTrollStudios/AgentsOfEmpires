@@ -9,44 +9,44 @@ namespace GameManager.Graph
 	internal class Node<V> where V : IColorable, IBuildable
     {
         /// <summary>Adjacent edges (undirected — each edge appears in both endpoint nodes).</summary>
-        public List<Edge<V>> edges = new List<Edge<V>>();
+        public List<Edge<V>> Edges = new List<Edge<V>>();
 
         /// <summary>The domain object this node represents (e.g., a GridCell).</summary>
-        public V item;
+        public V Item;
 
-        /// <summary>Unique identifier matching the node's key in <see cref="Graph{T}.nodesDict"/>.</summary>
-        public int number;
+        /// <summary>Unique identifier matching the node's key in <see cref="Graph{T}.NodesDict"/>.</summary>
+        public int Number;
 
         // --- A* transient search state (reset between searches) ---
 
         /// <summary>Best-known g-cost from the start node. Reset to MaxValue before each search.</summary>
-        public double cost = double.MaxValue;
+        public double Cost = double.MaxValue;
 
         /// <summary>Back-pointer to the predecessor in the current search path.</summary>
-		public PriorityNode<Node<V>> backPtr = null;
+		public PriorityNode<Node<V>> BackPtr = null;
 
         /// <summary>This node's entry in the priority queue (null if not yet enqueued).</summary>
-		public PriorityNode<Node<V>> priorityNode = null;
+		public PriorityNode<Node<V>> PriorityNode = null;
 
         public Node(int number, V item)
         {
-            this.number = number;
-            this.item = item;
+            this.Number = number;
+            this.Item = item;
         }
 
         /// <summary>Copy constructor (copies identity, not search state).</summary>
         public Node(Node<V> node)
         {
-            this.number = node.number;
-            this.item = node.item;
+            this.Number = node.Number;
+            this.Item = node.Item;
         }
 
         /// <summary>Clear transient A* state so this node can participate in a new search.</summary>
         public void ResetSearchVariables()
         {
-            cost = double.MaxValue;
-            backPtr = null;
-            priorityNode = null;
+            Cost = double.MaxValue;
+            BackPtr = null;
+            PriorityNode = null;
         }
     }
 }

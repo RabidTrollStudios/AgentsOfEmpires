@@ -24,14 +24,14 @@ namespace GameManager.Tests
 		}
 
 		/// <summary>
-		/// Direction.None should NOT be in the directions dictionary
+		/// Direction.NONE should NOT be in the directions dictionary
 		/// (None means stationary — no offset).
 		/// </summary>
 		[Test]
 		public void Directions_DoesNotContainNone()
 		{
-			Assert.IsFalse(Constants.directions.ContainsKey(Direction.None),
-				"Direction.None should not have an entry in the directions dictionary");
+			Assert.IsFalse(Constants.directions.ContainsKey(Direction.NONE),
+				"Direction.NONE should not have an entry in the directions dictionary");
 		}
 
 		/// <summary>

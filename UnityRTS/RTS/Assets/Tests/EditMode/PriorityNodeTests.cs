@@ -21,7 +21,7 @@ namespace GameManager.Tests
 		public void PriorityNode_StoresItem()
 		{
 			var node = new PriorityNode<int>(42, 3.0);
-			Assert.AreEqual(42, node.item, "PriorityNode should store the item");
+			Assert.AreEqual(42, node.Item, "PriorityNode should store the item");
 		}
 
 		/// <summary>
@@ -31,7 +31,7 @@ namespace GameManager.Tests
 		public void PriorityNode_StoresPriority()
 		{
 			var node = new PriorityNode<int>(42, 7.5);
-			Assert.AreEqual(7.5, node.priority, 0.0001, "PriorityNode should store the priority");
+			Assert.AreEqual(7.5, node.Priority, 0.0001, "PriorityNode should store the priority");
 		}
 
 		/// <summary>
@@ -57,7 +57,7 @@ namespace GameManager.Tests
 		{
 			var original = new PriorityNode<string>("hello", 2.0);
 			var copy = new PriorityNode<string>(original);
-			Assert.AreEqual("hello", copy.item, "Copy ctor should preserve item");
+			Assert.AreEqual("hello", copy.Item, "Copy ctor should preserve item");
 		}
 
 		/// <summary>
@@ -68,7 +68,7 @@ namespace GameManager.Tests
 		{
 			var original = new PriorityNode<int>(99, 5.5);
 			var copy = new PriorityNode<int>(original);
-			Assert.AreEqual(5.5, copy.priority, 0.0001, "Copy ctor should preserve priority");
+			Assert.AreEqual(5.5, copy.Priority, 0.0001, "Copy ctor should preserve priority");
 		}
 
 		/// <summary>

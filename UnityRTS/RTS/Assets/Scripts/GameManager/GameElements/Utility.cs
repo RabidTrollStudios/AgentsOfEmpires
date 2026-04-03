@@ -112,7 +112,7 @@ namespace GameManager.GameElements
 			int cx = direction.x == 0 ? 0 : (direction.x > 0 ? 1 : -1);
 			int cy = direction.y == 0 ? 0 : (direction.y > 0 ? 1 : -1);
 
-			if (cx == 0 && cy == 0) return Direction.None;
+			if (cx == 0 && cy == 0) return Direction.NONE;
 			if (cx == 0 && cy == -1) return Direction.S;
 			if (cx == 1 && cy == -1) return Direction.SE;
 			if (cx == 1 && cy == 0) return Direction.E;

@@ -482,7 +482,7 @@ namespace GameManager
         {
 	        proceduralMapResult = null;
 
-	        if (mapMode == MapMode.Procedural)
+	        if (mapMode == MapMode.PROCEDURAL)
 	        {
 		        SetupProceduralMap();
 	        }

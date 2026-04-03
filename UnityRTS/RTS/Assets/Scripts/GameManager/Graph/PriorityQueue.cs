@@ -5,30 +5,30 @@ namespace GameManager.Graph
 {
 	/// <summary>
 	/// Wrapper pairing an item with a priority value for use in <see cref="PriorityQueue{T}"/>.
-	/// Tracks its current <see cref="index"/> in the heap array so
+	/// Tracks its current <see cref="Index"/> in the heap array so
 	/// <see cref="PriorityQueue{T}.ChangePriority"/> can update it in O(log n).
 	/// Lower priority values are dequeued first (min-heap).
 	/// </summary>
 	internal class PriorityNode<V> : IComparable
     {
-        public V item;
-        public double priority;  // LOWER value is HIGHER priority
+        public V Item;
+        public double Priority;  // LOWER value is HIGHER priority
         /// <summary>Current position in the heap array (-1 if not enqueued).</summary>
-        public int index;
+        public int Index;
 
         public PriorityNode(V item, double priority)
         {
-            this.item = item;
-            this.priority = priority;
-            this.index = -1;
+            this.Item = item;
+            this.Priority = priority;
+            this.Index = -1;
         }
 
         /// <summary>Copy constructor.</summary>
         public PriorityNode(PriorityNode<V> node)
         {
-            this.item = node.item;
-            this.priority = node.priority;
-            this.index = node.index;
+            this.Item = node.Item;
+            this.Priority = node.Priority;
+            this.Index = node.Index;
         }
 
         public int CompareTo(Object item)
@@ -39,7 +39,7 @@ namespace GameManager.Graph
                 throw new Exception("ERROR: Cannot compare to " + item);
             }
 
-            return this.priority.CompareTo(i.priority);
+            return this.Priority.CompareTo(i.Priority);
         }
     }
 
@@ -66,7 +66,7 @@ namespace GameManager.Graph
         public void Enqueue(PriorityNode<T> node)
         {
             // Add to the end of the list
-            node.index = priorityQueue.Count;
+            node.Index = priorityQueue.Count;
             priorityQueue.Add(node);
             int current = priorityQueue.Count - 1;
             RaisePriority(current);
@@ -84,7 +84,7 @@ namespace GameManager.Graph
 
             // Store the last item, remove it from the list
             priorityQueue[0] = priorityQueue[priorityQueue.Count - 1];
-            priorityQueue[0].index = 0;
+            priorityQueue[0].Index = 0;
             priorityQueue.RemoveAt(priorityQueue.Count - 1);
 
             LowerPriority(0);
@@ -93,18 +93,18 @@ namespace GameManager.Graph
         }
         /// <summary>
         /// Update a node's priority and restore heap order.
-        /// Uses the node's tracked <see cref="PriorityNode{T}.index"/> to find it in O(1),
+        /// Uses the node's tracked <see cref="PriorityNode{T}.Index"/> to find it in O(1),
         /// then re-heapifies in O(log n).
         /// </summary>
         public void ChangePriority(PriorityNode<T> node, double newPriority)
         {
-            if (0 <= node.index && node.index < priorityQueue.Count)
+            if (0 <= node.Index && node.Index < priorityQueue.Count)
             {
-                node.priority = newPriority;
-                priorityQueue[node.index].priority = newPriority;
+                node.Priority = newPriority;
+                priorityQueue[node.Index].Priority = newPriority;
 
-                RaisePriority(node.index);
-                LowerPriority(node.index);
+                RaisePriority(node.Index);
+                LowerPriority(node.Index);
             }
         }
 
@@ -119,12 +119,12 @@ namespace GameManager.Graph
             {
                 // Copy parent down into current
                 priorityQueue[current] = priorityQueue[parent];
-                priorityQueue[current].index = current;
+                priorityQueue[current].Index = current;
                 current = parent;
                 parent = (current - 1) / 2;
             }
             priorityQueue[current] = newItem;
-            priorityQueue[current].index = current;
+            priorityQueue[current].Index = current;
         }
 
         /// <summary>Sink an element down through the heap while it has lower priority than a child.</summary>
@@ -157,7 +157,7 @@ namespace GameManager.Graph
                     if (priorityQueue[swap].CompareTo(lastItem) < 0)
                     {
                         priorityQueue[parent] = priorityQueue[swap];
-                        priorityQueue[parent].index = parent;
+                        priorityQueue[parent].Index = parent;
 
                         parent = swap;
                         left = parent * 2 + 1;
@@ -169,7 +169,7 @@ namespace GameManager.Graph
                     }
                 }
                 priorityQueue[parent] = lastItem;
-                priorityQueue[parent].index = parent;
+                priorityQueue[parent].Index = parent;
             }
         }
 
@@ -178,7 +178,7 @@ namespace GameManager.Graph
             string output = "[ ";
             for (int i = 0; i < priorityQueue.Count; ++i)
             {
-                output += priorityQueue[i].priority + " ";
+                output += priorityQueue[i].Priority + " ";
             }
             output += "]";
             return output;

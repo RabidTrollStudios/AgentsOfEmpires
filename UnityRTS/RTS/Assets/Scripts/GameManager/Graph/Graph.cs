@@ -22,13 +22,13 @@ namespace GameManager.Graph
 	internal class Graph<T> where T : IColorable, IBuildable, IPositionable
     {
         /// <summary>When true, all edge weights are equal (enables BFS). Currently unused.</summary>
-        public static bool isUniform = false;
+        public static bool IsUniform = false;
 
         /// <summary>All nodes keyed by their integer ID (typically grid cell index).</summary>
-        public Dictionary<int, Node<T>> nodesDict = new Dictionary<int, Node<T>>();
+        public Dictionary<int, Node<T>> NodesDict = new Dictionary<int, Node<T>>();
 
         /// <summary>All edges in the graph (each edge also appears in its endpoint nodes' adjacency lists).</summary>
-        public List<Edge<T>> edges = new List<Edge<T>>();
+        public List<Edge<T>> Edges = new List<Edge<T>>();
 
         /// <summary>Reusable priority queue for A* to avoid per-search allocation.</summary>
         PriorityQueue<Node<T>> pq = new PriorityQueue<Node<T>>();
@@ -40,13 +40,13 @@ namespace GameManager.Graph
         /// <summary>Deep-copy constructor: duplicates all nodes and edges from another graph.</summary>
         public Graph(Graph<T> graph)
         {
-            foreach(Node<T> node in graph.nodesDict.Values)
+            foreach(Node<T> node in graph.NodesDict.Values)
             {
-                AddNode(node.number, node.item);
+                AddNode(node.Number, node.Item);
             }
-            foreach (Edge<T> edge in graph.edges)
+            foreach (Edge<T> edge in graph.Edges)
             {
-                AddEdge(edge.start.number, edge.end.number, edge.cost);
+                AddEdge(edge.Start.Number, edge.End.Number, edge.Cost);
             }
         }
 
@@ -54,7 +54,7 @@ namespace GameManager.Graph
         public void AddNode(int number, T startItem)
         {
             Node<T> node = new Node<T>(number, startItem);
-            nodesDict.Add(number, node);
+            NodesDict.Add(number, node);
         }
 
         /// <summary>
@@ -63,12 +63,12 @@ namespace GameManager.Graph
         /// </summary>
         public void AddEdge(int startNodeNbr, int endNodeNbr, double cost)
         {
-            Node<T> start = nodesDict[startNodeNbr];
-            Node<T> end = nodesDict[endNodeNbr];
+            Node<T> start = NodesDict[startNodeNbr];
+            Node<T> end = NodesDict[endNodeNbr];
             Edge<T> edge = new Edge<T>(start, end, cost);
-            edges.Add(edge);
-            start.edges.Add(edge);
-            end.edges.Add(edge);
+            Edges.Add(edge);
+            start.Edges.Add(edge);
+            end.Edges.Add(edge);
         }
 
         /// <summary>
@@ -76,8 +76,8 @@ namespace GameManager.Graph
         /// </summary>
         private double EstimateCost(int nodeA, int nodeB)
         {
-            return Vector3.Distance(nodesDict[nodeA].item.GetPosition(),
-                                    nodesDict[nodeB].item.GetPosition());
+            return Vector3.Distance(NodesDict[nodeA].Item.GetPosition(),
+                                    NodesDict[nodeB].Item.GetPosition());
         }
 
         /// <summary>
@@ -89,28 +89,28 @@ namespace GameManager.Graph
         {
             int closestNodeNbr = -1;
             double closestDistance = double.MaxValue;
-            foreach (Edge<T> edge in nodesDict[endNodeNbr].edges)
+            foreach (Edge<T> edge in NodesDict[endNodeNbr].Edges)
             {
-                Node<T> neighbor = edge.GetNeighbor(nodesDict[startNodeNbr]);
-                double dist = EstimateCost(startNodeNbr, neighbor.number);
+                Node<T> neighbor = edge.GetNeighbor(NodesDict[startNodeNbr]);
+                double dist = EstimateCost(startNodeNbr, neighbor.Number);
                 if (dist < closestDistance)
                 {
                     closestDistance = dist;
-                    closestNodeNbr = neighbor.number;
+                    closestNodeNbr = neighbor.Number;
                 }
             }
             return closestNodeNbr;
         }
 
         /// <summary>
-        /// Breadth-first search (stub). Only valid when <see cref="isUniform"/> is true.
+        /// Breadth-first search (stub). Only valid when <see cref="IsUniform"/> is true.
         /// Currently throws — all pathfinding uses <see cref="AStarSearch"/> instead.
         /// </summary>
         public List<T> BreadthFirstSearch(int startNodeNbr, int endNodeNbr)
         {
             List<T> path = new List<T>();
 
-            if (!isUniform)
+            if (!IsUniform)
             {
                 throw new Exception("Cannot perform breadth-first on a non-uniform edge weight graph");
             }
@@ -121,7 +121,7 @@ namespace GameManager.Graph
         /// <summary>Clear transient search state on all nodes before a new A* search.</summary>
         public void ResetSearch()
         {
-            foreach (Node<T> node in nodesDict.Values)
+            foreach (Node<T> node in NodesDict.Values)
             {
                 node.ResetSearchVariables();
             }
@@ -167,7 +167,7 @@ namespace GameManager.Graph
             }
 
             // Early-exit: if the end node is blocked, no path can reach it
-            if (avoidUnits ? !nodesDict[endNodeNbr].item.IsBuildable() : !nodesDict[endNodeNbr].item.IsWalkable())
+            if (avoidUnits ? !NodesDict[endNodeNbr].Item.IsBuildable() : !NodesDict[endNodeNbr].Item.IsWalkable())
             {
                 LastSearchResult = "end_blocked";
                 return path;
@@ -180,11 +180,11 @@ namespace GameManager.Graph
             // are enqueued, so the path naturally exits the unwalkable area.
 
             // Add the first node to the priorityQueue
-            nodesDict[startNodeNbr].cost = 0.0f;
-            PriorityNode<Node<T>> currPNode = new PriorityNode<Node<T>>(nodesDict[startNodeNbr],
-                         nodesDict[startNodeNbr].cost + EstimateCost(startNodeNbr, endNodeNbr));
-            nodesDict[startNodeNbr].priorityNode = currPNode;
-            pq.Enqueue(nodesDict[startNodeNbr].priorityNode);
+            NodesDict[startNodeNbr].Cost = 0.0f;
+            PriorityNode<Node<T>> currPNode = new PriorityNode<Node<T>>(NodesDict[startNodeNbr],
+                         NodesDict[startNodeNbr].Cost + EstimateCost(startNodeNbr, endNodeNbr));
+            NodesDict[startNodeNbr].PriorityNode = currPNode;
+            pq.Enqueue(NodesDict[startNodeNbr].PriorityNode);
 
             // While there are still items in the priorityQueue
             int expansions = 0;
@@ -201,13 +201,13 @@ namespace GameManager.Graph
                 currPNode = pq.Dequeue();
 
                 // If this is the end node, success!
-	            if (currPNode.item.number == endNodeNbr)
+	            if (currPNode.Item.Number == endNodeNbr)
 	            {
 		            // Reverse-engineer the path
 		            while (currPNode != null)
 		            {
-			            path.Add(currPNode.item.number);
-			            currPNode = currPNode.item.backPtr;
+			            path.Add(currPNode.Item.Number);
+			            currPNode = currPNode.Item.BackPtr;
 		            }
 
 		            // Reverse the path
@@ -219,31 +219,31 @@ namespace GameManager.Graph
 				}
 
 				// For each edge attached to this node, expand it
-				foreach (Edge<T> edge in currPNode.item.edges)
+				foreach (Edge<T> edge in currPNode.Item.Edges)
                 {
                     // Get the neighbor of this node via the edge
-                    Node<T> neighbor = edge.GetNeighbor(currPNode.item);
+                    Node<T> neighbor = edge.GetNeighbor(currPNode.Item);
 
                     // If the node can be traversed (avoidUnits: only truly empty cells; normal: passable terrain)
-                    if (avoidUnits ? neighbor.item.IsBuildable() : neighbor.item.IsWalkable())
+                    if (avoidUnits ? neighbor.Item.IsBuildable() : neighbor.Item.IsWalkable())
                     {
                         // Calculate the new cost through this node to this neighbor
-                        double newCost = currPNode.item.cost + edge.cost + EstimateCost(neighbor.number, endNodeNbr);
+                        double newCost = currPNode.Item.Cost + edge.Cost + EstimateCost(neighbor.Number, endNodeNbr);
 
                         // If the item is already in the queue, update its priority if necessary
-                        if (neighbor.priorityNode != null && newCost < neighbor.priorityNode.priority)
+                        if (neighbor.PriorityNode != null && newCost < neighbor.PriorityNode.Priority)
                         {
-                            neighbor.cost = currPNode.item.cost + edge.cost;
-                            neighbor.backPtr = currPNode;
-                            pq.ChangePriority(neighbor.priorityNode, newCost);
+                            neighbor.Cost = currPNode.Item.Cost + edge.Cost;
+                            neighbor.BackPtr = currPNode;
+                            pq.ChangePriority(neighbor.PriorityNode, newCost);
                         }
                         // If the item has not yet been seen, start tracking it
-                        else if (neighbor.priorityNode == null)
+                        else if (neighbor.PriorityNode == null)
                         {
-                            neighbor.priorityNode = new PriorityNode<Node<T>>(neighbor, newCost);
-                            neighbor.backPtr = currPNode;
-                            neighbor.cost = currPNode.item.cost + edge.cost;
-                            pq.Enqueue(neighbor.priorityNode);
+                            neighbor.PriorityNode = new PriorityNode<Node<T>>(neighbor, newCost);
+                            neighbor.BackPtr = currPNode;
+                            neighbor.Cost = currPNode.Item.Cost + edge.Cost;
+                            pq.Enqueue(neighbor.PriorityNode);
                         }
                     }
                 }

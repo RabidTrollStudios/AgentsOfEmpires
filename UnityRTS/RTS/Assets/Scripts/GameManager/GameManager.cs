@@ -16,13 +16,13 @@ using Random = UnityEngine.Random;
 namespace GameManager
 {
 	/// <summary>Whether to use a hand-made tilemap or a procedurally generated map.</summary>
-	public enum MapMode { HandMade, Procedural }
+	public enum MapMode { HAND_MADE, PROCEDURAL }
 
 	/// <summary>Procedural map layout template.</summary>
-	public enum MapTemplate { OpenField, Maze, Forest }
+	public enum MapTemplate { OPEN_FIELD, MAZE, FOREST }
 
 	/// <summary>Symmetry enforcement for procedural maps.</summary>
-	public enum MapSymmetryMode { None, Mirror, Rotational }
+	public enum MapSymmetryMode { NONE, MIRROR, ROTATIONAL }
 
 	/// <summary>
 	/// Orchestrates the game: manages match/round lifecycle, agents, and delegates
@@ -111,7 +111,7 @@ namespace GameManager
 		/// Whether to use a hand-made tilemap or procedural generation.
 		/// </summary>
 		[Header("Map Configuration")]
-		[SerializeField] private MapMode mapMode = MapMode.HandMade;
+		[SerializeField] private MapMode mapMode = MapMode.HAND_MADE;
 
 		/// <summary>
 		/// Index into MapPrefabs for hand-made mode. 0 = scene Grid (default).
@@ -136,7 +136,7 @@ namespace GameManager
 		/// <summary>
 		/// Procedural map layout template.
 		/// </summary>
-		[SerializeField] private MapTemplate mapTemplate = MapTemplate.OpenField;
+		[SerializeField] private MapTemplate mapTemplate = MapTemplate.OPEN_FIELD;
 
 		/// <summary>
 		/// Fraction of the map covered by tree obstacles.
@@ -152,7 +152,7 @@ namespace GameManager
 		/// <summary>
 		/// Symmetry enforcement for procedural maps.
 		/// </summary>
-		[SerializeField] private MapSymmetryMode mapSymmetry = MapSymmetryMode.Mirror;
+		[SerializeField] private MapSymmetryMode mapSymmetry = MapSymmetryMode.MIRROR;
 
 		/// <summary>
 		/// Loader for all the game prefabs

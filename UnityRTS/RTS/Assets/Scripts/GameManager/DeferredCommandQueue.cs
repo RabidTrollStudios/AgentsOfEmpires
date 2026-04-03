@@ -7,7 +7,7 @@ namespace GameManager
 {
     internal enum DeferredCommandType
     {
-        Move, Build, Gather, Train, Attack, Repair, Heal
+        MOVE, BUILD, GATHER, TRAIN, ATTACK, REPAIR, HEAL
     }
 
     /// <summary>
@@ -93,35 +93,35 @@ namespace GameManager
                 AgentSDK.CommandResult result;
                 switch (cmd.Type)
                 {
-                    case DeferredCommandType.Move:
+                    case DeferredCommandType.MOVE:
                         result = AgentSDK.CommandProcessor.ProcessMove(
                             cmd.Unit, new AgentSDK.Position(cmd.Target.x, cmd.Target.y), world);
                         break;
-                    case DeferredCommandType.Build:
+                    case DeferredCommandType.BUILD:
                         result = AgentSDK.CommandProcessor.ProcessBuild(
                             cmd.Unit, new AgentSDK.Position(cmd.Target.x, cmd.Target.y),
                             cmd.BuildingType, world);
                         break;
-                    case DeferredCommandType.Gather:
+                    case DeferredCommandType.GATHER:
                         if (cmd.MineUnit == null || cmd.BaseUnit == null) { result = AgentSDK.CommandResult.INVALID_TARGET; break; }
                         result = AgentSDK.CommandProcessor.ProcessGather(
                             cmd.Unit, cmd.MineUnit.UnitNbr, cmd.BaseUnit.UnitNbr, world);
                         break;
-                    case DeferredCommandType.Train:
+                    case DeferredCommandType.TRAIN:
                         result = AgentSDK.CommandProcessor.ProcessTrain(
                             cmd.Unit, cmd.BuildingType, world);
                         break;
-                    case DeferredCommandType.Attack:
+                    case DeferredCommandType.ATTACK:
                         if (cmd.TargetUnit == null) { result = AgentSDK.CommandResult.INVALID_TARGET; break; }
                         result = AgentSDK.CommandProcessor.ProcessAttack(
                             cmd.Unit, cmd.TargetUnit.UnitNbr, world);
                         break;
-                    case DeferredCommandType.Repair:
+                    case DeferredCommandType.REPAIR:
                         if (cmd.TargetUnit == null) { result = AgentSDK.CommandResult.INVALID_TARGET; break; }
                         result = AgentSDK.CommandProcessor.ProcessRepair(
                             cmd.Unit, cmd.TargetUnit.UnitNbr, world);
                         break;
-                    case DeferredCommandType.Heal:
+                    case DeferredCommandType.HEAL:
                         if (cmd.TargetUnit == null) { result = AgentSDK.CommandResult.INVALID_TARGET; break; }
                         result = AgentSDK.CommandProcessor.ProcessHeal(
                             cmd.Unit, cmd.TargetUnit.UnitNbr, world);
