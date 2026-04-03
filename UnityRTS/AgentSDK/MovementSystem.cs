@@ -19,17 +19,29 @@ namespace AgentSDK
         /// </summary>
         public static void Advance(ITickUnit unit, float dt, ITickWorld world, ITickCallbacks callbacks)
         {
-            if (unit.TickPath == null || unit.PathIndex >= unit.TickPath.Count) return;
+            // Cache TickPath in a local to avoid repeated interface dispatch.
+            // The ITickUnit.TickPath property goes through explicit interface
+            // implementation on Unity's MonoBehaviour, and repeated virtual calls
+            // can return null if the setter fires between reads.
+            var path = unit.TickPath;
+            if (path == null || unit.PathIndex >= path.Count) return;
             if (!unit.CanMove) return;
             if (dt <= 0f) return;
 
-            float speed = world.Constants.MovingSpeed[unit.UnitType] / world.TickDuration;
+            var constants = world.Constants;
+            if (constants == null)
+                throw new NullReferenceException($"[MovementSystem] world.Constants is null for unit {unit.UnitNbr}");
+            var grid = world.Grid;
+            if (grid == null)
+                throw new NullReferenceException($"[MovementSystem] world.Grid is null for unit {unit.UnitNbr}");
+
+            float speed = constants.MovingSpeed[unit.UnitType] / world.TickDuration;
             if (speed <= 0f) return;
             float remainingDist = speed * dt;
 
-            while (remainingDist > 0f && unit.TickPath != null && unit.PathIndex < unit.TickPath.Count)
+            while (remainingDist > 0f && path != null && unit.PathIndex < path.Count)
             {
-                Position nextCell = unit.TickPath[unit.PathIndex];
+                Position nextCell = path[unit.PathIndex];
 
                 // Distance for the full segment (current grid cell to next cell)
                 float segmentDist = Position.Distance(unit.GridPosition, nextCell);
@@ -44,17 +56,18 @@ namespace AgentSDK
                     remainingDist -= progressDist;
 
                     // Collision check
-                    var cellState = CheckCell(nextCell, world.Grid);
+                    var cellState = CheckCell(nextCell, grid);
 
                     if (cellState == TaskEngine.MoveResult.BlockedByTerrain)
                     {
                         // Repath around obstacle
                         unit.PathProgress = 0f;
-                        Position dest = unit.TickPath[unit.TickPath.Count - 1];
+                        Position dest = path[path.Count - 1];
                         var repath = world.FindPath(unit.GridPosition, dest);
                         if (repath.Count > 0)
                         {
                             unit.TickPath = repath;
+                            path = repath;
                             unit.PathIndex = 0;
                             callbacks.OnUnitRepath(unit, repath);
                         }
@@ -73,7 +86,7 @@ namespace AgentSDK
 
                     if (cellState == TaskEngine.MoveResult.BlockedByUnit)
                     {
-                        if (unit.PathIndex == unit.TickPath.Count - 1)
+                        if (unit.PathIndex == path.Count - 1)
                         {
                             // Final cell blocked — let task logic handle repath
                             unit.PathProgress = 0f;
@@ -91,8 +104,8 @@ namespace AgentSDK
 
                     // Cross into the cell
                     Position oldPos = unit.GridPosition;
-                    world.Grid.SetCellOccupied(nextCell, true);
-                    world.Grid.SetCellOccupied(oldPos, false);
+                    grid.SetCellOccupied(nextCell, true);
+                    grid.SetCellOccupied(oldPos, false);
 
                     unit.GridPosition = nextCell;
                     unit.PathIndex++;
@@ -100,8 +113,12 @@ namespace AgentSDK
 
                     callbacks.OnUnitMoved(unit, oldPos, nextCell);
 
+                    // Re-read path — callback side effects or setter may have changed it
+                    path = unit.TickPath;
+                    if (path == null) return;
+
                     // Path complete?
-                    if (unit.PathIndex >= unit.TickPath.Count)
+                    if (unit.PathIndex >= path.Count)
                     {
                         if (unit.CurrentAction == UnitAction.MOVE)
                             TickEngine.SetIdle(unit);

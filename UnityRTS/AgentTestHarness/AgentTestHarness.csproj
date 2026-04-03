@@ -8,10 +8,18 @@
 
   <ItemGroup>
     <InternalsVisibleTo Include="PlanningAgent.Tests" />
+    <InternalsVisibleTo Include="Parity.Tests" />
+    <InternalsVisibleTo Include="Gameplay.Tests" />
+    <InternalsVisibleTo Include="Opponent.Tests" />
+    <InternalsVisibleTo Include="ParityRunner" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\AgentSDK\AgentSDK.csproj" />
   </ItemGroup>
+
+  <Target Name="CopyToUnityPlugins" AfterTargets="Build">
+    <Copy SourceFiles="$(TargetDir)AgentTestHarness.dll" DestinationFiles="$(ProjectDir)..\RTS\Assets\Plugins\AgentTestHarness.dll" SkipUnchangedFiles="true" />
+  </Target>
 
 </Project>
