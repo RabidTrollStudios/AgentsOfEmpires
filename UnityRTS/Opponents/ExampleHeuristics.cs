@@ -1,18 +1,19 @@
-// -territoryMap: generates influence based on proximety to own structures and mines using linear falloff, bases have higher intensity
-// -enemyMap: generates influence based on proximety to enemy structures using linear falloff, bases have higher intensity
-// -Functions for ideal build positions and unit positions subtract territoryMap influence from enemyMap influence for decision making
-// -Pawns use influence to determine where to build bases and refineries
-// -Warriors and archers use influence to prioritize which enemy unit to attack first
-
 using System.Collections.Generic;
 using System.Linq;
 using AgentSDK;
 
 namespace PlanningAgent
 {
-	// Planning Agent is the over-head planner that decides where
-	// individual units go and what tasks they perform.  Low-level
-	// AI is handled by other classes (like pathfinding).
+	/// <summary>
+	/// [EXPERIMENTAL] Influence-map-based decision making.
+	/// Uses two layered maps (territoryMap, enemyMap) with linear distance falloff:
+	///   - Territory map weights bases (3x), barracks (2x), and mines (2x)
+	///   - Enemy map weights hostile structures similarly
+	///   - Decision functions subtract territory from enemy influence
+	/// Pawns use influence to choose build locations; combat units use it to
+	/// prioritize targets. Partially implemented — serves as a reference for
+	/// influence-map AI patterns.
+	/// </summary>
 	public class PlanningAgent : PlanningAgentBase
 	{
 

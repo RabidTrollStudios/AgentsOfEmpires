@@ -6,6 +6,15 @@ using UnityEngine;
 
 namespace GameManager.EditorTools
 {
+	/// <summary>
+	/// Custom Unity Inspector for <see cref="global::GameManager.GameManager"/>.
+	///
+	/// Replaces the default inspector with organized sections:
+	///   - Player Settings: DLL dropdowns for Blue/Red agents (scanned from EnemyAgents/)
+	///   - Map Configuration: hand-made map prefab selector or procedural gen controls
+	///     (template, size, density slider, seed with randomize button, symmetry)
+	///   - Remaining serialized properties drawn automatically
+	/// </summary>
 	[CustomEditor(typeof(global::GameManager.GameManager))]
 	public class GameManagerEditor : Editor
 	{
@@ -85,7 +94,7 @@ namespace GameManager.EditorTools
 
 			EditorGUI.indentLevel++;
 
-			if (modeProp.enumValueIndex == (int)MapMode.HandMade)
+			if (modeProp.enumValueIndex == (int)MapMode.HAND_MADE)
 				DrawHandMadeSettings();
 			else
 				DrawProceduralSettings();

@@ -64,10 +64,10 @@ namespace GameManager
         {
             switch (t)
             {
-                case MapTemplate.OpenField: return AgentSDK.MapTemplate.OpenField;
-                case MapTemplate.Maze:      return AgentSDK.MapTemplate.Maze;
-                case MapTemplate.Forest:    return AgentSDK.MapTemplate.Forest;
-                default:                    return AgentSDK.MapTemplate.OpenField;
+                case MapTemplate.OPEN_FIELD: return AgentSDK.MapTemplate.OPEN_FIELD;
+                case MapTemplate.MAZE:      return AgentSDK.MapTemplate.MAZE;
+                case MapTemplate.FOREST:    return AgentSDK.MapTemplate.FOREST;
+                default:                    return AgentSDK.MapTemplate.OPEN_FIELD;
             }
         }
 
@@ -75,10 +75,10 @@ namespace GameManager
         {
             switch (s)
             {
-                case MapSymmetryMode.None:       return SymmetryType.None;
-                case MapSymmetryMode.Mirror:     return SymmetryType.Mirror;
-                case MapSymmetryMode.Rotational: return SymmetryType.Rotational;
-                default:                         return SymmetryType.Mirror;
+                case MapSymmetryMode.NONE:       return SymmetryType.NONE;
+                case MapSymmetryMode.MIRROR:     return SymmetryType.MIRROR;
+                case MapSymmetryMode.ROTATIONAL: return SymmetryType.ROTATIONAL;
+                default:                         return SymmetryType.MIRROR;
             }
         }
 

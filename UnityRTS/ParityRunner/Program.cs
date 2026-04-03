@@ -9,6 +9,17 @@ using Parity.Tests;
 
 namespace ParityRunner
 {
+    /// <summary>
+    /// CLI tool for running deterministic parity tests.
+    ///
+    /// Each scenario runs a SimGame match with live agents (recording commands),
+    /// then replays the same commands and compares per-tick state hashes.
+    /// If hashes diverge, the scenario fails — indicating non-determinism
+    /// between the recording and replay engines.
+    ///
+    /// Usage: ParityRunner [--list] [--scenario name] [--json [file]] [--help]
+    /// Exit code: 0 = all pass, 1 = any failure.
+    /// </summary>
     class Program
     {
         static int Main(string[] args)

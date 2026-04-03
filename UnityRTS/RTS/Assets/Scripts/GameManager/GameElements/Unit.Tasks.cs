@@ -5,6 +5,13 @@ using UnityEngine;
 
 namespace GameManager.GameElements
 {
+	/// <summary>
+	/// Unit partial — legacy per-frame task update methods (UpdateAttack, etc.).
+	///
+	/// These are the Unity-side task advancement methods that were used before the
+	/// shared TickEngine was introduced. Some remain as supplementary visual/state
+	/// logic that runs alongside the deterministic TickEngine updates.
+	/// </summary>
 	public partial class Unit
 	{
 		/// <summary>

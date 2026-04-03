@@ -6,6 +6,13 @@ using UnityEngine;
 
 namespace GameManager
 {
+	/// <summary>
+	/// Agent partial — command dispatch methods (Move, Build, Gather, Train, Attack, Repair, Heal).
+	///
+	/// Each method validates the command, logs it to the CommandLogger, and either
+	/// enqueues it in the DeferredCommandQueue (for shared TickEngine processing)
+	/// or executes it immediately for legacy/visual-only effects.
+	/// </summary>
 	public abstract partial class Agent
 	{
 		#region Event Throwers

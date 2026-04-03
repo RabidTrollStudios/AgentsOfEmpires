@@ -50,25 +50,25 @@ namespace AgentTestHarness
                 CommandResult result;
                 switch (cmd.Type)
                 {
-                    case CommandType.Move:
+                    case CommandType.MOVE:
                         result = CommandProcessor.ProcessMove(unit, cmd.Target, tickWorld);
                         break;
-                    case CommandType.Build:
+                    case CommandType.BUILD:
                         result = CommandProcessor.ProcessBuild(unit, cmd.Target, cmd.UnitType, tickWorld);
                         break;
-                    case CommandType.Gather:
+                    case CommandType.GATHER:
                         result = CommandProcessor.ProcessGather(unit, cmd.MineNbr, cmd.BaseNbr, tickWorld);
                         break;
-                    case CommandType.Train:
+                    case CommandType.TRAIN:
                         result = CommandProcessor.ProcessTrain(unit, cmd.UnitType, tickWorld);
                         break;
-                    case CommandType.Attack:
+                    case CommandType.ATTACK:
                         result = CommandProcessor.ProcessAttack(unit, cmd.TargetUnitNbr, tickWorld);
                         break;
-                    case CommandType.Repair:
+                    case CommandType.REPAIR:
                         result = CommandProcessor.ProcessRepair(unit, cmd.TargetUnitNbr, tickWorld);
                         break;
-                    case CommandType.Heal:
+                    case CommandType.HEAL:
                         result = CommandProcessor.ProcessHeal(unit, cmd.TargetUnitNbr, tickWorld);
                         break;
                     default: result = CommandResult.SUCCESS; break;
@@ -87,25 +87,25 @@ namespace AgentTestHarness
 
                 switch (cmd.Type)
                 {
-                    case CommandType.Move:
+                    case CommandType.MOVE:
                         ProcessMove(unit, cmd.Target);
                         break;
-                    case CommandType.Build:
+                    case CommandType.BUILD:
                         ProcessBuild(unit, cmd.Target, cmd.UnitType);
                         break;
-                    case CommandType.Gather:
+                    case CommandType.GATHER:
                         ProcessGather(unit, cmd.MineNbr, cmd.BaseNbr);
                         break;
-                    case CommandType.Train:
+                    case CommandType.TRAIN:
                         ProcessTrain(unit, cmd.UnitType);
                         break;
-                    case CommandType.Attack:
+                    case CommandType.ATTACK:
                         ProcessAttack(unit, cmd.TargetUnitNbr);
                         break;
-                    case CommandType.Repair:
+                    case CommandType.REPAIR:
                         ProcessRepair(unit, cmd.TargetUnitNbr);
                         break;
-                    case CommandType.Heal:
+                    case CommandType.HEAL:
                         ProcessHeal(unit, cmd.TargetUnitNbr);
                         break;
                 }
@@ -138,7 +138,7 @@ namespace AgentTestHarness
             if (result != CommandResult.SUCCESS)
             {
                 FailedCommands[pawn.OwnerAgentNbr].Add(
-                    new FailedCommand(pawn.UnitNbr, CommandType.Build, result));
+                    new FailedCommand(pawn.UnitNbr, CommandType.BUILD, result));
                 return;
             }
 
@@ -154,7 +154,7 @@ namespace AgentTestHarness
             {
                 Gold[pawn.OwnerAgentNbr] += cost;
                 FailedCommands[pawn.OwnerAgentNbr].Add(
-                    new FailedCommand(pawn.UnitNbr, CommandType.Build, CommandResult.NO_PATH_FOUND));
+                    new FailedCommand(pawn.UnitNbr, CommandType.BUILD, CommandResult.NO_PATH_FOUND));
                 return;
             }
 
@@ -201,7 +201,7 @@ namespace AgentTestHarness
             if (result != CommandResult.SUCCESS)
             {
                 FailedCommands[building.OwnerAgentNbr].Add(
-                    new FailedCommand(building.UnitNbr, CommandType.Train, result));
+                    new FailedCommand(building.UnitNbr, CommandType.TRAIN, result));
                 return;
             }
 
