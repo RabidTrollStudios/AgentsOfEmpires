@@ -73,6 +73,12 @@ namespace GameManager
             {
                 mapMeta = $"# map={mapW}x{mapH} speed={Constants.GAME_SPEED} mode=HandMade";
             }
+            // Append agent DLL names and starting gold for true parity tests
+            if (gm != null)
+            {
+                mapMeta += $" blue={gm.BlueDllName} red={gm.RedDllName}";
+                mapMeta += $" gold={gm.StartingPlayerGold}";
+            }
             stateWriter.WriteLine(mapMeta);
 
             // Export the actual blocked (unwalkable) cells so SimGame uses the exact same grid.

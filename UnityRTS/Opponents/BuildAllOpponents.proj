@@ -1,0 +1,21 @@
+<Project DefaultTargets="BuildAll" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <!--
+    Meta-project: builds every *.cs file in Opponents/ as a separate agent DLL.
+    Each agent is compiled via Opponents.csproj with -p:AgentName and -p:AgentFile.
+    The CopyToEnemyAgents target in Opponents.csproj deploys each DLL to EnemyAgents/.
+
+    Usage:
+      dotnet msbuild Opponents/BuildAllOpponents.proj
+    Or included in the solution so `dotnet build UnityRTS.slnx` rebuilds all agents.
+  -->
+
+  <ItemGroup>
+    <AgentSource Include="*.cs" />
+  </ItemGroup>
+
+  <Target Name="BuildAll">
+    <MSBuild Projects="Opponents.csproj"
+             Targets="Build"
+             Properties="AgentName=%(AgentSource.Filename);AgentFile=%(AgentSource.Filename).cs" />
+  </Target>
+</Project>
