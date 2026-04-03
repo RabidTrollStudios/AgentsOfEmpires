@@ -444,35 +444,21 @@
           "bin/placeholder/AgentTestHarness.dll": {}
         }
       },
-      "PlanningAgent/1.0.0": {
-        "type": "project",
-        "framework": ".NETStandard,Version=v2.1",
-        "dependencies": {
-          "AgentSDK": "1.0.0"
-        },
-        "compile": {
-          "bin/placeholder/PlanningAgent.dll": {}
-        },
-        "runtime": {
-          "bin/placeholder/PlanningAgent.dll": {}
-        }
-      },
-      "PlanningAgent.Tests/1.0.0": {
+      "Parity.Tests/1.0.0": {
         "type": "project",
         "framework": ".NETCoreApp,Version=v8.0",
         "dependencies": {
           "AgentSDK": "1.0.0",
           "AgentTestHarness": "1.0.0",
           "Microsoft.NET.Test.Sdk": "17.0.0",
-          "PlanningAgent": "1.0.0",
           "xunit": "2.0.0",
           "xunit.runner.visualstudio": "2.0.0"
         },
         "compile": {
-          "bin/placeholder/PlanningAgent.Tests.dll": {}
+          "bin/placeholder/Parity.Tests.dll": {}
         },
         "runtime": {
-          "bin/placeholder/PlanningAgent.Tests.dll": {}
+          "bin/placeholder/Parity.Tests.dll": {}
         }
       }
     }
@@ -989,22 +975,17 @@
       "path": "../AgentTestHarness/AgentTestHarness.csproj",
       "msbuildProject": "../AgentTestHarness/AgentTestHarness.csproj"
     },
-    "PlanningAgent/1.0.0": {
+    "Parity.Tests/1.0.0": {
       "type": "project",
-      "path": "../PlanningAgent/PlanningAgent.csproj",
-      "msbuildProject": "../PlanningAgent/PlanningAgent.csproj"
-    },
-    "PlanningAgent.Tests/1.0.0": {
-      "type": "project",
-      "path": "../PlanningAgent.Tests/PlanningAgent.Tests.csproj",
-      "msbuildProject": "../PlanningAgent.Tests/PlanningAgent.Tests.csproj"
+      "path": "../Parity.Tests/Parity.Tests.csproj",
+      "msbuildProject": "../Parity.Tests/Parity.Tests.csproj"
     }
   },
   "projectFileDependencyGroups": {
     "net8.0": [
       "AgentSDK >= 1.0.0",
       "AgentTestHarness >= 1.0.0",
-      "PlanningAgent.Tests >= 1.0.0"
+      "Parity.Tests >= 1.0.0"
     ]
   },
   "packageFolders": {
@@ -1045,8 +1026,8 @@
             "C:\\Git\\Warcrap\\UnityRTS\\AgentTestHarness\\AgentTestHarness.csproj": {
               "projectPath": "C:\\Git\\Warcrap\\UnityRTS\\AgentTestHarness\\AgentTestHarness.csproj"
             },
-            "C:\\Git\\Warcrap\\UnityRTS\\PlanningAgent.Tests\\PlanningAgent.Tests.csproj": {
-              "projectPath": "C:\\Git\\Warcrap\\UnityRTS\\PlanningAgent.Tests\\PlanningAgent.Tests.csproj"
+            "C:\\Git\\Warcrap\\UnityRTS\\Parity.Tests\\Parity.Tests.csproj": {
+              "projectPath": "C:\\Git\\Warcrap\\UnityRTS\\Parity.Tests\\Parity.Tests.csproj"
             }
           }
         }

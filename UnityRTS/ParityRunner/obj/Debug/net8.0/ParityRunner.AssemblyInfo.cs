@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("ParityRunner")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+459763e7646353d23222b8dc0d4baa11285f7892")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+7281f9dcb833e90c94e90625be866db610ef5270")]
 [assembly: System.Reflection.AssemblyProductAttribute("ParityRunner")]
 [assembly: System.Reflection.AssemblyTitleAttribute("ParityRunner")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

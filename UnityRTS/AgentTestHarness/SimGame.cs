@@ -153,35 +153,25 @@ namespace AgentTestHarness
 
         /// <summary>
         /// Advance the simulation by one tick.
-        /// </summary>
-        /// <summary>
-        /// Advance the simulation by one tick.
         ///
-        /// Tick order matches Unity's FixedUpdate → Update lifecycle:
-        /// 1. Advance in-progress tasks (FixedUpdate: movement, building, training, combat)
-        /// 2. Regenerate mana
-        /// 3. Remove dead units
-        /// 4. Call agent Update (agents see post-advance state, same as Unity)
-        /// 5. Process queued commands
+        /// Tick order matches Unity's FixedUpdate lifecycle:
+        ///   Phase 1: Process commands queued during PREVIOUS tick's agent Update
+        ///   Phase 2: Advance tasks (movement, building, training, combat, mana, death)
+        ///   Phase 3: Agent Update (agents see post-advance state, queue commands for next tick)
+        ///
+        /// In Unity, FixedUpdate fires before Update on the first frame, so the
+        /// first SimulateTick runs with an empty command queue. Agents issue their
+        /// first commands in the subsequent Update(), processed in the next FixedUpdate.
         /// </summary>
         public void Tick()
         {
-            // Tick order per Tick Engine GDD:
-            //   Phase 1: Process commands queued during PREVIOUS tick's Phase 5
-            //   Phase 2: Advance in-progress tasks
-            //   Phase 3: Regenerate mana
-            //   Phase 4: Remove dead units
-            //   Phase 5: Agent Update (agents see post-advance state, queue commands for NEXT tick)
-            //
-            // CurrentTick starts at 0, matching Unity's 0-based numbering.
-
             // Phase 1: Process commands queued during the PREVIOUS tick's Agent Update.
             ProcessCommandsSorted();
 
-            // Phase 2+3+4: Advance tasks/movement, mana regen, remove dead (all in shared TickEngine)
+            // Phase 2: Advance tasks/movement, mana regen, remove dead (shared TickEngine).
             AdvanceAllUnits();
 
-            // Phase 5: Agent Update (agents see post-advance state, queue commands for NEXT tick)
+            // Phase 3: Agent Update (agents see post-advance state, queue commands for next tick).
             for (int a = 0; a < 2; a++)
             {
                 actions[a].ClearPending();
