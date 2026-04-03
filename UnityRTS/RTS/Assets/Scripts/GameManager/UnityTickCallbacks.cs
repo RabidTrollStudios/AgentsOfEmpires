@@ -16,12 +16,21 @@ namespace GameManager
             if (unit is Unit u)
             {
                 // Sync legacy GridCells (for visual/debug code that still uses them)
-                var map = GameManager.Instance.Map;
-                var fromV = new Vector3Int(from.X, from.Y, 0);
-                var toV = new Vector3Int(to.X, to.Y, 0);
-                if (!map.Grid.IsPassageCell(from))
-                    map.GridCells[fromV.x, fromV.y].SetBuildable(true);
-                map.GridCells[toV.x, toV.y].SetBuildable(false);
+                var map = GameManager.Instance?.Map;
+                if (map != null && map.GridCells != null && map.Grid != null)
+                {
+                    var fromV = new Vector3Int(from.X, from.Y, 0);
+                    var toV = new Vector3Int(to.X, to.Y, 0);
+                    if (fromV.x >= 0 && fromV.x < map.MapSize.x && fromV.y >= 0 && fromV.y < map.MapSize.y)
+                    {
+                        if (!map.Grid.IsPassageCell(from))
+                            map.GridCells[fromV.x, fromV.y].SetBuildable(true);
+                    }
+                    if (toV.x >= 0 && toV.x < map.MapSize.x && toV.y >= 0 && toV.y < map.MapSize.y)
+                    {
+                        map.GridCells[toV.x, toV.y].SetBuildable(false);
+                    }
+                }
 
                 // Notify VSM of cell crossing for animation snapshot
                 u.NotifyVisualCellCrossed();

@@ -8,8 +8,19 @@
   </PropertyGroup>
 
   <Target Name="CopyToUnityPlugins" AfterTargets="Build">
-    <Copy SourceFiles="$(TargetDir)AgentSDK.dll" DestinationFiles="$(ProjectDir)..\RTS\Assets\Plugins\AgentSDK.dll" SkipUnchangedFiles="true" />
+    <Copy SourceFiles="$(TargetDir)AgentSDK.dll" DestinationFiles="$(ProjectDir)..\RTS\Assets\Plugins\AgentSDK.dll" SkipUnchangedFiles="false" />
     <Copy SourceFiles="$(TargetDir)AgentSDK.xml" DestinationFiles="$(ProjectDir)..\RTS\Assets\Plugins\AgentSDK.xml" SkipUnchangedFiles="true" Condition="Exists('$(TargetDir)AgentSDK.xml')" />
+  </Target>
+
+  <!-- Rebuild all downstream projects when AgentSDK changes.
+       Uses Exec to avoid circular MSBuild dependency (downstream projects reference AgentSDK). -->
+  <Target Name="RebuildDependents" AfterTargets="CopyToUnityPlugins">
+    <Exec Command="dotnet build &quot;$(ProjectDir)..\AgentTestHarness\AgentTestHarness.csproj&quot; --no-dependencies -c $(Configuration) -v q" />
+    <Exec Command="dotnet build &quot;$(ProjectDir)..\PlanningAgent\PlanningAgent.csproj&quot; --no-dependencies -c $(Configuration) -v q" />
+    <ItemGroup>
+      <OpponentSource Include="$(ProjectDir)..\Opponents\*.cs" />
+    </ItemGroup>
+    <Exec Command="dotnet build &quot;$(ProjectDir)..\Opponents\Opponents.csproj&quot; --no-dependencies -c $(Configuration) -v q -p:AgentName=%(OpponentSource.Filename) -p:AgentFile=%(OpponentSource.Filename).cs" />
   </Target>
 
 </Project>

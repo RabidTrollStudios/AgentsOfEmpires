@@ -216,7 +216,7 @@ namespace GameManager
 			{
 				Prefabs.RedScoreText.text = AgentWins[Constants.RED_ABBR].ToString();
 			}
-			TimeToDisplayBanner = 1.5f;
+			TimeToDisplayBanner = BannerDuration * 0.5f;
 		}
 
         private void DisplaySingleAgentResults()
