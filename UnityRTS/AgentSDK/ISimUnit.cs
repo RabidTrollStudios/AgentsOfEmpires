@@ -3,10 +3,10 @@ using System.Collections.Generic;
 namespace AgentSDK
 {
     /// <summary>
-    /// Abstraction over a game unit for the shared TickEngine.
+    /// Abstraction over a game unit for the shared StepEngine.
     /// Both SimUnit (headless) and Unity's Unit (MonoBehaviour) implement this.
     /// </summary>
-    public interface ITickUnit
+    public interface ISimUnit
     {
         // Identity (read-only)
         int UnitNbr { get; }
@@ -28,7 +28,7 @@ namespace AgentSDK
         float Mana { get; set; }
 
         // Movement
-        List<Position> TickPath { get; set; }
+        List<Position> SimPath { get; set; }
         int PathIndex { get; set; }
         float PathProgress { get; set; }
 

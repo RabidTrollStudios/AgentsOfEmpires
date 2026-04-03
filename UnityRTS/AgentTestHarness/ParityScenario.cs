@@ -15,6 +15,9 @@ namespace AgentTestHarness
         public Func<IPlanningAgent> Agent1Factory { get; }
         public int Ticks { get; }
 
+        /// <summary>
+        /// Create a scenario with an explicit tick count.
+        /// </summary>
         public ParityScenario(string name,
             Func<SimGameBuilder> builderFactory,
             Func<IPlanningAgent> agent0Factory,
@@ -26,6 +29,21 @@ namespace AgentTestHarness
             Agent0Factory = agent0Factory;
             Agent1Factory = agent1Factory;
             Ticks = ticks;
+        }
+
+        /// <summary>
+        /// Create a scenario with a duration in seconds.
+        /// Tick count is computed from the default SimConfig step rate (60 Hz).
+        /// </summary>
+        public static ParityScenario FromDuration(string name,
+            Func<SimGameBuilder> builderFactory,
+            Func<IPlanningAgent> agent0Factory,
+            Func<IPlanningAgent> agent1Factory,
+            float durationSeconds)
+        {
+            float tickDuration = new SimConfig().TickDuration;
+            int ticks = (int)Math.Ceiling(durationSeconds / tickDuration);
+            return new ParityScenario(name, builderFactory, agent0Factory, agent1Factory, ticks);
         }
 
         public override string ToString() => Name;

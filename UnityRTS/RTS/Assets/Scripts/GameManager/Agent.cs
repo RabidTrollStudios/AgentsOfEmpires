@@ -244,9 +244,11 @@ namespace GameManager
 		#region Public Methods
 
 		/// <summary>
-		/// Updates the agent each frame
+		/// Called once per simulation tick (from SimulateTick) to let the agent
+		/// observe post-advance state and issue commands for the next tick.
+		/// NOT called by Unity's MonoBehaviour update loop.
 		/// </summary>
-		public virtual void Update() { }
+		public virtual void TickUpdate() { }
 
 		/// <summary>
 		/// Record a command that failed during Phase 1 dispatch.

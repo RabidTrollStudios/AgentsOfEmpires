@@ -6,9 +6,9 @@ namespace AgentTestHarness
     /// <summary>
     /// Mutable unit state in the simulation. Mirrors the real game's Unit class
     /// but without MonoBehaviour/Unity dependencies.
-    /// Implements <see cref="ITickUnit"/> for the shared TickEngine.
+    /// Implements <see cref="ISimUnit"/> for the shared StepEngine.
     /// </summary>
-    public class SimUnit : ITickUnit
+    public class SimUnit : ISimUnit
     {
         // Identity
         public int UnitNbr { get; }
@@ -29,7 +29,7 @@ namespace AgentTestHarness
         public float Mana { get; set; }
 
         // Movement
-        public List<Position> TickPath { get; set; }
+        public List<Position> SimPath { get; set; }
         public int PathIndex { get; set; }
         public float PathProgress { get; set; }
 
@@ -59,14 +59,14 @@ namespace AgentTestHarness
         // Heal
         public int HealTargetNbr { get; set; }
 
-        // Local avoidance (not in ITickUnit but kept for backward compat)
+        // Local avoidance (not in ISimUnit but kept for backward compat)
         internal int LocalAvoidWaitTicks;
 
         // Legacy alias for code that still uses "Path"
         internal List<Position> Path
         {
-            get => TickPath;
-            set => TickPath = value;
+            get => SimPath;
+            set => SimPath = value;
         }
 
         // Legacy alias for BuildPlaced

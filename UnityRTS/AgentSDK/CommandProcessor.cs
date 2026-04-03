@@ -9,14 +9,14 @@ namespace AgentSDK
     /// </summary>
     public static class CommandProcessor
     {
-        public static CommandResult ProcessMove(ITickUnit unit, Position target, ITickWorld world)
+        public static CommandResult ProcessMove(ISimUnit unit, Position target, ISimWorld world)
         {
             if (!unit.CanMove) return CommandResult.UNIT_CANNOT_PERFORM_ACTION;
 
             // Allow MOVE to interrupt BUILD/REPAIR
             if (unit.CurrentAction == UnitAction.BUILD || unit.CurrentAction == UnitAction.REPAIR)
             {
-                TickEngine.SetIdle(unit);
+                StepEngine.SetIdle(unit);
             }
 
             // Try avoidUnits first, fall back to normal
@@ -26,13 +26,13 @@ namespace AgentSDK
             if (path.Count == 0) return CommandResult.NO_PATH_FOUND;
 
             unit.CurrentAction = UnitAction.MOVE;
-            unit.TickPath = path;
+            unit.SimPath = path;
             unit.PathIndex = 0;
             unit.PathProgress = 0f;
             return CommandResult.SUCCESS;
         }
 
-        public static CommandResult ProcessBuild(ITickUnit pawn, Position target, UnitType buildingType, ITickWorld world)
+        public static CommandResult ProcessBuild(ISimUnit pawn, Position target, UnitType buildingType, ISimWorld world)
         {
             // Validation
             bool areaBuildable = world.Grid.IsAreaBuildable(buildingType, target, pawn.GridPosition);
@@ -71,12 +71,12 @@ namespace AgentSDK
             pawn.BuildSite = target;
             pawn.BuildTargetNbr = building.UnitNbr;
             pawn.BuildTimer = 0f;
-            pawn.TickPath = path;
+            pawn.SimPath = path;
             pawn.PathIndex = 0;
             return CommandResult.SUCCESS;
         }
 
-        public static CommandResult ProcessGather(ITickUnit pawn, int mineNbr, int baseNbr, ITickWorld world)
+        public static CommandResult ProcessGather(ISimUnit pawn, int mineNbr, int baseNbr, ISimWorld world)
         {
             if (pawn.CurrentAction == UnitAction.BUILD || pawn.CurrentAction == UnitAction.REPAIR)
                 return CommandResult.UNIT_BUSY;
@@ -97,12 +97,12 @@ namespace AgentSDK
             pawn.GatherPhase = GatherPhase.TO_MINE;
             pawn.MiningTimer = 0f;
             pawn.GoldCarried = 0;
-            pawn.TickPath = path;
+            pawn.SimPath = path;
             pawn.PathIndex = 0;
             return CommandResult.SUCCESS;
         }
 
-        public static CommandResult ProcessTrain(ITickUnit building, UnitType unitType, ITickWorld world)
+        public static CommandResult ProcessTrain(ISimUnit building, UnitType unitType, ISimWorld world)
         {
             var result = CommandValidator.ValidateTrain(
                 building.UnitType, unitType,
@@ -118,7 +118,7 @@ namespace AgentSDK
             return CommandResult.SUCCESS;
         }
 
-        public static CommandResult ProcessAttack(ITickUnit attacker, int targetNbr, ITickWorld world)
+        public static CommandResult ProcessAttack(ISimUnit attacker, int targetNbr, ISimWorld world)
         {
             if (attacker.CurrentAction == UnitAction.BUILD || attacker.CurrentAction == UnitAction.REPAIR)
                 return CommandResult.UNIT_BUSY;
@@ -134,24 +134,24 @@ namespace AgentSDK
             if (TaskEngine.IsInAttackRange(attacker.UnitType, attacker.CenterPosition,
                     target.UnitType, target.CenterPosition))
             {
-                attacker.TickPath = null;
+                attacker.SimPath = null;
                 attacker.PathIndex = 0;
                 attacker.PathProgress = 0f;
             }
             else
             {
                 var path = world.FindPathToUnit(attacker.GridPosition, target.UnitType, target.GridPosition);
-                attacker.TickPath = path;
+                attacker.SimPath = path;
                 attacker.PathIndex = 0;
             }
             return CommandResult.SUCCESS;
         }
 
-        public static CommandResult ProcessRepair(ITickUnit pawn, int buildingNbr, ITickWorld world)
+        public static CommandResult ProcessRepair(ISimUnit pawn, int buildingNbr, ISimWorld world)
         {
             // Allow REPAIR to interrupt BUILD
             if (pawn.CurrentAction == UnitAction.BUILD)
-                TickEngine.SetIdle(pawn);
+                StepEngine.SetIdle(pawn);
 
             if (!pawn.CanBuild) return CommandResult.UNIT_CANNOT_PERFORM_ACTION;
 
@@ -164,12 +164,12 @@ namespace AgentSDK
 
             pawn.CurrentAction = UnitAction.REPAIR;
             pawn.RepairBuildingNbr = buildingNbr;
-            pawn.TickPath = path;
+            pawn.SimPath = path;
             pawn.PathIndex = 0;
             return CommandResult.SUCCESS;
         }
 
-        public static CommandResult ProcessHeal(ITickUnit monk, int targetNbr, ITickWorld world)
+        public static CommandResult ProcessHeal(ISimUnit monk, int targetNbr, ISimWorld world)
         {
             if (monk.CurrentAction == UnitAction.BUILD || monk.CurrentAction == UnitAction.REPAIR)
                 return CommandResult.UNIT_BUSY;
@@ -185,14 +185,14 @@ namespace AgentSDK
             // Check if already in range — skip pathfinding
             if (TaskEngine.IsInHealRange(monk.UnitType, monk.CenterPosition, target.CenterPosition))
             {
-                monk.TickPath = null;
+                monk.SimPath = null;
                 monk.PathIndex = 0;
                 monk.PathProgress = 0f;
             }
             else
             {
                 var path = world.FindPathToUnit(monk.GridPosition, target.UnitType, target.GridPosition);
-                monk.TickPath = path;
+                monk.SimPath = path;
                 monk.PathIndex = 0;
             }
             return CommandResult.SUCCESS;

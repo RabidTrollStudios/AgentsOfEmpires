@@ -67,8 +67,8 @@ namespace AgentTestHarness
 
             states[0] = new SimGameState(this, 0);
             states[1] = new SimGameState(this, 1);
-            actions[0] = new SimAgentActions(this, 0);
-            actions[1] = new SimAgentActions(this, 1);
+            actions[0] = new SimAgentActions(this, 0, () => CurrentTick);
+            actions[1] = new SimAgentActions(this, 1, () => CurrentTick);
         }
 
         private void ComputeDerivedConstants()
@@ -168,13 +168,14 @@ namespace AgentTestHarness
             // Phase 1: Process commands queued during the PREVIOUS tick's Agent Update.
             ProcessCommandsSorted();
 
-            // Phase 2: Advance tasks/movement, mana regen, remove dead (shared TickEngine).
+            // Phase 2: Advance tasks/movement, mana regen, remove dead (shared StepEngine).
             AdvanceAllUnits();
 
             // Phase 3: Agent Update (agents see post-advance state, queue commands for next tick).
             for (int a = 0; a < 2; a++)
             {
                 actions[a].ClearPending();
+                states[a].ClearPathCache();
                 IAgentActions agentActions = recorders != null ? (IAgentActions)recorders[a] : actions[a];
                 agents[a]?.Update(states[a], agentActions);
             }
@@ -240,7 +241,7 @@ namespace AgentTestHarness
             Units.Remove(unit.UnitNbr);
         }
 
-        /// <summary>Public wrapper for ITickWorld.RemoveUnit.</summary>
+        /// <summary>Public wrapper for ISimWorld.RemoveUnit.</summary>
         internal void RemoveUnitPublic(SimUnit unit) => RemoveUnit(unit);
 
         private void RemoveDeadUnits()

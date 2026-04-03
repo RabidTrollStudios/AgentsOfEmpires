@@ -26,20 +26,20 @@ namespace GameManager.GameElements
 			if (CanMove && GameManager.Instance != null && GameManager.Instance.IsPlaying)
 			{
 				// Capture movement direction for animation facing
-				if (_tickPath != null && pathIndex < _tickPath.Count)
+				if (_simPath != null && pathIndex < _simPath.Count)
 				{
 					Vector3 from = (Vector3)GridPosition + new Vector3(0.5f, 0f, 0);
-					Vector3 to = new Vector3(_tickPath[pathIndex].X + 0.5f, _tickPath[pathIndex].Y, 0);
+					Vector3 to = new Vector3(_simPath[pathIndex].X + 0.5f, _simPath[pathIndex].Y, 0);
 					velocity = Utility.SafeNormalize(to - from);
 				}
 
 				// Movement is now advanced per-tick in GameManager.SimulateTick()
 				// for deterministic parity with SimGame. Visual position is
 				// interpolated here from the authoritative grid state.
-				if (_tickPath != null && pathIndex < _tickPath.Count)
+				if (_simPath != null && pathIndex < _simPath.Count)
 				{
 					Vector3 from = (Vector3)GridPosition + new Vector3(0.5f, 0f, 0);
-					Vector3 to = new Vector3(_tickPath[pathIndex].X + 0.5f, _tickPath[pathIndex].Y, 0);
+					Vector3 to = new Vector3(_simPath[pathIndex].X + 0.5f, _simPath[pathIndex].Y, 0);
 					WorldPosition = Vector3.Lerp(from, to, PathProgress);
 				}
 				else
@@ -63,7 +63,7 @@ namespace GameManager.GameElements
 
 		/// <summary>
 		// All game logic (task dispatch, movement, mana regen, death) is handled
-		// by the shared TickEngine.AdvanceAllUnits() called from GameManager.FixedUpdate().
+		// by the shared StepEngine.AdvanceAllUnits() called from GameManager.FixedUpdate().
 		// Visual-only updates (animation, facing, debug UI) remain below.
 
 		/// <summary>
@@ -144,7 +144,7 @@ namespace GameManager.GameElements
 
 		/// <summary>
 		/// Spawn animation-timed visual effects (gold nuggets, arrows).
-		/// These are purely cosmetic — game logic is handled by TickEngine.
+		/// These are purely cosmetic — game logic is handled by StepEngine.
 		/// </summary>
 		private void UpdateVisualEffects()
 		{
@@ -605,7 +605,7 @@ namespace GameManager.GameElements
 
 		/// <summary>
 		/// Simulate one game tick. Delegates to GameManager.SimulateTick() which
-		/// runs TickEngine.AdvanceAllUnits for all units. Used by PlayMode tests.
+		/// runs StepEngine.AdvanceAllUnits for all units. Used by PlayMode tests.
 		/// </summary>
 		internal void TickFixedUpdate()
 		{
@@ -697,7 +697,7 @@ namespace GameManager.GameElements
 
 					if (pathFailCount >= 5)
 					{
-						// ATTACK pursuit handles its own retarget/idle logic in UpdateAttack;
+						// ATTACK pursuit handles its own retarget/idle logic in StepEngine;
 						// don't yank it to IDLE here — the target may still be shootable from range.
 						if (CurrentAction != UnitAction.ATTACK)
 							CurrentAction = UnitAction.IDLE;

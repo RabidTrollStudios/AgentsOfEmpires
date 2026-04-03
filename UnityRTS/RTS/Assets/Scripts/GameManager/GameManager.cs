@@ -393,8 +393,8 @@ namespace GameManager
 
 	
 			// Fixed timestep matching SimGame's TickDuration for exact parity.
-			// All game logic runs in FixedUpdate at this rate (20 Hz).
-			Time.fixedDeltaTime = 0.05f;
+			// All game logic runs in FixedUpdate at this rate (50 Hz).
+			Time.fixedDeltaTime = 0.02f;
 
 			string pathToDLLs = Application.dataPath + Path.AltDirectorySeparatorChar + ".."
 				+ Path.AltDirectorySeparatorChar + ".." + Path.AltDirectorySeparatorChar

@@ -29,7 +29,9 @@ namespace AgentTestHarness
         public bool IsPositionPassage(Position p) => Grid.IsPositionPassage(p);
         public bool IsAreaBuildable(UnitType unitType, Position anchor) => Grid.IsAreaBuildable(unitType, anchor);
         public bool IsAreaBuildable(UnitType unitType, Position anchor, Position exclude) => Grid.IsAreaBuildable(unitType, anchor, exclude);
+        public bool IsAreaBuildable(UnitType unitType, Position anchor, HashSet<Position> exclude) => Grid.IsAreaBuildable(unitType, anchor, exclude);
         public bool IsBoundedAreaBuildable(UnitType unitType, Position anchor) => Grid.IsBoundedAreaBuildable(unitType, anchor);
+        public bool IsBoundedAreaBuildable(UnitType unitType, Position anchor, HashSet<Position> exclude) => Grid.IsBoundedAreaBuildable(unitType, anchor, exclude);
 
         // --- Cell Modification (delegate to Grid) ---
 

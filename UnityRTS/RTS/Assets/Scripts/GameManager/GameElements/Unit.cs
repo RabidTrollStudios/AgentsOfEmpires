@@ -166,7 +166,7 @@ namespace GameManager.GameElements
 		private int localAvoidWaitFrames = 0;
 
 		/// <summary>True when the unit has a path to follow (movement in progress).</summary>
-		internal bool IsVisuallyMoving => _tickPath != null && pathIndex < _tickPath.Count;
+		internal bool IsVisuallyMoving => _simPath != null && pathIndex < _simPath.Count;
 
 		// Path visualization
 		private LineRenderer pathLineRenderer;

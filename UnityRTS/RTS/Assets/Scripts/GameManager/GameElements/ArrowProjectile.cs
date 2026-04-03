@@ -6,7 +6,7 @@ namespace GameManager.GameElements
 	/// <summary>
 	/// A visual-only arrow that arcs from an archer toward its target.
 	/// On impact it sticks for 0.5s (following mobile targets), then explodes.
-	/// Does not deal damage — damage is handled by the DPS system in Unit.Tasks.UpdateAttack().
+	/// Does not deal damage — damage is handled by the shared TickEngine.AdvanceAllUnits().
 	/// </summary>
 	public class ArrowProjectile : MonoBehaviour
 	{

@@ -186,7 +186,7 @@ namespace GameManager.GameElements
 
 		private void FaceTowardBuilding(Unit u)
 		{
-			var building = GameManager.Instance?.Units?.GetUnit(((ITickUnit)u).BuildTargetNbr);
+			var building = GameManager.Instance?.Units?.GetUnit(((ISimUnit)u).BuildTargetNbr);
 			if (building == null) return;
 			float dx = building.CenterGridPosition.x - CenterGridPosition.x;
 			if (dx > 0.01f) facingRight = true;

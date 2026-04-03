@@ -5,24 +5,24 @@ using AgentSDK;
 namespace AgentTestHarness
 {
     /// <summary>
-    /// Adapts SimGame to the <see cref="ITickWorld"/> interface
-    /// so the shared TickEngine can operate on SimGame's state.
+    /// Adapts SimGame to the <see cref="ISimWorld"/> interface
+    /// so the shared StepEngine can operate on SimGame's state.
     /// </summary>
-    internal class SimTickWorld : ITickWorld
+    internal class SimWorld : ISimWorld
     {
         private readonly SimGame game;
 
-        public SimTickWorld(SimGame game)
+        public SimWorld(SimGame game)
         {
             this.game = game;
         }
 
-        public ITickUnit GetUnit(int unitNbr)
+        public ISimUnit GetUnit(int unitNbr)
         {
             return game.Units.TryGetValue(unitNbr, out var u) ? u : null;
         }
 
-        public IEnumerable<ITickUnit> AllUnits => game.Units.Values;
+        public IEnumerable<ISimUnit> AllUnits => game.Units.Values;
 
         public GameGrid Grid => game.Map.Grid;
 
@@ -44,10 +44,10 @@ namespace AgentTestHarness
         public int GetGold(int agentNbr)
             => game.Gold[agentNbr];
 
-        public ITickUnit SpawnUnit(int ownerAgentNbr, UnitType unitType, Position pos, float health, bool isBuilt)
+        public ISimUnit SpawnUnit(int ownerAgentNbr, UnitType unitType, Position pos, float health, bool isBuilt)
             => game.PlaceUnit(ownerAgentNbr, unitType, pos, health, isBuilt);
 
-        public void RemoveUnit(ITickUnit unit)
+        public void RemoveUnit(ISimUnit unit)
         {
             if (unit is SimUnit su)
                 game.RemoveUnitPublic(su);
@@ -55,6 +55,6 @@ namespace AgentTestHarness
 
         public DerivedGameConstants Constants => game.derived;
 
-        public float TickDuration => game.Config.TickDuration;
+        public float StepDuration => game.Config.TickDuration;
     }
 }

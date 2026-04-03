@@ -258,13 +258,13 @@ namespace GameManager.GameElements
 				CurrentAction = UnitAction.GATHER;
 				gatherPhase = GatherPhase.TO_MINE;
 
-				// Path to the mine via the shared grid (syncs TickPath for MovementSystem)
-				var tickPath = GameManager.Instance.Map.Grid.FindPathToUnit(
+				// Path to the mine via the shared grid (syncs SimPath for MovementSystem)
+				var simPath = GameManager.Instance.Map.Grid.FindPathToUnit(
 					new AgentSDK.Position(GridPosition.x, GridPosition.y),
 					args.ResourceUnit.UnitType,
 					new AgentSDK.Position(args.ResourceUnit.GridPosition.x, args.ResourceUnit.GridPosition.y));
-				((AgentSDK.ITickUnit)this).TickPath = tickPath;
-				((AgentSDK.ITickUnit)this).PathIndex = 0;
+				((AgentSDK.ISimUnit)this).SimPath = simPath;
+				((AgentSDK.ISimUnit)this).PathIndex = 0;
 				GetCmdLog()?.LogCommand("GATHER", $"pawn#{UnitNbr} at {GridPosition} -> mine#{args.ResourceUnit.UnitNbr} at {args.ResourceUnit.GridPosition}, base#{args.BaseUnit.UnitNbr}",
 					$"STARTED (path={path.Count} steps)");
 			}

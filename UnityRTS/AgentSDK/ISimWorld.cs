@@ -3,16 +3,16 @@ using System.Collections.Generic;
 namespace AgentSDK
 {
     /// <summary>
-    /// World abstraction for the shared TickEngine.
+    /// World abstraction for the shared StepEngine.
     /// Provides unit lookup, pathfinding, gold management, and unit spawning.
     /// </summary>
-    public interface ITickWorld
+    public interface ISimWorld
     {
         /// <summary>Look up a unit by number. Returns null if not found or dead.</summary>
-        ITickUnit GetUnit(int unitNbr);
+        ISimUnit GetUnit(int unitNbr);
 
         /// <summary>All live units, for iteration.</summary>
-        IEnumerable<ITickUnit> AllUnits { get; }
+        IEnumerable<ISimUnit> AllUnits { get; }
 
         /// <summary>The shared game grid.</summary>
         GameGrid Grid { get; }
@@ -36,15 +36,15 @@ namespace AgentSDK
         int GetGold(int agentNbr);
 
         /// <summary>Spawn a new unit on the map.</summary>
-        ITickUnit SpawnUnit(int ownerAgentNbr, UnitType unitType, Position pos, float health, bool isBuilt);
+        ISimUnit SpawnUnit(int ownerAgentNbr, UnitType unitType, Position pos, float health, bool isBuilt);
 
         /// <summary>Remove a unit from the map (death).</summary>
-        void RemoveUnit(ITickUnit unit);
+        void RemoveUnit(ISimUnit unit);
 
         /// <summary>Game-speed-dependent constants.</summary>
         DerivedGameConstants Constants { get; }
 
-        /// <summary>Seconds per tick (0.05 at 20Hz).</summary>
-        float TickDuration { get; }
+        /// <summary>Seconds per step (0.05 at 20Hz).</summary>
+        float StepDuration { get; }
     }
 }

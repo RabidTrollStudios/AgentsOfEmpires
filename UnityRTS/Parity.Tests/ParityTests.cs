@@ -410,7 +410,7 @@ namespace Parity.Tests
             };
         }
 
-        public static ParityScenario IdleUnits() => new ParityScenario(
+        public static ParityScenario IdleUnits() => ParityScenario.FromDuration(
             "IdleUnits",
             () => new SimGameBuilder()
                 .WithMapSize(20, 20)
@@ -418,18 +418,18 @@ namespace Parity.Tests
                 .WithUnit(1, UnitType.PAWN, new Position(15, 15)),
             () => new DoNothingAgent(),
             () => new DoNothingAgent(),
-            100);
+            5f);
 
-        public static ParityScenario PawnMovesToTarget() => new ParityScenario(
+        public static ParityScenario PawnMovesToTarget() => ParityScenario.FromDuration(
             "PawnMovesToTarget",
             () => new SimGameBuilder()
                 .WithMapSize(20, 20)
                 .WithUnit(0, UnitType.PAWN, new Position(2, 10)),
             () => new MoveOnceAgent(new Position(18, 10)),
             () => new DoNothingAgent(),
-            200);
+            10f);
 
-        public static ParityScenario MultiUnitMovement() => new ParityScenario(
+        public static ParityScenario MultiUnitMovement() => ParityScenario.FromDuration(
             "MultiUnitMovement",
             () => new SimGameBuilder()
                 .WithMapSize(30, 30)
@@ -438,9 +438,9 @@ namespace Parity.Tests
                 .WithUnit(0, UnitType.PAWN, new Position(2, 25)),
             () => new MoveAllPawnsAgent(new Position(28, 15)),
             () => new DoNothingAgent(),
-            300);
+            15f);
 
-        public static ParityScenario MovementAroundWall() => new ParityScenario(
+        public static ParityScenario MovementAroundWall() => ParityScenario.FromDuration(
             "MovementAroundWall",
             () => new SimGameBuilder()
                 .WithMapSize(20, 20)
@@ -448,9 +448,9 @@ namespace Parity.Tests
                 .WithWall(new Position(10, 5), new Position(10, 15)),
             () => new MoveOnceAgent(new Position(15, 10)),
             () => new DoNothingAgent(),
-            300);
+            15f);
 
-        public static ParityScenario WarriorVsWarrior() => new ParityScenario(
+        public static ParityScenario WarriorVsWarrior() => ParityScenario.FromDuration(
             "WarriorVsWarrior",
             () => new SimGameBuilder()
                 .WithMapSize(30, 30)
@@ -458,9 +458,9 @@ namespace Parity.Tests
                 .WithUnit(1, UnitType.WARRIOR, new Position(25, 15)),
             () => new AttackFirstEnemyAgent(),
             () => new AttackFirstEnemyAgent(),
-            300);
+            15f);
 
-        public static ParityScenario ArcherVsArcher() => new ParityScenario(
+        public static ParityScenario ArcherVsArcher() => ParityScenario.FromDuration(
             "ArcherVsArcher",
             () => new SimGameBuilder()
                 .WithMapSize(30, 30)
@@ -468,9 +468,9 @@ namespace Parity.Tests
                 .WithUnit(1, UnitType.ARCHER, new Position(25, 15)),
             () => new AttackFirstEnemyAgent(),
             () => new AttackFirstEnemyAgent(),
-            300);
+            15f);
 
-        public static ParityScenario ArcherVsWarrior() => new ParityScenario(
+        public static ParityScenario ArcherVsWarrior() => ParityScenario.FromDuration(
             "ArcherVsWarrior",
             () => new SimGameBuilder()
                 .WithMapSize(30, 30)
@@ -478,9 +478,9 @@ namespace Parity.Tests
                 .WithUnit(1, UnitType.WARRIOR, new Position(25, 15)),
             () => new AttackFirstEnemyAgent(),
             () => new AttackFirstEnemyAgent(),
-            300);
+            15f);
 
-        public static ParityScenario MultiUnitCombat() => new ParityScenario(
+        public static ParityScenario MultiUnitCombat() => ParityScenario.FromDuration(
             "MultiUnitCombat",
             () => new SimGameBuilder()
                 .WithMapSize(30, 30)
@@ -491,9 +491,9 @@ namespace Parity.Tests
                 .WithUnit(1, UnitType.ARCHER, new Position(27, 15)),
             () => new AttackFirstEnemyAgent(),
             () => new AttackFirstEnemyAgent(),
-            400);
+            20f);
 
-        public static ParityScenario MutualCombat() => new ParityScenario(
+        public static ParityScenario MutualCombat() => ParityScenario.FromDuration(
             "MutualCombat",
             () => new SimGameBuilder()
                 .WithMapSize(30, 30)
@@ -503,9 +503,9 @@ namespace Parity.Tests
                 .WithUnit(1, UnitType.ARCHER, new Position(22, 15)),
             () => new AttackFirstEnemyAgent(),
             () => new AttackFirstEnemyAgent(),
-            400);
+            20f);
 
-        public static ParityScenario GatheringFullCycle() => new ParityScenario(
+        public static ParityScenario GatheringFullCycle() => ParityScenario.FromDuration(
             "GatheringFullCycle",
             () => new SimGameBuilder()
                 .WithMapSize(30, 30)
@@ -515,9 +515,9 @@ namespace Parity.Tests
                 .WithMine(new Position(20, 8)),
             () => new GatherAgent(),
             () => new DoNothingAgent(),
-            500);
+            25f);
 
-        public static ParityScenario MultiPawnGathering() => new ParityScenario(
+        public static ParityScenario MultiPawnGathering() => ParityScenario.FromDuration(
             "MultiPawnGathering",
             () => new SimGameBuilder()
                 .WithMapSize(30, 30)
@@ -529,9 +529,9 @@ namespace Parity.Tests
                 .WithMine(new Position(20, 8)),
             () => new GatherAgent(),
             () => new DoNothingAgent(),
-            500);
+            25f);
 
-        public static ParityScenario TrainPawnFromBase() => new ParityScenario(
+        public static ParityScenario TrainPawnFromBase() => ParityScenario.FromDuration(
             "TrainPawnFromBase",
             () => new SimGameBuilder()
                 .WithMapSize(20, 20)
@@ -539,9 +539,9 @@ namespace Parity.Tests
                 .WithUnit(0, UnitType.BASE, new Position(5, 10), isBuilt: true),
             () => new TrainOnceAgent(UnitType.PAWN),
             () => new DoNothingAgent(),
-            100);
+            5f);
 
-        public static ParityScenario TrainWarriorFromBarracks() => new ParityScenario(
+        public static ParityScenario TrainWarriorFromBarracks() => ParityScenario.FromDuration(
             "TrainWarriorFromBarracks",
             () => new SimGameBuilder()
                 .WithMapSize(20, 20)
@@ -550,9 +550,9 @@ namespace Parity.Tests
                 .WithUnit(0, UnitType.BARRACKS, new Position(10, 10), isBuilt: true),
             () => new TrainFromBarracksAgent(UnitType.WARRIOR),
             () => new DoNothingAgent(),
-            100);
+            5f);
 
-        public static ParityScenario BuildBarracks() => new ParityScenario(
+        public static ParityScenario BuildBarracks() => ParityScenario.FromDuration(
             "BuildBarracks",
             () => new SimGameBuilder()
                 .WithMapSize(30, 30)
@@ -561,9 +561,9 @@ namespace Parity.Tests
                 .WithUnit(0, UnitType.PAWN, new Position(6, 5)),
             () => new BuildOnceAgent(UnitType.BARRACKS, new Position(15, 15)),
             () => new DoNothingAgent(),
-            500);
+            25f);
 
-        public static ParityScenario FullEconomy() => new ParityScenario(
+        public static ParityScenario FullEconomy() => ParityScenario.FromDuration(
             "FullEconomy",
             () => new SimGameBuilder()
                 .WithMapSize(30, 30)
@@ -574,9 +574,9 @@ namespace Parity.Tests
                 .WithMine(new Position(20, 8)),
             () => new EconomyAgent(),
             () => new DoNothingAgent(),
-            800);
+            40f);
 
-        public static ParityScenario RepairBuilding() => new ParityScenario(
+        public static ParityScenario RepairBuilding() => ParityScenario.FromDuration(
             "RepairBuilding",
             () => new SimGameBuilder()
                 .WithMapSize(20, 20)
@@ -585,11 +585,11 @@ namespace Parity.Tests
                 .WithUnit(0, UnitType.PAWN, new Position(8, 10)),
             () => new RepairDamagedBaseAgent(),
             () => new DoNothingAgent(),
-            200);
+            10f);
 
         #region Collision avoidance scenarios
 
-        public static ParityScenario HeadOnCollision() => new ParityScenario(
+        public static ParityScenario HeadOnCollision() => ParityScenario.FromDuration(
             "HeadOnCollision",
             () => new SimGameBuilder()
                 .WithMapSize(20, 20)
@@ -597,11 +597,11 @@ namespace Parity.Tests
                 .WithUnit(1, UnitType.PAWN, new Position(18, 10)),
             () => new MoveOnceAgent(new Position(18, 10)),
             () => new MoveOnceAgent(new Position(2, 10)),
-            300);
+            15f);
 
         public static ParityScenario CorridorCongestion()
         {
-            return new ParityScenario(
+            return ParityScenario.FromDuration(
                 "CorridorCongestion",
                 () =>
                 {
@@ -619,10 +619,10 @@ namespace Parity.Tests
                 },
                 () => new MoveAllPawnsAgent(new Position(18, 10)),
                 () => new DoNothingAgent(),
-                600);
+                30f);
         }
 
-        public static ParityScenario AttackerBlockedByAlly() => new ParityScenario(
+        public static ParityScenario AttackerBlockedByAlly() => ParityScenario.FromDuration(
             "AttackerBlockedByAlly",
             () => new SimGameBuilder()
                 .WithMapSize(20, 20)
@@ -631,13 +631,13 @@ namespace Parity.Tests
                 .WithUnit(1, UnitType.WARRIOR, new Position(18, 10)),
             () => new AttackFirstEnemyAgent(),
             () => new DoNothingAgent(),
-            300);
+            15f);
 
         #endregion
 
         #region New unit type scenarios (LANCER, TOWER, MONK, MONASTERY)
 
-        public static ParityScenario TrainLancerFromTower() => new ParityScenario(
+        public static ParityScenario TrainLancerFromTower() => ParityScenario.FromDuration(
             "TrainLancerFromTower",
             () => new SimGameBuilder()
                 .WithMapSize(20, 20)
@@ -646,9 +646,9 @@ namespace Parity.Tests
                 .WithUnit(0, UnitType.TOWER, new Position(10, 10), isBuilt: true),
             () => new TrainFromTowerAgent(UnitType.LANCER),
             () => new DoNothingAgent(),
-            100);
+            5f);
 
-        public static ParityScenario TrainMonkFromMonastery() => new ParityScenario(
+        public static ParityScenario TrainMonkFromMonastery() => ParityScenario.FromDuration(
             "TrainMonkFromMonastery",
             () => new SimGameBuilder()
                 .WithMapSize(20, 20)
@@ -657,9 +657,9 @@ namespace Parity.Tests
                 .WithUnit(0, UnitType.MONASTERY, new Position(10, 10), isBuilt: true),
             () => new TrainFromMonasteryAgent(UnitType.MONK),
             () => new DoNothingAgent(),
-            100);
+            5f);
 
-        public static ParityScenario LancerVsWarrior() => new ParityScenario(
+        public static ParityScenario LancerVsWarrior() => ParityScenario.FromDuration(
             "LancerVsWarrior",
             () => new SimGameBuilder()
                 .WithMapSize(30, 30)
@@ -667,9 +667,9 @@ namespace Parity.Tests
                 .WithUnit(1, UnitType.WARRIOR, new Position(25, 15)),
             () => new LancerAttackAgent(),
             () => new AttackFirstEnemyAgent(),
-            300);
+            15f);
 
-        public static ParityScenario LancerVsArcher() => new ParityScenario(
+        public static ParityScenario LancerVsArcher() => ParityScenario.FromDuration(
             "LancerVsArcher",
             () => new SimGameBuilder()
                 .WithMapSize(30, 30)
@@ -677,9 +677,9 @@ namespace Parity.Tests
                 .WithUnit(1, UnitType.ARCHER, new Position(25, 15)),
             () => new LancerAttackAgent(),
             () => new AttackFirstEnemyAgent(),
-            300);
+            15f);
 
-        public static ParityScenario MonkHealsWarrior() => new ParityScenario(
+        public static ParityScenario MonkHealsWarrior() => ParityScenario.FromDuration(
             "MonkHealsWarrior",
             () => new SimGameBuilder()
                 .WithMapSize(20, 20)
@@ -688,9 +688,9 @@ namespace Parity.Tests
                 .WithUnit(1, UnitType.ARCHER, new Position(18, 10)),
             () => new HealAndFightAgent(),
             () => new AttackFirstEnemyAgent(),
-            400);
+            20f);
 
-        public static ParityScenario MixedArmyCombat() => new ParityScenario(
+        public static ParityScenario MixedArmyCombat() => ParityScenario.FromDuration(
             "MixedArmyCombat",
             () => new SimGameBuilder()
                 .WithMapSize(30, 30)
@@ -703,9 +703,9 @@ namespace Parity.Tests
                 .WithUnit(1, UnitType.LANCER, new Position(25, 18)),
             () => new HealAndFightAgent(),
             () => new AttackAllEnemiesAgent(),
-            500);
+            25f);
 
-        public static ParityScenario BuildTower() => new ParityScenario(
+        public static ParityScenario BuildTower() => ParityScenario.FromDuration(
             "BuildTower",
             () => new SimGameBuilder()
                 .WithMapSize(30, 30)
@@ -714,9 +714,9 @@ namespace Parity.Tests
                 .WithUnit(0, UnitType.PAWN, new Position(6, 5)),
             () => new BuildOnceAgent(UnitType.TOWER, new Position(15, 15)),
             () => new DoNothingAgent(),
-            500);
+            25f);
 
-        public static ParityScenario BuildMonastery() => new ParityScenario(
+        public static ParityScenario BuildMonastery() => ParityScenario.FromDuration(
             "BuildMonastery",
             () => new SimGameBuilder()
                 .WithMapSize(30, 30)
@@ -725,7 +725,7 @@ namespace Parity.Tests
                 .WithUnit(0, UnitType.PAWN, new Position(6, 5)),
             () => new BuildOnceAgent(UnitType.MONASTERY, new Position(15, 15)),
             () => new DoNothingAgent(),
-            500);
+            25f);
 
         #endregion
     }

@@ -46,7 +46,7 @@ namespace AgentTestHarness
                 if (!processedUnits.Add(cmd.UnitNbr))
                     continue; // skip — this unit already has a command this tick
 
-                if (tickWorld == null) tickWorld = new SimTickWorld(this);
+                if (tickWorld == null) tickWorld = new SimWorld(this);
                 CommandResult result;
                 switch (cmd.Type)
                 {

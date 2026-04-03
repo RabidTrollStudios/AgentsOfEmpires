@@ -381,6 +381,18 @@
             Check if the unit footprint plus a 1-cell border is all buildable.
             </summary>
         </member>
+        <member name="M:AgentSDK.GameGrid.IsAreaBuildable(AgentSDK.UnitType,AgentSDK.Position,System.Collections.Generic.HashSet{AgentSDK.Position})">
+            <summary>
+            Check if the full footprint is buildable, excluding a set of positions
+            (e.g., the agent's own pawns which can be moved out of the way).
+            </summary>
+        </member>
+        <member name="M:AgentSDK.GameGrid.IsBoundedAreaBuildable(AgentSDK.UnitType,AgentSDK.Position,System.Collections.Generic.HashSet{AgentSDK.Position})">
+            <summary>
+            Check if the unit footprint plus a 1-cell border is all buildable,
+            excluding a set of positions.
+            </summary>
+        </member>
         <member name="M:AgentSDK.GameGrid.SetCell(AgentSDK.Position,AgentSDK.CellState)">
             <summary>Set a single cell's state.</summary>
         </member>
@@ -694,68 +706,68 @@
             </summary>
             <param name="state">The final game state for this round</param>
         </member>
-        <member name="T:AgentSDK.ITickCallbacks">
+        <member name="T:AgentSDK.ISimCallbacks">
             <summary>
-            Callback interface for engine-specific side effects during tick processing.
+            Callback interface for engine-specific side effects during step processing.
             Unity implements this for visual effects, sounds, analytics.
-            SimGame uses <see cref="T:AgentSDK.NullTickCallbacks"/> (no-op).
+            SimGame uses <see cref="T:AgentSDK.NullSimCallbacks"/> (no-op).
             </summary>
         </member>
-        <member name="T:AgentSDK.NullTickCallbacks">
+        <member name="T:AgentSDK.NullSimCallbacks">
             <summary>
-            No-op implementation of <see cref="T:AgentSDK.ITickCallbacks"/> for headless simulation.
+            No-op implementation of <see cref="T:AgentSDK.ISimCallbacks"/> for headless simulation.
             </summary>
         </member>
-        <member name="T:AgentSDK.ITickUnit">
+        <member name="T:AgentSDK.ISimUnit">
             <summary>
-            Abstraction over a game unit for the shared TickEngine.
+            Abstraction over a game unit for the shared StepEngine.
             Both SimUnit (headless) and Unity's Unit (MonoBehaviour) implement this.
             </summary>
         </member>
-        <member name="T:AgentSDK.ITickWorld">
+        <member name="T:AgentSDK.ISimWorld">
             <summary>
-            World abstraction for the shared TickEngine.
+            World abstraction for the shared StepEngine.
             Provides unit lookup, pathfinding, gold management, and unit spawning.
             </summary>
         </member>
-        <member name="M:AgentSDK.ITickWorld.GetUnit(System.Int32)">
+        <member name="M:AgentSDK.ISimWorld.GetUnit(System.Int32)">
             <summary>Look up a unit by number. Returns null if not found or dead.</summary>
         </member>
-        <member name="P:AgentSDK.ITickWorld.AllUnits">
+        <member name="P:AgentSDK.ISimWorld.AllUnits">
             <summary>All live units, for iteration.</summary>
         </member>
-        <member name="P:AgentSDK.ITickWorld.Grid">
+        <member name="P:AgentSDK.ISimWorld.Grid">
             <summary>The shared game grid.</summary>
         </member>
-        <member name="M:AgentSDK.ITickWorld.FindPath(AgentSDK.Position,AgentSDK.Position)">
+        <member name="M:AgentSDK.ISimWorld.FindPath(AgentSDK.Position,AgentSDK.Position)">
             <summary>Find path between two positions.</summary>
         </member>
-        <member name="M:AgentSDK.ITickWorld.FindPathToUnit(AgentSDK.Position,AgentSDK.UnitType,AgentSDK.Position)">
+        <member name="M:AgentSDK.ISimWorld.FindPathToUnit(AgentSDK.Position,AgentSDK.UnitType,AgentSDK.Position)">
             <summary>Find path to a neighbor of the target unit.</summary>
         </member>
-        <member name="M:AgentSDK.ITickWorld.GetBuildablePositionsNearUnit(AgentSDK.UnitType,AgentSDK.Position)">
+        <member name="M:AgentSDK.ISimWorld.GetBuildablePositionsNearUnit(AgentSDK.UnitType,AgentSDK.Position)">
             <summary>Get OPEN positions adjacent to a unit (for spawning, adjacency checks).</summary>
         </member>
-        <member name="M:AgentSDK.ITickWorld.IsNeighborOfUnit(AgentSDK.Position,AgentSDK.UnitType,AgentSDK.Position)">
+        <member name="M:AgentSDK.ISimWorld.IsNeighborOfUnit(AgentSDK.Position,AgentSDK.UnitType,AgentSDK.Position)">
             <summary>Check if a position is adjacent to a unit.</summary>
         </member>
-        <member name="M:AgentSDK.ITickWorld.AddGold(System.Int32,System.Int32)">
+        <member name="M:AgentSDK.ISimWorld.AddGold(System.Int32,System.Int32)">
             <summary>Add gold to an agent's stockpile.</summary>
         </member>
-        <member name="M:AgentSDK.ITickWorld.GetGold(System.Int32)">
+        <member name="M:AgentSDK.ISimWorld.GetGold(System.Int32)">
             <summary>Get an agent's current gold.</summary>
         </member>
-        <member name="M:AgentSDK.ITickWorld.SpawnUnit(System.Int32,AgentSDK.UnitType,AgentSDK.Position,System.Single,System.Boolean)">
+        <member name="M:AgentSDK.ISimWorld.SpawnUnit(System.Int32,AgentSDK.UnitType,AgentSDK.Position,System.Single,System.Boolean)">
             <summary>Spawn a new unit on the map.</summary>
         </member>
-        <member name="M:AgentSDK.ITickWorld.RemoveUnit(AgentSDK.ITickUnit)">
+        <member name="M:AgentSDK.ISimWorld.RemoveUnit(AgentSDK.ISimUnit)">
             <summary>Remove a unit from the map (death).</summary>
         </member>
-        <member name="P:AgentSDK.ITickWorld.Constants">
+        <member name="P:AgentSDK.ISimWorld.Constants">
             <summary>Game-speed-dependent constants.</summary>
         </member>
-        <member name="P:AgentSDK.ITickWorld.TickDuration">
-            <summary>Seconds per tick (0.05 at 20Hz).</summary>
+        <member name="P:AgentSDK.ISimWorld.StepDuration">
+            <summary>Seconds per step (0.05 at 20Hz).</summary>
         </member>
         <member name="T:AgentSDK.SymmetryType">
             <summary>Symmetry mode for map generation.</summary>
@@ -876,7 +888,7 @@
             call this with their respective time deltas for identical results.
             </summary>
         </member>
-        <member name="M:AgentSDK.MovementSystem.Advance(AgentSDK.ITickUnit,System.Single,AgentSDK.ITickWorld,AgentSDK.ITickCallbacks)">
+        <member name="M:AgentSDK.MovementSystem.Advance(AgentSDK.ISimUnit,System.Single,AgentSDK.ISimWorld,AgentSDK.ISimCallbacks)">
             <summary>
             Advance a unit along its path by speed * dt.
             Crosses cell boundaries as needed, firing OnUnitMoved for each cell entered.
@@ -1102,6 +1114,37 @@
         <member name="M:AgentSDK.Position.ToString">
             <inheritdoc/>
         </member>
+        <member name="T:AgentSDK.SimulationRunner">
+            <summary>
+            Shared simulation step runner. Orchestrates the full sequence of
+            task advancement and movement in a single deterministic call.
+            Both Unity (via FixedUpdate) and SimGame call this to guarantee
+            identical game logic execution order.
+            </summary>
+        </member>
+        <member name="M:AgentSDK.SimulationRunner.AdvanceStep(AgentSDK.ISimWorld,AgentSDK.ISimCallbacks)">
+            <summary>
+            Advance the simulation by one fixed step:
+            1. Task logic (StepEngine.AdvanceAllUnits — actions, mana, death)
+            2. Movement (MovementSystem.Advance per unit, sorted by UnitNbr)
+            </summary>
+        </member>
+        <member name="T:AgentSDK.StepEngine">
+            <summary>
+            Shared game step engine. Processes all unit tasks and movement
+            in deterministic order. Both Unity and SimGame call this to
+            guarantee identical game logic.
+            </summary>
+        </member>
+        <member name="M:AgentSDK.StepEngine.AdvanceAllUnits(AgentSDK.ISimWorld,AgentSDK.ISimCallbacks)">
+            <summary>
+            Advance all units one step: task logic + movement per unit,
+            in deterministic UnitNbr order.
+            </summary>
+        </member>
+        <member name="M:AgentSDK.StepEngine.SetIdle(AgentSDK.ISimUnit)">
+            <summary>Transition a unit to IDLE, clearing all movement and target state.</summary>
+        </member>
         <member name="T:AgentSDK.TaskEngine">
              <summary>
              Shared game-rule logic for unit tasks. Both the Unity engine and SimGame
@@ -1219,22 +1262,6 @@
             <summary>
             Regenerate mana for a unit per tick.
             </summary>
-        </member>
-        <member name="T:AgentSDK.TickEngine">
-            <summary>
-            Shared game tick engine. Processes all unit tasks and movement
-            in deterministic order. Both Unity and SimGame call this to
-            guarantee identical game logic.
-            </summary>
-        </member>
-        <member name="M:AgentSDK.TickEngine.AdvanceAllUnits(AgentSDK.ITickWorld,AgentSDK.ITickCallbacks)">
-            <summary>
-            Advance all units one tick: task logic + movement per unit,
-            in deterministic UnitNbr order.
-            </summary>
-        </member>
-        <member name="M:AgentSDK.TickEngine.SetIdle(AgentSDK.ITickUnit)">
-            <summary>Transition a unit to IDLE, clearing all movement and target state.</summary>
         </member>
         <member name="T:AgentSDK.UnitAction">
             <summary>

@@ -7,16 +7,55 @@ namespace AgentTestHarness
     /// <summary>
     /// Read-only view of the simulation state for a specific agent.
     /// Implements IGameState by delegating to SimGame and SimMap.
+    ///
+    /// Includes per-tick pathfinding cache/budget and buildability pawn filtering
+    /// to match Unity's GameStateAdapter for cross-engine parity.
     /// </summary>
     public class SimGameState : IGameState
     {
         private readonly SimGame game;
         private readonly int agentNbr;
 
+        // Per-tick pathfinding cache and rate limiting — mirrors GameStateAdapter
+        private const int MAX_PATH_CALLS_PER_TICK = 20;
+        private int lastCacheTick = -1;
+        private int pathCallsThisTick = 0;
+        private Dictionary<(Position, Position), IReadOnlyList<Position>> pathBetweenCache
+            = new Dictionary<(Position, Position), IReadOnlyList<Position>>();
+        private Dictionary<(Position, UnitType, Position), IReadOnlyList<Position>> pathToUnitCache
+            = new Dictionary<(Position, UnitType, Position), IReadOnlyList<Position>>();
+        private static readonly IReadOnlyList<Position> EmptyPath = new List<Position>();
+
         internal SimGameState(SimGame game, int agentNbr)
         {
             this.game = game;
             this.agentNbr = agentNbr;
+        }
+
+        /// <summary>
+        /// Clear the path cache at the start of each tick.
+        /// Called by SimGame.Tick() before agent update.
+        /// </summary>
+        internal void ClearPathCache()
+        {
+            pathCallsThisTick = 0;
+            pathBetweenCache.Clear();
+            pathToUnitCache.Clear();
+        }
+
+        /// <summary>
+        /// Reset cache if we're on a new tick (fallback — ClearPathCache is the primary mechanism).
+        /// </summary>
+        private void ResetCacheIfNewTick()
+        {
+            int currentTick = game.CurrentTick;
+            if (currentTick != lastCacheTick)
+            {
+                lastCacheTick = currentTick;
+                pathCallsThisTick = 0;
+                pathBetweenCache.Clear();
+                pathToUnitCache.Clear();
+            }
         }
 
         public int MyAgentNbr => agentNbr;
@@ -62,29 +101,78 @@ namespace AgentTestHarness
             return game.Map.IsPositionBuildable(position);
         }
 
+        /// <summary>
+        /// Collects grid positions of all this agent's pawns.
+        /// These are excluded from buildability checks because the agent can move them.
+        /// Matches Unity's GameStateAdapter.GetMyPawnPositions().
+        /// </summary>
+        private HashSet<Position> GetMyPawnPositions()
+        {
+            var positions = new HashSet<Position>();
+            foreach (var unit in game.Units.Values)
+            {
+                if (unit.OwnerAgentNbr == agentNbr && unit.UnitType == UnitType.PAWN)
+                    positions.Add(unit.GridPosition);
+            }
+            return positions;
+        }
+
         public bool IsAreaBuildable(UnitType unitType, Position position)
         {
-            return game.Map.IsAreaBuildable(unitType, position);
+            return game.Map.IsAreaBuildable(unitType, position, GetMyPawnPositions());
         }
 
         public bool IsBoundedAreaBuildable(UnitType unitType, Position position)
         {
-            return game.Map.IsBoundedAreaBuildable(unitType, position);
+            return game.Map.IsBoundedAreaBuildable(unitType, position, GetMyPawnPositions());
         }
 
         public IReadOnlyList<Position> GetPathBetween(Position start, Position end)
         {
-            return game.Map.FindPath(start, end);
+            ResetCacheIfNewTick();
+
+            var key = (start, end);
+            if (pathBetweenCache.TryGetValue(key, out var cached))
+                return cached;
+
+            if (pathCallsThisTick >= MAX_PATH_CALLS_PER_TICK)
+                return EmptyPath;
+
+            pathCallsThisTick++;
+            var result = game.Map.FindPath(start, end);
+            pathBetweenCache[key] = result;
+            return result;
         }
 
         public IReadOnlyList<Position> GetPathBetween(Position start, Position end, bool avoidUnits)
         {
+            if (!avoidUnits)
+                return GetPathBetween(start, end);
+
+            ResetCacheIfNewTick();
+
+            if (pathCallsThisTick >= MAX_PATH_CALLS_PER_TICK)
+                return EmptyPath;
+
+            pathCallsThisTick++;
             return game.Map.FindPath(start, end, avoidUnits);
         }
 
         public IReadOnlyList<Position> GetPathToUnit(Position start, UnitType unitType, Position unitPosition)
         {
-            return game.Map.FindPathToUnit(start, unitType, unitPosition);
+            ResetCacheIfNewTick();
+
+            var key = (start, unitType, unitPosition);
+            if (pathToUnitCache.TryGetValue(key, out var cached))
+                return cached;
+
+            if (pathCallsThisTick >= MAX_PATH_CALLS_PER_TICK)
+                return EmptyPath;
+
+            pathCallsThisTick++;
+            var result = game.Map.FindPathToUnit(start, unitType, unitPosition);
+            pathToUnitCache[key] = result;
+            return result;
         }
 
         public IReadOnlyList<Position> GetBuildablePositionsNearUnit(UnitType unitType, Position unitPosition)
@@ -94,7 +182,22 @@ namespace AgentTestHarness
 
         public IReadOnlyList<Position> FindProspectiveBuildPositions(UnitType unitType)
         {
-            return game.Map.FindProspectiveBuildPositions(unitType);
+            var pawnPositions = GetMyPawnPositions();
+            var result = new List<Position>();
+            var size = game.Map.Size;
+            for (int i = 0; i < size.X; ++i)
+            {
+                for (int j = 0; j < size.Y; ++j)
+                {
+                    var pos = new Position(i, j);
+                    if (game.Map.IsPositionValid(pos)
+                        && game.Map.IsBoundedAreaBuildable(unitType, pos, pawnPositions))
+                    {
+                        result.Add(pos);
+                    }
+                }
+            }
+            return result;
         }
 
         public IReadOnlyList<FailedCommand> GetFailedCommands()

@@ -157,6 +157,46 @@ namespace AgentSDK
             return true;
         }
 
+        /// <summary>
+        /// Check if the full footprint is buildable, excluding a set of positions
+        /// (e.g., the agent's own pawns which can be moved out of the way).
+        /// </summary>
+        public bool IsAreaBuildable(UnitType unitType, Position anchor, HashSet<Position> excludePositions)
+        {
+            var size = GameConstants.UNIT_SIZE[unitType];
+            for (int i = 0; i < size.X; i++)
+            {
+                for (int j = 0; j < size.Y; j++)
+                {
+                    var cell = new Position(anchor.X + i, anchor.Y + j);
+                    if (excludePositions != null && excludePositions.Contains(cell)) continue;
+                    if (!IsPositionBuildable(cell))
+                        return false;
+                }
+            }
+            return true;
+        }
+
+        /// <summary>
+        /// Check if the unit footprint plus a 1-cell border is all buildable,
+        /// excluding a set of positions.
+        /// </summary>
+        public bool IsBoundedAreaBuildable(UnitType unitType, Position anchor, HashSet<Position> excludePositions)
+        {
+            var size = GameConstants.UNIT_SIZE[unitType];
+            for (int i = -1; i <= size.X; i++)
+            {
+                for (int j = -1; j <= size.Y; j++)
+                {
+                    var cell = new Position(anchor.X + i, anchor.Y + j);
+                    if (excludePositions != null && excludePositions.Contains(cell)) continue;
+                    if (!IsPositionBuildable(cell))
+                        return false;
+                }
+            }
+            return true;
+        }
+
         #endregion
 
         #region Cell Modification

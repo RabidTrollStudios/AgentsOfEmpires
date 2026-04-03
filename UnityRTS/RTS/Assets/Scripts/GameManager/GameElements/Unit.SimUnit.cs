@@ -5,20 +5,20 @@ using UnityEngine;
 namespace GameManager.GameElements
 {
     /// <summary>
-    /// ITickUnit implementation for Unity's Unit.
+    /// ISimUnit implementation for Unity's Unit.
     /// Bridges between Unity types (Vector3Int) and AgentSDK types (Position).
     /// </summary>
-    public partial class Unit : ITickUnit
+    public partial class Unit : ISimUnit
     {
         /// <summary>
-        /// Post-tick visual update. Mana regen and death are now in shared TickEngine.
+        /// Post-tick visual update. Mana regen and death are now in shared StepEngine.
         /// Only Unity-specific reference caching remains.
         /// </summary>
         internal void PostTickUpdate()
         {
             if (GameManager.Instance == null || !GameManager.Instance.IsPlaying) return;
 
-            // Update cached Unity references (not in shared TickEngine)
+            // Update cached Unity references (not in shared StepEngine)
             MineUnit = GameManager.Instance.Units.GetUnit(mineUnit);
             BaseUnit = GameManager.Instance.Units.GetUnit(baseUnit);
         }
@@ -34,30 +34,30 @@ namespace GameManager.GameElements
         }
 
         // Explicit implementations for properties with non-public setters
-        float ITickUnit.Health { get => Health; set => Health = value; }
-        bool ITickUnit.IsBuilt { get => IsBuilt; set => IsBuilt = value; }
-        UnitAction ITickUnit.CurrentAction { get => CurrentAction; set => CurrentAction = value; }
-        float ITickUnit.Mana { get => Mana; set => Mana = value; }
+        float ISimUnit.Health { get => Health; set => Health = value; }
+        bool ISimUnit.IsBuilt { get => IsBuilt; set => IsBuilt = value; }
+        UnitAction ISimUnit.CurrentAction { get => CurrentAction; set => CurrentAction = value; }
+        float ISimUnit.Mana { get => Mana; set => Mana = value; }
 
         // GridPosition — convert between Vector3Int and Position
-        Position ITickUnit.GridPosition
+        Position ISimUnit.GridPosition
         {
             get => new Position(GridPosition.x, GridPosition.y);
             set => GridPosition = new Vector3Int(value.X, value.Y, 0);
         }
 
-        Position ITickUnit.CenterPosition =>
+        Position ISimUnit.CenterPosition =>
             AgentSDK.TaskEngine.ComputeCenterPosition(UnitType, new Position(GridPosition.x, GridPosition.y));
 
-        // Movement — TickPath stores a separate List<Position> that TickEngine uses directly.
+        // Movement — SimPath stores a separate List<Position> that StepEngine uses directly.
         // The old List<Vector3Int> path is kept in sync for visual code.
-        private List<Position> _tickPath;
-        List<Position> ITickUnit.TickPath
+        private List<Position> _simPath;
+        List<Position> ISimUnit.SimPath
         {
-            get => _tickPath;
+            get => _simPath;
             set
             {
-                _tickPath = value;
+                _simPath = value;
                 // Sync legacy path for visual code
                 path.Clear();
                 if (value != null)
@@ -75,18 +75,18 @@ namespace GameManager.GameElements
                     _vsm?.NotifyMoveStarted(CurrentAction, gatherPhase, buildPhase);
             }
         }
-        int ITickUnit.PathIndex { get => pathIndex; set => pathIndex = value; }
-        float ITickUnit.PathProgress { get => PathProgress; set => PathProgress = value; }
+        int ISimUnit.PathIndex { get => pathIndex; set => pathIndex = value; }
+        float ISimUnit.PathProgress { get => PathProgress; set => PathProgress = value; }
 
         // Training — map to taskTime/taskUnitType
-        float ITickUnit.TrainTimer { get => taskTime; set => taskTime = value; }
-        UnitType ITickUnit.TrainTarget { get => taskUnitType; set => taskUnitType = value; }
+        float ISimUnit.TrainTimer { get => taskTime; set => taskTime = value; }
+        UnitType ISimUnit.TrainTarget { get => taskUnitType; set => taskUnitType = value; }
 
         // Building — BuildTimer stored on pawn as taskTime (same as training)
-        float ITickUnit.BuildTimer { get => taskTime; set => taskTime = value; }
-        UnitType ITickUnit.BuildTarget { get => taskUnitType; set => taskUnitType = value; }
+        float ISimUnit.BuildTimer { get => taskTime; set => taskTime = value; }
+        UnitType ISimUnit.BuildTarget { get => taskUnitType; set => taskUnitType = value; }
         private Position _buildSite;
-        Position ITickUnit.BuildSite
+        Position ISimUnit.BuildSite
         {
             get => currentBuilding != null
                 ? new Position(currentBuilding.GetComponent<Unit>().GridPosition.x,
@@ -94,7 +94,7 @@ namespace GameManager.GameElements
                 : _buildSite;
             set => _buildSite = value;
         }
-        int ITickUnit.BuildTargetNbr
+        int ISimUnit.BuildTargetNbr
         {
             get => currentBuilding != null ? currentBuilding.GetComponent<Unit>().UnitNbr : -1;
             set
@@ -112,21 +112,21 @@ namespace GameManager.GameElements
         }
 
         // Gathering
-        int ITickUnit.GatherMineNbr { get => mineUnit; set => mineUnit = value; }
-        int ITickUnit.GatherBaseNbr { get => baseUnit; set => baseUnit = value; }
-        GatherPhase ITickUnit.GatherPhase
+        int ISimUnit.GatherMineNbr { get => mineUnit; set => mineUnit = value; }
+        int ISimUnit.GatherBaseNbr { get => baseUnit; set => baseUnit = value; }
+        GatherPhase ISimUnit.GatherPhase
         {
             get => gatherPhase;
             set => gatherPhase = value;
         }
-        float ITickUnit.MiningTimer { get => minedGold; set => minedGold = value; }
-        int ITickUnit.GoldCarried { get => totalGold; set => totalGold = value; }
+        float ISimUnit.MiningTimer { get => minedGold; set => minedGold = value; }
+        int ISimUnit.GoldCarried { get => totalGold; set => totalGold = value; }
 
         // Combat
-        int ITickUnit.AttackTargetNbr { get => attackUnitNbr; set => attackUnitNbr = value; }
+        int ISimUnit.AttackTargetNbr { get => attackUnitNbr; set => attackUnitNbr = value; }
 
         // Repair
-        int ITickUnit.RepairBuildingNbr
+        int ISimUnit.RepairBuildingNbr
         {
             get => currentBuilding != null ? currentBuilding.GetComponent<Unit>().UnitNbr : -1;
             set
@@ -144,6 +144,6 @@ namespace GameManager.GameElements
         }
 
         // Heal
-        int ITickUnit.HealTargetNbr { get => healTargetNbr; set => healTargetNbr = value; }
+        int ISimUnit.HealTargetNbr { get => healTargetNbr; set => healTargetNbr = value; }
     }
 }

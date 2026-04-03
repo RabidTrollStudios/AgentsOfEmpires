@@ -17,13 +17,13 @@ namespace AgentSDK
         /// Handles collision: BlockedByTerrain triggers repath, BlockedByUnit at final
         /// cell clears path for task logic to handle, mid-path BlockedByUnit passes through.
         /// </summary>
-        public static void Advance(ITickUnit unit, float dt, ITickWorld world, ITickCallbacks callbacks)
+        public static void Advance(ISimUnit unit, float dt, ISimWorld world, ISimCallbacks callbacks)
         {
-            // Cache TickPath in a local to avoid repeated interface dispatch.
-            // The ITickUnit.TickPath property goes through explicit interface
+            // Cache SimPath in a local to avoid repeated interface dispatch.
+            // The ISimUnit.SimPath property goes through explicit interface
             // implementation on Unity's MonoBehaviour, and repeated virtual calls
             // can return null if the setter fires between reads.
-            var path = unit.TickPath;
+            var path = unit.SimPath;
             if (path == null || unit.PathIndex >= path.Count) return;
             if (!unit.CanMove) return;
             if (dt <= 0f) return;
@@ -35,7 +35,7 @@ namespace AgentSDK
             if (grid == null)
                 throw new NullReferenceException($"[MovementSystem] world.Grid is null for unit {unit.UnitNbr}");
 
-            float speed = constants.MovingSpeed[unit.UnitType] / world.TickDuration;
+            float speed = constants.MovingSpeed[unit.UnitType] / world.StepDuration;
             if (speed <= 0f) return;
             float remainingDist = speed * dt;
 
@@ -66,7 +66,7 @@ namespace AgentSDK
                         var repath = world.FindPath(unit.GridPosition, dest);
                         if (repath.Count > 0)
                         {
-                            unit.TickPath = repath;
+                            unit.SimPath = repath;
                             path = repath;
                             unit.PathIndex = 0;
                             callbacks.OnUnitRepath(unit, repath);
@@ -74,10 +74,10 @@ namespace AgentSDK
                         else
                         {
                             if (unit.CurrentAction == UnitAction.MOVE)
-                                TickEngine.SetIdle(unit);
+                                StepEngine.SetIdle(unit);
                             else
                             {
-                                unit.TickPath = null;
+                                unit.SimPath = null;
                                 unit.PathIndex = 0;
                             }
                         }
@@ -91,10 +91,10 @@ namespace AgentSDK
                             // Final cell blocked — let task logic handle repath
                             unit.PathProgress = 0f;
                             if (unit.CurrentAction == UnitAction.MOVE)
-                                TickEngine.SetIdle(unit);
+                                StepEngine.SetIdle(unit);
                             else
                             {
-                                unit.TickPath = null;
+                                unit.SimPath = null;
                                 unit.PathIndex = 0;
                             }
                             return;
@@ -114,14 +114,14 @@ namespace AgentSDK
                     callbacks.OnUnitMoved(unit, oldPos, nextCell);
 
                     // Re-read path — callback side effects or setter may have changed it
-                    path = unit.TickPath;
+                    path = unit.SimPath;
                     if (path == null) return;
 
                     // Path complete?
                     if (unit.PathIndex >= path.Count)
                     {
                         if (unit.CurrentAction == UnitAction.MOVE)
-                            TickEngine.SetIdle(unit);
+                            StepEngine.SetIdle(unit);
                         return;
                     }
                 }

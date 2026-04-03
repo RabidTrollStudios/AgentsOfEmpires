@@ -12,82 +12,51 @@ namespace GameManager
 		#region Game Loop
 
 		/// <summary>
-		/// Fixed-timestep tick: process deferred commands before units advance.
-		/// Runs at 0.05s intervals (matching SimGame's tick rate).
+		/// Fixed-timestep simulation: process deferred commands before units advance.
+		/// Runs at 50 Hz (matching SimGame's step rate and Unity's default fixedDeltaTime).
 		/// Must run BEFORE individual Unit.FixedUpdate() calls — set via
 		/// [DefaultExecutionOrder(-100)] on the GameManager class.
 		/// </summary>
-		private UnityTickWorld unityTickWorld;
-		private UnityTickCallbacks unityTickCallbacks;
+		private UnitySimWorld unitySimWorld;
+		private UnitySimCallbacks unitySimCallbacks;
 
-		/// <summary>Get the shared tick world adapter (lazy-initialized).</summary>
-		internal AgentSDK.ITickWorld GetTickWorld()
+		/// <summary>Get the shared sim world adapter (lazy-initialized).</summary>
+		internal AgentSDK.ISimWorld GetTickWorld()
 		{
-			if (unityTickWorld == null)
-				unityTickWorld = new UnityTickWorld();
-			return unityTickWorld;
+			if (unitySimWorld == null)
+				unitySimWorld = new UnitySimWorld();
+			return unitySimWorld;
 		}
 
-		/// <summary>Get the shared tick callbacks adapter (lazy-initialized).</summary>
-		internal AgentSDK.ITickCallbacks GetTickCallbacks()
+		/// <summary>Get the shared sim callbacks adapter (lazy-initialized).</summary>
+		internal AgentSDK.ISimCallbacks GetTickCallbacks()
 		{
-			if (unityTickCallbacks == null)
-				unityTickCallbacks = new UnityTickCallbacks();
-			return unityTickCallbacks;
+			if (unitySimCallbacks == null)
+				unitySimCallbacks = new UnitySimCallbacks();
+			return unitySimCallbacks;
 		}
 
 		/// <summary>
-		/// Run one game tick: process commands, advance all units via TickEngine,
-		/// then run post-tick updates. Used by tests to simulate ticks without
-		/// waiting for Unity's FixedUpdate cycle.
+		/// Run one game tick: process commands, advance all units via shared
+		/// SimulationRunner, then run post-tick updates. Used by tests to
+		/// simulate ticks without waiting for Unity's FixedUpdate cycle.
 		/// </summary>
 		internal void SimulateTick()
 		{
 			// Phase 1: Process commands queued during previous tick's Agent Update
 			DeferredCommandQueue.ProcessAll();
 
-			if (unityTickWorld == null)
-			{
-				unityTickWorld = new UnityTickWorld();
-			}
-			if (unityTickCallbacks == null)
-			{
-				unityTickCallbacks = new UnityTickCallbacks();
-			}
-			
-			// Phase 2: Advance all units via shared TickEngine (task logic)
-			AgentSDK.TickEngine.AdvanceAllUnits(unityTickWorld, unityTickCallbacks);
+			if (unitySimWorld == null)
+				unitySimWorld = new UnitySimWorld();
+			if (unitySimCallbacks == null)
+				unitySimCallbacks = new UnitySimCallbacks();
 
-			// Phase 2b: Movement — advance all units by one tick's worth of distance
-			// Must run per-tick (not per-frame) for deterministic parity with SimGame.
-			{
-				var moveUnits = unitManager.GetAllUnits();
-				var moveKeys = new System.Collections.Generic.List<int>(moveUnits.Keys);
-				moveKeys.Sort();
-				foreach (int key in moveKeys)
-				{
-					if (!moveUnits.TryGetValue(key, out var go) || go == null) continue;
-					var unit = go.GetComponent<GameElements.Unit>();
-					if (unit == null) continue;
-					try
-					{
-						AgentSDK.MovementSystem.Advance(unit, UnityEngine.Time.fixedDeltaTime, unityTickWorld, unityTickCallbacks);
-					}
-					catch (System.Exception ex)
-					{
-						var tu = (AgentSDK.ITickUnit)unit;
-						UnityEngine.Debug.LogError(
-							$"[MovementSystem NRE] unit={unit.UnitNbr} type={unit.UnitType} " +
-							$"action={unit.CurrentAction} canMove={tu.CanMove} " +
-							$"path={tu.TickPath?.Count} pi={tu.PathIndex} " +
-							$"pos=({tu.GridPosition.X},{tu.GridPosition.Y}) " +
-							$"pp={tu.PathProgress}" +
-							$"\nFull exception:\n{ex}");
-					}
-				}
-			}
+			// Phase 2: Advance all units — shared SimulationRunner handles
+			// StepEngine (task logic, mana, death) + MovementSystem (per-unit
+			// movement) in deterministic order, identical to SimGame.
+			AgentSDK.SimulationRunner.AdvanceStep(unitySimWorld, unitySimCallbacks);
 
-			// Phase 3: Post-tick updates
+			// Phase 3: Post-tick updates (Unity-specific: sync cached references)
 			var allUnits = unitManager.GetAllUnits();
 			var sortedKeys = new System.Collections.Generic.List<int>(allUnits.Keys);
 			sortedKeys.Sort();
@@ -97,6 +66,19 @@ namespace GameManager
 				var unit = go.GetComponent<GameElements.Unit>();
 				if (unit != null)
 					unit.PostTickUpdate();
+			}
+
+			// Phase 4: Agent Update — agents observe post-advance state and
+			// queue commands for the next tick. Matches SimGame's tick order:
+			// ProcessCommands → AdvanceAllUnits → AgentUpdate.
+			if (Agents != null)
+			{
+				foreach (var agentGo in Agents.Values)
+				{
+					var agent = agentGo.GetComponent<AgentController>()?.Agent;
+					if (agent != null && agent.gameObject.activeInHierarchy)
+						agent.TickUpdate();
+				}
 			}
 		}
 

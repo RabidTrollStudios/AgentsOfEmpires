@@ -6,12 +6,12 @@ using UnityEngine;
 namespace GameManager
 {
     /// <summary>
-    /// Unity-side callbacks for TickEngine events.
+    /// Unity-side callbacks for StepEngine events.
     /// Handles visual effects, grid cell sync, and analytics.
     /// </summary>
-    internal class UnityTickCallbacks : ITickCallbacks
+    internal class UnitySimCallbacks : ISimCallbacks
     {
-        public void OnUnitMoved(ITickUnit unit, Position from, Position to)
+        public void OnUnitMoved(ISimUnit unit, Position from, Position to)
         {
             if (unit is Unit u)
             {
@@ -37,16 +37,19 @@ namespace GameManager
             }
         }
 
-        public void OnDamageDealt(ITickUnit attacker, ITickUnit target, float damage) { }
-        public void OnUnitKilled(ITickUnit unit)
+        public void OnDamageDealt(ISimUnit attacker, ISimUnit target, float damage) { }
+        public void OnUnitKilled(ISimUnit unit)
         {
             if (unit is Unit u)
+            {
+                UnityEngine.Debug.Log($"[OnUnitKilled] unit={u.UnitNbr} type={u.UnitType} hp={u.Health:F2}");
                 u.SpawnDeathDust();
+            }
         }
 
-        public void OnTrainingComplete(ITickUnit building, ITickUnit spawnedUnit) { }
+        public void OnTrainingComplete(ISimUnit building, ISimUnit spawnedUnit) { }
 
-        public void OnBuildProgress(ITickUnit pawn, ITickUnit building, float progress, float total)
+        public void OnBuildProgress(ISimUnit pawn, ISimUnit building, float progress, float total)
         {
             // Transition pawn to BUILDING animation phase (path consumed, now hammering)
             if (pawn is Unit pawnUnit)
@@ -70,7 +73,7 @@ namespace GameManager
             }
         }
 
-        public void OnBuildComplete(ITickUnit pawn, ITickUnit building)
+        public void OnBuildComplete(ISimUnit pawn, ISimUnit building)
         {
             if (building is Unit buildingUnit)
             {
@@ -85,10 +88,10 @@ namespace GameManager
             }
         }
 
-        public void OnMiningTick(ITickUnit pawn, ITickUnit mine, int goldMined) { }
-        public void OnGoldDeposited(ITickUnit pawn, int amount) { }
-        public void OnGatherPhaseChanged(ITickUnit pawn, GatherPhase oldPhase, GatherPhase newPhase) { }
-        public void OnHealApplied(ITickUnit healer, ITickUnit target, float amount)
+        public void OnMiningTick(ISimUnit pawn, ISimUnit mine, int goldMined) { }
+        public void OnGoldDeposited(ISimUnit pawn, int amount) { }
+        public void OnGatherPhaseChanged(ISimUnit pawn, GatherPhase oldPhase, GatherPhase newPhase) { }
+        public void OnHealApplied(ISimUnit healer, ISimUnit target, float amount)
         {
             if (target is Unit targetUnit && healer is Unit healerUnit)
             {
@@ -97,7 +100,7 @@ namespace GameManager
                 healerUnit.healLineTimer = Unit.HEAL_LINE_DURATION;
             }
         }
-        public void OnRepairTick(ITickUnit pawn, ITickUnit building, float amount) { }
-        public void OnUnitRepath(ITickUnit unit, List<Position> newPath) { }
+        public void OnRepairTick(ISimUnit pawn, ISimUnit building, float amount) { }
+        public void OnUnitRepath(ISimUnit unit, List<Position> newPath) { }
     }
 }

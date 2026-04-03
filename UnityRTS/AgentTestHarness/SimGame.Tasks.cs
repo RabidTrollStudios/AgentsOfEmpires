@@ -1,30 +1,33 @@
-using System.Linq;
 using AgentSDK;
 
 namespace AgentTestHarness
 {
     /// <summary>
-    /// Task advancement and movement. Task logic delegates to TickEngine.AdvanceAllUnits.
-    /// Movement delegates to MovementSystem.Advance per unit per tick.
+    /// Task advancement and movement. Delegates to the shared SimulationRunner
+    /// which orchestrates StepEngine + MovementSystem in deterministic order.
     /// </summary>
     public partial class SimGame
     {
-        /// <summary>Lazy-initialized world adapter for TickEngine.</summary>
-        private SimTickWorld tickWorld;
+        /// <summary>Lazy-initialized world adapter for StepEngine.</summary>
+        private SimWorld tickWorld;
+
+        /// <summary>
+        /// Get the shared ISimWorld adapter for direct CommandProcessor calls.
+        /// Used by cross-engine parity tests to issue commands identically to both engines.
+        /// </summary>
+        public ISimWorld GetSimWorld()
+        {
+            if (tickWorld == null)
+                tickWorld = new SimWorld(this);
+            return tickWorld;
+        }
 
         private void AdvanceAllUnits()
         {
             if (tickWorld == null)
-                tickWorld = new SimTickWorld(this);
+                tickWorld = new SimWorld(this);
 
-            // Phase 1: Task logic (action state machines)
-            TickEngine.AdvanceAllUnits(tickWorld, NullTickCallbacks.Instance);
-
-            // Phase 2: Movement — advance all units by one tick's worth of distance
-            var units = tickWorld.AllUnits.ToList();
-            units.Sort((a, b) => a.UnitNbr.CompareTo(b.UnitNbr));
-            foreach (var unit in units)
-                MovementSystem.Advance(unit, Config.TickDuration, tickWorld, NullTickCallbacks.Instance);
+            SimulationRunner.AdvanceStep(tickWorld, NullSimCallbacks.Instance);
         }
     }
 }

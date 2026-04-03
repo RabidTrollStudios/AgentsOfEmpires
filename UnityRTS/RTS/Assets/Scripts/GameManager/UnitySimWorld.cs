@@ -7,17 +7,17 @@ using GameConstants = GameManager.Constants;
 namespace GameManager
 {
     /// <summary>
-    /// Adapts GameManager to ITickWorld for the shared TickEngine.
+    /// Adapts GameManager to ISimWorld for the shared StepEngine.
     /// </summary>
-    internal class UnityTickWorld : ITickWorld
+    internal class UnitySimWorld : ISimWorld
     {
-        public ITickUnit GetUnit(int unitNbr)
+        public ISimUnit GetUnit(int unitNbr)
         {
             var u = GameManager.Instance.Units.GetUnit(unitNbr);
-            return u; // Unit implements ITickUnit
+            return u; // Unit implements ISimUnit
         }
 
-        public IEnumerable<ITickUnit> AllUnits
+        public IEnumerable<ISimUnit> AllUnits
         {
             get
             {
@@ -68,7 +68,7 @@ namespace GameManager
             return 0;
         }
 
-        public ITickUnit SpawnUnit(int ownerAgentNbr, UnitType unitType, Position pos, float health, bool isBuilt)
+        public ISimUnit SpawnUnit(int ownerAgentNbr, UnitType unitType, Position pos, float health, bool isBuilt)
         {
             var gm = GameManager.Instance;
             var agentGo = gm.Agents[ownerAgentNbr];
@@ -79,14 +79,27 @@ namespace GameManager
             return unit;
         }
 
-        public void RemoveUnit(ITickUnit unit)
+        public void RemoveUnit(ISimUnit unit)
         {
             if (unit is Unit u)
-                GameManager.Instance.Units.DestroyUnit(u.gameObject);
+            {
+                try
+                {
+                    GameManager.Instance.Units.DestroyUnit(u.gameObject);
+                }
+                catch (System.Exception ex)
+                {
+                    UnityEngine.Debug.LogError($"[RemoveUnit] Failed to remove unit {u.UnitNbr}: {ex}");
+                }
+            }
+            else
+            {
+                UnityEngine.Debug.LogError($"[RemoveUnit] unit is not a Unit: {unit?.GetType().Name ?? "null"}");
+            }
         }
 
-        DerivedGameConstants ITickWorld.Constants => GameConstants.Derived;
+        DerivedGameConstants ISimWorld.Constants => GameConstants.Derived;
 
-        public float TickDuration => UnityEngine.Time.fixedDeltaTime;
+        public float StepDuration => UnityEngine.Time.fixedDeltaTime;
     }
 }
