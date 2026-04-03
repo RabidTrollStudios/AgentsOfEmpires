@@ -101,6 +101,13 @@ namespace GameManager
 		[SerializeField] public bool EnableLearning = true;
 
 		/// <summary>
+		/// Duration in seconds for each banner display (intro title, versus, round winner).
+		/// Set low (e.g. 0.1) for fast testing iteration.
+		/// </summary>
+		[Header("Banner Timing")]
+		[SerializeField] public float BannerDuration = 3f;
+
+		/// <summary>
 		/// Whether to use a hand-made tilemap or procedural generation.
 		/// </summary>
 		[Header("Map Configuration")]

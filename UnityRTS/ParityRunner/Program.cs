@@ -5,7 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Text.Json;
 using AgentTestHarness;
-using PlanningAgent.Tests;
+using Parity.Tests;
 
 namespace ParityRunner
 {

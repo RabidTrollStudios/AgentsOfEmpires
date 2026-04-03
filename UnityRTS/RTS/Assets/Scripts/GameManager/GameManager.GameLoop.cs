@@ -49,11 +49,43 @@ namespace GameManager
 			if (unityTickWorld == null)
 			{
 				unityTickWorld = new UnityTickWorld();
+			}
+			if (unityTickCallbacks == null)
+			{
 				unityTickCallbacks = new UnityTickCallbacks();
 			}
-
-			// Phase 2: Advance all units via shared TickEngine
+			
+			// Phase 2: Advance all units via shared TickEngine (task logic)
 			AgentSDK.TickEngine.AdvanceAllUnits(unityTickWorld, unityTickCallbacks);
+
+			// Phase 2b: Movement — advance all units by one tick's worth of distance
+			// Must run per-tick (not per-frame) for deterministic parity with SimGame.
+			{
+				var moveUnits = unitManager.GetAllUnits();
+				var moveKeys = new System.Collections.Generic.List<int>(moveUnits.Keys);
+				moveKeys.Sort();
+				foreach (int key in moveKeys)
+				{
+					if (!moveUnits.TryGetValue(key, out var go) || go == null) continue;
+					var unit = go.GetComponent<GameElements.Unit>();
+					if (unit == null) continue;
+					try
+					{
+						AgentSDK.MovementSystem.Advance(unit, UnityEngine.Time.fixedDeltaTime, unityTickWorld, unityTickCallbacks);
+					}
+					catch (System.Exception ex)
+					{
+						var tu = (AgentSDK.ITickUnit)unit;
+						UnityEngine.Debug.LogError(
+							$"[MovementSystem NRE] unit={unit.UnitNbr} type={unit.UnitType} " +
+							$"action={unit.CurrentAction} canMove={tu.CanMove} " +
+							$"path={tu.TickPath?.Count} pi={tu.PathIndex} " +
+							$"pos=({tu.GridPosition.X},{tu.GridPosition.Y}) " +
+							$"pp={tu.PathProgress}" +
+							$"\nFull exception:\n{ex}");
+					}
+				}
+			}
 
 			// Phase 3: Post-tick updates
 			var allUnits = unitManager.GetAllUnits();
@@ -140,7 +172,7 @@ namespace GameManager
 							DisplayMultiAgentResults();
 						}
 
-						TimeToDisplayBanner = 3.0f;
+						TimeToDisplayBanner = BannerDuration;
 						gameState = GameState.FINISHED;
 					}
 					else
