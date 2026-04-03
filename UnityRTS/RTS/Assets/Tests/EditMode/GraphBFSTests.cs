@@ -18,13 +18,13 @@ namespace GameManager.Tests
 		[SetUp]
 		public void SetUp()
 		{
-			_originalIsUniform = Graph<TestCell>.isUniform;
+			_originalIsUniform = Graph<TestCell>.IsUniform;
 		}
 
 		[TearDown]
 		public void TearDown()
 		{
-			Graph<TestCell>.isUniform = _originalIsUniform;
+			Graph<TestCell>.IsUniform = _originalIsUniform;
 		}
 
 		#region Non-Uniform Guard
@@ -37,7 +37,7 @@ namespace GameManager.Tests
 		public void BFS_NonUniform_ThrowsException()
 		{
 			var (graph, _) = GraphTestHelper.BuildGrid(3, 3);
-			Graph<TestCell>.isUniform = false;
+			Graph<TestCell>.IsUniform = false;
 
 			int start = GraphTestHelper.NodeNbr(0, 0, 3);
 			int end = GraphTestHelper.NodeNbr(2, 2, 3);
@@ -54,7 +54,7 @@ namespace GameManager.Tests
 		public void AStar_NonUniform_StillFindsPath()
 		{
 			var (graph, _) = GraphTestHelper.BuildGrid(5, 5);
-			Graph<TestCell>.isUniform = false;
+			Graph<TestCell>.IsUniform = false;
 
 			int start = GraphTestHelper.NodeNbr(0, 0, 3);
 			int end = GraphTestHelper.NodeNbr(2, 2, 3);
@@ -77,7 +77,7 @@ namespace GameManager.Tests
 		public void BFS_Uniform_DoesNotThrow()
 		{
 			var (graph, _) = GraphTestHelper.BuildGrid(3, 3);
-			Graph<TestCell>.isUniform = true;
+			Graph<TestCell>.IsUniform = true;
 
 			int start = GraphTestHelper.NodeNbr(0, 0, 3);
 			int end = GraphTestHelper.NodeNbr(2, 2, 3);
@@ -95,7 +95,7 @@ namespace GameManager.Tests
 		public void BFS_Uniform_ReturnsEmptyPath()
 		{
 			var (graph, _) = GraphTestHelper.BuildGrid(3, 3);
-			Graph<TestCell>.isUniform = true;
+			Graph<TestCell>.IsUniform = true;
 
 			int start = GraphTestHelper.NodeNbr(0, 0, 3);
 			int end = GraphTestHelper.NodeNbr(2, 2, 3);
@@ -118,7 +118,7 @@ namespace GameManager.Tests
 		{
 			// The saved value from SetUp should be false (default)
 			Assert.IsFalse(_originalIsUniform,
-				"Graph.isUniform should default to false");
+				"Graph.IsUniform should default to false");
 		}
 
 		/// <summary>
@@ -127,9 +127,9 @@ namespace GameManager.Tests
 		[Test]
 		public void IsUniform_CanBeSetToTrue()
 		{
-			Graph<TestCell>.isUniform = true;
-			Assert.IsTrue(Graph<TestCell>.isUniform,
-				"Graph.isUniform should reflect the assigned value");
+			Graph<TestCell>.IsUniform = true;
+			Assert.IsTrue(Graph<TestCell>.IsUniform,
+				"Graph.IsUniform should reflect the assigned value");
 		}
 
 		#endregion

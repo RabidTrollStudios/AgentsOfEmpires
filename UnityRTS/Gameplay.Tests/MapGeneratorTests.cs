@@ -14,11 +14,11 @@ namespace Gameplay.Tests
     public class MapDeterminismTests
     {
         [Theory]
-        [InlineData(42, MapTemplate.OpenField)]
-        [InlineData(42, MapTemplate.Maze)]
-        [InlineData(42, MapTemplate.Forest)]
-        [InlineData(123, MapTemplate.OpenField)]
-        [InlineData(999, MapTemplate.Maze)]
+        [InlineData(42, MapTemplate.OPEN_FIELD)]
+        [InlineData(42, MapTemplate.MAZE)]
+        [InlineData(42, MapTemplate.FOREST)]
+        [InlineData(123, MapTemplate.OPEN_FIELD)]
+        [InlineData(999, MapTemplate.MAZE)]
         public void SameSeed_ProducesIdenticalMap(int seed, MapTemplate template)
         {
             var config = new MapGeneratorConfig { Seed = seed, Template = template };
@@ -35,9 +35,9 @@ namespace Gameplay.Tests
         }
 
         [Theory]
-        [InlineData(42, 43, MapTemplate.OpenField)]
-        [InlineData(100, 200, MapTemplate.Maze)]
-        [InlineData(1, 2, MapTemplate.Forest)]
+        [InlineData(42, 43, MapTemplate.OPEN_FIELD)]
+        [InlineData(100, 200, MapTemplate.MAZE)]
+        [InlineData(1, 2, MapTemplate.FOREST)]
         public void DifferentSeeds_ProduceDifferentMaps(int seed1, int seed2, MapTemplate template)
         {
             var gen = new MapGenerator();
@@ -53,7 +53,7 @@ namespace Gameplay.Tests
         [Fact]
         public void SameSeed_WalkabilityGrid_IsIdentical()
         {
-            var config = new MapGeneratorConfig { Seed = 77, Template = MapTemplate.Maze };
+            var config = new MapGeneratorConfig { Seed = 77, Template = MapTemplate.MAZE };
             var r1 = new MapGenerator().Generate(config);
             var r2 = new MapGenerator().Generate(config);
 
@@ -74,19 +74,19 @@ namespace Gameplay.Tests
     public class MapSymmetryTests
     {
         [Theory]
-        [InlineData(MapTemplate.OpenField, 42)]
-        [InlineData(MapTemplate.Maze, 42)]
-        [InlineData(MapTemplate.Forest, 42)]
-        [InlineData(MapTemplate.OpenField, 7)]
-        [InlineData(MapTemplate.Maze, 7)]
-        [InlineData(MapTemplate.Forest, 7)]
+        [InlineData(MapTemplate.OPEN_FIELD, 42)]
+        [InlineData(MapTemplate.MAZE, 42)]
+        [InlineData(MapTemplate.FOREST, 42)]
+        [InlineData(MapTemplate.OPEN_FIELD, 7)]
+        [InlineData(MapTemplate.MAZE, 7)]
+        [InlineData(MapTemplate.FOREST, 7)]
         public void MirrorSymmetry_AllBlockedCellsHaveMirror(MapTemplate template, int seed)
         {
             var config = new MapGeneratorConfig
             {
                 Seed = seed,
                 Template = template,
-                Symmetry = SymmetryType.Mirror
+                Symmetry = SymmetryType.MIRROR
             };
             var result = new MapGenerator().Generate(config);
             int w = config.Width, h = config.Height;
@@ -133,15 +133,15 @@ namespace Gameplay.Tests
         }
 
         [Theory]
-        [InlineData(MapTemplate.OpenField)]
-        [InlineData(MapTemplate.Forest)]
+        [InlineData(MapTemplate.OPEN_FIELD)]
+        [InlineData(MapTemplate.FOREST)]
         public void GroveBased_GrovesAppearInPairs(MapTemplate template)
         {
             var config = new MapGeneratorConfig
             {
                 Seed = 42,
                 Template = template,
-                Symmetry = SymmetryType.Mirror,
+                Symmetry = SymmetryType.MIRROR,
                 ObstacleDensity = 0.15f
             };
             var result = new MapGenerator().Generate(config);
@@ -166,11 +166,11 @@ namespace Gameplay.Tests
         }
 
         [Theory]
-        [InlineData(MapTemplate.OpenField, 42)]
-        [InlineData(MapTemplate.Maze, 42)]
-        [InlineData(MapTemplate.Forest, 42)]
-        [InlineData(MapTemplate.OpenField, 1)]
-        [InlineData(MapTemplate.Maze, 1)]
+        [InlineData(MapTemplate.OPEN_FIELD, 42)]
+        [InlineData(MapTemplate.MAZE, 42)]
+        [InlineData(MapTemplate.FOREST, 42)]
+        [InlineData(MapTemplate.OPEN_FIELD, 1)]
+        [InlineData(MapTemplate.MAZE, 1)]
         public void EuclideanDistance_SpawnToMineCenter_EqualForAllPlayers(MapTemplate template, int seed)
         {
             var config = new MapGeneratorConfig { Seed = seed, Template = template };
@@ -184,9 +184,9 @@ namespace Gameplay.Tests
         }
 
         [Theory]
-        [InlineData(MapTemplate.OpenField, 42)]
-        [InlineData(MapTemplate.Maze, 42)]
-        [InlineData(MapTemplate.Forest, 42)]
+        [InlineData(MapTemplate.OPEN_FIELD, 42)]
+        [InlineData(MapTemplate.MAZE, 42)]
+        [InlineData(MapTemplate.FOREST, 42)]
         public void PathLength_SpawnToMine_CloseForAllPlayers(MapTemplate template, int seed)
         {
             var config = new MapGeneratorConfig { Seed = seed, Template = template };
@@ -210,11 +210,11 @@ namespace Gameplay.Tests
     public class MapPathBalanceTests
     {
         [Theory]
-        [InlineData(MapTemplate.OpenField, 42)]
-        [InlineData(MapTemplate.Maze, 42)]
-        [InlineData(MapTemplate.Forest, 42)]
-        [InlineData(MapTemplate.OpenField, 7)]
-        [InlineData(MapTemplate.Maze, 7)]
+        [InlineData(MapTemplate.OPEN_FIELD, 42)]
+        [InlineData(MapTemplate.MAZE, 42)]
+        [InlineData(MapTemplate.FOREST, 42)]
+        [InlineData(MapTemplate.OPEN_FIELD, 7)]
+        [InlineData(MapTemplate.MAZE, 7)]
         public void PathToCenter_BalancedForAllPlayers(MapTemplate template, int seed)
         {
             var config = new MapGeneratorConfig { Seed = seed, Template = template };
@@ -235,9 +235,9 @@ namespace Gameplay.Tests
         }
 
         [Theory]
-        [InlineData(MapTemplate.OpenField)]
-        [InlineData(MapTemplate.Maze)]
-        [InlineData(MapTemplate.Forest)]
+        [InlineData(MapTemplate.OPEN_FIELD)]
+        [InlineData(MapTemplate.MAZE)]
+        [InlineData(MapTemplate.FOREST)]
         public void SpawnsCanReachEachOther(MapTemplate template)
         {
             for (int seed = 0; seed < 5; seed++)
@@ -257,15 +257,15 @@ namespace Gameplay.Tests
     public class MapConnectivityTests
     {
         [Theory]
-        [InlineData(MapTemplate.OpenField, 42)]
-        [InlineData(MapTemplate.Maze, 42)]
-        [InlineData(MapTemplate.Forest, 42)]
-        [InlineData(MapTemplate.OpenField, 1)]
-        [InlineData(MapTemplate.Maze, 1)]
-        [InlineData(MapTemplate.Forest, 1)]
-        [InlineData(MapTemplate.OpenField, 999)]
-        [InlineData(MapTemplate.Maze, 999)]
-        [InlineData(MapTemplate.Forest, 999)]
+        [InlineData(MapTemplate.OPEN_FIELD, 42)]
+        [InlineData(MapTemplate.MAZE, 42)]
+        [InlineData(MapTemplate.FOREST, 42)]
+        [InlineData(MapTemplate.OPEN_FIELD, 1)]
+        [InlineData(MapTemplate.MAZE, 1)]
+        [InlineData(MapTemplate.FOREST, 1)]
+        [InlineData(MapTemplate.OPEN_FIELD, 999)]
+        [InlineData(MapTemplate.MAZE, 999)]
+        [InlineData(MapTemplate.FOREST, 999)]
         public void SpawnPositions_AreBuildable(MapTemplate template, int seed)
         {
             var config = new MapGeneratorConfig { Seed = seed, Template = template };
@@ -277,9 +277,9 @@ namespace Gameplay.Tests
         }
 
         [Theory]
-        [InlineData(MapTemplate.OpenField, 42)]
-        [InlineData(MapTemplate.Maze, 42)]
-        [InlineData(MapTemplate.Forest, 42)]
+        [InlineData(MapTemplate.OPEN_FIELD, 42)]
+        [InlineData(MapTemplate.MAZE, 42)]
+        [InlineData(MapTemplate.FOREST, 42)]
         public void MinePositions_AreWalkable(MapTemplate template, int seed)
         {
             var config = new MapGeneratorConfig { Seed = seed, Template = template };
@@ -291,9 +291,9 @@ namespace Gameplay.Tests
         }
 
         [Theory]
-        [InlineData(MapTemplate.OpenField)]
-        [InlineData(MapTemplate.Maze)]
-        [InlineData(MapTemplate.Forest)]
+        [InlineData(MapTemplate.OPEN_FIELD)]
+        [InlineData(MapTemplate.MAZE)]
+        [InlineData(MapTemplate.FOREST)]
         public void SpawnToMine_AlwaysReachable(MapTemplate template)
         {
             for (int seed = 0; seed < 10; seed++)
@@ -311,9 +311,9 @@ namespace Gameplay.Tests
         }
 
         [Theory]
-        [InlineData(MapTemplate.OpenField)]
-        [InlineData(MapTemplate.Maze)]
-        [InlineData(MapTemplate.Forest)]
+        [InlineData(MapTemplate.OPEN_FIELD)]
+        [InlineData(MapTemplate.MAZE)]
+        [InlineData(MapTemplate.FOREST)]
         public void SpawnToCenter_AlwaysReachable(MapTemplate template)
         {
             for (int seed = 0; seed < 10; seed++)
@@ -347,7 +347,7 @@ namespace Gameplay.Tests
             var config = new MapGeneratorConfig
             {
                 Seed = 42,
-                Template = MapTemplate.OpenField,
+                Template = MapTemplate.OPEN_FIELD,
                 ObstacleDensity = targetDensity
             };
             var result = new MapGenerator().Generate(config);
@@ -367,7 +367,7 @@ namespace Gameplay.Tests
             var config = new MapGeneratorConfig
             {
                 Seed = 42,
-                Template = MapTemplate.Maze,
+                Template = MapTemplate.MAZE,
                 ObstacleDensity = targetDensity
             };
             var result = new MapGenerator().Generate(config);
@@ -382,7 +382,7 @@ namespace Gameplay.Tests
             var config = new MapGeneratorConfig
             {
                 Seed = 42,
-                Template = MapTemplate.Forest,
+                Template = MapTemplate.FOREST,
                 ObstacleDensity = 0.20f
             };
             var result = new MapGenerator().Generate(config);
@@ -396,8 +396,8 @@ namespace Gameplay.Tests
         }
 
         [Theory]
-        [InlineData(MapTemplate.OpenField)]
-        [InlineData(MapTemplate.Forest)]
+        [InlineData(MapTemplate.OPEN_FIELD)]
+        [InlineData(MapTemplate.FOREST)]
         public void GroveBased_EachGroveHasSingleTreeType(MapTemplate template)
         {
             var config = new MapGeneratorConfig
@@ -418,7 +418,7 @@ namespace Gameplay.Tests
             var config = new MapGeneratorConfig
             {
                 Seed = 42,
-                Template = MapTemplate.Maze,
+                Template = MapTemplate.MAZE,
                 ObstacleDensity = 0.30f
             };
             var result = new MapGenerator().Generate(config);
@@ -476,7 +476,7 @@ namespace Gameplay.Tests
             var config = new MapGeneratorConfig
             {
                 Seed = 42,
-                Template = MapTemplate.OpenField,
+                Template = MapTemplate.OPEN_FIELD,
                 ObstacleDensity = 0.0f
             };
             var result = new MapGenerator().Generate(config);
@@ -517,8 +517,8 @@ namespace Gameplay.Tests
             var config = new MapGeneratorConfig
             {
                 Seed = 42,
-                Template = MapTemplate.OpenField,
-                Symmetry = SymmetryType.None,
+                Template = MapTemplate.OPEN_FIELD,
+                Symmetry = SymmetryType.NONE,
                 ObstacleDensity = 0.15f
             };
             var result = new MapGenerator().Generate(config);
@@ -545,7 +545,7 @@ namespace Gameplay.Tests
             var config = new MapGeneratorConfig
             {
                 Seed = 1914087774, Width = 75, Height = 30,
-                ObstacleDensity = 0.20f, Template = MapTemplate.OpenField
+                ObstacleDensity = 0.20f, Template = MapTemplate.OPEN_FIELD
             };
             var result = new MapGenerator().Generate(config);
 
@@ -600,7 +600,7 @@ namespace Gameplay.Tests
             var config = new MapGeneratorConfig
             {
                 Seed = seed, Width = 75, Height = 30,
-                ObstacleDensity = 0.20f, Template = MapTemplate.OpenField
+                ObstacleDensity = 0.20f, Template = MapTemplate.OPEN_FIELD
             };
             var result = new MapGenerator().Generate(config);
 
@@ -640,7 +640,7 @@ namespace Gameplay.Tests
         public void WithGeneratedMap_PlacesSpawnsAndMines()
         {
             var game = new SimGameBuilder()
-                .WithGeneratedMap(42, MapTemplate.OpenField)
+                .WithGeneratedMap(42, MapTemplate.OPEN_FIELD)
                 .WithGold(0, 5000)
                 .WithGold(1, 5000)
                 .Build();
@@ -658,7 +658,7 @@ namespace Gameplay.Tests
         public void WithGeneratedMap_GameRunsWithoutCrash()
         {
             var game = new SimGameBuilder()
-                .WithGeneratedMap(42, MapTemplate.Maze)
+                .WithGeneratedMap(42, MapTemplate.MAZE)
                 .WithGold(0, 5000)
                 .WithGold(1, 5000)
                 .Build();
@@ -672,10 +672,10 @@ namespace Gameplay.Tests
         public void WithGeneratedMap_IsDeterministic()
         {
             var game1 = new SimGameBuilder()
-                .WithGeneratedMap(42, MapTemplate.Forest)
+                .WithGeneratedMap(42, MapTemplate.FOREST)
                 .Build();
             var game2 = new SimGameBuilder()
-                .WithGeneratedMap(42, MapTemplate.Forest)
+                .WithGeneratedMap(42, MapTemplate.FOREST)
                 .Build();
 
             // Walkability grids must match
@@ -697,7 +697,7 @@ namespace Gameplay.Tests
                 Seed = 99,
                 Width = 40,
                 Height = 40,
-                Template = MapTemplate.Maze,
+                Template = MapTemplate.MAZE,
                 ObstacleDensity = 0.25f
             };
 
@@ -715,7 +715,7 @@ namespace Gameplay.Tests
         public void WithGeneratedMap_AdditionalUnitsCanBePlaced()
         {
             var game = new SimGameBuilder()
-                .WithGeneratedMap(42, MapTemplate.OpenField)
+                .WithGeneratedMap(42, MapTemplate.OPEN_FIELD)
                 .WithGold(0, 10000)
                 .WithUnit(0, UnitType.BASE, new Position(5, 8), isBuilt: true)
                 .Build();
@@ -732,21 +732,21 @@ namespace Gameplay.Tests
     public class MapRegressionTests
     {
         [Theory]
-        [InlineData(MapTemplate.OpenField, 0)]
-        [InlineData(MapTemplate.OpenField, 1)]
-        [InlineData(MapTemplate.OpenField, 42)]
-        [InlineData(MapTemplate.OpenField, 100)]
-        [InlineData(MapTemplate.OpenField, 999)]
-        [InlineData(MapTemplate.Maze, 0)]
-        [InlineData(MapTemplate.Maze, 1)]
-        [InlineData(MapTemplate.Maze, 42)]
-        [InlineData(MapTemplate.Maze, 100)]
-        [InlineData(MapTemplate.Maze, 999)]
-        [InlineData(MapTemplate.Forest, 0)]
-        [InlineData(MapTemplate.Forest, 1)]
-        [InlineData(MapTemplate.Forest, 42)]
-        [InlineData(MapTemplate.Forest, 100)]
-        [InlineData(MapTemplate.Forest, 999)]
+        [InlineData(MapTemplate.OPEN_FIELD, 0)]
+        [InlineData(MapTemplate.OPEN_FIELD, 1)]
+        [InlineData(MapTemplate.OPEN_FIELD, 42)]
+        [InlineData(MapTemplate.OPEN_FIELD, 100)]
+        [InlineData(MapTemplate.OPEN_FIELD, 999)]
+        [InlineData(MapTemplate.MAZE, 0)]
+        [InlineData(MapTemplate.MAZE, 1)]
+        [InlineData(MapTemplate.MAZE, 42)]
+        [InlineData(MapTemplate.MAZE, 100)]
+        [InlineData(MapTemplate.MAZE, 999)]
+        [InlineData(MapTemplate.FOREST, 0)]
+        [InlineData(MapTemplate.FOREST, 1)]
+        [InlineData(MapTemplate.FOREST, 42)]
+        [InlineData(MapTemplate.FOREST, 100)]
+        [InlineData(MapTemplate.FOREST, 999)]
         public void AllSeedsProduceValidMaps(MapTemplate template, int seed)
         {
             var config = new MapGeneratorConfig { Seed = seed, Template = template };
@@ -775,9 +775,9 @@ namespace Gameplay.Tests
         }
 
         [Theory]
-        [InlineData(MapTemplate.OpenField)]
-        [InlineData(MapTemplate.Maze)]
-        [InlineData(MapTemplate.Forest)]
+        [InlineData(MapTemplate.OPEN_FIELD)]
+        [InlineData(MapTemplate.MAZE)]
+        [InlineData(MapTemplate.FOREST)]
         public void GeneratedMap_SupportsBasePlacement(MapTemplate template)
         {
             var config = new MapGeneratorConfig { Seed = 42, Template = template };
@@ -801,9 +801,9 @@ namespace Gameplay.Tests
         }
 
         [Theory]
-        [InlineData(MapTemplate.OpenField)]
-        [InlineData(MapTemplate.Maze)]
-        [InlineData(MapTemplate.Forest)]
+        [InlineData(MapTemplate.OPEN_FIELD)]
+        [InlineData(MapTemplate.MAZE)]
+        [InlineData(MapTemplate.FOREST)]
         public void AgentSimulation_RunsOnGeneratedMap(MapTemplate template)
         {
             // Build a game with a simple gather agent on a generated map

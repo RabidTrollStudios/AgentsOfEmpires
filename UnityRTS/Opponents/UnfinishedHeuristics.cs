@@ -1,9 +1,3 @@
-// -territoryMap: generates influence based on proximety to own structures and mines using linear falloff, bases have higher intensity
-// -enemyMap: generates influence based on proximety to enemy structures using linear falloff, bases have higher intensity
-// -Functions for ideal build positions and unit positions subtract territoryMap influence from enemyMap influence for decision making
-// -Pawns use influence to determine where to build bases
-// -Warriors and archers use influence to prioritize which enemy unit to attack first
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,9 +5,13 @@ using AgentSDK;
 
 namespace PlanningAgent
 {
-	// Planning Agent is the over-head planner that decides where
-	// individual units go and what tasks they perform.  Low-level
-	// AI is handled by other classes (like pathfinding).
+	/// <summary>
+	/// [EXPERIMENTAL/INCOMPLETE] Extended influence-map agent with heuristic scoring.
+	/// Builds on the same dual-map pattern as ExampleHeuristics (territory vs. enemy
+	/// influence) but adds weighted heuristic evaluation for action selection.
+	/// Trains archers (up to 20) and warriors. Update logic is incomplete —
+	/// this agent exists as a development reference, not a competitive opponent.
+	/// </summary>
 	public class PlanningAgent : PlanningAgentBase
 	{
 		private const int MAX_NBR_ARCHERS = 20;

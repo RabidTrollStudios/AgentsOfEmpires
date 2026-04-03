@@ -8,7 +8,7 @@
 		/// <summary>
 		/// No direction (stationary)
 		/// </summary>
-		None,
+		NONE,
 		/// <summary>
 		/// South
 		/// </summary>

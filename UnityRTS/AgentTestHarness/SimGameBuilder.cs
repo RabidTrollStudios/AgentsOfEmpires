@@ -29,7 +29,7 @@ namespace AgentTestHarness
     ///
     /// Usage (generated map):
     ///   var game = new SimGameBuilder()
-    ///       .WithGeneratedMap(42, MapTemplate.OpenField)
+    ///       .WithGeneratedMap(42, MapTemplate.OPEN_FIELD)
     ///       .WithGold(0, 5000)
     ///       .WithAgent(0, myAgent)
     ///       .Build();

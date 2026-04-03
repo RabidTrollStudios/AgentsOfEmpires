@@ -5,13 +5,13 @@ namespace AgentSDK
     /// </summary>
     public enum CommandType
     {
-        Move,
-        Build,
-        Gather,
-        Train,
-        Attack,
-        Repair,
-        Heal,
-        Log,
+        MOVE,
+        BUILD,
+        GATHER,
+        TRAIN,
+        ATTACK,
+        REPAIR,
+        HEAL,
+        LOG,
     }
 }

@@ -99,7 +99,7 @@ namespace GameManager
             var result = ValidateAndQueue(unitNbr, new DeferredCommand
             {
                 AgentNbr = agent.AgentNbr, Agent = agent,
-                Type = DeferredCommandType.Move, UnitNbr = unitNbr,
+                Type = DeferredCommandType.MOVE, UnitNbr = unitNbr,
                 Unit = unit, Target = targetVec
             }, out bool enqueued);
             if (enqueued) RecordCmd("MOVE", unitNbr, target.X, target.Y);
@@ -116,7 +116,7 @@ namespace GameManager
             var result = ValidateAndQueue(unitNbr, new DeferredCommand
             {
                 AgentNbr = agent.AgentNbr, Agent = agent,
-                Type = DeferredCommandType.Build, UnitNbr = unitNbr,
+                Type = DeferredCommandType.BUILD, UnitNbr = unitNbr,
                 Unit = unit, Target = new Vector3Int(target.X, target.Y, 0),
                 BuildingType = unitType
             }, out bool enqueued);
@@ -137,7 +137,7 @@ namespace GameManager
             var result = ValidateAndQueue(pawnNbr, new DeferredCommand
             {
                 AgentNbr = agent.AgentNbr, Agent = agent,
-                Type = DeferredCommandType.Gather, UnitNbr = pawnNbr,
+                Type = DeferredCommandType.GATHER, UnitNbr = pawnNbr,
                 Unit = pawn, MineUnit = mine, BaseUnit = baseUnit
             }, out bool enqueued);
             if (enqueued) RecordCmd("GATHER", pawnNbr, mineNbr: mineNbr, baseNbr: baseNbr);
@@ -154,7 +154,7 @@ namespace GameManager
             var result = ValidateAndQueue(buildingNbr, new DeferredCommand
             {
                 AgentNbr = agent.AgentNbr, Agent = agent,
-                Type = DeferredCommandType.Train, UnitNbr = buildingNbr,
+                Type = DeferredCommandType.TRAIN, UnitNbr = buildingNbr,
                 Unit = building, BuildingType = unitType
             }, out bool enqueued);
             if (enqueued) RecordCmd("TRAIN", buildingNbr, buildingType: unitType.ToString());
@@ -178,7 +178,7 @@ namespace GameManager
             var result = ValidateAndQueue(unitNbr, new DeferredCommand
             {
                 AgentNbr = agent.AgentNbr, Agent = agent,
-                Type = DeferredCommandType.Attack, UnitNbr = unitNbr,
+                Type = DeferredCommandType.ATTACK, UnitNbr = unitNbr,
                 Unit = unit, TargetUnit = target
             }, out bool enqueued);
             if (enqueued) RecordCmd("ATTACK", unitNbr, targetUnit: targetNbr);
@@ -197,7 +197,7 @@ namespace GameManager
             var result = ValidateAndQueue(pawnNbr, new DeferredCommand
             {
                 AgentNbr = agent.AgentNbr, Agent = agent,
-                Type = DeferredCommandType.Repair, UnitNbr = pawnNbr,
+                Type = DeferredCommandType.REPAIR, UnitNbr = pawnNbr,
                 Unit = pawn, TargetUnit = building
             }, out bool enqueued);
             if (enqueued) RecordCmd("REPAIR", pawnNbr, targetUnit: buildingNbr);
@@ -219,7 +219,7 @@ namespace GameManager
             var result = ValidateAndQueue(monkNbr, new DeferredCommand
             {
                 AgentNbr = agent.AgentNbr, Agent = agent,
-                Type = DeferredCommandType.Heal, UnitNbr = monkNbr,
+                Type = DeferredCommandType.HEAL, UnitNbr = monkNbr,
                 Unit = monk, TargetUnit = target
             }, out bool enqueued);
             if (enqueued) RecordCmd("HEAL", monkNbr, targetUnit: targetNbr);

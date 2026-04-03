@@ -9,12 +9,21 @@ using UnityEngine.UI;
 
 namespace GameManager
 {
+	/// <summary>
+	/// MonoBehaviour that bridges a game agent (AI player) to Unity's lifecycle and UI.
+	///
+	/// Each player in the match has one AgentController attached to a root GameObject.
+	/// It holds the <see cref="Agent"/> reference and forwards lifecycle calls
+	/// (InitializeMatch, InitializeRound, Learn). On each frame it refreshes the
+	/// debug panel with live unit counts, gold, and the agent's custom debug text.
+	/// </summary>
 	class AgentController : MonoBehaviour
 	{
 		private GameObject debuggerPanel;
 		private Dictionary<string, Func<string>> _debugUpdaters;
 		private Text[] _debugTextAreas;
 
+		/// <summary>The agent (AI player) this controller manages.</summary>
 		internal Agent Agent;
 
 		/// <summary>

@@ -3,9 +3,19 @@ using AgentSDK;
 namespace AgentTestHarness
 {
     // ==================================================================
+    // Minimal single-purpose agents for automated testing.
+    //
+    // Each agent implements exactly one behavior (train, build, gather,
+    // attack, heal) so tests can isolate individual game mechanics without
+    // complex AI logic interfering. They are intentionally simple — most
+    // issue a single command and then stop, making test outcomes deterministic.
+    // ==================================================================
+
+    // ==================================================================
     // Training agents
     // ==================================================================
 
+    /// <summary>Trains one unit of the specified type from the first available BASE, then stops.</summary>
     public class TrainOnceAgent : IPlanningAgent
     {
         private readonly UnitType trainType;
@@ -33,6 +43,7 @@ namespace AgentTestHarness
         }
     }
 
+    /// <summary>Trains one unit of the specified type from the first BARRACKS, then stops.</summary>
     public class TrainFromBarracksAgent : IPlanningAgent
     {
         private readonly UnitType trainType;
@@ -60,6 +71,7 @@ namespace AgentTestHarness
         }
     }
 
+    /// <summary>Trains one unit of the specified type from the first ARCHERY, then stops.</summary>
     public class TrainFromArcheryAgent : IPlanningAgent
     {
         private readonly UnitType trainType;
@@ -87,6 +99,7 @@ namespace AgentTestHarness
         }
     }
 
+    /// <summary>Trains one unit from the first BASE without checking IsBuilt or IDLE state.</summary>
     public class TrainFromBaseAgent : IPlanningAgent
     {
         private readonly UnitType trainType;
@@ -109,6 +122,7 @@ namespace AgentTestHarness
         }
     }
 
+    /// <summary>Continuously trains PAWNs from all bases every tick (stress test).</summary>
     public class SpamTrainAgent : IPlanningAgent
     {
         public void InitializeMatch() { }
@@ -123,6 +137,7 @@ namespace AgentTestHarness
         }
     }
 
+    /// <summary>Trains exactly N pawns from BASE, one at a time, then stops.</summary>
     public class TrainNPawnsAgent : IPlanningAgent
     {
         private readonly int max;
@@ -154,6 +169,7 @@ namespace AgentTestHarness
     // Building agents
     // ==================================================================
 
+    /// <summary>Orders the first idle PAWN to build a structure at a fixed position, then stops.</summary>
     public class BuildOnceAgent : IPlanningAgent
     {
         private readonly UnitType buildType;
@@ -186,6 +202,7 @@ namespace AgentTestHarness
         }
     }
 
+    /// <summary>Attempts to build with a WARRIOR (should fail — warriors can't build).</summary>
     public class BuildWithWarriorAgent : IPlanningAgent
     {
         private bool tried;
@@ -205,6 +222,7 @@ namespace AgentTestHarness
         }
     }
 
+    /// <summary>Orders idle PAWNs to build BARRACKS at multiple predetermined sites.</summary>
     public class BuildMultipleAgent : IPlanningAgent
     {
         private int buildIndex;
@@ -243,6 +261,7 @@ namespace AgentTestHarness
     // Gathering agents
     // ==================================================================
 
+    /// <summary>Sends all idle PAWNs to gather from the first mine to the first base.</summary>
     public class GatherAgent : IPlanningAgent
     {
         public void InitializeMatch() { }
@@ -268,6 +287,7 @@ namespace AgentTestHarness
         }
     }
 
+    /// <summary>Attempts to gather with a WARRIOR (should fail — warriors can't gather).</summary>
     public class GatherWithWarriorAgent : IPlanningAgent
     {
         public void InitializeMatch() { }
@@ -284,6 +304,7 @@ namespace AgentTestHarness
         }
     }
 
+    /// <summary>Attempts to gather from a BARRACKS (should fail — barracks isn't a mine).</summary>
     public class GatherFromBarracksAgent : IPlanningAgent
     {
         public void InitializeMatch() { }
@@ -304,6 +325,7 @@ namespace AgentTestHarness
     // Combat agents
     // ==================================================================
 
+    /// <summary>All idle WARRIOR/ARCHER units attack the first visible enemy unit.</summary>
     public class AttackFirstEnemyAgent : IPlanningAgent
     {
         public void InitializeMatch() { }
@@ -336,6 +358,7 @@ namespace AgentTestHarness
         }
     }
 
+    /// <summary>First WARRIOR attacks the first enemy PAWN once, then stops.</summary>
     public class AttackOnceAgent : IPlanningAgent
     {
         private bool attacked;
@@ -356,6 +379,7 @@ namespace AgentTestHarness
         }
     }
 
+    /// <summary>Attempts friendly fire — WARRIOR attacks own PAWN (should fail).</summary>
     public class AttackOwnPawnAgent : IPlanningAgent
     {
         public void InitializeMatch() { }
@@ -371,6 +395,7 @@ namespace AgentTestHarness
         }
     }
 
+    /// <summary>Attempts to attack with a PAWN (should fail — pawns can't attack).</summary>
     public class PawnAttackAgent : IPlanningAgent
     {
         public void InitializeMatch() { }
@@ -386,6 +411,7 @@ namespace AgentTestHarness
         }
     }
 
+    /// <summary>Attempts to attack a MINE (should fail — mines are non-targetable).</summary>
     public class AttackMineAgent : IPlanningAgent
     {
         public void InitializeMatch() { }
@@ -401,6 +427,7 @@ namespace AgentTestHarness
         }
     }
 
+    /// <summary>All idle combat units (WARRIOR/ARCHER/LANCER) attack the first visible enemy.</summary>
     public class AttackAllEnemiesAgent : IPlanningAgent
     {
         public void InitializeMatch() { }
@@ -435,6 +462,7 @@ namespace AgentTestHarness
     // Tower / Lancer agents
     // ==================================================================
 
+    /// <summary>Trains one unit of the specified type from the first TOWER, then stops.</summary>
     public class TrainFromTowerAgent : IPlanningAgent
     {
         private readonly UnitType trainType;
@@ -466,6 +494,7 @@ namespace AgentTestHarness
     // Monastery / Monk / Heal agents
     // ==================================================================
 
+    /// <summary>Trains one unit of the specified type from the first MONASTERY, then stops.</summary>
     public class TrainFromMonasteryAgent : IPlanningAgent
     {
         private readonly UnitType trainType;
@@ -493,6 +522,7 @@ namespace AgentTestHarness
         }
     }
 
+    /// <summary>Each monk heals the most-wounded friendly mobile unit that is missing at least HEAL_AMOUNT HP.</summary>
     public class HealWoundedAgent : IPlanningAgent
     {
         public void InitializeMatch() { }
@@ -534,6 +564,7 @@ namespace AgentTestHarness
         }
     }
 
+    /// <summary>All idle LANCERs attack the first visible enemy unit.</summary>
     public class LancerAttackAgent : IPlanningAgent
     {
         public void InitializeMatch() { }

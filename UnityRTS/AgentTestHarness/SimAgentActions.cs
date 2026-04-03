@@ -53,7 +53,7 @@ namespace AgentTestHarness
 
             PendingCommands.Add(new SimCommand
             {
-                Type = CommandType.Move,
+                Type = CommandType.MOVE,
                 UnitNbr = unitNbr,
                 Target = target
             });
@@ -73,7 +73,7 @@ namespace AgentTestHarness
             // checks and EventDispatcher does heavy checks at dispatch time.
             PendingCommands.Add(new SimCommand
             {
-                Type = CommandType.Build,
+                Type = CommandType.BUILD,
                 UnitNbr = unitNbr,
                 Target = target,
                 UnitType = unitType
@@ -96,7 +96,7 @@ namespace AgentTestHarness
 
             PendingCommands.Add(new SimCommand
             {
-                Type = CommandType.Gather,
+                Type = CommandType.GATHER,
                 UnitNbr = pawnNbr,
                 MineNbr = mineNbr,
                 BaseNbr = baseNbr
@@ -114,7 +114,7 @@ namespace AgentTestHarness
             // Heavy validation (gold, isBuilt, idle) deferred to ProcessTrain
             PendingCommands.Add(new SimCommand
             {
-                Type = CommandType.Train,
+                Type = CommandType.TRAIN,
                 UnitNbr = buildingNbr,
                 UnitType = unitType
             });
@@ -134,7 +134,7 @@ namespace AgentTestHarness
 
             PendingCommands.Add(new SimCommand
             {
-                Type = CommandType.Attack,
+                Type = CommandType.ATTACK,
                 UnitNbr = unitNbr,
                 TargetUnitNbr = targetNbr
             });
@@ -155,7 +155,7 @@ namespace AgentTestHarness
 
             PendingCommands.Add(new SimCommand
             {
-                Type = CommandType.Repair,
+                Type = CommandType.REPAIR,
                 UnitNbr = pawnNbr,
                 TargetUnitNbr = buildingNbr
             });
@@ -177,7 +177,7 @@ namespace AgentTestHarness
 
             PendingCommands.Add(new SimCommand
             {
-                Type = CommandType.Heal,
+                Type = CommandType.HEAL,
                 UnitNbr = monkNbr,
                 TargetUnitNbr = targetNbr
             });

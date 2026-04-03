@@ -28,7 +28,7 @@ namespace GameManager.Tests
 		{
 			pq.Enqueue(new PriorityNode<int>(42, 1.0));
 			var node = pq.Dequeue();
-			Assert.AreEqual(42, node.item);
+			Assert.AreEqual(42, node.Item);
 			Assert.AreEqual(0, pq.Count);
 		}
 
@@ -39,9 +39,9 @@ namespace GameManager.Tests
 			pq.Enqueue(new PriorityNode<int>(2, 1.0));
 			pq.Enqueue(new PriorityNode<int>(3, 3.0));
 
-			Assert.AreEqual(2, pq.Dequeue().item); // priority 1.0
-			Assert.AreEqual(3, pq.Dequeue().item); // priority 3.0
-			Assert.AreEqual(1, pq.Dequeue().item); // priority 5.0
+			Assert.AreEqual(2, pq.Dequeue().Item); // priority 1.0
+			Assert.AreEqual(3, pq.Dequeue().Item); // priority 3.0
+			Assert.AreEqual(1, pq.Dequeue().Item); // priority 5.0
 		}
 
 		[Test]
@@ -52,9 +52,9 @@ namespace GameManager.Tests
 			pq.Enqueue(new PriorityNode<int>(30, 2.0));
 
 			var results = new HashSet<int>();
-			results.Add(pq.Dequeue().item);
-			results.Add(pq.Dequeue().item);
-			results.Add(pq.Dequeue().item);
+			results.Add(pq.Dequeue().Item);
+			results.Add(pq.Dequeue().Item);
+			results.Add(pq.Dequeue().Item);
 
 			Assert.AreEqual(3, results.Count);
 			Assert.IsTrue(results.Contains(10));
@@ -96,8 +96,8 @@ namespace GameManager.Tests
 			// Decrease A's priority so it should come out first
 			pq.ChangePriority(nodeA, 1.0);
 
-			Assert.AreEqual(1, pq.Dequeue().item);
-			Assert.AreEqual(2, pq.Dequeue().item);
+			Assert.AreEqual(1, pq.Dequeue().Item);
+			Assert.AreEqual(2, pq.Dequeue().Item);
 		}
 
 		[Test]
@@ -111,8 +111,8 @@ namespace GameManager.Tests
 			// Increase A's priority so it should come out last
 			pq.ChangePriority(nodeA, 10.0);
 
-			Assert.AreEqual(2, pq.Dequeue().item);
-			Assert.AreEqual(1, pq.Dequeue().item);
+			Assert.AreEqual(2, pq.Dequeue().Item);
+			Assert.AreEqual(1, pq.Dequeue().Item);
 		}
 
 		[Test]
@@ -136,9 +136,9 @@ namespace GameManager.Tests
 			while (pq.Count > 0)
 			{
 				var node = pq.Dequeue();
-				Assert.GreaterOrEqual(node.priority, prev,
-					"Heap order violated: dequeued {0} after {1}", node.priority, prev);
-				prev = node.priority;
+				Assert.GreaterOrEqual(node.Priority, prev,
+					"Heap order violated: dequeued {0} after {1}", node.Priority, prev);
+				prev = node.Priority;
 			}
 		}
 
@@ -167,8 +167,8 @@ namespace GameManager.Tests
 			while (pq.Count > 0)
 			{
 				var node = pq.Dequeue();
-				Assert.GreaterOrEqual(node.priority, lastDequeued);
-				lastDequeued = node.priority;
+				Assert.GreaterOrEqual(node.Priority, lastDequeued);
+				lastDequeued = node.Priority;
 			}
 		}
 	}

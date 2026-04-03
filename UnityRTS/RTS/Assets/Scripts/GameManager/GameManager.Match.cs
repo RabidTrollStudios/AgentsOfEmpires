@@ -11,6 +11,13 @@ using Random = UnityEngine.Random;
 
 namespace GameManager
 {
+	/// <summary>
+	/// GameManager partial — match and round initialization.
+	///
+	/// Handles one-time match setup (agent loading, DLL randomization, scoreboard)
+	/// and per-round initialization (map generation, unit spawning, agent reset,
+	/// parity exporter setup). Also manages the learning callback between rounds.
+	/// </summary>
 	public partial class GameManager
 	{
 		#region Match Initialization
@@ -475,7 +482,7 @@ namespace GameManager
         {
 	        proceduralMapResult = null;
 
-	        if (mapMode == MapMode.Procedural)
+	        if (mapMode == MapMode.PROCEDURAL)
 	        {
 		        SetupProceduralMap();
 	        }

@@ -7,6 +7,15 @@ using UnityEngine;
 
 namespace GameManager
 {
+	/// <summary>
+	/// GameManager partial — game loop, tick simulation, and win condition logic.
+	///
+	/// Runs FixedUpdate at 20Hz (0.05s ticks) to process deferred commands,
+	/// advance all units via the shared TickEngine, run movement, and perform
+	/// post-tick cleanup. Also contains the Update() state machine that drives
+	/// round transitions (INTRO → PLAYING → SHOWING_WINNER → RESTARTING → FINISHED)
+	/// and the timeout/elimination win condition checks.
+	/// </summary>
 	public partial class GameManager
 	{
 		#region Game Loop

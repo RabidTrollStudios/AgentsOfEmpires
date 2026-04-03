@@ -72,9 +72,9 @@ namespace GameManager.Tests
 		[Test]
 		public void ConvertDirection_SamePosition_ReturnsNone()
 		{
-			// Zero delta returns Direction.None
+			// Zero delta returns Direction.NONE
 			var result = Utility.ConvertPositionToDirection(new Vector3Int(5, 5, 0), new Vector3Int(5, 5, 0));
-			Assert.AreEqual(Direction.None, result);
+			Assert.AreEqual(Direction.NONE, result);
 		}
 
 		[Test]

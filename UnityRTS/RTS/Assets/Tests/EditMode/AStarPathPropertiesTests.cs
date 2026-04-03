@@ -24,11 +24,11 @@ namespace GameManager.Tests
 			graph.AStarSearch(start, end);
 			graph.ResetSearch();
 
-			foreach (var kvp in graph.nodesDict)
+			foreach (var kvp in graph.NodesDict)
 			{
-				Assert.AreEqual(double.MaxValue, kvp.Value.cost);
-				Assert.IsNull(kvp.Value.backPtr);
-				Assert.IsNull(kvp.Value.priorityNode);
+				Assert.AreEqual(double.MaxValue, kvp.Value.Cost);
+				Assert.IsNull(kvp.Value.BackPtr);
+				Assert.IsNull(kvp.Value.PriorityNode);
 			}
 		}
 

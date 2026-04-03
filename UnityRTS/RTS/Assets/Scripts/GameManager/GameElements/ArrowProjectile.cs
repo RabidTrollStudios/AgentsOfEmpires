@@ -22,8 +22,8 @@ namespace GameManager.GameElements
 		private Quaternion lastRotation;
 
 		// Impact state
-		private enum Phase { Flying, Stuck, Exploding }
-		private Phase phase = Phase.Flying;
+		private enum Phase { FLYING, STUCK, EXPLODING }
+		private Phase phase = Phase.FLYING;
 		private float stuckTimer;
 		private Transform targetTransform;
 		private RuntimeAnimatorController explosionController;
@@ -108,13 +108,13 @@ namespace GameManager.GameElements
 
 			switch (phase)
 			{
-				case Phase.Flying:
+				case Phase.FLYING:
 					UpdateFlying();
 					break;
-				case Phase.Stuck:
+				case Phase.STUCK:
 					UpdateStuck();
 					break;
-				case Phase.Exploding:
+				case Phase.EXPLODING:
 					UpdateExploding();
 					break;
 			}
@@ -175,7 +175,7 @@ namespace GameManager.GameElements
 
 		private void EnterStuckPhase()
 		{
-			phase = Phase.Stuck;
+			phase = Phase.STUCK;
 			stuckTimer = 0f;
 			transform.rotation = lastRotation;
 
@@ -254,7 +254,7 @@ namespace GameManager.GameElements
 
 		private void EnterExplodingPhase()
 		{
-			phase = Phase.Exploding;
+			phase = Phase.EXPLODING;
 			stuckTimer = 0f;
 
 			// Unparent so explosion stays at world position even if target moves/dies

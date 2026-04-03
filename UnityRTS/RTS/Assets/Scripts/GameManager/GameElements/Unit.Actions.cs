@@ -5,6 +5,13 @@ using UnityEngine;
 
 namespace GameManager.GameElements
 {
+	/// <summary>
+	/// Unit partial — command initiation (StartTraining, StartBuilding, StartGathering, etc.).
+	///
+	/// Each method validates preconditions, deducts gold, computes paths, and sets
+	/// the unit's action state so TickEngine can advance the task each tick.
+	/// Also provides helpers for accessing the owning agent's command logger and analytics.
+	/// </summary>
 	public partial class Unit
 	{
 		#region Start Actions
@@ -55,7 +62,7 @@ namespace GameManager.GameElements
 						? $"can't train {args.UnitType}"
 						: $"not enough gold (have {Agent.GetComponent<AgentController>().Agent.Gold}, need {(int)Constants.COST[args.UnitType]})";
 					GetCmdLog()?.LogCommand("TRAIN", $"{UnitType}#{UnitNbr} -> {args.UnitType}", $"EXEC_FAILED: {reason}");
-					GetOwnerAgent()?.RecordFailedCommand(new FailedCommand(UnitNbr, CommandType.Train,
+					GetOwnerAgent()?.RecordFailedCommand(new FailedCommand(UnitNbr, CommandType.TRAIN,
 						!Constants.TRAINS[UnitType].Contains(args.UnitType) ? CommandResult.UNIT_CANNOT_PERFORM_ACTION : CommandResult.INSUFFICIENT_GOLD));
 				}
 			}
@@ -65,7 +72,7 @@ namespace GameManager.GameElements
 					: !CanTrain ? "unit can't train"
 					: "building not finished";
 				GetCmdLog()?.LogCommand("TRAIN", $"{UnitType}#{UnitNbr} -> {args.UnitType}", $"EXEC_FAILED: {reason}");
-				GetOwnerAgent()?.RecordFailedCommand(new FailedCommand(UnitNbr, CommandType.Train,
+				GetOwnerAgent()?.RecordFailedCommand(new FailedCommand(UnitNbr, CommandType.TRAIN,
 					CurrentAction != UnitAction.IDLE ? CommandResult.UNIT_BUSY
 					: !CanTrain ? CommandResult.UNIT_CANNOT_PERFORM_ACTION
 					: CommandResult.BUILDING_NOT_FINISHED));
@@ -159,7 +166,7 @@ namespace GameManager.GameElements
 				{
 					GetCmdLog()?.LogCommand("BUILD", $"pawn#{UnitNbr} -> {args.UnitType} at {args.TargetPosition}",
 						"EXEC_FAILED: no path found to build site");
-					GetOwnerAgent()?.RecordFailedCommand(new FailedCommand(UnitNbr, CommandType.Build, CommandResult.NO_PATH_FOUND));
+					GetOwnerAgent()?.RecordFailedCommand(new FailedCommand(UnitNbr, CommandType.BUILD, CommandResult.NO_PATH_FOUND));
 				}
 			}
 			else
@@ -176,7 +183,7 @@ namespace GameManager.GameElements
 					: $"not enough gold (have {Agent.GetComponent<AgentController>().Agent.Gold}, need {(int)Constants.COST[args.UnitType]})";
 				GetCmdLog()?.LogCommand("BUILD", $"pawn#{UnitNbr} at {GridPosition} -> {args.UnitType} at {args.TargetPosition}",
 					$"EXEC_FAILED: {reason}");
-				GetOwnerAgent()?.RecordFailedCommand(new FailedCommand(UnitNbr, CommandType.Build, buildFailReason));
+				GetOwnerAgent()?.RecordFailedCommand(new FailedCommand(UnitNbr, CommandType.BUILD, buildFailReason));
 			}
 		}
 

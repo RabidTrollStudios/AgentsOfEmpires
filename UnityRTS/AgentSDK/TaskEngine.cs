@@ -19,13 +19,13 @@ namespace AgentSDK
         public enum MoveResult
         {
             /// <summary>Successfully moved to the next cell.</summary>
-            Moved,
+            MOVED,
             /// <summary>Blocked by a mobile unit (walkable but not buildable).</summary>
-            BlockedByUnit,
+            BLOCKED_BY_UNIT,
             /// <summary>Blocked by terrain/building (not walkable). Needs re-path.</summary>
-            BlockedByTerrain,
+            BLOCKED_BY_TERRAIN,
             /// <summary>Not enough accumulated movement to reach next cell.</summary>
-            InsufficientMovement,
+            INSUFFICIENT_MOVEMENT,
         }
 
         /// <summary>
@@ -47,7 +47,7 @@ namespace AgentSDK
             if (distCost < 0.01f) distCost = 1.0f; // safety: same-cell fallback
 
             if (moveAccumulator < distCost)
-                return MoveResult.InsufficientMovement;
+                return MoveResult.INSUFFICIENT_MOVEMENT;
 
             var state = grid.GetCell(nextPos);
 
@@ -56,16 +56,16 @@ namespace AgentSDK
 
             // OPEN = free cell, can move and stand
             if (state == CellState.OPEN)
-                return MoveResult.Moved;
+                return MoveResult.MOVED;
 
             // WALKABLE: either a building passage or a mobile-unit-occupied cell.
             // Both are walkable, but only unit-occupied cells allow pass-through.
             // Passage cells (building top rows) are normal movement — return Moved.
             if (state == CellState.WALKABLE)
-                return grid.IsPassageCell(nextPos) ? MoveResult.Moved : MoveResult.BlockedByUnit;
+                return grid.IsPassageCell(nextPos) ? MoveResult.MOVED : MoveResult.BLOCKED_BY_UNIT;
 
             // BLOCKED = terrain or building body
-            return MoveResult.BlockedByTerrain;
+            return MoveResult.BLOCKED_BY_TERRAIN;
         }
 
         /// <summary>

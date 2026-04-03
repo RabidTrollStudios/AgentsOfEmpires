@@ -58,7 +58,7 @@ namespace AgentSDK
                     // Collision check
                     var cellState = CheckCell(nextCell, grid);
 
-                    if (cellState == TaskEngine.MoveResult.BlockedByTerrain)
+                    if (cellState == TaskEngine.MoveResult.BLOCKED_BY_TERRAIN)
                     {
                         // Repath around obstacle
                         unit.PathProgress = 0f;
@@ -84,7 +84,7 @@ namespace AgentSDK
                         return;
                     }
 
-                    if (cellState == TaskEngine.MoveResult.BlockedByUnit)
+                    if (cellState == TaskEngine.MoveResult.BLOCKED_BY_UNIT)
                     {
                         if (unit.PathIndex == path.Count - 1)
                         {
@@ -140,14 +140,14 @@ namespace AgentSDK
             var state = grid.GetCell(pos);
 
             if (state == CellState.OPEN)
-                return TaskEngine.MoveResult.Moved;
+                return TaskEngine.MoveResult.MOVED;
 
             if (state == CellState.WALKABLE)
                 return grid.IsPassageCell(pos)
-                    ? TaskEngine.MoveResult.Moved
-                    : TaskEngine.MoveResult.BlockedByUnit;
+                    ? TaskEngine.MoveResult.MOVED
+                    : TaskEngine.MoveResult.BLOCKED_BY_UNIT;
 
-            return TaskEngine.MoveResult.BlockedByTerrain;
+            return TaskEngine.MoveResult.BLOCKED_BY_TERRAIN;
         }
     }
 }
