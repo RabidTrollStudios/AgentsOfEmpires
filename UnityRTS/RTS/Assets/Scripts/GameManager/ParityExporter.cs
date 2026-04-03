@@ -61,7 +61,7 @@ namespace GameManager
             int mapW = gm != null ? gm.Map.MapSize.x : 30;
             int mapH = gm != null ? gm.Map.MapSize.y : 30;
             string mapMeta;
-            if (gm != null && gm.MapConfigMode == MapMode.Procedural)
+            if (gm != null && gm.MapConfigMode == MapMode.PROCEDURAL)
             {
                 mapMeta = $"# map={mapW}x{mapH} speed={Constants.GAME_SPEED}" +
                     $" mode=Procedural template={gm.MapConfigTemplate}" +

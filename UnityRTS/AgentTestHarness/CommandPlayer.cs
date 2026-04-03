@@ -45,28 +45,28 @@ namespace AgentTestHarness
         {
             switch (r.Type)
             {
-                case CommandType.Move:
+                case CommandType.MOVE:
                     actions.Move(r.UnitNbr, r.Target);
                     break;
-                case CommandType.Build:
+                case CommandType.BUILD:
                     actions.Build(r.UnitNbr, r.Target, r.BuildingType);
                     break;
-                case CommandType.Gather:
+                case CommandType.GATHER:
                     actions.Gather(r.UnitNbr, r.MineNbr, r.BaseNbr);
                     break;
-                case CommandType.Train:
+                case CommandType.TRAIN:
                     actions.Train(r.BuildingNbr, r.TrainType);
                     break;
-                case CommandType.Attack:
+                case CommandType.ATTACK:
                     actions.Attack(r.UnitNbr, r.TargetUnitNbr);
                     break;
-                case CommandType.Repair:
+                case CommandType.REPAIR:
                     actions.Repair(r.UnitNbr, r.RepairBuildingNbr);
                     break;
-                case CommandType.Heal:
+                case CommandType.HEAL:
                     actions.Heal(r.UnitNbr, r.TargetUnitNbr);
                     break;
-                case CommandType.Log:
+                case CommandType.LOG:
                     actions.Log(r.LogMessage);
                     break;
             }

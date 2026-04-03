@@ -20,7 +20,7 @@ namespace GameManager.Tests
 
 			graph.AddNode(0, cell);
 
-			Assert.IsTrue(graph.nodesDict.ContainsKey(0),
+			Assert.IsTrue(graph.NodesDict.ContainsKey(0),
 				"Node 0 should exist in nodesDict after AddNode");
 		}
 
@@ -36,7 +36,7 @@ namespace GameManager.Tests
 
 			graph.AddEdge(0, 1, 1.0);
 
-			Assert.AreEqual(1, graph.edges.Count,
+			Assert.AreEqual(1, graph.Edges.Count,
 				"Global edge list should have exactly one entry after AddEdge");
 		}
 
@@ -52,7 +52,7 @@ namespace GameManager.Tests
 
 			graph.AddEdge(0, 1, 1.0);
 
-			Assert.AreEqual(1, graph.nodesDict[0].edges.Count,
+			Assert.AreEqual(1, graph.NodesDict[0].Edges.Count,
 				"Start node's edge list should contain the newly added edge");
 		}
 
@@ -69,7 +69,7 @@ namespace GameManager.Tests
 
 			graph.AddEdge(0, 1, 1.0);
 
-			Assert.AreEqual(1, graph.nodesDict[1].edges.Count,
+			Assert.AreEqual(1, graph.NodesDict[1].Edges.Count,
 				"End node's edge list should also contain the added edge (bidirectional storage)");
 		}
 
@@ -84,9 +84,9 @@ namespace GameManager.Tests
 				graph.AddNode(i, new TestCell(new Vector3Int(i, 0, 0)));
 
 			for (int i = 0; i < 5; i++)
-				Assert.IsTrue(graph.nodesDict.ContainsKey(i),
+				Assert.IsTrue(graph.NodesDict.ContainsKey(i),
 					$"Node {i} should exist after being added");
-			Assert.AreEqual(5, graph.nodesDict.Count,
+			Assert.AreEqual(5, graph.NodesDict.Count,
 				"nodesDict should contain exactly 5 nodes");
 		}
 
@@ -99,7 +99,7 @@ namespace GameManager.Tests
 			var (original, _) = GraphTestHelper.BuildGrid(3, 3);
 			var copy = new Graph<TestCell>(original);
 
-			Assert.AreEqual(original.nodesDict.Count, copy.nodesDict.Count,
+			Assert.AreEqual(original.NodesDict.Count, copy.NodesDict.Count,
 				"Copy should have the same number of nodes as the original");
 		}
 
@@ -112,7 +112,7 @@ namespace GameManager.Tests
 			var (original, _) = GraphTestHelper.BuildGrid(3, 3);
 			var copy = new Graph<TestCell>(original);
 
-			Assert.AreEqual(original.edges.Count, copy.edges.Count,
+			Assert.AreEqual(original.Edges.Count, copy.Edges.Count,
 				"Copy should have the same number of edges as the original");
 		}
 
@@ -125,7 +125,7 @@ namespace GameManager.Tests
 			var graph = new Graph<TestCell>();
 			graph.AddNode(0, new TestCell(new Vector3Int(0, 0, 0)));
 
-			Assert.AreEqual(0, graph.nodesDict[0].edges.Count,
+			Assert.AreEqual(0, graph.NodesDict[0].Edges.Count,
 				"Isolated node should have zero edges");
 		}
 
@@ -146,7 +146,7 @@ namespace GameManager.Tests
 			double cost = 5.0;
 			graph.AddEdge(0, 1, cost);
 
-			Assert.AreEqual(cost, graph.edges[0].cost, 0.0001,
+			Assert.AreEqual(cost, graph.Edges[0].Cost, 0.0001,
 				"Edge cost should match the value passed to AddEdge");
 		}
 
@@ -158,8 +158,8 @@ namespace GameManager.Tests
 		{
 			var graph = new Graph<TestCell>();
 
-			Assert.AreEqual(0, graph.nodesDict.Count, "New graph should have zero nodes");
-			Assert.AreEqual(0, graph.edges.Count, "New graph should have zero edges");
+			Assert.AreEqual(0, graph.NodesDict.Count, "New graph should have zero nodes");
+			Assert.AreEqual(0, graph.Edges.Count, "New graph should have zero edges");
 		}
 
 		/// <summary>
@@ -179,7 +179,7 @@ namespace GameManager.Tests
 			graph.AddEdge(0, 2, 1.0);
 			graph.AddEdge(0, 3, 1.414);
 
-			Assert.AreEqual(3, graph.nodesDict[0].edges.Count,
+			Assert.AreEqual(3, graph.NodesDict[0].Edges.Count,
 				"Node 0 should have 3 edges after three AddEdge calls from it");
 		}
 

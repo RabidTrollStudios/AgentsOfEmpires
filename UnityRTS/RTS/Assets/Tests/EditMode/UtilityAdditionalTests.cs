@@ -200,7 +200,7 @@ namespace GameManager.Tests
 		public void ConvertPositionToDirection_SamePositionNonOrigin_None()
 		{
 			var result = Utility.ConvertPositionToDirection(new Vector3Int(7, 3, 0), new Vector3Int(7, 3, 0));
-			Assert.AreEqual(Direction.None, result);
+			Assert.AreEqual(Direction.NONE, result);
 		}
 
 		#endregion

@@ -36,12 +36,12 @@ namespace PlanningAgent
 
         private enum GameState
         {
-            BaseBuilding,
-            ArmyBuilding,
-            Attacking
+            BASE_BUILDING,
+            ARMY_BUILDING,
+            ATTACKING
         }
 
-        private GameState currState = GameState.BaseBuilding;
+        private GameState currState = GameState.BASE_BUILDING;
 
         // Column indices for stateThresholds
         private const int MIN_PAWNS = 0, MAX_PAWNS = 1;
@@ -496,7 +496,7 @@ namespace PlanningAgent
         public override void InitializeRound(IGameState state)
         {
             base.InitializeRound(state);
-            currState = GameState.BaseBuilding;
+            currState = GameState.BASE_BUILDING;
         }
 
         /// <summary>
@@ -508,15 +508,15 @@ namespace PlanningAgent
 
             switch (currState)
             {
-                case GameState.BaseBuilding:
+                case GameState.BASE_BUILDING:
                     UpdateBaseBuilding(state, actions);
                     DefendBase(state, actions);
                     break;
-                case GameState.ArmyBuilding:
+                case GameState.ARMY_BUILDING:
                     UpdateArmyBuilding(state, actions);
                     DefendBase(state, actions);
                     break;
-                case GameState.Attacking:
+                case GameState.ATTACKING:
                     UpdateAttacking(state, actions);
                     CoordinatedAttack(state, actions);
                     // Rally any troops still idle after attack orders (e.g. newly spawned with no enemies nearby)
@@ -532,10 +532,10 @@ namespace PlanningAgent
         private void UpdateBaseBuilding(IGameState state, IAgentActions actions)
         {
             // Progress to ArmyBuilding once we meet BaseBuilding max thresholds
-            int eval = EvaluateState(GameState.BaseBuilding);
+            int eval = EvaluateState(GameState.BASE_BUILDING);
             if (eval == 1)
             {
-                currState = GameState.ArmyBuilding;
+                currState = GameState.ARMY_BUILDING;
                 return;
             }
 
@@ -666,15 +666,15 @@ namespace PlanningAgent
         private void UpdateArmyBuilding(IGameState state, IAgentActions actions)
         {
             // Regress to BaseBuilding or progress to Attacking based on ArmyBuilding thresholds
-            int eval = EvaluateState(GameState.ArmyBuilding);
+            int eval = EvaluateState(GameState.ARMY_BUILDING);
             if (eval == -1)
             {
-                currState = GameState.BaseBuilding;
+                currState = GameState.BASE_BUILDING;
                 return;
             }
             if (eval == 1)
             {
-                currState = GameState.Attacking;
+                currState = GameState.ATTACKING;
                 return;
             }
 
@@ -741,10 +741,10 @@ namespace PlanningAgent
         private void UpdateAttacking(IGameState state, IAgentActions actions)
         {
             // Regress to ArmyBuilding based on Attacking thresholds
-            int eval = EvaluateState(GameState.Attacking);
+            int eval = EvaluateState(GameState.ATTACKING);
             if (eval == -1)
             {
-                currState = GameState.ArmyBuilding;
+                currState = GameState.ARMY_BUILDING;
                 return;
             }
 

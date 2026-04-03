@@ -94,7 +94,7 @@ namespace GameManager.EditorTools
 
 			EditorGUI.indentLevel++;
 
-			if (modeProp.enumValueIndex == (int)MapMode.HandMade)
+			if (modeProp.enumValueIndex == (int)MapMode.HAND_MADE)
 				DrawHandMadeSettings();
 			else
 				DrawProceduralSettings();

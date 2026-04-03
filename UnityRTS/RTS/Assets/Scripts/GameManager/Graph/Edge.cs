@@ -7,23 +7,23 @@
 	/// </summary>
 	internal class Edge<V> where V : IColorable, IBuildable
     {
-        internal Node<V> start;
-        internal Node<V> end;
-        internal double cost;
+        internal Node<V> Start;
+        internal Node<V> End;
+        internal double Cost;
 
         internal Edge(Node<V> start, Node<V> end, double cost)
         {
-            this.start = start;
-            this.end = end;
-            this.cost = cost;
+            this.Start = start;
+            this.End = end;
+            this.Cost = cost;
         }
 
         /// <summary>Copy constructor.</summary>
         internal Edge(Edge<V> edge)
         {
-            this.start = edge.start;
-            this.end = edge.end;
-            this.cost = edge.cost;
+            this.Start = edge.Start;
+            this.End = edge.End;
+            this.Cost = edge.Cost;
         }
 
         /// <summary>
@@ -33,10 +33,10 @@
         /// </summary>
         internal Node<V> GetNeighbor(Node<V> item)
         {
-            if (start == item)
-                return end;
+            if (Start == item)
+                return End;
             else
-                return start;
+                return Start;
         }
     }
 }

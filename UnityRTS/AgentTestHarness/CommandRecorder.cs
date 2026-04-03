@@ -32,7 +32,7 @@ namespace AgentTestHarness
             {
                 Tick = getCurrentTick(),
                 AgentNbr = agentNbr,
-                Type = CommandType.Move,
+                Type = CommandType.MOVE,
                 UnitNbr = unitNbr,
                 Target = target
             });
@@ -45,7 +45,7 @@ namespace AgentTestHarness
             {
                 Tick = getCurrentTick(),
                 AgentNbr = agentNbr,
-                Type = CommandType.Build,
+                Type = CommandType.BUILD,
                 UnitNbr = unitNbr,
                 Target = target,
                 BuildingType = unitType
@@ -59,7 +59,7 @@ namespace AgentTestHarness
             {
                 Tick = getCurrentTick(),
                 AgentNbr = agentNbr,
-                Type = CommandType.Gather,
+                Type = CommandType.GATHER,
                 UnitNbr = pawnNbr,
                 MineNbr = mineNbr,
                 BaseNbr = baseNbr
@@ -73,7 +73,7 @@ namespace AgentTestHarness
             {
                 Tick = getCurrentTick(),
                 AgentNbr = agentNbr,
-                Type = CommandType.Train,
+                Type = CommandType.TRAIN,
                 BuildingNbr = buildingNbr,
                 TrainType = unitType
             });
@@ -86,7 +86,7 @@ namespace AgentTestHarness
             {
                 Tick = getCurrentTick(),
                 AgentNbr = agentNbr,
-                Type = CommandType.Attack,
+                Type = CommandType.ATTACK,
                 UnitNbr = unitNbr,
                 TargetUnitNbr = targetNbr
             });
@@ -99,7 +99,7 @@ namespace AgentTestHarness
             {
                 Tick = getCurrentTick(),
                 AgentNbr = agentNbr,
-                Type = CommandType.Repair,
+                Type = CommandType.REPAIR,
                 UnitNbr = pawnNbr,
                 RepairBuildingNbr = buildingNbr
             });
@@ -112,7 +112,7 @@ namespace AgentTestHarness
             {
                 Tick = getCurrentTick(),
                 AgentNbr = agentNbr,
-                Type = CommandType.Heal,
+                Type = CommandType.HEAL,
                 UnitNbr = monkNbr,
                 TargetUnitNbr = targetNbr
             });
@@ -125,7 +125,7 @@ namespace AgentTestHarness
             {
                 Tick = getCurrentTick(),
                 AgentNbr = agentNbr,
-                Type = CommandType.Log,
+                Type = CommandType.LOG,
                 LogMessage = message
             });
             inner.Log(message);
