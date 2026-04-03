@@ -3,10 +3,17 @@ using System.Collections.Generic;
 
 namespace GameManager.Graph
 {
+	/// <summary>
+	/// Wrapper pairing an item with a priority value for use in <see cref="PriorityQueue{T}"/>.
+	/// Tracks its current <see cref="index"/> in the heap array so
+	/// <see cref="PriorityQueue{T}.ChangePriority"/> can update it in O(log n).
+	/// Lower priority values are dequeued first (min-heap).
+	/// </summary>
 	internal class PriorityNode<V> : IComparable
     {
         public V item;
         public double priority;  // LOWER value is HIGHER priority
+        /// <summary>Current position in the heap array (-1 if not enqueued).</summary>
         public int index;
 
         public PriorityNode(V item, double priority)
@@ -15,12 +22,15 @@ namespace GameManager.Graph
             this.priority = priority;
             this.index = -1;
         }
+
+        /// <summary>Copy constructor.</summary>
         public PriorityNode(PriorityNode<V> node)
         {
             this.item = node.item;
             this.priority = node.priority;
             this.index = node.index;
         }
+
         public int CompareTo(Object item)
         {
             PriorityNode<V> i = (PriorityNode<V>)item;
@@ -33,16 +43,26 @@ namespace GameManager.Graph
         }
     }
 
+	/// <summary>
+	/// Min-heap priority queue supporting O(log n) enqueue, dequeue, and priority update.
+	/// Used by <see cref="Graph{T}.AStarSearch"/> as the open set.
+	/// Each <see cref="PriorityNode{T}"/> tracks its heap index so
+	/// <see cref="ChangePriority"/> can re-heapify without a linear scan.
+	/// </summary>
 	internal class PriorityQueue<T>
     {
         List<PriorityNode<T>> priorityQueue = new List<PriorityNode<T>>();
 
+        /// <summary>Number of elements currently in the queue.</summary>
         public int Count => priorityQueue.Count;
 
+        /// <summary>Remove all elements from the queue.</summary>
         public void Clear()
         {
             priorityQueue.Clear();
         }
+
+        /// <summary>Insert a node into the heap and bubble it up to its correct position.</summary>
         public void Enqueue(PriorityNode<T> node)
         {
             // Add to the end of the list
@@ -51,6 +71,7 @@ namespace GameManager.Graph
             int current = priorityQueue.Count - 1;
             RaisePriority(current);
         }
+        /// <summary>Remove and return the element with the lowest priority value (highest urgency).</summary>
         public PriorityNode<T> Dequeue()
         {
             if (priorityQueue.Count == 0)
@@ -70,6 +91,11 @@ namespace GameManager.Graph
 
             return node;
         }
+        /// <summary>
+        /// Update a node's priority and restore heap order.
+        /// Uses the node's tracked <see cref="PriorityNode{T}.index"/> to find it in O(1),
+        /// then re-heapifies in O(log n).
+        /// </summary>
         public void ChangePriority(PriorityNode<T> node, double newPriority)
         {
             if (0 <= node.index && node.index < priorityQueue.Count)
@@ -82,6 +108,7 @@ namespace GameManager.Graph
             }
         }
 
+        /// <summary>Bubble an element up toward the root while it has higher priority than its parent.</summary>
         private void RaisePriority(int current)
         {
             PriorityNode<T> newItem = priorityQueue[current];
@@ -100,6 +127,7 @@ namespace GameManager.Graph
             priorityQueue[current].index = current;
         }
 
+        /// <summary>Sink an element down through the heap while it has lower priority than a child.</summary>
         private void LowerPriority(int current)
         {
             if (priorityQueue.Count >= 1)

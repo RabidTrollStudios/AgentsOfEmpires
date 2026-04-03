@@ -9,6 +9,13 @@ using UnityEngine.UI;
 
 namespace GameManager.GameElements
 {
+	/// <summary>
+	/// Unit partial — per-frame visual update and animation logic.
+	///
+	/// Handles sprite facing, animation state transitions, debug visualization
+	/// (path tinting, target lines, action color overlays), and health bar rendering.
+	/// Game logic runs in FixedUpdate via TickEngine; this file is strictly visual.
+	/// </summary>
 	public partial class Unit
 	{
 		private bool facingRight = true;

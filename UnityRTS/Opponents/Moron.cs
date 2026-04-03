@@ -2,16 +2,14 @@ using System.Collections.Generic;
 using System.Linq;
 using AgentSDK;
 
-/////////////////////////////////////////////////////////////////////////////
-// This is the Moron Agent
-/////////////////////////////////////////////////////////////////////////////
-
 namespace PlanningAgent
 {
-    ///<summary>Planning Agent is the over-head planner that decided where
-    /// individual units go and what tasks they perform.  Low-level
-    /// AI is handled by other classes (like pathfinding).
-    ///</summary>
+    /// <summary>
+    /// [HARD] Brute-force agent: trains up to 20 pawns and floods warriors/archers.
+    /// Builds barracks without tactical positioning and attacks random enemy targets.
+    /// Less effective than strategies with focused unit compositions, but
+    /// overwhelms through sheer unit count if the game goes long enough.
+    /// </summary>
     public class PlanningAgent : PlanningAgentBase
     {
         private const int MAX_NBR_PAWNS = 20;
