@@ -5,10 +5,20 @@
     </assembly>
     <members>
         <member name="T:PlanningAgent.PlanningAgent">
-            <summary>Planning Agent is the over-head planner that decided where
-             individual units go and what tasks they perform.  Low-level
-             AI is handled by other classes (like pathfinding).
-            </summary>
+             <summary>
+             User's primary AI agent. Uses a three-phase FSM driven by threshold tables:
+               - BaseBuilding: economy first — find mine, build base + barracks, train pawns
+               - ArmyBuilding: train warriors and archers (alternating), build second barracks
+               - Attacking: coordinated assault — warriors charge, archers range-fire
+            
+             Phase transitions are evaluated each tick via <see cref="M:PlanningAgent.PlanningAgent.EvaluateState(PlanningAgent.PlanningAgent.GameState)"/>:
+             if all unit counts exceed the phase's max thresholds → progress;
+             if any count drops below its min threshold → regress.
+            
+             Defense is active in all phases: idle troops attack enemies within 10 cells
+             of friendly buildings or pawns. During Attacking phase, uses
+             <see cref="M:PlanningAgent.PlanningAgent.CoordinatedAttack(AgentSDK.IGameState,AgentSDK.IAgentActions)"/> for role-based targeting.
+             </summary>
         </member>
         <member name="M:PlanningAgent.PlanningAgent.EvaluateState(PlanningAgent.PlanningAgent.GameState)">
             <summary>
@@ -40,6 +50,9 @@
             Find the closest enemy (to the troop) that is within radius of any of our buildings or pawns.
             </summary>
         </member>
+        <member name="M:PlanningAgent.PlanningAgent.IsNearOurUnits(AgentSDK.Position,System.Single,AgentSDK.IGameState)">
+            <summary>Returns true if the enemy position is within radius of any friendly building or pawn.</summary>
+        </member>
         <member name="M:PlanningAgent.PlanningAgent.CoordinatedAttack(AgentSDK.IGameState,AgentSDK.IAgentActions)">
             <summary>
             Split targeting by unit type: warriors charge closest enemy (melee),
@@ -58,6 +71,9 @@
             Returns -1 if no enemy is within range.
             </summary>
         </member>
+        <member name="M:PlanningAgent.PlanningAgent.FindClosestToBase(System.Collections.Generic.List{System.Int32},AgentSDK.IGameState)">
+            <summary>Find the enemy closest to our main base (for defensive prioritization).</summary>
+        </member>
         <member name="M:PlanningAgent.PlanningAgent.InitializeMatch">
             <summary>
             Called before each match between two agents.  Matches have
@@ -72,6 +88,31 @@
         <member name="M:PlanningAgent.PlanningAgent.Update(AgentSDK.IGameState,AgentSDK.IAgentActions)">
             <summary>
             Update the GameManager - called once per frame
+            </summary>
+        </member>
+        <member name="M:PlanningAgent.PlanningAgent.UpdateBaseBuilding(AgentSDK.IGameState,AgentSDK.IAgentActions)">
+            <summary>
+            BaseBuilding phase: find a mine, build a base near it, train pawns,
+            then build a barracks. Progresses to ArmyBuilding once thresholds are met.
+            </summary>
+        </member>
+        <member name="M:PlanningAgent.PlanningAgent.UpdateArmyBuilding(AgentSDK.IGameState,AgentSDK.IAgentActions)">
+            <summary>
+            ArmyBuilding phase: train warriors and archers (alternating by count),
+            build a second barracks, rally idle troops. Regresses to BaseBuilding
+            if economy collapses; progresses to Attacking once army thresholds are met.
+            </summary>
+        </member>
+        <member name="M:PlanningAgent.PlanningAgent.UpdateAttacking(AgentSDK.IGameState,AgentSDK.IAgentActions)">
+            <summary>
+            Attacking phase: continue mining and training, launch coordinated attacks.
+            Regresses to ArmyBuilding if army drops below attacking min thresholds.
+            </summary>
+        </member>
+        <member name="M:PlanningAgent.PlanningAgent.Mine(AgentSDK.IGameState,AgentSDK.IAgentActions)">
+            <summary>
+            Send all idle pawns to gather from the closest mine, delivering to the closest base.
+            Each pawn independently selects its nearest mine and base by path length.
             </summary>
         </member>
     </members>

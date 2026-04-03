@@ -7,6 +7,13 @@ using UnityEngine.UI;
 
 namespace GameManager
 {
+	/// <summary>
+	/// GameManager partial — UI, input handling, and debug visualization toggles.
+	///
+	/// Manages the game-over banner, timer/speed display, debug toggle checkboxes
+	/// (agent info, unit info, influence map, action tint overlays), keyboard
+	/// speed controls, and the custom debug text panels that show agent DebugText.
+	/// </summary>
 	public partial class GameManager
 	{
 		#region UI and Input

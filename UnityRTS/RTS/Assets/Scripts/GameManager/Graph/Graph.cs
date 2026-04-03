@@ -4,18 +4,40 @@ using UnityEngine;
 
 namespace GameManager.Graph
 {
+	/// <summary>
+	/// Generic undirected weighted graph with A* pathfinding.
+	///
+	/// Used by <see cref="MapManager"/> with <see cref="GridCell"/> as the node type
+	/// to provide grid-based pathfinding on the Unity side. Each GridCell becomes a
+	/// node; edges connect the 8 cardinal/diagonal neighbors with Euclidean costs
+	/// (1.0 cardinal, ~1.414 diagonal).
+	///
+	/// The A* implementation uses <see cref="PriorityQueue{T}"/> as its open set
+	/// and Euclidean distance as its heuristic. It supports both normal pathfinding
+	/// (walkable cells) and unit-avoidance mode (buildable cells only).
+	///
+	/// Note: This is the Unity-side graph used for the visual game. The shared
+	/// deterministic pathfinder lives in <c>AgentSDK.Pathfinder</c>.
+	/// </summary>
 	internal class Graph<T> where T : IColorable, IBuildable, IPositionable
     {
+        /// <summary>When true, all edge weights are equal (enables BFS). Currently unused.</summary>
         public static bool isUniform = false;
 
+        /// <summary>All nodes keyed by their integer ID (typically grid cell index).</summary>
         public Dictionary<int, Node<T>> nodesDict = new Dictionary<int, Node<T>>();
+
+        /// <summary>All edges in the graph (each edge also appears in its endpoint nodes' adjacency lists).</summary>
         public List<Edge<T>> edges = new List<Edge<T>>();
+
+        /// <summary>Reusable priority queue for A* to avoid per-search allocation.</summary>
         PriorityQueue<Node<T>> pq = new PriorityQueue<Node<T>>();
 
         public Graph()
         {
         }
 
+        /// <summary>Deep-copy constructor: duplicates all nodes and edges from another graph.</summary>
         public Graph(Graph<T> graph)
         {
             foreach(Node<T> node in graph.nodesDict.Values)
@@ -28,12 +50,17 @@ namespace GameManager.Graph
             }
         }
 
+        /// <summary>Add a node wrapping <paramref name="startItem"/> with the given numeric key.</summary>
         public void AddNode(int number, T startItem)
         {
             Node<T> node = new Node<T>(number, startItem);
             nodesDict.Add(number, node);
         }
 
+        /// <summary>
+        /// Add an undirected edge between two existing nodes.
+        /// The edge is stored in the master list and in both endpoints' adjacency lists.
+        /// </summary>
         public void AddEdge(int startNodeNbr, int endNodeNbr, double cost)
         {
             Node<T> start = nodesDict[startNodeNbr];
@@ -53,6 +80,11 @@ namespace GameManager.Graph
                                     nodesDict[nodeB].item.GetPosition());
         }
 
+        /// <summary>
+        /// Find the neighbor of <paramref name="endNodeNbr"/> that is closest
+        /// to <paramref name="startNodeNbr"/> by Euclidean distance.
+        /// Returns -1 if no neighbors exist.
+        /// </summary>
         public int FindClosestNeighborToTarget(int startNodeNbr, int endNodeNbr)
         {
             int closestNodeNbr = -1;
@@ -70,6 +102,10 @@ namespace GameManager.Graph
             return closestNodeNbr;
         }
 
+        /// <summary>
+        /// Breadth-first search (stub). Only valid when <see cref="isUniform"/> is true.
+        /// Currently throws — all pathfinding uses <see cref="AStarSearch"/> instead.
+        /// </summary>
         public List<T> BreadthFirstSearch(int startNodeNbr, int endNodeNbr)
         {
             List<T> path = new List<T>();
@@ -82,7 +118,7 @@ namespace GameManager.Graph
             return path;
         }
 
-        // Reset for AStarSearch
+        /// <summary>Clear transient search state on all nodes before a new A* search.</summary>
         public void ResetSearch()
         {
             foreach (Node<T> node in nodesDict.Values)
@@ -96,6 +132,24 @@ namespace GameManager.Graph
         /// <summary>Why the last search ended: "found", "cap", "exhausted", "same_node", "end_blocked"</summary>
         public string LastSearchResult { get; private set; }
 
+        /// <summary>
+        /// A* shortest-path search from <paramref name="startNodeNbr"/> to <paramref name="endNodeNbr"/>.
+        ///
+        /// Returns a list of node IDs from start (exclusive) to end (inclusive), or
+        /// an empty list if no path exists.
+        ///
+        /// When <paramref name="avoidUnits"/> is true, only nodes where
+        /// <see cref="IBuildable.IsBuildable"/> is true are expanded (avoids cells
+        /// occupied by mobile units). Otherwise, <see cref="IBuildable.IsWalkable"/>
+        /// is used (standard terrain passability).
+        ///
+        /// The start node is allowed to be impassable — units may be inside a building
+        /// and need to pathfind out. The end node must be passable.
+        ///
+        /// Search is capped at <paramref name="maxExpansions"/> node expansions to
+        /// prevent unbounded computation on large or disconnected maps.
+        /// Results are recorded in <see cref="LastSearchResult"/> and <see cref="LastSearchExpansions"/>.
+        /// </summary>
         public List<int> AStarSearch(int startNodeNbr, int endNodeNbr, int maxExpansions = 2000, bool avoidUnits = false)
         {
 			List<int> path = new List<int>();

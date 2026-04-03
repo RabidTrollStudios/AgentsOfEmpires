@@ -5,6 +5,13 @@ using UnityEngine;
 
 namespace GameManager.GameElements
 {
+	/// <summary>
+	/// Unit partial — command initiation (StartTraining, StartBuilding, StartGathering, etc.).
+	///
+	/// Each method validates preconditions, deducts gold, computes paths, and sets
+	/// the unit's action state so TickEngine can advance the task each tick.
+	/// Also provides helpers for accessing the owning agent's command logger and analytics.
+	/// </summary>
 	public partial class Unit
 	{
 		#region Start Actions

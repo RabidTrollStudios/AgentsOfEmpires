@@ -5,10 +5,20 @@ using AgentSDK;
 
 namespace PlanningAgent
 {
-    ///<summary>Planning Agent is the over-head planner that decided where
-    /// individual units go and what tasks they perform.  Low-level
-    /// AI is handled by other classes (like pathfinding).
-    ///</summary>
+    /// <summary>
+    /// User's primary AI agent. Uses a three-phase FSM driven by threshold tables:
+    ///   - BaseBuilding: economy first — find mine, build base + barracks, train pawns
+    ///   - ArmyBuilding: train warriors and archers (alternating), build second barracks
+    ///   - Attacking: coordinated assault — warriors charge, archers range-fire
+    ///
+    /// Phase transitions are evaluated each tick via <see cref="EvaluateState"/>:
+    /// if all unit counts exceed the phase's max thresholds → progress;
+    /// if any count drops below its min threshold → regress.
+    ///
+    /// Defense is active in all phases: idle troops attack enemies within 10 cells
+    /// of friendly buildings or pawns. During Attacking phase, uses
+    /// <see cref="CoordinatedAttack"/> for role-based targeting.
+    /// </summary>
     public class PlanningAgent : PlanningAgentBase
     {
         private const int PAWNS_PER_BASE = 8;
@@ -317,6 +327,7 @@ namespace PlanningAgent
             }
         }
 
+        /// <summary>Returns true if the enemy position is within radius of any friendly building or pawn.</summary>
         private bool IsNearOurUnits(Position enemyPos, float radius, IGameState state)
         {
             foreach (int unit in myBases)
@@ -444,6 +455,7 @@ namespace PlanningAgent
             return closest;
         }
 
+        /// <summary>Find the enemy closest to our main base (for defensive prioritization).</summary>
         private int FindClosestToBase(List<int> enemies, IGameState state)
         {
             UnitInfo? baseInfo = state.GetUnit(mainBaseNbr);
@@ -513,6 +525,10 @@ namespace PlanningAgent
             }
         }
 
+        /// <summary>
+        /// BaseBuilding phase: find a mine, build a base near it, train pawns,
+        /// then build a barracks. Progresses to ArmyBuilding once thresholds are met.
+        /// </summary>
         private void UpdateBaseBuilding(IGameState state, IAgentActions actions)
         {
             // Progress to ArmyBuilding once we meet BaseBuilding max thresholds
@@ -642,6 +658,11 @@ namespace PlanningAgent
             Mine(state, actions);
         }
 
+        /// <summary>
+        /// ArmyBuilding phase: train warriors and archers (alternating by count),
+        /// build a second barracks, rally idle troops. Regresses to BaseBuilding
+        /// if economy collapses; progresses to Attacking once army thresholds are met.
+        /// </summary>
         private void UpdateArmyBuilding(IGameState state, IAgentActions actions)
         {
             // Regress to BaseBuilding or progress to Attacking based on ArmyBuilding thresholds
@@ -713,6 +734,10 @@ namespace PlanningAgent
             }
         }
 
+        /// <summary>
+        /// Attacking phase: continue mining and training, launch coordinated attacks.
+        /// Regresses to ArmyBuilding if army drops below attacking min thresholds.
+        /// </summary>
         private void UpdateAttacking(IGameState state, IAgentActions actions)
         {
             // Regress to ArmyBuilding based on Attacking thresholds
@@ -762,7 +787,10 @@ namespace PlanningAgent
 
         }
 
-        // Sends all pawns to go mine
+        /// <summary>
+        /// Send all idle pawns to gather from the closest mine, delivering to the closest base.
+        /// Each pawn independently selects its nearest mine and base by path length.
+        /// </summary>
         void Mine(IGameState state, IAgentActions actions)
         {
             if (mines.Count > 0)

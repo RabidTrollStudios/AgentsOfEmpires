@@ -4,9 +4,12 @@ using AgentSDK;
 
 namespace PlanningAgent
 {
-    // Planning Agent is the over-head planner that decided where
-    // individual units go and what tasks they perform.  Low-level
-    // AI is handled by other classes (like pathfinding).
+    /// <summary>
+    /// [MEDIUM] Random-decision agent using heuristic scoring.
+    /// Trains up to 10 pawns and 10 warriors (no archers despite having constants).
+    /// Selects attack targets randomly from available enemy types.
+    /// Uses FindClosestBuildPosition and FindClosestUnit helpers for spatial decisions.
+    /// </summary>
     public class PlanningAgent : PlanningAgentBase
     {
         private const int MAX_NBR_ARCHERS = 0;

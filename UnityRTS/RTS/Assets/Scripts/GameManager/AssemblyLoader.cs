@@ -9,16 +9,16 @@ using System.Threading.Tasks;
 namespace GameManager
 {
     /// <summary>
-    /// AssemblyLoader Class
+    /// Resolves .NET assemblies at runtime by searching the application base directory.
+    /// Hooks into <see cref="AppDomain.AssemblyResolve"/> so that agent DLLs
+    /// (compiled separately and dropped into the Plugins folder) can be loaded
+    /// even when the CLR's default probing fails.
     /// </summary>
 	[Serializable]
 	public class AssemblyLoader : MarshalByRefObject
 	{
 		private string ApplicationBase { get; set; }
 
-        /// <summary>
-        /// AssemblyLoader
-        /// </summary>
 		public AssemblyLoader()
 		{
 			ApplicationBase = AppDomain.CurrentDomain.BaseDirectory;
@@ -26,11 +26,9 @@ namespace GameManager
 		}
 
         /// <summary>
-        /// Resolve
+        /// Called by the CLR when normal assembly resolution fails.
+        /// Attempts to load the requested assembly from the application base directory.
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="args"></param>
-        /// <returns></returns>
 		private Assembly Resolve(object sender, ResolveEventArgs args)
 		{
 			AssemblyName assemblyName = new AssemblyName(args.Name);
