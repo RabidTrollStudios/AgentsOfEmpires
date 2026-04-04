@@ -13,8 +13,8 @@ namespace Opponent.Tests
     /// </summary>
     public class LancerTurtleOpponent : PlanningAgentBase
     {
-        private const int MAX_PAWNS = 8;
-        private const int ATTACK_THRESHOLD = 8;
+        private const int MAX_PAWNS = 6;
+        private const int ATTACK_THRESHOLD = 6;
 
         public override void InitializeMatch() { }
 

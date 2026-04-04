@@ -87,7 +87,7 @@ namespace AgentSDK
                 { UnitType.MINE,        0f },
                 { UnitType.PAWN,      0f },
                 { UnitType.WARRIOR,     50f },
-                { UnitType.ARCHER,      38f },
+                { UnitType.ARCHER,      30f },
                 { UnitType.BASE,        0f },
                 { UnitType.BARRACKS,    0f },
                 { UnitType.ARCHERY,     0f },
@@ -307,14 +307,14 @@ namespace AgentSDK
         /// <summary>Warrior Charge: speed multiplier when charging toward an enemy.</summary>
         public static readonly float CHARGE_SPEED_MULTIPLIER = 2.0f;
         /// <summary>Warrior Charge: triggers when an attack target is within this range.</summary>
-        public static readonly float CHARGE_RANGE = 6.0f;
+        public static readonly float CHARGE_RANGE = 8.0f;
         /// <summary>Warrior Charge: duration of the speed boost (seconds at game speed 1).</summary>
-        public static readonly float CHARGE_DURATION = 1.5f;
+        public static readonly float CHARGE_DURATION = 2.0f;
         /// <summary>Warrior Charge: cooldown between charges (seconds at game speed 1).</summary>
         public static readonly float CHARGE_COOLDOWN = 5.0f;
 
         /// <summary>Archer Volley: damage multiplier on the first hit against a new target.</summary>
-        public static readonly float VOLLEY_BONUS_MULTIPLIER = 1.5f;
+        public static readonly float VOLLEY_BONUS_MULTIPLIER = 1.75f;
         /// <summary>Archer Volley: seconds before the same target can receive volley bonus again.</summary>
         public static readonly float VOLLEY_COOLDOWN = 3.0f;
 
