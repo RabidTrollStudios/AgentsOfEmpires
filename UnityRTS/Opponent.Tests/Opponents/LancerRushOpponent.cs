@@ -27,8 +27,8 @@ namespace Opponent.Tests
             TrainPawns(state, actions, MAX_PAWNS);
             GatherWithIdlePawns(state, actions);
 
-            // Rush to tower
-            if (myTowers.Count == 0 && HasBuiltUnit(myBases, state))
+            // Rush to 2 towers
+            if (myTowers.Count < 2 && HasBuiltUnit(myBases, state))
                 BuildStructure(UnitType.TOWER, state, actions);
 
             // Train lancers only

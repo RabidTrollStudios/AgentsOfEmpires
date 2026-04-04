@@ -275,17 +275,27 @@ function render(data) {
   }).join('');
   document.getElementById('unit-perf').innerHTML = unitPerf;
 
-  // Strategy comparison grid
+  // Strategy comparison grid (intra-tier win rates only)
   const rates = data.AggregateWinRates || {};
+  const mtx = data.WinRateMatrix || {};
   let sgHtml = '<div class="strategy-grid" style="grid-template-columns:auto repeat(4, 1fr)">';
   sgHtml += '<div class="cell cell-header"></div>';
   ['Warrior', 'Archer', 'Lancer', 'Mixed/All'].forEach(u => sgHtml += `<div class="cell cell-header">${u}</div>`);
   Object.entries(TIERS).forEach(([tierKey, tier]) => {
     sgHtml += `<div class="cell cell-label" style="color:${tier.color}">${tierKey}</div>`;
     tier.agents.forEach(name => {
-      const r = rates[name];
-      if (r !== undefined) {
-        sgHtml += `<div class="cell" style="background:${winColor(r)};font-weight:700" title="${name}">${pct(r)}</div>`;
+      // Calculate win rate only against other agents in the same tier
+      const opponents = tier.agents.filter(a => a !== name);
+      let wins = 0, total = 0;
+      opponents.forEach(opp => {
+        if (mtx[name] && mtx[name][opp] !== undefined) {
+          wins += mtx[name][opp];
+          total++;
+        }
+      });
+      const intraTierWr = total > 0 ? wins / total : null;
+      if (intraTierWr !== null) {
+        sgHtml += `<div class="cell" style="background:${winColor(intraTierWr)};font-weight:700" title="${name} (${pct(intraTierWr)} within tier)">${pct(intraTierWr)}</div>`;
       } else {
         sgHtml += `<div class="cell" style="color:var(--text-dim)" title="${name}">-</div>`;
       }

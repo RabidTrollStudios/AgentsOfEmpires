@@ -37,7 +37,26 @@ namespace AgentSDK
 
             float speed = constants.MovingSpeed[unit.UnitType] / world.StepDuration;
             if (speed <= 0f) return;
+
+            // Warrior Charge: speed boost when moving toward attack target and cooldown ready
+            if (unit.UnitType == UnitType.WARRIOR
+                && unit.CurrentAction == UnitAction.ATTACK
+                && unit.ChargeCooldown <= 0f
+                && unit.AttackTargetNbr >= 0)
+            {
+                var target = world.GetUnit(unit.AttackTargetNbr);
+                if (target != null && target.Health > 0)
+                {
+                    float distToTarget = Position.Distance(unit.CenterPosition, target.CenterPosition);
+                    if (distToTarget <= GameConstants.CHARGE_RANGE)
+                    {
+                        speed *= GameConstants.CHARGE_SPEED_MULTIPLIER;
+                    }
+                }
+            }
+
             float remainingDist = speed * dt;
+            float distThisFrame = 0f; // track for lancer joust
 
             while (remainingDist > 0f && path != null && unit.PathIndex < path.Count)
             {
@@ -53,6 +72,7 @@ namespace AgentSDK
                 if (remainingDist >= progressDist)
                 {
                     // Enough distance to cross into the next cell
+                    distThisFrame += progressDist;
                     remainingDist -= progressDist;
 
                     // Collision check
@@ -128,10 +148,15 @@ namespace AgentSDK
                 else
                 {
                     // Partial progress within this segment
+                    distThisFrame += remainingDist;
                     unit.PathProgress += remainingDist / segmentDist;
                     remainingDist = 0f;
                 }
             }
+
+            // Lancer Joust: accumulate distance traveled for joust bonus
+            if (unit.UnitType == UnitType.LANCER)
+                unit.JoustDistance += distThisFrame;
         }
 
         /// <summary>Check if a cell is passable, without accumulator logic.</summary>

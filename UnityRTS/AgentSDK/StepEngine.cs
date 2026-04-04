@@ -52,12 +52,16 @@ namespace AgentSDK
                 // Movement is now handled by MovementSystem.Advance called separately
             }
 
-            // Phase 3: Mana regen for all units
+            // Phase 3: Mana regen + ability cooldowns
             foreach (var unit in units)
             {
                 float maxMana = GameConstants.MAX_MANA[unit.UnitType];
                 float manaRegen = world.Constants.ManaRegen;
                 unit.Mana = TaskEngine.RegenMana(unit.Mana, maxMana, manaRegen, world.StepDuration);
+
+                // Warrior charge cooldown ticks down
+                if (unit.UnitType == UnitType.WARRIOR && unit.ChargeCooldown > 0f)
+                    unit.ChargeCooldown = Math.Max(0f, unit.ChargeCooldown - world.StepDuration);
             }
 
             // Phase 4: Remove dead units
@@ -87,6 +91,10 @@ namespace AgentSDK
             unit.HealTargetNbr = -1;
             unit.BuildTargetNbr = -1;
             unit.RepairBuildingNbr = -1;
+            // Ability state: keep ChargeCooldown (ticks down over time),
+            // keep VolleyTargetNbr/VolleyTimer (persists between attacks),
+            // reset JoustDistance (lancer starts accumulating on next move).
+            unit.JoustDistance = 0f;
         }
 
         #region Movement
@@ -391,8 +399,42 @@ namespace AgentSDK
                 float dmg = TaskEngine.ComputeDamagePerTick(
                     attacker.UnitType, target.UnitType,
                     world.Constants.Damage[attacker.UnitType], world.StepDuration);
+
+                // Archer Volley: bonus damage on first hit against a new/cooled-down target
+                if (attacker.UnitType == UnitType.ARCHER)
+                {
+                    bool isNewTarget = attacker.VolleyTargetNbr != target.UnitNbr;
+                    bool isCooledDown = attacker.VolleyTimer >= GameConstants.VOLLEY_COOLDOWN;
+                    if (isNewTarget || isCooledDown)
+                    {
+                        dmg *= GameConstants.VOLLEY_BONUS_MULTIPLIER;
+                        attacker.VolleyTargetNbr = target.UnitNbr;
+                        attacker.VolleyTimer = 0f;
+                    }
+                    else
+                    {
+                        attacker.VolleyTimer += world.StepDuration;
+                    }
+                }
+
+                // Lancer Joust: bonus damage after traveling minimum distance
+                if (attacker.UnitType == UnitType.LANCER && attacker.JoustDistance >= GameConstants.JOUST_MIN_DISTANCE)
+                {
+                    dmg *= GameConstants.JOUST_BONUS_MULTIPLIER;
+                    attacker.JoustDistance = 0f;
+                }
+                else if (attacker.UnitType == UnitType.LANCER)
+                {
+                    // Reset distance on hit without joust (standing and fighting)
+                    attacker.JoustDistance = 0f;
+                }
+
                 target.Health -= dmg;
                 callbacks.OnDamageDealt(attacker, target, dmg);
+
+                // Warrior resets charge cooldown on hit (engaged in melee)
+                if (attacker.UnitType == UnitType.WARRIOR)
+                    attacker.ChargeCooldown = GameConstants.CHARGE_COOLDOWN;
 
                 if (target.Health <= 0)
                 {

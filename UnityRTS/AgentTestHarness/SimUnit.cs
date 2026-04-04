@@ -53,6 +53,12 @@ namespace AgentTestHarness
         // Combat
         public int AttackTargetNbr { get; set; }
 
+        // Abilities
+        public float ChargeCooldown { get; set; }
+        public int VolleyTargetNbr { get; set; }
+        public float VolleyTimer { get; set; }
+        public float JoustDistance { get; set; }
+
         // Repair
         public int RepairBuildingNbr { get; set; }
 
@@ -87,6 +93,7 @@ namespace AgentTestHarness
             GatherMineNbr = -1;
             GatherBaseNbr = -1;
             HealTargetNbr = -1;
+            VolleyTargetNbr = -1;
             Mana = GameConstants.MAX_MANA[unitType];
         }
 

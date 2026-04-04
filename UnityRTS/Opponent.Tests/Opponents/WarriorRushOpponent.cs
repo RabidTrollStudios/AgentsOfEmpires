@@ -26,8 +26,8 @@ namespace Opponent.Tests
             TrainPawns(state, actions, MAX_PAWNS);
             GatherWithIdlePawns(state, actions);
 
-            // Rush to barracks
-            if (myBarracks.Count == 0 && HasBuiltUnit(myBases, state))
+            // Rush to 2 barracks
+            if (myBarracks.Count < 2 && HasBuiltUnit(myBases, state))
                 BuildStructure(UnitType.BARRACKS, state, actions);
 
             // Train warriors only — spend everything on military

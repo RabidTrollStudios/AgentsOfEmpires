@@ -52,6 +52,16 @@ namespace AgentSDK
         // Combat
         int AttackTargetNbr { get; set; }
 
+        // Abilities
+        /// <summary>Warrior: charge cooldown remaining (seconds). 0 = ready.</summary>
+        float ChargeCooldown { get; set; }
+        /// <summary>Archer: UnitNbr of last volley target (-1 = none).</summary>
+        int VolleyTargetNbr { get; set; }
+        /// <summary>Archer: time since last volley on current target (seconds).</summary>
+        float VolleyTimer { get; set; }
+        /// <summary>Lancer: distance traveled since last attack (for joust).</summary>
+        float JoustDistance { get; set; }
+
         // Repair
         int RepairBuildingNbr { get; set; }
 

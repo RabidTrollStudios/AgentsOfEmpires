@@ -302,6 +302,30 @@
         <member name="F:AgentSDK.GameConstants.HEAL_AMOUNT">
             <summary>Flat HP restored per heal action</summary>
         </member>
+        <member name="F:AgentSDK.GameConstants.CHARGE_SPEED_MULTIPLIER">
+            <summary>Warrior Charge: speed multiplier when charging toward an enemy.</summary>
+        </member>
+        <member name="F:AgentSDK.GameConstants.CHARGE_RANGE">
+            <summary>Warrior Charge: triggers when an attack target is within this range.</summary>
+        </member>
+        <member name="F:AgentSDK.GameConstants.CHARGE_DURATION">
+            <summary>Warrior Charge: duration of the speed boost (seconds at game speed 1).</summary>
+        </member>
+        <member name="F:AgentSDK.GameConstants.CHARGE_COOLDOWN">
+            <summary>Warrior Charge: cooldown between charges (seconds at game speed 1).</summary>
+        </member>
+        <member name="F:AgentSDK.GameConstants.VOLLEY_BONUS_MULTIPLIER">
+            <summary>Archer Volley: damage multiplier on the first hit against a new target.</summary>
+        </member>
+        <member name="F:AgentSDK.GameConstants.VOLLEY_COOLDOWN">
+            <summary>Archer Volley: seconds before the same target can receive volley bonus again.</summary>
+        </member>
+        <member name="F:AgentSDK.GameConstants.JOUST_MIN_DISTANCE">
+            <summary>Lancer Joust: minimum distance traveled since last attack to trigger bonus.</summary>
+        </member>
+        <member name="F:AgentSDK.GameConstants.JOUST_BONUS_MULTIPLIER">
+            <summary>Lancer Joust: damage multiplier on first hit after moving minimum distance.</summary>
+        </member>
         <member name="M:AgentSDK.GameConstants.EffectiveAttackRange(AgentSDK.UnitType,AgentSDK.UnitType)">
             <summary>
             Compute effective attack range against a target, accounting for target unit size.
@@ -723,6 +747,18 @@
             Abstraction over a game unit for the shared StepEngine.
             Both SimUnit (headless) and Unity's Unit (MonoBehaviour) implement this.
             </summary>
+        </member>
+        <member name="P:AgentSDK.ISimUnit.ChargeCooldown">
+            <summary>Warrior: charge cooldown remaining (seconds). 0 = ready.</summary>
+        </member>
+        <member name="P:AgentSDK.ISimUnit.VolleyTargetNbr">
+            <summary>Archer: UnitNbr of last volley target (-1 = none).</summary>
+        </member>
+        <member name="P:AgentSDK.ISimUnit.VolleyTimer">
+            <summary>Archer: time since last volley on current target (seconds).</summary>
+        </member>
+        <member name="P:AgentSDK.ISimUnit.JoustDistance">
+            <summary>Lancer: distance traveled since last attack (for joust).</summary>
         </member>
         <member name="T:AgentSDK.ISimWorld">
             <summary>

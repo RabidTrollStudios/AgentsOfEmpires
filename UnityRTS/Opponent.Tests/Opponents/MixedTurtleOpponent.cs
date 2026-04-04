@@ -4,19 +4,27 @@ using AgentSDK;
 namespace Opponent.Tests
 {
     /// <summary>
-    /// [EASY] Greedy economy mixed turtle: 8 pawns, barracks + archery.
-    /// Trains warriors and archers in alternation. Waits for 8+ total
-    /// combat units before attacking. Very slow start, but the mixed
-    /// army covers R-P-S weaknesses if given time to build up.
-    /// Strategy to beat: rush before the turtle masses up, or lancers
-    /// to counter the warriors while closing on archers.
+    /// [EASY] Reactive counter-picker turtle: 8 pawns, waits to see what
+    /// the opponent builds, then picks the unit type that counters it
+    /// (Warrior→Lancer, Archer→Warrior, Lancer→Archer). Builds 1 building
+    /// of the counter type. If the opponent hasn't built anything yet,
+    /// waits. Attacks with 8+ units.
+    /// Strategy to beat: delay your building to stall the counter-picker,
+    /// or switch unit types after it commits.
     /// </summary>
     public class MixedTurtleOpponent : PlanningAgentBase
     {
         private const int MAX_PAWNS = 8;
         private const int ATTACK_THRESHOLD = 8;
 
-        public override void InitializeMatch() { }
+        private UnitType _chosenUnit = UnitType.MINE; // MINE = not chosen yet
+        private UnitType _chosenBuilding = UnitType.MINE;
+
+        public override void InitializeMatch()
+        {
+            _chosenUnit = UnitType.MINE;
+            _chosenBuilding = UnitType.MINE;
+        }
 
         public override void Update(IGameState state, IAgentActions actions)
         {
@@ -27,42 +35,62 @@ namespace Opponent.Tests
             TrainPawns(state, actions, MAX_PAWNS);
             GatherWithIdlePawns(state, actions);
 
-            // Build barracks first, then archery
-            if (myBarracks.Count == 0 && HasBuiltUnit(myBases, state))
-                BuildStructure(UnitType.BARRACKS, state, actions);
-            else if (myArchery.Count == 0 && HasBuiltUnit(myBarracks, state))
-                BuildStructure(UnitType.ARCHERY, state, actions);
-
-            // Train warriors from barracks
-            foreach (int barracksNbr in myBarracks)
+            // Scout enemy buildings and pick counter
+            if (_chosenUnit == UnitType.MINE)
             {
-                var info = state.GetUnit(barracksNbr);
-                if (info.HasValue && info.Value.IsBuilt
-                    && info.Value.CurrentAction == UnitAction.IDLE
-                    && state.MyGold >= GameConstants.COST[UnitType.WARRIOR])
+                if (state.GetEnemyUnits(UnitType.BARRACKS).Count > 0)
                 {
-                    actions.Train(barracksNbr, UnitType.WARRIOR);
+                    // Enemy has barracks (warriors) → build tower (lancers counter warriors)
+                    _chosenUnit = UnitType.LANCER;
+                    _chosenBuilding = UnitType.TOWER;
+                }
+                else if (state.GetEnemyUnits(UnitType.ARCHERY).Count > 0)
+                {
+                    // Enemy has archery (archers) → build barracks (warriors counter archers)
+                    _chosenUnit = UnitType.WARRIOR;
+                    _chosenBuilding = UnitType.BARRACKS;
+                }
+                else if (state.GetEnemyUnits(UnitType.TOWER).Count > 0)
+                {
+                    // Enemy has tower (lancers) → build archery (archers counter lancers)
+                    _chosenUnit = UnitType.ARCHER;
+                    _chosenBuilding = UnitType.ARCHERY;
                 }
             }
 
-            // Train archers from archery
-            foreach (int archeryNbr in myArchery)
+            // Build counter building once chosen
+            if (_chosenBuilding != UnitType.MINE)
             {
-                var info = state.GetUnit(archeryNbr);
-                if (info.HasValue && info.Value.IsBuilt
-                    && info.Value.CurrentAction == UnitAction.IDLE
-                    && state.MyGold >= GameConstants.COST[UnitType.ARCHER])
-                {
-                    actions.Train(archeryNbr, UnitType.ARCHER);
-                }
-            }
+                bool hasBuilding = _chosenBuilding == UnitType.BARRACKS ? myBarracks.Count > 0
+                    : _chosenBuilding == UnitType.ARCHERY ? myArchery.Count > 0
+                    : myTowers.Count > 0;
 
-            // Only attack with a large mixed army
-            int armySize = myWarriors.Count + myArchers.Count;
-            if (armySize >= ATTACK_THRESHOLD)
-            {
-                AttackWithUnits(myWarriors, state, actions);
-                AttackWithUnits(myArchers, state, actions);
+                if (!hasBuilding && HasBuiltUnit(myBases, state))
+                    BuildStructure(_chosenBuilding, state, actions);
+
+                // Train counter units
+                var buildings = _chosenBuilding == UnitType.BARRACKS ? myBarracks
+                    : _chosenBuilding == UnitType.ARCHERY ? myArchery
+                    : myTowers;
+
+                foreach (int bldgNbr in buildings)
+                {
+                    var info = state.GetUnit(bldgNbr);
+                    if (info.HasValue && info.Value.IsBuilt
+                        && info.Value.CurrentAction == UnitAction.IDLE
+                        && state.MyGold >= GameConstants.COST[_chosenUnit])
+                    {
+                        actions.Train(bldgNbr, _chosenUnit);
+                    }
+                }
+
+                // Attack with chosen unit type
+                var army = _chosenUnit == UnitType.WARRIOR ? myWarriors
+                    : _chosenUnit == UnitType.ARCHER ? myArchers
+                    : myLancers;
+
+                if (army.Count >= ATTACK_THRESHOLD)
+                    AttackWithUnits(army, state, actions);
             }
         }
 

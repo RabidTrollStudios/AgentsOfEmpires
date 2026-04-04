@@ -125,6 +125,16 @@ namespace GameManager.GameElements
         // Combat
         int ISimUnit.AttackTargetNbr { get => attackUnitNbr; set => attackUnitNbr = value; }
 
+        // Abilities
+        private float _chargeCooldown;
+        private int _volleyTargetNbr = -1;
+        private float _volleyTimer;
+        private float _joustDistance;
+        float ISimUnit.ChargeCooldown { get => _chargeCooldown; set => _chargeCooldown = value; }
+        int ISimUnit.VolleyTargetNbr { get => _volleyTargetNbr; set => _volleyTargetNbr = value; }
+        float ISimUnit.VolleyTimer { get => _volleyTimer; set => _volleyTimer = value; }
+        float ISimUnit.JoustDistance { get => _joustDistance; set => _joustDistance = value; }
+
         // Repair
         int ISimUnit.RepairBuildingNbr
         {
