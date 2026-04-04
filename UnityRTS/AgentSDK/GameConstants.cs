@@ -26,14 +26,14 @@ namespace AgentSDK
             new ReadOnlyDictionary<UnitType, float>(new Dictionary<UnitType, float>()
             {
                 { UnitType.MINE,        0.0f },
-                { UnitType.PAWN,      SCALAR_COST },
-                { UnitType.WARRIOR,     SCALAR_COST * 2 },
+                { UnitType.PAWN,      75f },
+                { UnitType.WARRIOR,     85f },
                 { UnitType.ARCHER,      80f },
                 { UnitType.BASE,        SCALAR_COST * 10 },
                 { UnitType.BARRACKS,    SCALAR_COST * 8 },
                 { UnitType.ARCHERY,     SCALAR_COST * 7 },
-                { UnitType.LANCER,      70f },
-                { UnitType.TOWER,       SCALAR_COST * 6 },
+                { UnitType.LANCER,      90f },
+                { UnitType.TOWER,       SCALAR_COST * 8 },
                 { UnitType.MONASTERY,   SCALAR_COST * 7 },
                 { UnitType.MONK,        90f },
             });
@@ -66,7 +66,7 @@ namespace AgentSDK
             new ReadOnlyDictionary<UnitType, float>(new Dictionary<UnitType, float>()
             {
                 { UnitType.MINE,        0.0f },
-                { UnitType.PAWN,      SCALAR_MINING_CAPACITY * 5.0f },
+                { UnitType.PAWN,      25f },
                 { UnitType.WARRIOR,     0.0f },
                 { UnitType.ARCHER,      0.0f },
                 { UnitType.BASE,        0.0f },
@@ -105,7 +105,7 @@ namespace AgentSDK
             {
                 { UnitType.MINE,        0f },
                 { UnitType.PAWN,      2f },
-                { UnitType.WARRIOR,     7f },
+                { UnitType.WARRIOR,     4f },
                 { UnitType.ARCHER,      4f },
                 { UnitType.BASE,        10f },
                 { UnitType.BARRACKS,    20f },
@@ -142,7 +142,7 @@ namespace AgentSDK
         public static readonly ReadOnlyDictionary<UnitType, Position> UNIT_SIZE =
             new ReadOnlyDictionary<UnitType, Position>(new Dictionary<UnitType, Position>()
             {
-                { UnitType.MINE,        new Position(3, 3) },
+                { UnitType.MINE,        new Position(2, 2) },
                 { UnitType.PAWN,      new Position(1, 1) },
                 { UnitType.WARRIOR,     new Position(1, 1) },
                 { UnitType.ARCHER,      new Position(1, 1) },
@@ -293,7 +293,7 @@ namespace AgentSDK
             });
 
         /// <summary>Mana cost per heal action (10% of max mana)</summary>
-        public static readonly float MANA_COST = 10f;
+        public static readonly float MANA_COST = 15f;
 
         /// <summary>Base mana regeneration rate (scaled by game speed)</summary>
         /// <summary>Base mana regeneration rate (scaled by game speed). Full pool (100) in ~3s at speed 20.</summary>

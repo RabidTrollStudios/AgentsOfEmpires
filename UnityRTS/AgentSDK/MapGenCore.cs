@@ -48,7 +48,7 @@ namespace AgentSDK
         public float ObstacleDensity { get; set; } = 0.15f;
 
         /// <summary>Number of gold mines per player.</summary>
-        public int MinesPerPlayer { get; set; } = 1;
+        public int MinesPerPlayer { get; set; } = 2;
 
         /// <summary>Symmetry enforcement mode.</summary>
         public SymmetryType Symmetry { get; set; } = SymmetryType.Mirror;
@@ -164,11 +164,22 @@ namespace AgentSDK
         private static Position[] ComputeMinePositions(Position spawn0, MapGenConfig config, Random rng)
         {
             var mines = new Position[config.PlayerCount * config.MinesPerPlayer];
+            var mineSize = GameConstants.UNIT_SIZE[UnitType.MINE];
+
             for (int m = 0; m < config.MinesPerPlayer; m++)
             {
-                var mine0 = PickMineNear(spawn0, config.Width, config.Height, rng);
+                Position mine0;
+                if (m == 0)
+                {
+                    // First mine: near base (safe income)
+                    mine0 = PickMineNear(spawn0, config.Width, config.Height, rng);
+                }
+                else
+                {
+                    // Additional mines: contested positions (opposite quadrant from base)
+                    mine0 = PickContestedMine(spawn0, config.Width, config.Height, rng);
+                }
                 mines[m * 2] = mine0;
-                var mineSize = GameConstants.UNIT_SIZE[UnitType.MINE];
                 mines[m * 2 + 1] = MirrorUnit(mine0, config.Width, config.Height, mineSize.X, mineSize.Y);
             }
             return mines;
@@ -195,6 +206,31 @@ namespace AgentSDK
             return new Position(
                 Math.Min(spawn.X + 7, w / 2 - 2),
                 Math.Min(spawn.Y + 7, h / 2 - 2));
+        }
+
+        /// <summary>
+        /// Pick a contested mine position: in the opposite quadrant from spawn0,
+        /// creating a mine that requires map control to access safely.
+        /// Player 0 spawns bottom-left, so contested mine goes in the top-left
+        /// or bottom-right quadrant. Mirror handles the symmetric counterpart.
+        /// </summary>
+        private static Position PickContestedMine(Position spawn, int w, int h, Random rng)
+        {
+            // Place in bottom-right quadrant (far from spawn0 which is bottom-left)
+            int minX = w / 2 + 2;
+            int maxX = w - 4;
+            int minY = 2;
+            int maxY = h / 2 - 2;
+
+            for (int i = 0; i < 100; i++)
+            {
+                int x = rng.Next(minX, maxX + 1);
+                int y = rng.Next(minY, maxY + 1);
+                if (x >= 2 && x < w - 2 && y >= 2 && y < h - 2)
+                    return new Position(x, y);
+            }
+
+            return new Position(w * 3 / 4, h / 4);
         }
 
         #endregion

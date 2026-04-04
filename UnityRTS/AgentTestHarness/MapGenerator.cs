@@ -45,7 +45,7 @@ namespace AgentTestHarness
         public float ObstacleDensity { get; set; } = 0.15f;
 
         /// <summary>Number of gold mines per player.</summary>
-        public int MinesPerPlayer { get; set; } = 1;
+        public int MinesPerPlayer { get; set; } = 2;
 
         /// <summary>Symmetry enforcement mode.</summary>
         public SymmetryType Symmetry { get; set; } = SymmetryType.Mirror;

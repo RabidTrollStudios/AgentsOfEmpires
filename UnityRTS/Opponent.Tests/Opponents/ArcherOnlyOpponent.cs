@@ -4,9 +4,9 @@ using AgentSDK;
 namespace Opponent.Tests
 {
     /// <summary>
-    /// [EASY] Builds barracks and trains only archers. Attacks with 2+.
-    /// Archers cost 200g but deal only 3 DPS — warriors (100g, 20 DPS) destroy them.
-    /// Strategy to beat: train a few warriors.
+    /// [EASY] Builds archery and trains only archers. Attacks with 2+.
+    /// Archers have range (9.0) but low HP (600) — warriors counter (1.25x).
+    /// Strategy to beat: train a few warriors to close the gap.
     /// </summary>
     public class ArcherOnlyOpponent : PlanningAgentBase
     {
@@ -24,19 +24,19 @@ namespace Opponent.Tests
             TrainPawns(state, actions, MAX_PAWNS);
             GatherWithIdlePawns(state, actions);
 
-            // Build barracks if we don't have one
-            if (myBarracks.Count == 0 && HasBuiltUnit(myBases, state))
-                BuildStructure(UnitType.BARRACKS, state, actions);
+            // Build archery if we don't have one
+            if (myArchery.Count == 0 && HasBuiltUnit(myBases, state))
+                BuildStructure(UnitType.ARCHERY, state, actions);
 
             // Train archers only
-            foreach (int barracksNbr in myBarracks)
+            foreach (int archeryNbr in myArchery)
             {
-                var info = state.GetUnit(barracksNbr);
+                var info = state.GetUnit(archeryNbr);
                 if (info.HasValue && info.Value.IsBuilt
                     && info.Value.CurrentAction == UnitAction.IDLE
                     && state.MyGold >= GameConstants.COST[UnitType.ARCHER])
                 {
-                    actions.Train(barracksNbr, UnitType.ARCHER);
+                    actions.Train(archeryNbr, UnitType.ARCHER);
                 }
             }
 

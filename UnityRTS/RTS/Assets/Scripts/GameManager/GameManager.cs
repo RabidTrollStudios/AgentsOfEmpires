@@ -63,12 +63,12 @@ namespace GameManager
 		/// <summary>
 		/// Amount of starting gold in each mine
 		/// </summary>
-		[SerializeField] public int StartingMineGold = 10000;
+		[SerializeField] public int StartingMineGold = 3000;
 
 		/// <summary>
 		/// Number of mines at the start of the game
 		/// </summary>
-		[SerializeField] public int NumberOfMines = 2;
+		[SerializeField] public int NumberOfMines = 4;
 
 		/// <summary>
 		/// Starting Game Speed

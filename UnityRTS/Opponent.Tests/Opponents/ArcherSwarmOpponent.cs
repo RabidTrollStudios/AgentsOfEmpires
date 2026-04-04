@@ -5,9 +5,9 @@ namespace Opponent.Tests
 {
     /// <summary>
     /// [MEDIUM] Builds a solid economy, then masses archers. Attacks with 6+.
-    /// Archers have 4.0 range vs warrior 1.5 — a wall of archers can
-    /// outrange melee units. But each archer only does 3 DPS, so warriors
-    /// that close the gap will win.
+    /// Archers have 9.0 range — a wall of archers can outrange melee units.
+    /// But archers have low HP (600), so warriors that close the gap
+    /// will win with their 1.25x counter damage.
     /// Strategy to beat: warriors with good economy, or rush before 6 archers.
     /// </summary>
     public class ArcherSwarmOpponent : PlanningAgentBase
@@ -26,18 +26,18 @@ namespace Opponent.Tests
             TrainPawns(state, actions, MAX_PAWNS);
             GatherWithIdlePawns(state, actions);
 
-            if (myBarracks.Count == 0 && HasBuiltUnit(myBases, state))
-                BuildStructure(UnitType.BARRACKS, state, actions);
+            if (myArchery.Count == 0 && HasBuiltUnit(myBases, state))
+                BuildStructure(UnitType.ARCHERY, state, actions);
 
             // Mass archers
-            foreach (int barracksNbr in myBarracks)
+            foreach (int archeryNbr in myArchery)
             {
-                var info = state.GetUnit(barracksNbr);
+                var info = state.GetUnit(archeryNbr);
                 if (info.HasValue && info.Value.IsBuilt
                     && info.Value.CurrentAction == UnitAction.IDLE
                     && state.MyGold >= GameConstants.COST[UnitType.ARCHER])
                 {
-                    actions.Train(barracksNbr, UnitType.ARCHER);
+                    actions.Train(archeryNbr, UnitType.ARCHER);
                 }
             }
 

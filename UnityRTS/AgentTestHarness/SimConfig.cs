@@ -16,7 +16,7 @@ namespace AgentTestHarness
         public int StartingGold { get; set; } = 1000;
 
         /// <summary>Starting gold in each mine (also used as mine health).</summary>
-        public int StartingMineGold { get; set; } = 10000;
+        public int StartingMineGold { get; set; } = 3000;
 
         /// <summary>
         /// Game speed multiplier. Controls movement speed, damage, creation time, etc.

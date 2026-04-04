@@ -870,6 +870,14 @@
             Retries on connectivity failure with advancing RNG state.
             </summary>
         </member>
+        <member name="M:AgentSDK.MapGenCore.PickContestedMine(AgentSDK.Position,System.Int32,System.Int32,System.Random)">
+            <summary>
+            Pick a contested mine position: in the opposite quadrant from spawn0,
+            creating a mine that requires map control to access safely.
+            Player 0 spawns bottom-left, so contested mine goes in the top-left
+            or bottom-right quadrant. Mirror handles the symmetric counterpart.
+            </summary>
+        </member>
         <member name="M:AgentSDK.MapGenCore.MirrorPos(AgentSDK.Position,System.Int32,System.Int32)">
             <summary>Point reflection for 1x1 cells: (x, y) -> (W-1-x, H-1-y).</summary>
         </member>

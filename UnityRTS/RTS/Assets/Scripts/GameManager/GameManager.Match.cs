@@ -864,8 +864,8 @@ namespace GameManager
 	        unitManager.PlaceUnit(Agents[redAgentNbr], r.SpawnPositions[1], UnitType.PAWN, Color.white);
 
 	        // Mines are neutral (not owned by either agent)
-	        unitManager.PlaceNeutralUnit(r.MinePositions[0], UnitType.MINE, Color.white);
-	        unitManager.PlaceNeutralUnit(r.MinePositions[1], UnitType.MINE, Color.white);
+	        for (int i = 0; i < r.MinePositions.Length; i++)
+	            unitManager.PlaceNeutralUnit(r.MinePositions[i], UnitType.MINE, Color.white);
         }
 
         /// <summary>Place pawns and mines using the original hand-made map placement logic.</summary>

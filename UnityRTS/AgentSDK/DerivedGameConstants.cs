@@ -19,9 +19,9 @@ namespace AgentSDK
                 { UnitType.MINE, 0f }, { UnitType.BASE, 0f }, { UnitType.BARRACKS, 0f },
                 { UnitType.ARCHERY, 0f }, { UnitType.TOWER, 0f }, { UnitType.MONASTERY, 0f },
                 { UnitType.PAWN, 1.0f },
-                { UnitType.WARRIOR, 2.1f },
+                { UnitType.WARRIOR, 2.0f },
                 { UnitType.ARCHER, 3.0f },
-                { UnitType.LANCER, 3.45f },
+                { UnitType.LANCER, 2.5f },
                 { UnitType.MONK, 2.5f },
             };
 
