@@ -321,7 +321,7 @@ namespace AgentSDK
         /// <summary>Lancer Joust: minimum distance traveled since last attack to trigger bonus.</summary>
         public static readonly float JOUST_MIN_DISTANCE = 3.0f;
         /// <summary>Lancer Joust: damage multiplier on first hit after moving minimum distance.</summary>
-        public static readonly float JOUST_BONUS_MULTIPLIER = 1.75f;
+        public static readonly float JOUST_BONUS_MULTIPLIER = 2.25f;
 
         /// <summary>
         /// Compute effective attack range against a target, accounting for target unit size.
