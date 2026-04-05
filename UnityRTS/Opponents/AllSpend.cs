@@ -18,7 +18,6 @@ namespace PlanningAgent
         private const int ATTACK_TICKS = 2;
         private const int KITE_TICKS = 1;
         private const int CYCLE_LENGTH = ATTACK_TICKS + KITE_TICKS;
-        private const int DISENGAGE_TICKS = 3;
         private const float RALLY_DISTANCE = 5.0f;
 
         private int _lastArmySize;
@@ -26,7 +25,7 @@ namespace PlanningAgent
         private UnitType _priorityUnit = UnitType.MINE;
         private Dictionary<int, int> _lastArcherTarget = new Dictionary<int, int>();
         private Dictionary<int, int> _archerCycleTick = new Dictionary<int, int>();
-        private Dictionary<int, int> _lancerCombatTicks = new Dictionary<int, int>();
+        private Dictionary<int, float> _lancerLastHp = new Dictionary<int, float>();
 
         public override void InitializeMatch()
         {
@@ -35,7 +34,7 @@ namespace PlanningAgent
             _priorityUnit = UnitType.MINE;
             _lastArcherTarget = new Dictionary<int, int>();
             _archerCycleTick = new Dictionary<int, int>();
-            _lancerCombatTicks = new Dictionary<int, int>();
+            _lancerLastHp = new Dictionary<int, float>();
         }
 
         public override void Update(IGameState state, IAgentActions actions)
@@ -242,25 +241,58 @@ namespace PlanningAgent
             {
                 var info = state.GetUnit(lancerNbr);
                 if (!info.HasValue) continue;
-                if (!_lancerCombatTicks.ContainsKey(lancerNbr)) _lancerCombatTicks[lancerNbr] = 0;
+
+                float currentHp = info.Value.Health;
+                float lastHp = _lancerLastHp.ContainsKey(lancerNbr) ? _lancerLastHp[lancerNbr] : currentHp;
+                bool tookDamage = currentHp < lastHp;
+                _lancerLastHp[lancerNbr] = currentHp;
+
                 if (info.Value.CurrentAction == UnitAction.ATTACK)
                 {
-                    float dist = Position.Distance(info.Value.CenterPosition, targetInfo.Value.CenterPosition);
-                    if (dist < GameConstants.ATTACK_RANGE[UnitType.LANCER] + 1.0f)
+                    var myTarget = info.Value.AttackTargetNbr >= 0 ? state.GetUnit(info.Value.AttackTargetNbr) : null;
+                    bool fightingRanged = myTarget.HasValue && myTarget.Value.UnitType == UnitType.ARCHER;
+
+                    if (tookDamage && !fightingRanged)
                     {
-                        _lancerCombatTicks[lancerNbr]++;
-                        if (_lancerCombatTicks[lancerNbr] >= DISENGAGE_TICKS && mainBaseNbr >= 0)
-                        { var b = state.GetUnit(mainBaseNbr); if (b.HasValue) { actions.Move(lancerNbr, b.Value.CenterPosition); _lancerCombatTicks[lancerNbr] = 0; } }
+                        Position enemyPos = myTarget.HasValue ? myTarget.Value.GridPosition : targetInfo.Value.GridPosition;
+                        Position? retreat = FindRetreatPosition(info.Value.GridPosition, enemyPos, 3, state);
+                        if (retreat.HasValue) actions.Move(lancerNbr, retreat.Value);
                     }
                 }
                 else if (info.Value.CurrentAction == UnitAction.MOVE)
                 {
                     float dist = Position.Distance(info.Value.CenterPosition, targetInfo.Value.CenterPosition);
-                    if (dist >= RALLY_DISTANCE) { actions.Attack(lancerNbr, enemyTarget.Value); _lancerCombatTicks[lancerNbr] = 0; }
+                    if (dist >= RALLY_DISTANCE) actions.Attack(lancerNbr, enemyTarget.Value);
                 }
                 else if (info.Value.CurrentAction == UnitAction.IDLE)
-                { actions.Attack(lancerNbr, enemyTarget.Value); _lancerCombatTicks[lancerNbr] = 0; }
+                {
+                    actions.Attack(lancerNbr, enemyTarget.Value);
+                }
             }
+        }
+
+        private Position? FindRetreatPosition(Position from, Position enemy, int distance, IGameState state)
+        {
+            int dx = from.X - enemy.X;
+            int dy = from.Y - enemy.Y;
+            int sx = dx > 0 ? 1 : dx < 0 ? -1 : 0;
+            int sy = dy > 0 ? 1 : dy < 0 ? -1 : 0;
+            if (sx == 0 && sy == 0) sx = 1;
+            int[][] dirs = new int[][] {
+                new[] { sx, sy }, new[] { sx, 0 }, new[] { 0, sy },
+                new[] { -sy, sx }, new[] { sy, -sx },
+            };
+            foreach (var dir in dirs)
+            {
+                bool clear = true;
+                for (int i = 1; i <= distance; i++)
+                {
+                    if (!state.IsPositionBuildable(new Position(from.X + dir[0] * i, from.Y + dir[1] * i)))
+                    { clear = false; break; }
+                }
+                if (clear) return new Position(from.X + dir[0] * distance, from.Y + dir[1] * distance);
+            }
+            return null;
         }
 
         private void HealWithMonks(IGameState state, IAgentActions actions)

@@ -396,6 +396,21 @@ namespace AgentSDK
             if (TaskEngine.IsInAttackRange(attacker.UnitType, attacker.CenterPosition,
                     target.UnitType, target.CenterPosition))
             {
+                // Anti-stack: if in range but sharing a cell and stationary, spread out
+                if (attacker.CanMove
+                    && world.Grid.GetOccupantCount(attacker.GridPosition) > 1
+                    && (attacker.SimPath == null || attacker.PathIndex >= attacker.SimPath.Count))
+                {
+                    var spreadPath = world.FindPathToUnit(attacker.GridPosition, target.UnitType, target.GridPosition);
+                    if (spreadPath.Count > 0)
+                    {
+                        attacker.SimPath = spreadPath;
+                        attacker.PathIndex = 0;
+                        attacker.PathProgress = 0f;
+                        // Don't return — still deal damage this tick
+                    }
+                }
+
                 float dmg = TaskEngine.ComputeDamagePerTick(
                     attacker.UnitType, target.UnitType,
                     world.Constants.Damage[attacker.UnitType], world.StepDuration);
@@ -455,8 +470,18 @@ namespace AgentSDK
                     return;
                 }
 
-                // Out of range — repath if path exhausted
-                if (attacker.SimPath == null || attacker.PathIndex >= attacker.SimPath.Count)
+                // Out of range — repath if path exhausted or target moved significantly
+                bool pathExhausted = attacker.SimPath == null || attacker.PathIndex >= attacker.SimPath.Count;
+                bool targetMoved = false;
+                if (!pathExhausted && attacker.SimPath.Count > 0 && target.CanMove)
+                {
+                    // Check if target has moved >2 cells from our path destination
+                    Position pathDest = attacker.SimPath[attacker.SimPath.Count - 1];
+                    float destToTarget = Position.Distance(pathDest, target.CenterPosition);
+                    targetMoved = destToTarget > 2.0f;
+                }
+
+                if (pathExhausted || targetMoved)
                 {
                     var path = world.FindPathToUnit(attacker.GridPosition, target.UnitType, target.GridPosition);
                     if (path.Count > 0)
@@ -559,7 +584,17 @@ namespace AgentSDK
             }
             else
             {
-                if (monk.SimPath == null || monk.PathIndex >= monk.SimPath.Count)
+                // Out of range — repath if path exhausted or target moved
+                bool pathExhausted = monk.SimPath == null || monk.PathIndex >= monk.SimPath.Count;
+                bool targetMoved = false;
+                if (!pathExhausted && monk.SimPath.Count > 0 && target.CanMove)
+                {
+                    Position pathDest = monk.SimPath[monk.SimPath.Count - 1];
+                    float destToTarget = Position.Distance(pathDest, target.CenterPosition);
+                    targetMoved = destToTarget > 2.0f;
+                }
+
+                if (pathExhausted || targetMoved)
                 {
                     var path = world.FindPathToUnit(monk.GridPosition, target.UnitType, target.GridPosition);
                     if (path.Count > 0)

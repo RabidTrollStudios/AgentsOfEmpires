@@ -304,6 +304,48 @@ namespace AgentSDK
         }
 
         /// <summary>
+        /// Find the nearest OPEN cell to a position, searching in expanding rings
+        /// until one is found or the map edge is reached. Returns the position itself
+        /// if it's already OPEN, or null if no open cell exists on the map.
+        /// </summary>
+        public Position? FindNearestOpenCell(Position center, int maxRadius = 0)
+        {
+            if (maxRadius <= 0) maxRadius = System.Math.Max(Width, Height);
+
+            if (IsPositionValid(center) && cells[center.X, center.Y] == CellState.OPEN)
+                return center;
+
+            for (int r = 1; r <= maxRadius; r++)
+            {
+                Position? best = null;
+                float bestDist = float.MaxValue;
+
+                for (int dx = -r; dx <= r; dx++)
+                {
+                    for (int dy = -r; dy <= r; dy++)
+                    {
+                        // Ring only — skip interior
+                        if (System.Math.Abs(dx) != r && System.Math.Abs(dy) != r) continue;
+
+                        var p = new Position(center.X + dx, center.Y + dy);
+                        if (!IsPositionValid(p)) continue;
+                        if (cells[p.X, p.Y] != CellState.OPEN) continue;
+
+                        float dist = Position.Distance(center, p);
+                        if (dist < bestDist)
+                        {
+                            bestDist = dist;
+                            best = p;
+                        }
+                    }
+                }
+
+                if (best.HasValue) return best;
+            }
+            return null;
+        }
+
+        /// <summary>
         /// Get OPEN positions near a unit where a mobile unit can stand.
         /// Used for spawn positions, pathfinding targets, and adjacency checks.
         /// Only returns cells in the neighbor ring (not passage cells inside the footprint).
@@ -394,49 +436,54 @@ namespace AgentSDK
         /// </summary>
         public List<Position> FindPathToUnit(Position start, UnitType unitType, Position unitAnchor)
         {
-            // Include both OPEN and WALKABLE (occupied) cells so units spread out
-            var neighbors = new List<Position>();
-            foreach (var p in GetPositionsNearUnit(unitType, unitAnchor))
+            // Get all neighbor cells around the target unit
+            var allNeighbors = GetPositionsNearUnit(unitType, unitAnchor);
+
+            // Separate into OPEN (preferred) and WALKABLE (fallback) lists
+            var openCells = new List<Position>();
+            var walkableCells = new List<Position>();
+            foreach (var p in allNeighbors)
             {
-                if (cells[p.X, p.Y] == CellState.OPEN || cells[p.X, p.Y] == CellState.WALKABLE)
-                    neighbors.Add(p);
+                if (cells[p.X, p.Y] == CellState.OPEN)
+                    openCells.Add(p);
+                else if (cells[p.X, p.Y] == CellState.WALKABLE)
+                    walkableCells.Add(p);
             }
 
-            // Tiebreak seed based on start position so different pawns prefer different cells
+            // Sort each list by distance from the moving unit (closest first),
+            // with position-based tiebreaking so different units prefer different cells
             int tiebreakSeed = start.X * 397 ^ start.Y;
-
-            // Sort by effective occupancy (occupants + reservations), then distance,
-            // with position-based tiebreaking so different units spread to different cells
-            neighbors.Sort((a, b) =>
+            System.Comparison<Position> sortByDistance = (a, b) =>
             {
-                // Prefer cells with fewer occupants (spreads units out)
-                int occA = GetOccupantCount(a);
-                int occB = GetOccupantCount(b);
-                int occCmp = occA.CompareTo(occB);
-                if (occCmp != 0) return occCmp;
-
                 int dxA = a.X - start.X, dyA = a.Y - start.Y;
                 int dxB = b.X - start.X, dyB = b.Y - start.Y;
                 int distA = dxA * dxA + dyA * dyA;
                 int distB = dxB * dxB + dyB * dyB;
                 int cmp = distA.CompareTo(distB);
                 if (cmp != 0) return cmp;
-                // Deterministic tiebreak using start-position hash
                 int hashA = (a.X * 31 + a.Y) ^ tiebreakSeed;
                 int hashB = (b.X * 31 + b.Y) ^ tiebreakSeed;
                 return hashA.CompareTo(hashB);
-            });
+            };
+            openCells.Sort(sortByDistance);
+            walkableCells.Sort(sortByDistance);
 
-            foreach (var neighbor in neighbors)
+            // Try OPEN cells first (no occupant — unit can stop here cleanly)
+            foreach (var cell in openCells)
             {
-                var path = FindPath(start, neighbor);
+                var path = FindPath(start, cell);
                 if (path.Count > 0)
-                {
-                    // Mark destination as occupied so the next pathfinder picks a different cell
-                    SetCellOccupied(neighbor, true);
                     return path;
-                }
             }
+
+            // Fallback: WALKABLE cells (occupied — may stack, but better than no path)
+            foreach (var cell in walkableCells)
+            {
+                var path = FindPath(start, cell);
+                if (path.Count > 0)
+                    return path;
+            }
+
             return new List<Position>();
         }
 

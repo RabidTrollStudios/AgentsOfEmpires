@@ -443,6 +443,13 @@
             Anchor is bottom-left; footprint occupies [anchor.X..anchor.X+sizeX-1, anchor.Y..anchor.Y+sizeY-1].
             </summary>
         </member>
+        <member name="M:AgentSDK.GameGrid.FindNearestOpenCell(AgentSDK.Position,System.Int32)">
+            <summary>
+            Find the nearest OPEN cell to a position, searching in expanding rings
+            until one is found or the map edge is reached. Returns the position itself
+            if it's already OPEN, or null if no open cell exists on the map.
+            </summary>
+        </member>
         <member name="M:AgentSDK.GameGrid.GetBuildablePositionsNearUnit(AgentSDK.UnitType,AgentSDK.Position)">
             <summary>
             Get OPEN positions near a unit where a mobile unit can stand.
