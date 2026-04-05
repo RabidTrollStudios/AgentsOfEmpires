@@ -4,29 +4,29 @@ using AgentSDK;
 namespace PlanningAgent
 {
     /// <summary>
-    /// [IMPOSSIBLE] Max-spend Archer + Monk: 6 pawns, Archery + Monastery.
-    /// Trains Archers from Archery and Monks from Monastery every tick —
-    /// spending every gold coin as fast as income allows.
-    /// Monks heal the most-wounded friendly archer below 80% HP.
-    /// Attacks with all archers when total combat army reaches 6+.
-    /// Tests whether archer range (9.0) combined with monk sustain
-    /// creates a durable ranged force under max-spend pressure.
-    /// Strategy to beat: warriors counter archers (1.25x); rush before
-    /// both buildings complete (350g + 350g = 700g investment).
+    /// [IMPOSSIBLE] Adaptive archer-focused agent with monk sustain.
+    /// Makes decisions based on game state: scales economy when gold-starved,
+    /// builds more production when gold-rich, adds monks when taking losses.
+    /// Archers use volley+kite micro. Guaranteed at least 1 monastery.
     /// </summary>
     public class PlanningAgent : PlanningAgentBase
     {
-        private const int MAX_PAWNS = 6;
-        private const int ATTACK_THRESHOLD = 6;
+        private const int ATTACK_THRESHOLD = 4;
+        private const float GOLD_STARVED = 100f;
+        private const float GOLD_RICH = 400f;
         private const int ATTACK_TICKS = 2;
         private const int KITE_TICKS = 1;
         private const int CYCLE_LENGTH = ATTACK_TICKS + KITE_TICKS;
 
+        private int _lastArmySize;
+        private int _ticksSinceArmyShrunk;
         private Dictionary<int, int> _lastArcherTarget = new Dictionary<int, int>();
         private Dictionary<int, int> _archerCycleTick = new Dictionary<int, int>();
 
         public override void InitializeMatch()
         {
+            _lastArmySize = 0;
+            _ticksSinceArmyShrunk = 999;
             _lastArcherTarget = new Dictionary<int, int>();
             _archerCycleTick = new Dictionary<int, int>();
         }
@@ -37,23 +37,51 @@ namespace PlanningAgent
             mainMineNbr = mines.Count > 0 ? mines[0] : -1;
             mainBaseNbr = myBases.Count > 0 ? myBases[0] : -1;
 
-            // Build a base first if we dont have one
             if (myBases.Count == 0)
             {
                 BuildStructure(UnitType.BASE, state, actions);
                 return;
             }
 
-            TrainPawns(state, actions, MAX_PAWNS);
+            int armySize = myWarriors.Count + myArchers.Count + myLancers.Count;
+            if (armySize < _lastArmySize) _ticksSinceArmyShrunk = 0;
+            else _ticksSinceArmyShrunk++;
+            _lastArmySize = armySize;
+
             GatherWithIdlePawns(state, actions);
 
-            // Build order: archery -> monastery
+            int enemyArmy = state.GetEnemyUnits(UnitType.WARRIOR).Count
+                + state.GetEnemyUnits(UnitType.ARCHER).Count
+                + state.GetEnemyUnits(UnitType.LANCER).Count;
+            bool goldStarved = state.MyGold < GOLD_STARVED;
+            bool goldRich = state.MyGold > GOLD_RICH;
+            bool takingLosses = _ticksSinceArmyShrunk < 20;
+            bool outnumbered = enemyArmy > armySize;
+            bool needMorePawns = myPawns.Count < 3 || (goldStarved && myPawns.Count < 8);
+
+            if (needMorePawns)
+            {
+                foreach (int baseNbr in myBases)
+                {
+                    var info = state.GetUnit(baseNbr);
+                    if (info.HasValue && info.Value.IsBuilt
+                        && info.Value.CurrentAction == UnitAction.IDLE
+                        && state.MyGold >= GameConstants.COST[UnitType.PAWN])
+                    {
+                        actions.Train(baseNbr, UnitType.PAWN);
+                    }
+                }
+            }
+
+            // Build: archery first, then monastery, then scale archeries
             if (myArchery.Count == 0 && HasBuiltUnit(myBases, state))
                 BuildStructure(UnitType.ARCHERY, state, actions);
             else if (myMonasteries.Count == 0 && HasBuiltUnit(myArchery, state))
                 BuildStructure(UnitType.MONASTERY, state, actions);
+            else if (goldRich && myArchery.Count < 3 && HasBuiltUnit(myBases, state))
+                BuildStructure(UnitType.ARCHERY, state, actions);
 
-            // Train archers from all archeries every tick
+            // Train archers
             foreach (int archeryNbr in myArchery)
             {
                 var info = state.GetUnit(archeryNbr);
@@ -65,23 +93,24 @@ namespace PlanningAgent
                 }
             }
 
-            // Train monks from all monasteries every tick
-            foreach (int monasteryNbr in myMonasteries)
+            // Train monks when taking losses or have none
+            if ((takingLosses && myMonks.Count < 3) || myMonks.Count < 1)
             {
-                var info = state.GetUnit(monasteryNbr);
-                if (info.HasValue && info.Value.IsBuilt
-                    && info.Value.CurrentAction == UnitAction.IDLE
-                    && state.MyGold >= GameConstants.COST[UnitType.MONK])
+                foreach (int monasteryNbr in myMonasteries)
                 {
-                    actions.Train(monasteryNbr, UnitType.MONK);
+                    var info = state.GetUnit(monasteryNbr);
+                    if (info.HasValue && info.Value.IsBuilt
+                        && info.Value.CurrentAction == UnitAction.IDLE
+                        && state.MyGold >= GameConstants.COST[UnitType.MONK])
+                    {
+                        actions.Train(monasteryNbr, UnitType.MONK);
+                    }
                 }
             }
 
-            // Monks heal most-wounded friendly archer below 80% HP
             HealWithMonks(state, actions);
 
-            // Archers use volley+kite micro
-            if (myArchers.Count >= ATTACK_THRESHOLD)
+            if (myArchers.Count >= ATTACK_THRESHOLD || (armySize > 0 && outnumbered))
                 ArcherVolleyKite(state, actions);
         }
 
@@ -113,18 +142,12 @@ namespace PlanningAgent
                 {
                     int lastTarget = _lastArcherTarget.ContainsKey(archerNbr)
                         ? _lastArcherTarget[archerNbr] : -1;
-
                     int chosenTarget = -1;
                     foreach (int enemyNbr in enemies)
                     {
-                        if (enemyNbr != lastTarget)
-                        {
-                            chosenTarget = enemyNbr;
-                            break;
-                        }
+                        if (enemyNbr != lastTarget) { chosenTarget = enemyNbr; break; }
                     }
                     if (chosenTarget < 0) chosenTarget = enemies[0];
-
                     actions.Attack(archerNbr, chosenTarget);
                     _lastArcherTarget[archerNbr] = chosenTarget;
                 }
@@ -145,15 +168,11 @@ namespace PlanningAgent
             foreach (int monkNbr in myMonks)
             {
                 var monkInfo = state.GetUnit(monkNbr);
-                if (!monkInfo.HasValue || monkInfo.Value.CurrentAction != UnitAction.IDLE)
-                    continue;
-                if (monkInfo.Value.Mana < GameConstants.MANA_COST)
-                    continue;
+                if (!monkInfo.HasValue || monkInfo.Value.CurrentAction != UnitAction.IDLE) continue;
+                if (monkInfo.Value.Mana < GameConstants.MANA_COST) continue;
 
-                // Find most-wounded archer below 80% HP
                 int? bestTarget = null;
                 float lowestHpRatio = 0.8f;
-
                 foreach (int unitNbr in myArchers)
                 {
                     var info = state.GetUnit(unitNbr);
@@ -161,24 +180,22 @@ namespace PlanningAgent
                     float ratio = info.Value.Health / GameConstants.HEALTH[UnitType.ARCHER];
                     if (ratio < lowestHpRatio) { lowestHpRatio = ratio; bestTarget = unitNbr; }
                 }
-
+                foreach (int unitNbr in myWarriors)
+                {
+                    var info = state.GetUnit(unitNbr);
+                    if (!info.HasValue) continue;
+                    float ratio = info.Value.Health / GameConstants.HEALTH[UnitType.WARRIOR];
+                    if (ratio < lowestHpRatio) { lowestHpRatio = ratio; bestTarget = unitNbr; }
+                }
+                foreach (int unitNbr in myLancers)
+                {
+                    var info = state.GetUnit(unitNbr);
+                    if (!info.HasValue) continue;
+                    float ratio = info.Value.Health / GameConstants.HEALTH[UnitType.LANCER];
+                    if (ratio < lowestHpRatio) { lowestHpRatio = ratio; bestTarget = unitNbr; }
+                }
                 if (bestTarget.HasValue)
                     actions.Heal(monkNbr, bestTarget.Value);
-            }
-        }
-
-        private void TrainPawns(IGameState state, IAgentActions actions, int max)
-        {
-            foreach (int baseNbr in myBases)
-            {
-                var info = state.GetUnit(baseNbr);
-                if (info.HasValue && info.Value.IsBuilt
-                    && info.Value.CurrentAction == UnitAction.IDLE
-                    && state.MyGold >= GameConstants.COST[UnitType.PAWN]
-                    && myPawns.Count < max)
-                {
-                    actions.Train(baseNbr, UnitType.PAWN);
-                }
             }
         }
 
@@ -187,7 +204,6 @@ namespace PlanningAgent
             if (mainBaseNbr < 0 || mainMineNbr < 0) return;
             var mineInfo = state.GetUnit(mainMineNbr);
             if (!mineInfo.HasValue || mineInfo.Value.Health <= 0) return;
-
             foreach (int pawn in myPawns)
             {
                 var info = state.GetUnit(pawn);
@@ -213,19 +229,6 @@ namespace PlanningAgent
                         }
                     }
                 }
-            }
-        }
-
-        private void AttackWithUnits(List<int> units, IGameState state, IAgentActions actions)
-        {
-            int? target = FindAnyEnemy(state);
-            if (!target.HasValue) return;
-
-            foreach (int unitNbr in units)
-            {
-                var info = state.GetUnit(unitNbr);
-                if (info.HasValue && info.Value.CurrentAction == UnitAction.IDLE)
-                    actions.Attack(unitNbr, target.Value);
             }
         }
 
