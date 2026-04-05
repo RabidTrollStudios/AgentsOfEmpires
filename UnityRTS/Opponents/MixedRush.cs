@@ -28,7 +28,7 @@ namespace PlanningAgent
         public override void Update(IGameState state, IAgentActions actions)
         {
             UpdateGameState(state);
-            mainMineNbr = mines.Count > 0 ? mines[0] : -1;
+            mainMineNbr = FindClosestMine(state);
             mainBaseNbr = myBases.Count > 0 ? myBases[0] : -1;
 
             // Build a base first if we dont have one
@@ -170,6 +170,25 @@ namespace PlanningAgent
                 if (info.HasValue && info.Value.CurrentAction == UnitAction.IDLE)
                     actions.Attack(unitNbr, target.Value);
             }
+        }
+
+        private int FindClosestMine(IGameState state)
+        {
+            Position refPos = mainBaseNbr >= 0 && state.GetUnit(mainBaseNbr).HasValue
+                ? state.GetUnit(mainBaseNbr).Value.CenterPosition
+                : (myPawns.Count > 0 && state.GetUnit(myPawns[0]).HasValue
+                    ? state.GetUnit(myPawns[0]).Value.GridPosition
+                    : new Position(0, 0));
+            int bestMine = -1;
+            float bestDist = float.MaxValue;
+            foreach (int mineNbr in mines)
+            {
+                var info = state.GetUnit(mineNbr);
+                if (!info.HasValue || info.Value.Health <= 0) continue;
+                float dist = Position.Distance(info.Value.CenterPosition, refPos);
+                if (dist < bestDist) { bestDist = dist; bestMine = mineNbr; }
+            }
+            return bestMine;
         }
 
         private int? FindAnyEnemy(IGameState state)
