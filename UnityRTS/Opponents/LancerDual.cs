@@ -22,6 +22,13 @@ namespace PlanningAgent
             mainMineNbr = mines.Count > 0 ? mines[0] : -1;
             mainBaseNbr = myBases.Count > 0 ? myBases[0] : -1;
 
+            // Build a base first if we dont have one
+            if (myBases.Count == 0)
+            {
+                BuildStructure(UnitType.BASE, state, actions);
+                return;
+            }
+
             TrainPawns(state, actions, MAX_PAWNS);
             GatherWithIdlePawns(state, actions);
 
