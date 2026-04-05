@@ -1,6 +1,6 @@
 {
-  "Timestamp": "2026-04-04T23:58:34.9204594Z",
-  "ElapsedMs": 118409,
+  "Timestamp": "2026-04-05T00:05:21.5557344Z",
+  "ElapsedMs": 135043,
   "TotalMatches": 1620,
   "AgentNames": [
     "AllSpend",
@@ -24,7 +24,7 @@
   ],
   "AggregateWinRates": {
     "AllSpend": 0.47058824,
-    "ArcherDual": 0.85294116,
+    "ArcherDual": 0.88235295,
     "ArcherMonkSpend": 0.29411766,
     "ArcherRush": 0.6764706,
     "ArcherTurtle": 0.23529412,
@@ -37,7 +37,7 @@
     "MixedTurtle": 0.3529412,
     "PawnGather": 0.1764706,
     "PawnIdle": 0,
-    "WarriorDual": 0.8235294,
+    "WarriorDual": 0.7941176,
     "WarriorMonkSpend": 0.38235295,
     "WarriorRush": 0.6764706,
     "WarriorTurtle": 0.23529412
@@ -76,7 +76,7 @@
       "MixedTurtle": 1,
       "PawnGather": 1,
       "PawnIdle": 1,
-      "WarriorDual": 0,
+      "WarriorDual": 0.5,
       "WarriorMonkSpend": 1,
       "WarriorRush": 1,
       "WarriorTurtle": 1
@@ -311,7 +311,7 @@
     },
     "WarriorDual": {
       "AllSpend": 1,
-      "ArcherDual": 1,
+      "ArcherDual": 0.5,
       "ArcherMonkSpend": 1,
       "ArcherRush": 1,
       "ArcherTurtle": 1,
@@ -392,16 +392,16 @@
       "AggregateWinRate": 0.9411765
     },
     {
+      "AgentName": "ArcherDual",
+      "AggregateWinRate": 0.88235295
+    },
+    {
       "AgentName": "LancerDual",
       "AggregateWinRate": 0.88235295
     },
     {
-      "AgentName": "ArcherDual",
-      "AggregateWinRate": 0.85294116
-    },
-    {
       "AgentName": "WarriorDual",
-      "AggregateWinRate": 0.8235294
+      "AggregateWinRate": 0.7941176
     }
   ],
   "WeakAgents": [
@@ -432,48 +432,48 @@
       "Cost": 85,
       "HpPerGold": 17.647058,
       "DpsPerGold": 0.5882353,
-      "TotalProduced": 23020,
-      "ProducedInWins": 15610,
-      "ProducedInLosses": 7410,
+      "TotalProduced": 23040,
+      "ProducedInWins": 15430,
+      "ProducedInLosses": 7610,
       "MatchesWithUnit": 1245,
-      "WinsWithUnit": 780,
-      "WinRateWhenProduced": 0.62650603
+      "WinsWithUnit": 775,
+      "WinRateWhenProduced": 0.62249
     },
     {
       "UnitType": "ARCHER",
       "Cost": 80,
       "HpPerGold": 7.5,
       "DpsPerGold": 0.375,
-      "TotalProduced": 26855,
-      "ProducedInWins": 19865,
-      "ProducedInLosses": 6990,
-      "MatchesWithUnit": 1210,
+      "TotalProduced": 26610,
+      "ProducedInWins": 19535,
+      "ProducedInLosses": 7075,
+      "MatchesWithUnit": 1205,
       "WinsWithUnit": 775,
-      "WinRateWhenProduced": 0.6404959
+      "WinRateWhenProduced": 0.64315355
     },
     {
       "UnitType": "LANCER",
       "Cost": 90,
       "HpPerGold": 10,
       "DpsPerGold": 0.46666667,
-      "TotalProduced": 23880,
-      "ProducedInWins": 16905,
-      "ProducedInLosses": 6975,
-      "MatchesWithUnit": 1235,
-      "WinsWithUnit": 800,
-      "WinRateWhenProduced": 0.64777327
+      "TotalProduced": 24435,
+      "ProducedInWins": 17215,
+      "ProducedInLosses": 7220,
+      "MatchesWithUnit": 1240,
+      "WinsWithUnit": 805,
+      "WinRateWhenProduced": 0.6491935
     },
     {
       "UnitType": "MONK",
       "Cost": 90,
       "HpPerGold": 4.4444447,
       "DpsPerGold": 0,
-      "TotalProduced": 4785,
+      "TotalProduced": 4860,
       "ProducedInWins": 3145,
-      "ProducedInLosses": 1640,
-      "MatchesWithUnit": 500,
+      "ProducedInLosses": 1715,
+      "MatchesWithUnit": 495,
       "WinsWithUnit": 245,
-      "WinRateWhenProduced": 0.49
+      "WinRateWhenProduced": 0.4949495
     }
   ],
   "UnitStats": [
@@ -640,8 +640,8 @@
   "Diversity": [
     {
       "UnitType": "WARRIOR",
-      "TotalProduced": 23020,
-      "ProducedInWins": 15610,
+      "TotalProduced": 23040,
+      "ProducedInWins": 15430,
       "ProducingAgentCount": 9,
       "WinningAgentCount": 9,
       "ProducingAgents": [
@@ -669,8 +669,8 @@
     },
     {
       "UnitType": "ARCHER",
-      "TotalProduced": 26855,
-      "ProducedInWins": 19865,
+      "TotalProduced": 26610,
+      "ProducedInWins": 19535,
       "ProducingAgentCount": 9,
       "WinningAgentCount": 9,
       "ProducingAgents": [
@@ -698,8 +698,8 @@
     },
     {
       "UnitType": "LANCER",
-      "TotalProduced": 23880,
-      "ProducedInWins": 16905,
+      "TotalProduced": 24435,
+      "ProducedInWins": 17215,
       "ProducingAgentCount": 9,
       "WinningAgentCount": 9,
       "ProducingAgents": [
@@ -727,7 +727,7 @@
     },
     {
       "UnitType": "MONK",
-      "TotalProduced": 4785,
+      "TotalProduced": 4860,
       "ProducedInWins": 3145,
       "ProducingAgentCount": 4,
       "WinningAgentCount": 4,
@@ -751,17 +751,17 @@
       "Count": 1530,
       "Min": 739,
       "Max": 5000,
-      "Mean": 1460.5555,
+      "Mean": 1461.6274,
       "Median": 1219,
-      "P25": 983,
-      "P75": 1385
+      "P25": 992,
+      "P75": 1373
     },
     "TimeoutRate": 0.04901961,
     "EarlyEndRate": 0,
     "EndReasonCounts": {
       "Timeout": 75,
-      "Elimination": 355,
-      "BaseDestroyed": 1100
+      "Elimination": 335,
+      "BaseDestroyed": 1120
     }
   },
   "Counters": [
@@ -806,8 +806,7 @@
         "WarriorTurtle"
       ],
       "LosesTo": [
-        "MixedDual",
-        "WarriorDual"
+        "MixedDual"
       ]
     },
     {
@@ -1076,7 +1075,6 @@
       "AgentName": "WarriorDual",
       "Beats": [
         "AllSpend",
-        "ArcherDual",
         "ArcherMonkSpend",
         "ArcherRush",
         "ArcherTurtle",
@@ -1183,6 +1181,19 @@
     {
       "Severity": "High",
       "Category": "Dominance",
+      "Description": "Strategy \u0027ArcherDual\u0027 is dominant with 88% aggregate win rate.",
+      "Evidence": [
+        "Wins 88% of all matchups against other strategies."
+      ],
+      "ConstantName": null,
+      "CurrentValue": null,
+      "SuggestedValue": null,
+      "Rationale": "A healthy metagame requires that no single strategy dominates all others. Examine which units this strategy relies on and consider increasing their cost or reducing their stats.",
+      "FollowUpTest": "--matchup \u0022ArcherDual,WarriorRush,Balanced,Swarm\u0022 --seeds 5"
+    },
+    {
+      "Severity": "High",
+      "Category": "Dominance",
       "Description": "Strategy \u0027LancerDual\u0027 is dominant with 88% aggregate win rate.",
       "Evidence": [
         "Wins 88% of all matchups against other strategies."
@@ -1196,22 +1207,9 @@
     {
       "Severity": "High",
       "Category": "Dominance",
-      "Description": "Strategy \u0027ArcherDual\u0027 is dominant with 85% aggregate win rate.",
+      "Description": "Strategy \u0027WarriorDual\u0027 is dominant with 79% aggregate win rate.",
       "Evidence": [
-        "Wins 85% of all matchups against other strategies."
-      ],
-      "ConstantName": null,
-      "CurrentValue": null,
-      "SuggestedValue": null,
-      "Rationale": "A healthy metagame requires that no single strategy dominates all others. Examine which units this strategy relies on and consider increasing their cost or reducing their stats.",
-      "FollowUpTest": "--matchup \u0022ArcherDual,WarriorRush,Balanced,Swarm\u0022 --seeds 5"
-    },
-    {
-      "Severity": "High",
-      "Category": "Dominance",
-      "Description": "Strategy \u0027WarriorDual\u0027 is dominant with 82% aggregate win rate.",
-      "Evidence": [
-        "Wins 82% of all matchups against other strategies."
+        "Wins 79% of all matchups against other strategies."
       ],
       "ConstantName": null,
       "CurrentValue": null,
@@ -1253,7 +1251,7 @@
       "Description": "MONK may be under-performing: 49% win rate when produced (mean=60%).",
       "Evidence": [
         "Cost=90g, HP/gold=4.4, DPS/gold=0.00",
-        "Produced 4785 times, in 245/500 winning matches"
+        "Produced 4860 times, in 245/495 winning matches"
       ],
       "ConstantName": "COST[MONK]",
       "CurrentValue": 90,
@@ -1692,7 +1690,7 @@
           "GoldSpent": 0,
           "PawnCount": 0.8333333,
           "ArmyValue": 0,
-          "HpPercent": 96.547905,
+          "HpPercent": 96.621376,
           "EnemyGoldKilled": 0,
           "OwnGoldLost": 12.5,
           "UnitCounts": {}
@@ -1722,7 +1720,7 @@
           "UnitCounts": {}
         },
         {
-          "Tick": 1828,
+          "Tick": 1829,
           "Gold": 1000,
           "GoldMined": 0,
           "GoldSpent": 0,
@@ -1884,7 +1882,7 @@
           "GoldSpent": 0,
           "PawnCount": 0.8,
           "ArmyValue": 0,
-          "HpPercent": 90.99542,
+          "HpPercent": 91.08366,
           "EnemyGoldKilled": 0,
           "OwnGoldLost": 15,
           "UnitCounts": {}
@@ -2868,14 +2866,14 @@
         },
         {
           "Tick": 700,
-          "Gold": 7335.278,
+          "Gold": 7339.4443,
           "GoldMined": 6935.472,
-          "GoldSpent": 697.9167,
-          "PawnCount": 9.388889,
+          "GoldSpent": 695.8333,
+          "PawnCount": 9.555555,
           "ArmyValue": 0,
-          "HpPercent": 98.65245,
+          "HpPercent": 99.13876,
           "EnemyGoldKilled": 0,
-          "OwnGoldLost": 68.75,
+          "OwnGoldLost": 54.166668,
           "UnitCounts": {}
         },
         {
@@ -2888,18 +2886,6 @@
           "HpPercent": 100,
           "EnemyGoldKilled": 0,
           "OwnGoldLost": 1925,
-          "UnitCounts": {}
-        },
-        {
-          "Tick": 742,
-          "Gold": 7564,
-          "GoldMined": 7240,
-          "GoldSpent": 900,
-          "PawnCount": 10,
-          "ArmyValue": 0,
-          "HpPercent": 93.07,
-          "EnemyGoldKilled": 0,
-          "OwnGoldLost": 725,
           "UnitCounts": {}
         },
         {
@@ -2927,27 +2913,15 @@
           "UnitCounts": {}
         },
         {
-          "Tick": 748,
-          "Gold": 5801,
-          "GoldMined": 6376,
-          "GoldSpent": 1500,
-          "PawnCount": 1,
-          "ArmyValue": 0,
-          "HpPercent": 100,
-          "EnemyGoldKilled": 0,
-          "OwnGoldLost": 2000,
-          "UnitCounts": {}
-        },
-        {
           "Tick": 750,
-          "Gold": 7394.2256,
-          "GoldMined": 7151.645,
-          "GoldSpent": 844.35486,
-          "PawnCount": 7.580645,
+          "Gold": 7353.364,
+          "GoldMined": 7130.8184,
+          "GoldSpent": 863.63635,
+          "PawnCount": 7.4242425,
           "ArmyValue": 0,
-          "HpPercent": 87.63787,
+          "HpPercent": 87.83372,
           "EnemyGoldKilled": 0,
-          "OwnGoldLost": 350.80646,
+          "OwnGoldLost": 381.81818,
           "UnitCounts": {}
         },
         {
@@ -2976,14 +2950,14 @@
         },
         {
           "Tick": 770,
-          "Gold": 7039,
-          "GoldMined": 7240,
-          "GoldSpent": 1350,
-          "PawnCount": 2,
+          "Gold": 6345,
+          "GoldMined": 6808,
+          "GoldSpent": 1500,
+          "PawnCount": 1,
           "ArmyValue": 0,
           "HpPercent": 88.75,
           "EnemyGoldKilled": 0,
-          "OwnGoldLost": 1775,
+          "OwnGoldLost": 2000,
           "UnitCounts": {}
         },
         {
@@ -3048,26 +3022,26 @@
         },
         {
           "Tick": 800,
-          "Gold": 7429.727,
-          "GoldMined": 7367.136,
-          "GoldSpent": 1009.0909,
-          "PawnCount": 7.5454545,
+          "Gold": 7406.2173,
+          "GoldMined": 7361.609,
+          "GoldSpent": 1030.4348,
+          "PawnCount": 7.2173915,
           "ArmyValue": 0,
-          "HpPercent": 84.10433,
+          "HpPercent": 81.305405,
           "EnemyGoldKilled": 0,
-          "OwnGoldLost": 586.36365,
+          "OwnGoldLost": 629.34784,
           "UnitCounts": {}
         },
         {
           "Tick": 803,
-          "Gold": 5501,
-          "GoldMined": 6376,
-          "GoldSpent": 1800,
-          "PawnCount": 1,
+          "Gold": 6195,
+          "GoldMined": 6808,
+          "GoldSpent": 1650,
+          "PawnCount": 0.5,
           "ArmyValue": 0,
           "HpPercent": 49.59999,
           "EnemyGoldKilled": 0,
-          "OwnGoldLost": 2300,
+          "OwnGoldLost": 2187.5,
           "UnitCounts": {}
         },
         {
@@ -4431,30 +4405,30 @@
         },
         {
           "Tick": 850,
-          "Gold": 5969.0586,
+          "Gold": 5971.2646,
           "GoldMined": 5953.647,
-          "GoldSpent": 957.2059,
+          "GoldSpent": 955,
           "PawnCount": 5.970588,
-          "ArmyValue": 247.5,
-          "HpPercent": 96.54487,
+          "ArmyValue": 245,
+          "HpPercent": 96.71858,
           "EnemyGoldKilled": 0,
-          "OwnGoldLost": 54.558823,
+          "OwnGoldLost": 54.85294,
           "UnitCounts": {
-            "WARRIOR": 2.9117646
+            "WARRIOR": 2.8823528
           }
         },
         {
           "Tick": 900,
-          "Gold": 5727.647,
+          "Gold": 5739.1177,
           "GoldMined": 6058.1177,
-          "GoldSpent": 1323.6765,
+          "GoldSpent": 1312.2059,
           "PawnCount": 5.647059,
-          "ArmyValue": 277.5,
-          "HpPercent": 93.20904,
+          "ArmyValue": 275,
+          "HpPercent": 93.54204,
           "EnemyGoldKilled": 125,
-          "OwnGoldLost": 415.29413,
+          "OwnGoldLost": 406.32352,
           "UnitCounts": {
-            "WARRIOR": 3.264706
+            "WARRIOR": 3.235294
           }
         },
         {
@@ -4507,14 +4481,14 @@
         },
         {
           "Tick": 950,
-          "Gold": 5591.8335,
+          "Gold": 5670.6665,
           "GoldMined": 6220.533,
-          "GoldSpent": 1604.3334,
-          "PawnCount": 5.766667,
+          "GoldSpent": 1528,
+          "PawnCount": 5.866667,
           "ArmyValue": 209.66667,
-          "HpPercent": 93.06519,
+          "HpPercent": 93.78922,
           "EnemyGoldKilled": 304.5,
-          "OwnGoldLost": 783.8333,
+          "OwnGoldLost": 700,
           "UnitCounts": {
             "WARRIOR": 2.4666667
           }
@@ -4544,42 +4518,18 @@
           "UnitCounts": {}
         },
         {
-          "Tick": 971,
-          "Gold": 3923,
-          "GoldMined": 6464,
-          "GoldSpent": 3445,
-          "PawnCount": 1,
-          "ArmyValue": 0,
-          "HpPercent": 68.928566,
-          "EnemyGoldKilled": 0,
-          "OwnGoldLost": 3545,
-          "UnitCounts": {}
-        },
-        {
           "Tick": 1000,
-          "Gold": 5452.3335,
-          "GoldMined": 6386.074,
-          "GoldSpent": 1897.963,
-          "PawnCount": 5.4074073,
-          "ArmyValue": 201.48148,
-          "HpPercent": 90.72899,
-          "EnemyGoldKilled": 491.85184,
-          "OwnGoldLost": 1128.8889,
+          "Gold": 5525.393,
+          "GoldMined": 6388.857,
+          "GoldSpent": 1825.5358,
+          "PawnCount": 5.357143,
+          "ArmyValue": 194.28572,
+          "HpPercent": 90.06015,
+          "EnemyGoldKilled": 474.2857,
+          "OwnGoldLost": 1079.4642,
           "UnitCounts": {
-            "WARRIOR": 2.3703704
+            "WARRIOR": 2.2857144
           }
-        },
-        {
-          "Tick": 1007,
-          "Gold": 48,
-          "GoldMined": 5296,
-          "GoldSpent": 6195,
-          "PawnCount": 0,
-          "ArmyValue": 0,
-          "HpPercent": 0,
-          "EnemyGoldKilled": 0,
-          "OwnGoldLost": 6770,
-          "UnitCounts": {}
         },
         {
           "Tick": 1008,
@@ -4627,6 +4577,18 @@
           "HpPercent": 59.85758,
           "EnemyGoldKilled": 1020,
           "OwnGoldLost": 2705,
+          "UnitCounts": {}
+        },
+        {
+          "Tick": 1047,
+          "Gold": 1888,
+          "GoldMined": 5296,
+          "GoldSpent": 4280,
+          "PawnCount": 3,
+          "ArmyValue": 0,
+          "HpPercent": 49.14338,
+          "EnemyGoldKilled": 0,
+          "OwnGoldLost": 4230,
           "UnitCounts": {}
         },
         {
@@ -5439,30 +5401,30 @@
         },
         {
           "Tick": 850,
-          "Gold": 5894.353,
+          "Gold": 5896.5586,
           "GoldMined": 5953.647,
-          "GoldSpent": 1035.4412,
+          "GoldSpent": 1033.2354,
           "PawnCount": 5.970588,
           "ArmyValue": 317.64706,
-          "HpPercent": 97.76114,
+          "HpPercent": 97.94129,
           "EnemyGoldKilled": 20,
-          "OwnGoldLost": 97.94118,
+          "OwnGoldLost": 95.73529,
           "UnitCounts": {
             "ARCHER": 3.9705882
           }
         },
         {
           "Tick": 900,
-          "Gold": 5572.5,
+          "Gold": 5593.9707,
           "GoldMined": 6058.1177,
-          "GoldSpent": 1457.5,
-          "PawnCount": 5.5882354,
-          "ArmyValue": 343.52942,
-          "HpPercent": 95.165855,
+          "GoldSpent": 1440.5883,
+          "PawnCount": 5.647059,
+          "ArmyValue": 345.88235,
+          "HpPercent": 95.951996,
           "EnemyGoldKilled": 180.44118,
-          "OwnGoldLost": 543.3823,
+          "OwnGoldLost": 519.7059,
           "UnitCounts": {
-            "ARCHER": 4.2941175
+            "ARCHER": 4.3235292
           }
         },
         {
@@ -5515,29 +5477,17 @@
         },
         {
           "Tick": 950,
-          "Gold": 5475.6665,
+          "Gold": 5524,
           "GoldMined": 6220.533,
-          "GoldSpent": 1720.8334,
+          "GoldSpent": 1672.5,
           "PawnCount": 5.366667,
           "ArmyValue": 322.66666,
-          "HpPercent": 86.21954,
+          "HpPercent": 88.4938,
           "EnemyGoldKilled": 391.33334,
-          "OwnGoldLost": 872.3333,
+          "OwnGoldLost": 824,
           "UnitCounts": {
             "ARCHER": 4.0333333
           }
-        },
-        {
-          "Tick": 951,
-          "Gold": 2008,
-          "GoldMined": 5296,
-          "GoldSpent": 4165,
-          "PawnCount": 2,
-          "ArmyValue": 0,
-          "HpPercent": 20.281809,
-          "EnemyGoldKilled": 0,
-          "OwnGoldLost": 4240,
-          "UnitCounts": {}
         },
         {
           "Tick": 953,
@@ -5552,15 +5502,15 @@
           "UnitCounts": {}
         },
         {
-          "Tick": 955,
-          "Gold": 3538,
+          "Tick": 954,
+          "Gold": 4033,
           "GoldMined": 6464,
-          "GoldSpent": 3835,
-          "PawnCount": 2,
+          "GoldSpent": 3415,
+          "PawnCount": 1,
           "ArmyValue": 0,
-          "HpPercent": 33.05907,
+          "HpPercent": 70.35715,
           "EnemyGoldKilled": 0,
-          "OwnGoldLost": 3910,
+          "OwnGoldLost": 3565,
           "UnitCounts": {}
         },
         {
@@ -5577,16 +5527,16 @@
         },
         {
           "Tick": 1000,
-          "Gold": 5548.846,
-          "GoldMined": 6428,
-          "GoldSpent": 1838.4615,
-          "PawnCount": 5.6538463,
-          "ArmyValue": 316.92307,
-          "HpPercent": 91.43737,
-          "EnemyGoldKilled": 664.2308,
-          "OwnGoldLost": 957.11536,
+          "Gold": 5415.852,
+          "GoldMined": 6386.074,
+          "GoldSpent": 1926.4814,
+          "PawnCount": 5.4814816,
+          "ArmyValue": 308.14816,
+          "HpPercent": 89.54731,
+          "EnemyGoldKilled": 639.62964,
+          "OwnGoldLost": 1061.8518,
           "UnitCounts": {
-            "ARCHER": 3.9615386
+            "ARCHER": 3.851852
           }
         },
         {
@@ -5599,6 +5549,18 @@
           "HpPercent": 26.552164,
           "EnemyGoldKilled": 425,
           "OwnGoldLost": 3470,
+          "UnitCounts": {}
+        },
+        {
+          "Tick": 1016,
+          "Gold": 1728,
+          "GoldMined": 5296,
+          "GoldSpent": 4520,
+          "PawnCount": 4,
+          "ArmyValue": 0,
+          "HpPercent": 42.249836,
+          "EnemyGoldKilled": 0,
+          "OwnGoldLost": 4445,
           "UnitCounts": {}
         },
         {
@@ -6456,7 +6418,7 @@
           "GoldSpent": 1078.5294,
           "PawnCount": 6,
           "ArmyValue": 330.88235,
-          "HpPercent": 96.63519,
+          "HpPercent": 96.76505,
           "EnemyGoldKilled": 0,
           "OwnGoldLost": 90.29412,
           "UnitCounts": {
@@ -6465,16 +6427,16 @@
         },
         {
           "Tick": 900,
-          "Gold": 5523.6763,
+          "Gold": 5548.3823,
           "GoldMined": 6058.1177,
-          "GoldSpent": 1511.9117,
-          "PawnCount": 5.3235292,
-          "ArmyValue": 270,
-          "HpPercent": 92.35653,
+          "GoldSpent": 1492.0588,
+          "PawnCount": 5.352941,
+          "ArmyValue": 272.64706,
+          "HpPercent": 93.117615,
           "EnemyGoldKilled": 136.17647,
-          "OwnGoldLost": 647.05884,
+          "OwnGoldLost": 610.58826,
           "UnitCounts": {
-            "LANCER": 3
+            "LANCER": 3.0294118
           }
         },
         {
@@ -6526,41 +6488,29 @@
           "UnitCounts": {}
         },
         {
-          "Tick": 937,
-          "Gold": 1933,
-          "GoldMined": 5296,
-          "GoldSpent": 4230,
-          "PawnCount": 5,
-          "ArmyValue": 0,
-          "HpPercent": 47.46998,
-          "EnemyGoldKilled": 0,
-          "OwnGoldLost": 4030,
-          "UnitCounts": {}
-        },
-        {
-          "Tick": 944,
-          "Gold": 3488,
+          "Tick": 948,
+          "Gold": 4088,
           "GoldMined": 6464,
-          "GoldSpent": 3875,
+          "GoldSpent": 3350,
           "PawnCount": 1,
           "ArmyValue": 0,
-          "HpPercent": 58.149975,
+          "HpPercent": 84.53125,
           "EnemyGoldKilled": 0,
-          "OwnGoldLost": 3975,
+          "OwnGoldLost": 3450,
           "UnitCounts": {}
         },
         {
           "Tick": 950,
-          "Gold": 5487.643,
-          "GoldMined": 6244.857,
-          "GoldSpent": 1721.7858,
-          "PawnCount": 5.714286,
-          "ArmyValue": 237.85715,
-          "HpPercent": 90.29785,
-          "EnemyGoldKilled": 368.39285,
-          "OwnGoldLost": 873.2143,
+          "Gold": 5407.1377,
+          "GoldMined": 6212.1377,
+          "GoldSpent": 1769.3103,
+          "PawnCount": 5.551724,
+          "ArmyValue": 232.75862,
+          "HpPercent": 89.61875,
+          "EnemyGoldKilled": 355.68967,
+          "OwnGoldLost": 933.10345,
           "UnitCounts": {
-            "LANCER": 2.642857
+            "LANCER": 2.586207
           }
         },
         {
@@ -6585,6 +6535,18 @@
           "HpPercent": 93.7,
           "EnemyGoldKilled": 170,
           "OwnGoldLost": 4080,
+          "UnitCounts": {}
+        },
+        {
+          "Tick": 993,
+          "Gold": 2268,
+          "GoldMined": 5296,
+          "GoldSpent": 3895,
+          "PawnCount": 1,
+          "ArmyValue": 0,
+          "HpPercent": 14.293612,
+          "EnemyGoldKilled": 0,
+          "OwnGoldLost": 3995,
           "UnitCounts": {}
         },
         {
@@ -7422,30 +7384,30 @@
         },
         {
           "Tick": 850,
-          "Gold": 5957.9443,
+          "Gold": 5960.028,
           "GoldMined": 5898,
-          "GoldSpent": 922.2222,
+          "GoldSpent": 920.1389,
           "PawnCount": 6,
-          "ArmyValue": 245.27777,
-          "HpPercent": 97.2876,
+          "ArmyValue": 240.55556,
+          "HpPercent": 97.555,
           "EnemyGoldKilled": 5,
-          "OwnGoldLost": 65.833336,
+          "OwnGoldLost": 68.47222,
           "UnitCounts": {
             "LANCER": 1.3333334,
-            "WARRIOR": 0.6111111,
+            "WARRIOR": 0.5555556,
             "ARCHER": 0.9166667
           }
         },
         {
           "Tick": 900,
-          "Gold": 5722.722,
+          "Gold": 5727.3057,
           "GoldMined": 5996.6665,
-          "GoldSpent": 1257.9166,
+          "GoldSpent": 1253.3334,
           "PawnCount": 5.5555553,
           "ArmyValue": 292.3611,
-          "HpPercent": 92.83133,
+          "HpPercent": 93.079666,
           "EnemyGoldKilled": 130.97223,
-          "OwnGoldLost": 398.8889,
+          "OwnGoldLost": 394.30554,
           "UnitCounts": {
             "LANCER": 1.5555556,
             "WARRIOR": 0.6944444,
@@ -7502,14 +7464,14 @@
         },
         {
           "Tick": 950,
-          "Gold": 5620.4062,
+          "Gold": 5667.75,
           "GoldMined": 6141.25,
-          "GoldSpent": 1500,
-          "PawnCount": 5.5625,
+          "GoldSpent": 1452.6562,
+          "PawnCount": 5.46875,
           "ArmyValue": 299.84375,
-          "HpPercent": 91.196594,
+          "HpPercent": 91.70978,
           "EnemyGoldKilled": 381.25,
-          "OwnGoldLost": 639.21875,
+          "OwnGoldLost": 598.90625,
           "UnitCounts": {
             "LANCER": 1.3125,
             "WARRIOR": 0.84375,
@@ -7541,15 +7503,15 @@
           "UnitCounts": {}
         },
         {
-          "Tick": 970,
-          "Gold": 4258,
+          "Tick": 966,
+          "Gold": 4273,
           "GoldMined": 6464,
-          "GoldSpent": 3110,
-          "PawnCount": 1,
+          "GoldSpent": 3095,
+          "PawnCount": 0,
           "ArmyValue": 0,
-          "HpPercent": 4.442844,
+          "HpPercent": 63.024998,
           "EnemyGoldKilled": 0,
-          "OwnGoldLost": 3210,
+          "OwnGoldLost": 3270,
           "UnitCounts": {}
         },
         {
@@ -7566,31 +7528,19 @@
         },
         {
           "Tick": 1000,
-          "Gold": 5696.357,
+          "Gold": 5803.857,
           "GoldMined": 6321.4287,
-          "GoldSpent": 1603.9286,
-          "PawnCount": 5.714286,
+          "GoldSpent": 1496.4286,
+          "PawnCount": 5.857143,
           "ArmyValue": 387.5,
-          "HpPercent": 95.70889,
+          "HpPercent": 95.010544,
           "EnemyGoldKilled": 745,
-          "OwnGoldLost": 684.2857,
+          "OwnGoldLost": 551.7857,
           "UnitCounts": {
             "LANCER": 1.6071428,
             "WARRIOR": 1.1428572,
             "ARCHER": 1.8214285
           }
-        },
-        {
-          "Tick": 1007,
-          "Gold": 48,
-          "GoldMined": 5296,
-          "GoldSpent": 6195,
-          "PawnCount": 0,
-          "ArmyValue": 0,
-          "HpPercent": 0,
-          "EnemyGoldKilled": 0,
-          "OwnGoldLost": 6770,
-          "UnitCounts": {}
         },
         {
           "Tick": 1030,
@@ -7617,6 +7567,18 @@
           "UnitCounts": {
             "LANCER": 20
           }
+        },
+        {
+          "Tick": 1047,
+          "Gold": 1888,
+          "GoldMined": 5296,
+          "GoldSpent": 4280,
+          "PawnCount": 3,
+          "ArmyValue": 0,
+          "HpPercent": 49.14338,
+          "EnemyGoldKilled": 0,
+          "OwnGoldLost": 4230,
+          "UnitCounts": {}
         },
         {
           "Tick": 1050,
@@ -9145,16 +9107,16 @@
         },
         {
           "Tick": 1150,
-          "Gold": 3866.9707,
+          "Gold": 3869.1765,
           "GoldMined": 3906.8235,
-          "GoldSpent": 959.85297,
+          "GoldSpent": 957.64703,
           "PawnCount": 2,
-          "ArmyValue": 280,
-          "HpPercent": 98.32228,
+          "ArmyValue": 277.5,
+          "HpPercent": 98.24549,
           "EnemyGoldKilled": 77.64706,
-          "OwnGoldLost": 40.14706,
+          "OwnGoldLost": 40.441177,
           "UnitCounts": {
-            "WARRIOR": 3.2941177
+            "WARRIOR": 3.264706
           }
         },
         {
@@ -9163,12 +9125,12 @@
           "GoldMined": 3944.4707,
           "GoldSpent": 1437.6471,
           "PawnCount": 1.9705882,
-          "ArmyValue": 635,
-          "HpPercent": 96.03595,
-          "EnemyGoldKilled": 380,
-          "OwnGoldLost": 165.14706,
+          "ArmyValue": 630,
+          "HpPercent": 95.631714,
+          "EnemyGoldKilled": 372.94116,
+          "OwnGoldLost": 170.14706,
           "UnitCounts": {
-            "WARRIOR": 7.470588
+            "WARRIOR": 7.4117646
           }
         },
         {
@@ -9219,12 +9181,12 @@
           "GoldMined": 4025.8064,
           "GoldSpent": 1878.7097,
           "PawnCount": 1.8387097,
-          "ArmyValue": 839.0323,
-          "HpPercent": 93.201775,
-          "EnemyGoldKilled": 808.5484,
-          "OwnGoldLost": 447.74194,
+          "ArmyValue": 817.0968,
+          "HpPercent": 93.08005,
+          "EnemyGoldKilled": 779.8387,
+          "OwnGoldLost": 469.67743,
           "UnitCounts": {
-            "WARRIOR": 9.870968
+            "WARRIOR": 9.612904
           }
         },
         {
@@ -9325,16 +9287,16 @@
         },
         {
           "Tick": 1300,
-          "Gold": 3236.1738,
+          "Gold": 3227.0435,
           "GoldMined": 4192.696,
-          "GoldSpent": 1853.4783,
+          "GoldSpent": 1862.6086,
           "PawnCount": 1.9565217,
-          "ArmyValue": 742.8261,
-          "HpPercent": 93.8268,
-          "EnemyGoldKilled": 1033.6957,
-          "OwnGoldLost": 621.5217,
+          "ArmyValue": 724.34784,
+          "HpPercent": 93.927986,
+          "EnemyGoldKilled": 971.087,
+          "OwnGoldLost": 683.913,
           "UnitCounts": {
-            "WARRIOR": 8.73913
+            "WARRIOR": 8.521739
           }
         },
         {
@@ -9347,6 +9309,18 @@
           "HpPercent": 91.75,
           "EnemyGoldKilled": 850,
           "OwnGoldLost": 4525,
+          "UnitCounts": {}
+        },
+        {
+          "Tick": 1326,
+          "Gold": 22,
+          "GoldMined": 3392,
+          "GoldSpent": 4200,
+          "PawnCount": 0,
+          "ArmyValue": 0,
+          "HpPercent": 0,
+          "EnemyGoldKilled": 1240,
+          "OwnGoldLost": 4775,
           "UnitCounts": {}
         },
         {
@@ -9407,16 +9381,30 @@
         },
         {
           "Tick": 1350,
-          "Gold": 3449.6667,
-          "GoldMined": 4312.4443,
-          "GoldSpent": 1791.9445,
-          "PawnCount": 1.8888888,
-          "ArmyValue": 543.05554,
-          "HpPercent": 88.77071,
-          "EnemyGoldKilled": 1100.2778,
-          "OwnGoldLost": 871.1111,
+          "Gold": 3650.1177,
+          "GoldMined": 4366.5884,
+          "GoldSpent": 1641.4706,
+          "PawnCount": 2,
+          "ArmyValue": 550,
+          "HpPercent": 88.275826,
+          "EnemyGoldKilled": 997.35297,
+          "OwnGoldLost": 687.05884,
           "UnitCounts": {
-            "WARRIOR": 6.388889
+            "WARRIOR": 6.470588
+          }
+        },
+        {
+          "Tick": 1353,
+          "Gold": 1552,
+          "GoldMined": 4392,
+          "GoldSpent": 3670,
+          "PawnCount": 2,
+          "ArmyValue": 1785,
+          "HpPercent": 87.88457,
+          "EnemyGoldKilled": 3530,
+          "OwnGoldLost": 1510,
+          "UnitCounts": {
+            "WARRIOR": 21
           }
         },
         {
@@ -9432,18 +9420,6 @@
           "UnitCounts": {}
         },
         {
-          "Tick": 1367,
-          "Gold": 42,
-          "GoldMined": 3392,
-          "GoldSpent": 4350,
-          "PawnCount": 0,
-          "ArmyValue": 0,
-          "HpPercent": 0,
-          "EnemyGoldKilled": 2320,
-          "OwnGoldLost": 4925,
-          "UnitCounts": {}
-        },
-        {
           "Tick": 1369,
           "Gold": 192,
           "GoldMined": 4392,
@@ -9454,20 +9430,6 @@
           "EnemyGoldKilled": 915,
           "OwnGoldLost": 4970,
           "UnitCounts": {}
-        },
-        {
-          "Tick": 1385,
-          "Gold": 1042,
-          "GoldMined": 4392,
-          "GoldSpent": 4180,
-          "PawnCount": 2,
-          "ArmyValue": 2465,
-          "HpPercent": 91.712135,
-          "EnemyGoldKilled": 5240,
-          "OwnGoldLost": 1340,
-          "UnitCounts": {
-            "WARRIOR": 29
-          }
         },
         {
           "Tick": 1393,
@@ -10861,40 +10823,40 @@
           "GoldMined": 3906.8235,
           "GoldSpent": 987.05884,
           "PawnCount": 1.9705882,
-          "ArmyValue": 374.11765,
-          "HpPercent": 99.227936,
+          "ArmyValue": 369.41177,
+          "HpPercent": 99.61967,
           "EnemyGoldKilled": 116.32353,
-          "OwnGoldLost": 56.32353,
+          "OwnGoldLost": 61.02941,
           "UnitCounts": {
-            "ARCHER": 4.6764708
+            "ARCHER": 4.617647
           }
         },
         {
           "Tick": 1200,
-          "Gold": 3214.9119,
+          "Gold": 3228.2942,
           "GoldMined": 3944.4707,
-          "GoldSpent": 1623.6765,
+          "GoldSpent": 1610.2941,
           "PawnCount": 2,
-          "ArmyValue": 872.94116,
-          "HpPercent": 97.068306,
-          "EnemyGoldKilled": 455.29413,
-          "OwnGoldLost": 181.61765,
+          "ArmyValue": 870.58826,
+          "HpPercent": 96.615425,
+          "EnemyGoldKilled": 450,
+          "OwnGoldLost": 170.58824,
           "UnitCounts": {
-            "ARCHER": 10.911765
+            "ARCHER": 10.882353
           }
         },
         {
           "Tick": 1250,
-          "Gold": 2704.147,
+          "Gold": 2717.5293,
           "GoldMined": 3969.8823,
-          "GoldSpent": 2153.3823,
-          "PawnCount": 1.882353,
-          "ArmyValue": 1171.7646,
-          "HpPercent": 96.75872,
-          "EnemyGoldKilled": 1137.2059,
-          "OwnGoldLost": 452.20587,
+          "GoldSpent": 2144.5588,
+          "PawnCount": 1.9117647,
+          "ArmyValue": 1160,
+          "HpPercent": 96.314835,
+          "EnemyGoldKilled": 1124.2646,
+          "OwnGoldLost": 442.64706,
           "UnitCounts": {
-            "ARCHER": 14.6470585
+            "ARCHER": 14.5
           }
         },
         {
@@ -11005,16 +10967,16 @@
         },
         {
           "Tick": 1300,
-          "Gold": 2985.6924,
+          "Gold": 2986.4614,
           "GoldMined": 4177.231,
-          "GoldSpent": 2114.8076,
-          "PawnCount": 1.8846154,
-          "ArmyValue": 1184.6154,
-          "HpPercent": 96.87463,
+          "GoldSpent": 2117.1155,
+          "PawnCount": 1.9615384,
+          "ArmyValue": 1156.9231,
+          "HpPercent": 97.18888,
           "EnemyGoldKilled": 1460,
-          "OwnGoldLost": 460,
+          "OwnGoldLost": 470.76923,
           "UnitCounts": {
-            "ARCHER": 14.807693
+            "ARCHER": 14.461538
           }
         },
         {
@@ -11030,18 +10992,6 @@
           "UnitCounts": {
             "ARCHER": 39
           }
-        },
-        {
-          "Tick": 1315,
-          "Gold": 27,
-          "GoldMined": 3392,
-          "GoldSpent": 4285,
-          "PawnCount": 0,
-          "ArmyValue": 0,
-          "HpPercent": 0,
-          "EnemyGoldKilled": 2240,
-          "OwnGoldLost": 4860,
-          "UnitCounts": {}
         },
         {
           "Tick": 1336,
@@ -11068,31 +11018,29 @@
           "UnitCounts": {}
         },
         {
-          "Tick": 1350,
-          "Gold": 3133.0454,
-          "GoldMined": 4281.4546,
-          "GoldSpent": 2057.7273,
-          "PawnCount": 1.9545455,
-          "ArmyValue": 1429.091,
-          "HpPercent": 97.25644,
-          "EnemyGoldKilled": 2298.6365,
-          "OwnGoldLost": 175.22728,
-          "UnitCounts": {
-            "ARCHER": 17.863636
-          }
+          "Tick": 1343,
+          "Gold": 47,
+          "GoldMined": 3392,
+          "GoldSpent": 4345,
+          "PawnCount": 0,
+          "ArmyValue": 0,
+          "HpPercent": 0,
+          "EnemyGoldKilled": 2530,
+          "OwnGoldLost": 4920,
+          "UnitCounts": {}
         },
         {
-          "Tick": 1360,
-          "Gold": 682,
-          "GoldMined": 4392,
-          "GoldSpent": 4550,
-          "PawnCount": 2,
-          "ArmyValue": 880,
-          "HpPercent": 94.454994,
-          "EnemyGoldKilled": 3195,
-          "OwnGoldLost": 3395,
+          "Tick": 1350,
+          "Gold": 3129.4092,
+          "GoldMined": 4281.4546,
+          "GoldSpent": 2065,
+          "PawnCount": 1.9090909,
+          "ArmyValue": 1381.8182,
+          "HpPercent": 97.42166,
+          "EnemyGoldKilled": 2238.6365,
+          "OwnGoldLost": 233.18182,
           "UnitCounts": {
-            "ARCHER": 11
+            "ARCHER": 17.272728
           }
         },
         {
@@ -11108,6 +11056,18 @@
           "UnitCounts": {
             "ARCHER": 39
           }
+        },
+        {
+          "Tick": 1373,
+          "Gold": 27,
+          "GoldMined": 4392,
+          "GoldSpent": 5365,
+          "PawnCount": 0,
+          "ArmyValue": 0,
+          "HpPercent": 71.25244,
+          "EnemyGoldKilled": 1705,
+          "OwnGoldLost": 5240,
+          "UnitCounts": {}
         },
         {
           "Tick": 1397,
@@ -12583,30 +12543,30 @@
         },
         {
           "Tick": 1150,
-          "Gold": 3728,
+          "Gold": 3730.2058,
           "GoldMined": 3906.8235,
-          "GoldSpent": 1057.0588,
+          "GoldSpent": 1054.8529,
           "PawnCount": 2,
-          "ArmyValue": 378.52942,
-          "HpPercent": 98.04997,
-          "EnemyGoldKilled": 117.64706,
-          "OwnGoldLost": 38.82353,
+          "ArmyValue": 375.88235,
+          "HpPercent": 98.51413,
+          "EnemyGoldKilled": 120,
+          "OwnGoldLost": 39.264706,
           "UnitCounts": {
-            "LANCER": 4.2058825
+            "LANCER": 4.1764708
           }
         },
         {
           "Tick": 1200,
-          "Gold": 3146.6765,
+          "Gold": 3150.0588,
           "GoldMined": 3944.4707,
-          "GoldSpent": 1673.3823,
+          "GoldSpent": 1670,
           "PawnCount": 2,
-          "ArmyValue": 839.1177,
-          "HpPercent": 98.27152,
-          "EnemyGoldKilled": 541.7647,
-          "OwnGoldLost": 194.55882,
+          "ArmyValue": 860.2941,
+          "HpPercent": 98.1391,
+          "EnemyGoldKilled": 544.1177,
+          "OwnGoldLost": 170,
           "UnitCounts": {
-            "LANCER": 9.323529
+            "LANCER": 9.558824
           }
         },
         {
@@ -12709,16 +12669,16 @@
         },
         {
           "Tick": 1250,
-          "Gold": 3078.7778,
+          "Gold": 3106.1853,
           "GoldMined": 4119.7036,
-          "GoldSpent": 1952.5927,
-          "PawnCount": 1.8518518,
-          "ArmyValue": 830,
-          "HpPercent": 94.34562,
-          "EnemyGoldKilled": 746.4815,
-          "OwnGoldLost": 584.62964,
+          "GoldSpent": 1931.2963,
+          "PawnCount": 1.8888888,
+          "ArmyValue": 856.6667,
+          "HpPercent": 95.252235,
+          "EnemyGoldKilled": 768.7037,
+          "OwnGoldLost": 533.8889,
           "UnitCounts": {
-            "LANCER": 9.222222
+            "LANCER": 9.518518
           }
         },
         {
@@ -12762,18 +12722,6 @@
           }
         },
         {
-          "Tick": 1294,
-          "Gold": 47,
-          "GoldMined": 3392,
-          "GoldSpent": 4165,
-          "PawnCount": 0,
-          "ArmyValue": 0,
-          "HpPercent": 0,
-          "EnemyGoldKilled": 1270,
-          "OwnGoldLost": 4740,
-          "UnitCounts": {}
-        },
-        {
           "Tick": 1295,
           "Gold": 1817,
           "GoldMined": 4392,
@@ -12789,16 +12737,16 @@
         },
         {
           "Tick": 1300,
-          "Gold": 3220.6191,
-          "GoldMined": 4268.952,
-          "GoldSpent": 1971.9048,
-          "PawnCount": 1.9047619,
-          "ArmyValue": 887.1429,
-          "HpPercent": 96.626144,
-          "EnemyGoldKilled": 1132.1428,
-          "OwnGoldLost": 616.9048,
+          "Gold": 3077.0454,
+          "GoldMined": 4229.091,
+          "GoldSpent": 2075.682,
+          "PawnCount": 1.8181819,
+          "ArmyValue": 900,
+          "HpPercent": 96.105156,
+          "EnemyGoldKilled": 1183.6364,
+          "OwnGoldLost": 696.13635,
           "UnitCounts": {
-            "LANCER": 9.857142
+            "LANCER": 10
           }
         },
         {
@@ -12883,17 +12831,29 @@
         },
         {
           "Tick": 1350,
-          "Gold": 3912.9285,
-          "GoldMined": 4361.143,
-          "GoldSpent": 1390.3572,
-          "PawnCount": 2,
-          "ArmyValue": 456.42856,
-          "HpPercent": 91.39833,
-          "EnemyGoldKilled": 908.5714,
-          "OwnGoldLost": 658.9286,
+          "Gold": 3652.2,
+          "GoldMined": 4296.533,
+          "GoldSpent": 1596.3334,
+          "PawnCount": 1.8666667,
+          "ArmyValue": 426,
+          "HpPercent": 92.594025,
+          "EnemyGoldKilled": 1041.6666,
+          "OwnGoldLost": 892,
           "UnitCounts": {
-            "LANCER": 5.071429
+            "LANCER": 4.733333
           }
+        },
+        {
+          "Tick": 1351,
+          "Gold": 67,
+          "GoldMined": 4392,
+          "GoldSpent": 5235,
+          "PawnCount": 0,
+          "ArmyValue": 0,
+          "HpPercent": 100,
+          "EnemyGoldKilled": 790,
+          "OwnGoldLost": 5410,
+          "UnitCounts": {}
         },
         {
           "Tick": 1362,
@@ -12910,18 +12870,6 @@
           }
         },
         {
-          "Tick": 1367,
-          "Gold": 72,
-          "GoldMined": 4392,
-          "GoldSpent": 5140,
-          "PawnCount": 0,
-          "ArmyValue": 0,
-          "HpPercent": 0,
-          "EnemyGoldKilled": 1510,
-          "OwnGoldLost": 5715,
-          "UnitCounts": {}
-        },
-        {
           "Tick": 1390,
           "Gold": 62,
           "GoldMined": 4392,
@@ -12935,17 +12883,29 @@
         },
         {
           "Tick": 1400,
-          "Gold": 4928.636,
-          "GoldMined": 4469.091,
-          "GoldSpent": 524.0909,
-          "PawnCount": 2,
-          "ArmyValue": 278.18182,
-          "HpPercent": 96.36822,
-          "EnemyGoldKilled": 493.63635,
-          "OwnGoldLost": 98.181816,
+          "Gold": 4518.5,
+          "GoldMined": 4379.3335,
+          "GoldSpent": 845.8333,
+          "PawnCount": 1.8333334,
+          "ArmyValue": 255,
+          "HpPercent": 93.592155,
+          "EnemyGoldKilled": 754.5833,
+          "OwnGoldLost": 461.66666,
           "UnitCounts": {
-            "LANCER": 3.090909
+            "LANCER": 2.8333333
           }
+        },
+        {
+          "Tick": 1409,
+          "Gold": 7,
+          "GoldMined": 3392,
+          "GoldSpent": 4385,
+          "PawnCount": 0,
+          "ArmyValue": 0,
+          "HpPercent": 0,
+          "EnemyGoldKilled": 3625,
+          "OwnGoldLost": 4960,
+          "UnitCounts": {}
         },
         {
           "Tick": 1424,
@@ -14233,17 +14193,17 @@
         },
         {
           "Tick": 1150,
-          "Gold": 3885.6667,
+          "Gold": 3887.75,
           "GoldMined": 3861.7778,
-          "GoldSpent": 885.2778,
+          "GoldSpent": 883.19446,
           "PawnCount": 2,
-          "ArmyValue": 299.72223,
-          "HpPercent": 98.89623,
+          "ArmyValue": 297.3611,
+          "HpPercent": 98.811676,
           "EnemyGoldKilled": 105.833336,
-          "OwnGoldLost": 38.333332,
+          "OwnGoldLost": 38.61111,
           "UnitCounts": {
             "LANCER": 1.5833334,
-            "WARRIOR": 0.7777778,
+            "WARRIOR": 0.75,
             "ARCHER": 1.1388888
           }
         },
@@ -14253,13 +14213,13 @@
           "GoldMined": 3897.3333,
           "GoldSpent": 1388.4722,
           "PawnCount": 2,
-          "ArmyValue": 691.6667,
-          "HpPercent": 97.78272,
-          "EnemyGoldKilled": 458.05554,
-          "OwnGoldLost": 149.58333,
+          "ArmyValue": 686.94446,
+          "HpPercent": 97.31596,
+          "EnemyGoldKilled": 451.3889,
+          "OwnGoldLost": 154.30556,
           "UnitCounts": {
             "LANCER": 3.5555556,
-            "WARRIOR": 1.8888888,
+            "WARRIOR": 1.8333334,
             "ARCHER": 2.6388888
           }
         },
@@ -14312,13 +14272,13 @@
           "GoldMined": 3987.5,
           "GoldSpent": 1669.2188,
           "PawnCount": 1.90625,
-          "ArmyValue": 801.875,
-          "HpPercent": 94.73613,
-          "EnemyGoldKilled": 879.6875,
-          "OwnGoldLost": 393.125,
+          "ArmyValue": 780.625,
+          "HpPercent": 94.60407,
+          "EnemyGoldKilled": 851.875,
+          "OwnGoldLost": 414.375,
           "UnitCounts": {
             "LANCER": 2.9375,
-            "WARRIOR": 2.5,
+            "WARRIOR": 2.25,
             "ARCHER": 4.0625
           }
         },
@@ -14378,17 +14338,17 @@
         },
         {
           "Tick": 1300,
-          "Gold": 3339.5557,
+          "Gold": 3331.7778,
           "GoldMined": 4126.222,
-          "GoldSpent": 1719.8148,
+          "GoldSpent": 1727.5927,
           "PawnCount": 1.925926,
-          "ArmyValue": 856.4815,
-          "HpPercent": 95.2836,
-          "EnemyGoldKilled": 1113.7037,
-          "OwnGoldLost": 434.62964,
+          "ArmyValue": 840.7407,
+          "HpPercent": 95.428055,
+          "EnemyGoldKilled": 1060.3704,
+          "OwnGoldLost": 487.77777,
           "UnitCounts": {
             "LANCER": 4.037037,
-            "WARRIOR": 2.6296296,
+            "WARRIOR": 2.4444444,
             "ARCHER": 3.3703704
           }
         },
@@ -14405,6 +14365,18 @@
           "UnitCounts": {
             "LANCER": 30
           }
+        },
+        {
+          "Tick": 1326,
+          "Gold": 22,
+          "GoldMined": 3392,
+          "GoldSpent": 4200,
+          "PawnCount": 0,
+          "ArmyValue": 0,
+          "HpPercent": 0,
+          "EnemyGoldKilled": 1240,
+          "OwnGoldLost": 4775,
+          "UnitCounts": {}
         },
         {
           "Tick": 1327,
@@ -14474,18 +14446,32 @@
         },
         {
           "Tick": 1350,
-          "Gold": 3699.1904,
-          "GoldMined": 4152.7617,
-          "GoldSpent": 1405.9524,
-          "PawnCount": 1.9047619,
-          "ArmyValue": 776.6667,
-          "HpPercent": 94.24957,
-          "EnemyGoldKilled": 1410,
-          "OwnGoldLost": 347.14285,
+          "Gold": 3882.05,
+          "GoldMined": 4190.8,
+          "GoldSpent": 1258.75,
+          "PawnCount": 2,
+          "ArmyValue": 794.25,
+          "HpPercent": 94.00231,
+          "EnemyGoldKilled": 1338,
+          "OwnGoldLost": 164.5,
           "UnitCounts": {
-            "ARCHER": 5.3809524,
-            "LANCER": 1.2380953,
-            "WARRIOR": 2.7619047
+            "ARCHER": 5.65,
+            "LANCER": 1.3,
+            "WARRIOR": 2.65
+          }
+        },
+        {
+          "Tick": 1353,
+          "Gold": 1552,
+          "GoldMined": 4392,
+          "GoldSpent": 3670,
+          "PawnCount": 2,
+          "ArmyValue": 1785,
+          "HpPercent": 87.88457,
+          "EnemyGoldKilled": 3530,
+          "OwnGoldLost": 1510,
+          "UnitCounts": {
+            "WARRIOR": 21
           }
         },
         {
@@ -14500,32 +14486,6 @@
           "OwnGoldLost": 0,
           "UnitCounts": {
             "WARRIOR": 34
-          }
-        },
-        {
-          "Tick": 1367,
-          "Gold": 42,
-          "GoldMined": 3392,
-          "GoldSpent": 4350,
-          "PawnCount": 0,
-          "ArmyValue": 0,
-          "HpPercent": 0,
-          "EnemyGoldKilled": 2320,
-          "OwnGoldLost": 4925,
-          "UnitCounts": {}
-        },
-        {
-          "Tick": 1386,
-          "Gold": 1042,
-          "GoldMined": 4392,
-          "GoldSpent": 4180,
-          "PawnCount": 2,
-          "ArmyValue": 2465,
-          "HpPercent": 91.50982,
-          "EnemyGoldKilled": 5345,
-          "OwnGoldLost": 1340,
-          "UnitCounts": {
-            "WARRIOR": 29
           }
         },
         {
@@ -15846,31 +15806,31 @@
         },
         {
           "Tick": 850,
-          "Gold": 5104.353,
+          "Gold": 5106.5586,
           "GoldMined": 5946.1177,
-          "GoldSpent": 1747.7941,
+          "GoldSpent": 1745.5883,
           "PawnCount": 5.970588,
-          "ArmyValue": 530.44116,
-          "HpPercent": 97.16556,
+          "ArmyValue": 522.94116,
+          "HpPercent": 97.49128,
           "EnemyGoldKilled": 27.352942,
-          "OwnGoldLost": 44.558823,
+          "OwnGoldLost": 49.85294,
           "UnitCounts": {
-            "WARRIOR": 5.852941,
+            "WARRIOR": 5.7647057,
             "ARCHER": 0.4117647
           }
         },
         {
           "Tick": 900,
-          "Gold": 4405.147,
+          "Gold": 4407.353,
           "GoldMined": 6050.5884,
-          "GoldSpent": 2548.3823,
+          "GoldSpent": 2546.1765,
           "PawnCount": 6,
-          "ArmyValue": 1115.8823,
-          "HpPercent": 96.14085,
-          "EnemyGoldKilled": 588.82355,
-          "OwnGoldLost": 245.73529,
+          "ArmyValue": 1103.3823,
+          "HpPercent": 96.02724,
+          "EnemyGoldKilled": 583.5294,
+          "OwnGoldLost": 256.02942,
           "UnitCounts": {
-            "WARRIOR": 10,
+            "WARRIOR": 9.8529415,
             "ARCHER": 3.3235295
           }
         },
@@ -15891,16 +15851,16 @@
         },
         {
           "Tick": 950,
-          "Gold": 3723.9092,
+          "Gold": 3726.3333,
           "GoldMined": 6165.091,
-          "GoldSpent": 3321.3635,
+          "GoldSpent": 3318.9395,
           "PawnCount": 5.969697,
-          "ArmyValue": 1629.5454,
-          "HpPercent": 96.20901,
-          "EnemyGoldKilled": 1428.4849,
-          "OwnGoldLost": 517.57574,
+          "ArmyValue": 1606.3636,
+          "HpPercent": 96.07567,
+          "EnemyGoldKilled": 1410,
+          "OwnGoldLost": 538.3333,
           "UnitCounts": {
-            "WARRIOR": 13.181818,
+            "WARRIOR": 12.909091,
             "ARCHER": 6.3636365
           }
         },
@@ -16026,17 +15986,17 @@
         },
         {
           "Tick": 1000,
-          "Gold": 3957.8696,
+          "Gold": 3954.3914,
           "GoldMined": 6464.3477,
-          "GoldSpent": 3401.087,
+          "GoldSpent": 3408.0435,
           "PawnCount": 5.695652,
-          "ArmyValue": 1331.3043,
-          "HpPercent": 95.24704,
-          "EnemyGoldKilled": 1630.4348,
-          "OwnGoldLost": 1132.826,
+          "ArmyValue": 1283.9131,
+          "HpPercent": 94.50232,
+          "EnemyGoldKilled": 1575.6522,
+          "OwnGoldLost": 1187.174,
           "UnitCounts": {
-            "WARRIOR": 10.26087,
-            "ARCHER": 5.7391305
+            "WARRIOR": 9.826087,
+            "ARCHER": 5.6086955
           }
         },
         {
@@ -16083,17 +16043,17 @@
         },
         {
           "Tick": 1021,
-          "Gold": 880.5,
+          "Gold": 918,
           "GoldMined": 6464,
-          "GoldSpent": 6477.5,
+          "GoldSpent": 6440,
           "PawnCount": 6,
-          "ArmyValue": 4532.5,
-          "HpPercent": 98.99882,
-          "EnemyGoldKilled": 5860,
-          "OwnGoldLost": 420,
+          "ArmyValue": 4915,
+          "HpPercent": 100,
+          "EnemyGoldKilled": 5570,
+          "OwnGoldLost": 0,
           "UnitCounts": {
-            "ARCHER": 20,
-            "WARRIOR": 34.5
+            "WARRIOR": 39,
+            "ARCHER": 20
           }
         },
         {
@@ -16109,6 +16069,21 @@
           "UnitCounts": {
             "WARRIOR": 35,
             "ARCHER": 14
+          }
+        },
+        {
+          "Tick": 1034,
+          "Gold": 833,
+          "GoldMined": 6464,
+          "GoldSpent": 6445,
+          "PawnCount": 6,
+          "ArmyValue": 3570,
+          "HpPercent": 91.696304,
+          "EnemyGoldKilled": 6645,
+          "OwnGoldLost": 1350,
+          "UnitCounts": {
+            "WARRIOR": 26,
+            "ARCHER": 17
           }
         },
         {
@@ -16140,17 +16115,17 @@
         },
         {
           "Tick": 1050,
-          "Gold": 5353.7334,
+          "Gold": 5354.7334,
           "GoldMined": 7039.467,
-          "GoldSpent": 2656,
-          "PawnCount": 5.733333,
-          "ArmyValue": 529.3333,
-          "HpPercent": 94.31454,
-          "EnemyGoldKilled": 1190,
-          "OwnGoldLost": 1228.3334,
+          "GoldSpent": 2649.3333,
+          "PawnCount": 5.6666665,
+          "ArmyValue": 462.66666,
+          "HpPercent": 94.4934,
+          "EnemyGoldKilled": 1065.3334,
+          "OwnGoldLost": 1320,
           "UnitCounts": {
-            "ARCHER": 2.9333334,
-            "WARRIOR": 3.4666667
+            "ARCHER": 2.6666667,
+            "WARRIOR": 2.9333334
           }
         },
         {
@@ -16170,32 +16145,44 @@
         },
         {
           "Tick": 1100,
-          "Gold": 5771.4614,
+          "Gold": 5772.615,
           "GoldMined": 7358.154,
-          "GoldSpent": 2555.7693,
-          "PawnCount": 5.8461537,
-          "ArmyValue": 296.15384,
-          "HpPercent": 97.47772,
-          "EnemyGoldKilled": 1105.7693,
-          "OwnGoldLost": 1088.4615,
+          "GoldSpent": 2548.077,
+          "PawnCount": 5.5384617,
+          "ArmyValue": 227.6923,
+          "HpPercent": 97.963875,
+          "EnemyGoldKilled": 896.9231,
+          "OwnGoldLost": 1260.7693,
           "UnitCounts": {
-            "WARRIOR": 1.3846154,
-            "ARCHER": 2.2307692
+            "WARRIOR": 1.2307693,
+            "ARCHER": 1.5384616
           }
         },
         {
+          "Tick": 1119,
+          "Gold": 43,
+          "GoldMined": 5296,
+          "GoldSpent": 6120,
+          "PawnCount": 0,
+          "ArmyValue": 0,
+          "HpPercent": 0,
+          "EnemyGoldKilled": 2780,
+          "OwnGoldLost": 6695,
+          "UnitCounts": {}
+        },
+        {
           "Tick": 1150,
-          "Gold": 5545.769,
-          "GoldMined": 7414.769,
-          "GoldSpent": 2813.4614,
-          "PawnCount": 5.6923075,
-          "ArmyValue": 457.30768,
-          "HpPercent": 94.71646,
-          "EnemyGoldKilled": 1316.1538,
-          "OwnGoldLost": 1196.5385,
+          "Gold": 6005.5835,
+          "GoldMined": 7591.3335,
+          "GoldSpent": 2529.5833,
+          "PawnCount": 5.6666665,
+          "ArmyValue": 428.33334,
+          "HpPercent": 95.00818,
+          "EnemyGoldKilled": 898.75,
+          "OwnGoldLost": 972.0833,
           "UnitCounts": {
-            "WARRIOR": 2.8461537,
-            "ARCHER": 2.6923077
+            "WARRIOR": 3,
+            "ARCHER": 2.1666667
           }
         },
         {
@@ -16227,47 +16214,32 @@
         },
         {
           "Tick": 1200,
-          "Gold": 5801.727,
-          "GoldMined": 7645.8184,
-          "GoldSpent": 2775.9092,
-          "PawnCount": 5.818182,
-          "ArmyValue": 844.5455,
-          "HpPercent": 93.30689,
-          "EnemyGoldKilled": 952.2727,
-          "OwnGoldLost": 629.0909,
+          "Gold": 6379.1,
+          "GoldMined": 7880.8,
+          "GoldSpent": 2431.5,
+          "PawnCount": 5.8,
+          "ArmyValue": 848.5,
+          "HpPercent": 93.43356,
+          "EnemyGoldKilled": 345,
+          "OwnGoldLost": 303,
           "UnitCounts": {
-            "WARRIOR": 7.4545455,
-            "ARCHER": 2.6363637
+            "WARRIOR": 8.1,
+            "ARCHER": 2
           }
         },
         {
           "Tick": 1250,
-          "Gold": 5022.636,
-          "GoldMined": 7704,
-          "GoldSpent": 3566.818,
+          "Gold": 5522.1,
+          "GoldMined": 7944.8,
+          "GoldSpent": 3301.5,
           "PawnCount": 6,
-          "ArmyValue": 1245,
-          "HpPercent": 91.664925,
-          "EnemyGoldKilled": 1615.909,
-          "OwnGoldLost": 1005.9091,
+          "ArmyValue": 1289,
+          "HpPercent": 91.65065,
+          "EnemyGoldKilled": 1032.5,
+          "OwnGoldLost": 717.5,
           "UnitCounts": {
-            "WARRIOR": 10.454545,
-            "ARCHER": 4.4545455
-          }
-        },
-        {
-          "Tick": 1276,
-          "Gold": 28,
-          "GoldMined": 5296,
-          "GoldSpent": 6220,
-          "PawnCount": 6,
-          "ArmyValue": 805,
-          "HpPercent": 91.85943,
-          "EnemyGoldKilled": 7950,
-          "OwnGoldLost": 3890,
-          "UnitCounts": {
-            "ARCHER": 9,
-            "WARRIOR": 1
+            "WARRIOR": 11.4,
+            "ARCHER": 4
           }
         },
         {
@@ -16828,7 +16800,7 @@
           "PawnCount": 6,
           "ArmyValue": 51.38889,
           "HpPercent": 100,
-          "EnemyGoldKilled": 20.833334,
+          "EnemyGoldKilled": 6.25,
           "OwnGoldLost": 0,
           "UnitCounts": {
             "ARCHER": 0.6111111,
@@ -16836,100 +16808,104 @@
           }
         },
         {
-          "Tick": 742,
-          "Gold": 2111,
-          "GoldMined": 4456,
-          "GoldSpent": 3095,
-          "PawnCount": 6,
-          "ArmyValue": 1620,
-          "HpPercent": 100,
-          "EnemyGoldKilled": 725,
-          "OwnGoldLost": 0,
-          "UnitCounts": {
-            "ARCHER": 18,
-            "LANCER": 2
-          }
-        },
-        {
-          "Tick": 748,
-          "Gold": 2497,
-          "GoldMined": 5448,
-          "GoldSpent": 3765,
-          "PawnCount": 6,
-          "ArmyValue": 2290,
-          "HpPercent": 100,
-          "EnemyGoldKilled": 2000,
-          "OwnGoldLost": 0,
-          "UnitCounts": {
-            "ARCHER": 23,
-            "LANCER": 5
-          }
-        },
-        {
           "Tick": 750,
-          "Gold": 5933,
-          "GoldMined": 5759.7646,
-          "GoldSpent": 869.1177,
+          "Gold": 5722.222,
+          "GoldMined": 5714.8887,
+          "GoldSpent": 1020.55554,
           "PawnCount": 6,
-          "ArmyValue": 0,
+          "ArmyValue": 117.77778,
           "HpPercent": 100,
-          "EnemyGoldKilled": 0,
+          "EnemyGoldKilled": 47.916668,
           "OwnGoldLost": 0,
-          "UnitCounts": {}
+          "UnitCounts": {
+            "LANCER": 0.22222222,
+            "ARCHER": 1.2222222
+          }
+        },
+        {
+          "Tick": 770,
+          "Gold": 1917,
+          "GoldMined": 5448,
+          "GoldSpent": 4345,
+          "PawnCount": 6,
+          "ArmyValue": 2870,
+          "HpPercent": 100,
+          "EnemyGoldKilled": 2225,
+          "OwnGoldLost": 0,
+          "UnitCounts": {
+            "ARCHER": 28,
+            "LANCER": 7
+          }
         },
         {
           "Tick": 800,
-          "Gold": 5524.0586,
-          "GoldMined": 5847.294,
-          "GoldSpent": 1273.8235,
+          "Gold": 5381.6855,
+          "GoldMined": 5807.543,
+          "GoldSpent": 1370.7142,
           "PawnCount": 6,
-          "ArmyValue": 122.35294,
+          "ArmyValue": 210,
           "HpPercent": 100,
-          "EnemyGoldKilled": 0,
+          "EnemyGoldKilled": 45,
           "OwnGoldLost": 0,
           "UnitCounts": {
-            "ARCHER": 1.5294118
+            "LANCER": 0.2,
+            "ARCHER": 2.4
+          }
+        },
+        {
+          "Tick": 803,
+          "Gold": 541,
+          "GoldMined": 4456,
+          "GoldSpent": 4755,
+          "PawnCount": 6,
+          "ArmyValue": 3280,
+          "HpPercent": 100,
+          "EnemyGoldKilled": 2075,
+          "OwnGoldLost": 0,
+          "UnitCounts": {
+            "LANCER": 8,
+            "ARCHER": 32
           }
         },
         {
           "Tick": 850,
-          "Gold": 4852.8823,
+          "Gold": 4855.0884,
           "GoldMined": 5946.1177,
-          "GoldSpent": 1993.2354,
+          "GoldSpent": 1991.0294,
           "PawnCount": 6,
-          "ArmyValue": 782.05884,
-          "HpPercent": 98.206665,
-          "EnemyGoldKilled": 165.88235,
-          "OwnGoldLost": 59.705883,
+          "ArmyValue": 779.7059,
+          "HpPercent": 98.46807,
+          "EnemyGoldKilled": 190.14706,
+          "OwnGoldLost": 59.85294,
           "UnitCounts": {
-            "ARCHER": 9.1470585,
+            "ARCHER": 9.117647,
             "LANCER": 0.5588235
           }
         },
         {
           "Tick": 900,
-          "Gold": 4030.8823,
+          "Gold": 4043.8235,
           "GoldMined": 6050.5884,
-          "GoldSpent": 2888.0881,
-          "PawnCount": 5.970588,
-          "ArmyValue": 1420,
-          "HpPercent": 97.19414,
-          "EnemyGoldKilled": 824.85297,
-          "OwnGoldLost": 318.82352,
+          "GoldSpent": 2875,
+          "PawnCount": 6,
+          "ArmyValue": 1435.5883,
+          "HpPercent": 97.763794,
+          "EnemyGoldKilled": 692.5,
+          "OwnGoldLost": 287.94116,
           "UnitCounts": {
-            "LANCER": 3.1764705,
-            "ARCHER": 14.176471
+            "LANCER": 3.3235295,
+            "ARCHER": 14.205882
           }
         },
         {
-          "Tick": 937,
-          "Gold": 2353,
-          "GoldMined": 6464,
+          "Tick": 948,
+          "Gold": 1163,
+          "GoldMined": 5296,
           "GoldSpent": 5005,
           "PawnCount": 6,
           "ArmyValue": 3530,
           "HpPercent": 100,
-          "EnemyGoldKilled": 4030,
+          "EnemyGoldKilled": 3450,
           "OwnGoldLost": 0,
           "UnitCounts": {
             "ARCHER": 34,
@@ -16937,537 +16913,504 @@
           }
         },
         {
-          "Tick": 944,
-          "Gold": 1243,
-          "GoldMined": 5296,
-          "GoldSpent": 4915,
-          "PawnCount": 6,
-          "ArmyValue": 3440,
-          "HpPercent": 100,
-          "EnemyGoldKilled": 3975,
-          "OwnGoldLost": 0,
-          "UnitCounts": {
-            "LANCER": 8,
-            "ARCHER": 34
-          }
-        },
-        {
           "Tick": 950,
-          "Gold": 3370.0312,
-          "GoldMined": 6192.25,
-          "GoldSpent": 3704.0625,
-          "PawnCount": 5.96875,
-          "ArmyValue": 1839.375,
-          "HpPercent": 96.843895,
-          "EnemyGoldKilled": 1814.6875,
-          "OwnGoldLost": 757.65625,
+          "Gold": 3533.303,
+          "GoldMined": 6200.485,
+          "GoldSpent": 3544.5454,
+          "PawnCount": 5.939394,
+          "ArmyValue": 1771.2122,
+          "HpPercent": 97.80667,
+          "EnemyGoldKilled": 1418.7878,
+          "OwnGoldLost": 636.2121,
           "UnitCounts": {
-            "ARCHER": 17.15625,
-            "LANCER": 5.1875
+            "LANCER": 5.7272725,
+            "ARCHER": 15.69697
           }
         },
         {
-          "Tick": 951,
-          "Gold": 1853,
-          "GoldMined": 6464,
-          "GoldSpent": 5425,
-          "PawnCount": 6,
-          "ArmyValue": 3950,
-          "HpPercent": 100,
-          "EnemyGoldKilled": 4240,
-          "OwnGoldLost": 0,
-          "UnitCounts": {
-            "ARCHER": 37,
-            "LANCER": 11
-          }
-        },
-        {
-          "Tick": 955,
+          "Tick": 954,
           "Gold": 913,
           "GoldMined": 5296,
           "GoldSpent": 5165,
           "PawnCount": 6,
           "ArmyValue": 3690,
           "HpPercent": 100,
-          "EnemyGoldKilled": 3910,
+          "EnemyGoldKilled": 3565,
           "OwnGoldLost": 0,
           "UnitCounts": {
-            "ARCHER": 36,
-            "LANCER": 9
+            "LANCER": 9,
+            "ARCHER": 36
           }
         },
         {
-          "Tick": 968,
-          "Gold": 1443,
-          "GoldMined": 6464,
-          "GoldSpent": 5835,
-          "PawnCount": 6,
-          "ArmyValue": 4360,
-          "HpPercent": 100,
-          "EnemyGoldKilled": 6685,
-          "OwnGoldLost": 0,
-          "UnitCounts": {
-            "LANCER": 12,
-            "ARCHER": 41
-          }
-        },
-        {
-          "Tick": 970,
-          "Gold": 663,
+          "Tick": 966,
+          "Gold": 743,
           "GoldMined": 5296,
-          "GoldSpent": 5415,
+          "GoldSpent": 5335,
           "PawnCount": 6,
-          "ArmyValue": 3940,
+          "ArmyValue": 3860,
           "HpPercent": 100,
-          "EnemyGoldKilled": 3210,
+          "EnemyGoldKilled": 3270,
           "OwnGoldLost": 0,
           "UnitCounts": {
-            "ARCHER": 38,
+            "ARCHER": 37,
             "LANCER": 10
           }
         },
         {
-          "Tick": 971,
-          "Gold": 493,
+          "Tick": 978,
+          "Gold": 1133,
           "GoldMined": 5296,
-          "GoldSpent": 5665,
+          "GoldSpent": 4945,
           "PawnCount": 6,
-          "ArmyValue": 4190,
+          "ArmyValue": 3470,
           "HpPercent": 100,
-          "EnemyGoldKilled": 3545,
+          "EnemyGoldKilled": 4850,
           "OwnGoldLost": 0,
           "UnitCounts": {
-            "ARCHER": 40,
+            "ARCHER": 31,
             "LANCER": 11
           }
         },
         {
-          "Tick": 976,
-          "Gold": 733,
-          "GoldMined": 5296,
-          "GoldSpent": 5345,
-          "PawnCount": 6,
-          "ArmyValue": 3870,
-          "HpPercent": 100,
-          "EnemyGoldKilled": 5205,
-          "OwnGoldLost": 0,
-          "UnitCounts": {
-            "ARCHER": 36,
-            "LANCER": 11
-          }
-        },
-        {
-          "Tick": 977,
-          "Gold": 413,
-          "GoldMined": 5296,
-          "GoldSpent": 5745,
-          "PawnCount": 6,
-          "ArmyValue": 4270,
-          "HpPercent": 100,
-          "EnemyGoldKilled": 5655,
-          "OwnGoldLost": 0,
-          "UnitCounts": {
-            "ARCHER": 41,
-            "LANCER": 11
-          }
-        },
-        {
-          "Tick": 990,
-          "Gold": 63,
+          "Tick": 988,
+          "Gold": 38,
           "GoldMined": 5328,
-          "GoldSpent": 5935,
-          "PawnCount": 0,
+          "GoldSpent": 5960,
+          "PawnCount": 2,
           "ArmyValue": 0,
-          "HpPercent": 0,
-          "EnemyGoldKilled": 320,
-          "OwnGoldLost": 6510,
+          "HpPercent": 55,
+          "EnemyGoldKilled": 490,
+          "OwnGoldLost": 6385,
           "UnitCounts": {}
         },
         {
-          "Tick": 994,
-          "Gold": 783,
-          "GoldMined": 6464,
-          "GoldSpent": 6585,
+          "Tick": 989,
+          "Gold": 323,
+          "GoldMined": 5296,
+          "GoldSpent": 5835,
           "PawnCount": 6,
-          "ArmyValue": 5110,
+          "ArmyValue": 4360,
           "HpPercent": 100,
-          "EnemyGoldKilled": 6645,
+          "EnemyGoldKilled": 4685,
           "OwnGoldLost": 0,
           "UnitCounts": {
-            "ARCHER": 47,
-            "LANCER": 15
+            "ARCHER": 41,
+            "LANCER": 12
           }
         },
         {
-          "Tick": 998,
-          "Gold": 693,
+          "Tick": 993,
+          "Gold": 2543,
           "GoldMined": 6464,
-          "GoldSpent": 6585,
+          "GoldSpent": 4825,
           "PawnCount": 6,
-          "ArmyValue": 5110,
+          "ArmyValue": 3350,
           "HpPercent": 100,
-          "EnemyGoldKilled": 6430,
+          "EnemyGoldKilled": 3995,
           "OwnGoldLost": 0,
           "UnitCounts": {
             "LANCER": 15,
-            "ARCHER": 47
+            "ARCHER": 25
           }
         },
         {
           "Tick": 1000,
-          "Gold": 3900.1365,
-          "GoldMined": 6569.091,
-          "GoldSpent": 3597.0454,
-          "PawnCount": 5.8636365,
-          "ArmyValue": 1318.6364,
-          "HpPercent": 95.1934,
-          "EnemyGoldKilled": 2062.7273,
-          "OwnGoldLost": 1397.7273,
+          "Gold": 3681.4075,
+          "GoldMined": 6506.3706,
+          "GoldSpent": 3724.4443,
+          "PawnCount": 5.962963,
+          "ArmyValue": 1781.4814,
+          "HpPercent": 96.66751,
+          "EnemyGoldKilled": 1977.037,
+          "OwnGoldLost": 931.85187,
           "UnitCounts": {
-            "ARCHER": 11.727273,
-            "LANCER": 4.2272725
+            "LANCER": 6.5925927,
+            "ARCHER": 14.851851
           }
         },
         {
-          "Tick": 1007,
-          "Gold": 443,
+          "Tick": 1016,
+          "Gold": 1225.5,
           "GoldMined": 6464,
-          "GoldSpent": 6835,
+          "GoldSpent": 6097.5,
           "PawnCount": 6,
-          "ArmyValue": 5360,
+          "ArmyValue": 2205,
+          "HpPercent": 94.510826,
+          "EnemyGoldKilled": 3455,
+          "OwnGoldLost": 2667.5,
+          "UnitCounts": {
+            "ARCHER": 18,
+            "LANCER": 8.5
+          }
+        },
+        {
+          "Tick": 1024,
+          "Gold": 673,
+          "GoldMined": 6464,
+          "GoldSpent": 6605,
+          "PawnCount": 6,
+          "ArmyValue": 5130,
           "HpPercent": 100,
-          "EnemyGoldKilled": 6770,
+          "EnemyGoldKilled": 5170,
           "OwnGoldLost": 0,
           "UnitCounts": {
-            "ARCHER": 49,
-            "LANCER": 16
+            "ARCHER": 45,
+            "LANCER": 17
           }
         },
         {
-          "Tick": 1021,
-          "Gold": 73,
+          "Tick": 1031,
+          "Gold": 63,
           "GoldMined": 5296,
-          "GoldSpent": 5925,
+          "GoldSpent": 6105,
+          "PawnCount": 6,
+          "ArmyValue": 3990,
+          "HpPercent": 97.799995,
+          "EnemyGoldKilled": 6285,
+          "OwnGoldLost": 640,
+          "UnitCounts": {
+            "LANCER": 15,
+            "ARCHER": 33
+          }
+        },
+        {
+          "Tick": 1033,
+          "Gold": 145.5,
+          "GoldMined": 5880,
+          "GoldSpent": 6572.5,
+          "PawnCount": 3,
+          "ArmyValue": 2575,
+          "HpPercent": 96.593025,
+          "EnemyGoldKilled": 3547.5,
+          "OwnGoldLost": 3547.5,
+          "UnitCounts": {
+            "ARCHER": 21.5,
+            "LANCER": 9.5
+          }
+        },
+        {
+          "Tick": 1034,
+          "Gold": 8,
+          "GoldMined": 5296,
+          "GoldSpent": 6070,
           "PawnCount": 0,
           "ArmyValue": 0,
-          "HpPercent": 3.85,
-          "EnemyGoldKilled": 840,
-          "OwnGoldLost": 6150,
+          "HpPercent": 0,
+          "EnemyGoldKilled": 1350,
+          "OwnGoldLost": 6645,
           "UnitCounts": {}
         },
         {
-          "Tick": 1023,
-          "Gold": 1793,
+          "Tick": 1038,
+          "Gold": 2183,
           "GoldMined": 6464,
-          "GoldSpent": 5485,
+          "GoldSpent": 5185,
           "PawnCount": 6,
-          "ArmyValue": 3920,
-          "HpPercent": 96.51785,
-          "EnemyGoldKilled": 6725,
-          "OwnGoldLost": 90,
+          "ArmyValue": 3710,
+          "HpPercent": 100,
+          "EnemyGoldKilled": 4695,
+          "OwnGoldLost": 0,
           "UnitCounts": {
-            "LANCER": 16,
-            "ARCHER": 31
+            "LANCER": 19,
+            "ARCHER": 25
           }
         },
         {
-          "Tick": 1025,
-          "Gold": 73,
-          "GoldMined": 5296,
-          "GoldSpent": 6175,
+          "Tick": 1040,
+          "Gold": 2093,
+          "GoldMined": 6464,
+          "GoldSpent": 5185,
           "PawnCount": 6,
-          "ArmyValue": 4290,
-          "HpPercent": 93.264015,
-          "EnemyGoldKilled": 5930,
-          "OwnGoldLost": 410,
+          "ArmyValue": 3710,
+          "HpPercent": 100,
+          "EnemyGoldKilled": 3765,
+          "OwnGoldLost": 0,
           "UnitCounts": {
-            "ARCHER": 39,
-            "LANCER": 13
+            "ARCHER": 25,
+            "LANCER": 19
           }
         },
         {
-          "Tick": 1026,
-          "Gold": 73,
+          "Tick": 1042,
+          "Gold": 2093,
+          "GoldMined": 6464,
+          "GoldSpent": 5185,
+          "PawnCount": 6,
+          "ArmyValue": 3710,
+          "HpPercent": 100,
+          "EnemyGoldKilled": 3765,
+          "OwnGoldLost": 0,
+          "UnitCounts": {
+            "ARCHER": 25,
+            "LANCER": 19
+          }
+        },
+        {
+          "Tick": 1046,
+          "Gold": 13,
           "GoldMined": 5296,
-          "GoldSpent": 6255,
+          "GoldSpent": 5985,
+          "PawnCount": 0,
+          "ArmyValue": 0,
+          "HpPercent": 0,
+          "EnemyGoldKilled": 1840,
+          "OwnGoldLost": 6560,
+          "UnitCounts": {}
+        },
+        {
+          "Tick": 1047,
+          "Gold": 1613,
+          "GoldMined": 6464,
+          "GoldSpent": 5665,
+          "PawnCount": 6,
+          "ArmyValue": 4190,
+          "HpPercent": 100,
+          "EnemyGoldKilled": 4230,
+          "OwnGoldLost": 0,
+          "UnitCounts": {
+            "ARCHER": 31,
+            "LANCER": 19
+          }
+        },
+        {
+          "Tick": 1050,
+          "Gold": 6628.0835,
+          "GoldMined": 7378,
+          "GoldSpent": 1777.0834,
+          "PawnCount": 6,
+          "ArmyValue": 515,
+          "HpPercent": 97.246864,
+          "EnemyGoldKilled": 825,
+          "OwnGoldLost": 470.41666,
+          "UnitCounts": {
+            "ARCHER": 4,
+            "LANCER": 2.1666667
+          }
+        },
+        {
+          "Tick": 1100,
+          "Gold": 6253.4165,
+          "GoldMined": 7530,
+          "GoldSpent": 2257.0833,
+          "PawnCount": 6,
+          "ArmyValue": 620.8333,
+          "HpPercent": 98.02395,
+          "EnemyGoldKilled": 1031.25,
+          "OwnGoldLost": 477.91666,
+          "UnitCounts": {
+            "ARCHER": 5.4166665,
+            "LANCER": 2.0833333
+          }
+        },
+        {
+          "Tick": 1108,
+          "Gold": 18,
+          "GoldMined": 6464,
+          "GoldSpent": 7340,
+          "PawnCount": 6,
+          "ArmyValue": 2910,
+          "HpPercent": 97.110565,
+          "EnemyGoldKilled": 6830,
+          "OwnGoldLost": 2955,
+          "UnitCounts": {
+            "ARCHER": 24,
+            "LANCER": 11
+          }
+        },
+        {
+          "Tick": 1119,
+          "Gold": 13,
+          "GoldMined": 6464,
+          "GoldSpent": 7515,
           "PawnCount": 6,
           "ArmyValue": 3260,
-          "HpPercent": 93.92939,
-          "EnemyGoldKilled": 5050,
-          "OwnGoldLost": 1520,
+          "HpPercent": 91.68149,
+          "EnemyGoldKilled": 6695,
+          "OwnGoldLost": 2780,
           "UnitCounts": {
             "ARCHER": 25,
             "LANCER": 14
           }
         },
         {
-          "Tick": 1032,
-          "Gold": 33,
-          "GoldMined": 5880,
-          "GoldSpent": 6810,
-          "PawnCount": 3,
-          "ArmyValue": 1970,
-          "HpPercent": 95.33039,
-          "EnemyGoldKilled": 4390,
-          "OwnGoldLost": 4390,
-          "UnitCounts": {
-            "ARCHER": 19,
-            "LANCER": 5
-          }
-        },
-        {
-          "Tick": 1043,
-          "Gold": 3,
-          "GoldMined": 6464,
-          "GoldSpent": 7355,
-          "PawnCount": 1,
-          "ArmyValue": 0,
-          "HpPercent": 49.5,
-          "EnemyGoldKilled": 2300,
-          "OwnGoldLost": 7505,
-          "UnitCounts": {}
-        },
-        {
-          "Tick": 1047,
-          "Gold": 23,
-          "GoldMined": 5296,
-          "GoldSpent": 6065,
-          "PawnCount": 0,
-          "ArmyValue": 0,
-          "HpPercent": 0,
-          "EnemyGoldKilled": 1405,
-          "OwnGoldLost": 6640,
-          "UnitCounts": {}
-        },
-        {
-          "Tick": 1050,
-          "Gold": 6636.4165,
-          "GoldMined": 7378,
-          "GoldSpent": 1768.75,
-          "PawnCount": 6,
-          "ArmyValue": 371.66666,
-          "HpPercent": 98.63862,
-          "EnemyGoldKilled": 767.0833,
-          "OwnGoldLost": 605.4167,
-          "UnitCounts": {
-            "ARCHER": 3.3333333,
-            "LANCER": 1.1666666
-          }
-        },
-        {
-          "Tick": 1067,
-          "Gold": 58,
-          "GoldMined": 6464,
-          "GoldSpent": 7380,
-          "PawnCount": 6,
-          "ArmyValue": 3200,
-          "HpPercent": 97.181755,
-          "EnemyGoldKilled": 6810,
-          "OwnGoldLost": 2705,
-          "UnitCounts": {
-            "ARCHER": 31,
-            "LANCER": 8
-          }
-        },
-        {
-          "Tick": 1100,
-          "Gold": 6825.727,
-          "GoldMined": 7626.909,
-          "GoldSpent": 1782.2727,
-          "PawnCount": 5.909091,
-          "ArmyValue": 160,
-          "HpPercent": 99.064926,
-          "EnemyGoldKilled": 345.9091,
-          "OwnGoldLost": 499.54544,
-          "UnitCounts": {
-            "ARCHER": 2
-          }
-        },
-        {
           "Tick": 1150,
-          "Gold": 6264,
-          "GoldMined": 7693.8184,
-          "GoldSpent": 2357.2727,
-          "PawnCount": 5.909091,
-          "ArmyValue": 437.27274,
-          "HpPercent": 96.96695,
-          "EnemyGoldKilled": 458.18182,
-          "OwnGoldLost": 683.63635,
+          "Gold": 6883.1,
+          "GoldMined": 7816.8,
+          "GoldSpent": 1855.5,
+          "PawnCount": 6,
+          "ArmyValue": 473,
+          "HpPercent": 97.44772,
+          "EnemyGoldKilled": 134.5,
+          "OwnGoldLost": 127.5,
           "UnitCounts": {
-            "ARCHER": 4.5454545,
-            "LANCER": 0.8181818
+            "ARCHER": 4.9,
+            "LANCER": 0.9
           }
         },
         {
           "Tick": 1200,
-          "Gold": 5569.909,
-          "GoldMined": 7752,
-          "GoldSpent": 3073.6365,
-          "PawnCount": 5.4545455,
-          "ArmyValue": 810,
-          "HpPercent": 93.115845,
-          "EnemyGoldKilled": 830.4545,
-          "OwnGoldLost": 1097.7273,
+          "Gold": 6127.6,
+          "GoldMined": 7880.8,
+          "GoldSpent": 2635.5,
+          "PawnCount": 5.9,
+          "ArmyValue": 941,
+          "HpPercent": 93.66789,
+          "EnemyGoldKilled": 437.5,
+          "OwnGoldLost": 447,
           "UnitCounts": {
-            "ARCHER": 8.181818,
-            "LANCER": 1.7272727
+            "ARCHER": 9.4,
+            "LANCER": 2.1
           }
         },
         {
           "Tick": 1250,
-          "Gold": 4597.636,
-          "GoldMined": 7810.1816,
-          "GoldSpent": 4100.909,
-          "PawnCount": 5.4545455,
-          "ArmyValue": 1226.3636,
-          "HpPercent": 93.57908,
-          "EnemyGoldKilled": 1381.8182,
-          "OwnGoldLost": 1740.4546,
-          "UnitCounts": {
-            "ARCHER": 11.545455,
-            "LANCER": 3.3636363
-          }
-        },
-        {
-          "Tick": 1276,
-          "Gold": 73,
-          "GoldMined": 6464,
-          "GoldSpent": 7375,
-          "PawnCount": 0,
-          "ArmyValue": 0,
-          "HpPercent": 0,
-          "EnemyGoldKilled": 3890,
-          "OwnGoldLost": 7950,
-          "UnitCounts": {}
-        },
-        {
-          "Tick": 1294,
-          "Gold": 3455,
-          "GoldMined": 8384,
-          "GoldSpent": 5865,
+          "Gold": 5085.1,
+          "GoldMined": 7944.8,
+          "GoldSpent": 3729.5,
           "PawnCount": 6,
-          "ArmyValue": 3120,
-          "HpPercent": 94.807785,
-          "EnemyGoldKilled": 4740,
-          "OwnGoldLost": 1270,
+          "ArmyValue": 1467,
+          "HpPercent": 94.574295,
+          "EnemyGoldKilled": 1097.5,
+          "OwnGoldLost": 1007.5,
           "UnitCounts": {
-            "ARCHER": 39
+            "ARCHER": 13.5,
+            "LANCER": 4.3
           }
         },
         {
           "Tick": 1300,
-          "Gold": 4264.6665,
-          "GoldMined": 7964.4443,
-          "GoldSpent": 4545.5557,
+          "Gold": 4333.2,
+          "GoldMined": 8006.4,
+          "GoldSpent": 4526,
           "PawnCount": 6,
-          "ArmyValue": 1631.1111,
-          "HpPercent": 92.59375,
-          "EnemyGoldKilled": 1654.4445,
-          "OwnGoldLost": 1683.8889,
+          "ArmyValue": 1817,
+          "HpPercent": 94.19125,
+          "EnemyGoldKilled": 2040,
+          "OwnGoldLost": 1454,
           "UnitCounts": {
-            "LANCER": 5.7777777,
-            "ARCHER": 13.888889
+            "LANCER": 6.5,
+            "ARCHER": 15.4
           }
         },
         {
-          "Tick": 1315,
-          "Gold": 1975,
+          "Tick": 1326,
+          "Gold": 2015,
           "GoldMined": 8384,
-          "GoldSpent": 7255,
+          "GoldSpent": 7135,
           "PawnCount": 6,
-          "ArmyValue": 3540,
-          "HpPercent": 91.685715,
-          "EnemyGoldKilled": 4860,
-          "OwnGoldLost": 2240,
+          "ArmyValue": 4420,
+          "HpPercent": 96.50697,
+          "EnemyGoldKilled": 4775,
+          "OwnGoldLost": 1240,
           "UnitCounts": {
-            "LANCER": 10,
-            "ARCHER": 33
+            "LANCER": 18,
+            "ARCHER": 35
+          }
+        },
+        {
+          "Tick": 1343,
+          "Gold": 1315,
+          "GoldMined": 8384,
+          "GoldSpent": 7915,
+          "PawnCount": 6,
+          "ArmyValue": 3910,
+          "HpPercent": 97.45368,
+          "EnemyGoldKilled": 4920,
+          "OwnGoldLost": 2530,
+          "UnitCounts": {
+            "ARCHER": 32,
+            "LANCER": 15
           }
         },
         {
           "Tick": 1350,
-          "Gold": 3712.875,
-          "GoldMined": 7984,
-          "GoldSpent": 5106.875,
+          "Gold": 4366.143,
+          "GoldMined": 7926.857,
+          "GoldSpent": 4359.2856,
           "PawnCount": 6,
-          "ArmyValue": 1745,
-          "HpPercent": 91.948685,
-          "EnemyGoldKilled": 2095,
-          "OwnGoldLost": 2161.875,
+          "ArmyValue": 1315.7142,
+          "HpPercent": 92.509125,
+          "EnemyGoldKilled": 2027.1428,
+          "OwnGoldLost": 1882.8572,
           "UnitCounts": {
-            "ARCHER": 14.5,
-            "LANCER": 6.5
+            "LANCER": 4.714286,
+            "ARCHER": 11.142858
           }
         },
         {
-          "Tick": 1360,
-          "Gold": 1928,
+          "Tick": 1351,
+          "Gold": 3623,
           "GoldMined": 7528,
-          "GoldSpent": 6270,
+          "GoldSpent": 4745,
           "PawnCount": 6,
-          "ArmyValue": 1600,
-          "HpPercent": 97.30221,
-          "EnemyGoldKilled": 3395,
-          "OwnGoldLost": 3195,
+          "ArmyValue": 2480,
+          "HpPercent": 87.57317,
+          "EnemyGoldKilled": 5410,
+          "OwnGoldLost": 790,
           "UnitCounts": {
-            "ARCHER": 11,
-            "LANCER": 8
+            "ARCHER": 31
           }
         },
         {
-          "Tick": 1367,
-          "Gold": 1377.6666,
-          "GoldMined": 8098.6665,
-          "GoldSpent": 7541.6665,
-          "PawnCount": 6,
-          "ArmyValue": 4016.6667,
-          "HpPercent": 93.16724,
-          "EnemyGoldKilled": 5188.3335,
-          "OwnGoldLost": 2050,
-          "UnitCounts": {
-            "ARCHER": 36.333332,
-            "LANCER": 12.333333
-          }
-        },
-        {
-          "Tick": 1385,
-          "Gold": 673,
+          "Tick": 1353,
+          "Gold": 1983,
           "GoldMined": 7528,
-          "GoldSpent": 7525,
+          "GoldSpent": 6215,
           "PawnCount": 6,
-          "ArmyValue": 810,
-          "HpPercent": 91.99647,
-          "EnemyGoldKilled": 1340,
-          "OwnGoldLost": 5240,
+          "ArmyValue": 1210,
+          "HpPercent": 89.28115,
+          "EnemyGoldKilled": 1510,
+          "OwnGoldLost": 3530,
           "UnitCounts": {
-            "LANCER": 9
+            "LANCER": 9,
+            "ARCHER": 5
           }
         },
         {
-          "Tick": 1386,
-          "Gold": 748,
+          "Tick": 1373,
+          "Gold": 1838,
           "GoldMined": 7528,
-          "GoldSpent": 7450,
+          "GoldSpent": 6450,
           "PawnCount": 6,
-          "ArmyValue": 630,
-          "HpPercent": 91.5849,
-          "EnemyGoldKilled": 1340,
-          "OwnGoldLost": 5345,
+          "ArmyValue": 3270,
+          "HpPercent": 96.345116,
+          "EnemyGoldKilled": 5240,
+          "OwnGoldLost": 1705,
           "UnitCounts": {
-            "LANCER": 7
+            "LANCER": 15,
+            "ARCHER": 24
           }
         },
         {
           "Tick": 1400,
-          "Gold": 9473,
-          "GoldMined": 8816,
-          "GoldSpent": 375,
+          "Gold": 6698.6665,
+          "GoldMined": 8672,
+          "GoldSpent": 2886.6667,
           "PawnCount": 6,
-          "ArmyValue": 0,
-          "HpPercent": 100,
-          "EnemyGoldKilled": 0,
-          "OwnGoldLost": 0,
-          "UnitCounts": {}
+          "ArmyValue": 936.6667,
+          "HpPercent": 95.40518,
+          "EnemyGoldKilled": 1486.6666,
+          "OwnGoldLost": 1208.3334,
+          "UnitCounts": {
+            "ARCHER": 8.333333,
+            "LANCER": 3
+          }
+        },
+        {
+          "Tick": 1409,
+          "Gold": 900,
+          "GoldMined": 8384,
+          "GoldSpent": 8160,
+          "PawnCount": 6,
+          "ArmyValue": 3060,
+          "HpPercent": 93.75549,
+          "EnemyGoldKilled": 4960,
+          "OwnGoldLost": 3625,
+          "UnitCounts": {
+            "ARCHER": 27,
+            "LANCER": 10
+          }
         },
         {
           "Tick": 1450,
@@ -17571,7 +17514,7 @@
           }
         },
         {
-          "Tick": 1828,
+          "Tick": 1829,
           "Gold": 9331,
           "GoldMined": 11808,
           "GoldSpent": 3355,
@@ -17725,9 +17668,9 @@
         },
         {
           "Type": "FirstKill",
-          "MedianTick": 836,
+          "MedianTick": 842,
           "MinTick": 680,
-          "MaxTick": 2175,
+          "MaxTick": 2177,
           "Count": 180
         }
       ]
@@ -17967,32 +17910,32 @@
         },
         {
           "Tick": 850,
-          "Gold": 4804.0586,
+          "Gold": 4806.2646,
           "GoldMined": 5946.1177,
-          "GoldSpent": 2045.8823,
+          "GoldSpent": 2043.6765,
           "PawnCount": 6,
-          "ArmyValue": 755.14703,
-          "HpPercent": 98.22328,
+          "ArmyValue": 747.2059,
+          "HpPercent": 98.400154,
           "EnemyGoldKilled": 222.20589,
-          "OwnGoldLost": 68.67647,
+          "OwnGoldLost": 74.411766,
           "UnitCounts": {
-            "LANCER": 8.029411,
+            "LANCER": 7.9411764,
             "WARRIOR": 0.38235295
           }
         },
         {
           "Tick": 900,
-          "Gold": 4052.2058,
+          "Gold": 4069.5588,
           "GoldMined": 6050.5884,
-          "GoldSpent": 2883.2354,
+          "GoldSpent": 2865.8823,
           "PawnCount": 5.970588,
-          "ArmyValue": 1393.6765,
-          "HpPercent": 97.21873,
-          "EnemyGoldKilled": 936.6177,
-          "OwnGoldLost": 269.70587,
+          "ArmyValue": 1388.6765,
+          "HpPercent": 97.168106,
+          "EnemyGoldKilled": 927.2059,
+          "OwnGoldLost": 257.35294,
           "UnitCounts": {
             "LANCER": 13.235294,
-            "WARRIOR": 2.3823528
+            "WARRIOR": 2.3235295
           }
         },
         {
@@ -18162,17 +18105,17 @@
         },
         {
           "Tick": 950,
-          "Gold": 4164.8184,
+          "Gold": 4196.864,
           "GoldMined": 6228,
-          "GoldSpent": 2951.5908,
+          "GoldSpent": 2923.6365,
           "PawnCount": 5.909091,
-          "ArmyValue": 1187.0454,
-          "HpPercent": 95.10211,
-          "EnemyGoldKilled": 1210.4546,
-          "OwnGoldLost": 778.1818,
+          "ArmyValue": 1163.8636,
+          "HpPercent": 96.07766,
+          "EnemyGoldKilled": 1202.7273,
+          "OwnGoldLost": 773.4091,
           "UnitCounts": {
             "LANCER": 11,
-            "WARRIOR": 2.3181818
+            "WARRIOR": 2.0454545
           }
         },
         {
@@ -18249,32 +18192,32 @@
         },
         {
           "Tick": 1000,
-          "Gold": 5428.467,
+          "Gold": 5439.1333,
           "GoldMined": 6851.7334,
-          "GoldSpent": 2379,
-          "PawnCount": 5.866667,
-          "ArmyValue": 903,
-          "HpPercent": 95.18313,
-          "EnemyGoldKilled": 1266.3334,
-          "OwnGoldLost": 737.6667,
+          "GoldSpent": 2374.3333,
+          "PawnCount": 6,
+          "ArmyValue": 892.6667,
+          "HpPercent": 95.7583,
+          "EnemyGoldKilled": 1256.6666,
+          "OwnGoldLost": 706.6667,
           "UnitCounts": {
-            "LANCER": 8.333333,
-            "WARRIOR": 1.8
+            "LANCER": 8.533334,
+            "WARRIOR": 1.4666667
           }
         },
         {
-          "Tick": 1047,
+          "Tick": 1046,
           "Gold": 23,
           "GoldMined": 6464,
           "GoldSpent": 7415,
           "PawnCount": 6,
-          "ArmyValue": 4435,
-          "HpPercent": 96.81229,
-          "EnemyGoldKilled": 6640,
-          "OwnGoldLost": 1405,
+          "ArmyValue": 4000,
+          "HpPercent": 96.63105,
+          "EnemyGoldKilled": 6560,
+          "OwnGoldLost": 1840,
           "UnitCounts": {
-            "WARRIOR": 13,
-            "LANCER": 37
+            "LANCER": 35,
+            "WARRIOR": 10
           }
         },
         {
@@ -18294,14 +18237,14 @@
         },
         {
           "Tick": 1050,
-          "Gold": 6087.6924,
+          "Gold": 6093.077,
           "GoldMined": 7128,
-          "GoldSpent": 2070.7693,
-          "PawnCount": 5.5384617,
+          "GoldSpent": 2072.3076,
+          "PawnCount": 5.8461537,
           "ArmyValue": 426.15384,
-          "HpPercent": 95.07238,
-          "EnemyGoldKilled": 1062.6923,
-          "OwnGoldLost": 842.6923,
+          "HpPercent": 96.30489,
+          "EnemyGoldKilled": 1081.9231,
+          "OwnGoldLost": 790.38464,
           "UnitCounts": {
             "LANCER": 4.1538463,
             "WARRIOR": 0.61538464
@@ -18323,30 +18266,30 @@
           }
         },
         {
-          "Tick": 1067,
-          "Gold": 3,
+          "Tick": 1100,
+          "Gold": 6171.75,
+          "GoldMined": 7335.3335,
+          "GoldSpent": 2138.75,
+          "PawnCount": 5.4166665,
+          "ArmyValue": 217.5,
+          "HpPercent": 96.94091,
+          "EnemyGoldKilled": 764.5833,
+          "OwnGoldLost": 856.6667,
+          "UnitCounts": {
+            "LANCER": 2.4166667
+          }
+        },
+        {
+          "Tick": 1108,
+          "Gold": 73,
           "GoldMined": 5296,
-          "GoldSpent": 6235,
+          "GoldSpent": 6255,
           "PawnCount": 0,
           "ArmyValue": 0,
           "HpPercent": 0,
-          "EnemyGoldKilled": 2705,
-          "OwnGoldLost": 6810,
+          "EnemyGoldKilled": 2955,
+          "OwnGoldLost": 6830,
           "UnitCounts": {}
-        },
-        {
-          "Tick": 1100,
-          "Gold": 6726.1816,
-          "GoldMined": 7520.727,
-          "GoldSpent": 1764.5454,
-          "PawnCount": 5.909091,
-          "ArmyValue": 237.27272,
-          "HpPercent": 99.0965,
-          "EnemyGoldKilled": 565.4545,
-          "OwnGoldLost": 359.0909,
-          "UnitCounts": {
-            "LANCER": 2.6363637
-          }
         },
         {
           "Tick": 1150,
@@ -19038,13 +18981,13 @@
           "GoldMined": 5946.1177,
           "GoldSpent": 2208.9707,
           "PawnCount": 6,
-          "ArmyValue": 985.2941,
-          "HpPercent": 98.5758,
+          "ArmyValue": 985.44116,
+          "HpPercent": 98.38627,
           "EnemyGoldKilled": 321.17648,
-          "OwnGoldLost": 36.911766,
+          "OwnGoldLost": 36.764706,
           "UnitCounts": {
-            "WARRIOR": 3,
-            "LANCER": 4.0882354,
+            "WARRIOR": 2.9705882,
+            "LANCER": 4.117647,
             "ARCHER": 4.529412
           }
         },
@@ -19054,14 +18997,14 @@
           "GoldMined": 6050.5884,
           "GoldSpent": 3079.4119,
           "PawnCount": 6,
-          "ArmyValue": 1722.0588,
-          "HpPercent": 98.14765,
-          "EnemyGoldKilled": 1213.5294,
-          "OwnGoldLost": 170.58824,
+          "ArmyValue": 1717.3529,
+          "HpPercent": 98.00468,
+          "EnemyGoldKilled": 1218.2354,
+          "OwnGoldLost": 175.29411,
           "UnitCounts": {
-            "WARRIOR": 5.352941,
-            "LANCER": 6.9411764,
-            "ARCHER": 8.029411
+            "WARRIOR": 5.2941175,
+            "LANCER": 6.970588,
+            "ARCHER": 8
           }
         },
         {
@@ -19260,16 +19203,16 @@
           "Tick": 950,
           "Gold": 4153,
           "GoldMined": 6272.381,
-          "GoldSpent": 3030.476,
+          "GoldSpent": 3026.4285,
           "PawnCount": 6,
-          "ArmyValue": 1545.7142,
-          "HpPercent": 95.11949,
-          "EnemyGoldKilled": 1590.238,
-          "OwnGoldLost": 507.38095,
+          "ArmyValue": 1510.4762,
+          "HpPercent": 95.57556,
+          "EnemyGoldKilled": 1576.4286,
+          "OwnGoldLost": 538.5714,
           "UnitCounts": {
             "LANCER": 6.1904764,
-            "ARCHER": 7.904762,
-            "WARRIOR": 4.1904764
+            "ARCHER": 7.6666665,
+            "WARRIOR": 4
           }
         },
         {
@@ -19321,19 +19264,19 @@
           }
         },
         {
-          "Tick": 990,
-          "Gold": 683,
+          "Tick": 988,
+          "Gold": 773,
           "GoldMined": 6464,
           "GoldSpent": 6590,
           "PawnCount": 6,
-          "ArmyValue": 4745,
-          "HpPercent": 97.807945,
-          "EnemyGoldKilled": 6510,
-          "OwnGoldLost": 320,
+          "ArmyValue": 4575,
+          "HpPercent": 99.334,
+          "EnemyGoldKilled": 6385,
+          "OwnGoldLost": 490,
           "UnitCounts": {
             "LANCER": 19,
             "ARCHER": 22,
-            "WARRIOR": 15
+            "WARRIOR": 13
           }
         },
         {
@@ -19354,17 +19297,17 @@
         },
         {
           "Tick": 1000,
-          "Gold": 5012.8125,
+          "Gold": 5024.375,
           "GoldMined": 6683.5,
-          "GoldSpent": 2635.3125,
+          "GoldSpent": 2607.5,
           "PawnCount": 5.625,
-          "ArmyValue": 941.5625,
-          "HpPercent": 94.728424,
-          "EnemyGoldKilled": 1480.625,
-          "OwnGoldLost": 1037.5,
+          "ArmyValue": 892.8125,
+          "HpPercent": 95.11395,
+          "EnemyGoldKilled": 1410.625,
+          "OwnGoldLost": 1058.4375,
           "UnitCounts": {
-            "LANCER": 3.6875,
-            "ARCHER": 5.5625,
+            "LANCER": 3.8125,
+            "ARCHER": 4.8125,
             "WARRIOR": 1.9375
           }
         },
@@ -19401,18 +19344,19 @@
           }
         },
         {
-          "Tick": 1043,
-          "Gold": 23,
+          "Tick": 1016,
+          "Gold": 43,
           "GoldMined": 5296,
-          "GoldSpent": 6305,
+          "GoldSpent": 6115,
           "PawnCount": 6,
-          "ArmyValue": 2480,
-          "HpPercent": 94.4936,
-          "EnemyGoldKilled": 7505,
-          "OwnGoldLost": 2300,
+          "ArmyValue": 2125,
+          "HpPercent": 94.80592,
+          "EnemyGoldKilled": 5335,
+          "OwnGoldLost": 2465,
           "UnitCounts": {
-            "ARCHER": 22,
-            "LANCER": 8
+            "LANCER": 12,
+            "ARCHER": 12,
+            "WARRIOR": 1
           }
         },
         {
@@ -20166,27 +20110,27 @@
           "GoldMined": 5953.647,
           "GoldSpent": 1201.7646,
           "PawnCount": 5.970588,
-          "ArmyValue": 250,
-          "HpPercent": 96.365265,
+          "ArmyValue": 247.5,
+          "HpPercent": 96.48158,
           "EnemyGoldKilled": 0,
-          "OwnGoldLost": 49.558823,
+          "OwnGoldLost": 52.058823,
           "UnitCounts": {
-            "WARRIOR": 2.9411764
+            "WARRIOR": 2.9117646
           }
         },
         {
           "Tick": 900,
-          "Gold": 5232.647,
+          "Gold": 5252.0586,
           "GoldMined": 6058.1177,
-          "GoldSpent": 1773.0883,
+          "GoldSpent": 1756.3235,
           "PawnCount": 5.7647057,
-          "ArmyValue": 352.5,
-          "HpPercent": 93.31277,
-          "EnemyGoldKilled": 119.70588,
-          "OwnGoldLost": 387.64706,
+          "ArmyValue": 342.5,
+          "HpPercent": 93.807976,
+          "EnemyGoldKilled": 115,
+          "OwnGoldLost": 386.17648,
           "UnitCounts": {
-            "WARRIOR": 4.147059,
-            "MONK": 1.8529412
+            "WARRIOR": 4.029412,
+            "MONK": 1.7941177
           }
         },
         {
@@ -20215,17 +20159,17 @@
         },
         {
           "Tick": 950,
-          "Gold": 4880.0312,
+          "Gold": 4929.4062,
           "GoldMined": 6235.75,
-          "GoldSpent": 2246.0938,
-          "PawnCount": 5.6875,
-          "ArmyValue": 390.46875,
-          "HpPercent": 93.082085,
-          "EnemyGoldKilled": 420.3125,
-          "OwnGoldLost": 799.0625,
+          "GoldSpent": 2201.875,
+          "PawnCount": 5.78125,
+          "ArmyValue": 385.15625,
+          "HpPercent": 92.839615,
+          "EnemyGoldKilled": 407.5,
+          "OwnGoldLost": 747.8125,
           "UnitCounts": {
-            "WARRIOR": 4.59375,
-            "MONK": 2.46875
+            "WARRIOR": 4.53125,
+            "MONK": 2.40625
           }
         },
         {
@@ -20253,30 +20197,18 @@
           "UnitCounts": {}
         },
         {
-          "Tick": 998,
-          "Gold": 223,
-          "GoldMined": 5296,
-          "GoldSpent": 5855,
-          "PawnCount": 0,
-          "ArmyValue": 0,
-          "HpPercent": 0,
-          "EnemyGoldKilled": 0,
-          "OwnGoldLost": 6430,
-          "UnitCounts": {}
-        },
-        {
           "Tick": 1000,
-          "Gold": 4651.6895,
-          "GoldMined": 6391.448,
-          "GoldSpent": 2621.724,
-          "PawnCount": 5.6551723,
-          "ArmyValue": 507.06897,
-          "HpPercent": 94.63599,
-          "EnemyGoldKilled": 745.1724,
-          "OwnGoldLost": 1000.68964,
+          "Gold": 4607.567,
+          "GoldMined": 6354.933,
+          "GoldSpent": 2631.5,
+          "PawnCount": 5.4666667,
+          "ArmyValue": 490.16666,
+          "HpPercent": 94.22969,
+          "EnemyGoldKilled": 706.6667,
+          "OwnGoldLost": 1058.6666,
           "UnitCounts": {
-            "MONK": 3.1724138,
-            "WARRIOR": 5.965517
+            "MONK": 3.0666666,
+            "WARRIOR": 5.766667
           }
         },
         {
@@ -20307,18 +20239,6 @@
           "UnitCounts": {}
         },
         {
-          "Tick": 1025,
-          "Gold": 1373,
-          "GoldMined": 6464,
-          "GoldSpent": 5905,
-          "PawnCount": 2,
-          "ArmyValue": 0,
-          "HpPercent": 30.045456,
-          "EnemyGoldKilled": 410,
-          "OwnGoldLost": 5930,
-          "UnitCounts": {}
-        },
-        {
           "Tick": 1029,
           "Gold": 2348,
           "GoldMined": 6464,
@@ -20340,6 +20260,18 @@
           "HpPercent": 75.09616,
           "EnemyGoldKilled": 350,
           "OwnGoldLost": 4440,
+          "UnitCounts": {}
+        },
+        {
+          "Tick": 1040,
+          "Gold": 2278,
+          "GoldMined": 5296,
+          "GoldSpent": 3890,
+          "PawnCount": 4,
+          "ArmyValue": 0,
+          "HpPercent": 80.275,
+          "EnemyGoldKilled": 0,
+          "OwnGoldLost": 3765,
           "UnitCounts": {}
         },
         {
@@ -20950,14 +20882,14 @@
           "MedianTick": 866,
           "MinTick": 717,
           "MaxTick": 2212,
-          "Count": 120
+          "Count": 115
         },
         {
           "Type": "FirstKill",
           "MedianTick": 885,
           "MinTick": 732,
           "MaxTick": 2224,
-          "Count": 115
+          "Count": 110
         }
       ]
     },
@@ -21187,28 +21119,28 @@
           "GoldMined": 5953.647,
           "GoldSpent": 1347.3529,
           "PawnCount": 5.970588,
-          "ArmyValue": 336.17648,
-          "HpPercent": 96.070496,
+          "ArmyValue": 333.52942,
+          "HpPercent": 96.230736,
           "EnemyGoldKilled": 0,
-          "OwnGoldLost": 79.85294,
+          "OwnGoldLost": 82.5,
           "UnitCounts": {
-            "LANCER": 3.735294,
+            "LANCER": 3.7058823,
             "MONK": 0.32352942
           }
         },
         {
           "Tick": 900,
-          "Gold": 5028.5293,
+          "Gold": 5054.853,
           "GoldMined": 6058.1177,
-          "GoldSpent": 1967.3529,
+          "GoldSpent": 1943.6765,
           "PawnCount": 5.8235292,
-          "ArmyValue": 389.11765,
-          "HpPercent": 94.02775,
+          "ArmyValue": 383.82352,
+          "HpPercent": 93.9704,
           "EnemyGoldKilled": 215.58824,
-          "OwnGoldLost": 532.64703,
+          "OwnGoldLost": 506.61765,
           "UnitCounts": {
-            "LANCER": 4.3235292,
-            "MONK": 2.0588236
+            "LANCER": 4.2647057,
+            "MONK": 2.0294118
           }
         },
         {
@@ -21249,14 +21181,14 @@
         },
         {
           "Tick": 950,
-          "Gold": 4668.8066,
+          "Gold": 4768.161,
           "GoldMined": 6228.387,
-          "GoldSpent": 2482.9033,
-          "PawnCount": 5.612903,
+          "GoldSpent": 2388.8708,
+          "PawnCount": 5.7419353,
           "ArmyValue": 470.32257,
-          "HpPercent": 92.48989,
+          "HpPercent": 93.35598,
           "EnemyGoldKilled": 478.3871,
-          "OwnGoldLost": 887.25806,
+          "OwnGoldLost": 760.9677,
           "UnitCounts": {
             "LANCER": 5.225806,
             "MONK": 3.516129
@@ -21287,42 +21219,30 @@
           "UnitCounts": {}
         },
         {
-          "Tick": 968,
-          "Gold": 38,
-          "GoldMined": 5296,
-          "GoldSpent": 6110,
-          "PawnCount": 0,
-          "ArmyValue": 0,
-          "HpPercent": 0,
-          "EnemyGoldKilled": 0,
-          "OwnGoldLost": 6685,
-          "UnitCounts": {}
-        },
-        {
-          "Tick": 977,
-          "Gold": 1643,
+          "Tick": 989,
+          "Gold": 2413,
           "GoldMined": 6464,
-          "GoldSpent": 5630,
-          "PawnCount": 2,
+          "GoldSpent": 4935,
+          "PawnCount": 1,
           "ArmyValue": 0,
-          "HpPercent": 48.611755,
+          "HpPercent": 43.546177,
           "EnemyGoldKilled": 0,
-          "OwnGoldLost": 5655,
+          "OwnGoldLost": 4685,
           "UnitCounts": {}
         },
         {
           "Tick": 1000,
-          "Gold": 4597.148,
-          "GoldMined": 6429.3335,
-          "GoldSpent": 2739.8147,
-          "PawnCount": 5.851852,
-          "ArmyValue": 636.6667,
-          "HpPercent": 95.62578,
-          "EnemyGoldKilled": 937.96295,
-          "OwnGoldLost": 862.96295,
+          "Gold": 4499.6787,
+          "GoldMined": 6388.857,
+          "GoldSpent": 2795.3572,
+          "PawnCount": 5.714286,
+          "ArmyValue": 613.9286,
+          "HpPercent": 95.51162,
+          "EnemyGoldKilled": 904.4643,
+          "OwnGoldLost": 968.5714,
           "UnitCounts": {
-            "LANCER": 7.0740743,
-            "MONK": 4.7777777
+            "LANCER": 6.821429,
+            "MONK": 4.607143
           }
         },
         {
@@ -21339,6 +21259,18 @@
             "LANCER": 11,
             "MONK": 7
           }
+        },
+        {
+          "Tick": 1024,
+          "Gold": 1168,
+          "GoldMined": 5296,
+          "GoldSpent": 4995,
+          "PawnCount": 0,
+          "ArmyValue": 0,
+          "HpPercent": 87.679985,
+          "EnemyGoldKilled": 0,
+          "OwnGoldLost": 5170,
+          "UnitCounts": {}
         },
         {
           "Tick": 1030,
@@ -22205,26 +22137,26 @@
           "GoldMined": 5953.647,
           "GoldSpent": 1286.9117,
           "PawnCount": 5.970588,
-          "ArmyValue": 334.11765,
-          "HpPercent": 97.01621,
+          "ArmyValue": 329.41177,
+          "HpPercent": 97.34455,
           "EnemyGoldKilled": 25.294117,
-          "OwnGoldLost": 85.882355,
+          "OwnGoldLost": 90.588234,
           "UnitCounts": {
-            "ARCHER": 4.1764708
+            "ARCHER": 4.117647
           }
         },
         {
           "Tick": 900,
-          "Gold": 5089.5586,
+          "Gold": 5108.5293,
           "GoldMined": 6058.1177,
-          "GoldSpent": 1889.1177,
+          "GoldSpent": 1870.1471,
           "PawnCount": 5.7058825,
           "ArmyValue": 425.88235,
-          "HpPercent": 94.34056,
+          "HpPercent": 94.6561,
           "EnemyGoldKilled": 200.73529,
-          "OwnGoldLost": 498.52942,
+          "OwnGoldLost": 487.5,
           "UnitCounts": {
-            "MONK": 1.7647059,
+            "MONK": 1.6764706,
             "ARCHER": 5.3235292
           }
         },
@@ -22266,14 +22198,14 @@
         },
         {
           "Tick": 950,
-          "Gold": 4808.3228,
+          "Gold": 4865.4194,
           "GoldMined": 6266.0645,
-          "GoldSpent": 2366.9355,
+          "GoldSpent": 2309.6775,
           "PawnCount": 5.548387,
           "ArmyValue": 418.0645,
-          "HpPercent": 94.65264,
+          "HpPercent": 93.99265,
           "EnemyGoldKilled": 422.25806,
-          "OwnGoldLost": 937.74194,
+          "OwnGoldLost": 857.9032,
           "UnitCounts": {
             "MONK": 2.6774194,
             "ARCHER": 5.225806
@@ -22304,15 +22236,15 @@
           "UnitCounts": {}
         },
         {
-          "Tick": 976,
-          "Gold": 2003,
+          "Tick": 978,
+          "Gold": 2388,
           "GoldMined": 6464,
-          "GoldSpent": 5280,
-          "PawnCount": 4,
+          "GoldSpent": 4975,
+          "PawnCount": 0,
           "ArmyValue": 0,
-          "HpPercent": 61.475002,
+          "HpPercent": 81.52,
           "EnemyGoldKilled": 0,
-          "OwnGoldLost": 5205,
+          "OwnGoldLost": 4850,
           "UnitCounts": {}
         },
         {
@@ -22328,31 +22260,31 @@
           "UnitCounts": {}
         },
         {
-          "Tick": 994,
-          "Gold": 183,
-          "GoldMined": 5296,
-          "GoldSpent": 6070,
-          "PawnCount": 0,
-          "ArmyValue": 0,
-          "HpPercent": 0,
-          "EnemyGoldKilled": 0,
-          "OwnGoldLost": 6645,
-          "UnitCounts": {}
+          "Tick": 1000,
+          "Gold": 4686.222,
+          "GoldMined": 6386.074,
+          "GoldSpent": 2604.8147,
+          "PawnCount": 5.703704,
+          "ArmyValue": 518.5185,
+          "HpPercent": 97.96942,
+          "EnemyGoldKilled": 748.7037,
+          "OwnGoldLost": 932.03705,
+          "UnitCounts": {
+            "ARCHER": 6.4814816,
+            "MONK": 4.296296
+          }
         },
         {
-          "Tick": 1000,
-          "Gold": 4786.5386,
-          "GoldMined": 6428,
-          "GoldSpent": 2547.5,
-          "PawnCount": 5.8461537,
-          "ArmyValue": 538.46155,
-          "HpPercent": 97.94623,
-          "EnemyGoldKilled": 777.5,
-          "OwnGoldLost": 826.7308,
-          "UnitCounts": {
-            "ARCHER": 6.730769,
-            "MONK": 4.4615383
-          }
+          "Tick": 1038,
+          "Gold": 1628,
+          "GoldMined": 5296,
+          "GoldSpent": 4545,
+          "PawnCount": 1,
+          "ArmyValue": 0,
+          "HpPercent": 99.6,
+          "EnemyGoldKilled": 0,
+          "OwnGoldLost": 4695,
+          "UnitCounts": {}
         },
         {
           "Tick": 1039,
@@ -23275,29 +23207,29 @@
           "GoldMined": 5953.647,
           "GoldSpent": 1333.5294,
           "PawnCount": 5.970588,
-          "ArmyValue": 252.35294,
-          "HpPercent": 96.59813,
+          "ArmyValue": 249.85294,
+          "HpPercent": 96.70724,
           "EnemyGoldKilled": 0,
-          "OwnGoldLost": 49.558823,
+          "OwnGoldLost": 52.058823,
           "UnitCounts": {
-            "WARRIOR": 2.9411764,
+            "WARRIOR": 2.9117646,
             "ARCHER": 0.029411765
           }
         },
         {
           "Tick": 900,
-          "Gold": 4795.8823,
+          "Gold": 4812.9414,
           "GoldMined": 6058.1177,
-          "GoldSpent": 2191.6177,
+          "GoldSpent": 2171.9119,
           "PawnCount": 5.882353,
-          "ArmyValue": 568.82355,
-          "HpPercent": 93.01031,
-          "EnemyGoldKilled": 167.94118,
-          "OwnGoldLost": 396.32352,
+          "ArmyValue": 554.55884,
+          "HpPercent": 93.42799,
+          "EnemyGoldKilled": 170.29411,
+          "OwnGoldLost": 392.35294,
           "UnitCounts": {
-            "ARCHER": 2.9411764,
-            "WARRIOR": 3.7058823,
-            "LANCER": 0.20588236
+            "ARCHER": 2.8235295,
+            "WARRIOR": 3.6176472,
+            "LANCER": 0.23529412
           }
         },
         {
@@ -23326,19 +23258,19 @@
         },
         {
           "Tick": 950,
-          "Gold": 4149.7188,
+          "Gold": 4175.5,
           "GoldMined": 6235.75,
-          "GoldSpent": 2947.5,
-          "PawnCount": 5.875,
-          "ArmyValue": 881.875,
-          "HpPercent": 93.03006,
-          "EnemyGoldKilled": 642.5,
-          "OwnGoldLost": 772.5,
+          "GoldSpent": 2923.75,
+          "PawnCount": 5.90625,
+          "ArmyValue": 865.15625,
+          "HpPercent": 92.94812,
+          "EnemyGoldKilled": 622.1875,
+          "OwnGoldLost": 750.9375,
           "UnitCounts": {
-            "ARCHER": 4.65625,
-            "LANCER": 2,
-            "WARRIOR": 3.875,
-            "MONK": 0.21875
+            "ARCHER": 4.34375,
+            "LANCER": 2.0625,
+            "WARRIOR": 3.90625,
+            "MONK": 0.25
           }
         },
         {
@@ -23384,17 +23316,17 @@
         },
         {
           "Tick": 1000,
-          "Gold": 3490.5715,
+          "Gold": 3503.7856,
           "GoldMined": 6347.143,
-          "GoldSpent": 3682.3215,
-          "PawnCount": 5.642857,
-          "ArmyValue": 1252.1428,
-          "HpPercent": 95.58106,
-          "EnemyGoldKilled": 1297.1428,
-          "OwnGoldLost": 1097.3214,
+          "GoldSpent": 3665.7144,
+          "PawnCount": 5.714286,
+          "ArmyValue": 1258.2142,
+          "HpPercent": 95.42065,
+          "EnemyGoldKilled": 1262.5,
+          "OwnGoldLost": 1044.2858,
           "UnitCounts": {
-            "ARCHER": 6.035714,
-            "LANCER": 3.892857,
+            "ARCHER": 6.071429,
+            "LANCER": 3.9285715,
             "WARRIOR": 4.928571,
             "MONK": 1.5357143
           }
@@ -23446,30 +23378,6 @@
           "UnitCounts": {}
         },
         {
-          "Tick": 1023,
-          "Gold": 13,
-          "GoldMined": 5296,
-          "GoldSpent": 6150,
-          "PawnCount": 0,
-          "ArmyValue": 0,
-          "HpPercent": 0,
-          "EnemyGoldKilled": 90,
-          "OwnGoldLost": 6725,
-          "UnitCounts": {}
-        },
-        {
-          "Tick": 1026,
-          "Gold": 2188,
-          "GoldMined": 6464,
-          "GoldSpent": 5100,
-          "PawnCount": 3,
-          "ArmyValue": 0,
-          "HpPercent": 42.086956,
-          "EnemyGoldKilled": 1520,
-          "OwnGoldLost": 5050,
-          "UnitCounts": {}
-        },
-        {
           "Tick": 1027,
           "Gold": 388,
           "GoldMined": 6464,
@@ -23502,6 +23410,18 @@
             "WARRIOR": 14,
             "MONK": 5
           }
+        },
+        {
+          "Tick": 1031,
+          "Gold": 68,
+          "GoldMined": 6464,
+          "GoldSpent": 7285,
+          "PawnCount": 1,
+          "ArmyValue": 0,
+          "HpPercent": 63.371338,
+          "EnemyGoldKilled": 640,
+          "OwnGoldLost": 6285,
+          "UnitCounts": {}
         },
         {
           "Tick": 1036,
@@ -23551,19 +23471,19 @@
         },
         {
           "Tick": 1042,
-          "Gold": 43,
-          "GoldMined": 6464,
-          "GoldSpent": 7140,
-          "PawnCount": 6,
-          "ArmyValue": 4125,
-          "HpPercent": 95.393166,
-          "EnemyGoldKilled": 5525,
-          "OwnGoldLost": 510,
+          "Gold": 1160.5,
+          "GoldMined": 5880,
+          "GoldSpent": 5515,
+          "PawnCount": 5,
+          "ArmyValue": 2062.5,
+          "HpPercent": 94.76208,
+          "EnemyGoldKilled": 2762.5,
+          "OwnGoldLost": 2137.5,
           "UnitCounts": {
-            "WARRIOR": 15,
-            "MONK": 7,
-            "ARCHER": 21,
-            "LANCER": 13
+            "WARRIOR": 7.5,
+            "MONK": 3.5,
+            "ARCHER": 10.5,
+            "LANCER": 6.5
           }
         },
         {
@@ -24128,14 +24048,14 @@
           "MedianTick": 866,
           "MinTick": 709,
           "MaxTick": 2212,
-          "Count": 130
+          "Count": 125
         },
         {
           "Type": "FirstKill",
-          "MedianTick": 883,
+          "MedianTick": 881,
           "MinTick": 723,
           "MaxTick": 2224,
-          "Count": 130
+          "Count": 125
         }
       ]
     }
