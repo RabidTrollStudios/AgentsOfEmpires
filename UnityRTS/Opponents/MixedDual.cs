@@ -119,7 +119,7 @@ namespace PlanningAgent
             int armySize = myWarriors.Count + myArchers.Count + myLancers.Count;
             if (armySize < ATTACK_THRESHOLD) return;
 
-            // Warriors attack normally
+            // Warriors attack nearest enemy
             AttackWithUnits(myWarriors, state, actions);
 
             // Archers use volley+kite micro
