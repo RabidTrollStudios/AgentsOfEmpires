@@ -134,13 +134,26 @@ namespace Opponent.Tests
                 if (info.HasValue && info.Value.CurrentAction == UnitAction.IDLE
                     && state.MyGold >= GameConstants.COST[type])
                 {
+                    // Pick the closest buildable position to this pawn
+                    Position pawnPos = info.Value.GridPosition;
+                    Position? bestPos = null;
+                    float bestDist = float.MaxValue;
                     foreach (Position pos in buildPositions)
                     {
                         if (state.IsBoundedAreaBuildable(type, pos))
                         {
-                            actions.Build(pawn, pos, type);
-                            return;
+                            float dist = Position.Distance(pos, pawnPos);
+                            if (dist < bestDist)
+                            {
+                                bestDist = dist;
+                                bestPos = pos;
+                            }
                         }
+                    }
+                    if (bestPos.HasValue)
+                    {
+                        actions.Build(pawn, bestPos.Value, type);
+                        return;
                     }
                 }
             }
