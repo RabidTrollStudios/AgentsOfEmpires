@@ -23,6 +23,9 @@ namespace AgentSDK
         /// <summary>Size of the map grid</summary>
         Position MapSize { get; }
 
+        /// <summary>Current game speed (simulation steps per second)</summary>
+        int GameSpeed { get; }
+
         /// <summary>Your agent's win count</summary>
         int MyWins { get; }
 

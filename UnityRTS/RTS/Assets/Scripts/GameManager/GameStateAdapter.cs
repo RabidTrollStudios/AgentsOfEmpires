@@ -60,6 +60,7 @@ namespace GameManager
         public int MyGold => GameManager.Instance.GetAgent(agentNbr).Gold;
         public int EnemyGold => enemyAgentNbr >= 0 ? GameManager.Instance.GetAgent(enemyAgentNbr).Gold : 0;
         public Position MapSize => new Position(mapManager.MapSize.x, mapManager.MapSize.y);
+        public int GameSpeed => Constants.GAME_SPEED;
         public int MyWins => GameManager.Instance.GetAgent(agentNbr).AgentNbrWins;
 
         public IReadOnlyList<int> GetMyUnits(AgentSDK.UnitType unitType)

@@ -588,17 +588,20 @@ namespace GameManager.GameElements
 		/// </summary>
 		private void UpdateLancerFacing()
 		{
-			if (velocity.x > 0.05f)
-				facingRight = true;
-			else if (velocity.x < -0.05f)
-				facingRight = false;
-
-			if (CurrentAction == UnitAction.ATTACK && AttackUnit != null && path.Count == 0)
+			// Attack facing takes priority — always face the target
+			if (CurrentAction == UnitAction.ATTACK && AttackUnit != null)
 			{
 				float dx = AttackUnit.CenterGridPosition.x - CenterGridPosition.x;
 				if (dx > 0.01f)
 					facingRight = true;
 				else if (dx < -0.01f)
+					facingRight = false;
+			}
+			else
+			{
+				if (velocity.x > 0.05f)
+					facingRight = true;
+				else if (velocity.x < -0.05f)
 					facingRight = false;
 			}
 		}

@@ -311,22 +311,22 @@ namespace GameManager.GameElements
 
 			sm.AddTransition(run, idle, u => !u.IsVisuallyMoving);
 
-			// From idle → directional attack
+			// From idle/run → directional attack (evaluate direction immediately)
 			sm.AddTransition(idle, atkRight,     u => u.CurrentAction == UnitAction.ATTACK && GetLancerDirIndex(u) == 2);
 			sm.AddTransition(idle, atkUp,        u => u.CurrentAction == UnitAction.ATTACK && GetLancerDirIndex(u) == 3);
 			sm.AddTransition(idle, atkDown,      u => u.CurrentAction == UnitAction.ATTACK && GetLancerDirIndex(u) == 4);
 			sm.AddTransition(idle, atkUpRight,   u => u.CurrentAction == UnitAction.ATTACK && GetLancerDirIndex(u) == 5);
 			sm.AddTransition(idle, atkDownRight, u => u.CurrentAction == UnitAction.ATTACK && GetLancerDirIndex(u) == 6);
 
-			// Direction changes while attacking
+			// Direction changes while attacking — only at the start of an animation loop
 			foreach (var atk in atkStates)
 			{
 				sm.AddTransition(atk, idle, u => u.CurrentAction != UnitAction.ATTACK);
-				if (atk != atkRight)     sm.AddTransition(atk, atkRight,     u => GetLancerDirIndex(u) == 2);
-				if (atk != atkUp)        sm.AddTransition(atk, atkUp,        u => GetLancerDirIndex(u) == 3);
-				if (atk != atkDown)      sm.AddTransition(atk, atkDown,      u => GetLancerDirIndex(u) == 4);
-				if (atk != atkUpRight)   sm.AddTransition(atk, atkUpRight,   u => GetLancerDirIndex(u) == 5);
-				if (atk != atkDownRight) sm.AddTransition(atk, atkDownRight, u => GetLancerDirIndex(u) == 6);
+				if (atk != atkRight)     sm.AddTransition(atk, atkRight,     u => IsAtAnimLoopStart(u) && GetLancerDirIndex(u) == 2);
+				if (atk != atkUp)        sm.AddTransition(atk, atkUp,        u => IsAtAnimLoopStart(u) && GetLancerDirIndex(u) == 3);
+				if (atk != atkDown)      sm.AddTransition(atk, atkDown,      u => IsAtAnimLoopStart(u) && GetLancerDirIndex(u) == 4);
+				if (atk != atkUpRight)   sm.AddTransition(atk, atkUpRight,   u => IsAtAnimLoopStart(u) && GetLancerDirIndex(u) == 5);
+				if (atk != atkDownRight) sm.AddTransition(atk, atkDownRight, u => IsAtAnimLoopStart(u) && GetLancerDirIndex(u) == 6);
 			}
 
 			sm.SetInitialState(idle);
@@ -336,6 +336,19 @@ namespace GameManager.GameElements
 		private int GetLancerDirIndex(Unit u)
 		{
 			return GetLancerDirectionalAttackIndex();
+		}
+
+		/// <summary>
+		/// Returns true when the animator is near the start of its current animation loop.
+		/// Used to gate direction changes so they only happen at loop boundaries,
+		/// preventing mid-animation resets.
+		/// </summary>
+		private bool IsAtAnimLoopStart(Unit u)
+		{
+			if (u.animator == null) return true;
+			var stateInfo = u.animator.GetCurrentAnimatorStateInfo(0);
+			float loopPos = stateInfo.normalizedTime % 1f;
+			return loopPos < 0.1f; // within first 10% of the loop
 		}
 
 		#endregion
@@ -392,31 +405,27 @@ namespace GameManager.GameElements
 			{
 				string stateName = _vsm.CurrentState?.Name;
 
-				// Stationary action states handle their own facing via OnUpdate callbacks
-				// (Building faces toward building, Mining faces toward mine).
-				// Only apply velocity-based facing for movement and other states.
-				if (stateName != "Building" && stateName != "Mining")
+				// Attack facing takes priority — always face the target
+				if (CurrentAction == UnitAction.ATTACK && AttackUnit != null)
 				{
-					if (velocity.x > 0.05f)
-						facingRight = true;
-					else if (velocity.x < -0.05f)
-						facingRight = false;
+					float dx = AttackUnit.CenterGridPosition.x - CenterGridPosition.x;
+					if (dx > 0.01f) facingRight = true;
+					else if (dx < -0.01f) facingRight = false;
 				}
-
 				// Face toward mine when mining
-				if (stateName == "Mining" && MineUnit != null)
+				else if (stateName == "Mining" && MineUnit != null)
 				{
 					float dx = MineUnit.GetComponent<Unit>().CenterGridPosition.x - CenterGridPosition.x;
 					if (dx > 0.01f) facingRight = true;
 					else if (dx < -0.01f) facingRight = false;
 				}
-
-				// Face toward attack target when stationary attacking
-				if ((CurrentAction == UnitAction.ATTACK) && !IsVisuallyMoving && AttackUnit != null)
+				// Stationary action states handle their own facing via OnUpdate callbacks
+				else if (stateName != "Building" && stateName != "Mining")
 				{
-					float dx = AttackUnit.CenterGridPosition.x - CenterGridPosition.x;
-					if (dx > 0.01f) facingRight = true;
-					else if (dx < -0.01f) facingRight = false;
+					if (velocity.x > 0.05f)
+						facingRight = true;
+					else if (velocity.x < -0.05f)
+						facingRight = false;
 				}
 
 				if (unitSprite != null)

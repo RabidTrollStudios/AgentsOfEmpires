@@ -63,6 +63,7 @@ namespace AgentTestHarness
         public int MyGold => game.GetGold(agentNbr);
         public int EnemyGold => game.GetGold(EnemyAgentNbr);
         public Position MapSize => game.Map.Size;
+        public int GameSpeed => game.Config.GameSpeed;
         public int MyWins => game.GetWins(agentNbr);
 
         public IReadOnlyList<int> GetMyUnits(UnitType unitType)

@@ -18,14 +18,19 @@ namespace PlanningAgent
         private const int ATTACK_TICKS = 2;
         private const int KITE_TICKS = 1;
         private const int CYCLE_LENGTH = ATTACK_TICKS + KITE_TICKS;
-        private const float RALLY_DISTANCE = 5.0f;
+        private const int RETREAT_DISTANCE = 2;
+        private const float ANIM_DURATION_BASE = 0.5f; // 6 frames at 12 FPS
+        private const float FRAME_DURATION = 0.02f;  // 50 Hz fixed update
+
+        private enum JoustState { Charging, Striking, Retreating }
 
         private int _lastArmySize;
         private int _ticksSinceArmyShrunk;
         private UnitType _priorityUnit = UnitType.MINE;
         private Dictionary<int, int> _lastArcherTarget = new Dictionary<int, int>();
         private Dictionary<int, int> _archerCycleTick = new Dictionary<int, int>();
-        private Dictionary<int, float> _lancerLastHp = new Dictionary<int, float>();
+        private Dictionary<int, JoustState> _joustState = new Dictionary<int, JoustState>();
+        private Dictionary<int, int> _strikeTicks = new Dictionary<int, int>();
 
         public override void InitializeMatch()
         {
@@ -34,7 +39,8 @@ namespace PlanningAgent
             _priorityUnit = UnitType.MINE;
             _lastArcherTarget = new Dictionary<int, int>();
             _archerCycleTick = new Dictionary<int, int>();
-            _lancerLastHp = new Dictionary<int, float>();
+            _joustState = new Dictionary<int, JoustState>();
+            _strikeTicks = new Dictionary<int, int>();
         }
 
         public override void Update(IGameState state, IAgentActions actions)
@@ -233,42 +239,113 @@ namespace PlanningAgent
 
         private void LancerJoust(IGameState state, IAgentActions actions)
         {
-            int? enemyTarget = FindAnyEnemy(state);
-            if (!enemyTarget.HasValue) return;
-            var targetInfo = state.GetUnit(enemyTarget.Value);
-            if (!targetInfo.HasValue) return;
             foreach (int lancerNbr in myLancers)
             {
                 var info = state.GetUnit(lancerNbr);
                 if (!info.HasValue) continue;
 
-                float currentHp = info.Value.Health;
-                float lastHp = _lancerLastHp.ContainsKey(lancerNbr) ? _lancerLastHp[lancerNbr] : currentHp;
-                bool tookDamage = currentHp < lastHp;
-                _lancerLastHp[lancerNbr] = currentHp;
-
-                if (info.Value.CurrentAction == UnitAction.ATTACK)
+                if (!_joustState.ContainsKey(lancerNbr))
                 {
-                    var myTarget = info.Value.AttackTargetNbr >= 0 ? state.GetUnit(info.Value.AttackTargetNbr) : null;
-                    bool fightingRanged = myTarget.HasValue && myTarget.Value.UnitType == UnitType.ARCHER;
-
-                    if (tookDamage && !fightingRanged)
-                    {
-                        Position enemyPos = myTarget.HasValue ? myTarget.Value.GridPosition : targetInfo.Value.GridPosition;
-                        Position? retreat = FindRetreatPosition(info.Value.GridPosition, enemyPos, 3, state);
-                        if (retreat.HasValue) actions.Move(lancerNbr, retreat.Value);
-                    }
+                    _joustState[lancerNbr] = JoustState.Charging;
+                    _strikeTicks[lancerNbr] = 0;
                 }
-                else if (info.Value.CurrentAction == UnitAction.MOVE)
+
+                switch (_joustState[lancerNbr])
                 {
-                    float dist = Position.Distance(info.Value.CenterPosition, targetInfo.Value.CenterPosition);
-                    if (dist >= RALLY_DISTANCE) actions.Attack(lancerNbr, enemyTarget.Value);
-                }
-                else if (info.Value.CurrentAction == UnitAction.IDLE)
-                {
-                    actions.Attack(lancerNbr, enemyTarget.Value);
+                    case JoustState.Charging:
+                        if (info.Value.CurrentAction == UnitAction.IDLE)
+                        {
+                            int? target = FindPriorityTarget(state, info.Value.CenterPosition);
+                            if (target.HasValue)
+                                actions.Attack(lancerNbr, target.Value);
+                        }
+                        else if (info.Value.CurrentAction == UnitAction.ATTACK)
+                        {
+                            var atkTarget = info.Value.AttackTargetNbr >= 0
+                                ? state.GetUnit(info.Value.AttackTargetNbr) : null;
+                            if (atkTarget.HasValue)
+                            {
+                                float dist = Position.Distance(info.Value.CenterPosition,
+                                    atkTarget.Value.CenterPosition);
+                                float range = GameConstants.EffectiveAttackRange(
+                                    UnitType.LANCER, atkTarget.Value.UnitType) + 0.5f;
+                                if (dist < range)
+                                {
+                                    _joustState[lancerNbr] = JoustState.Striking;
+                                    _strikeTicks[lancerNbr] = 0;
+                                }
+                            }
+                        }
+                        break;
+
+                    case JoustState.Striking:
+                        _strikeTicks[lancerNbr]++;
+                        int framesPerAnim = System.Math.Max(1,
+                            (int)System.Math.Ceiling(ANIM_DURATION_BASE / (state.GameSpeed * FRAME_DURATION)));
+                        if (_strikeTicks[lancerNbr] >= framesPerAnim)
+                        {
+                            var atkTarget = info.Value.AttackTargetNbr >= 0
+                                ? state.GetUnit(info.Value.AttackTargetNbr) : null;
+                            Position enemyPos = atkTarget.HasValue
+                                ? atkTarget.Value.GridPosition : info.Value.GridPosition;
+                            Position? retreat = FindRetreatPosition(
+                                info.Value.GridPosition, enemyPos, RETREAT_DISTANCE, state);
+                            if (retreat.HasValue)
+                            {
+                                actions.Move(lancerNbr, retreat.Value);
+                                _joustState[lancerNbr] = JoustState.Retreating;
+                            }
+                            else
+                            {
+                                _strikeTicks[lancerNbr] = 0;
+                            }
+                        }
+                        break;
+
+                    case JoustState.Retreating:
+                        if (info.Value.CurrentAction == UnitAction.IDLE)
+                        {
+                            int? target = FindPriorityTarget(state, info.Value.CenterPosition);
+                            if (target.HasValue)
+                                actions.Attack(lancerNbr, target.Value);
+                            _joustState[lancerNbr] = JoustState.Charging;
+                        }
+                        break;
                 }
             }
+        }
+
+        private int? FindPriorityTarget(IGameState state, Position fromPos)
+        {
+            int? best = null;
+            float bestDist = float.MaxValue;
+            Position myPos = fromPos;
+
+            foreach (UnitType ut in new[] { UnitType.WARRIOR, UnitType.ARCHER, UnitType.LANCER,
+                                            UnitType.MONK, UnitType.PAWN })
+            {
+                foreach (int enemyNbr in state.GetEnemyUnits(ut))
+                {
+                    var info = state.GetUnit(enemyNbr);
+                    if (!info.HasValue) continue;
+                    float dist = Position.Distance(info.Value.CenterPosition, myPos);
+                    if (dist < bestDist) { bestDist = dist; best = enemyNbr; }
+                }
+            }
+            if (best.HasValue) return best;
+
+            foreach (UnitType ut in new[] { UnitType.BASE, UnitType.BARRACKS,
+                                            UnitType.ARCHERY, UnitType.TOWER, UnitType.MONASTERY })
+            {
+                foreach (int enemyNbr in state.GetEnemyUnits(ut))
+                {
+                    var info = state.GetUnit(enemyNbr);
+                    if (!info.HasValue) continue;
+                    float dist = Position.Distance(info.Value.CenterPosition, myPos);
+                    if (dist < bestDist) { bestDist = dist; best = enemyNbr; }
+                }
+            }
+            return best;
         }
 
         private Position? FindRetreatPosition(Position from, Position enemy, int distance, IGameState state)
