@@ -110,7 +110,6 @@ namespace GameManager
 		/// <summary>
 		/// Whether to use a hand-made tilemap or procedural generation.
 		/// </summary>
-		[Header("Map Configuration")]
 		[SerializeField] private MapMode mapMode = MapMode.HandMade;
 
 		/// <summary>

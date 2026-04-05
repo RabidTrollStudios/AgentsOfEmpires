@@ -4,38 +4,43 @@ using AgentSDK;
 namespace PlanningAgent
 {
     /// <summary>
-    /// [MEDIUM] Lancer-only: builds barracks + tower, then masses lancers.
-    /// Exploits extended melee range (2.5) and strong-vs-warrior bonus.
-    /// Vulnerable to massed archers.
+    /// [MID] Hit-and-run lancer rush: 2 pawns, 2 towers, lancers use joust
+    /// tactics — charge in for bonus damage, then disengage to reset joust
+    /// distance. Each lancer alternates between attacking and retreating.
+    /// Lancers track ticks spent in melee; after a few hits they pull back
+    /// to their rally point, then charge again for another joust bonus.
+    /// Strategy to beat: archers counter lancers (1.25x), or pin them down
+    /// so they can't disengage.
     /// </summary>
     public class PlanningAgent : PlanningAgentBase
     {
-        private const int MAX_PAWNS = 4;
+        private const int MAX_PAWNS = 2;
+        private const int ATTACK_THRESHOLD = 3;
+        private const int DISENGAGE_TICKS = 3; // pull back after this many ticks in combat
+        private const float RALLY_DISTANCE = 5.0f; // how far to retreat before re-engaging
 
-        public override void InitializeMatch() { }
+        // Track per-lancer combat ticks
+        private Dictionary<int, int> _combatTicks = new Dictionary<int, int>();
+
+        public override void InitializeMatch()
+        {
+            _combatTicks = new Dictionary<int, int>();
+        }
 
         public override void Update(IGameState state, IAgentActions actions)
         {
             UpdateGameState(state);
+            mainMineNbr = mines.Count > 0 ? mines[0] : -1;
             mainBaseNbr = myBases.Count > 0 ? myBases[0] : -1;
-            if (mainMineNbr < 0 || !state.GetUnit(mainMineNbr).HasValue || state.GetUnit(mainMineNbr).Value.Health <= 0)
-                mainMineNbr = FindClosestMine(state);
 
-            if (myBases.Count == 0)
-            {
-                BuildStructure(UnitType.BASE, state, actions);
-                return;
-            }
-
-            TrainPawns(state, actions);
-
-            bool hasBase = HasBuiltUnit(myBases, state);
-            if (myTowers.Count == 0 && hasBase)
-                BuildStructure(UnitType.TOWER, state, actions);
-
+            TrainPawns(state, actions, MAX_PAWNS);
             GatherWithIdlePawns(state, actions);
 
-            // Train lancers from tower
+            // Rush to 2 towers
+            if (myTowers.Count < 2 && HasBuiltUnit(myBases, state))
+                BuildStructure(UnitType.TOWER, state, actions);
+
+            // Train lancers
             foreach (int towerNbr in myTowers)
             {
                 var info = state.GetUnit(towerNbr);
@@ -47,12 +52,65 @@ namespace PlanningAgent
                 }
             }
 
-            DefendTroops(myLancers, state, actions);
-            if (myLancers.Count >= 4)
-                AttackWithUnits(myLancers, state, actions);
+            if (myLancers.Count < ATTACK_THRESHOLD) return;
+
+            // Find enemy target
+            int? enemyTarget = FindAnyEnemy(state);
+            if (!enemyTarget.HasValue) return;
+            var targetInfo = state.GetUnit(enemyTarget.Value);
+            if (!targetInfo.HasValue) return;
+
+            // Hit-and-run micro for each lancer
+            foreach (int lancerNbr in myLancers)
+            {
+                var info = state.GetUnit(lancerNbr);
+                if (!info.HasValue) continue;
+
+                if (!_combatTicks.ContainsKey(lancerNbr))
+                    _combatTicks[lancerNbr] = 0;
+
+                if (info.Value.CurrentAction == UnitAction.ATTACK)
+                {
+                    // In combat — count ticks
+                    float dist = Position.Distance(info.Value.CenterPosition, targetInfo.Value.CenterPosition);
+                    if (dist < GameConstants.ATTACK_RANGE[UnitType.LANCER] + 1.0f)
+                    {
+                        _combatTicks[lancerNbr]++;
+
+                        // After enough hits, disengage — move toward our base to reset joust
+                        if (_combatTicks[lancerNbr] >= DISENGAGE_TICKS && mainBaseNbr >= 0)
+                        {
+                            var baseInfo = state.GetUnit(mainBaseNbr);
+                            if (baseInfo.HasValue)
+                            {
+                                // Move toward base (rally point)
+                                actions.Move(lancerNbr, baseInfo.Value.CenterPosition);
+                                _combatTicks[lancerNbr] = 0;
+                            }
+                        }
+                    }
+                }
+                else if (info.Value.CurrentAction == UnitAction.MOVE)
+                {
+                    // Disengaging — check if far enough from enemy to re-engage
+                    float dist = Position.Distance(info.Value.CenterPosition, targetInfo.Value.CenterPosition);
+                    if (dist >= RALLY_DISTANCE)
+                    {
+                        // Far enough — charge back in for joust bonus
+                        actions.Attack(lancerNbr, enemyTarget.Value);
+                        _combatTicks[lancerNbr] = 0;
+                    }
+                }
+                else if (info.Value.CurrentAction == UnitAction.IDLE)
+                {
+                    // Idle — send to attack
+                    actions.Attack(lancerNbr, enemyTarget.Value);
+                    _combatTicks[lancerNbr] = 0;
+                }
+            }
         }
 
-        private void TrainPawns(IGameState state, IAgentActions actions)
+        private void TrainPawns(IGameState state, IAgentActions actions, int max)
         {
             foreach (int baseNbr in myBases)
             {
@@ -60,7 +118,7 @@ namespace PlanningAgent
                 if (info.HasValue && info.Value.IsBuilt
                     && info.Value.CurrentAction == UnitAction.IDLE
                     && state.MyGold >= GameConstants.COST[UnitType.PAWN]
-                    && myPawns.Count < MAX_PAWNS)
+                    && myPawns.Count < max)
                 {
                     actions.Train(baseNbr, UnitType.PAWN);
                 }
@@ -81,51 +139,6 @@ namespace PlanningAgent
             }
         }
 
-        private int FindClosestMine(IGameState state)
-        {
-            if (mines.Count == 0) return -1;
-            if (myPawns.Count == 0) return mines[0];
-            var pawnInfo = state.GetUnit(myPawns[0]);
-            if (!pawnInfo.HasValue) return mines[0];
-
-            Position pawnPos = pawnInfo.Value.GridPosition;
-            int bestMine = -1;
-            int bestPathLen = int.MaxValue;
-            foreach (int mineNbr in mines)
-            {
-                var mineInfo = state.GetUnit(mineNbr);
-                if (mineInfo.HasValue && mineInfo.Value.Health > 0)
-                {
-                    int pathLen = state.GetPathToUnit(pawnPos, UnitType.MINE, mineInfo.Value.GridPosition).Count;
-                    if (pathLen > 0 && pathLen < bestPathLen)
-                    {
-                        bestPathLen = pathLen;
-                        bestMine = mineNbr;
-                    }
-                }
-            }
-
-            if (bestMine == -1)
-            {
-                float bestDist = float.MaxValue;
-                foreach (int mineNbr in mines)
-                {
-                    var mineInfo = state.GetUnit(mineNbr);
-                    if (mineInfo.HasValue && mineInfo.Value.Health > 0)
-                    {
-                        float dist = Position.Distance(pawnPos, mineInfo.Value.CenterPosition);
-                        if (dist < bestDist)
-                        {
-                            bestDist = dist;
-                            bestMine = mineNbr;
-                        }
-                    }
-                }
-            }
-
-            return bestMine >= 0 ? bestMine : mines[0];
-        }
-
         private void BuildStructure(UnitType type, IGameState state, IAgentActions actions)
         {
             foreach (int pawn in myPawns)
@@ -134,131 +147,29 @@ namespace PlanningAgent
                 if (info.HasValue && info.Value.CurrentAction == UnitAction.IDLE
                     && state.MyGold >= GameConstants.COST[type])
                 {
-                    Position buildPos = FindBestBuildPosition(type, state);
-                    if (buildPos.X >= 0)
+                    foreach (Position pos in buildPositions)
                     {
-                        actions.Build(pawn, buildPos, type);
-                        return;
-                    }
-                }
-            }
-        }
-
-        private Position FindBestBuildPosition(UnitType type, IGameState state)
-        {
-            var freshPositions = state.FindProspectiveBuildPositions(type);
-
-            if (type == UnitType.BASE && mainMineNbr >= 0)
-            {
-                var mineInfo = state.GetUnit(mainMineNbr);
-                if (mineInfo.HasValue)
-                {
-                    float bestDist = float.MaxValue;
-                    Position bestPos = new Position(-1, -1);
-                    foreach (Position pos in freshPositions)
-                    {
-                        float dist = Position.Distance(pos, mineInfo.Value.CenterPosition);
-                        if (dist >= 2f && dist < bestDist)
+                        if (state.IsBoundedAreaBuildable(type, pos))
                         {
-                            bestDist = dist;
-                            bestPos = pos;
-                        }
-                    }
-                    if (bestPos.X >= 0) return bestPos;
-                }
-            }
-            else if ((type == UnitType.BARRACKS || type == UnitType.TOWER) && mainBaseNbr >= 0)
-            {
-                var baseInfo = state.GetUnit(mainBaseNbr);
-                if (baseInfo.HasValue)
-                {
-                    float bestDist = float.MaxValue;
-                    Position bestPos = new Position(-1, -1);
-                    foreach (Position pos in freshPositions)
-                    {
-                        float dist = Position.Distance(pos, baseInfo.Value.CenterPosition);
-                        if (dist >= 2f && dist < bestDist)
-                        {
-                            bestDist = dist;
-                            bestPos = pos;
-                        }
-                    }
-                    if (bestPos.X >= 0) return bestPos;
-                }
-            }
-
-            return freshPositions.Count > 0 ? freshPositions[0] : new Position(-1, -1);
-        }
-
-        private void AttackWithUnits(List<int> units, IGameState state, IAgentActions actions)
-        {
-            foreach (int unitNbr in units)
-            {
-                var info = state.GetUnit(unitNbr);
-                if (!info.HasValue || info.Value.CurrentAction != UnitAction.IDLE) continue;
-                int? target = FindClosestEnemy(unitNbr, state);
-                if (target.HasValue)
-                    actions.Attack(unitNbr, target.Value);
-            }
-        }
-
-        private void DefendTroops(List<int> units, IGameState state, IAgentActions actions)
-        {
-            foreach (int unitNbr in units)
-            {
-                var info = state.GetUnit(unitNbr);
-                if (!info.HasValue || info.Value.CurrentAction != UnitAction.IDLE) continue;
-                Position myPos = info.Value.GridPosition;
-                float myRange = GameConstants.ATTACK_RANGE[info.Value.UnitType];
-
-                int? bestTarget = null;
-                float bestDist = float.MaxValue;
-                foreach (UnitType ut in new[] { UnitType.WARRIOR, UnitType.ARCHER, UnitType.LANCER, UnitType.PAWN,
-                                                UnitType.BASE, UnitType.BARRACKS, UnitType.ARCHERY, UnitType.TOWER })
-                {
-                    var enemies = state.GetEnemyUnits(ut);
-                    foreach (int enemyNbr in enemies)
-                    {
-                        var enemyInfo = state.GetUnit(enemyNbr);
-                        if (!enemyInfo.HasValue) continue;
-                        float dist = Position.Distance(myPos, enemyInfo.Value.CenterPosition);
-                        if (dist <= myRange && dist < bestDist)
-                        {
-                            bestDist = dist;
-                            bestTarget = enemyNbr;
+                            actions.Build(pawn, pos, type);
+                            return;
                         }
                     }
                 }
-                if (bestTarget.HasValue)
-                    actions.Attack(unitNbr, bestTarget.Value);
             }
         }
 
-        private int? FindClosestEnemy(int attackerNbr, IGameState state)
+        private int? FindAnyEnemy(IGameState state)
         {
-            var attackerInfo = state.GetUnit(attackerNbr);
-            if (!attackerInfo.HasValue) return null;
-            Position attackerPos = attackerInfo.Value.GridPosition;
-
-            int? bestTarget = null;
-            float bestDist = float.MaxValue;
-            foreach (UnitType ut in new[] { UnitType.WARRIOR, UnitType.ARCHER, UnitType.LANCER, UnitType.PAWN,
-                                            UnitType.BASE, UnitType.BARRACKS, UnitType.ARCHERY, UnitType.TOWER })
+            foreach (UnitType ut in new[] { UnitType.WARRIOR, UnitType.ARCHER, UnitType.LANCER,
+                                            UnitType.MONK, UnitType.PAWN, UnitType.BASE,
+                                            UnitType.BARRACKS, UnitType.ARCHERY, UnitType.TOWER,
+                                            UnitType.MONASTERY })
             {
                 var enemies = state.GetEnemyUnits(ut);
-                foreach (int enemyNbr in enemies)
-                {
-                    var enemyInfo = state.GetUnit(enemyNbr);
-                    if (!enemyInfo.HasValue) continue;
-                    float dist = Position.Distance(attackerPos, enemyInfo.Value.CenterPosition);
-                    if (dist < bestDist)
-                    {
-                        bestDist = dist;
-                        bestTarget = enemyNbr;
-                    }
-                }
+                if (enemies.Count > 0) return enemies[0];
             }
-            return bestTarget;
+            return null;
         }
     }
 }

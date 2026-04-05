@@ -4,16 +4,15 @@ using AgentSDK;
 namespace PlanningAgent
 {
     /// <summary>
-    /// [MEDIUM] Minimal economy, fast barracks, warrior rush with 3+.
-    /// Punishes slow builders — if you don't have defenders by tick ~100,
-    /// you're in trouble. Runs out of gold quickly if the rush fails.
-    /// Strategy to beat: fast barracks + a few defenders, then counter-attack
-    /// once the rusher's economy collapses.
+    /// [MEDIUM] Greedy economy: 8 pawns, masses warriors.
+    /// Waits for 8+ warriors before attacking.
+    /// Very slow start, but the army is huge if you let it build up.
+    /// Strategy to beat: rush before the turtle masses up, or out-economy it.
     /// </summary>
     public class PlanningAgent : PlanningAgentBase
     {
-        private const int MAX_PAWNS = 2;
-        private const int ATTACK_THRESHOLD = 3;
+        private const int MAX_PAWNS = 6;
+        private const int ATTACK_THRESHOLD = 6;
 
         public override void InitializeMatch() { }
 
@@ -26,11 +25,11 @@ namespace PlanningAgent
             TrainPawns(state, actions, MAX_PAWNS);
             GatherWithIdlePawns(state, actions);
 
-            // Rush to 2 barracks
-            if (myBarracks.Count < 2 && HasBuiltUnit(myBases, state))
+            // Build barracks, then mass warriors
+            if (myBarracks.Count == 0 && HasBuiltUnit(myBases, state))
                 BuildStructure(UnitType.BARRACKS, state, actions);
 
-            // Train warriors only — spend everything on military
+            // Train warriors
             foreach (int barracksNbr in myBarracks)
             {
                 var info = state.GetUnit(barracksNbr);
@@ -42,7 +41,7 @@ namespace PlanningAgent
                 }
             }
 
-            // Attack early with 3+ warriors
+            // Only attack with a large army
             if (myWarriors.Count >= ATTACK_THRESHOLD)
                 AttackWithUnits(myWarriors, state, actions);
         }

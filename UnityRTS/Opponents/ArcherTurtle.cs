@@ -4,16 +4,17 @@ using AgentSDK;
 namespace PlanningAgent
 {
     /// <summary>
-    /// [MEDIUM] Minimal economy, fast barracks, warrior rush with 3+.
-    /// Punishes slow builders — if you don't have defenders by tick ~100,
-    /// you're in trouble. Runs out of gold quickly if the rush fails.
-    /// Strategy to beat: fast barracks + a few defenders, then counter-attack
-    /// once the rusher's economy collapses.
+    /// [MEDIUM] Greedy economy archer turtle: 8 pawns, masses archers.
+    /// Waits for 8+ archers before attacking.
+    /// Mirrors Turtle's warrior strategy but with archers.
+    /// Tests whether massed archers with range (9.0) are stronger
+    /// than massed warriors when given time to build up.
+    /// Strategy to beat: rush before 8 archers, or warriors counter (1.25x).
     /// </summary>
     public class PlanningAgent : PlanningAgentBase
     {
-        private const int MAX_PAWNS = 2;
-        private const int ATTACK_THRESHOLD = 3;
+        private const int MAX_PAWNS = 6;
+        private const int ATTACK_THRESHOLD = 6;
 
         public override void InitializeMatch() { }
 
@@ -26,25 +27,25 @@ namespace PlanningAgent
             TrainPawns(state, actions, MAX_PAWNS);
             GatherWithIdlePawns(state, actions);
 
-            // Rush to 2 barracks
-            if (myBarracks.Count < 2 && HasBuiltUnit(myBases, state))
-                BuildStructure(UnitType.BARRACKS, state, actions);
+            // Build archery, then mass archers
+            if (myArchery.Count == 0 && HasBuiltUnit(myBases, state))
+                BuildStructure(UnitType.ARCHERY, state, actions);
 
-            // Train warriors only — spend everything on military
-            foreach (int barracksNbr in myBarracks)
+            // Train archers
+            foreach (int archeryNbr in myArchery)
             {
-                var info = state.GetUnit(barracksNbr);
+                var info = state.GetUnit(archeryNbr);
                 if (info.HasValue && info.Value.IsBuilt
                     && info.Value.CurrentAction == UnitAction.IDLE
-                    && state.MyGold >= GameConstants.COST[UnitType.WARRIOR])
+                    && state.MyGold >= GameConstants.COST[UnitType.ARCHER])
                 {
-                    actions.Train(barracksNbr, UnitType.WARRIOR);
+                    actions.Train(archeryNbr, UnitType.ARCHER);
                 }
             }
 
-            // Attack early with 3+ warriors
-            if (myWarriors.Count >= ATTACK_THRESHOLD)
-                AttackWithUnits(myWarriors, state, actions);
+            // Only attack with a large army
+            if (myArchers.Count >= ATTACK_THRESHOLD)
+                AttackWithUnits(myArchers, state, actions);
         }
 
         private void TrainPawns(IGameState state, IAgentActions actions, int max)
@@ -111,8 +112,10 @@ namespace PlanningAgent
 
         private int? FindAnyEnemy(IGameState state)
         {
-            foreach (UnitType ut in new[] { UnitType.WARRIOR, UnitType.ARCHER, UnitType.PAWN,
-                                            UnitType.BASE, UnitType.BARRACKS })
+            foreach (UnitType ut in new[] { UnitType.WARRIOR, UnitType.ARCHER, UnitType.LANCER,
+                                            UnitType.MONK, UnitType.PAWN, UnitType.BASE,
+                                            UnitType.BARRACKS, UnitType.ARCHERY, UnitType.TOWER,
+                                            UnitType.MONASTERY })
             {
                 var enemies = state.GetEnemyUnits(ut);
                 if (enemies.Count > 0) return enemies[0];

@@ -17,7 +17,8 @@ namespace GameManager.EditorTools
 		{
 			"mapMode", "selectedMapIndex", "mapPrefabs",
 			"mapWidth", "mapHeight", "mapTemplate",
-			"treeDensity", "mapSeed", "mapSymmetry"
+			"treeDensity", "mapSeed", "mapSymmetry",
+			"NumberOfMines"
 		};
 
 		private void ScanDLLs()
@@ -57,6 +58,8 @@ namespace GameManager.EditorTools
 			DrawDllDropdown("BlueDllName", "Blue DLL");
 			DrawDllDropdown("RedDllName", "Red DLL");
 			EditorGUILayout.PropertyField(serializedObject.FindProperty("RandomizeAgentsAsRed"));
+			if (GUILayout.Button("Rescan DLLs"))
+				ScanDLLs();
 
 			// --- Map Configuration (custom layout) ---
 			EditorGUILayout.Space(8);
@@ -69,9 +72,6 @@ namespace GameManager.EditorTools
 			};
 			excludeList.AddRange(mapConfigProps);
 			DrawPropertiesExcluding(serializedObject, excludeList.ToArray());
-
-			if (GUILayout.Button("Rescan DLLs"))
-				ScanDLLs();
 
 			serializedObject.ApplyModifiedProperties();
 		}
@@ -89,6 +89,10 @@ namespace GameManager.EditorTools
 				DrawHandMadeSettings();
 			else
 				DrawProceduralSettings();
+
+			// Number of mines (shared across both modes)
+			EditorGUILayout.PropertyField(serializedObject.FindProperty("NumberOfMines"),
+				new GUIContent("Number of Mines"));
 
 			EditorGUI.indentLevel--;
 		}
