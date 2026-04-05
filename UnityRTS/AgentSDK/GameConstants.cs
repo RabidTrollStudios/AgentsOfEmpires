@@ -117,6 +117,27 @@ namespace AgentSDK
             });
 
         /// <summary>
+        /// Base attack cooldown in seconds (at game speed 1). Time between discrete attacks.
+        /// Matches animation cycle length: 6 frames at 12 FPS = 0.5s.
+        /// Actual cooldown = BASE_ATTACK_COOLDOWN / gameSpeed.
+        /// </summary>
+        public static readonly ReadOnlyDictionary<UnitType, float> BASE_ATTACK_COOLDOWN =
+            new ReadOnlyDictionary<UnitType, float>(new Dictionary<UnitType, float>()
+            {
+                { UnitType.MINE,        0f },
+                { UnitType.PAWN,        0f },
+                { UnitType.WARRIOR,     0.5f },
+                { UnitType.ARCHER,      0.5f },
+                { UnitType.BASE,        0f },
+                { UnitType.BARRACKS,    0f },
+                { UnitType.ARCHERY,     0f },
+                { UnitType.LANCER,      0.5f },
+                { UnitType.TOWER,       0f },
+                { UnitType.MONASTERY,   0f },
+                { UnitType.MONK,        0f },
+            });
+
+        /// <summary>
         /// Attack range for each unit type (in grid units)
         /// </summary>
         public static readonly ReadOnlyDictionary<UnitType, float> ATTACK_RANGE =

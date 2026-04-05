@@ -243,6 +243,13 @@
             Creation time multipliers (divide by game speed to get duration in seconds).
             </summary>
         </member>
+        <member name="F:AgentSDK.GameConstants.BASE_ATTACK_COOLDOWN">
+            <summary>
+            Base attack cooldown in seconds (at game speed 1). Time between discrete attacks.
+            Matches animation cycle length: 6 frames at 12 FPS = 0.5s.
+            Actual cooldown = BASE_ATTACK_COOLDOWN / gameSpeed.
+            </summary>
+        </member>
         <member name="F:AgentSDK.GameConstants.ATTACK_RANGE">
             <summary>
             Attack range for each unit type (in grid units)
@@ -757,6 +764,9 @@
             Abstraction over a game unit for the shared StepEngine.
             Both SimUnit (headless) and Unity's Unit (MonoBehaviour) implement this.
             </summary>
+        </member>
+        <member name="P:AgentSDK.ISimUnit.AttackCooldown">
+            <summary>Time remaining until next attack (seconds). 0 = ready to strike.</summary>
         </member>
         <member name="P:AgentSDK.ISimUnit.ChargeCooldown">
             <summary>Warrior: charge cooldown remaining (seconds). 0 = ready.</summary>

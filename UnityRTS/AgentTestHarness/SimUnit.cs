@@ -53,6 +53,9 @@ namespace AgentTestHarness
         // Combat
         public int AttackTargetNbr { get; set; }
 
+        // Combat timing
+        public float AttackCooldown { get; set; }
+
         // Abilities
         public float ChargeCooldown { get; set; }
         public int VolleyTargetNbr { get; set; }

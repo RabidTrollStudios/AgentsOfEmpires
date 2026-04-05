@@ -125,6 +125,10 @@ namespace GameManager.GameElements
         // Combat
         int ISimUnit.AttackTargetNbr { get => attackUnitNbr; set => attackUnitNbr = value; }
 
+        // Combat timing
+        private float _attackCooldown;
+        float ISimUnit.AttackCooldown { get => _attackCooldown; set => _attackCooldown = value; }
+
         // Abilities
         private float _chargeCooldown;
         private int _volleyTargetNbr = -1;

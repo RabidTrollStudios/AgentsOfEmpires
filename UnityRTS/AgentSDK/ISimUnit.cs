@@ -52,6 +52,10 @@ namespace AgentSDK
         // Combat
         int AttackTargetNbr { get; set; }
 
+        // Combat timing
+        /// <summary>Time remaining until next attack (seconds). 0 = ready to strike.</summary>
+        float AttackCooldown { get; set; }
+
         // Abilities
         /// <summary>Warrior: charge cooldown remaining (seconds). 0 = ready.</summary>
         float ChargeCooldown { get; set; }

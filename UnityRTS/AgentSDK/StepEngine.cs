@@ -91,6 +91,8 @@ namespace AgentSDK
             unit.HealTargetNbr = -1;
             unit.BuildTargetNbr = -1;
             unit.RepairBuildingNbr = -1;
+            // Reset attack cooldown so next attack starts fresh
+            unit.AttackCooldown = 0f;
             // Ability state: keep ChargeCooldown (ticks down over time),
             // keep VolleyTargetNbr/VolleyTimer (persists between attacks),
             // reset JoustDistance (lancer starts accumulating on next move).
@@ -407,13 +409,19 @@ namespace AgentSDK
                         attacker.SimPath = spreadPath;
                         attacker.PathIndex = 0;
                         attacker.PathProgress = 0f;
-                        // Don't return — still deal damage this tick
                     }
                 }
 
-                float dmg = TaskEngine.ComputeDamagePerTick(
-                    attacker.UnitType, target.UnitType,
-                    world.Constants.Damage[attacker.UnitType], world.StepDuration);
+                // Tick down attack cooldown
+                if (attacker.AttackCooldown > 0f)
+                {
+                    attacker.AttackCooldown -= world.StepDuration;
+                    return; // waiting for next attack — no damage this step
+                }
+
+                // Ready to strike — deal discrete damage
+                float baseDmg = world.Constants.Damage[attacker.UnitType];
+                float dmg = baseDmg * GameConstants.DamageMultiplier(attacker.UnitType, target.UnitType);
 
                 // Archer Volley: bonus damage on first hit against a new/cooled-down target
                 if (attacker.UnitType == UnitType.ARCHER)
@@ -440,12 +448,15 @@ namespace AgentSDK
                 }
                 else if (attacker.UnitType == UnitType.LANCER)
                 {
-                    // Reset distance on hit without joust (standing and fighting)
                     attacker.JoustDistance = 0f;
                 }
 
                 target.Health -= dmg;
                 callbacks.OnDamageDealt(attacker, target, dmg);
+
+                // Reset attack cooldown (scaled by game speed via StepDuration)
+                float baseCooldown = GameConstants.BASE_ATTACK_COOLDOWN[attacker.UnitType];
+                attacker.AttackCooldown = baseCooldown > 0 ? baseCooldown : world.StepDuration;
 
                 // Warrior resets charge cooldown on hit (engaged in melee)
                 if (attacker.UnitType == UnitType.WARRIOR)
