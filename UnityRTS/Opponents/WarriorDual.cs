@@ -4,10 +4,9 @@ using AgentSDK;
 namespace PlanningAgent
 {
     /// <summary>
-    /// [HARD] Warrior-primary dual with archer support: 6 pawns, 2 Barracks + 1 Archery.
-    /// Trains warriors from both barracks and archers from the archery.
-    /// Archers cover the warrior weakness to lancers.
-    /// Attacks with all combat units when total army reaches 6+.
+    /// [HARD] Triple barracks warrior flood: 6 pawns, 3 Barracks.
+    /// Pure warrior production from 3 buildings for maximum throughput.
+    /// Attacks with warriors when army reaches 6+.
     /// </summary>
     public class PlanningAgent : PlanningAgentBase
     {
@@ -32,11 +31,9 @@ namespace PlanningAgent
             TrainPawns(state, actions, MAX_PAWNS);
             GatherWithIdlePawns(state, actions);
 
-            // Build 2 barracks then 1 archery
-            if (myBarracks.Count < 2 && HasBuiltUnit(myBases, state))
+            // Build 3 barracks for triple warrior production
+            if (myBarracks.Count < 3 && HasBuiltUnit(myBases, state))
                 BuildStructure(UnitType.BARRACKS, state, actions);
-            else if (myArchery.Count < 1 && HasBuiltUnit(myBarracks, state))
-                BuildStructure(UnitType.ARCHERY, state, actions);
 
             // Train warriors from all barracks
             foreach (int barracksNbr in myBarracks)
@@ -50,25 +47,9 @@ namespace PlanningAgent
                 }
             }
 
-            // Train archers from archery
-            foreach (int archeryNbr in myArchery)
-            {
-                var info = state.GetUnit(archeryNbr);
-                if (info.HasValue && info.Value.IsBuilt
-                    && info.Value.CurrentAction == UnitAction.IDLE
-                    && state.MyGold >= GameConstants.COST[UnitType.ARCHER])
-                {
-                    actions.Train(archeryNbr, UnitType.ARCHER);
-                }
-            }
-
-            // Attack with full army
-            int armySize = myWarriors.Count + myArchers.Count;
-            if (armySize >= ATTACK_THRESHOLD)
-            {
+            // Attack with warriors
+            if (myWarriors.Count >= ATTACK_THRESHOLD)
                 AttackWithUnits(myWarriors, state, actions);
-                AttackWithUnits(myArchers, state, actions);
-            }
         }
 
         private void TrainPawns(IGameState state, IAgentActions actions, int max)

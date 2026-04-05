@@ -4,24 +4,27 @@ using AgentSDK;
 namespace PlanningAgent
 {
     /// <summary>
-    /// [HARD] Archer-primary dual with lancer support: 6 pawns, 2 Archery + 1 Tower.
-    /// Trains archers from both archeries and lancers from the tower.
-    /// Archers use volley micro — each archer cycles to a different enemy target
-    /// every tick to maximize volley first-hit bonus procs. Lancers cover the
-    /// archer weakness to warriors.
-    /// Attacks with all combat units when total army reaches 6+.
+    /// [HARD] Triple archery archer flood: 6 pawns, 3 Archery.
+    /// Pure archer production from 3 buildings with volley micro
+    /// (target cycling for first-hit bonus) and kiting (attack 2 ticks,
+    /// retreat 1 tick to maintain distance from melee).
+    /// Attacks with archers when army reaches 6+.
     /// </summary>
     public class PlanningAgent : PlanningAgentBase
     {
         private const int MAX_PAWNS = 6;
         private const int ATTACK_THRESHOLD = 6;
+        private const int ATTACK_TICKS = 2;  // attack for 2 ticks
+        private const int KITE_TICKS = 1;    // kite for 1 tick
+        private const int CYCLE_LENGTH = ATTACK_TICKS + KITE_TICKS; // 3-tick cycle
 
-        // Track which target each archer last attacked so they can rotate
         private Dictionary<int, int> _lastArcherTarget = new Dictionary<int, int>();
+        private Dictionary<int, int> _archerCycleTick = new Dictionary<int, int>();
 
         public override void InitializeMatch()
         {
             _lastArcherTarget = new Dictionary<int, int>();
+            _archerCycleTick = new Dictionary<int, int>();
         }
 
         public override void Update(IGameState state, IAgentActions actions)
@@ -40,11 +43,9 @@ namespace PlanningAgent
             TrainPawns(state, actions, MAX_PAWNS);
             GatherWithIdlePawns(state, actions);
 
-            // Build 2 archeries then 1 tower
-            if (myArchery.Count < 2 && HasBuiltUnit(myBases, state))
+            // Build 3 archeries for triple archer production
+            if (myArchery.Count < 3 && HasBuiltUnit(myBases, state))
                 BuildStructure(UnitType.ARCHERY, state, actions);
-            else if (myTowers.Count < 1 && HasBuiltUnit(myArchery, state))
-                BuildStructure(UnitType.TOWER, state, actions);
 
             // Train archers from all archeries
             foreach (int archeryNbr in myArchery)
@@ -58,30 +59,12 @@ namespace PlanningAgent
                 }
             }
 
-            // Train lancers from tower
-            foreach (int towerNbr in myTowers)
-            {
-                var info = state.GetUnit(towerNbr);
-                if (info.HasValue && info.Value.IsBuilt
-                    && info.Value.CurrentAction == UnitAction.IDLE
-                    && state.MyGold >= GameConstants.COST[UnitType.LANCER])
-                {
-                    actions.Train(towerNbr, UnitType.LANCER);
-                }
-            }
-
-            // Attack with full army
-            int armySize = myArchers.Count + myLancers.Count;
-            if (armySize < ATTACK_THRESHOLD) return;
-
-            // Lancers attack normally
-            AttackWithUnits(myLancers, state, actions);
-
-            // Archers use volley micro — cycle targets for maximum first-hit bonus
-            VolleyMicro(state, actions);
+            // Attack with archers using volley + kite micro
+            if (myArchers.Count < ATTACK_THRESHOLD) return;
+            VolleyKiteMicro(state, actions);
         }
 
-        private void VolleyMicro(IGameState state, IAgentActions actions)
+        private void VolleyKiteMicro(IGameState state, IAgentActions actions)
         {
             // Build list of living enemies
             var enemies = new List<int>();
@@ -100,30 +83,68 @@ namespace PlanningAgent
                 var info = state.GetUnit(archerNbr);
                 if (!info.HasValue) continue;
 
-                // Find a target this archer hasn't hit recently
-                int lastTarget = _lastArcherTarget.ContainsKey(archerNbr)
-                    ? _lastArcherTarget[archerNbr] : -1;
+                if (!_archerCycleTick.ContainsKey(archerNbr))
+                    _archerCycleTick[archerNbr] = 0;
 
-                // Pick a different target than last time (cycle for volley bonus)
-                int chosenTarget = -1;
-                foreach (int enemyNbr in enemies)
+                int cycleTick = _archerCycleTick[archerNbr] % CYCLE_LENGTH;
+                _archerCycleTick[archerNbr]++;
+
+                if (cycleTick < ATTACK_TICKS)
                 {
-                    if (enemyNbr != lastTarget)
+                    // Attack phase — volley micro (cycle targets)
+                    int lastTarget = _lastArcherTarget.ContainsKey(archerNbr)
+                        ? _lastArcherTarget[archerNbr] : -1;
+
+                    int chosenTarget = -1;
+                    foreach (int enemyNbr in enemies)
                     {
-                        chosenTarget = enemyNbr;
-                        break;
+                        if (enemyNbr != lastTarget)
+                        {
+                            chosenTarget = enemyNbr;
+                            break;
+                        }
                     }
-                }
-                // If only one enemy left, just keep hitting it
-                if (chosenTarget < 0) chosenTarget = enemies[0];
+                    if (chosenTarget < 0) chosenTarget = enemies[0];
 
-                if (info.Value.CurrentAction == UnitAction.IDLE
-                    || info.Value.CurrentAction == UnitAction.ATTACK)
-                {
                     actions.Attack(archerNbr, chosenTarget);
                     _lastArcherTarget[archerNbr] = chosenTarget;
                 }
+                else
+                {
+                    // Kite phase — move away from nearest enemy
+                    int? nearestEnemy = FindNearestEnemy(info.Value.CenterPosition, state);
+                    if (nearestEnemy.HasValue && mainBaseNbr >= 0)
+                    {
+                        var baseInfo = state.GetUnit(mainBaseNbr);
+                        if (baseInfo.HasValue)
+                        {
+                            actions.Move(archerNbr, baseInfo.Value.CenterPosition);
+                        }
+                    }
+                }
             }
+        }
+
+        private int? FindNearestEnemy(Position from, IGameState state)
+        {
+            float closestDist = float.MaxValue;
+            int? closest = null;
+            foreach (UnitType ut in new[] { UnitType.WARRIOR, UnitType.LANCER, UnitType.ARCHER,
+                                            UnitType.MONK, UnitType.PAWN })
+            {
+                foreach (int enemyNbr in state.GetEnemyUnits(ut))
+                {
+                    var info = state.GetUnit(enemyNbr);
+                    if (!info.HasValue) continue;
+                    float dist = Position.Distance(from, info.Value.CenterPosition);
+                    if (dist < closestDist)
+                    {
+                        closestDist = dist;
+                        closest = enemyNbr;
+                    }
+                }
+            }
+            return closest;
         }
 
         private void TrainPawns(IGameState state, IAgentActions actions, int max)
@@ -172,19 +193,6 @@ namespace PlanningAgent
                         }
                     }
                 }
-            }
-        }
-
-        private void AttackWithUnits(List<int> units, IGameState state, IAgentActions actions)
-        {
-            int? target = FindAnyEnemy(state);
-            if (!target.HasValue) return;
-
-            foreach (int unitNbr in units)
-            {
-                var info = state.GetUnit(unitNbr);
-                if (info.HasValue && info.Value.CurrentAction == UnitAction.IDLE)
-                    actions.Attack(unitNbr, target.Value);
             }
         }
 

@@ -11,20 +11,20 @@ namespace Opponent.Tests
     {
         /// <summary>
         /// Standard game setup for testing an opponent.
-        /// Opponent is agent 1 with a base, pawn, and mine.
+        /// 1 pawn each, no base, 1000g, 4 mines at 3000g.
         /// </summary>
         protected SimGame BuildStandardGame(PlanningAgentBase opponent)
         {
             return new SimGameBuilder()
                 .WithMapSize(30, 30)
-                .WithGold(0, 5000)
-                .WithGold(1, 5000)
-                .WithUnit(0, UnitType.BASE, new Position(5, 5), isBuilt: true)
+                .WithGold(0, 1000)
+                .WithGold(1, 1000)
                 .WithUnit(0, UnitType.PAWN, new Position(8, 5))
-                .WithUnit(1, UnitType.BASE, new Position(25, 25), isBuilt: true)
                 .WithUnit(1, UnitType.PAWN, new Position(22, 25))
-                .WithMine(new Position(15, 10), health: 10000)
-                .WithMine(new Position(15, 20), health: 10000)
+                .WithMine(new Position(10, 3), health: 3000)
+                .WithMine(new Position(20, 27), health: 3000)
+                .WithMine(new Position(8, 20), health: 3000)
+                .WithMine(new Position(22, 10), health: 3000)
                 .WithAgent(0, new DoNothingAgent())
                 .WithAgent(1, opponent)
                 .Build();
@@ -32,19 +32,20 @@ namespace Opponent.Tests
 
         /// <summary>
         /// Standard PvP game setup for testing two opponents against each other.
+        /// 1 pawn each, no base, 1000g, 4 mines at 3000g.
         /// </summary>
         protected SimGame BuildPvPGame(PlanningAgentBase agent0, PlanningAgentBase agent1)
         {
             return new SimGameBuilder()
                 .WithMapSize(30, 30)
-                .WithGold(0, 5000)
-                .WithGold(1, 5000)
-                .WithUnit(0, UnitType.BASE, new Position(5, 5), isBuilt: true)
+                .WithGold(0, 1000)
+                .WithGold(1, 1000)
                 .WithUnit(0, UnitType.PAWN, new Position(8, 5))
-                .WithUnit(1, UnitType.BASE, new Position(25, 25), isBuilt: true)
                 .WithUnit(1, UnitType.PAWN, new Position(22, 25))
-                .WithMine(new Position(15, 10), health: 10000)
-                .WithMine(new Position(15, 20), health: 10000)
+                .WithMine(new Position(10, 3), health: 3000)
+                .WithMine(new Position(20, 27), health: 3000)
+                .WithMine(new Position(8, 20), health: 3000)
+                .WithMine(new Position(22, 10), health: 3000)
                 .WithAgent(0, agent0)
                 .WithAgent(1, agent1)
                 .Build();

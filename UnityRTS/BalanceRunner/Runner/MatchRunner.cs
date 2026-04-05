@@ -29,18 +29,15 @@ namespace BalanceRunner.Runner
             string agent1Name, PlanningAgentBase agent1,
             int seed, int tickLimit = 5000, MapTemplate mapTemplate = MapTemplate.OpenField)
         {
-            // Standard PvP layout with constrained economy.
+            // Standard PvP layout: 1 pawn each, no base (must build one).
             // 1000g starting gold, 4 mines (3000g each) spread symmetrically.
-            // Mines near each base + contested mines in the middle.
             var game = new SimGameBuilder()
                 .WithMapSize(30, 30)
                 .WithGold(0, 1000)
                 .WithGold(1, 1000)
-                .WithUnit(0, UnitType.BASE, new Position(5, 5), isBuilt: true)
                 .WithUnit(0, UnitType.PAWN, new Position(8, 5))
-                .WithUnit(1, UnitType.BASE, new Position(25, 25), isBuilt: true)
                 .WithUnit(1, UnitType.PAWN, new Position(22, 25))
-                // Near-base mines (safe income)
+                // Near-spawn mines (safe income)
                 .WithMine(new Position(10, 3), health: 3000)
                 .WithMine(new Position(20, 27), health: 3000)
                 // Contested center mines (risky, requires map control)
@@ -84,28 +81,34 @@ namespace BalanceRunner.Runner
                     break;
                 }
 
-                // Check for base destruction (one side lost their base)
+                // Check for base destruction (skip first 500 ticks to let both players build)
+                if (tick >= 500)
+                {
                 bool agent0HasBase = game.GetUnitsByType(0, UnitType.BASE).Count > 0;
                 bool agent1HasBase = game.GetUnitsByType(1, UnitType.BASE).Count > 0;
 
-                if (!agent0HasBase && !agent1HasBase)
+                if (agent0HasBase || agent1HasBase)
                 {
-                    winner = -1;
-                    endReason = MatchEndReason.Draw;
-                    break;
+                    if (!agent0HasBase && !agent1HasBase)
+                    {
+                        winner = -1;
+                        endReason = MatchEndReason.Draw;
+                        break;
+                    }
+                    if (!agent0HasBase)
+                    {
+                        winner = 1;
+                        endReason = MatchEndReason.BaseDestroyed;
+                        break;
+                    }
+                    if (!agent1HasBase)
+                    {
+                        winner = 0;
+                        endReason = MatchEndReason.BaseDestroyed;
+                        break;
+                    }
                 }
-                if (!agent0HasBase)
-                {
-                    winner = 1;
-                    endReason = MatchEndReason.BaseDestroyed;
-                    break;
-                }
-                if (!agent1HasBase)
-                {
-                    winner = 0;
-                    endReason = MatchEndReason.BaseDestroyed;
-                    break;
-                }
+                } // tick >= 500 grace period
             }
 
             // Timeout: determine winner by score

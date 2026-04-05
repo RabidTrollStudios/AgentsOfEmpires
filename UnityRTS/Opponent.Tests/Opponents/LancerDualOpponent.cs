@@ -4,17 +4,25 @@ using AgentSDK;
 namespace Opponent.Tests
 {
     /// <summary>
-    /// [HARD] Lancer-primary dual with warrior support: 6 pawns, 2 Tower + 1 Barracks.
-    /// Trains lancers from both towers and warriors from the barracks.
-    /// Warriors cover the lancer weakness to archers.
-    /// Attacks with all combat units when total army reaches 6+.
+    /// [HARD] Triple tower lancer flood: 6 pawns, 3 Towers.
+    /// Pure lancer production from 3 buildings with hit-and-run joust
+    /// micro — lancers charge in for bonus damage, disengage after a
+    /// few hits, then charge again for another joust proc.
+    /// Attacks with lancers when army reaches 6+.
     /// </summary>
     public class LancerDualOpponent : PlanningAgentBase
     {
         private const int MAX_PAWNS = 6;
         private const int ATTACK_THRESHOLD = 6;
+        private const int DISENGAGE_TICKS = 3;
+        private const float RALLY_DISTANCE = 5.0f;
 
-        public override void InitializeMatch() { }
+        private Dictionary<int, int> _combatTicks = new Dictionary<int, int>();
+
+        public override void InitializeMatch()
+        {
+            _combatTicks = new Dictionary<int, int>();
+        }
 
         public override void Update(IGameState state, IAgentActions actions)
         {
@@ -32,11 +40,9 @@ namespace Opponent.Tests
             TrainPawns(state, actions, MAX_PAWNS);
             GatherWithIdlePawns(state, actions);
 
-            // Build 2 towers then 1 barracks
-            if (myTowers.Count < 2 && HasBuiltUnit(myBases, state))
+            // Build 3 towers for triple lancer production
+            if (myTowers.Count < 3 && HasBuiltUnit(myBases, state))
                 BuildStructure(UnitType.TOWER, state, actions);
-            else if (myBarracks.Count < 1 && HasBuiltUnit(myTowers, state))
-                BuildStructure(UnitType.BARRACKS, state, actions);
 
             // Train lancers from all towers
             foreach (int towerNbr in myTowers)
@@ -50,24 +56,55 @@ namespace Opponent.Tests
                 }
             }
 
-            // Train warriors from barracks
-            foreach (int barracksNbr in myBarracks)
-            {
-                var info = state.GetUnit(barracksNbr);
-                if (info.HasValue && info.Value.IsBuilt
-                    && info.Value.CurrentAction == UnitAction.IDLE
-                    && state.MyGold >= GameConstants.COST[UnitType.WARRIOR])
-                {
-                    actions.Train(barracksNbr, UnitType.WARRIOR);
-                }
-            }
+            if (myLancers.Count < ATTACK_THRESHOLD) return;
 
-            // Attack with full army
-            int armySize = myLancers.Count + myWarriors.Count;
-            if (armySize >= ATTACK_THRESHOLD)
+            // Find enemy target
+            int? enemyTarget = FindAnyEnemy(state);
+            if (!enemyTarget.HasValue) return;
+            var targetInfo = state.GetUnit(enemyTarget.Value);
+            if (!targetInfo.HasValue) return;
+
+            // Hit-and-run micro for each lancer
+            foreach (int lancerNbr in myLancers)
             {
-                AttackWithUnits(myLancers, state, actions);
-                AttackWithUnits(myWarriors, state, actions);
+                var info = state.GetUnit(lancerNbr);
+                if (!info.HasValue) continue;
+
+                if (!_combatTicks.ContainsKey(lancerNbr))
+                    _combatTicks[lancerNbr] = 0;
+
+                if (info.Value.CurrentAction == UnitAction.ATTACK)
+                {
+                    float dist = Position.Distance(info.Value.CenterPosition, targetInfo.Value.CenterPosition);
+                    if (dist < GameConstants.ATTACK_RANGE[UnitType.LANCER] + 1.0f)
+                    {
+                        _combatTicks[lancerNbr]++;
+
+                        if (_combatTicks[lancerNbr] >= DISENGAGE_TICKS && mainBaseNbr >= 0)
+                        {
+                            var baseInfo = state.GetUnit(mainBaseNbr);
+                            if (baseInfo.HasValue)
+                            {
+                                actions.Move(lancerNbr, baseInfo.Value.CenterPosition);
+                                _combatTicks[lancerNbr] = 0;
+                            }
+                        }
+                    }
+                }
+                else if (info.Value.CurrentAction == UnitAction.MOVE)
+                {
+                    float dist = Position.Distance(info.Value.CenterPosition, targetInfo.Value.CenterPosition);
+                    if (dist >= RALLY_DISTANCE)
+                    {
+                        actions.Attack(lancerNbr, enemyTarget.Value);
+                        _combatTicks[lancerNbr] = 0;
+                    }
+                }
+                else if (info.Value.CurrentAction == UnitAction.IDLE)
+                {
+                    actions.Attack(lancerNbr, enemyTarget.Value);
+                    _combatTicks[lancerNbr] = 0;
+                }
             }
         }
 
@@ -117,19 +154,6 @@ namespace Opponent.Tests
                         }
                     }
                 }
-            }
-        }
-
-        private void AttackWithUnits(List<int> units, IGameState state, IAgentActions actions)
-        {
-            int? target = FindAnyEnemy(state);
-            if (!target.HasValue) return;
-
-            foreach (int unitNbr in units)
-            {
-                var info = state.GetUnit(unitNbr);
-                if (info.HasValue && info.Value.CurrentAction == UnitAction.IDLE)
-                    actions.Attack(unitNbr, target.Value);
             }
         }
 
