@@ -115,6 +115,10 @@ tr:hover { background: rgba(255,255,255,0.03); }
 <h2>Strategy Comparison (by Tier)</h2>
 <div id="strategy-grid"></div>
 
+<!-- Strategy Reference -->
+<h2>Strategy Reference</h2>
+<div id="strategy-ref"></div>
+
 <!-- Tier Analysis -->
 <h2>Tier Analysis</h2>
 <div id="tier-sections"></div>
@@ -178,6 +182,32 @@ function getTier(name) {
   if (SANITY.includes(name)) return 'Sanity';
   return null;
 }
+
+const AGENT_STRATEGIES = {
+  // Sanity
+  PawnIdle:    { pawns: '0', buildings: 'None', attack: 'Never', tactics: [], notes: 'Does nothing' },
+  PawnGather:  { pawns: '≤10', buildings: 'None', attack: 'Never', tactics: ['Closest mine'], notes: 'Economy only, no military' },
+  // Easy (Turtle)
+  WarriorTurtle: { pawns: '3', buildings: '1 Barracks', attack: '6 warriors', tactics: ['Closest mine', 'Closest build'], notes: 'Small economy, delayed attack' },
+  ArcherTurtle:  { pawns: '3', buildings: '1 Archery', attack: '6 archers', tactics: ['Closest mine', 'Closest build'], notes: 'Small economy, delayed attack' },
+  LancerTurtle:  { pawns: '3', buildings: '1 Tower', attack: '6 lancers', tactics: ['Closest mine', 'Closest build'], notes: 'Small economy, delayed attack' },
+  MixedTurtle:   { pawns: '3', buildings: '1 (reactive counter)', attack: '6 units', tactics: ['Closest mine', 'Closest build', 'Scout → counter-pick'], notes: 'Waits for enemy building, picks R-P-S counter' },
+  // Mid (Rush)
+  WarriorRush: { pawns: '6', buildings: '2 Barracks', attack: '3 warriors', tactics: ['Closest mine', 'Closest build'], notes: 'Solid economy, early aggression' },
+  ArcherRush:  { pawns: '6', buildings: '2 Archery', attack: '3 archers', tactics: ['Closest mine', 'Closest build'], notes: 'Solid economy, early aggression' },
+  LancerRush:  { pawns: '6', buildings: '2 Tower', attack: '3 lancers', tactics: ['Closest mine', 'Closest build'], notes: 'Solid economy, early aggression' },
+  MixedRush:   { pawns: '6', buildings: '2 (reactive counter)', attack: '3 units', tactics: ['Closest mine', 'Closest build', 'Scout → counter-pick'], notes: 'Dual production of counter unit type' },
+  // Hard (Dual/Triple)
+  WarriorDual: { pawns: '6', buildings: '3 Barracks', attack: '6 warriors', tactics: ['Closest mine', 'Closest build', 'Squad-of-3 targeting'], notes: 'Triple production, squads retarget on kill' },
+  ArcherDual:  { pawns: '6', buildings: '3 Archery', attack: '6 archers', tactics: ['Closest mine', 'Closest build', 'Volley target cycling', 'Kite 2/1'], notes: 'Attack 2 ticks (cycle targets), retreat 1 tick' },
+  LancerDual:  { pawns: '6', buildings: '3 Tower', attack: '6 lancers', tactics: ['Closest mine', 'Closest build', 'Hit-and-run joust'], notes: 'Fight 3 ticks, disengage to base, re-engage at 5+ dist' },
+  MixedDual:   { pawns: '6', buildings: '1 each (reactive)', attack: '6 total', tactics: ['Closest mine', 'Closest build', 'Scout → counter-pick', 'Squad-of-3', 'Volley+kite', 'Hit-and-run joust'], notes: 'All 3 buildings, counter-pick priority, all micro' },
+  // Impossible (Adaptive + Monks)
+  WarriorMonkSpend:  { pawns: '5-8 adaptive', buildings: '1-3 Barracks + 1 Monastery', attack: '4 warriors', tactics: ['Closest mine', 'Closest build', 'Adaptive economy', 'Adaptive production', 'Squad-of-3', 'Monk heal'], notes: 'Scales pawns when gold-starved, buildings when gold-rich, monks when losing' },
+  ArcherMonkSpend:   { pawns: '5-8 adaptive', buildings: '1-3 Archery + 1 Monastery', attack: '4 archers', tactics: ['Closest mine', 'Closest build', 'Adaptive economy', 'Adaptive production', 'Volley+kite', 'Monk heal'], notes: 'Scales pawns when gold-starved, buildings when gold-rich, monks when losing' },
+  LancerMonkSpend:   { pawns: '5-8 adaptive', buildings: '1-3 Tower + 1 Monastery', attack: '4 lancers', tactics: ['Closest mine', 'Closest build', 'Adaptive economy', 'Adaptive production', 'Hit-and-run joust', 'Monk heal'], notes: 'Scales pawns when gold-starved, buildings when gold-rich, monks when losing' },
+  AllSpend:          { pawns: '5-8 adaptive', buildings: '1-2 each + 1 Monastery', attack: '4 total', tactics: ['Closest mine', 'Closest build', 'Adaptive economy', 'Adaptive production', 'Scout → counter-pick', 'Squad-of-3', 'Volley+kite', 'Hit-and-run joust', 'Monk heal'], notes: 'All buildings, all micro, all adaptive — the final boss' },
+};
 
 function getUnitColor(name) {
   if (name.startsWith('Warrior')) return '#b91c1c';
@@ -305,6 +335,7 @@ function render(data) {
   document.getElementById('strategy-grid').innerHTML = sgHtml;
 
   // Tier analysis sections
+  renderStrategyRef();
   renderTiers(data);
 
   // Agent rankings (exclude sanity check agents)
@@ -419,6 +450,49 @@ function render(data) {
 }
 
 // ==================== TIER ANALYSIS ====================
+
+function renderStrategyRef() {
+  const container = document.getElementById('strategy-ref');
+  let html = '';
+
+  Object.entries(TIERS).forEach(([tierKey, tier]) => {
+    html += `<div style="margin-bottom:24px">`;
+    html += `<h3 style="color:${tier.color};border-bottom:2px solid ${tier.color};padding-bottom:6px">${tier.label}</h3>`;
+    html += `<table style="font-size:0.85em"><thead><tr>
+      <th>Agent</th><th>Pawns</th><th>Buildings</th><th>Attack At</th><th>Tactics</th><th>Notes</th>
+    </tr></thead><tbody>`;
+
+    tier.agents.forEach(name => {
+      const s = AGENT_STRATEGIES[name];
+      if (!s) return;
+      const tag = getUnitTag(name);
+      const tagHtml = tag ? `<span class="tag tag-${tag}">${tag}</span>` : '';
+      const tacticsHtml = s.tactics.map(t => {
+        let cls = '';
+        if (t.includes('Squad')) cls = 'tag-warrior';
+        else if (t.includes('Volley') || t.includes('Kite')) cls = 'tag-archer';
+        else if (t.includes('oust') || t.includes('Hit-and-run')) cls = 'tag-lancer';
+        else if (t.includes('Scout') || t.includes('counter')) cls = 'tag-mixed';
+        else if (t.includes('Monk') || t.includes('heal')) cls = 'tag-monk';
+        else if (t.includes('Adaptive')) cls = 'tag-mixed';
+        return `<span class="tag ${cls}" style="margin:1px">${t}</span>`;
+      }).join(' ');
+
+      html += `<tr>
+        <td style="font-weight:600;white-space:nowrap">${name} ${tagHtml}</td>
+        <td style="text-align:center">${s.pawns}</td>
+        <td>${s.buildings}</td>
+        <td style="text-align:center;white-space:nowrap">${s.attack}</td>
+        <td>${tacticsHtml}</td>
+        <td style="color:var(--text-dim);font-size:0.9em">${s.notes}</td>
+      </tr>`;
+    });
+
+    html += `</tbody></table></div>`;
+  });
+
+  container.innerHTML = html;
+}
 
 function renderTiers(data) {
   const rates = data.AggregateWinRates || {};

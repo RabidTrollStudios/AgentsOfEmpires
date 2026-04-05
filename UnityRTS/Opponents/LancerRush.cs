@@ -4,28 +4,17 @@ using AgentSDK;
 namespace PlanningAgent
 {
     /// <summary>
-    /// [MID] Hit-and-run lancer rush: 2 pawns, 2 towers, lancers use joust
-    /// tactics — charge in for bonus damage, then disengage to reset joust
-    /// distance. Each lancer alternates between attacking and retreating.
-    /// Lancers track ticks spent in melee; after a few hits they pull back
-    /// to their rally point, then charge again for another joust bonus.
-    /// Strategy to beat: archers counter lancers (1.25x), or pin them down
-    /// so they can't disengage.
+    /// [MID] Lancer rush: 2 pawns, 2 towers, trains lancers and attacks
+    /// with 3+. Simple rush — no micro, just overwhelm with speed.
+    /// Strategy to beat: archers counter lancers (1.25x), or rush before
+    /// tower completes (400g is a big investment on 2 pawns).
     /// </summary>
     public class PlanningAgent : PlanningAgentBase
     {
-        private const int MAX_PAWNS = 2;
+        private const int MAX_PAWNS = 6;
         private const int ATTACK_THRESHOLD = 3;
-        private const int DISENGAGE_TICKS = 3; // pull back after this many ticks in combat
-        private const float RALLY_DISTANCE = 5.0f; // how far to retreat before re-engaging
 
-        // Track per-lancer combat ticks
-        private Dictionary<int, int> _combatTicks = new Dictionary<int, int>();
-
-        public override void InitializeMatch()
-        {
-            _combatTicks = new Dictionary<int, int>();
-        }
+        public override void InitializeMatch() { }
 
         public override void Update(IGameState state, IAgentActions actions)
         {
@@ -59,62 +48,9 @@ namespace PlanningAgent
                 }
             }
 
-            if (myLancers.Count < ATTACK_THRESHOLD) return;
-
-            // Find enemy target
-            int? enemyTarget = FindAnyEnemy(state);
-            if (!enemyTarget.HasValue) return;
-            var targetInfo = state.GetUnit(enemyTarget.Value);
-            if (!targetInfo.HasValue) return;
-
-            // Hit-and-run micro for each lancer
-            foreach (int lancerNbr in myLancers)
-            {
-                var info = state.GetUnit(lancerNbr);
-                if (!info.HasValue) continue;
-
-                if (!_combatTicks.ContainsKey(lancerNbr))
-                    _combatTicks[lancerNbr] = 0;
-
-                if (info.Value.CurrentAction == UnitAction.ATTACK)
-                {
-                    // In combat — count ticks
-                    float dist = Position.Distance(info.Value.CenterPosition, targetInfo.Value.CenterPosition);
-                    if (dist < GameConstants.ATTACK_RANGE[UnitType.LANCER] + 1.0f)
-                    {
-                        _combatTicks[lancerNbr]++;
-
-                        // After enough hits, disengage — move toward our base to reset joust
-                        if (_combatTicks[lancerNbr] >= DISENGAGE_TICKS && mainBaseNbr >= 0)
-                        {
-                            var baseInfo = state.GetUnit(mainBaseNbr);
-                            if (baseInfo.HasValue)
-                            {
-                                // Move toward base (rally point)
-                                actions.Move(lancerNbr, baseInfo.Value.CenterPosition);
-                                _combatTicks[lancerNbr] = 0;
-                            }
-                        }
-                    }
-                }
-                else if (info.Value.CurrentAction == UnitAction.MOVE)
-                {
-                    // Disengaging — check if far enough from enemy to re-engage
-                    float dist = Position.Distance(info.Value.CenterPosition, targetInfo.Value.CenterPosition);
-                    if (dist >= RALLY_DISTANCE)
-                    {
-                        // Far enough — charge back in for joust bonus
-                        actions.Attack(lancerNbr, enemyTarget.Value);
-                        _combatTicks[lancerNbr] = 0;
-                    }
-                }
-                else if (info.Value.CurrentAction == UnitAction.IDLE)
-                {
-                    // Idle — send to attack
-                    actions.Attack(lancerNbr, enemyTarget.Value);
-                    _combatTicks[lancerNbr] = 0;
-                }
-            }
+            // Attack with 3+ lancers
+            if (myLancers.Count >= ATTACK_THRESHOLD)
+                AttackWithUnits(myLancers, state, actions);
         }
 
         private void TrainPawns(IGameState state, IAgentActions actions, int max)
@@ -154,7 +90,6 @@ namespace PlanningAgent
                 if (info.HasValue && info.Value.CurrentAction == UnitAction.IDLE
                     && state.MyGold >= GameConstants.COST[type])
                 {
-                    // Pick the closest buildable position to this pawn
                     Position pawnPos = info.Value.GridPosition;
                     Position? bestPos = null;
                     float bestDist = float.MaxValue;
@@ -176,6 +111,19 @@ namespace PlanningAgent
                         return;
                     }
                 }
+            }
+        }
+
+        private void AttackWithUnits(List<int> units, IGameState state, IAgentActions actions)
+        {
+            int? target = FindAnyEnemy(state);
+            if (!target.HasValue) return;
+
+            foreach (int unitNbr in units)
+            {
+                var info = state.GetUnit(unitNbr);
+                if (info.HasValue && info.Value.CurrentAction == UnitAction.IDLE)
+                    actions.Attack(unitNbr, target.Value);
             }
         }
 

@@ -12,7 +12,7 @@ namespace Opponent.Tests
     /// </summary>
     public class ArcherRushOpponent : PlanningAgentBase
     {
-        private const int MAX_PAWNS = 2;
+        private const int MAX_PAWNS = 6;
         private const int ATTACK_THRESHOLD = 3;
 
         public override void InitializeMatch() { }

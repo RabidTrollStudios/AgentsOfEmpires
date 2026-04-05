@@ -13,7 +13,7 @@ namespace PlanningAgent
     /// </summary>
     public class PlanningAgent : PlanningAgentBase
     {
-        private const int MAX_PAWNS = 2;
+        private const int MAX_PAWNS = 6;
         private const int ATTACK_THRESHOLD = 3;
 
         private UnitType _chosenUnit = UnitType.MINE;

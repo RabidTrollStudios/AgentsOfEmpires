@@ -11,7 +11,7 @@ namespace PlanningAgent
     /// </summary>
     public class PlanningAgent : PlanningAgentBase
     {
-        private const int MAX_PAWNS = 6;
+        private const int MAX_PAWNS = 3;
         private const int ATTACK_THRESHOLD = 6;
 
         public override void InitializeMatch() { }
