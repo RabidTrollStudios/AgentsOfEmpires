@@ -4,17 +4,14 @@ using AgentSDK;
 namespace Opponent.Tests
 {
     /// <summary>
-    /// [HARD] Tower-heavy defense: 6 pawns, builds 2 Towers near base,
-    /// masses Lancers behind the tower line. Only attacks with 6+ lancers.
-    /// Tests whether heavy Tower investment (2 * 300g = 600g) provides
-    /// defensive value, and whether Lancers are viable as a solo army type.
-    /// Strategy to beat: archers outrange everything, or out-economy the
-    /// slow defensive start.
+    /// [HARD] Lancer-primary dual with warrior support: 6 pawns, 2 Tower + 1 Barracks.
+    /// Trains lancers from both towers and warriors from the barracks.
+    /// Warriors cover the lancer weakness to archers.
+    /// Attacks with all combat units when total army reaches 6+.
     /// </summary>
     public class LancerDualOpponent : PlanningAgentBase
     {
         private const int MAX_PAWNS = 6;
-        private const int MAX_TOWERS = 2;
         private const int ATTACK_THRESHOLD = 6;
 
         public override void InitializeMatch() { }
@@ -28,9 +25,11 @@ namespace Opponent.Tests
             TrainPawns(state, actions, MAX_PAWNS);
             GatherWithIdlePawns(state, actions);
 
-            // Build towers for defense and lancer production
-            if (myTowers.Count < MAX_TOWERS && HasBuiltUnit(myBases, state))
+            // Build 2 towers then 1 barracks
+            if (myTowers.Count < 2 && HasBuiltUnit(myBases, state))
                 BuildStructure(UnitType.TOWER, state, actions);
+            else if (myBarracks.Count < 1 && HasBuiltUnit(myTowers, state))
+                BuildStructure(UnitType.BARRACKS, state, actions);
 
             // Train lancers from all towers
             foreach (int towerNbr in myTowers)
@@ -44,9 +43,25 @@ namespace Opponent.Tests
                 }
             }
 
-            // Defensive: attack enemies near our base, or push with enough lancers
-            if (myLancers.Count >= ATTACK_THRESHOLD)
+            // Train warriors from barracks
+            foreach (int barracksNbr in myBarracks)
+            {
+                var info = state.GetUnit(barracksNbr);
+                if (info.HasValue && info.Value.IsBuilt
+                    && info.Value.CurrentAction == UnitAction.IDLE
+                    && state.MyGold >= GameConstants.COST[UnitType.WARRIOR])
+                {
+                    actions.Train(barracksNbr, UnitType.WARRIOR);
+                }
+            }
+
+            // Attack with full army
+            int armySize = myLancers.Count + myWarriors.Count;
+            if (armySize >= ATTACK_THRESHOLD)
+            {
                 AttackWithUnits(myLancers, state, actions);
+                AttackWithUnits(myWarriors, state, actions);
+            }
         }
 
         private void TrainPawns(IGameState state, IAgentActions actions, int max)

@@ -4,19 +4,14 @@ using AgentSDK;
 namespace Opponent.Tests
 {
     /// <summary>
-    /// [HARD] Dual archery archer spam: 6 pawns, builds 2 Archeries,
-    /// masses Archers from both buildings simultaneously.
-    /// Attacks with 6+ archers. Mirrors TowerDefense's dual-production
-    /// strategy but with Archery (350g each) → Archers (80g each).
-    /// Tests whether massed archers with range advantage (9.0) can
-    /// counter lancer-based strategies that currently dominate.
-    /// Strategy to beat: warriors counter archers (1.25x), or close
-    /// the distance before archers can focus fire.
+    /// [HARD] Archer-primary dual with lancer support: 6 pawns, 2 Archery + 1 Tower.
+    /// Trains archers from both archeries and lancers from the tower.
+    /// Lancers cover the archer weakness to warriors.
+    /// Attacks with all combat units when total army reaches 6+.
     /// </summary>
     public class ArcherDualOpponent : PlanningAgentBase
     {
         private const int MAX_PAWNS = 6;
-        private const int MAX_ARCHERY = 2;
         private const int ATTACK_THRESHOLD = 6;
 
         public override void InitializeMatch() { }
@@ -30,9 +25,11 @@ namespace Opponent.Tests
             TrainPawns(state, actions, MAX_PAWNS);
             GatherWithIdlePawns(state, actions);
 
-            // Build 2 archeries for dual archer production
-            if (myArchery.Count < MAX_ARCHERY && HasBuiltUnit(myBases, state))
+            // Build 2 archeries then 1 tower
+            if (myArchery.Count < 2 && HasBuiltUnit(myBases, state))
                 BuildStructure(UnitType.ARCHERY, state, actions);
+            else if (myTowers.Count < 1 && HasBuiltUnit(myArchery, state))
+                BuildStructure(UnitType.TOWER, state, actions);
 
             // Train archers from all archeries
             foreach (int archeryNbr in myArchery)
@@ -46,9 +43,25 @@ namespace Opponent.Tests
                 }
             }
 
-            // Push with enough archers
-            if (myArchers.Count >= ATTACK_THRESHOLD)
+            // Train lancers from tower
+            foreach (int towerNbr in myTowers)
+            {
+                var info = state.GetUnit(towerNbr);
+                if (info.HasValue && info.Value.IsBuilt
+                    && info.Value.CurrentAction == UnitAction.IDLE
+                    && state.MyGold >= GameConstants.COST[UnitType.LANCER])
+                {
+                    actions.Train(towerNbr, UnitType.LANCER);
+                }
+            }
+
+            // Attack with full army
+            int armySize = myArchers.Count + myLancers.Count;
+            if (armySize >= ATTACK_THRESHOLD)
+            {
                 AttackWithUnits(myArchers, state, actions);
+                AttackWithUnits(myLancers, state, actions);
+            }
         }
 
         private void TrainPawns(IGameState state, IAgentActions actions, int max)
