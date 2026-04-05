@@ -27,7 +27,7 @@ namespace BalanceRunner.Runner
         public static MatchResult Run(
             string agent0Name, PlanningAgentBase agent0,
             string agent1Name, PlanningAgentBase agent1,
-            int seed, int tickLimit = 5000, MapTemplate mapTemplate = MapTemplate.OpenField)
+            int seed, int tickLimit = 3000, MapTemplate mapTemplate = MapTemplate.OpenField)
         {
             // Procedural map matching Unity settings: 75x40, OpenField, 20% trees.
             // 1000g starting gold. Map generator places pawns and mines automatically.

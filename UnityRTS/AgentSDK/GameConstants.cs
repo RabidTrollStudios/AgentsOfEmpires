@@ -313,8 +313,8 @@ namespace AgentSDK
                 { UnitType.MONASTERY, 0f }, { UnitType.MONK, 100f },
             });
 
-        /// <summary>Mana cost per heal action (10% of max mana)</summary>
-        public static readonly float MANA_COST = 15f;
+        /// <summary>Mana cost per heal action (25% of max mana)</summary>
+        public static readonly float MANA_COST = 25f;
 
         /// <summary>Base mana regeneration rate (scaled by game speed)</summary>
         /// <summary>Base mana regeneration rate (scaled by game speed). Full pool (100) in ~3s at speed 20.</summary>
