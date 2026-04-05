@@ -18,7 +18,7 @@ namespace Opponent.Tests
             return new SimGameBuilder()
                 .WithGold(0, 1000)
                 .WithGold(1, 1000)
-                .WithGeneratedMap(new AgentSDK.MapGeneratorConfig
+                .WithGeneratedMap(new AgentTestHarness.MapGeneratorConfig
                 {
                     Width = 75, Height = 40, Seed = 42,
                     Template = AgentSDK.MapTemplate.OpenField,
@@ -39,7 +39,7 @@ namespace Opponent.Tests
             return new SimGameBuilder()
                 .WithGold(0, 1000)
                 .WithGold(1, 1000)
-                .WithGeneratedMap(new AgentSDK.MapGeneratorConfig
+                .WithGeneratedMap(new AgentTestHarness.MapGeneratorConfig
                 {
                     Width = 75, Height = 40, Seed = 42,
                     Template = AgentSDK.MapTemplate.OpenField,

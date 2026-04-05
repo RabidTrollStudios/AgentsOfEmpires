@@ -74,7 +74,6 @@ namespace Opponent.Tests
             }
 
             // Build priority: first barracks, then monastery, then scale up barracks
-            DebugText = $"Bases:{myBases.Count} Built:{HasBuiltUnit(myBases, state)} Barracks:{myBarracks.Count} Gold:{state.MyGold} Pawns:{myPawns.Count} IdlePawns:{CountIdlePawns(state)}";
             if (myBarracks.Count == 0 && HasBuiltUnit(myBases, state))
                 BuildStructure(UnitType.BARRACKS, state, actions);
             else if (needMonastery && HasBuiltUnit(myBarracks, state))
@@ -232,17 +231,6 @@ namespace Opponent.Tests
                     }
                 }
             }
-        }
-
-        private int CountIdlePawns(IGameState state)
-        {
-            int count = 0;
-            foreach (int pawn in myPawns)
-            {
-                var info = state.GetUnit(pawn);
-                if (info.HasValue && info.Value.CurrentAction == UnitAction.IDLE) count++;
-            }
-            return count;
         }
 
         private int FindClosestMine(IGameState state)

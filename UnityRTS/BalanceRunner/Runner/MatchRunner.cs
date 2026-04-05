@@ -34,7 +34,7 @@ namespace BalanceRunner.Runner
             var game = new SimGameBuilder()
                 .WithGold(0, 1000)
                 .WithGold(1, 1000)
-                .WithGeneratedMap(new AgentSDK.MapGeneratorConfig
+                .WithGeneratedMap(new AgentTestHarness.MapGeneratorConfig
                 {
                     Width = 75,
                     Height = 40,
