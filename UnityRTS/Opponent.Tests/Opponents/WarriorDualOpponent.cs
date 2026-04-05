@@ -47,9 +47,47 @@ namespace Opponent.Tests
                 }
             }
 
-            // Attack with warriors
+            // Attack with warriors — squads of 3 on the same target, retarget on kill
             if (myWarriors.Count >= ATTACK_THRESHOLD)
-                AttackWithUnits(myWarriors, state, actions);
+                SquadAttack(myWarriors, 3, state, actions);
+        }
+
+        private void SquadAttack(List<int> units, int squadSize, IGameState state, IAgentActions actions)
+        {
+            // Find all living enemy units, prioritize mobile combat units
+            var enemies = new List<int>();
+            foreach (UnitType ut in new[] { UnitType.WARRIOR, UnitType.ARCHER, UnitType.LANCER,
+                                            UnitType.MONK, UnitType.PAWN, UnitType.BASE,
+                                            UnitType.BARRACKS, UnitType.ARCHERY, UnitType.TOWER,
+                                            UnitType.MONASTERY })
+            {
+                foreach (int enemyNbr in state.GetEnemyUnits(ut))
+                    enemies.Add(enemyNbr);
+            }
+            if (enemies.Count == 0) return;
+
+            // Assign warriors in squads of N to the same target
+            int targetIdx = 0;
+            int assigned = 0;
+
+            foreach (int unitNbr in units)
+            {
+                var info = state.GetUnit(unitNbr);
+                if (!info.HasValue) continue;
+
+                // Only reassign idle warriors (let attacking warriors finish their target)
+                if (info.Value.CurrentAction == UnitAction.IDLE)
+                {
+                    actions.Attack(unitNbr, enemies[targetIdx]);
+                    assigned++;
+
+                    if (assigned >= squadSize && targetIdx < enemies.Count - 1)
+                    {
+                        targetIdx++;
+                        assigned = 0;
+                    }
+                }
+            }
         }
 
         private void TrainPawns(IGameState state, IAgentActions actions, int max)

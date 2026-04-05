@@ -24,7 +24,24 @@ namespace PlanningAgent
         private const int MAX_PAWNS = 6;
         private const int ATTACK_THRESHOLD = 6;
 
-        public override void InitializeMatch() { }
+        // Archer micro
+        private const int ATTACK_TICKS = 2;
+        private const int KITE_TICKS = 1;
+        private const int CYCLE_LENGTH = ATTACK_TICKS + KITE_TICKS;
+        private Dictionary<int, int> _lastArcherTarget = new Dictionary<int, int>();
+        private Dictionary<int, int> _archerCycleTick = new Dictionary<int, int>();
+
+        // Lancer micro
+        private const int DISENGAGE_TICKS = 3;
+        private const float RALLY_DISTANCE = 5.0f;
+        private Dictionary<int, int> _lancerCombatTicks = new Dictionary<int, int>();
+
+        public override void InitializeMatch()
+        {
+            _lastArcherTarget = new Dictionary<int, int>();
+            _archerCycleTick = new Dictionary<int, int>();
+            _lancerCombatTicks = new Dictionary<int, int>();
+        }
 
         public override void Update(IGameState state, IAgentActions actions)
         {
@@ -103,13 +120,145 @@ namespace PlanningAgent
             // Monks heal most-wounded friendly combat unit below 80% HP
             HealWithMonks(state, actions);
 
-            // Attack with all combat units when total army is large enough
+            // Attack with unit-specific micro
             int armySize = myWarriors.Count + myArchers.Count + myLancers.Count;
-            if (armySize >= ATTACK_THRESHOLD)
+            if (armySize < ATTACK_THRESHOLD) return;
+
+            // Warriors in squads of 3
+            SquadAttack(myWarriors, 3, state, actions);
+            // Archers volley+kite
+            ArcherVolleyKite(state, actions);
+            // Lancers hit-and-run joust
+            LancerJoust(state, actions);
+        }
+
+        private void SquadAttack(List<int> units, int squadSize, IGameState state, IAgentActions actions)
+        {
+            var enemies = new List<int>();
+            foreach (UnitType ut in new[] { UnitType.WARRIOR, UnitType.ARCHER, UnitType.LANCER,
+                                            UnitType.MONK, UnitType.PAWN, UnitType.BASE,
+                                            UnitType.BARRACKS, UnitType.ARCHERY, UnitType.TOWER,
+                                            UnitType.MONASTERY })
             {
-                AttackWithUnits(myWarriors, state, actions);
-                AttackWithUnits(myArchers, state, actions);
-                AttackWithUnits(myLancers, state, actions);
+                foreach (int enemyNbr in state.GetEnemyUnits(ut))
+                    enemies.Add(enemyNbr);
+            }
+            if (enemies.Count == 0) return;
+
+            int targetIdx = 0;
+            int assigned = 0;
+            foreach (int unitNbr in units)
+            {
+                var info = state.GetUnit(unitNbr);
+                if (!info.HasValue) continue;
+                if (info.Value.CurrentAction == UnitAction.IDLE)
+                {
+                    actions.Attack(unitNbr, enemies[targetIdx]);
+                    assigned++;
+                    if (assigned >= squadSize && targetIdx < enemies.Count - 1)
+                    {
+                        targetIdx++;
+                        assigned = 0;
+                    }
+                }
+            }
+        }
+
+        private void ArcherVolleyKite(IGameState state, IAgentActions actions)
+        {
+            var enemies = new List<int>();
+            foreach (UnitType ut in new[] { UnitType.WARRIOR, UnitType.ARCHER, UnitType.LANCER,
+                                            UnitType.MONK, UnitType.PAWN, UnitType.BASE,
+                                            UnitType.BARRACKS, UnitType.ARCHERY, UnitType.TOWER,
+                                            UnitType.MONASTERY })
+            {
+                foreach (int enemyNbr in state.GetEnemyUnits(ut))
+                    enemies.Add(enemyNbr);
+            }
+            if (enemies.Count == 0) return;
+
+            foreach (int archerNbr in myArchers)
+            {
+                var info = state.GetUnit(archerNbr);
+                if (!info.HasValue) continue;
+
+                if (!_archerCycleTick.ContainsKey(archerNbr))
+                    _archerCycleTick[archerNbr] = 0;
+
+                int cycleTick = _archerCycleTick[archerNbr] % CYCLE_LENGTH;
+                _archerCycleTick[archerNbr]++;
+
+                if (cycleTick < ATTACK_TICKS)
+                {
+                    int lastTarget = _lastArcherTarget.ContainsKey(archerNbr)
+                        ? _lastArcherTarget[archerNbr] : -1;
+                    int chosenTarget = -1;
+                    foreach (int enemyNbr in enemies)
+                    {
+                        if (enemyNbr != lastTarget) { chosenTarget = enemyNbr; break; }
+                    }
+                    if (chosenTarget < 0) chosenTarget = enemies[0];
+                    actions.Attack(archerNbr, chosenTarget);
+                    _lastArcherTarget[archerNbr] = chosenTarget;
+                }
+                else
+                {
+                    if (mainBaseNbr >= 0)
+                    {
+                        var baseInfo = state.GetUnit(mainBaseNbr);
+                        if (baseInfo.HasValue)
+                            actions.Move(archerNbr, baseInfo.Value.CenterPosition);
+                    }
+                }
+            }
+        }
+
+        private void LancerJoust(IGameState state, IAgentActions actions)
+        {
+            int? enemyTarget = FindAnyEnemy(state);
+            if (!enemyTarget.HasValue) return;
+            var targetInfo = state.GetUnit(enemyTarget.Value);
+            if (!targetInfo.HasValue) return;
+
+            foreach (int lancerNbr in myLancers)
+            {
+                var info = state.GetUnit(lancerNbr);
+                if (!info.HasValue) continue;
+
+                if (!_lancerCombatTicks.ContainsKey(lancerNbr))
+                    _lancerCombatTicks[lancerNbr] = 0;
+
+                if (info.Value.CurrentAction == UnitAction.ATTACK)
+                {
+                    float dist = Position.Distance(info.Value.CenterPosition, targetInfo.Value.CenterPosition);
+                    if (dist < GameConstants.ATTACK_RANGE[UnitType.LANCER] + 1.0f)
+                    {
+                        _lancerCombatTicks[lancerNbr]++;
+                        if (_lancerCombatTicks[lancerNbr] >= DISENGAGE_TICKS && mainBaseNbr >= 0)
+                        {
+                            var baseInfo = state.GetUnit(mainBaseNbr);
+                            if (baseInfo.HasValue)
+                            {
+                                actions.Move(lancerNbr, baseInfo.Value.CenterPosition);
+                                _lancerCombatTicks[lancerNbr] = 0;
+                            }
+                        }
+                    }
+                }
+                else if (info.Value.CurrentAction == UnitAction.MOVE)
+                {
+                    float dist = Position.Distance(info.Value.CenterPosition, targetInfo.Value.CenterPosition);
+                    if (dist >= RALLY_DISTANCE)
+                    {
+                        actions.Attack(lancerNbr, enemyTarget.Value);
+                        _lancerCombatTicks[lancerNbr] = 0;
+                    }
+                }
+                else if (info.Value.CurrentAction == UnitAction.IDLE)
+                {
+                    actions.Attack(lancerNbr, enemyTarget.Value);
+                    _lancerCombatTicks[lancerNbr] = 0;
+                }
             }
         }
 

@@ -18,8 +18,18 @@ namespace PlanningAgent
     {
         private const int MAX_PAWNS = 6;
         private const int ATTACK_THRESHOLD = 6;
+        private const int ATTACK_TICKS = 2;
+        private const int KITE_TICKS = 1;
+        private const int CYCLE_LENGTH = ATTACK_TICKS + KITE_TICKS;
 
-        public override void InitializeMatch() { }
+        private Dictionary<int, int> _lastArcherTarget = new Dictionary<int, int>();
+        private Dictionary<int, int> _archerCycleTick = new Dictionary<int, int>();
+
+        public override void InitializeMatch()
+        {
+            _lastArcherTarget = new Dictionary<int, int>();
+            _archerCycleTick = new Dictionary<int, int>();
+        }
 
         public override void Update(IGameState state, IAgentActions actions)
         {
@@ -70,9 +80,64 @@ namespace PlanningAgent
             // Monks heal most-wounded friendly archer below 80% HP
             HealWithMonks(state, actions);
 
-            // Attack with archers when army is large enough
+            // Archers use volley+kite micro
             if (myArchers.Count >= ATTACK_THRESHOLD)
-                AttackWithUnits(myArchers, state, actions);
+                ArcherVolleyKite(state, actions);
+        }
+
+        private void ArcherVolleyKite(IGameState state, IAgentActions actions)
+        {
+            var enemies = new List<int>();
+            foreach (UnitType ut in new[] { UnitType.WARRIOR, UnitType.ARCHER, UnitType.LANCER,
+                                            UnitType.MONK, UnitType.PAWN, UnitType.BASE,
+                                            UnitType.BARRACKS, UnitType.ARCHERY, UnitType.TOWER,
+                                            UnitType.MONASTERY })
+            {
+                foreach (int enemyNbr in state.GetEnemyUnits(ut))
+                    enemies.Add(enemyNbr);
+            }
+            if (enemies.Count == 0) return;
+
+            foreach (int archerNbr in myArchers)
+            {
+                var info = state.GetUnit(archerNbr);
+                if (!info.HasValue) continue;
+
+                if (!_archerCycleTick.ContainsKey(archerNbr))
+                    _archerCycleTick[archerNbr] = 0;
+
+                int cycleTick = _archerCycleTick[archerNbr] % CYCLE_LENGTH;
+                _archerCycleTick[archerNbr]++;
+
+                if (cycleTick < ATTACK_TICKS)
+                {
+                    int lastTarget = _lastArcherTarget.ContainsKey(archerNbr)
+                        ? _lastArcherTarget[archerNbr] : -1;
+
+                    int chosenTarget = -1;
+                    foreach (int enemyNbr in enemies)
+                    {
+                        if (enemyNbr != lastTarget)
+                        {
+                            chosenTarget = enemyNbr;
+                            break;
+                        }
+                    }
+                    if (chosenTarget < 0) chosenTarget = enemies[0];
+
+                    actions.Attack(archerNbr, chosenTarget);
+                    _lastArcherTarget[archerNbr] = chosenTarget;
+                }
+                else
+                {
+                    if (mainBaseNbr >= 0)
+                    {
+                        var baseInfo = state.GetUnit(mainBaseNbr);
+                        if (baseInfo.HasValue)
+                            actions.Move(archerNbr, baseInfo.Value.CenterPosition);
+                    }
+                }
+            }
         }
 
         private void HealWithMonks(IGameState state, IAgentActions actions)

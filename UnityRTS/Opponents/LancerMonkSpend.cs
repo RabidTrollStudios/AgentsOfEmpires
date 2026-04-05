@@ -19,8 +19,15 @@ namespace PlanningAgent
     {
         private const int MAX_PAWNS = 6;
         private const int ATTACK_THRESHOLD = 6;
+        private const int DISENGAGE_TICKS = 3;
+        private const float RALLY_DISTANCE = 5.0f;
 
-        public override void InitializeMatch() { }
+        private Dictionary<int, int> _combatTicks = new Dictionary<int, int>();
+
+        public override void InitializeMatch()
+        {
+            _combatTicks = new Dictionary<int, int>();
+        }
 
         public override void Update(IGameState state, IAgentActions actions)
         {
@@ -71,9 +78,54 @@ namespace PlanningAgent
             // Monks heal most-wounded friendly combat unit below 80% HP
             HealWithMonks(state, actions);
 
-            // Attack with lancers when total combat army is large enough
-            if (myLancers.Count >= ATTACK_THRESHOLD)
-                AttackWithUnits(myLancers, state, actions);
+            // Lancers use hit-and-run joust
+            if (myLancers.Count < ATTACK_THRESHOLD) return;
+
+            int? enemyTarget = FindAnyEnemy(state);
+            if (!enemyTarget.HasValue) return;
+            var targetInfo = state.GetUnit(enemyTarget.Value);
+            if (!targetInfo.HasValue) return;
+
+            foreach (int lancerNbr in myLancers)
+            {
+                var info = state.GetUnit(lancerNbr);
+                if (!info.HasValue) continue;
+
+                if (!_combatTicks.ContainsKey(lancerNbr))
+                    _combatTicks[lancerNbr] = 0;
+
+                if (info.Value.CurrentAction == UnitAction.ATTACK)
+                {
+                    float dist = Position.Distance(info.Value.CenterPosition, targetInfo.Value.CenterPosition);
+                    if (dist < GameConstants.ATTACK_RANGE[UnitType.LANCER] + 1.0f)
+                    {
+                        _combatTicks[lancerNbr]++;
+                        if (_combatTicks[lancerNbr] >= DISENGAGE_TICKS && mainBaseNbr >= 0)
+                        {
+                            var baseInfo = state.GetUnit(mainBaseNbr);
+                            if (baseInfo.HasValue)
+                            {
+                                actions.Move(lancerNbr, baseInfo.Value.CenterPosition);
+                                _combatTicks[lancerNbr] = 0;
+                            }
+                        }
+                    }
+                }
+                else if (info.Value.CurrentAction == UnitAction.MOVE)
+                {
+                    float dist = Position.Distance(info.Value.CenterPosition, targetInfo.Value.CenterPosition);
+                    if (dist >= RALLY_DISTANCE)
+                    {
+                        actions.Attack(lancerNbr, enemyTarget.Value);
+                        _combatTicks[lancerNbr] = 0;
+                    }
+                }
+                else if (info.Value.CurrentAction == UnitAction.IDLE)
+                {
+                    actions.Attack(lancerNbr, enemyTarget.Value);
+                    _combatTicks[lancerNbr] = 0;
+                }
+            }
         }
 
         private void HealWithMonks(IGameState state, IAgentActions actions)

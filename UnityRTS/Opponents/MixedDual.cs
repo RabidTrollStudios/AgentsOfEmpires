@@ -119,14 +119,49 @@ namespace PlanningAgent
             int armySize = myWarriors.Count + myArchers.Count + myLancers.Count;
             if (armySize < ATTACK_THRESHOLD) return;
 
-            // Warriors attack nearest enemy
-            AttackWithUnits(myWarriors, state, actions);
+            // Warriors in squads of 3, retarget on kill
+            SquadAttack(myWarriors, 3, state, actions);
 
             // Archers use volley+kite micro
             ArcherVolleyKite(state, actions);
 
             // Lancers use hit-and-run joust
             LancerJoust(state, actions);
+        }
+
+        private void SquadAttack(List<int> units, int squadSize, IGameState state, IAgentActions actions)
+        {
+            var enemies = new List<int>();
+            foreach (UnitType ut in new[] { UnitType.WARRIOR, UnitType.ARCHER, UnitType.LANCER,
+                                            UnitType.MONK, UnitType.PAWN, UnitType.BASE,
+                                            UnitType.BARRACKS, UnitType.ARCHERY, UnitType.TOWER,
+                                            UnitType.MONASTERY })
+            {
+                foreach (int enemyNbr in state.GetEnemyUnits(ut))
+                    enemies.Add(enemyNbr);
+            }
+            if (enemies.Count == 0) return;
+
+            int targetIdx = 0;
+            int assigned = 0;
+
+            foreach (int unitNbr in units)
+            {
+                var info = state.GetUnit(unitNbr);
+                if (!info.HasValue) continue;
+
+                if (info.Value.CurrentAction == UnitAction.IDLE)
+                {
+                    actions.Attack(unitNbr, enemies[targetIdx]);
+                    assigned++;
+
+                    if (assigned >= squadSize && targetIdx < enemies.Count - 1)
+                    {
+                        targetIdx++;
+                        assigned = 0;
+                    }
+                }
+            }
         }
 
         private void ArcherVolleyKite(IGameState state, IAgentActions actions)
