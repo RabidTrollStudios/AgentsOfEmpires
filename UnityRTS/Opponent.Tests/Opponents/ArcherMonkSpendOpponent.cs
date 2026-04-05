@@ -13,7 +13,7 @@ namespace Opponent.Tests
     {
         private const int ATTACK_THRESHOLD = 4;
         private const float GOLD_STARVED = 100f;
-        private const float GOLD_RICH = 400f;
+        private const float GOLD_RICH = 150f;
         private const int ATTACK_TICKS = 2;
         private const int KITE_TICKS = 1;
         private const int CYCLE_LENGTH = ATTACK_TICKS + KITE_TICKS;
@@ -48,8 +48,6 @@ namespace Opponent.Tests
             else _ticksSinceArmyShrunk++;
             _lastArmySize = armySize;
 
-            GatherWithIdlePawns(state, actions);
-
             int enemyArmy = state.GetEnemyUnits(UnitType.WARRIOR).Count
                 + state.GetEnemyUnits(UnitType.ARCHER).Count
                 + state.GetEnemyUnits(UnitType.LANCER).Count;
@@ -57,7 +55,7 @@ namespace Opponent.Tests
             bool goldRich = state.MyGold > GOLD_RICH;
             bool takingLosses = _ticksSinceArmyShrunk < 20;
             bool outnumbered = enemyArmy > armySize;
-            bool needMorePawns = myPawns.Count < 3 || (goldStarved && myPawns.Count < 8);
+            bool needMorePawns = myPawns.Count < 5 || (goldStarved && myPawns.Count < 8);
 
             if (needMorePawns)
             {
@@ -80,6 +78,8 @@ namespace Opponent.Tests
                 BuildStructure(UnitType.MONASTERY, state, actions);
             else if (goldRich && myArchery.Count < 3 && HasBuiltUnit(myBases, state))
                 BuildStructure(UnitType.ARCHERY, state, actions);
+
+            GatherWithIdlePawns(state, actions);
 
             // Train archers
             foreach (int archeryNbr in myArchery)
@@ -110,7 +110,7 @@ namespace Opponent.Tests
 
             HealWithMonks(state, actions);
 
-            if (myArchers.Count >= ATTACK_THRESHOLD || (armySize > 0 && outnumbered))
+            if (myArchers.Count >= ATTACK_THRESHOLD)
                 ArcherVolleyKite(state, actions);
         }
 

@@ -29,20 +29,21 @@ namespace BalanceRunner.Runner
             string agent1Name, PlanningAgentBase agent1,
             int seed, int tickLimit = 5000, MapTemplate mapTemplate = MapTemplate.OpenField)
         {
-            // Standard PvP layout: 1 pawn each, no base (must build one).
-            // 1000g starting gold, 4 mines (3000g each) spread symmetrically.
+            // Procedural map matching Unity settings: 75x40, OpenField, 20% trees.
+            // 1000g starting gold. Map generator places pawns and mines automatically.
             var game = new SimGameBuilder()
-                .WithMapSize(30, 30)
                 .WithGold(0, 1000)
                 .WithGold(1, 1000)
-                .WithUnit(0, UnitType.PAWN, new Position(8, 5))
-                .WithUnit(1, UnitType.PAWN, new Position(22, 25))
-                // Near-spawn mines (safe income)
-                .WithMine(new Position(10, 3), health: 3000)
-                .WithMine(new Position(20, 27), health: 3000)
-                // Contested center mines (risky, requires map control)
-                .WithMine(new Position(8, 20), health: 3000)
-                .WithMine(new Position(22, 10), health: 3000)
+                .WithGeneratedMap(new AgentSDK.MapGeneratorConfig
+                {
+                    Width = 75,
+                    Height = 40,
+                    Seed = seed,
+                    Template = mapTemplate,
+                    ObstacleDensity = 0.20f,
+                    MinesPerPlayer = 2,
+                    Symmetry = AgentSDK.SymmetryType.Mirror
+                })
                 .WithAgent(0, agent0)
                 .WithAgent(1, agent1)
                 .Build();

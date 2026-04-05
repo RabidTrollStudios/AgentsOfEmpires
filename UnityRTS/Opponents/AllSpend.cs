@@ -14,7 +14,7 @@ namespace PlanningAgent
     {
         private const int ATTACK_THRESHOLD = 4;
         private const float GOLD_STARVED = 100f;
-        private const float GOLD_RICH = 400f;
+        private const float GOLD_RICH = 150f;
         private const int ATTACK_TICKS = 2;
         private const int KITE_TICKS = 1;
         private const int CYCLE_LENGTH = ATTACK_TICKS + KITE_TICKS;
@@ -55,8 +55,6 @@ namespace PlanningAgent
             else _ticksSinceArmyShrunk++;
             _lastArmySize = armySize;
 
-            GatherWithIdlePawns(state, actions);
-
             // Scout enemy and pick counter priority
             if (_priorityUnit == UnitType.MINE)
             {
@@ -75,7 +73,7 @@ namespace PlanningAgent
             bool goldRich = state.MyGold > GOLD_RICH;
             bool takingLosses = _ticksSinceArmyShrunk < 20;
             bool outnumbered = enemyArmy > armySize;
-            bool needMorePawns = myPawns.Count < 3 || (goldStarved && myPawns.Count < 8);
+            bool needMorePawns = myPawns.Count < 5 || (goldStarved && myPawns.Count < 8);
 
             if (needMorePawns)
             {
@@ -111,6 +109,8 @@ namespace PlanningAgent
                 BuildStructure(UnitType.TOWER, state, actions);
             else if (goldRich && GetBuildingCount(priorityBuilding) < 2 && HasBuiltUnit(myBases, state))
                 BuildStructure(priorityBuilding, state, actions);
+
+            GatherWithIdlePawns(state, actions);
 
             // Train from all combat buildings
             foreach (int barracksNbr in myBarracks)
@@ -154,7 +154,7 @@ namespace PlanningAgent
             HealWithMonks(state, actions);
 
             // Attack with unit-specific micro
-            if (armySize < ATTACK_THRESHOLD && !(armySize > 0 && outnumbered)) return;
+            if (armySize < ATTACK_THRESHOLD) return;
 
             SquadAttack(myWarriors, 3, state, actions);
             ArcherVolleyKite(state, actions);

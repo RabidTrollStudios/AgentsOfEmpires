@@ -11,20 +11,20 @@ namespace Opponent.Tests
     {
         /// <summary>
         /// Standard game setup for testing an opponent.
-        /// 1 pawn each, no base, 1000g, 4 mines at 3000g.
+        /// Procedural 75x40 OpenField map, 20% trees, 1000g, matching Unity settings.
         /// </summary>
         protected SimGame BuildStandardGame(PlanningAgentBase opponent)
         {
             return new SimGameBuilder()
-                .WithMapSize(30, 30)
                 .WithGold(0, 1000)
                 .WithGold(1, 1000)
-                .WithUnit(0, UnitType.PAWN, new Position(8, 5))
-                .WithUnit(1, UnitType.PAWN, new Position(22, 25))
-                .WithMine(new Position(10, 3), health: 3000)
-                .WithMine(new Position(20, 27), health: 3000)
-                .WithMine(new Position(8, 20), health: 3000)
-                .WithMine(new Position(22, 10), health: 3000)
+                .WithGeneratedMap(new AgentSDK.MapGeneratorConfig
+                {
+                    Width = 75, Height = 40, Seed = 42,
+                    Template = AgentSDK.MapTemplate.OpenField,
+                    ObstacleDensity = 0.20f, MinesPerPlayer = 2,
+                    Symmetry = AgentSDK.SymmetryType.Mirror
+                })
                 .WithAgent(0, new DoNothingAgent())
                 .WithAgent(1, opponent)
                 .Build();
@@ -32,20 +32,20 @@ namespace Opponent.Tests
 
         /// <summary>
         /// Standard PvP game setup for testing two opponents against each other.
-        /// 1 pawn each, no base, 1000g, 4 mines at 3000g.
+        /// Procedural 75x40 OpenField map, 20% trees, 1000g, matching Unity settings.
         /// </summary>
         protected SimGame BuildPvPGame(PlanningAgentBase agent0, PlanningAgentBase agent1)
         {
             return new SimGameBuilder()
-                .WithMapSize(30, 30)
                 .WithGold(0, 1000)
                 .WithGold(1, 1000)
-                .WithUnit(0, UnitType.PAWN, new Position(8, 5))
-                .WithUnit(1, UnitType.PAWN, new Position(22, 25))
-                .WithMine(new Position(10, 3), health: 3000)
-                .WithMine(new Position(20, 27), health: 3000)
-                .WithMine(new Position(8, 20), health: 3000)
-                .WithMine(new Position(22, 10), health: 3000)
+                .WithGeneratedMap(new AgentSDK.MapGeneratorConfig
+                {
+                    Width = 75, Height = 40, Seed = 42,
+                    Template = AgentSDK.MapTemplate.OpenField,
+                    ObstacleDensity = 0.20f, MinesPerPlayer = 2,
+                    Symmetry = AgentSDK.SymmetryType.Mirror
+                })
                 .WithAgent(0, agent0)
                 .WithAgent(1, agent1)
                 .Build();

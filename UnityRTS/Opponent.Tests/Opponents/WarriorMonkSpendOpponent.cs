@@ -14,7 +14,7 @@ namespace Opponent.Tests
     {
         private const int ATTACK_THRESHOLD = 4;
         private const float GOLD_STARVED = 100f;
-        private const float GOLD_RICH = 400f;
+        private const float GOLD_RICH = 150f;
 
         private int _lastArmySize;
         private int _ticksSinceArmyShrunk;
@@ -45,8 +45,6 @@ namespace Opponent.Tests
                 _ticksSinceArmyShrunk++;
             _lastArmySize = armySize;
 
-            GatherWithIdlePawns(state, actions);
-
             // --- Adaptive decisions ---
             int enemyArmy = state.GetEnemyUnits(UnitType.WARRIOR).Count
                 + state.GetEnemyUnits(UnitType.ARCHER).Count
@@ -55,7 +53,7 @@ namespace Opponent.Tests
             bool goldRich = state.MyGold > GOLD_RICH;
             bool takingLosses = _ticksSinceArmyShrunk < 20;
             bool outnumbered = enemyArmy > armySize;
-            bool needMorePawns = myPawns.Count < 3 || (goldStarved && myPawns.Count < 8);
+            bool needMorePawns = myPawns.Count < 5 || (goldStarved && myPawns.Count < 8);
             bool needMonastery = myMonasteries.Count == 0;
             bool needMoreMonks = takingLosses && myMonks.Count < 3;
             bool needMoreBarracks = goldRich && myBarracks.Count < 3;
@@ -76,12 +74,16 @@ namespace Opponent.Tests
             }
 
             // Build priority: first barracks, then monastery, then scale up barracks
+            DebugText = $"Bases:{myBases.Count} Built:{HasBuiltUnit(myBases, state)} Barracks:{myBarracks.Count} Gold:{state.MyGold} Pawns:{myPawns.Count} IdlePawns:{CountIdlePawns(state)}";
             if (myBarracks.Count == 0 && HasBuiltUnit(myBases, state))
                 BuildStructure(UnitType.BARRACKS, state, actions);
             else if (needMonastery && HasBuiltUnit(myBarracks, state))
                 BuildStructure(UnitType.MONASTERY, state, actions);
             else if (needMoreBarracks && HasBuiltUnit(myBases, state))
                 BuildStructure(UnitType.BARRACKS, state, actions);
+
+            // Gather with remaining idle pawns (after building gets first pick)
+            GatherWithIdlePawns(state, actions);
 
             // Train warriors from all barracks
             foreach (int barracksNbr in myBarracks)
@@ -113,7 +115,7 @@ namespace Opponent.Tests
             HealWithMonks(state, actions);
 
             // Attack: go when we have enough, or when outnumbered (desperation)
-            if (myWarriors.Count >= ATTACK_THRESHOLD || (armySize > 0 && outnumbered))
+            if (myWarriors.Count >= ATTACK_THRESHOLD)
                 SquadAttack(myWarriors, 3, state, actions);
         }
 
@@ -230,6 +232,17 @@ namespace Opponent.Tests
                     }
                 }
             }
+        }
+
+        private int CountIdlePawns(IGameState state)
+        {
+            int count = 0;
+            foreach (int pawn in myPawns)
+            {
+                var info = state.GetUnit(pawn);
+                if (info.HasValue && info.Value.CurrentAction == UnitAction.IDLE) count++;
+            }
+            return count;
         }
 
         private int FindClosestMine(IGameState state)

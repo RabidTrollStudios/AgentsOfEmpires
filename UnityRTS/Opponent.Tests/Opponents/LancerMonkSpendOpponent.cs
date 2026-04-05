@@ -13,7 +13,7 @@ namespace Opponent.Tests
     {
         private const int ATTACK_THRESHOLD = 4;
         private const float GOLD_STARVED = 100f;
-        private const float GOLD_RICH = 400f;
+        private const float GOLD_RICH = 150f;
         private const int DISENGAGE_TICKS = 3;
         private const float RALLY_DISTANCE = 5.0f;
 
@@ -45,8 +45,6 @@ namespace Opponent.Tests
             else _ticksSinceArmyShrunk++;
             _lastArmySize = armySize;
 
-            GatherWithIdlePawns(state, actions);
-
             int enemyArmy = state.GetEnemyUnits(UnitType.WARRIOR).Count
                 + state.GetEnemyUnits(UnitType.ARCHER).Count
                 + state.GetEnemyUnits(UnitType.LANCER).Count;
@@ -54,7 +52,7 @@ namespace Opponent.Tests
             bool goldRich = state.MyGold > GOLD_RICH;
             bool takingLosses = _ticksSinceArmyShrunk < 20;
             bool outnumbered = enemyArmy > armySize;
-            bool needMorePawns = myPawns.Count < 3 || (goldStarved && myPawns.Count < 8);
+            bool needMorePawns = myPawns.Count < 5 || (goldStarved && myPawns.Count < 8);
 
             if (needMorePawns)
             {
@@ -77,6 +75,8 @@ namespace Opponent.Tests
                 BuildStructure(UnitType.MONASTERY, state, actions);
             else if (goldRich && myTowers.Count < 3 && HasBuiltUnit(myBases, state))
                 BuildStructure(UnitType.TOWER, state, actions);
+
+            GatherWithIdlePawns(state, actions);
 
             // Train lancers
             foreach (int towerNbr in myTowers)
@@ -106,7 +106,7 @@ namespace Opponent.Tests
 
             HealWithMonks(state, actions);
 
-            if (myLancers.Count < ATTACK_THRESHOLD && !(armySize > 0 && outnumbered)) return;
+            if (myLancers.Count < ATTACK_THRESHOLD) return;
 
             int? enemyTarget = FindAnyEnemy(state);
             if (!enemyTarget.HasValue) return;
