@@ -45,6 +45,9 @@ namespace AgentSDK
         /// <summary>Current mana (0 for units without mana)</summary>
         public float Mana { get; }
 
+        /// <summary>Unit number of the current attack target (-1 if not attacking)</summary>
+        public int AttackTargetNbr { get; }
+
         /// <summary>Agent number of the unit's owner</summary>
         public int OwnerAgentNbr { get; }
 
@@ -67,7 +70,8 @@ namespace AgentSDK
         public UnitInfo(int unitNbr, UnitType unitType, Position gridPosition,
             float health, bool isBuilt, UnitAction currentAction,
             bool canMove, bool canBuild, bool canTrain, bool canAttack,
-            bool canGather, bool canHeal, float mana, int ownerAgentNbr)
+            bool canGather, bool canHeal, float mana, int ownerAgentNbr,
+            int attackTargetNbr = -1)
         {
             UnitNbr = unitNbr;
             UnitType = unitType;
@@ -83,6 +87,7 @@ namespace AgentSDK
             CanHeal = canHeal;
             Mana = mana;
             OwnerAgentNbr = ownerAgentNbr;
+            AttackTargetNbr = attackTargetNbr;
         }
     }
 }

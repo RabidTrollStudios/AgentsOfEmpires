@@ -91,7 +91,8 @@ namespace GameManager
                 unit.CanGather,
                 unit.CanHeal,
                 unit.Mana,
-                ownerNbr
+                ownerNbr,
+                ((ISimUnit)unit).AttackTargetNbr
             );
         }
 

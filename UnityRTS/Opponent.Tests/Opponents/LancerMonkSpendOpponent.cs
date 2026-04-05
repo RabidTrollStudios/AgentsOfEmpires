@@ -14,18 +14,17 @@ namespace Opponent.Tests
         private const int ATTACK_THRESHOLD = 4;
         private const float GOLD_STARVED = 100f;
         private const float GOLD_RICH = 150f;
-        private const int DISENGAGE_TICKS = 3;
         private const float RALLY_DISTANCE = 5.0f;
 
         private int _lastArmySize;
         private int _ticksSinceArmyShrunk;
-        private Dictionary<int, int> _combatTicks = new Dictionary<int, int>();
+        private Dictionary<int, float> _lancerLastHp = new Dictionary<int, float>();
 
         public override void InitializeMatch()
         {
             _lastArmySize = 0;
             _ticksSinceArmyShrunk = 999;
-            _combatTicks = new Dictionary<int, int>();
+            _lancerLastHp = new Dictionary<int, float>();
         }
 
         public override void Update(IGameState state, IAgentActions actions)
@@ -118,41 +117,70 @@ namespace Opponent.Tests
                 var info = state.GetUnit(lancerNbr);
                 if (!info.HasValue) continue;
 
-                if (!_combatTicks.ContainsKey(lancerNbr))
-                    _combatTicks[lancerNbr] = 0;
+                float currentHp = info.Value.Health;
+                float lastHp = _lancerLastHp.ContainsKey(lancerNbr) ? _lancerLastHp[lancerNbr] : currentHp;
+                bool tookDamage = currentHp < lastHp;
+                _lancerLastHp[lancerNbr] = currentHp;
 
                 if (info.Value.CurrentAction == UnitAction.ATTACK)
                 {
-                    float dist = Position.Distance(info.Value.CenterPosition, targetInfo.Value.CenterPosition);
-                    if (dist < GameConstants.ATTACK_RANGE[UnitType.LANCER] + 1.0f)
+                    // Check what this lancer is fighting — only joust against melee targets
+                    var myTarget = info.Value.AttackTargetNbr >= 0 ? state.GetUnit(info.Value.AttackTargetNbr) : null;
+                    bool fightingRanged = myTarget.HasValue && myTarget.Value.UnitType == UnitType.ARCHER;
+
+                    if (tookDamage && !fightingRanged)
                     {
-                        _combatTicks[lancerNbr]++;
-                        if (_combatTicks[lancerNbr] >= DISENGAGE_TICKS && mainBaseNbr >= 0)
-                        {
-                            var baseInfo = state.GetUnit(mainBaseNbr);
-                            if (baseInfo.HasValue)
-                            {
-                                actions.Move(lancerNbr, baseInfo.Value.CenterPosition);
-                                _combatTicks[lancerNbr] = 0;
-                            }
-                        }
+                        Position enemyPos = myTarget.HasValue ? myTarget.Value.GridPosition : targetInfo.Value.GridPosition;
+                        Position? retreat = FindRetreatPosition(info.Value.GridPosition, enemyPos, 3, state);
+                        if (retreat.HasValue)
+                            actions.Move(lancerNbr, retreat.Value);
                     }
                 }
                 else if (info.Value.CurrentAction == UnitAction.MOVE)
                 {
                     float dist = Position.Distance(info.Value.CenterPosition, targetInfo.Value.CenterPosition);
                     if (dist >= RALLY_DISTANCE)
-                    {
                         actions.Attack(lancerNbr, enemyTarget.Value);
-                        _combatTicks[lancerNbr] = 0;
-                    }
                 }
                 else if (info.Value.CurrentAction == UnitAction.IDLE)
                 {
                     actions.Attack(lancerNbr, enemyTarget.Value);
-                    _combatTicks[lancerNbr] = 0;
                 }
             }
+        }
+
+        private Position? FindRetreatPosition(Position from, Position enemy, int distance, IGameState state)
+        {
+            // Calculate direction away from enemy
+            int dx = from.X - enemy.X;
+            int dy = from.Y - enemy.Y;
+            // Normalize to -1/0/1
+            int sx = dx > 0 ? 1 : dx < 0 ? -1 : 0;
+            int sy = dy > 0 ? 1 : dy < 0 ? -1 : 0;
+            if (sx == 0 && sy == 0) sx = 1; // default right if on top of enemy
+
+            // Try primary direction, then fallback rotations
+            int[][] dirs = new int[][] {
+                new[] { sx, sy },
+                new[] { sx, 0 },
+                new[] { 0, sy },
+                new[] { -sy, sx },  // 90 degrees
+                new[] { sy, -sx },  // -90 degrees
+            };
+
+            foreach (var dir in dirs)
+            {
+                Position target = new Position(from.X + dir[0] * distance, from.Y + dir[1] * distance);
+                // Check all cells along the path are clear
+                bool clear = true;
+                for (int i = 1; i <= distance; i++)
+                {
+                    Position step = new Position(from.X + dir[0] * i, from.Y + dir[1] * i);
+                    if (!state.IsPositionBuildable(step)) { clear = false; break; }
+                }
+                if (clear) return target;
+            }
+            return null; // no clear retreat path found
         }
 
         private void HealWithMonks(IGameState state, IAgentActions actions)

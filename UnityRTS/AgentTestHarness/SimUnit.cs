@@ -110,7 +110,8 @@ namespace AgentTestHarness
             return new UnitInfo(
                 UnitNbr, UnitType, GridPosition, Health, IsBuilt,
                 CurrentAction, CanMove, CanBuild, CanTrain, CanAttack,
-                CanGather, CanHeal, Mana, OwnerAgentNbr);
+                CanGather, CanHeal, Mana, OwnerAgentNbr,
+                AttackTargetNbr);
         }
     }
 }

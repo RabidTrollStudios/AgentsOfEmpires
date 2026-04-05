@@ -152,7 +152,7 @@ namespace GameManager.GameElements
 		private float damage = 0.0f;
 		private float totalDamage = 0.0f;
 		private bool arrowFiredThisCycle = false;
-		private const float ARROW_SPEED = 7.5f;
+		private const float ARROW_SPEED = 9.375f;
 
 		// Path variables
 		private int baseUnit = -1;

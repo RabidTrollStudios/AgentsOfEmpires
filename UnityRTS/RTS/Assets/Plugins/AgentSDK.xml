@@ -1381,6 +1381,9 @@
         <member name="P:AgentSDK.UnitInfo.Mana">
             <summary>Current mana (0 for units without mana)</summary>
         </member>
+        <member name="P:AgentSDK.UnitInfo.AttackTargetNbr">
+            <summary>Unit number of the current attack target (-1 if not attacking)</summary>
+        </member>
         <member name="P:AgentSDK.UnitInfo.OwnerAgentNbr">
             <summary>Agent number of the unit's owner</summary>
         </member>
@@ -1392,7 +1395,7 @@
             For 3x3 structures (bases, barracks, mines, refineries) this is GridPosition+(1,-1).
             </summary>
         </member>
-        <member name="M:AgentSDK.UnitInfo.#ctor(System.Int32,AgentSDK.UnitType,AgentSDK.Position,System.Single,System.Boolean,AgentSDK.UnitAction,System.Boolean,System.Boolean,System.Boolean,System.Boolean,System.Boolean,System.Boolean,System.Single,System.Int32)">
+        <member name="M:AgentSDK.UnitInfo.#ctor(System.Int32,AgentSDK.UnitType,AgentSDK.Position,System.Single,System.Boolean,AgentSDK.UnitAction,System.Boolean,System.Boolean,System.Boolean,System.Boolean,System.Boolean,System.Boolean,System.Single,System.Int32,System.Int32)">
             <summary>Create a new UnitInfo snapshot</summary>
         </member>
         <member name="T:AgentSDK.UnitType">

@@ -394,15 +394,27 @@ namespace AgentSDK
         /// </summary>
         public List<Position> FindPathToUnit(Position start, UnitType unitType, Position unitAnchor)
         {
-            var neighbors = GetBuildablePositionsNearUnit(unitType, unitAnchor);
+            // Include both OPEN and WALKABLE (occupied) cells so units spread out
+            var neighbors = new List<Position>();
+            foreach (var p in GetPositionsNearUnit(unitType, unitAnchor))
+            {
+                if (cells[p.X, p.Y] == CellState.OPEN || cells[p.X, p.Y] == CellState.WALKABLE)
+                    neighbors.Add(p);
+            }
 
             // Tiebreak seed based on start position so different pawns prefer different cells
             int tiebreakSeed = start.X * 397 ^ start.Y;
 
-            // Sort by distance to start, with position-based tiebreaking so
-            // different pawns approaching the same building spread to different cells
+            // Sort by effective occupancy (occupants + reservations), then distance,
+            // with position-based tiebreaking so different units spread to different cells
             neighbors.Sort((a, b) =>
             {
+                // Prefer cells with fewer occupants (spreads units out)
+                int occA = GetOccupantCount(a);
+                int occB = GetOccupantCount(b);
+                int occCmp = occA.CompareTo(occB);
+                if (occCmp != 0) return occCmp;
+
                 int dxA = a.X - start.X, dyA = a.Y - start.Y;
                 int dxB = b.X - start.X, dyB = b.Y - start.Y;
                 int distA = dxA * dxA + dyA * dyA;
@@ -419,7 +431,11 @@ namespace AgentSDK
             {
                 var path = FindPath(start, neighbor);
                 if (path.Count > 0)
+                {
+                    // Mark destination as occupied so the next pathfinder picks a different cell
+                    SetCellOccupied(neighbor, true);
                     return path;
+                }
             }
             return new List<Position>();
         }
