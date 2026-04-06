@@ -41,11 +41,12 @@ namespace Opponent.Tests
             }
 
             TrainPawns(state, actions, MAX_PAWNS);
-            GatherWithIdlePawns(state, actions);
 
             // Build 3 towers for triple lancer production
             if (myTowers.Count < 3 && HasBuiltUnit(myBases, state) && !IsPawnBuilding(state) && !_buildQueued)
                 BuildStructure(UnitType.TOWER, state, actions);
+
+            GatherWithIdlePawns(state, actions);
 
             // Train lancers from all towers
             foreach (int towerNbr in myTowers)

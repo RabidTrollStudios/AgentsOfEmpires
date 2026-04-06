@@ -35,11 +35,12 @@ namespace PlanningAgent
             }
 
             TrainPawns(state, actions, MAX_PAWNS);
-            GatherWithIdlePawns(state, actions);
 
             // Build tower, then mass lancers
             if (myTowers.Count == 0 && HasBuiltUnit(myBases, state) && !IsPawnBuilding(state) && !_buildQueued)
                 BuildStructure(UnitType.TOWER, state, actions);
+
+            GatherWithIdlePawns(state, actions);
 
             // Train lancers
             foreach (int towerNbr in myTowers)

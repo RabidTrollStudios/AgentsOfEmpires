@@ -35,11 +35,12 @@ namespace Opponent.Tests
             }
 
             TrainPawns(state, actions, MAX_PAWNS);
-            GatherWithIdlePawns(state, actions);
 
             // Build archery, then mass archers
             if (myArchery.Count == 0 && HasBuiltUnit(myBases, state) && !IsPawnBuilding(state) && !_buildQueued)
                 BuildStructure(UnitType.ARCHERY, state, actions);
+
+            GatherWithIdlePawns(state, actions);
 
             // Train archers
             foreach (int archeryNbr in myArchery)

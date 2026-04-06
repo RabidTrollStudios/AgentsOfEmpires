@@ -33,11 +33,12 @@ namespace Opponent.Tests
             }
 
             TrainPawns(state, actions, MAX_PAWNS);
-            GatherWithIdlePawns(state, actions);
 
             // Build barracks, then mass warriors
             if (myBarracks.Count == 0 && HasBuiltUnit(myBases, state) && !IsPawnBuilding(state) && !_buildQueued)
                 BuildStructure(UnitType.BARRACKS, state, actions);
+
+            GatherWithIdlePawns(state, actions);
 
             // Train warriors
             foreach (int barracksNbr in myBarracks)

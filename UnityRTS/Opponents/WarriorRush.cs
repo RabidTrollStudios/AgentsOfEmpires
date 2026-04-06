@@ -34,12 +34,13 @@ namespace PlanningAgent
             }
 
             TrainPawns(state, actions, MAX_PAWNS);
-            GatherWithIdlePawns(state, actions);
 
             // Rush to 2 barracks
             if (myBarracks.Count < 2 && HasBuiltUnit(myBases, state)
                 && !IsPawnBuilding(state) && !_buildQueued)
                 BuildStructure(UnitType.BARRACKS, state, actions);
+
+            GatherWithIdlePawns(state, actions);
 
             // Train warriors only — spend everything on military
             foreach (int barracksNbr in myBarracks)

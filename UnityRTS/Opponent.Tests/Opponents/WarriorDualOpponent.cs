@@ -32,11 +32,12 @@ namespace Opponent.Tests
             }
 
             TrainPawns(state, actions, MAX_PAWNS);
-            GatherWithIdlePawns(state, actions);
 
             // Build 3 barracks for triple warrior production
             if (myBarracks.Count < 3 && HasBuiltUnit(myBases, state) && !IsPawnBuilding(state) && !_buildQueued)
                 BuildStructure(UnitType.BARRACKS, state, actions);
+
+            GatherWithIdlePawns(state, actions);
 
             // Train warriors from all barracks
             foreach (int barracksNbr in myBarracks)

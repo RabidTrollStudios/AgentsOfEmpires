@@ -56,7 +56,6 @@ namespace PlanningAgent
             }
 
             TrainPawns(state, actions, MAX_PAWNS);
-            GatherWithIdlePawns(state, actions);
 
             // Scout enemy buildings and pick counter as priority
             if (_priorityUnit == UnitType.MINE)
@@ -83,6 +82,8 @@ namespace PlanningAgent
                 BuildStructure(UnitType.ARCHERY, state, actions);
             else if (myTowers.Count < 1 && HasBuiltUnit(myBases, state) && !IsPawnBuilding(state) && !_buildQueued)
                 BuildStructure(UnitType.TOWER, state, actions);
+
+            GatherWithIdlePawns(state, actions);
 
             // Train from all buildings
             foreach (int barracksNbr in myBarracks)

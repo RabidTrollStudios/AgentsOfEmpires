@@ -44,11 +44,12 @@ namespace PlanningAgent
             }
 
             TrainPawns(state, actions, MAX_PAWNS);
-            GatherWithIdlePawns(state, actions);
 
             // Build 3 archeries for triple archer production
             if (myArchery.Count < 3 && HasBuiltUnit(myBases, state) && !IsPawnBuilding(state) && !_buildQueued)
                 BuildStructure(UnitType.ARCHERY, state, actions);
+
+            GatherWithIdlePawns(state, actions);
 
             // Train archers from all archeries
             foreach (int archeryNbr in myArchery)

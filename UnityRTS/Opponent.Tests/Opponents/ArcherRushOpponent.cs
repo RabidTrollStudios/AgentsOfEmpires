@@ -34,11 +34,12 @@ namespace Opponent.Tests
             }
 
             TrainPawns(state, actions, MAX_PAWNS);
-            GatherWithIdlePawns(state, actions);
 
             // Rush to 2 archeries
             if (myArchery.Count < 2 && HasBuiltUnit(myBases, state) && !IsPawnBuilding(state) && !_buildQueued)
                 BuildStructure(UnitType.ARCHERY, state, actions);
+
+            GatherWithIdlePawns(state, actions);
 
             // Train archers only
             foreach (int archeryNbr in myArchery)
