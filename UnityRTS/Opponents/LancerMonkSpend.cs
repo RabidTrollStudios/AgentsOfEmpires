@@ -25,6 +25,8 @@ namespace PlanningAgent
         private int _lastArmySize;
         private int _framesSinceArmyShrunk;
 
+        private bool _buildQueued;
+
         public override void InitializeMatch()
         {
             _lastArmySize = 0;
@@ -36,6 +38,7 @@ namespace PlanningAgent
         public override void Update(IGameState state, IAgentActions actions)
         {
             UpdateGameState(state);
+            _buildQueued = false;
             mainMineNbr = FindClosestMine(state);
             mainBaseNbr = myBases.Count > 0 ? myBases[0] : -1;
 
@@ -74,11 +77,11 @@ namespace PlanningAgent
             }
 
             // Build: tower first, then monastery, then scale towers
-            if (myTowers.Count == 0 && HasBuiltUnit(myBases, state) && !IsPawnBuilding(state))
+            if (myTowers.Count == 0 && HasBuiltUnit(myBases, state) && !IsPawnBuilding(state) && !_buildQueued)
                 BuildStructure(UnitType.TOWER, state, actions);
-            else if (myMonasteries.Count == 0 && HasBuiltUnit(myTowers, state) && !IsPawnBuilding(state))
+            else if (myMonasteries.Count == 0 && HasBuiltUnit(myTowers, state) && !IsPawnBuilding(state) && !_buildQueued)
                 BuildStructure(UnitType.MONASTERY, state, actions);
-            else if (goldRich && myTowers.Count < 3 && HasBuiltUnit(myBases, state) && !IsPawnBuilding(state))
+            else if (goldRich && myTowers.Count < 3 && HasBuiltUnit(myBases, state) && !IsPawnBuilding(state) && !_buildQueued)
                 BuildStructure(UnitType.TOWER, state, actions);
 
             GatherWithIdlePawns(state, actions);
@@ -341,6 +344,7 @@ namespace PlanningAgent
                     if (bestPos.HasValue)
                     {
                         actions.Build(pawn, bestPos.Value, type);
+                        _buildQueued = true;
                         return;
                     }
                 }

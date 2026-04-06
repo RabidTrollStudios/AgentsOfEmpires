@@ -19,6 +19,8 @@ namespace Opponent.Tests
         private UnitType _chosenUnit = UnitType.MINE;
         private UnitType _chosenBuilding = UnitType.MINE;
 
+        private bool _buildQueued;
+
         public override void InitializeMatch()
         {
             _chosenUnit = UnitType.MINE;
@@ -28,6 +30,7 @@ namespace Opponent.Tests
         public override void Update(IGameState state, IAgentActions actions)
         {
             UpdateGameState(state);
+            _buildQueued = false;
             mainMineNbr = FindClosestMine(state);
             mainBaseNbr = myBases.Count > 0 ? myBases[0] : -1;
 
@@ -68,7 +71,7 @@ namespace Opponent.Tests
                     : _chosenBuilding == UnitType.ARCHERY ? myArchery.Count
                     : myTowers.Count;
 
-                if (buildingCount < 2 && HasBuiltUnit(myBases, state) && !IsPawnBuilding(state))
+                if (buildingCount < 2 && HasBuiltUnit(myBases, state) && !IsPawnBuilding(state) && !_buildQueued)
                     BuildStructure(_chosenBuilding, state, actions);
 
                 // Train counter units from all buildings
@@ -153,6 +156,7 @@ namespace Opponent.Tests
                     if (bestPos.HasValue)
                     {
                         actions.Build(pawn, bestPos.Value, type);
+                        _buildQueued = true;
                         return;
                     }
                 }

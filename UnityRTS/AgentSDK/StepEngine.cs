@@ -458,9 +458,8 @@ namespace AgentSDK
                 float baseCooldown = GameConstants.BASE_ATTACK_COOLDOWN[attacker.UnitType];
                 attacker.AttackCooldown = baseCooldown > 0 ? baseCooldown : world.StepDuration;
 
-                // Warrior resets charge cooldown on hit (engaged in melee)
-                if (attacker.UnitType == UnitType.WARRIOR)
-                    attacker.ChargeCooldown = GameConstants.CHARGE_COOLDOWN;
+                // Warrior charge stays active while in ATTACK state — no cooldown reset on hit.
+                // Cooldown only resets when warrior goes idle (in GoIdle).
 
                 if (target.Health <= 0)
                 {

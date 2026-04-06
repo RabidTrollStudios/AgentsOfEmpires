@@ -332,7 +332,7 @@ namespace AgentSDK
         /// <summary>Warrior Charge: duration of the speed boost (seconds at game speed 1).</summary>
         public static readonly float CHARGE_DURATION = 2.0f;
         /// <summary>Warrior Charge: cooldown between charges (seconds at game speed 1).</summary>
-        public static readonly float CHARGE_COOLDOWN = 5.0f;
+        public static readonly float CHARGE_COOLDOWN = 3.0f;
 
         /// <summary>Archer Volley: damage multiplier on the first hit against a new target.</summary>
         public static readonly float VOLLEY_BONUS_MULTIPLIER = 1.75f;

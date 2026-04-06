@@ -13,11 +13,14 @@ namespace PlanningAgent
         private const int MAX_PAWNS = 6;
         private const int ATTACK_THRESHOLD = 6;
 
+        private bool _buildQueued;
+
         public override void InitializeMatch() { }
 
         public override void Update(IGameState state, IAgentActions actions)
         {
             UpdateGameState(state);
+            _buildQueued = false;
             mainMineNbr = FindClosestMine(state);
             mainBaseNbr = myBases.Count > 0 ? myBases[0] : -1;
 
@@ -32,7 +35,7 @@ namespace PlanningAgent
             GatherWithIdlePawns(state, actions);
 
             // Build 3 barracks for triple warrior production
-            if (myBarracks.Count < 3 && HasBuiltUnit(myBases, state) && !IsPawnBuilding(state))
+            if (myBarracks.Count < 3 && HasBuiltUnit(myBases, state) && !IsPawnBuilding(state) && !_buildQueued)
                 BuildStructure(UnitType.BARRACKS, state, actions);
 
             // Train warriors from all barracks
@@ -146,6 +149,7 @@ namespace PlanningAgent
                     if (bestPos.HasValue)
                     {
                         actions.Build(pawn, bestPos.Value, type);
+                        _buildQueued = true;
                         return;
                     }
                 }

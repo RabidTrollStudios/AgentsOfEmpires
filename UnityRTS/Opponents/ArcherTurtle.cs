@@ -16,11 +16,14 @@ namespace PlanningAgent
         private const int MAX_PAWNS = 3;
         private const int ATTACK_THRESHOLD = 6;
 
+        private bool _buildQueued;
+
         public override void InitializeMatch() { }
 
         public override void Update(IGameState state, IAgentActions actions)
         {
             UpdateGameState(state);
+            _buildQueued = false;
             mainMineNbr = FindClosestMine(state);
             mainBaseNbr = myBases.Count > 0 ? myBases[0] : -1;
 
@@ -35,7 +38,7 @@ namespace PlanningAgent
             GatherWithIdlePawns(state, actions);
 
             // Build archery, then mass archers
-            if (myArchery.Count == 0 && HasBuiltUnit(myBases, state) && !IsPawnBuilding(state))
+            if (myArchery.Count == 0 && HasBuiltUnit(myBases, state) && !IsPawnBuilding(state) && !_buildQueued)
                 BuildStructure(UnitType.ARCHERY, state, actions);
 
             // Train archers
@@ -111,6 +114,7 @@ namespace PlanningAgent
                     if (bestPos.HasValue)
                     {
                         actions.Build(pawn, bestPos.Value, type);
+                        _buildQueued = true;
                         return;
                     }
                 }

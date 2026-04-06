@@ -19,6 +19,8 @@ namespace Opponent.Tests
         private int _lastArmySize;
         private int _framesSinceArmyShrunk;
 
+        private bool _buildQueued;
+
         public override void InitializeMatch()
         {
             _lastArmySize = 0;
@@ -28,6 +30,7 @@ namespace Opponent.Tests
         public override void Update(IGameState state, IAgentActions actions)
         {
             UpdateGameState(state);
+            _buildQueued = false;
             mainMineNbr = FindClosestMine(state);
             mainBaseNbr = myBases.Count > 0 ? myBases[0] : -1;
 
@@ -74,11 +77,11 @@ namespace Opponent.Tests
             }
 
             // Build priority: first barracks, then monastery, then scale up barracks
-            if (myBarracks.Count == 0 && HasBuiltUnit(myBases, state) && !IsPawnBuilding(state))
+            if (myBarracks.Count == 0 && HasBuiltUnit(myBases, state) && !IsPawnBuilding(state) && !_buildQueued)
                 BuildStructure(UnitType.BARRACKS, state, actions);
-            else if (needMonastery && HasBuiltUnit(myBarracks, state) && !IsPawnBuilding(state))
+            else if (needMonastery && HasBuiltUnit(myBarracks, state) && !IsPawnBuilding(state) && !_buildQueued)
                 BuildStructure(UnitType.MONASTERY, state, actions);
-            else if (needMoreBarracks && HasBuiltUnit(myBases, state) && !IsPawnBuilding(state))
+            else if (needMoreBarracks && HasBuiltUnit(myBases, state) && !IsPawnBuilding(state) && !_buildQueued)
                 BuildStructure(UnitType.BARRACKS, state, actions);
 
             // Gather with remaining idle pawns (after building gets first pick)
@@ -227,6 +230,7 @@ namespace Opponent.Tests
                     if (bestPos.HasValue)
                     {
                         actions.Build(pawn, bestPos.Value, type);
+                        _buildQueued = true;
                         return;
                     }
                 }

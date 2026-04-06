@@ -31,6 +31,8 @@ namespace Opponent.Tests
         // Reactive scouting
         private UnitType _priorityUnit = UnitType.MINE;
 
+        private bool _buildQueued;
+
         public override void InitializeMatch()
         {
             _priorityUnit = UnitType.MINE;
@@ -42,6 +44,7 @@ namespace Opponent.Tests
         public override void Update(IGameState state, IAgentActions actions)
         {
             UpdateGameState(state);
+            _buildQueued = false;
             mainMineNbr = FindClosestMine(state);
             mainBaseNbr = myBases.Count > 0 ? myBases[0] : -1;
 
@@ -72,13 +75,13 @@ namespace Opponent.Tests
                 : _priorityUnit == UnitType.ARCHER ? UnitType.ARCHERY
                 : UnitType.BARRACKS;
 
-            if (GetBuildingCount(firstBuilding) < 1 && HasBuiltUnit(myBases, state) && !IsPawnBuilding(state))
+            if (GetBuildingCount(firstBuilding) < 1 && HasBuiltUnit(myBases, state) && !IsPawnBuilding(state) && !_buildQueued)
                 BuildStructure(firstBuilding, state, actions);
-            else if (myBarracks.Count < 1 && HasBuiltUnit(myBases, state) && !IsPawnBuilding(state))
+            else if (myBarracks.Count < 1 && HasBuiltUnit(myBases, state) && !IsPawnBuilding(state) && !_buildQueued)
                 BuildStructure(UnitType.BARRACKS, state, actions);
-            else if (myArchery.Count < 1 && HasBuiltUnit(myBases, state) && !IsPawnBuilding(state))
+            else if (myArchery.Count < 1 && HasBuiltUnit(myBases, state) && !IsPawnBuilding(state) && !_buildQueued)
                 BuildStructure(UnitType.ARCHERY, state, actions);
-            else if (myTowers.Count < 1 && HasBuiltUnit(myBases, state) && !IsPawnBuilding(state))
+            else if (myTowers.Count < 1 && HasBuiltUnit(myBases, state) && !IsPawnBuilding(state) && !_buildQueued)
                 BuildStructure(UnitType.TOWER, state, actions);
 
             // Train from all buildings
@@ -332,6 +335,7 @@ namespace Opponent.Tests
                     if (bestPos.HasValue)
                     {
                         actions.Build(pawn, bestPos.Value, type);
+                        _buildQueued = true;
                         return;
                     }
                 }

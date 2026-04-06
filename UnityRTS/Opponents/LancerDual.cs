@@ -19,6 +19,8 @@ namespace PlanningAgent
 
         private Dictionary<int, int> _combatFrames = new Dictionary<int, int>();
 
+        private bool _buildQueued;
+
         public override void InitializeMatch()
         {
             _combatFrames = new Dictionary<int, int>();
@@ -27,6 +29,7 @@ namespace PlanningAgent
         public override void Update(IGameState state, IAgentActions actions)
         {
             UpdateGameState(state);
+            _buildQueued = false;
             mainMineNbr = FindClosestMine(state);
             mainBaseNbr = myBases.Count > 0 ? myBases[0] : -1;
 
@@ -41,7 +44,7 @@ namespace PlanningAgent
             GatherWithIdlePawns(state, actions);
 
             // Build 3 towers for triple lancer production
-            if (myTowers.Count < 3 && HasBuiltUnit(myBases, state) && !IsPawnBuilding(state))
+            if (myTowers.Count < 3 && HasBuiltUnit(myBases, state) && !IsPawnBuilding(state) && !_buildQueued)
                 BuildStructure(UnitType.TOWER, state, actions);
 
             // Train lancers from all towers
@@ -164,6 +167,7 @@ namespace PlanningAgent
                     if (bestPos.HasValue)
                     {
                         actions.Build(pawn, bestPos.Value, type);
+                        _buildQueued = true;
                         return;
                     }
                 }
