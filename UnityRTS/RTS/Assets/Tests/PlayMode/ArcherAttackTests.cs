@@ -113,7 +113,7 @@ namespace GameManager.Tests.PlayMode
 		}
 
 		/// <summary>
-		/// An archer attacking a high-health building deals damage over multiple ticks.
+		/// An archer attacking a high-health building deals damage over multiple steps.
 		/// </summary>
 		[UnityTest]
 		public IEnumerator Archer_AttacksBuilding_DealsDamageOverTime()

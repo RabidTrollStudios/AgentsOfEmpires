@@ -26,7 +26,7 @@ namespace GameManager.Tests.PlayMode
 			return baseUnit;
 		}
 
-		private void TickUnit(Unit unit) => unit.Update();
+		private void StepUnit(Unit unit) => unit.Update();
 
 		// ── Error conditions ───────────────────────────────────────────────────
 
@@ -58,7 +58,7 @@ namespace GameManager.Tests.PlayMode
 			float waited = 0f;
 			while (waited < 3f)
 			{
-				TickUnit(baseUnit);
+				StepUnit(baseUnit);
 				waited += Time.deltaTime;
 				yield return null;
 			}
@@ -138,7 +138,7 @@ namespace GameManager.Tests.PlayMode
 
 				yield return WaitUntil(() =>
 				{
-					TickUnit(baseUnit);
+					StepUnit(baseUnit);
 					return baseUnit.CurrentAction == UnitAction.IDLE;
 				}, timeoutSeconds: 5f, failMessage: $"Training iteration {i} did not complete");
 			}

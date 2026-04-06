@@ -81,7 +81,7 @@ namespace GameManager.Tests.PlayMode
 				(0, UnitType.PAWN, 5, 10));
 
 			// Issue move command to both engines
-			var unityWorld = GameManager.Instance.GetTickWorld();
+			var unityWorld = GameManager.Instance.GetStepWorld();
 			var simWorld = sim.GetSimWorld();
 
 			CommandProcessor.ProcessMove(
@@ -103,7 +103,7 @@ namespace GameManager.Tests.PlayMode
 				(1, UnitType.WARRIOR, 20, 15));
 
 			// Both attack each other
-			var unityWorld = GameManager.Instance.GetTickWorld();
+			var unityWorld = GameManager.Instance.GetStepWorld();
 			var simWorld = sim.GetSimWorld();
 
 			CommandProcessor.ProcessAttack((ISimUnit)warrior0, warrior1.UnitNbr, unityWorld);
@@ -124,7 +124,7 @@ namespace GameManager.Tests.PlayMode
 				(0, UnitType.ARCHER, 5, 15),
 				(1, UnitType.WARRIOR, 25, 15));
 
-			var unityWorld = GameManager.Instance.GetTickWorld();
+			var unityWorld = GameManager.Instance.GetStepWorld();
 			var simWorld = sim.GetSimWorld();
 
 			CommandProcessor.ProcessAttack((ISimUnit)archer, warrior.UnitNbr, unityWorld);
@@ -144,7 +144,7 @@ namespace GameManager.Tests.PlayMode
 			var sim = BuildMatchingSimGame(
 				(0, UnitType.BASE, 5, 10));
 
-			var unityWorld = GameManager.Instance.GetTickWorld();
+			var unityWorld = GameManager.Instance.GetStepWorld();
 			var simWorld = sim.GetSimWorld();
 
 			CommandProcessor.ProcessTrain((ISimUnit)baseUnit, UnitType.PAWN, unityWorld);
@@ -164,7 +164,7 @@ namespace GameManager.Tests.PlayMode
 				(0, UnitType.BASE, 3, 8),
 				(0, UnitType.PAWN, 6, 5));
 
-			var unityWorld = GameManager.Instance.GetTickWorld();
+			var unityWorld = GameManager.Instance.GetStepWorld();
 			var simWorld = sim.GetSimWorld();
 
 			CommandProcessor.ProcessBuild(
@@ -188,7 +188,7 @@ namespace GameManager.Tests.PlayMode
 				(0, UnitType.PAWN, 6, 5),
 				(-1, UnitType.MINE, 20, 8));
 
-			var unityWorld = GameManager.Instance.GetTickWorld();
+			var unityWorld = GameManager.Instance.GetStepWorld();
 			var simWorld = sim.GetSimWorld();
 
 			CommandProcessor.ProcessGather(
@@ -213,7 +213,7 @@ namespace GameManager.Tests.PlayMode
 			// Damage the sim base to match
 			sim.GetUnit(0).Health = GameConstants.HEALTH[UnitType.BASE] * 0.5f;
 
-			var unityWorld = GameManager.Instance.GetTickWorld();
+			var unityWorld = GameManager.Instance.GetStepWorld();
 			var simWorld = sim.GetSimWorld();
 
 			CommandProcessor.ProcessRepair(
@@ -236,7 +236,7 @@ namespace GameManager.Tests.PlayMode
 				(0, UnitType.MONK, 8, 10));
 			sim.GetUnit(0).Health = GameConstants.HEALTH[UnitType.WARRIOR] * 0.5f;
 
-			var unityWorld = GameManager.Instance.GetTickWorld();
+			var unityWorld = GameManager.Instance.GetStepWorld();
 			var simWorld = sim.GetSimWorld();
 
 			CommandProcessor.ProcessHeal(
@@ -257,7 +257,7 @@ namespace GameManager.Tests.PlayMode
 				(0, UnitType.LANCER, 5, 15),
 				(1, UnitType.ARCHER, 25, 15));
 
-			var unityWorld = GameManager.Instance.GetTickWorld();
+			var unityWorld = GameManager.Instance.GetStepWorld();
 			var simWorld = sim.GetSimWorld();
 
 			CommandProcessor.ProcessAttack((ISimUnit)lancer, archer.UnitNbr, unityWorld);
@@ -287,7 +287,7 @@ namespace GameManager.Tests.PlayMode
 				(-1, UnitType.MINE, 12, 8),
 				(1, UnitType.WARRIOR, 9, 8));
 
-			var unityWorld = GameManager.Instance.GetTickWorld();
+			var unityWorld = GameManager.Instance.GetStepWorld();
 			var simWorld = sim.GetSimWorld();
 
 			// Pawn gathers, enemy attacks the pawn
@@ -320,7 +320,7 @@ namespace GameManager.Tests.PlayMode
 				(-1, UnitType.MINE, 12, 8));
 			sim.GetUnit(3).Health = 30;
 
-			var unityWorld = GameManager.Instance.GetTickWorld();
+			var unityWorld = GameManager.Instance.GetStepWorld();
 			var simWorld = sim.GetSimWorld();
 
 			CommandProcessor.ProcessGather((ISimUnit)pawn0, mine.UnitNbr, baseUnit.UnitNbr, unityWorld);
@@ -366,19 +366,19 @@ namespace GameManager.Tests.PlayMode
 				(0, UnitType.PAWN, 9, 10),
 				(0, UnitType.PAWN, 12, 10));
 
-			var unityWorld = GameManager.Instance.GetTickWorld();
+			var unityWorld = GameManager.Instance.GetStepWorld();
 			var simWorld = sim.GetSimWorld();
 
 			// Train a pawn — spawn should be blocked initially
 			CommandProcessor.ProcessTrain((ISimUnit)baseUnit, UnitType.PAWN, unityWorld);
 			CommandProcessor.ProcessTrain(sim.GetUnit(0), UnitType.PAWN, simWorld);
 
-			// After some ticks, move one blocker away to free a spawn cell
+			// After some steps, move one blocker away to free a spawn cell
 			// We run 100 steps with blocked spawn, then move blocker0 away
 			for (int step = 0; step < 100; step++)
 			{
-				GameManager.Instance.SimulateTick();
-				sim.Tick();
+				GameManager.Instance.SimulateStep();
+				sim.Step();
 				yield return null;
 			}
 
@@ -406,7 +406,7 @@ namespace GameManager.Tests.PlayMode
 				(0, UnitType.PAWN, 6, 5),
 				(1, UnitType.ARCHER, 20, 15));
 
-			var unityWorld = GameManager.Instance.GetTickWorld();
+			var unityWorld = GameManager.Instance.GetStepWorld();
 			var simWorld = sim.GetSimWorld();
 
 			// Pawn builds barracks near the archer
@@ -414,9 +414,9 @@ namespace GameManager.Tests.PlayMode
 			CommandProcessor.ProcessBuild(sim.GetUnit(1), new Position(15, 15), UnitType.BARRACKS, simWorld);
 
 			// Archer attacks the unbuilt barracks (unitNbr 3 in both engines — spawned by ProcessBuild)
-			// Need to wait a tick for the building to be spawned first
-			GameManager.Instance.SimulateTick();
-			sim.Tick();
+			// Need to wait a step for the building to be spawned first
+			GameManager.Instance.SimulateStep();
+			sim.Step();
 
 			var unbuiltBarracks = ctx.UnitManager.GetUnit(3);
 			if (unbuiltBarracks != null)
@@ -445,7 +445,7 @@ namespace GameManager.Tests.PlayMode
 				(0, UnitType.PAWN, 8, 8));
 			sim.GetUnit(0).Health = GameConstants.HEALTH[UnitType.BASE] * 0.3f;
 
-			var unityWorld = GameManager.Instance.GetTickWorld();
+			var unityWorld = GameManager.Instance.GetStepWorld();
 			var simWorld = sim.GetSimWorld();
 
 			CommandProcessor.ProcessRepair((ISimUnit)pawn0, baseUnit.UnitNbr, unityWorld);
@@ -462,7 +462,7 @@ namespace GameManager.Tests.PlayMode
 		public IEnumerator Parity_MonkHealExactMana_IdenticalState()
 		{
 			// Monk starts with exactly MANA_COST mana — heal should succeed.
-			// After heal, mana = 0 and regen must tick identically.
+			// After heal, mana = 0 and regen must step identically.
 			var warrior = PlaceUnit(UnitType.WARRIOR, new Vector3Int(10, 10, 0));
 			warrior.Health = GameConstants.HEALTH[UnitType.WARRIOR] * 0.3f;
 			var monk = PlaceUnit(UnitType.MONK, new Vector3Int(8, 10, 0));
@@ -474,7 +474,7 @@ namespace GameManager.Tests.PlayMode
 			sim.GetUnit(0).Health = GameConstants.HEALTH[UnitType.WARRIOR] * 0.3f;
 			sim.GetUnit(1).Mana = GameConstants.MANA_COST;
 
-			var unityWorld = GameManager.Instance.GetTickWorld();
+			var unityWorld = GameManager.Instance.GetStepWorld();
 			var simWorld = sim.GetSimWorld();
 
 			CommandProcessor.ProcessHeal((ISimUnit)monk, warrior.UnitNbr, unityWorld);
@@ -502,7 +502,7 @@ namespace GameManager.Tests.PlayMode
 				(1, UnitType.WARRIOR, 12, 10));
 			sim.GetUnit(1).Health = 1f;
 
-			var unityWorld = GameManager.Instance.GetTickWorld();
+			var unityWorld = GameManager.Instance.GetStepWorld();
 			var simWorld = sim.GetSimWorld();
 
 			// Warrior attacks weak pawn
@@ -524,7 +524,7 @@ namespace GameManager.Tests.PlayMode
 				(0, UnitType.PAWN, 5, 10),
 				(0, UnitType.PAWN, 25, 10));
 
-			var unityWorld = GameManager.Instance.GetTickWorld();
+			var unityWorld = GameManager.Instance.GetStepWorld();
 			var simWorld = sim.GetSimWorld();
 
 			// Both move to same cell
@@ -546,7 +546,7 @@ namespace GameManager.Tests.PlayMode
 			var sim = BuildMatchingSimGame(
 				(0, UnitType.PAWN, 2, 2));
 
-			var unityWorld = GameManager.Instance.GetTickWorld();
+			var unityWorld = GameManager.Instance.GetStepWorld();
 			var simWorld = sim.GetSimWorld();
 
 			// Move to far diagonal corner
@@ -574,7 +574,7 @@ namespace GameManager.Tests.PlayMode
 			sim.GetUnit(0).Health = 1f;
 			sim.GetUnit(1).Health = 1f;
 
-			var unityWorld = GameManager.Instance.GetTickWorld();
+			var unityWorld = GameManager.Instance.GetStepWorld();
 			var simWorld = sim.GetSimWorld();
 
 			CommandProcessor.ProcessAttack((ISimUnit)w0, w1.UnitNbr, unityWorld);
@@ -611,7 +611,7 @@ namespace GameManager.Tests.PlayMode
 				(1, UnitType.LANCER, 25, 18),
 				(1, UnitType.MONK, 28, 15));
 
-			var unityWorld = GameManager.Instance.GetTickWorld();
+			var unityWorld = GameManager.Instance.GetStepWorld();
 			var simWorld = sim.GetSimWorld();
 
 			// All military units attack the first enemy of each type
@@ -656,7 +656,7 @@ namespace GameManager.Tests.PlayMode
 			{
 				MapWidth = MAP_W,
 				MapHeight = MAP_H,
-				TickDuration = _actualStepDuration
+				StepDuration = _actualStepDuration
 			};
 			var builder = new SimGameBuilder()
 				.WithConfig(config)
@@ -691,7 +691,7 @@ namespace GameManager.Tests.PlayMode
 
 			for (int step = 0; step < steps; step++)
 			{
-				// Collect pre-tick diagnostics for combat scenarios
+				// Collect pre-step diagnostics for combat scenarios
 				if (step < 100)
 				{
 					diag.Append($"[step {step}] ");
@@ -713,8 +713,8 @@ namespace GameManager.Tests.PlayMode
 				}
 
 				// Advance both engines one step
-				GameManager.Instance.SimulateTick();
-				sim.Tick();
+				GameManager.Instance.SimulateStep();
+				sim.Step();
 
 				// Compare gold
 				int unityGold0 = ctx.GetAgent(0).Gold;

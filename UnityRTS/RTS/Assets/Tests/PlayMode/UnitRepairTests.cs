@@ -57,10 +57,10 @@ namespace GameManager.Tests.PlayMode
 			pawn.StartRepairing(new RepairEventArgs(pawn, baseUnit));
 			Assert.AreEqual(UnitAction.REPAIR, pawn.CurrentAction);
 
-			// Tick until repair completes
+			// Step until repair completes
 			yield return WaitUntil(() =>
 			{
-				BuildingTestHelper.Tick(pawn);
+				BuildingTestHelper.Step(pawn);
 				return pawn.CurrentAction == UnitAction.IDLE;
 			}, timeoutSeconds: 15f, failMessage: "Pawn should return to IDLE after repair completes");
 
@@ -84,10 +84,10 @@ namespace GameManager.Tests.PlayMode
 
 			pawn.StartRepairing(new RepairEventArgs(pawn, baseUnit));
 
-			// Tick a few frames to accumulate some repair
+			// Step a few frames to accumulate some repair
 			for (int i = 0; i < 30; i++)
 			{
-				BuildingTestHelper.Tick(pawn);
+				BuildingTestHelper.Step(pawn);
 				yield return null;
 			}
 
@@ -137,10 +137,10 @@ namespace GameManager.Tests.PlayMode
 			pawn.StartRepairing(new RepairEventArgs(pawn, baseUnit));
 			Assert.AreEqual(UnitAction.REPAIR, pawn.CurrentAction);
 
-			// Tick a few frames so repair is in progress
+			// Step a few frames so repair is in progress
 			for (int i = 0; i < 10; i++)
 			{
-				BuildingTestHelper.Tick(pawn);
+				BuildingTestHelper.Step(pawn);
 				yield return null;
 			}
 
@@ -152,7 +152,7 @@ namespace GameManager.Tests.PlayMode
 			// Pawn should detect building is gone and go idle
 			for (int i = 0; i < 5; i++)
 			{
-				BuildingTestHelper.Tick(pawn);
+				BuildingTestHelper.Step(pawn);
 				yield return null;
 			}
 
@@ -238,7 +238,7 @@ namespace GameManager.Tests.PlayMode
 			Unit pawn = PlaceUnit(UnitType.PAWN, new Vector3Int(8, 10, 0));
 			yield return null;
 
-			// Enable debugging via GameManager (Unit.Update reads HasUnitDebugging each tick)
+			// Enable debugging via GameManager (Unit.Update reads HasUnitDebugging each frame)
 			typeof(GameManager).GetProperty("HasUnitDebugging",
 				BindingFlags.Public | BindingFlags.Instance)
 				.SetValue(GameManager.Instance, true);
@@ -246,10 +246,10 @@ namespace GameManager.Tests.PlayMode
 			pawn.StartRepairing(new RepairEventArgs(pawn, baseUnit));
 			Assert.AreEqual(UnitAction.REPAIR, pawn.CurrentAction);
 
-			// Tick to trigger UpdateDebuggingInfo with REPAIR case
+			// Step to trigger UpdateDebuggingInfo with REPAIR case
 			for (int i = 0; i < 5; i++)
 			{
-				BuildingTestHelper.Tick(pawn);
+				BuildingTestHelper.Step(pawn);
 				yield return null;
 			}
 

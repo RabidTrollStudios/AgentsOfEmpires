@@ -25,7 +25,7 @@ namespace GameManager.Tests.PlayMode
 			return baseUnit;
 		}
 
-		private void TickUnit(Unit unit) => unit.Update();
+		private void StepUnit(Unit unit) => unit.Update();
 
 		// ── Happy path ─────────────────────────────────────────────────────────
 
@@ -45,7 +45,7 @@ namespace GameManager.Tests.PlayMode
 
 			yield return WaitUntil(() =>
 			{
-				TickUnit(baseUnit);
+				StepUnit(baseUnit);
 				return ctx.UnitManager.GetAllUnits().Count > unitsBefore;
 			}, timeoutSeconds: 5f, failMessage: "New pawn never appeared after training");
 
@@ -63,7 +63,7 @@ namespace GameManager.Tests.PlayMode
 
 			yield return WaitUntil(() =>
 			{
-				TickUnit(baseUnit);
+				StepUnit(baseUnit);
 				return baseUnit.CurrentAction == UnitAction.IDLE;
 			}, timeoutSeconds: 5f, failMessage: "Base never returned to IDLE after training");
 
@@ -80,7 +80,7 @@ namespace GameManager.Tests.PlayMode
 
 			yield return WaitUntil(() =>
 			{
-				TickUnit(baseUnit);
+				StepUnit(baseUnit);
 				return ctx.UnitManager.GetAllUnits().Count > unitsBefore;
 			}, timeoutSeconds: 5f, failMessage: "Trained pawn never appeared");
 
@@ -116,7 +116,7 @@ namespace GameManager.Tests.PlayMode
 
 				yield return WaitUntil(() =>
 				{
-					TickUnit(baseUnit);
+					StepUnit(baseUnit);
 					return ctx.UnitManager.GetAllUnits().Count > unitsBefore;
 				}, timeoutSeconds: 3f, failMessage: "Training at max speed did not complete quickly");
 
@@ -140,7 +140,7 @@ namespace GameManager.Tests.PlayMode
 
 			yield return WaitUntil(() =>
 			{
-				TickUnit(baseUnit);
+				StepUnit(baseUnit);
 				return ctx.UnitManager.GetAllUnits().Count > unitsBefore;
 			}, timeoutSeconds: 5f, failMessage: "Trained pawn never appeared");
 

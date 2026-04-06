@@ -132,7 +132,7 @@ namespace GameManager.Tests.PlayMode
 			// Kill the base via FixedUpdate() — death check runs in FixedUpdate,
 			// which removes it from UnitManager
 			baseUnit.Health = 0;
-			baseUnit.TickFixedUpdate();
+			baseUnit.StepFixedUpdate();
 
 			// Call StartGathering in the SAME frame — GetUnit returns null but
 			// args.BaseUnit.UnitNbr is still accessible
@@ -218,16 +218,16 @@ namespace GameManager.Tests.PlayMode
 			enemy.StartAttacking(new AttackEventArgs(enemy, warrior));
 			Assert.AreEqual(UnitAction.ATTACK, enemy.CurrentAction);
 
-			// Weaken enemy so it dies next tick
+			// Weaken enemy so it dies next step
 			enemy.Health = 0.01f;
 
-			// Tick both — enemy dies with attackUnitNbr pointing to warrior.
+			// Step both — enemy dies with attackUnitNbr pointing to warrior.
 			// The death branch (including killer info lookup) runs inside Update()
-			// during the tick that reduces health to 0.
+			// during the step that reduces health to 0.
 			yield return WaitUntil(() =>
 			{
-				BuildingTestHelper.Tick(warrior);
-				BuildingTestHelper.Tick(enemy);
+				BuildingTestHelper.Step(warrior);
+				BuildingTestHelper.Step(enemy);
 				return enemy.Health <= 0;
 			}, timeoutSeconds: 10f, failMessage: "Enemy should die from warrior attack");
 
@@ -262,8 +262,8 @@ namespace GameManager.Tests.PlayMode
 			// Force pawn to IDLE (simulates interruption)
 			pawn.CurrentAction = UnitAction.IDLE;
 
-			// Tick — the IDLE branch should clean up currentBuilding
-			pawn.TickFixedUpdate();
+			// Step — the IDLE branch should clean up currentBuilding
+			pawn.StepFixedUpdate();
 			yield return null;
 
 			var afterBuilding = GetPrivateField<GameObject>(pawn, "currentBuilding");
@@ -295,7 +295,7 @@ namespace GameManager.Tests.PlayMode
 			// Wait for construction to complete
 			yield return WaitUntil(() =>
 			{
-				BuildingTestHelper.Tick(pawn);
+				BuildingTestHelper.Step(pawn);
 				return pawn.CurrentAction == UnitAction.IDLE;
 			}, timeoutSeconds: 30f, failMessage: "Building should complete");
 
@@ -304,7 +304,7 @@ namespace GameManager.Tests.PlayMode
 			if (building == null)
 				Assert.Ignore("Could not find completed building");
 
-			// Tick the building through its pulse animation (24 frames)
+			// Step the building through its pulse animation (24 frames)
 			for (int i = 0; i < 30; i++)
 			{
 				building.Update();
@@ -336,10 +336,10 @@ namespace GameManager.Tests.PlayMode
 			pawn.StartRepairing(new RepairEventArgs(pawn, baseUnit));
 			Assert.AreEqual(UnitAction.REPAIR, pawn.CurrentAction);
 
-			// Tick until repair is in BUILDING phase (path cleared, actively repairing)
+			// Step until repair is in BUILDING phase (path cleared, actively repairing)
 			yield return WaitUntil(() =>
 			{
-				BuildingTestHelper.Tick(pawn);
+				BuildingTestHelper.Step(pawn);
 				var phase = GetPrivateField<BuildPhase>(pawn, "buildPhase");
 				return phase == BuildPhase.BUILDING;
 			}, timeoutSeconds: 10f, failMessage: "Pawn should enter BUILDING phase of repair");
@@ -348,10 +348,10 @@ namespace GameManager.Tests.PlayMode
 			// This way currentBuilding is still valid but health <= 0
 			baseUnit.Health = 0;
 
-			// Tick the pawn — UpdateRepair should detect health <= 0
+			// Step the pawn — UpdateRepair should detect health <= 0
 			for (int i = 0; i < 5; i++)
 			{
-				BuildingTestHelper.Tick(pawn);
+				BuildingTestHelper.Step(pawn);
 				yield return null;
 			}
 
@@ -380,24 +380,24 @@ namespace GameManager.Tests.PlayMode
 			// Wait until mining
 			yield return WaitUntil(() =>
 			{
-				BuildingTestHelper.Tick(pawn);
+				BuildingTestHelper.Step(pawn);
 				return mine.Health < Constants.HEALTH[UnitType.MINE];
 			}, timeoutSeconds: 15f, failMessage: "Pawn should start mining");
 
 			// Destroy the base first
 			baseUnit.Health = 0;
-			baseUnit.TickFixedUpdate();
+			baseUnit.StepFixedUpdate();
 			yield return WaitFrames(2);
 
 			// Now destroy the mine
 			mine.Health = 0;
-			mine.TickFixedUpdate();
+			mine.StepFixedUpdate();
 			yield return WaitFrames(2);
 
-			// Tick the pawn — should hit the mine dead + no base path
+			// Step the pawn — should hit the mine dead + no base path
 			for (int i = 0; i < 10; i++)
 			{
-				BuildingTestHelper.Tick(pawn);
+				BuildingTestHelper.Step(pawn);
 				yield return null;
 			}
 
@@ -427,7 +427,7 @@ namespace GameManager.Tests.PlayMode
 			// Wait until pawn reaches MINING phase
 			yield return WaitUntil(() =>
 			{
-				BuildingTestHelper.Tick(pawn);
+				BuildingTestHelper.Step(pawn);
 				return mine.Health < Constants.HEALTH[UnitType.MINE];
 			}, timeoutSeconds: 15f, failMessage: "Pawn should start mining");
 
@@ -439,8 +439,8 @@ namespace GameManager.Tests.PlayMode
 			pawn.TargetUnitType = UnitType.BASE;
 			pawn.TargetGridPos = baseUnit.GridPosition;
 
-			// Tick — pawn should detect it's not at base neighbor and re-path
-			BuildingTestHelper.Tick(pawn);
+			// Step — pawn should detect it's not at base neighbor and re-path
+			BuildingTestHelper.Step(pawn);
 			yield return null;
 
 			// Pawn should still be gathering (it re-pathed, didn't go idle)
@@ -469,7 +469,7 @@ namespace GameManager.Tests.PlayMode
 			// Wait until mining
 			yield return WaitUntil(() =>
 			{
-				BuildingTestHelper.Tick(pawn);
+				BuildingTestHelper.Step(pawn);
 				return mine.Health < Constants.HEALTH[UnitType.MINE];
 			}, timeoutSeconds: 15f, failMessage: "Pawn should start mining");
 
@@ -479,13 +479,13 @@ namespace GameManager.Tests.PlayMode
 
 			// Destroy the base
 			baseUnit.Health = 0;
-			baseUnit.TickFixedUpdate();
+			baseUnit.StepFixedUpdate();
 			yield return WaitFrames(2);
 
-			// Tick the pawn — should detect base is gone and go IDLE
+			// Step the pawn — should detect base is gone and go IDLE
 			for (int i = 0; i < 5; i++)
 			{
-				BuildingTestHelper.Tick(pawn);
+				BuildingTestHelper.Step(pawn);
 				yield return null;
 			}
 
@@ -514,19 +514,19 @@ namespace GameManager.Tests.PlayMode
 			// Wait until mining
 			yield return WaitUntil(() =>
 			{
-				BuildingTestHelper.Tick(pawn);
+				BuildingTestHelper.Step(pawn);
 				return mine.Health < Constants.HEALTH[UnitType.MINE];
 			}, timeoutSeconds: 15f, failMessage: "Pawn should start mining");
 
 			// Destroy the base while mining
 			baseUnit.Health = 0;
-			baseUnit.TickFixedUpdate();
+			baseUnit.StepFixedUpdate();
 			yield return WaitFrames(2);
 
 			// Continue mining until capacity is reached — pawn should go IDLE
 			yield return WaitUntil(() =>
 			{
-				BuildingTestHelper.Tick(pawn);
+				BuildingTestHelper.Step(pawn);
 				return pawn.CurrentAction == UnitAction.IDLE;
 			}, timeoutSeconds: 20f, failMessage: "Pawn should go IDLE when capacity reached and no base");
 		}
@@ -553,27 +553,27 @@ namespace GameManager.Tests.PlayMode
 			// Wait until pawn has started mining
 			yield return WaitUntil(() =>
 			{
-				BuildingTestHelper.Tick(pawn);
+				BuildingTestHelper.Step(pawn);
 				return mine.Health < Constants.HEALTH[UnitType.MINE];
 			}, timeoutSeconds: 15f, failMessage: "Pawn should start mining");
 
 			// Wait until pawn fills capacity and heads to base
 			yield return WaitUntil(() =>
 			{
-				BuildingTestHelper.Tick(pawn);
+				BuildingTestHelper.Step(pawn);
 				var phase = GetPrivateField<GatherPhase>(pawn, "gatherPhase");
 				return phase == GatherPhase.TO_BASE;
 			}, timeoutSeconds: 20f, failMessage: "Pawn should transition to TO_BASE");
 
 			// Destroy the mine while pawn is heading to base
 			mine.Health = 0;
-			mine.TickFixedUpdate();
+			mine.StepFixedUpdate();
 			yield return WaitFrames(2);
 
 			// Let pawn deposit and try to return — should go IDLE since mine is gone
 			yield return WaitUntil(() =>
 			{
-				BuildingTestHelper.Tick(pawn);
+				BuildingTestHelper.Step(pawn);
 				return pawn.CurrentAction == UnitAction.IDLE;
 			}, timeoutSeconds: 20f, failMessage: "Pawn should go IDLE after deposit when mine is gone");
 		}
@@ -638,7 +638,7 @@ namespace GameManager.Tests.PlayMode
 
 			// Kill the pawn
 			pawn.Health = 0;
-			pawn.TickFixedUpdate();
+			pawn.StepFixedUpdate();
 			yield return WaitFrames(2);
 
 			// ActiveBuilders should not contain the dead pawn

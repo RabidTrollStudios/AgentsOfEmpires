@@ -59,13 +59,13 @@ namespace GameManager.Tests.PlayMode
 			Assert.AreEqual(UnitAction.ATTACK, archer.CurrentAction);
 			ForceArcherAttackState(archer);
 
-			// Tick many frames to let the animator reach frame 5 (normalizedTime >= 0.625)
+			// Step many frames to let the animator reach frame 5 (normalizedTime >= 0.625)
 			// and trigger SpawnArrow
 			bool arrowFound = false;
 			for (int i = 0; i < 120; i++)
 			{
 				AdvanceAnimator(archer, Time.fixedDeltaTime);
-				BuildingTestHelper.Tick(archer);
+				BuildingTestHelper.Step(archer);
 				yield return null;
 
 				if (GameObject.Find("Arrow") != null)
@@ -107,7 +107,7 @@ namespace GameManager.Tests.PlayMode
 				if (anim != null)
 					anim.Update(Time.fixedDeltaTime);
 
-				BuildingTestHelper.Tick(archer);
+				BuildingTestHelper.Step(archer);
 				yield return null;
 
 				var arrowGo = GameObject.Find("Arrow");
@@ -148,7 +148,7 @@ namespace GameManager.Tests.PlayMode
 			for (int i = 0; i < 120; i++)
 			{
 				AdvanceAnimator(archer, Time.fixedDeltaTime);
-				BuildingTestHelper.Tick(archer);
+				BuildingTestHelper.Step(archer);
 				yield return null;
 
 				if (GameObject.Find("Arrow") != null)
@@ -179,7 +179,7 @@ namespace GameManager.Tests.PlayMode
 			for (int i = 0; i < 60; i++)
 			{
 				AdvanceAnimator(archer, Time.fixedDeltaTime);
-				BuildingTestHelper.Tick(archer);
+				BuildingTestHelper.Step(archer);
 				yield return null;
 			}
 
@@ -213,7 +213,7 @@ namespace GameManager.Tests.PlayMode
 			for (int i = 0; i < 120; i++)
 			{
 				AdvanceAnimator(archer, Time.fixedDeltaTime);
-				BuildingTestHelper.Tick(archer);
+				BuildingTestHelper.Step(archer);
 				yield return null;
 				arrowGo = GameObject.Find("Arrow");
 				if (arrowGo != null) break;

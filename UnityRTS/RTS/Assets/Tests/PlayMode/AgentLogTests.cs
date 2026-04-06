@@ -223,7 +223,7 @@ namespace GameManager.Tests.PlayMode
 			yield return null;
 			var bridge = CreateAgentBridge("Blue", "TestDLL", 0);
 
-			Assert.DoesNotThrow(() => bridge.TickUpdate());
+			Assert.DoesNotThrow(() => bridge.StepUpdate());
 		}
 
 		// ── OnDestroy ─────────────────────────────────────────────────────────

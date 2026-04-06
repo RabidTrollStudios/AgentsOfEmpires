@@ -31,7 +31,7 @@ namespace GameManager.Tests.PlayMode
 
 			// Kill the pawn — Unit.Update() calls SpawnDeathDust() when Health <= 0
 			pawn.Health = 0;
-			BuildingTestHelper.Tick(pawn);
+			BuildingTestHelper.Step(pawn);
 			yield return null;
 
 			// A "DeathDust" object should have been created
@@ -58,7 +58,7 @@ namespace GameManager.Tests.PlayMode
 			yield return null;
 
 			pawn.Health = 0;
-			BuildingTestHelper.Tick(pawn);
+			BuildingTestHelper.Step(pawn);
 			yield return null;
 
 			var dust = GameObject.Find("DeathDust");

@@ -16,9 +16,9 @@ namespace GameManager.Tests.PlayMode
 	[TestFixture]
 	public class AgentGoldTests : PlayModeTestBase
 	{
-		private void TickUnit(Unit unit)
+		private void StepUnit(Unit unit)
 		{
-			unit.TickFixedUpdate();
+			unit.StepFixedUpdate();
 			unit.Update();
 		}
 
@@ -196,7 +196,7 @@ namespace GameManager.Tests.PlayMode
 			Agent agent = GetAgent0();
 			int initialGold = agent.Gold;
 
-			var world = GameManager.Instance.GetTickWorld();
+			var world = GameManager.Instance.GetStepWorld();
 			AgentSDK.CommandProcessor.ProcessGather(pawn, mine.UnitNbr, baseUnit.UnitNbr, world);
 
 			yield return WaitUntil(
@@ -223,8 +223,8 @@ namespace GameManager.Tests.PlayMode
 			Agent agent = GetAgent0();
 			int initialGold = agent.Gold;
 
-			// Use shared CommandProcessor for proper TickEngine integration
-			var world = GameManager.Instance.GetTickWorld();
+			// Use shared CommandProcessor for proper StepEngine integration
+			var world = GameManager.Instance.GetStepWorld();
 			AgentSDK.CommandProcessor.ProcessGather(pawn, mine.UnitNbr, baseUnit.UnitNbr, world);
 
 			// Wait for at least two deposits (gold to exceed initial + 1 capacity)

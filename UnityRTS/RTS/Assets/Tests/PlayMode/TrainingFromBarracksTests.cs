@@ -17,7 +17,7 @@ namespace GameManager.Tests.PlayMode
 	[TestFixture]
 	public class TrainingFromBarracksTests : PlayModeTestBase
 	{
-		private void TickUnit(Unit unit)
+		private void StepUnit(Unit unit)
 		{
 			unit.Update();
 		}
@@ -47,7 +47,7 @@ namespace GameManager.Tests.PlayMode
 
 			yield return WaitUntil(() =>
 			{
-				TickUnit(barracks);
+				StepUnit(barracks);
 				return ctx.UnitManager.GetAllUnits().Count > unitsBefore;
 			}, timeoutSeconds: 10f, failMessage: "WARRIOR never appeared after BARRACKS training");
 
@@ -78,7 +78,7 @@ namespace GameManager.Tests.PlayMode
 
 			yield return WaitUntil(() =>
 			{
-				TickUnit(archery);
+				StepUnit(archery);
 				return ctx.UnitManager.GetAllUnits().Count > unitsBefore;
 			}, timeoutSeconds: 10f, failMessage: "ARCHER never appeared after ARCHERY training");
 
@@ -121,7 +121,7 @@ namespace GameManager.Tests.PlayMode
 
 			yield return WaitUntil(() =>
 			{
-				TickUnit(barracks);
+				StepUnit(barracks);
 				return barracks.CurrentAction == UnitAction.IDLE;
 			}, timeoutSeconds: 10f, failMessage: "BARRACKS did not go IDLE after training");
 
@@ -209,7 +209,7 @@ namespace GameManager.Tests.PlayMode
 
 			yield return WaitUntil(() =>
 			{
-				TickUnit(barracks);
+				StepUnit(barracks);
 				return barracks.CurrentAction == UnitAction.IDLE;
 			}, timeoutSeconds: 10f, failMessage: "First WARRIOR training did not complete");
 
@@ -222,7 +222,7 @@ namespace GameManager.Tests.PlayMode
 
 			yield return WaitUntil(() =>
 			{
-				TickUnit(barracks);
+				StepUnit(barracks);
 				return barracks.CurrentAction == UnitAction.IDLE;
 			}, timeoutSeconds: 10f, failMessage: "Second WARRIOR training did not complete");
 

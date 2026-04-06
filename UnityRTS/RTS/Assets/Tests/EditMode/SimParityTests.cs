@@ -12,7 +12,7 @@ namespace GameManager.Tests
     ///
     /// Pattern: run a scenario with real agents + command recording, then
     /// replay the recorded commands on a fresh game and assert identical
-    /// state hashes at every tick.
+    /// state hashes at every frame.
     /// </summary>
     [TestFixture]
     public class SimParityTests
@@ -22,7 +22,7 @@ namespace GameManager.Tests
             var builder = scenario.BuilderFactory();
             var agent0 = scenario.Agent0Factory();
             var agent1 = scenario.Agent1Factory();
-            int ticks = scenario.Ticks;
+            int steps = scenario.Frames;
 
             builder.WithAgent(0, agent0).WithAgent(1, agent1);
             var game1 = builder.Build();
@@ -30,10 +30,10 @@ namespace GameManager.Tests
             game1.InitializeMatch();
             game1.InitializeRound();
 
-            var hashes1 = new long[ticks];
-            for (int t = 0; t < ticks; t++)
+            var hashes1 = new long[frames];
+            for (int t = 0; t < steps; t++)
             {
-                game1.Tick();
+                game1.Step();
                 hashes1[t] = game1.GetStateHash();
             }
 
@@ -47,19 +47,19 @@ namespace GameManager.Tests
             game2.InitializeMatch();
             game2.InitializeRound();
 
-            for (int t = 0; t < ticks; t++)
+            for (int t = 0; t < steps; t++)
             {
-                game2.Tick();
+                game2.Step();
                 long hash2 = game2.GetStateHash();
                 if (hashes1[t] != hash2)
                 {
                     return new DivergenceReport
                     {
                         ScenarioName = scenario.Name,
-                        DivergenceTick = t + 1,
+                        DivergenceFrame = t + 1,
                         ExpectedHash = hashes1[t],
                         ActualHash = hash2,
-                        TotalTicks = ticks
+                        TotalFrames = steps
                     };
                 }
             }
@@ -67,7 +67,7 @@ namespace GameManager.Tests
             return new DivergenceReport
             {
                 ScenarioName = scenario.Name,
-                TotalTicks = ticks
+                TotalFrames = steps
             };
         }
 

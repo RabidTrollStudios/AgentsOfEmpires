@@ -146,10 +146,10 @@ namespace GameManager.Tests.PlayMode
 
 			var animator = warrior.GetComponent<Animator>();
 
-			// Tick to let animator process attack state
+			// Step to let animator process attack state
 			for (int i = 0; i < 5; i++)
 			{
-				BuildingTestHelper.Tick(warrior);
+				BuildingTestHelper.Step(warrior);
 				yield return null;
 			}
 
@@ -199,10 +199,10 @@ namespace GameManager.Tests.PlayMode
 			archer.StartMoving(new MoveEventArgs(archer, UnitType.ARCHER, new Vector3Int(20, 10, 0)));
 			Assert.AreEqual(UnitAction.MOVE, archer.CurrentAction);
 
-			// Tick so UpdateAnimation runs with path
+			// Step so UpdateAnimation runs with path
 			for (int i = 0; i < 3; i++)
 			{
-				BuildingTestHelper.Tick(archer);
+				BuildingTestHelper.Step(archer);
 				yield return null;
 			}
 
@@ -231,10 +231,10 @@ namespace GameManager.Tests.PlayMode
 			archer.StartAttacking(new AttackEventArgs(archer, enemy));
 			Assert.AreEqual(UnitAction.ATTACK, archer.CurrentAction);
 
-			// Tick a few frames — archer should be chasing with a path
+			// Step a few frames — archer should be chasing with a path
 			for (int i = 0; i < 3; i++)
 			{
-				BuildingTestHelper.Tick(archer);
+				BuildingTestHelper.Step(archer);
 				yield return null;
 			}
 
@@ -266,7 +266,7 @@ namespace GameManager.Tests.PlayMode
 
 			for (int i = 0; i < 3; i++)
 			{
-				BuildingTestHelper.Tick(pawn);
+				BuildingTestHelper.Step(pawn);
 				yield return null;
 			}
 
@@ -297,7 +297,7 @@ namespace GameManager.Tests.PlayMode
 
 			for (int i = 0; i < 3; i++)
 			{
-				BuildingTestHelper.Tick(warrior);
+				BuildingTestHelper.Step(warrior);
 				yield return null;
 			}
 
@@ -331,10 +331,10 @@ namespace GameManager.Tests.PlayMode
 			if (pawn.CurrentAction != UnitAction.BUILD)
 				Assert.Ignore("Could not start build");
 
-			// Tick until building phase
+			// Step until building phase
 			yield return WaitUntil(() =>
 			{
-				BuildingTestHelper.Tick(pawn);
+				BuildingTestHelper.Step(pawn);
 				return GetPrivateField<BuildPhase>(pawn, "buildPhase") == BuildPhase.BUILDING;
 			}, timeoutSeconds: 15f, failMessage: "Pawn should reach BUILDING phase");
 
@@ -368,14 +368,14 @@ namespace GameManager.Tests.PlayMode
 
 			pawn.StartGathering(new GatherEventArgs(pawn, mine, baseUnit));
 
-			// Tick until MINING phase
+			// Step until MINING phase
 			yield return WaitUntil(() =>
 			{
-				BuildingTestHelper.Tick(pawn);
+				BuildingTestHelper.Step(pawn);
 				return GetPrivateField<GatherPhase>(pawn, "gatherPhase") == GatherPhase.MINING;
 			}, timeoutSeconds: 15f, failMessage: "Pawn should enter MINING phase");
 
-			// Tick to run UpdateAnimation
+			// Step to run UpdateAnimation
 			pawn.Update();
 			yield return null;
 
@@ -406,10 +406,10 @@ namespace GameManager.Tests.PlayMode
 			warrior.StartAttacking(new AttackEventArgs(warrior, enemy));
 			Assert.AreEqual(UnitAction.ATTACK, warrior.CurrentAction);
 
-			// Tick to process — warrior should be adjacent (in range), no path needed
+			// Step to process — warrior should be adjacent (in range), no path needed
 			for (int i = 0; i < 5; i++)
 			{
-				BuildingTestHelper.Tick(warrior);
+				BuildingTestHelper.Step(warrior);
 				yield return null;
 			}
 
@@ -444,7 +444,7 @@ namespace GameManager.Tests.PlayMode
 
 			for (int i = 0; i < 5; i++)
 			{
-				BuildingTestHelper.Tick(lancer);
+				BuildingTestHelper.Step(lancer);
 				yield return null;
 			}
 
@@ -476,10 +476,10 @@ namespace GameManager.Tests.PlayMode
 			lancer.StartAttacking(new AttackEventArgs(lancer, enemy));
 			Assert.AreEqual(UnitAction.ATTACK, lancer.CurrentAction);
 
-			// Tick to process attack — lancer should be adjacent (range 2.5), in range
+			// Step to process attack — lancer should be adjacent (range 2.5), in range
 			for (int i = 0; i < 5; i++)
 			{
-				BuildingTestHelper.Tick(lancer);
+				BuildingTestHelper.Step(lancer);
 				yield return null;
 			}
 
@@ -577,7 +577,7 @@ namespace GameManager.Tests.PlayMode
 			PlaceBuiltBase(new Vector3Int(0, 0, 0));
 			BuildingTestHelper.PlaceBuiltTower(ctx, new Vector3Int(8, 8, 0));
 
-			// Test Up attack (enemy directly above — high HP so it survives 5 ticks)
+			// Test Up attack (enemy directly above — high HP so it survives 5 steps)
 			Unit lancer = PlaceUnit(UnitType.LANCER, new Vector3Int(15, 15, 0));
 			Unit enemyUp = PlaceUnit(UnitType.WARRIOR, new Vector3Int(15, 17, 0), ctx.Agent1Go);
 			VisualTestHelper.SetupLancerAnimator(lancer);
@@ -586,14 +586,14 @@ namespace GameManager.Tests.PlayMode
 			lancer.StartAttacking(new AttackEventArgs(lancer, enemyUp));
 			for (int i = 0; i < 5; i++)
 			{
-				BuildingTestHelper.Tick(lancer);
+				BuildingTestHelper.Step(lancer);
 				yield return null;
 			}
 
 			// Verify lancer is attacking (directional index exercised)
 			Assert.AreEqual(UnitAction.ATTACK, lancer.CurrentAction);
 
-			// Test Down attack (enemy directly below — high HP so it survives 5 ticks)
+			// Test Down attack (enemy directly below — high HP so it survives 5 steps)
 			Unit lancer2 = PlaceUnit(UnitType.LANCER, new Vector3Int(20, 17, 0));
 			Unit enemyDown = PlaceUnit(UnitType.WARRIOR, new Vector3Int(20, 15, 0), ctx.Agent1Go);
 			VisualTestHelper.SetupLancerAnimator(lancer2);
@@ -602,7 +602,7 @@ namespace GameManager.Tests.PlayMode
 			lancer2.StartAttacking(new AttackEventArgs(lancer2, enemyDown));
 			for (int i = 0; i < 5; i++)
 			{
-				BuildingTestHelper.Tick(lancer2);
+				BuildingTestHelper.Step(lancer2);
 				yield return null;
 			}
 			Assert.AreEqual(UnitAction.ATTACK, lancer2.CurrentAction);
@@ -632,8 +632,8 @@ namespace GameManager.Tests.PlayMode
 			var animator = pawn.GetComponent<Animator>();
 
 			// Phase 1: TO_MINE with path → state=5 (RunPickaxe)
-			// Tick a frame so the path is set
-			BuildingTestHelper.Tick(pawn);
+			// Step a frame so the path is set
+			BuildingTestHelper.Step(pawn);
 			yield return null;
 
 			var gatherPhase = GetPrivateField<GatherPhase>(pawn, "gatherPhase");
@@ -648,7 +648,7 @@ namespace GameManager.Tests.PlayMode
 			// Wait until MINING phase
 			yield return WaitUntil(() =>
 			{
-				BuildingTestHelper.Tick(pawn);
+				BuildingTestHelper.Step(pawn);
 				return GetPrivateField<GatherPhase>(pawn, "gatherPhase") == GatherPhase.MINING;
 			}, timeoutSeconds: 15f, failMessage: "Pawn should enter MINING phase");
 
@@ -661,7 +661,7 @@ namespace GameManager.Tests.PlayMode
 			// Wait until TO_BASE phase
 			yield return WaitUntil(() =>
 			{
-				BuildingTestHelper.Tick(pawn);
+				BuildingTestHelper.Step(pawn);
 				return GetPrivateField<GatherPhase>(pawn, "gatherPhase") == GatherPhase.TO_BASE;
 			}, timeoutSeconds: 15f, failMessage: "Pawn should enter TO_BASE phase");
 
@@ -701,7 +701,7 @@ namespace GameManager.Tests.PlayMode
 			var animator = pawn.GetComponent<Animator>();
 
 			// Phase 1: TO_POSITION with path → state=4 (RunHammer)
-			BuildingTestHelper.Tick(pawn);
+			BuildingTestHelper.Step(pawn);
 			yield return null;
 
 			var buildPhase = GetPrivateField<BuildPhase>(pawn, "buildPhase");
@@ -716,7 +716,7 @@ namespace GameManager.Tests.PlayMode
 			// Phase 2: Wait until BUILDING phase → state=3 (InteractHammer)
 			yield return WaitUntil(() =>
 			{
-				BuildingTestHelper.Tick(pawn);
+				BuildingTestHelper.Step(pawn);
 				return GetPrivateField<BuildPhase>(pawn, "buildPhase") == BuildPhase.BUILDING;
 			}, timeoutSeconds: 15f, failMessage: "Pawn should enter BUILDING phase");
 
@@ -755,10 +755,10 @@ namespace GameManager.Tests.PlayMode
 				ctx.MapManager.GridCells[12, y].SetBuildable(false);
 			}
 
-			// Tick — should attempt full re-path, fail, and restore saved path
+			// Step — should attempt full re-path, fail, and restore saved path
 			for (int i = 0; i < 5; i++)
 			{
-				warrior.TickFixedUpdate();
+				warrior.StepFixedUpdate();
 				yield return new WaitForFixedUpdate();
 			}
 

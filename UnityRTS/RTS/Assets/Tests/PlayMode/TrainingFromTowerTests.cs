@@ -16,7 +16,7 @@ namespace GameManager.Tests.PlayMode
 	[TestFixture]
 	public class TrainingFromTowerTests : PlayModeTestBase
 	{
-		private void TickUnit(Unit unit)
+		private void StepUnit(Unit unit)
 		{
 			unit.Update();
 		}
@@ -46,7 +46,7 @@ namespace GameManager.Tests.PlayMode
 
 			yield return WaitUntil(() =>
 			{
-				TickUnit(tower);
+				StepUnit(tower);
 				return ctx.UnitManager.GetAllUnits().Count > unitsBefore;
 			}, timeoutSeconds: 10f, failMessage: "LANCER never appeared after TOWER training");
 
@@ -89,7 +89,7 @@ namespace GameManager.Tests.PlayMode
 
 			yield return WaitUntil(() =>
 			{
-				TickUnit(tower);
+				StepUnit(tower);
 				return tower.CurrentAction == UnitAction.IDLE;
 			}, timeoutSeconds: 10f, failMessage: "TOWER did not go IDLE after training");
 

@@ -18,9 +18,9 @@ namespace GameManager.Tests.PlayMode
 		/// Manually advance a unit's Update and FixedUpdate cycles.
 		/// Required when GameManager.enabled is false in tests.
 		/// </summary>
-		public static void Tick(Unit unit)
+		public static void Step(Unit unit)
 		{
-			unit.TickFixedUpdate();
+			unit.StepFixedUpdate();
 			unit.Update();
 		}
 
@@ -83,7 +83,7 @@ namespace GameManager.Tests.PlayMode
 
 		/// <summary>
 		/// Wait until the given unit's IsBuilt property becomes true,
-		/// ticking the building pawn each frame.
+		/// stepping the building pawn each frame.
 		/// </summary>
 		public static IEnumerator WaitForConstruction(Unit pawn, Unit building,
 			float timeoutSeconds = 15f)
@@ -91,7 +91,7 @@ namespace GameManager.Tests.PlayMode
 			float elapsed = 0f;
 			while (!building.IsBuilt)
 			{
-				Tick(pawn);
+				Step(pawn);
 				elapsed += Time.deltaTime;
 				if (elapsed > timeoutSeconds)
 				{
@@ -104,7 +104,7 @@ namespace GameManager.Tests.PlayMode
 
 		/// <summary>
 		/// Wait until the given trainer's CurrentAction returns to IDLE,
-		/// ticking the trainer each frame.
+		/// stepping the trainer each frame.
 		/// </summary>
 		public static IEnumerator WaitForTraining(Unit trainer,
 			float timeoutSeconds = 15f)

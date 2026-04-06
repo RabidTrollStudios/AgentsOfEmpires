@@ -19,9 +19,9 @@ namespace GameManager.Tests.PlayMode
 	{
 		// ── Helper ─────────────────────────────────────────────────────────────
 
-		private void TickUnit(Unit unit)
+		private void StepUnit(Unit unit)
 		{
-			unit.TickFixedUpdate();
+			unit.StepFixedUpdate();
 			unit.Update();
 		}
 
@@ -45,7 +45,7 @@ namespace GameManager.Tests.PlayMode
 
 			yield return WaitUntil(() =>
 			{
-				TickUnit(pawn);
+				StepUnit(pawn);
 				return building.IsBuilt;
 			}, timeoutSeconds: 10f, failMessage: "Building never became IsBuilt=true");
 
@@ -90,7 +90,7 @@ namespace GameManager.Tests.PlayMode
 
 			yield return WaitUntil(() =>
 			{
-				TickUnit(pawn);
+				StepUnit(pawn);
 				return pawn.CurrentAction == UnitAction.IDLE;
 			}, timeoutSeconds: 10f, failMessage: "Pawn never returned to IDLE after building");
 
@@ -143,7 +143,7 @@ namespace GameManager.Tests.PlayMode
 
 			yield return WaitUntil(() =>
 			{
-				TickUnit(pawn);
+				StepUnit(pawn);
 				return pawn.CurrentAction == UnitAction.IDLE;
 			}, timeoutSeconds: 10f, failMessage: "Build near map edge did not complete");
 
@@ -165,7 +165,7 @@ namespace GameManager.Tests.PlayMode
 
 			yield return WaitUntil(() =>
 			{
-				TickUnit(pawn);
+				StepUnit(pawn);
 				return pawn.CurrentAction == UnitAction.IDLE;
 			}, timeoutSeconds: 5f, failMessage: "Adjacent pawn did not finish building quickly");
 

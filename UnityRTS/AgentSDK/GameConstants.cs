@@ -150,7 +150,7 @@ namespace AgentSDK
                 { UnitType.BASE,        0.0f },
                 { UnitType.BARRACKS,    0.0f },
                 { UnitType.ARCHERY,     0.0f },
-                { UnitType.LANCER,      2.5f },
+                { UnitType.LANCER,      2.0f },
                 { UnitType.TOWER,       0.0f },
                 { UnitType.MONASTERY,   0.0f },
                 { UnitType.MONK,        0.0f },

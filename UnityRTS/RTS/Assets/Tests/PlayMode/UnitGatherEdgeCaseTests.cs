@@ -44,7 +44,7 @@ namespace GameManager.Tests.PlayMode
 			// Wait until the pawn is mining (has arrived at mine and is extracting)
 			yield return WaitUntil(() =>
 			{
-				BuildingTestHelper.Tick(pawn);
+				BuildingTestHelper.Step(pawn);
 				// Pawn is gathering and mine health is decreasing
 				return pawn.CurrentAction == UnitAction.GATHER && mine.Health < Constants.HEALTH[UnitType.MINE];
 			}, timeoutSeconds: 15f, failMessage: "Pawn should start mining");
@@ -54,10 +54,10 @@ namespace GameManager.Tests.PlayMode
 			mine.Update();
 			yield return WaitFrames(2);
 
-			// Tick the pawn — it should detect the mine is gone
+			// Step the pawn — it should detect the mine is gone
 			for (int i = 0; i < 10; i++)
 			{
-				BuildingTestHelper.Tick(pawn);
+				BuildingTestHelper.Step(pawn);
 				yield return null;
 			}
 
@@ -65,7 +65,7 @@ namespace GameManager.Tests.PlayMode
 			// The key behavior: pawn doesn't crash and eventually returns to IDLE
 			yield return WaitUntil(() =>
 			{
-				BuildingTestHelper.Tick(pawn);
+				BuildingTestHelper.Step(pawn);
 				return pawn.CurrentAction == UnitAction.IDLE;
 			}, timeoutSeconds: 15f, failMessage: "Pawn should eventually go IDLE after mine depleted");
 		}
@@ -93,7 +93,7 @@ namespace GameManager.Tests.PlayMode
 			// Let the pawn gather for a bit, wait for it to start mining
 			yield return WaitUntil(() =>
 			{
-				BuildingTestHelper.Tick(pawn);
+				BuildingTestHelper.Step(pawn);
 				return mine.Health < Constants.HEALTH[UnitType.MINE];
 			}, timeoutSeconds: 15f, failMessage: "Pawn should start mining");
 
@@ -102,10 +102,10 @@ namespace GameManager.Tests.PlayMode
 			baseUnit.Update();
 			yield return WaitFrames(2);
 
-			// Tick enough for the pawn to try to deposit and fail
+			// Step enough for the pawn to try to deposit and fail
 			yield return WaitUntil(() =>
 			{
-				BuildingTestHelper.Tick(pawn);
+				BuildingTestHelper.Step(pawn);
 				return pawn.CurrentAction == UnitAction.IDLE;
 			}, timeoutSeconds: 20f, failMessage: "Pawn should go IDLE when base is destroyed and can't deposit");
 		}
@@ -130,10 +130,10 @@ namespace GameManager.Tests.PlayMode
 			StartGathering(pawn, mine, baseUnit);
 			Assert.AreEqual(UnitAction.GATHER, pawn.CurrentAction);
 
-			// Tick a few frames so pawn is moving toward the mine
+			// Step a few frames so pawn is moving toward the mine
 			for (int i = 0; i < 5; i++)
 			{
-				BuildingTestHelper.Tick(pawn);
+				BuildingTestHelper.Step(pawn);
 				yield return null;
 			}
 
@@ -145,7 +145,7 @@ namespace GameManager.Tests.PlayMode
 			// Pawn should detect mine is gone during TO_MINE phase
 			for (int i = 0; i < 5; i++)
 			{
-				BuildingTestHelper.Tick(pawn);
+				BuildingTestHelper.Step(pawn);
 				yield return null;
 			}
 

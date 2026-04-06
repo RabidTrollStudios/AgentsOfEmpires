@@ -67,10 +67,10 @@ namespace GameManager.Tests.PlayMode
 			pawn.StartGathering(new GatherEventArgs(pawn, mine, baseUnit));
 			Assert.AreEqual(UnitAction.GATHER, pawn.CurrentAction);
 
-			// Tick many times — the pawn should eventually give up and go IDLE
+			// Step many times — the pawn should eventually give up and go IDLE
 			yield return WaitUntil(() =>
 			{
-				BuildingTestHelper.Tick(pawn);
+				BuildingTestHelper.Step(pawn);
 				return pawn.CurrentAction == UnitAction.IDLE;
 			}, timeoutSeconds: 15f, failMessage: "Pawn should go IDLE after repeated path failures");
 
@@ -97,10 +97,10 @@ namespace GameManager.Tests.PlayMode
 
 			pawn.StartMoving(new MoveEventArgs(pawn, UnitType.PAWN, new Vector3Int(10, 5, 0)));
 
-			// Tick until the pawn either reaches nearby and stops, or goes IDLE
+			// Step until the pawn either reaches nearby and stops, or goes IDLE
 			yield return WaitUntil(() =>
 			{
-				BuildingTestHelper.Tick(pawn);
+				BuildingTestHelper.Step(pawn);
 				return pawn.CurrentAction == UnitAction.IDLE;
 			}, timeoutSeconds: 10f, failMessage: "Pawn should stop when destination is blocked by another unit");
 

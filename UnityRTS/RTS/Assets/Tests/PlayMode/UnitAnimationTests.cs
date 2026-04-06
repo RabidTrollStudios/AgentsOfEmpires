@@ -33,8 +33,8 @@ namespace GameManager.Tests.PlayMode
 			VisualTestHelper.SetupLancerAnimator(lancer);
 			yield return null;
 
-			// Tick to trigger UpdateAnimation which uses lancerStateHashes
-			BuildingTestHelper.Tick(lancer);
+			// Step to trigger UpdateAnimation which uses lancerStateHashes
+			BuildingTestHelper.Step(lancer);
 			yield return null;
 
 			// Lancer should still be IDLE (no commands issued) — no exceptions thrown
@@ -54,10 +54,10 @@ namespace GameManager.Tests.PlayMode
 			lancer.StartMoving(new MoveEventArgs(lancer, UnitType.LANCER, new Vector3Int(20, 20, 0)));
 			Assert.AreEqual(UnitAction.MOVE, lancer.CurrentAction);
 
-			// Tick to drive animation update
+			// Step to drive animation update
 			for (int i = 0; i < 5; i++)
 			{
-				BuildingTestHelper.Tick(lancer);
+				BuildingTestHelper.Step(lancer);
 				yield return null;
 			}
 
@@ -81,10 +81,10 @@ namespace GameManager.Tests.PlayMode
 			lancer.StartAttacking(new AttackEventArgs(lancer, enemy));
 			Assert.AreEqual(UnitAction.ATTACK, lancer.CurrentAction);
 
-			// Tick to trigger directional attack animation selection
+			// Step to trigger directional attack animation selection
 			for (int i = 0; i < 10; i++)
 			{
-				BuildingTestHelper.Tick(lancer);
+				BuildingTestHelper.Step(lancer);
 				yield return null;
 			}
 
@@ -108,7 +108,7 @@ namespace GameManager.Tests.PlayMode
 
 			for (int i = 0; i < 10; i++)
 			{
-				BuildingTestHelper.Tick(lancer);
+				BuildingTestHelper.Step(lancer);
 				yield return null;
 			}
 
@@ -130,7 +130,7 @@ namespace GameManager.Tests.PlayMode
 
 			for (int i = 0; i < 10; i++)
 			{
-				BuildingTestHelper.Tick(lancer);
+				BuildingTestHelper.Step(lancer);
 				yield return null;
 			}
 
@@ -150,7 +150,7 @@ namespace GameManager.Tests.PlayMode
 			// InitLancerStateHashes without a controller — should not crash
 			lancer.InitLancerStateHashes();
 
-			BuildingTestHelper.Tick(lancer);
+			BuildingTestHelper.Step(lancer);
 			yield return null;
 
 			Assert.AreEqual(UnitAction.IDLE, lancer.CurrentAction);
@@ -175,11 +175,11 @@ namespace GameManager.Tests.PlayMode
 			warrior.StartAttacking(new AttackEventArgs(warrior, enemy));
 			Assert.AreEqual(UnitAction.ATTACK, warrior.CurrentAction);
 
-			// Tick many frames to allow the animation to complete one loop
+			// Step many frames to allow the animation to complete one loop
 			// and potentially trigger the useAttack2 toggle
 			for (int i = 0; i < 60; i++)
 			{
-				BuildingTestHelper.Tick(warrior);
+				BuildingTestHelper.Step(warrior);
 				yield return null;
 			}
 
@@ -207,7 +207,7 @@ namespace GameManager.Tests.PlayMode
 
 			for (int i = 0; i < 10; i++)
 			{
-				BuildingTestHelper.Tick(warrior);
+				BuildingTestHelper.Step(warrior);
 				yield return null;
 			}
 
@@ -231,7 +231,7 @@ namespace GameManager.Tests.PlayMode
 			// Wait for arrival
 			yield return WaitUntil(() =>
 			{
-				BuildingTestHelper.Tick(warrior);
+				BuildingTestHelper.Step(warrior);
 				return warrior.CurrentAction == UnitAction.IDLE;
 			}, timeoutSeconds: 10f, failMessage: "Warrior should arrive at destination");
 
@@ -258,7 +258,7 @@ namespace GameManager.Tests.PlayMode
 
 			for (int i = 0; i < 10; i++)
 			{
-				BuildingTestHelper.Tick(archer);
+				BuildingTestHelper.Step(archer);
 				yield return null;
 			}
 
@@ -288,10 +288,10 @@ namespace GameManager.Tests.PlayMode
 
 			if (pawn.CurrentAction == UnitAction.BUILD)
 			{
-				// Tick a few frames — pawn should be in TO_POSITION or BUILDING phase
+				// Step a few frames — pawn should be in TO_POSITION or BUILDING phase
 				for (int i = 0; i < 30; i++)
 				{
-					BuildingTestHelper.Tick(pawn);
+					BuildingTestHelper.Step(pawn);
 					yield return null;
 				}
 
@@ -322,10 +322,10 @@ namespace GameManager.Tests.PlayMode
 			pawn.StartGathering(new GatherEventArgs(pawn, mine, baseUnit));
 			Assert.AreEqual(UnitAction.GATHER, pawn.CurrentAction);
 
-			// Tick through the gather cycle — TO_MINE, MINING, TO_BASE
+			// Step through the gather cycle — TO_MINE, MINING, TO_BASE
 			for (int i = 0; i < 200; i++)
 			{
-				BuildingTestHelper.Tick(pawn);
+				BuildingTestHelper.Step(pawn);
 				yield return null;
 
 				if (pawn.CurrentAction != UnitAction.GATHER)
@@ -353,10 +353,10 @@ namespace GameManager.Tests.PlayMode
 
 			pawn.StartBuilding(new BuildEventArgs(pawn, new Vector3Int(10, 10, 0), UnitType.BARRACKS));
 
-			// Tick until building phase
+			// Step until building phase
 			for (int i = 0; i < 60; i++)
 			{
-				BuildingTestHelper.Tick(pawn);
+				BuildingTestHelper.Step(pawn);
 				yield return null;
 			}
 
@@ -380,7 +380,7 @@ namespace GameManager.Tests.PlayMode
 
 			for (int i = 0; i < 10; i++)
 			{
-				BuildingTestHelper.Tick(lancer);
+				BuildingTestHelper.Step(lancer);
 				yield return null;
 			}
 

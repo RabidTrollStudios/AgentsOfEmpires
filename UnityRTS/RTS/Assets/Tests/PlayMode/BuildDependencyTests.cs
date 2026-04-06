@@ -17,9 +17,9 @@ namespace GameManager.Tests.PlayMode
 	[TestFixture]
 	public class BuildDependencyTests : PlayModeTestBase
 	{
-		private void TickUnit(Unit unit)
+		private void StepUnit(Unit unit)
 		{
-			unit.TickFixedUpdate();
+			unit.StepFixedUpdate();
 			unit.Update();
 		}
 
@@ -44,7 +44,7 @@ namespace GameManager.Tests.PlayMode
 			Unit baseUnit = null;
 			yield return WaitUntil(() =>
 			{
-				TickUnit(pawn);
+				StepUnit(pawn);
 				baseUnit = ctx.UnitManager.GetAllUnits().Values
 					.Select(go => go.GetComponent<Unit>())
 					.FirstOrDefault(u => u.UnitType == UnitType.BASE);
@@ -86,7 +86,7 @@ namespace GameManager.Tests.PlayMode
 			Unit baseUnit = null;
 			yield return WaitUntil(() =>
 			{
-				TickUnit(pawn);
+				StepUnit(pawn);
 				baseUnit = ctx.UnitManager.GetAllUnits().Values
 					.Select(go => go.GetComponent<Unit>())
 					.FirstOrDefault(u => u.UnitType == UnitType.BASE);

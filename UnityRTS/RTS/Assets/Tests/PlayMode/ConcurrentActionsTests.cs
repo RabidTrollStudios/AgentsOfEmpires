@@ -16,9 +16,9 @@ namespace GameManager.Tests.PlayMode
 	[TestFixture]
 	public class ConcurrentActionsTests : PlayModeTestBase
 	{
-		private void TickUnit(Unit unit)
+		private void StepUnit(Unit unit)
 		{
-			unit.TickFixedUpdate();
+			unit.StepFixedUpdate();
 			unit.Update();
 		}
 
@@ -52,7 +52,7 @@ namespace GameManager.Tests.PlayMode
 			Unit building = null;
 			yield return WaitUntil(() =>
 			{
-				TickUnit(pawn);
+				StepUnit(pawn);
 				if (!warriorDone && ctx.UnitManager.GetUnit(enemyNbr) == null)
 					warriorDone = true;
 				if (!pawnDone)
@@ -94,8 +94,8 @@ namespace GameManager.Tests.PlayMode
 			// Wait for both pawns to go IDLE (build complete)
 			yield return WaitUntil(() =>
 			{
-				TickUnit(pawn0);
-				TickUnit(pawn1);
+				StepUnit(pawn0);
+				StepUnit(pawn1);
 				return pawn0.CurrentAction == UnitAction.IDLE
 					&& pawn1.CurrentAction == UnitAction.IDLE;
 			}, timeoutSeconds: 20f, failMessage: "Both pawns did not complete their builds");

@@ -16,9 +16,9 @@ namespace GameManager.Tests.PlayMode
 	[TestFixture]
 	public class UnitInterruptTests : PlayModeTestBase
 	{
-		private void TickUnit(Unit unit)
+		private void StepUnit(Unit unit)
 		{
-			unit.TickFixedUpdate();
+			unit.StepFixedUpdate();
 			unit.Update();
 		}
 

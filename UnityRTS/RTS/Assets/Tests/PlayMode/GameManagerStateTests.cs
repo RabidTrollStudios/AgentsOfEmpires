@@ -39,7 +39,7 @@ namespace GameManager.Tests.PlayMode
 				.SetValue(GM, value);
 
 		/// <summary>
-		/// Manually drives one Update() tick on the inactive GameManager singleton.
+		/// Manually drives one Update() step on the inactive GameManager singleton.
 		/// </summary>
 		private static void InvokeUpdate() =>
 			typeof(GameManager)

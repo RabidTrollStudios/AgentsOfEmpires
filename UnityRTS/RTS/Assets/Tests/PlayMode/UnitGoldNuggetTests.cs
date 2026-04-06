@@ -13,7 +13,7 @@ namespace GameManager.Tests.PlayMode
 	/// PlayMode tests for gold nugget spawning during mining (SpawnGoldNugget).
 	/// Uses real GoldResourceSprite via VisualTestHelper.
 	/// SpawnGoldNugget is invoked via reflection to avoid animation-timing dependency
-	/// (animator normalizedTime does not advance reliably with manual Tick calls).
+	/// (animator normalizedTime does not advance reliably with manual Step calls).
 	/// </summary>
 	[TestFixture]
 	public class UnitGoldNuggetTests : PlayModeTestBase
@@ -107,10 +107,10 @@ namespace GameManager.Tests.PlayMode
 			pawn.StartGathering(new GatherEventArgs(pawn, mine, baseUnit));
 			Assert.AreEqual(UnitAction.GATHER, pawn.CurrentAction);
 
-			// Tick until pawn enters MINING phase
+			// Step until pawn enters MINING phase
 			for (int i = 0; i < 60; i++)
 			{
-				BuildingTestHelper.Tick(pawn);
+				BuildingTestHelper.Step(pawn);
 				yield return null;
 				if (GetGatherPhase(pawn) == GatherPhase.MINING)
 					break;
@@ -118,7 +118,7 @@ namespace GameManager.Tests.PlayMode
 			Assert.AreEqual(GatherPhase.MINING, GetGatherPhase(pawn),
 				"Pawn should have entered MINING phase");
 
-			// Tick once so UpdateAnimation sets State=6 (InteractPickaxe) for MINING
+			// Step once so UpdateAnimation sets State=6 (InteractPickaxe) for MINING
 			pawn.Update();
 
 			// Wait for the animator state transition to complete.
@@ -137,7 +137,7 @@ namespace GameManager.Tests.PlayMode
 			for (int step = 0; step < 60; step++)
 			{
 				animator.Update(0.1f);
-				BuildingTestHelper.Tick(pawn);
+				BuildingTestHelper.Step(pawn);
 				yield return null;
 
 				if (GameObject.Find("GoldNugget") != null)

@@ -75,7 +75,7 @@ namespace GameManager.Tests.PlayMode
 			{
 				MapWidth = MAP_W,
 				MapHeight = MAP_H,
-				TickDuration = _actualStepDuration
+				StepDuration = _actualStepDuration
 			};
 			var builder = new SimGameBuilder()
 				.WithConfig(config)
@@ -105,7 +105,7 @@ namespace GameManager.Tests.PlayMode
 		public IEnumerator Stress_EconomyAgent_2000Steps()
 		{
 			// Full economy: gather, build barracks, train warriors.
-			// Exercises pathfinding budget heavily (agents query paths every tick).
+			// Exercises pathfinding budget heavily (agents query paths every frame).
 			var baseUnit = PlaceUnit(UnitType.BASE, new Vector3Int(5, 5, 0));
 			baseUnit.IsBuilt = true;
 			var pawn0 = PlaceUnit(UnitType.PAWN, new Vector3Int(8, 5, 0));
@@ -185,7 +185,7 @@ namespace GameManager.Tests.PlayMode
 		[UnityTest]
 		public IEnumerator Stress_RapidFireCommands_500Steps()
 		{
-			// Agent issues many commands per tick to exercise cooldown/dedup.
+			// Agent issues many commands per step to exercise cooldown/dedup.
 			var base0 = PlaceUnit(UnitType.BASE, new Vector3Int(5, 10, 0));
 			base0.IsBuilt = true;
 			for (int i = 0; i < 8; i++)
@@ -206,7 +206,7 @@ namespace GameManager.Tests.PlayMode
 		[UnityTest]
 		public IEnumerator Stress_PathfindingFlood_300Steps()
 		{
-			// Agent calls GetPathBetween 30+ times per tick to hit the budget.
+			// Agent calls GetPathBetween 30+ times per step to hit the budget.
 			var pawn = PlaceUnit(UnitType.PAWN, new Vector3Int(5, 5, 0));
 
 			WireAgent(ctx.Agent0Go, 0, new StressPathfloodAgent());
@@ -225,8 +225,8 @@ namespace GameManager.Tests.PlayMode
 		{
 			for (int step = 0; step < steps; step++)
 			{
-				GameManager.Instance.SimulateTick();
-				sim.Tick();
+				GameManager.Instance.SimulateStep();
+				sim.Step();
 
 				// Compare gold
 				int unityGold0 = ctx.GetAgent(0).Gold;
@@ -348,7 +348,7 @@ namespace GameManager.Tests.PlayMode
 
 		/// <summary>
 		/// Combat agent: attacks closest enemy with all combat units.
-		/// Reissues attack commands each tick (tests cooldown system with dead targets).
+		/// Reissues attack commands each frame (tests cooldown system with dead targets).
 		/// </summary>
 		private class StressCombatAgent : IPlanningAgent
 		{
@@ -457,31 +457,31 @@ namespace GameManager.Tests.PlayMode
 		}
 
 		/// <summary>
-		/// Rapid fire agent: issues many commands per tick to stress cooldown and dedup.
-		/// Moves all pawns to random valid positions every tick.
+		/// Rapid fire agent: issues many commands per step to stress cooldown and dedup.
+		/// Moves all pawns to random valid positions every frame.
 		/// </summary>
 		private class StressRapidFireAgent : IPlanningAgent
 		{
-			private int tick;
+			private int frame;
 
-			public void InitializeMatch() { tick = 0; }
+			public void InitializeMatch() { step = 0; }
 			public void InitializeRound(IGameState state) { }
 			public void Learn(IGameState state) { }
 
 			public void Update(IGameState state, IAgentActions actions)
 			{
-				tick++;
+				frame++;
 				var pawns = state.GetMyUnits(UnitType.PAWN);
 
-				// Move all pawns to a new position each tick (deterministic, based on tick number)
+				// Move all pawns to a new position each frame (deterministic, based on step number)
 				for (int i = 0; i < pawns.Count; i++)
 				{
-					int x = 5 + ((tick * 7 + i * 3) % 20);
-					int y = 5 + ((tick * 11 + i * 5) % 20);
+					int x = 5 + ((step * 7 + i * 3) % 20);
+					int y = 5 + ((step * 11 + i * 5) % 20);
 					actions.Move(pawns[i], new Position(x, y));
 				}
 
-				// Also try to train from base every tick (will fail most of the time — tests cooldown)
+				// Also try to train from base every frame (will fail most of the time — tests cooldown)
 				var bases = state.GetMyUnits(UnitType.BASE);
 				foreach (int bNbr in bases)
 				{
@@ -491,34 +491,34 @@ namespace GameManager.Tests.PlayMode
 		}
 
 		/// <summary>
-		/// Pathfinding flood agent: calls GetPathBetween 30+ times per tick.
-		/// Tests the pathfinding budget (20 calls/tick cap).
+		/// Pathfinding flood agent: calls GetPathBetween 30+ times per step.
+		/// Tests the pathfinding budget (20 calls/step cap).
 		/// </summary>
 		private class StressPathfloodAgent : IPlanningAgent
 		{
-			private int tick;
+			private int frame;
 
-			public void InitializeMatch() { tick = 0; }
+			public void InitializeMatch() { step = 0; }
 			public void InitializeRound(IGameState state) { }
 			public void Learn(IGameState state) { }
 
 			public void Update(IGameState state, IAgentActions actions)
 			{
-				tick++;
-				// Query 30 paths per tick — exceeds budget of 20
+				frame++;
+				// Query 30 paths per step — exceeds budget of 20
 				for (int i = 0; i < 30; i++)
 				{
 					int x = 2 + (i % 26);
-					int y = 2 + ((tick + i) % 26);
+					int y = 2 + ((step + i) % 26);
 					state.GetPathBetween(new Position(5, 5), new Position(x, y));
 				}
 
-				// Move the pawn based on tick to keep things dynamic
+				// Move the pawn based on step to keep things dynamic
 				var pawns = state.GetMyUnits(UnitType.PAWN);
 				if (pawns.Count > 0)
 				{
-					int x = 5 + (tick % 20);
-					int y = 5 + ((tick * 3) % 20);
+					int x = 5 + (step % 20);
+					int y = 5 + ((step * 3) % 20);
 					actions.Move(pawns[0], new Position(x, y));
 				}
 			}

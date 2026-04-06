@@ -51,11 +51,11 @@ namespace GameManager.Tests.PlayMode
 			// Now wall off the unreachable enemy so subsequent re-paths fail
 			WallOff(20, 20);
 
-			// Tick — after pathFailCount >= 3, FindClosestReachableEnemy fires
+			// Step — after pathFailCount >= 3, FindClosestReachableEnemy fires
 			bool retargeted = false;
 			for (int i = 0; i < 300; i++)
 			{
-				BuildingTestHelper.Tick(warrior);
+				BuildingTestHelper.Step(warrior);
 				yield return null;
 
 				if (warrior.AttackUnit == reachableEnemy)
@@ -87,11 +87,11 @@ namespace GameManager.Tests.PlayMode
 			// Now wall off the enemy so subsequent re-paths fail
 			WallOff(20, 20);
 
-			// Tick many frames — warrior should stay in ATTACK (doesn't go IDLE)
+			// Step many frames — warrior should stay in ATTACK (doesn't go IDLE)
 			// because attack retargeting resets pathFailCount when no alt found
 			for (int i = 0; i < 200; i++)
 			{
-				BuildingTestHelper.Tick(warrior);
+				BuildingTestHelper.Step(warrior);
 				yield return null;
 			}
 
@@ -126,7 +126,7 @@ namespace GameManager.Tests.PlayMode
 			bool retargeted = false;
 			for (int i = 0; i < 300; i++)
 			{
-				BuildingTestHelper.Tick(warrior);
+				BuildingTestHelper.Step(warrior);
 				yield return null;
 
 				if (warrior.AttackUnit == reachableEnemy)
