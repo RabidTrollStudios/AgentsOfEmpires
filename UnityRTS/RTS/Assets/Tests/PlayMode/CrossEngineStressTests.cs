@@ -517,7 +517,7 @@ namespace GameManager.Tests.PlayMode
 				var pawns = state.GetMyUnits(UnitType.PAWN);
 				if (pawns.Count > 0)
 				{
-					int x = 5 + (step % 20);
+					int x = 5 + (frame % 20);
 					int y = 5 + (( frame * 3) % 20);
 					actions.Move(pawns[0], new Position(x, y));
 				}
