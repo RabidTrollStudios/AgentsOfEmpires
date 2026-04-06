@@ -35,7 +35,7 @@ namespace AgentTestHarness
         public int RepairBuildingNbr;
         public int HealTargetNbr;
         public float Mana;
-        public int LocalAvoidWaitTicks;
+        public int LocalAvoidWaitFrames;
 
         internal static UnitSnapshot FromSimUnit(SimUnit u)
         {
@@ -65,27 +65,27 @@ namespace AgentTestHarness
                 RepairBuildingNbr = u.RepairBuildingNbr,
                 HealTargetNbr = u.HealTargetNbr,
                 Mana = u.Mana,
-                LocalAvoidWaitTicks = u.LocalAvoidWaitTicks
+                LocalAvoidWaitFrames = u.LocalAvoidWaitFrames
             };
         }
     }
 
     /// <summary>
-    /// Immutable snapshot of the entire game state at a single tick.
+    /// Immutable snapshot of the entire game state at a single frame.
     /// Supports field-level diff for diagnosing exactly what changed.
     /// </summary>
     public class StateSnapshot
     {
-        public int CurrentTick { get; }
+        public int CurrentFrame { get; }
         public int Gold0 { get; }
         public int Gold1 { get; }
         public int NextUnitNbr { get; }
         public IReadOnlyDictionary<int, UnitSnapshot> Units { get; }
 
-        private StateSnapshot(int currentTick, int gold0, int gold1, int nextUnitNbr,
+        private StateSnapshot(int currentFrame, int gold0, int gold1, int nextUnitNbr,
             Dictionary<int, UnitSnapshot> units)
         {
-            CurrentTick = currentTick;
+            CurrentFrame = currentFrame;
             Gold0 = gold0;
             Gold1 = gold1;
             NextUnitNbr = nextUnitNbr;
@@ -104,7 +104,7 @@ namespace AgentTestHarness
             }
 
             return new StateSnapshot(
-                game.CurrentTick,
+                game.CurrentFrame,
                 game.Gold[0],
                 game.Gold[1],
                 game.NextUnitNbr,
@@ -120,8 +120,8 @@ namespace AgentTestHarness
             var sb = new StringBuilder();
 
             // Global state
-            if (a.CurrentTick != b.CurrentTick)
-                sb.AppendLine($"  CurrentTick: {a.CurrentTick} -> {b.CurrentTick}");
+            if (a.CurrentFrame != b.CurrentFrame)
+                sb.AppendLine($"  CurrentFrame: {a.CurrentFrame} -> {b.CurrentFrame}");
             if (a.Gold0 != b.Gold0)
                 sb.AppendLine($"  Gold[0]: {a.Gold0} -> {b.Gold0}");
             if (a.Gold1 != b.Gold1)
@@ -193,7 +193,7 @@ namespace AgentTestHarness
             Check("RepairBuildingNbr", a.RepairBuildingNbr, b.RepairBuildingNbr);
             Check("HealTargetNbr", a.HealTargetNbr, b.HealTargetNbr);
             Check("Mana", a.Mana, b.Mana);
-            Check("LocalAvoidWaitTicks", a.LocalAvoidWaitTicks, b.LocalAvoidWaitTicks);
+            Check("LocalAvoidWaitFrames", a.LocalAvoidWaitFrames, b.LocalAvoidWaitFrames);
 
             return sb.ToString();
         }

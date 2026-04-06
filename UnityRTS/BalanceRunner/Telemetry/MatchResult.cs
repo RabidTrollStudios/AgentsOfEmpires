@@ -20,14 +20,14 @@ namespace BalanceRunner.Telemetry
         /// <summary>Map template used for this match.</summary>
         public MapTemplate MapTemplate { get; set; }
 
-        /// <summary>Maximum ticks allowed before timeout.</summary>
-        public int TickLimit { get; set; }
+        /// <summary>Maximum frames allowed before timeout.</summary>
+        public int FrameLimit { get; set; }
 
         /// <summary>Winner: 0 or 1 for the winning agent, -1 for draw/timeout.</summary>
         public int Winner { get; set; }
 
-        /// <summary>Total ticks elapsed when the match ended.</summary>
-        public int DurationTicks { get; set; }
+        /// <summary>Total frames elapsed when the match ended.</summary>
+        public int DurationFrames { get; set; }
 
         /// <summary>How the match ended.</summary>
         public MatchEndReason EndReason { get; set; }
@@ -58,7 +58,7 @@ namespace BalanceRunner.Telemetry
         /// <summary>One side lost their base (but may have mobile units).</summary>
         BaseDestroyed,
 
-        /// <summary>Tick limit reached; winner determined by score.</summary>
+        /// <summary>Frame limit reached; winner determined by score.</summary>
         Timeout,
 
         /// <summary>Both sides eliminated simultaneously or tied on score at timeout.</summary>

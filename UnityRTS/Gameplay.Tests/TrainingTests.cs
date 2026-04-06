@@ -166,7 +166,7 @@ namespace Gameplay.Tests
         [Fact]
         public void TrainWhileAlreadyTraining_SecondRejected()
         {
-            // Agent that tries to train every tick
+            // Agent that tries to train every frame
             var game = new SimGameBuilder()
                 .WithMapSize(30, 30)
                 .WithGold(0, 5000)
@@ -178,7 +178,7 @@ namespace Gameplay.Tests
             game.InitializeRound();
 
             int goldBefore = game.GetGold(0);
-            // Run 2 ticks: tick 1 = agent queues TRAIN, tick 2 = command dispatched
+            // Run 2 frames: frame 1 = agent queues TRAIN, frame 2 = command dispatched
             game.Run(2);
 
             // Should deduct for exactly one pawn
@@ -193,7 +193,7 @@ namespace Gameplay.Tests
         [Fact]
         public void TrainAtMaxSpeed_CompletesQuickly()
         {
-            var config = new SimConfig { GameSpeed = 30, TickDuration = 1f / 30f };
+            var config = new SimConfig { GameSpeed = 30, StepDuration = 1f / 30f };
             var game = new SimGameBuilder()
                 .WithConfig(config)
                 .WithMapSize(30, 30)

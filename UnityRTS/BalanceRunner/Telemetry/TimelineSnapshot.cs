@@ -8,8 +8,8 @@ namespace BalanceRunner.Telemetry
     /// </summary>
     public class TimelineSnapshot
     {
-        /// <summary>Tick when this snapshot was taken.</summary>
-        public int Tick { get; set; }
+        /// <summary>Frame when this snapshot was taken.</summary>
+        public int Frame { get; set; }
 
         /// <summary>Current gold balance.</summary>
         public int Gold { get; set; }
@@ -43,12 +43,12 @@ namespace BalanceRunner.Telemetry
     }
 
     /// <summary>
-    /// A milestone event that occurred at a specific tick.
+    /// A milestone event that occurred at a specific frame.
     /// </summary>
     public class MilestoneEvent
     {
-        /// <summary>Tick when the event occurred.</summary>
-        public int Tick { get; set; }
+        /// <summary>Frame when the event occurred.</summary>
+        public int Frame { get; set; }
 
         /// <summary>Type of milestone.</summary>
         public string Type { get; set; }
@@ -62,7 +62,7 @@ namespace BalanceRunner.Telemetry
     /// </summary>
     public class AgentTimeline
     {
-        /// <summary>Periodic snapshots sampled every N ticks.</summary>
+        /// <summary>Periodic snapshots sampled every N frames.</summary>
         public List<TimelineSnapshot> Snapshots { get; set; } = new List<TimelineSnapshot>();
 
         /// <summary>Milestone events (buildings completed, first attack, peak army, etc.).</summary>

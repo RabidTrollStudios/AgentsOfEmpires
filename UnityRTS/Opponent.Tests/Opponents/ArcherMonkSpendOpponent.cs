@@ -14,21 +14,21 @@ namespace Opponent.Tests
         private const int ATTACK_THRESHOLD = 4;
         private const float GOLD_STARVED = 100f;
         private const float GOLD_RICH = 150f;
-        private const int ATTACK_TICKS = 2;
-        private const int KITE_TICKS = 1;
-        private const int CYCLE_LENGTH = ATTACK_TICKS + KITE_TICKS;
+        private const int ATTACK_FRAMES = 2;
+        private const int KITE_FRAMES = 1;
+        private const int CYCLE_LENGTH = ATTACK_FRAMES + KITE_FRAMES;
 
         private int _lastArmySize;
-        private int _ticksSinceArmyShrunk;
+        private int _framesSinceArmyShrunk;
         private Dictionary<int, int> _lastArcherTarget = new Dictionary<int, int>();
-        private Dictionary<int, int> _archerCycleTick = new Dictionary<int, int>();
+        private Dictionary<int, int> _archerCycleFrame = new Dictionary<int, int>();
 
         public override void InitializeMatch()
         {
             _lastArmySize = 0;
-            _ticksSinceArmyShrunk = 999;
+            _framesSinceArmyShrunk = 999;
             _lastArcherTarget = new Dictionary<int, int>();
-            _archerCycleTick = new Dictionary<int, int>();
+            _archerCycleFrame = new Dictionary<int, int>();
         }
 
         public override void Update(IGameState state, IAgentActions actions)
@@ -44,8 +44,8 @@ namespace Opponent.Tests
             }
 
             int armySize = myWarriors.Count + myArchers.Count + myLancers.Count;
-            if (armySize < _lastArmySize) _ticksSinceArmyShrunk = 0;
-            else _ticksSinceArmyShrunk++;
+            if (armySize < _lastArmySize) _framesSinceArmyShrunk = 0;
+            else _framesSinceArmyShrunk++;
             _lastArmySize = armySize;
 
             int enemyArmy = state.GetEnemyUnits(UnitType.WARRIOR).Count
@@ -53,7 +53,7 @@ namespace Opponent.Tests
                 + state.GetEnemyUnits(UnitType.LANCER).Count;
             bool goldStarved = state.MyGold < GOLD_STARVED;
             bool goldRich = state.MyGold > GOLD_RICH;
-            bool takingLosses = _ticksSinceArmyShrunk < 20;
+            bool takingLosses = _framesSinceArmyShrunk < 20;
             bool outnumbered = enemyArmy > armySize;
             bool needMorePawns = myPawns.Count < 5 || (goldStarved && myPawns.Count < 8);
 
@@ -132,13 +132,13 @@ namespace Opponent.Tests
                 var info = state.GetUnit(archerNbr);
                 if (!info.HasValue) continue;
 
-                if (!_archerCycleTick.ContainsKey(archerNbr))
-                    _archerCycleTick[archerNbr] = 0;
+                if (!_archerCycleFrame.ContainsKey(archerNbr))
+                    _archerCycleFrame[archerNbr] = 0;
 
-                int cycleTick = _archerCycleTick[archerNbr] % CYCLE_LENGTH;
-                _archerCycleTick[archerNbr]++;
+                int cycleFrame = _archerCycleFrame[archerNbr] % CYCLE_LENGTH;
+                _archerCycleFrame[archerNbr]++;
 
-                if (cycleTick < ATTACK_TICKS)
+                if (cycleFrame < ATTACK_FRAMES)
                 {
                     int lastTarget = _lastArcherTarget.ContainsKey(archerNbr)
                         ? _lastArcherTarget[archerNbr] : -1;

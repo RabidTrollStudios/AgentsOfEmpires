@@ -6,10 +6,10 @@ using AgentSDK;
 namespace AgentTestHarness
 {
     /// <summary>
-    /// Tick-based game loop simulator. Orchestrates the full agent lifecycle
+    /// Frame-based game loop simulator. Orchestrates the full agent lifecycle
     /// without any Unity dependencies.
     ///
-    /// Tick order:
+    /// Step order:
     /// 1. Call agent.Update(state, actions) for each agent
     /// 2. Process queued commands (validate, deduct gold, set unit actions)
     /// 3. Advance all in-progress unit tasks (move, train, build, gather, attack)
@@ -19,7 +19,7 @@ namespace AgentTestHarness
     {
         public SimMap Map { get; }
         public SimConfig Config { get; }
-        public int CurrentTick { get; private set; }
+        public int CurrentFrame { get; private set; }
 
         // Per-agent state
         internal int[] Gold;
@@ -38,7 +38,7 @@ namespace AgentTestHarness
         private CommandRecorder[] recorders;
 
 
-        // Commands that failed during Phase 1 processing (cleared each tick)
+        // Commands that failed during Phase 1 processing (cleared each frame)
         internal List<FailedCommand>[] FailedCommands = new List<FailedCommand>[2]
         {
             new List<FailedCommand>(),
@@ -61,14 +61,14 @@ namespace AgentTestHarness
             Map = map;
             Gold = new int[] { config.StartingGold, config.StartingGold };
             Wins = new int[] { 0, 0 };
-            CurrentTick = 0;
+            CurrentFrame = 0;
 
             ComputeDerivedConstants();
 
             states[0] = new SimGameState(this, 0);
             states[1] = new SimGameState(this, 1);
-            actions[0] = new SimAgentActions(this, 0, () => CurrentTick);
-            actions[1] = new SimAgentActions(this, 1, () => CurrentTick);
+            actions[0] = new SimAgentActions(this, 0, () => CurrentFrame);
+            actions[1] = new SimAgentActions(this, 1, () => CurrentFrame);
         }
 
         private void ComputeDerivedConstants()
@@ -107,13 +107,13 @@ namespace AgentTestHarness
         #endregion
 
         /// <summary>
-        /// Enable command recording for all agents. Call before Run/Tick.
+        /// Enable command recording for all agents. Call before Run/Step.
         /// </summary>
         public void EnableRecording()
         {
             recorders = new CommandRecorder[2];
             for (int a = 0; a < 2; a++)
-                recorders[a] = new CommandRecorder(actions[a], a, () => CurrentTick);
+                recorders[a] = new CommandRecorder(actions[a], a, () => CurrentFrame);
         }
 
         /// <summary>Get recorded commands for an agent (null if recording not enabled).</summary>
@@ -152,26 +152,26 @@ namespace AgentTestHarness
         }
 
         /// <summary>
-        /// Advance the simulation by one tick.
+        /// Advance the simulation by one step.
         ///
-        /// Tick order matches Unity's FixedUpdate lifecycle:
-        ///   Phase 1: Process commands queued during PREVIOUS tick's agent Update
+        /// Step order matches Unity's FixedUpdate lifecycle:
+        ///   Phase 1: Process commands queued during PREVIOUS frame's agent Update
         ///   Phase 2: Advance tasks (movement, building, training, combat, mana, death)
-        ///   Phase 3: Agent Update (agents see post-advance state, queue commands for next tick)
+        ///   Phase 3: Agent Update (agents see post-advance state, queue commands for next frame)
         ///
         /// In Unity, FixedUpdate fires before Update on the first frame, so the
-        /// first SimulateTick runs with an empty command queue. Agents issue their
+        /// first SimulateStep runs with an empty command queue. Agents issue their
         /// first commands in the subsequent Update(), processed in the next FixedUpdate.
         /// </summary>
-        public void Tick()
+        public void Step()
         {
-            // Phase 1: Process commands queued during the PREVIOUS tick's Agent Update.
+            // Phase 1: Process commands queued during the PREVIOUS frame's Agent Update.
             ProcessCommandsSorted();
 
             // Phase 2: Advance tasks/movement, mana regen, remove dead (shared StepEngine).
             AdvanceAllUnits();
 
-            // Phase 3: Agent Update (agents see post-advance state, queue commands for next tick).
+            // Phase 3: Agent Update (agents see post-advance state, queue commands for next frame).
             for (int a = 0; a < 2; a++)
             {
                 actions[a].ClearPending();
@@ -180,26 +180,26 @@ namespace AgentTestHarness
                 agents[a]?.Update(states[a], agentActions);
             }
 
-            CurrentTick++;
+            CurrentFrame++;
         }
 
-        /// <summary>Run the simulation for a fixed number of ticks.</summary>
-        public void Run(int ticks)
+        /// <summary>Run the simulation for a fixed number of frames.</summary>
+        public void Run(int frames)
         {
-            for (int i = 0; i < ticks; i++)
-                Tick();
+            for (int i = 0; i < frames; i++)
+                Step();
         }
 
         /// <summary>
-        /// Run until a predicate is true or maxTicks is exceeded.
+        /// Run until a predicate is true or maxFrames is exceeded.
         /// Returns true if predicate was satisfied.
         /// </summary>
-        public bool RunUntil(Func<SimGame, bool> predicate, int maxTicks = 10000)
+        public bool RunUntil(Func<SimGame, bool> predicate, int maxFrames = 10000)
         {
-            for (int i = 0; i < maxTicks; i++)
+            for (int i = 0; i < maxFrames; i++)
             {
                 if (predicate(this)) return true;
-                Tick();
+                Step();
             }
             return predicate(this);
         }

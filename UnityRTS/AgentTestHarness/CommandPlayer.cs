@@ -7,13 +7,13 @@ namespace AgentTestHarness
     /// Replays a pre-recorded sequence of commands. Implements IPlanningAgent
     /// so it can be plugged into SimGame as a replacement agent for deterministic replay.
     ///
-    /// Commands are matched by tick number. The player tracks ticks internally
-    /// by counting Update() calls (since IGameState doesn't expose tick number).
+    /// Commands are matched by frame number. The player tracks frames internally
+    /// by counting Update() calls (since IGameState doesn't expose frame number).
     /// </summary>
     public class CommandPlayer : IPlanningAgent
     {
         private readonly List<CommandRecord> records;
-        private int currentTick;
+        private int currentFrame;
         private int nextIndex;
 
         public CommandPlayer(List<CommandRecord> records)
@@ -23,7 +23,7 @@ namespace AgentTestHarness
 
         public void InitializeMatch()
         {
-            currentTick = 0;
+            currentFrame = 0;
             nextIndex = 0;
         }
 
@@ -33,12 +33,12 @@ namespace AgentTestHarness
 
         public void Update(IGameState state, IAgentActions actions)
         {
-            while (nextIndex < records.Count && records[nextIndex].Tick == currentTick)
+            while (nextIndex < records.Count && records[nextIndex].Frame == currentFrame)
             {
                 Replay(records[nextIndex], actions);
                 nextIndex++;
             }
-            currentTick++;
+            currentFrame++;
         }
 
         private static void Replay(CommandRecord r, IAgentActions actions)

@@ -26,8 +26,8 @@ namespace Gameplay.Tests
             game.InitializeMatch();
             game.InitializeRound();
 
-            // Run enough ticks for the mover to reach the blocker and detour
-            for (int i = 0; i < 400; i++) game.Tick();
+            // Run enough frames for the mover to reach the blocker and detour
+            for (int i = 0; i < 400; i++) game.Step();
 
             // The mover should have arrived near the target
             var pawns = game.GetUnitsByType(0, UnitType.PAWN);
@@ -56,7 +56,7 @@ namespace Gameplay.Tests
             game.InitializeMatch();
             game.InitializeRound();
 
-            for (int i = 0; i < 200; i++) game.Tick();
+            for (int i = 0; i < 200; i++) game.Step();
 
             // The mover should have stopped (IDLE) near the blocker
             var pawns = game.GetUnitsByType(0, UnitType.PAWN);
@@ -89,7 +89,7 @@ namespace Gameplay.Tests
             game.InitializeMatch();
             game.InitializeRound();
 
-            for (int i = 0; i < 300; i++) game.Tick();
+            for (int i = 0; i < 300; i++) game.Step();
 
             // Both units should be IDLE and not on the same cell
             var p0 = game.GetUnitsByType(0, UnitType.PAWN);
@@ -121,7 +121,7 @@ namespace Gameplay.Tests
             game.InitializeMatch();
             game.InitializeRound();
 
-            for (int i = 0; i < 600; i++) game.Tick();
+            for (int i = 0; i < 600; i++) game.Step();
 
             // At least one pawn should have made it past the corridor
             var pawns = game.GetUnitsByType(0, UnitType.PAWN);
@@ -151,7 +151,7 @@ namespace Gameplay.Tests
             game.InitializeMatch();
             game.InitializeRound();
 
-            for (int i = 0; i < 300; i++) game.Tick();
+            for (int i = 0; i < 300; i++) game.Step();
 
             // Warrior should have moved past the blocker
             var warriors = game.GetUnitsByType(0, UnitType.WARRIOR);
@@ -176,7 +176,7 @@ namespace Gameplay.Tests
             game.InitializeMatch();
             game.InitializeRound();
 
-            for (int i = 0; i < 400; i++) game.Tick();
+            for (int i = 0; i < 400; i++) game.Step();
 
             var pawns = game.GetUnitsByType(0, UnitType.PAWN);
             Assert.True(pawns.Count > 0, "Pawn should still exist");
@@ -213,7 +213,7 @@ namespace Gameplay.Tests
             var builder = scenario.BuilderFactory();
             var agent0 = scenario.Agent0Factory();
             var agent1 = scenario.Agent1Factory();
-            int ticks = scenario.Ticks;
+            int frames = scenario.Frames;
 
             builder.WithAgent(0, agent0).WithAgent(1, agent1);
             var game1 = builder.Build();
@@ -221,10 +221,10 @@ namespace Gameplay.Tests
             game1.InitializeMatch();
             game1.InitializeRound();
 
-            var hashes1 = new long[ticks];
-            for (int t = 0; t < ticks; t++)
+            var hashes1 = new long[frames];
+            for (int t = 0; t < frames; t++)
             {
-                game1.Tick();
+                game1.Step();
                 hashes1[t] = game1.GetStateHash();
             }
 
@@ -238,19 +238,19 @@ namespace Gameplay.Tests
             game2.InitializeMatch();
             game2.InitializeRound();
 
-            for (int t = 0; t < ticks; t++)
+            for (int t = 0; t < frames; t++)
             {
-                game2.Tick();
+                game2.Step();
                 long hash2 = game2.GetStateHash();
                 if (hashes1[t] != hash2)
                 {
                     return new DivergenceReport
                     {
                         ScenarioName = scenario.Name,
-                        DivergenceTick = t + 1,
+                        DivergenceFrame = t + 1,
                         ExpectedHash = hashes1[t],
                         ActualHash = hash2,
-                        TotalTicks = ticks
+                        TotalFrames = frames
                     };
                 }
             }
@@ -258,7 +258,7 @@ namespace Gameplay.Tests
             return new DivergenceReport
             {
                 ScenarioName = scenario.Name,
-                TotalTicks = ticks
+                TotalFrames = frames
             };
         }
     }

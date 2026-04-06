@@ -74,8 +74,8 @@ namespace ParityRunner
                 {
                     ScenarioName = scenario.Name,
                     Passed = report.Passed,
-                    Ticks = scenario.Ticks,
-                    DivergenceTick = report.DivergenceTick,
+                    Frames = scenario.Frames,
+                    DivergenceFrame = report.DivergenceFrame,
                     ExpectedHash = report.ExpectedHash,
                     ActualHash = report.ActualHash,
                     ElapsedMs = sw.ElapsedMilliseconds
@@ -85,16 +85,16 @@ namespace ParityRunner
                 if (report.Passed)
                 {
                     passed++;
-                    Console.WriteLine($"  PASS  {scenario.Name} ({scenario.Ticks} ticks, {sw.ElapsedMilliseconds}ms)");
+                    Console.WriteLine($"  PASS  {scenario.Name} ({scenario.Frames} frames, {sw.ElapsedMilliseconds}ms)");
                 }
                 else
                 {
                     failed++;
-                    Console.WriteLine($"  FAIL  {scenario.Name}: diverged at tick {report.DivergenceTick}/{scenario.Ticks}");
+                    Console.WriteLine($"  FAIL  {scenario.Name}: diverged at frame {report.DivergenceFrame}/{scenario.Frames}");
                     Console.WriteLine($"        expected 0x{report.ExpectedHash:X16}, got 0x{report.ActualHash:X16}");
 
                     // Run subsystem diff for failed scenario
-                    var subsystemDiff = RunSubsystemDiff(scenario, report.DivergenceTick);
+                    var subsystemDiff = RunSubsystemDiff(scenario, report.DivergenceFrame);
                     if (subsystemDiff != null)
                     {
                         Console.WriteLine($"        subsystems: {subsystemDiff}");
@@ -160,7 +160,7 @@ namespace ParityRunner
             var scenarios = GetAllScenarios();
             Console.WriteLine($"Available scenarios ({scenarios.Count}):");
             foreach (var s in scenarios)
-                Console.WriteLine($"  {s.Name} ({s.Ticks} ticks)");
+                Console.WriteLine($"  {s.Name} ({s.Frames} frames)");
         }
 
         static List<ParityScenario> GetAllScenarios()
@@ -173,7 +173,7 @@ namespace ParityRunner
             var builder = scenario.BuilderFactory();
             var agent0 = scenario.Agent0Factory();
             var agent1 = scenario.Agent1Factory();
-            int ticks = scenario.Ticks;
+            int frames = scenario.Frames;
 
             // Recording run
             builder.WithAgent(0, agent0).WithAgent(1, agent1);
@@ -182,10 +182,10 @@ namespace ParityRunner
             game1.InitializeMatch();
             game1.InitializeRound();
 
-            var hashes1 = new long[ticks];
-            for (int t = 0; t < ticks; t++)
+            var hashes1 = new long[frames];
+            for (int t = 0; t < frames; t++)
             {
-                game1.Tick();
+                game1.Step();
                 hashes1[t] = game1.GetStateHash();
             }
 
@@ -200,19 +200,19 @@ namespace ParityRunner
             game2.InitializeMatch();
             game2.InitializeRound();
 
-            for (int t = 0; t < ticks; t++)
+            for (int t = 0; t < frames; t++)
             {
-                game2.Tick();
+                game2.Step();
                 long hash2 = game2.GetStateHash();
                 if (hashes1[t] != hash2)
                 {
                     return new DivergenceReport
                     {
                         ScenarioName = scenario.Name,
-                        DivergenceTick = t + 1,
+                        DivergenceFrame = t + 1,
                         ExpectedHash = hashes1[t],
                         ActualHash = hash2,
-                        TotalTicks = ticks
+                        TotalFrames = frames
                     };
                 }
             }
@@ -220,14 +220,14 @@ namespace ParityRunner
             return new DivergenceReport
             {
                 ScenarioName = scenario.Name,
-                TotalTicks = ticks
+                TotalFrames = frames
             };
         }
 
         /// <summary>
-        /// Re-run the scenario up to the divergence tick and compare subsystem hashes.
+        /// Re-run the scenario up to the divergence frame and compare subsystem hashes.
         /// </summary>
-        static string RunSubsystemDiff(ParityScenario scenario, int divergenceTick)
+        static string RunSubsystemDiff(ParityScenario scenario, int divergenceFrame)
         {
             try
             {
@@ -241,8 +241,8 @@ namespace ParityRunner
                 game1.InitializeMatch();
                 game1.InitializeRound();
 
-                for (int t = 0; t < divergenceTick; t++)
-                    game1.Tick();
+                for (int t = 0; t < divergenceFrame; t++)
+                    game1.Step();
 
                 var sub1 = game1.GetSubsystemHash();
 
@@ -256,8 +256,8 @@ namespace ParityRunner
                 game2.InitializeMatch();
                 game2.InitializeRound();
 
-                for (int t = 0; t < divergenceTick; t++)
-                    game2.Tick();
+                for (int t = 0; t < divergenceFrame; t++)
+                    game2.Step();
 
                 var sub2 = game2.GetSubsystemHash();
 
@@ -285,8 +285,8 @@ namespace ParityRunner
         {
             public string ScenarioName { get; set; }
             public bool Passed { get; set; }
-            public int Ticks { get; set; }
-            public int DivergenceTick { get; set; }
+            public int Frames { get; set; }
+            public int DivergenceFrame { get; set; }
             public long ExpectedHash { get; set; }
             public long ActualHash { get; set; }
             public long ElapsedMs { get; set; }

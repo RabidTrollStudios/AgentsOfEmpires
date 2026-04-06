@@ -9,7 +9,7 @@ namespace BalanceRunner.Runner
 {
     /// <summary>
     /// Runs a single match between two agents with telemetry collection.
-    /// Builds the SimGame, runs tick-by-tick, determines the winner,
+    /// Builds the SimGame, runs step-by-step, determines the winner,
     /// and returns a complete MatchResult.
     /// </summary>
     public class MatchRunner
@@ -22,12 +22,12 @@ namespace BalanceRunner.Runner
         /// <param name="agent1Name">Display name for agent 1.</param>
         /// <param name="agent1">Agent instance for slot 1.</param>
         /// <param name="seed">Map generation seed.</param>
-        /// <param name="tickLimit">Maximum ticks before timeout.</param>
+        /// <param name="frameLimit">Maximum frames before timeout.</param>
         /// <param name="mapTemplate">Map template for generation.</param>
         public static MatchResult Run(
             string agent0Name, PlanningAgentBase agent0,
             string agent1Name, PlanningAgentBase agent1,
-            int seed, int tickLimit = 3000, MapTemplate mapTemplate = MapTemplate.OpenField)
+            int seed, int frameLimit = 3000, MapTemplate mapTemplate = MapTemplate.OpenField)
         {
             // Procedural map matching Unity settings: 75x40, OpenField, 20% trees.
             // 1000g starting gold. Map generator places pawns and mines automatically.
@@ -55,9 +55,9 @@ namespace BalanceRunner.Runner
             MatchEndReason endReason = MatchEndReason.Timeout;
             int winner = -1;
 
-            for (int tick = 0; tick < tickLimit; tick++)
+            for (int frame = 0; frame < frameLimit; frame++)
             {
-                collector.TickAndCollect();
+                collector.StepAndCollect();
 
                 // Check for elimination: agent lost all units
                 bool agent0HasUnits = HasAnyUnits(game, 0);
@@ -82,8 +82,8 @@ namespace BalanceRunner.Runner
                     break;
                 }
 
-                // Check for base destruction (skip first 500 ticks to let both players build)
-                if (tick >= 500)
+                // Check for base destruction (skip first 500 frames to let both players build)
+                if (frame >= 500)
                 {
                 bool agent0HasBase = game.GetUnitsByType(0, UnitType.BASE).Count > 0;
                 bool agent1HasBase = game.GetUnitsByType(1, UnitType.BASE).Count > 0;
@@ -109,7 +109,7 @@ namespace BalanceRunner.Runner
                         break;
                     }
                 }
-                } // tick >= 500 grace period
+                } // frame >= 500 grace period
             }
 
             // Timeout: determine winner by score
@@ -134,9 +134,9 @@ namespace BalanceRunner.Runner
                 Agent1Name = agent1Name,
                 Seed = seed,
                 MapTemplate = mapTemplate,
-                TickLimit = tickLimit,
+                FrameLimit = frameLimit,
                 Winner = winner,
-                DurationTicks = game.CurrentTick,
+                DurationFrames = game.CurrentFrame,
                 EndReason = endReason,
                 Agent0Stats = collector.GetStats(0),
                 Agent1Stats = collector.GetStats(1)

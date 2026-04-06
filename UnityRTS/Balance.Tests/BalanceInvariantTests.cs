@@ -24,7 +24,7 @@ namespace Balance.Tests
             var config = new RunConfig
             {
                 SeedCount = 2,
-                TickLimit = 3000
+                FrameLimit = 3000
             };
 
             var results = BatchRunner.Run(config);
@@ -60,7 +60,7 @@ namespace Balance.Tests
             {
                 Agents = new List<string> { "WarriorRush", "Balanced", "TechRush" },
                 SeedCount = 3,
-                TickLimit = 3000,
+                FrameLimit = 3000,
                 BothSeatOrderings = true
             };
 

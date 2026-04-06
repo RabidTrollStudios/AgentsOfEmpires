@@ -5,7 +5,7 @@ namespace PlanningAgent
 {
     /// <summary>
     /// [MEDIUM] Minimal economy, fast barracks, warrior rush with 3+.
-    /// Punishes slow builders — if you don't have defenders by tick ~100,
+    /// Punishes slow builders — if you don't have defenders by frame ~100,
     /// you're in trouble. Runs out of gold quickly if the rush fails.
     /// Strategy to beat: fast barracks + a few defenders, then counter-attack
     /// once the rusher's economy collapses.

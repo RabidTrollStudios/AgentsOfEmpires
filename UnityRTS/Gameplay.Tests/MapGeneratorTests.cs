@@ -663,9 +663,9 @@ namespace Gameplay.Tests
                 .WithGold(1, 5000)
                 .Build();
 
-            // Should survive 100 ticks with DoNothingAgents
+            // Should survive 100 frames with DoNothingAgents
             game.Run(100);
-            Assert.True(game.CurrentTick == 100);
+            Assert.True(game.CurrentFrame == 100);
         }
 
         [Fact]
@@ -820,7 +820,7 @@ namespace Gameplay.Tests
             game.Run(200);
 
             // Game should still be running (no crash, units still exist)
-            Assert.True(game.CurrentTick == 200);
+            Assert.True(game.CurrentFrame == 200);
         }
     }
 }

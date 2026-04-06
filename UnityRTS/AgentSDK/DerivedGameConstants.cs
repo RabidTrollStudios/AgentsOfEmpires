@@ -69,7 +69,7 @@ namespace AgentSDK
         /// <summary>Damage per second for each unit at current game speed.</summary>
         public Dictionary<UnitType, float> Damage { get; }
 
-        /// <summary>Movement speed (cells/tick) for each unit at current game speed.</summary>
+        /// <summary>Movement speed (cells/step) for each unit at current game speed.</summary>
         public Dictionary<UnitType, float> MovingSpeed { get; }
 
         /// <summary>Mining speed for each unit type.</summary>

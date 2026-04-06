@@ -85,7 +85,7 @@ namespace GameManager
             }
         }
 
-        public void OnMiningTick(ISimUnit pawn, ISimUnit mine, int goldMined) { }
+        public void OnMiningStep(ISimUnit pawn, ISimUnit mine, int goldMined) { }
         public void OnGoldDeposited(ISimUnit pawn, int amount) { }
         public void OnGatherPhaseChanged(ISimUnit pawn, GatherPhase oldPhase, GatherPhase newPhase) { }
         public void OnHealApplied(ISimUnit healer, ISimUnit target, float amount)
@@ -97,7 +97,7 @@ namespace GameManager
                 healerUnit.healLineTimer = Unit.HEAL_LINE_DURATION;
             }
         }
-        public void OnRepairTick(ISimUnit pawn, ISimUnit building, float amount) { }
+        public void OnRepairStep(ISimUnit pawn, ISimUnit building, float amount) { }
         public void OnUnitRepath(ISimUnit unit, List<Position> newPath) { }
     }
 }

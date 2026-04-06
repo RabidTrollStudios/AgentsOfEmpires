@@ -14,14 +14,14 @@ namespace Opponent.Tests
     {
         private const int MAX_PAWNS = 6;
         private const int ATTACK_THRESHOLD = 6;
-        private const int DISENGAGE_TICKS = 3;
+        private const int DISENGAGE_FRAMES = 3;
         private const float RALLY_DISTANCE = 5.0f;
 
-        private Dictionary<int, int> _combatTicks = new Dictionary<int, int>();
+        private Dictionary<int, int> _combatFrames = new Dictionary<int, int>();
 
         public override void InitializeMatch()
         {
-            _combatTicks = new Dictionary<int, int>();
+            _combatFrames = new Dictionary<int, int>();
         }
 
         public override void Update(IGameState state, IAgentActions actions)
@@ -70,23 +70,23 @@ namespace Opponent.Tests
                 var info = state.GetUnit(lancerNbr);
                 if (!info.HasValue) continue;
 
-                if (!_combatTicks.ContainsKey(lancerNbr))
-                    _combatTicks[lancerNbr] = 0;
+                if (!_combatFrames.ContainsKey(lancerNbr))
+                    _combatFrames[lancerNbr] = 0;
 
                 if (info.Value.CurrentAction == UnitAction.ATTACK)
                 {
                     float dist = Position.Distance(info.Value.CenterPosition, targetInfo.Value.CenterPosition);
                     if (dist < GameConstants.ATTACK_RANGE[UnitType.LANCER] + 1.0f)
                     {
-                        _combatTicks[lancerNbr]++;
+                        _combatFrames[lancerNbr]++;
 
-                        if (_combatTicks[lancerNbr] >= DISENGAGE_TICKS && mainBaseNbr >= 0)
+                        if (_combatFrames[lancerNbr] >= DISENGAGE_FRAMES && mainBaseNbr >= 0)
                         {
                             var baseInfo = state.GetUnit(mainBaseNbr);
                             if (baseInfo.HasValue)
                             {
                                 actions.Move(lancerNbr, baseInfo.Value.CenterPosition);
-                                _combatTicks[lancerNbr] = 0;
+                                _combatFrames[lancerNbr] = 0;
                             }
                         }
                     }
@@ -97,13 +97,13 @@ namespace Opponent.Tests
                     if (dist >= RALLY_DISTANCE)
                     {
                         actions.Attack(lancerNbr, enemyTarget.Value);
-                        _combatTicks[lancerNbr] = 0;
+                        _combatFrames[lancerNbr] = 0;
                     }
                 }
                 else if (info.Value.CurrentAction == UnitAction.IDLE)
                 {
                     actions.Attack(lancerNbr, enemyTarget.Value);
-                    _combatTicks[lancerNbr] = 0;
+                    _combatFrames[lancerNbr] = 0;
                 }
             }
         }

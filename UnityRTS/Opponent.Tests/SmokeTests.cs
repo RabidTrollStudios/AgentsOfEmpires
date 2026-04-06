@@ -65,7 +65,7 @@ namespace Opponent.Tests
 
             // Gold should have increased from gathering (even after training costs)
             // The agent starts with 500 — training a pawn costs 50, gathering brings in 100/trip
-            // After 500 ticks with a nearby mine, net gold should be positive
+            // After 500 frames with a nearby mine, net gold should be positive
             Assert.True(game.GetGold(0) > 0,
                 $"Expected agent to have gold, but got {game.GetGold(0)}");
         }
@@ -90,7 +90,7 @@ namespace Opponent.Tests
         }
 
         /// <summary>
-        /// Training a pawn at a base should produce a new pawn after enough ticks.
+        /// Training a pawn at a base should produce a new pawn after enough frames.
         /// Tests the harness training logic directly (no agent needed).
         /// </summary>
         [Fact]
@@ -115,8 +115,8 @@ namespace Opponent.Tests
             int pawnsBefore = game.GetUnitsByType(0, UnitType.PAWN).Count;
             Assert.Equal(0, pawnsBefore);
 
-            // Run enough ticks for training to complete
-            // At GAME_SPEED=20, PAWN creation time = 0.1s = 2 ticks
+            // Run enough frames for training to complete
+            // At GAME_SPEED=20, PAWN creation time = 0.1s = 2 frames
             game.Run(20);
 
             int pawnsAfter = game.GetUnitsByType(0, UnitType.PAWN).Count;

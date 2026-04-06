@@ -11,19 +11,19 @@ namespace BalanceRunner.Analysis
     /// </summary>
     public class TimingAnalysis
     {
-        /// <summary>Game duration statistics (ticks).</summary>
+        /// <summary>Game duration statistics (frames).</summary>
         public DistributionStats DurationStats { get; set; }
 
-        /// <summary>First military unit timing statistics (ticks).</summary>
+        /// <summary>First military unit timing statistics (frames).</summary>
         public DistributionStats FirstMilitaryStats { get; set; }
 
-        /// <summary>First attack timing statistics (ticks).</summary>
+        /// <summary>First attack timing statistics (frames).</summary>
         public DistributionStats FirstAttackStats { get; set; }
 
         /// <summary>Percentage of games that ended in timeout.</summary>
         public float TimeoutRate { get; set; }
 
-        /// <summary>Percentage of games ending before tick 500 (rush indicator).</summary>
+        /// <summary>Percentage of games ending before frame 500 (rush indicator).</summary>
         public float EarlyEndRate { get; set; }
 
         /// <summary>Matches ending by elimination vs base destruction vs timeout.</summary>
@@ -38,26 +38,26 @@ namespace BalanceRunner.Analysis
             if (matches.Count == 0) return analysis;
 
             // Duration distribution
-            var durations = matches.Select(r => r.DurationTicks).ToList();
+            var durations = matches.Select(r => r.DurationFrames).ToList();
             analysis.DurationStats = DistributionStats.From(durations);
 
             // First military timing (exclude -1 = never)
             var firstMilitary = matches
-                .SelectMany(r => new[] { r.Agent0Stats.FirstMilitaryTick, r.Agent1Stats.FirstMilitaryTick })
+                .SelectMany(r => new[] { r.Agent0Stats.FirstMilitaryFrame, r.Agent1Stats.FirstMilitaryFrame })
                 .Where(t => t >= 0)
                 .ToList();
             analysis.FirstMilitaryStats = DistributionStats.From(firstMilitary);
 
             // First attack timing
             var firstAttack = matches
-                .SelectMany(r => new[] { r.Agent0Stats.FirstAttackTick, r.Agent1Stats.FirstAttackTick })
+                .SelectMany(r => new[] { r.Agent0Stats.FirstAttackFrame, r.Agent1Stats.FirstAttackFrame })
                 .Where(t => t >= 0)
                 .ToList();
             analysis.FirstAttackStats = DistributionStats.From(firstAttack);
 
             // Timeout and early end rates
             int timeouts = matches.Count(r => r.EndReason == MatchEndReason.Timeout);
-            int earlyEnds = matches.Count(r => r.DurationTicks < 500);
+            int earlyEnds = matches.Count(r => r.DurationFrames < 500);
             analysis.TimeoutRate = (float)timeouts / matches.Count;
             analysis.EarlyEndRate = (float)earlyEnds / matches.Count;
 

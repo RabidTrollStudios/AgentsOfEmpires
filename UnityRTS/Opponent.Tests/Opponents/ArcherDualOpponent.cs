@@ -6,25 +6,25 @@ namespace Opponent.Tests
     /// <summary>
     /// [HARD] Triple archery archer flood: 6 pawns, 3 Archery.
     /// Pure archer production from 3 buildings with volley micro
-    /// (target cycling for first-hit bonus) and kiting (attack 2 ticks,
-    /// retreat 1 tick to maintain distance from melee).
+    /// (target cycling for frames,
+    /// retreat 1 frame to maintain distance from melee).
     /// Attacks with archers when army reaches 6+.
     /// </summary>
     public class ArcherDualOpponent : PlanningAgentBase
     {
         private const int MAX_PAWNS = 6;
         private const int ATTACK_THRESHOLD = 6;
-        private const int ATTACK_TICKS = 2;  // attack for 2 ticks
-        private const int KITE_TICKS = 1;    // kite for 1 tick
-        private const int CYCLE_LENGTH = ATTACK_TICKS + KITE_TICKS; // 3-tick cycle
+        private const int ATTACK_FRAMES = 2;  // attack for frames
+        private const int KITE_FRAMES = 1;    // kite for 1 frame
+        private const int CYCLE_LENGTH = ATTACK_FRAMES + KITE_FRAMES; // 3-frame cycle
 
         private Dictionary<int, int> _lastArcherTarget = new Dictionary<int, int>();
-        private Dictionary<int, int> _archerCycleTick = new Dictionary<int, int>();
+        private Dictionary<int, int> _archerCycleFrame = new Dictionary<int, int>();
 
         public override void InitializeMatch()
         {
             _lastArcherTarget = new Dictionary<int, int>();
-            _archerCycleTick = new Dictionary<int, int>();
+            _archerCycleFrame = new Dictionary<int, int>();
         }
 
         public override void Update(IGameState state, IAgentActions actions)
@@ -83,13 +83,13 @@ namespace Opponent.Tests
                 var info = state.GetUnit(archerNbr);
                 if (!info.HasValue) continue;
 
-                if (!_archerCycleTick.ContainsKey(archerNbr))
-                    _archerCycleTick[archerNbr] = 0;
+                if (!_archerCycleFrame.ContainsKey(archerNbr))
+                    _archerCycleFrame[archerNbr] = 0;
 
-                int cycleTick = _archerCycleTick[archerNbr] % CYCLE_LENGTH;
-                _archerCycleTick[archerNbr]++;
+                int cycleFrame = _archerCycleFrame[archerNbr] % CYCLE_LENGTH;
+                _archerCycleFrame[archerNbr]++;
 
-                if (cycleTick < ATTACK_TICKS)
+                if (cycleFrame < ATTACK_FRAMES)
                 {
                     // Attack phase — volley micro (cycle targets)
                     int lastTarget = _lastArcherTarget.ContainsKey(archerNbr)

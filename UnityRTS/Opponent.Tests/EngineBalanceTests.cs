@@ -34,7 +34,7 @@ namespace Opponent.Tests
         #region Test Agents
 
         /// <summary>
-        /// Attacks the closest enemy each tick. No economy, no building, no micro.
+        /// Attacks the closest enemy each frame. No economy, no building, no micro.
         /// Used for pure combat tests with pre-spawned units.
         /// </summary>
         private class AttackClosestAgent : PlanningAgentBase
@@ -315,7 +315,7 @@ namespace Opponent.Tests
         private struct MatchResult
         {
             public int WinnerAgent;   // 0, 1, or -1 for draw/timeout
-            public int TicksElapsed;
+            public int FramesElapsed;
             public int Agent0Units;
             public int Agent1Units;
             public float Agent0HpPercent;
@@ -355,12 +355,12 @@ namespace Opponent.Tests
         /// </summary>
         private MatchResult RunCombat(int agent0WarriorCount, int agent0ArcherCount,
                                        int agent1WarriorCount, int agent1ArcherCount,
-                                       float startDistance = 15f, int maxTicks = 3000)
+                                       float startDistance = 15f, int maxFrames = 3000)
         {
             return RunCombatWithAgents(agent0WarriorCount, agent0ArcherCount,
                 agent1WarriorCount, agent1ArcherCount,
                 new AttackClosestAgent(), new AttackClosestAgent(),
-                startDistance, maxTicks);
+                startDistance, maxFrames);
         }
 
         /// <summary>
@@ -369,7 +369,7 @@ namespace Opponent.Tests
         private MatchResult RunCombatWithAgents(int agent0WarriorCount, int agent0ArcherCount,
                                        int agent1WarriorCount, int agent1ArcherCount,
                                        IPlanningAgent agent0, IPlanningAgent agent1,
-                                       float startDistance = 15f, int maxTicks = 3000)
+                                       float startDistance = 15f, int maxFrames = 3000)
         {
             var builder = new SimGameBuilder()
                 .WithMapSize(30, 30)
@@ -400,7 +400,7 @@ namespace Opponent.Tests
 
             game.RunUntil(g =>
                 CountAllUnits(g, 0) == 0 || CountAllUnits(g, 1) == 0,
-                maxTicks);
+                maxFrames);
 
             int units0 = CountAllUnits(game, 0);
             int units1 = CountAllUnits(game, 1);
@@ -415,7 +415,7 @@ namespace Opponent.Tests
             return new MatchResult
             {
                 WinnerAgent = winner,
-                TicksElapsed = game.CurrentTick,
+                FramesElapsed = game.CurrentFrame,
                 Agent0Units = units0,
                 Agent1Units = units1,
                 Agent0HpPercent = GetTotalHpPercent(game, 0),
@@ -445,7 +445,7 @@ namespace Opponent.Tests
             float hpPct = result.WinnerAgent == 0 ? result.Agent0HpPercent : result.Agent1HpPercent;
 
             _output.WriteLine($"=== EQUAL COUNT: {count}v{count} ===");
-            _output.WriteLine($"  Winner: {winner}  Survivors: {survivors}  HP%: {hpPct:F1}%  Ticks: {result.TicksElapsed}");
+            _output.WriteLine($"  Winner: {winner}  Survivors: {survivors}  HP%: {hpPct:F1}%  Frames: {result.FramesElapsed}");
         }
 
         #endregion
@@ -473,7 +473,7 @@ namespace Opponent.Tests
             float hpPct = result.WinnerAgent == 0 ? result.Agent0HpPercent : result.Agent1HpPercent;
 
             _output.WriteLine($"=== EQUAL GOLD: {gold}g ({warriorCount} warriors vs {archerCount} archers) ===");
-            _output.WriteLine($"  Winner: {winner}  Survivors: {survivors}  HP%: {hpPct:F1}%  Ticks: {result.TicksElapsed}");
+            _output.WriteLine($"  Winner: {winner}  Survivors: {survivors}  HP%: {hpPct:F1}%  Frames: {result.FramesElapsed}");
         }
 
         #endregion
@@ -485,7 +485,7 @@ namespace Opponent.Tests
         {
             var sb = new StringBuilder();
             sb.AppendLine("=== BREAK-EVEN RATIO: Warriors vs Archers ===");
-            sb.AppendLine("  Warriors | Archers | Winner   | Survivors | HP%    | Ticks");
+            sb.AppendLine("  Warriors | Archers | Winner   | Survivors | HP%    | Frames");
             sb.AppendLine("  ---------+---------+----------+-----------+--------+------");
 
             for (int warriors = 1; warriors <= 8; warriors++)
@@ -501,7 +501,7 @@ namespace Opponent.Tests
                     int survivors = result.WinnerAgent == 0 ? result.Agent0Units : result.Agent1Units;
                     float hpPct = result.WinnerAgent == 0 ? result.Agent0HpPercent : result.Agent1HpPercent;
 
-                    sb.AppendLine($"  {warriors,8} | {archers,7} | {winner,-8} | {survivors,9} | {hpPct,5:F1}% | {result.TicksElapsed}");
+                    sb.AppendLine($"  {warriors,8} | {archers,7} | {winner,-8} | {survivors,9} | {hpPct,5:F1}% | {result.FramesElapsed}");
                 }
             }
 
@@ -531,7 +531,7 @@ namespace Opponent.Tests
             float hpPct = result.WinnerAgent == 0 ? result.Agent0HpPercent : result.Agent1HpPercent;
 
             _output.WriteLine($"=== RANGE: Distance={distance} (6 warriors vs 4 archers) ===");
-            _output.WriteLine($"  Winner: {winner}  Survivors: {survivors}  HP%: {hpPct:F1}%  Ticks: {result.TicksElapsed}");
+            _output.WriteLine($"  Winner: {winner}  Survivors: {survivors}  HP%: {hpPct:F1}%  Frames: {result.FramesElapsed}");
         }
 
         #endregion
@@ -557,7 +557,7 @@ namespace Opponent.Tests
             float hpPct = result.WinnerAgent == 0 ? result.Agent0HpPercent : result.Agent1HpPercent;
 
             _output.WriteLine($"=== FOCUS FIRE EQUAL COUNT: {count}v{count} ===");
-            _output.WriteLine($"  Winner: {winner}  Survivors: {survivors}  HP%: {hpPct:F1}%  Ticks: {result.TicksElapsed}");
+            _output.WriteLine($"  Winner: {winner}  Survivors: {survivors}  HP%: {hpPct:F1}%  Frames: {result.FramesElapsed}");
         }
 
         #endregion
@@ -586,7 +586,7 @@ namespace Opponent.Tests
             float hpPct = result.WinnerAgent == 0 ? result.Agent0HpPercent : result.Agent1HpPercent;
 
             _output.WriteLine($"=== FOCUS FIRE EQUAL GOLD: {gold}g ({warriorCount} warriors vs {archerCount} archers) ===");
-            _output.WriteLine($"  Winner: {winner}  Survivors: {survivors}  HP%: {hpPct:F1}%  Ticks: {result.TicksElapsed}");
+            _output.WriteLine($"  Winner: {winner}  Survivors: {survivors}  HP%: {hpPct:F1}%  Frames: {result.FramesElapsed}");
         }
 
         #endregion
@@ -598,7 +598,7 @@ namespace Opponent.Tests
         {
             var sb = new StringBuilder();
             sb.AppendLine("=== FOCUS FIRE BREAK-EVEN RATIO: Warriors vs Archers ===");
-            sb.AppendLine("  Warriors | Archers | Winner   | Survivors | HP%    | Ticks");
+            sb.AppendLine("  Warriors | Archers | Winner   | Survivors | HP%    | Frames");
             sb.AppendLine("  ---------+---------+----------+-----------+--------+------");
 
             for (int warriors = 1; warriors <= 8; warriors++)
@@ -615,7 +615,7 @@ namespace Opponent.Tests
                     int survivors = result.WinnerAgent == 0 ? result.Agent0Units : result.Agent1Units;
                     float hpPct = result.WinnerAgent == 0 ? result.Agent0HpPercent : result.Agent1HpPercent;
 
-                    sb.AppendLine($"  {warriors,8} | {archers,7} | {winner,-8} | {survivors,9} | {hpPct,5:F1}% | {result.TicksElapsed}");
+                    sb.AppendLine($"  {warriors,8} | {archers,7} | {winner,-8} | {survivors,9} | {hpPct,5:F1}% | {result.FramesElapsed}");
                 }
             }
 
@@ -648,7 +648,7 @@ namespace Opponent.Tests
             float hpPct = result.WinnerAgent == 0 ? result.Agent0HpPercent : result.Agent1HpPercent;
 
             _output.WriteLine($"=== FOCUS FIRE RANGE: Distance={distance} ({warriorCount} warriors vs {archerCount} archers) ===");
-            _output.WriteLine($"  Winner: {winner}  Survivors: {survivors}  HP%: {hpPct:F1}%  Ticks: {result.TicksElapsed}");
+            _output.WriteLine($"  Winner: {winner}  Survivors: {survivors}  HP%: {hpPct:F1}%  Frames: {result.FramesElapsed}");
         }
 
         #endregion

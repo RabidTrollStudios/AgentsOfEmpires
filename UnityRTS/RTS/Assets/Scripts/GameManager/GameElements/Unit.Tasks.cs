@@ -10,8 +10,8 @@ namespace GameManager.GameElements
 		// =====================================================================
 		// Legacy task methods (UpdateAttack, UpdateBuild, UpdateTrain,
 		// UpdateGather, UpdateRepair, UpdateHeal) have been removed.
-		// All task logic is now driven by the shared TickEngine.AdvanceAllUnits()
-		// called from GameManager.SimulateTick(). The methods below are
+		// All task logic is now driven by the shared StepEngine.AdvanceAllUnits()
+		// called from GameManager.SimulateStep(). The methods below are
 		// visual-only helpers used by callbacks and the animation system.
 		// =====================================================================
 

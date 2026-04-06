@@ -178,10 +178,10 @@ namespace BalanceRunner.Recommendations
                 {
                     Severity = IssueSeverity.Medium,
                     Category = IssueCategory.TimingWindow,
-                    Description = $"Rush strategies dominate: {report.Timing.EarlyEndRate * 100:F0}% of games end before tick 500.",
+                    Description = $"Rush strategies dominate: {report.Timing.EarlyEndRate * 100:F0}% of games end before frame 500.",
                     Evidence =
                     {
-                        $"Median duration: {report.Timing.DurationStats?.Median ?? 0} ticks",
+                        $"Median duration: {report.Timing.DurationStats?.Median ?? 0} frames",
                         "Most games are decided before eco strategies can develop."
                     },
                     Rationale = "Consider increasing early military costs or building times to extend the opening window."
@@ -197,7 +197,7 @@ namespace BalanceRunner.Recommendations
                     Description = $"High stalemate rate: {report.Timing.TimeoutRate * 100:F0}% of games reach timeout.",
                     Evidence =
                     {
-                        $"Median duration: {report.Timing.DurationStats?.Median ?? 0} ticks",
+                        $"Median duration: {report.Timing.DurationStats?.Median ?? 0} frames",
                         "Many games fail to reach a decisive conclusion."
                     },
                     Rationale = "Consider reducing defensive building HP or increasing military unit damage to break stalemates."

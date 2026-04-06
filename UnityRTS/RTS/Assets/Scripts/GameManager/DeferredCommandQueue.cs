@@ -47,11 +47,11 @@ namespace GameManager
 
         /// <summary>
         /// Enqueue a command. Returns true if accepted, false if a command for this
-        /// unit was already queued this tick (duplicate suppressed).
+        /// unit was already queued this frame (duplicate suppressed).
         /// </summary>
         public static bool Enqueue(DeferredCommand cmd)
         {
-            // Only accept the first command per unit per tick.
+            // Only accept the first command per unit per step.
             // With deferred dispatch, agents may re-issue the same command on
             // consecutive frames before the first one executes.
             if (!unitsSeen.Add(cmd.UnitNbr)) return false;
@@ -83,7 +83,7 @@ namespace GameManager
             var events = GameManager.Instance.Events;
 
             // Use shared CommandProcessor for identical logic with SimGame.
-            var world = GameManager.Instance.GetTickWorld();
+            var world = GameManager.Instance.GetStepWorld();
 
             foreach (var cmd in pending)
             {

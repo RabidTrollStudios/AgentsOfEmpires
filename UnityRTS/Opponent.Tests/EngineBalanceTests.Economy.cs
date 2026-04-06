@@ -15,7 +15,7 @@ namespace Opponent.Tests
         {
             var sb = new StringBuilder();
             sb.AppendLine("=== ECONOMY: Pawn Scaling ===");
-            sb.AppendLine("  Pawns | Gold@500t | Gold@1000t | Gold@2000t | Gold/tick");
+            sb.AppendLine("  Pawns | Gold@500f | Gold@1000f | Gold@2000f | Gold/frame");
             sb.AppendLine("  --------+-----------+------------+------------+---------");
 
             foreach (int pawnCap in new[] { 1, 2, 3, 5, 8, 10 })
@@ -44,9 +44,9 @@ namespace Opponent.Tests
                 game.Run(1000);
                 int gold2000 = game.GetGold(0) - startGold;
 
-                float goldPerTick = gold2000 / 2000f;
+                float goldPerFrame = gold2000 / 2000f;
 
-                sb.AppendLine($"  {pawnCap,7} | {gold500,9} | {gold1000,10} | {gold2000,10} | {goldPerTick,8:F2}");
+                sb.AppendLine($"  {pawnCap,7} | {gold500,9} | {gold1000,10} | {gold2000,10} | {goldPerFrame,8:F2}");
             }
 
             _output.WriteLine(sb.ToString());
@@ -77,32 +77,32 @@ namespace Opponent.Tests
                 game.InitializeMatch();
                 game.InitializeRound();
 
-                int tickBase = -1;
-                int tickBarracks = -1;
-                int tickFirstUnit = -1;
+                int frameBase = -1;
+                int frameBarracks = -1;
+                int frameFirstUnit = -1;
 
                 for (int t = 0; t < 5000; t++)
                 {
                     game.Run(1);
 
-                    if (tickBase < 0 && game.GetUnitsByType(0, UnitType.BASE).Any(u => u.IsBuilt))
-                        tickBase = game.CurrentTick;
+                    if (frameBase < 0 && game.GetUnitsByType(0, UnitType.BASE).Any(u => u.IsBuilt))
+                        frameBase = game.CurrentFrame;
 
-                    if (tickBarracks < 0 && game.GetUnitsByType(0, UnitType.BARRACKS).Any(u => u.IsBuilt))
-                        tickBarracks = game.CurrentTick;
+                    if (frameBarracks < 0 && game.GetUnitsByType(0, UnitType.BARRACKS).Any(u => u.IsBuilt))
+                        frameBarracks = game.CurrentFrame;
 
-                    if (tickFirstUnit < 0)
+                    if (frameFirstUnit < 0)
                     {
                         var units = game.GetUnitsByType(0, trainType);
                         if (units.Count > 0)
-                            tickFirstUnit = game.CurrentTick;
+                            frameFirstUnit = game.CurrentFrame;
                     }
 
-                    if (tickBarracks >= 0 && tickFirstUnit >= 0)
+                    if (frameBarracks >= 0 && frameFirstUnit >= 0)
                         break;
                 }
 
-                sb.AppendLine($"  {trainType}: Base built @ tick {tickBase}, Barracks built @ tick {tickBarracks}, First {trainType} @ tick {tickFirstUnit}");
+                sb.AppendLine($"  {trainType}: Base built @ frame {frameBase}, Barracks built @ frame {frameBarracks}, First {trainType} @ frame {frameFirstUnit}");
             }
 
             _output.WriteLine(sb.ToString());

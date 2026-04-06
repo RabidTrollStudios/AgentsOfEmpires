@@ -34,9 +34,9 @@ namespace AgentTestHarness
                 return a.cmd.UnitNbr.CompareTo(b.cmd.UnitNbr);
             });
 
-            // Track which units have already received a command this tick.
+            // Track which units have already received a command this frame.
             // Only the first command per unit is processed — later ones are dropped.
-            // This prevents a GATHER from overriding a BUILD issued in the same tick.
+            // This prevents a GATHER from overriding a BUILD issued in the same frame.
             var processedUnits = new HashSet<int>();
 
             foreach (var (agentNbr, cmd) in allCommands)
@@ -44,32 +44,32 @@ namespace AgentTestHarness
                 if (!Units.TryGetValue(cmd.UnitNbr, out var unit))
                     continue;
                 if (!processedUnits.Add(cmd.UnitNbr))
-                    continue; // skip — this unit already has a command this tick
+                    continue; // skip — this unit already has a command this frame
 
-                if (tickWorld == null) tickWorld = new SimWorld(this);
+                if (stepWorld == null) stepWorld = new SimWorld(this);
                 CommandResult result;
                 switch (cmd.Type)
                 {
                     case CommandType.Move:
-                        result = CommandProcessor.ProcessMove(unit, cmd.Target, tickWorld);
+                        result = CommandProcessor.ProcessMove(unit, cmd.Target, stepWorld);
                         break;
                     case CommandType.Build:
-                        result = CommandProcessor.ProcessBuild(unit, cmd.Target, cmd.UnitType, tickWorld);
+                        result = CommandProcessor.ProcessBuild(unit, cmd.Target, cmd.UnitType, stepWorld);
                         break;
                     case CommandType.Gather:
-                        result = CommandProcessor.ProcessGather(unit, cmd.MineNbr, cmd.BaseNbr, tickWorld);
+                        result = CommandProcessor.ProcessGather(unit, cmd.MineNbr, cmd.BaseNbr, stepWorld);
                         break;
                     case CommandType.Train:
-                        result = CommandProcessor.ProcessTrain(unit, cmd.UnitType, tickWorld);
+                        result = CommandProcessor.ProcessTrain(unit, cmd.UnitType, stepWorld);
                         break;
                     case CommandType.Attack:
-                        result = CommandProcessor.ProcessAttack(unit, cmd.TargetUnitNbr, tickWorld);
+                        result = CommandProcessor.ProcessAttack(unit, cmd.TargetUnitNbr, stepWorld);
                         break;
                     case CommandType.Repair:
-                        result = CommandProcessor.ProcessRepair(unit, cmd.TargetUnitNbr, tickWorld);
+                        result = CommandProcessor.ProcessRepair(unit, cmd.TargetUnitNbr, stepWorld);
                         break;
                     case CommandType.Heal:
-                        result = CommandProcessor.ProcessHeal(unit, cmd.TargetUnitNbr, tickWorld);
+                        result = CommandProcessor.ProcessHeal(unit, cmd.TargetUnitNbr, stepWorld);
                         break;
                     default: result = CommandResult.SUCCESS; break;
                 }

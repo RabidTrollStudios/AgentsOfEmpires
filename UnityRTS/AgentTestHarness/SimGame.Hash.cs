@@ -10,7 +10,7 @@ namespace AgentTestHarness
     /// </summary>
     public struct SubsystemHash
     {
-        /// <summary>CurrentTick, Gold[0], Gold[1], Units.Count, NextUnitNbr</summary>
+        /// <summary>CurrentFrame, Gold[0], Gold[1], Units.Count, NextUnitNbr</summary>
         public long Global;
 
         /// <summary>Per-unit: UnitNbr, UnitType, OwnerAgentNbr, GridPosition</summary>
@@ -47,14 +47,14 @@ namespace AgentTestHarness
     /// State hashing for deterministic parity comparison.
     ///
     /// Hashing scheme:
-    /// - Global state: CurrentTick, Gold[0], Gold[1], unit count, NextUnitNbr
+    /// - Global state: CurrentFrame, Gold[0], Gold[1], unit count, NextUnitNbr
     /// - Per-unit state: all mutable fields including internal task state
     /// - Units sorted by UnitNbr for deterministic ordering (Dictionary iteration is unordered)
     /// - Floats converted to bit-level representation via BitConverter.SingleToInt32Bits
     /// - Map state is NOT hashed separately — it's a function of unit placements
     ///
     /// Replay assumption: given identical commands and initial state, SimGame produces
-    /// identical state at every tick. GetStateHash() verifies this by producing a
+    /// identical state at every frame. GetStateHash() verifies this by producing a
     /// reproducible hash that changes if any game state differs.
     /// </summary>
     public partial class SimGame
@@ -68,7 +68,7 @@ namespace AgentTestHarness
             unchecked
             {
                 long hash = 17;
-                hash = hash * 31 + CurrentTick;
+                hash = hash * 31 + CurrentFrame;
                 hash = hash * 31 + Gold[0];
                 hash = hash * 31 + Gold[1];
                 hash = hash * 31 + Units.Count;
@@ -94,7 +94,7 @@ namespace AgentTestHarness
 
                 // Global
                 long g = 17;
-                g = g * 31 + CurrentTick;
+                g = g * 31 + CurrentFrame;
                 g = g * 31 + Gold[0];
                 g = g * 31 + Gold[1];
                 g = g * 31 + Units.Count;
@@ -146,7 +146,7 @@ namespace AgentTestHarness
                     timers = timers * 31 + FloatToStableBits(u.BuildTimer);
                     timers = timers * 31 + FloatToStableBits(u.MiningTimer);
                     timers = timers * 31 + FloatToStableBits(u.Mana);
-                    timers = timers * 31 + u.LocalAvoidWaitTicks;
+                    timers = timers * 31 + u.LocalAvoidWaitFrames;
                 }
 
                 result.UnitPositions = pos;
@@ -197,7 +197,7 @@ namespace AgentTestHarness
                 hash = hash * 31 + u.RepairBuildingNbr;
                 hash = hash * 31 + u.HealTargetNbr;
                 hash = hash * 31 + FloatToStableBits(u.Mana);
-                hash = hash * 31 + u.LocalAvoidWaitTicks;
+                hash = hash * 31 + u.LocalAvoidWaitFrames;
                 return hash;
             }
         }

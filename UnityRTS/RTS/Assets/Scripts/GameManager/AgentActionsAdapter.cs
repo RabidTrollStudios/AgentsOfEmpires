@@ -66,7 +66,7 @@ namespace GameManager
         /// </summary>
         /// <summary>
         /// Queue the command. Returns SUCCESS. Sets enqueued=true if this was the first
-        /// command for this unit this tick (for recording purposes).
+        /// command for this unit this frame (for recording purposes).
         /// </summary>
         private CommandResult ValidateAndQueue(int unitNbr, DeferredCommand cmd, out bool enqueued)
         {

@@ -85,7 +85,7 @@ namespace Gameplay.Tests
         public void Move_WarriorFasterThanPawn()
         {
             // Pawn speed = 1.0x, Warrior speed = 2.1x
-            // Over the same distance, warrior should take fewer ticks
+            // Over the same distance, warrior should take fewer frames
             int distance = 10;
             var target = new Position(2 + distance, 5);
 
@@ -103,7 +103,7 @@ namespace Gameplay.Tests
                 var pawns = g.GetUnitsByType(0, UnitType.PAWN);
                 return pawns.Count > 0 && pawns[0].GridPosition.Equals(target);
             }, 500);
-            int pawnTicks = pawnGame.CurrentTick;
+            int pawnFrames = pawnGame.CurrentFrame;
 
             // Warrior
             var warriorGame = new SimGameBuilder()
@@ -119,10 +119,10 @@ namespace Gameplay.Tests
                 var warriors = g.GetUnitsByType(0, UnitType.WARRIOR);
                 return warriors.Count > 0 && warriors[0].GridPosition.Equals(target);
             }, 500);
-            int warriorTicks = warriorGame.CurrentTick;
+            int warriorFrames = warriorGame.CurrentFrame;
 
-            Assert.True(warriorTicks < pawnTicks,
-                $"Warrior ({warriorTicks} ticks) should be faster than pawn ({pawnTicks} ticks)");
+            Assert.True(warriorFrames < pawnFrames,
+                $"Warrior ({warriorFrames} frames) should be faster than pawn ({pawnFrames} frames)");
         }
 
         [Fact]
@@ -146,7 +146,7 @@ namespace Gameplay.Tests
                 var pawns = g.GetUnitsByType(0, UnitType.PAWN);
                 return pawns.Count > 0 && pawns[0].GridPosition.Equals(target);
             }, 500);
-            int pawnTicks = pawnGame.CurrentTick;
+            int pawnFrames = pawnGame.CurrentFrame;
 
             // Archer
             var archerGame = new SimGameBuilder()
@@ -162,10 +162,10 @@ namespace Gameplay.Tests
                 var archers = g.GetUnitsByType(0, UnitType.ARCHER);
                 return archers.Count > 0 && archers[0].GridPosition.Equals(target);
             }, 500);
-            int archerTicks = archerGame.CurrentTick;
+            int archerFrames = archerGame.CurrentFrame;
 
-            Assert.True(archerTicks < pawnTicks,
-                $"Archer ({archerTicks} ticks) should be faster than pawn ({pawnTicks} ticks)");
+            Assert.True(archerFrames < pawnFrames,
+                $"Archer ({archerFrames} frames) should be faster than pawn ({pawnFrames} frames)");
         }
 
         // ------------------------------------------------------------------

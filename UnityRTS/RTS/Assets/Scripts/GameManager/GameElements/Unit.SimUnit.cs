@@ -11,10 +11,10 @@ namespace GameManager.GameElements
     public partial class Unit : ISimUnit
     {
         /// <summary>
-        /// Post-tick visual update. Mana regen and death are now in shared StepEngine.
+        /// Post-step visual update. Mana regen and death are now in shared StepEngine.
         /// Only Unity-specific reference caching remains.
         /// </summary>
-        internal void PostTickUpdate()
+        internal void PostStepUpdate()
         {
             if (GameManager.Instance == null || !GameManager.Instance.IsPlaying) return;
 

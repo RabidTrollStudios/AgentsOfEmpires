@@ -33,7 +33,7 @@ namespace GameManager.GameElements
 					velocity = Utility.SafeNormalize(to - from);
 				}
 
-				// Movement is now advanced per-tick in GameManager.SimulateTick()
+				// Movement is now advanced per-step in GameManager.SimulateStep()
 				// for deterministic parity with SimGame. Visual position is
 				// interpolated here from the authoritative grid state.
 				if (_simPath != null && pathIndex < _simPath.Count)
@@ -607,12 +607,12 @@ namespace GameManager.GameElements
 		}
 
 		/// <summary>
-		/// Simulate one game tick. Delegates to GameManager.SimulateTick() which
+		/// Simulate one game step. Delegates to GameManager.SimulateStep() which
 		/// runs StepEngine.AdvanceAllUnits for all units. Used by PlayMode tests.
 		/// </summary>
-		internal void TickFixedUpdate()
+		internal void StepFixedUpdate()
 		{
-			GameManager.Instance?.SimulateTick();
+			GameManager.Instance?.SimulateStep();
 		}
 
 	

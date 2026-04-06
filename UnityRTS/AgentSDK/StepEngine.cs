@@ -59,7 +59,7 @@ namespace AgentSDK
                 float manaRegen = world.Constants.ManaRegen;
                 unit.Mana = TaskEngine.RegenMana(unit.Mana, maxMana, manaRegen, world.StepDuration);
 
-                // Warrior charge cooldown ticks down
+                // Warrior charge cooldown counts down
                 if (unit.UnitType == UnitType.WARRIOR && unit.ChargeCooldown > 0f)
                     unit.ChargeCooldown = Math.Max(0f, unit.ChargeCooldown - world.StepDuration);
             }
@@ -93,7 +93,7 @@ namespace AgentSDK
             unit.RepairBuildingNbr = -1;
             // Reset attack cooldown so next attack starts fresh
             unit.AttackCooldown = 0f;
-            // Ability state: keep ChargeCooldown (ticks down over time),
+            // Ability state: keep ChargeCooldown (counts down over time),
             // keep VolleyTargetNbr/VolleyTimer (persists between attacks),
             // reset JoustDistance (lancer starts accumulating on next move).
             unit.JoustDistance = 0f;
@@ -265,7 +265,7 @@ namespace AgentSDK
                 mine.Health -= goldChunk;
                 pawn.GoldCarried += goldChunk;
                 pawn.MiningTimer -= goldChunk;
-                callbacks.OnMiningTick(pawn, mine, goldChunk);
+                callbacks.OnMiningStep(pawn, mine, goldChunk);
             }
 
             float miningCapacity = world.Constants.MiningCapacity;
@@ -412,7 +412,7 @@ namespace AgentSDK
                     }
                 }
 
-                // Tick down attack cooldown
+                // Count down attack cooldown
                 if (attacker.AttackCooldown > 0f)
                 {
                     attacker.AttackCooldown -= world.StepDuration;
@@ -550,10 +550,10 @@ namespace AgentSDK
                 return;
             }
 
-            float repairAmount = TaskEngine.ComputeRepairPerTick(
+            float repairAmount = TaskEngine.ComputeRepairPerStep(
                 building.UnitType, world.Constants.CreationTime[building.UnitType], world.StepDuration);
             building.Health = Math.Min(building.Health + repairAmount, maxHp);
-            callbacks.OnRepairTick(pawn, building, repairAmount);
+            callbacks.OnRepairStep(pawn, building, repairAmount);
 
             if (building.Health >= maxHp)
             {

@@ -30,10 +30,10 @@ namespace AgentTestHarness
     {
         private readonly SimGame game;
         private readonly int agentNbr;
-        private readonly Func<int> getCurrentTick;
+        private readonly Func<int> getCurrentFrame;
 
         // Cooldown system — mirrors AgentActionsAdapter exactly.
-        // Uses tick count instead of Unity's Time.frameCount.
+        // Uses frame count instead of Unity's Time.frameCount.
         private readonly Dictionary<int, int> cooldownExpiry = new Dictionary<int, int>();
         private readonly Dictionary<int, int> failureCount = new Dictionary<int, int>();
         private const int BASE_COOLDOWN_TICKS = 15;
@@ -44,11 +44,11 @@ namespace AgentTestHarness
         /// <summary>All log messages issued by this agent.</summary>
         public List<string> LogMessages { get; } = new List<string>();
 
-        internal SimAgentActions(SimGame game, int agentNbr, Func<int> getCurrentTick)
+        internal SimAgentActions(SimGame game, int agentNbr, Func<int> getCurrentFrame)
         {
             this.game = game;
             this.agentNbr = agentNbr;
-            this.getCurrentTick = getCurrentTick;
+            this.getCurrentFrame = getCurrentFrame;
         }
 
         internal void ClearPending()
@@ -62,7 +62,7 @@ namespace AgentTestHarness
         {
             if (cooldownExpiry.TryGetValue(unitNbr, out int expiry))
             {
-                if (getCurrentTick() < expiry) return true;
+                if (getCurrentFrame() < expiry) return true;
                 cooldownExpiry.Remove(unitNbr);
             }
             return false;
@@ -75,7 +75,7 @@ namespace AgentTestHarness
             failureCount[unitNbr] = failures;
             int cooldown = BASE_COOLDOWN_TICKS * (1 << Math.Min(failures - 1, 3));
             if (cooldown > MAX_COOLDOWN_TICKS) cooldown = MAX_COOLDOWN_TICKS;
-            cooldownExpiry[unitNbr] = getCurrentTick() + cooldown;
+            cooldownExpiry[unitNbr] = getCurrentFrame() + cooldown;
         }
 
         private void ResetCooldown(int unitNbr)
@@ -87,12 +87,12 @@ namespace AgentTestHarness
         #endregion
 
         /// <summary>
-        /// Queue a command. Dedup: only first command per unit per tick.
+        /// Queue a command. Dedup: only first command per unit per step.
         /// Returns true if enqueued (first for this unit), false if duplicate.
         /// </summary>
         private bool Enqueue(SimCommand cmd)
         {
-            // Check if this unit already has a pending command this tick
+            // Check if this unit already has a pending command this frame
             if (PendingCommands.Any(c => c.UnitNbr == cmd.UnitNbr))
                 return false;
             PendingCommands.Add(cmd);

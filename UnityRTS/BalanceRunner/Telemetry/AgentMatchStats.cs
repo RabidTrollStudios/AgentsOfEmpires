@@ -24,17 +24,17 @@ namespace BalanceRunner.Telemetry
         /// <summary>Units lost (killed) during the match, by type.</summary>
         public Dictionary<UnitType, int> UnitsLost { get; set; } = new Dictionary<UnitType, int>();
 
-        /// <summary>Maximum total army value (sum of COST for all living military units) at any tick.</summary>
+        /// <summary>Maximum total army value (sum of COST for all living military units) at any frame.</summary>
         public int PeakArmyValue { get; set; }
 
-        /// <summary>Tick when the first military unit (warrior, archer, lancer) finished training. -1 if never.</summary>
-        public int FirstMilitaryTick { get; set; } = -1;
+        /// <summary>Frame when the first military unit (warrior, archer, lancer) finished training. -1 if never.</summary>
+        public int FirstMilitaryFrame { get; set; } = -1;
 
-        /// <summary>Tick when the agent's first attack command was observed (unit entered ATTACK action). -1 if never.</summary>
-        public int FirstAttackTick { get; set; } = -1;
+        /// <summary>Frame when the agent's first attack command was observed (unit entered ATTACK action). -1 if never.</summary>
+        public int FirstAttackFrame { get; set; } = -1;
 
-        /// <summary>Tick when the agent first killed an enemy unit. -1 if never.</summary>
-        public int FirstKillTick { get; set; } = -1;
+        /// <summary>Frame when the agent first killed an enemy unit. -1 if never.</summary>
+        public int FirstKillFrame { get; set; } = -1;
 
         /// <summary>Count of surviving units at match end, by type.</summary>
         public Dictionary<UnitType, int> SurvivingUnits { get; set; } = new Dictionary<UnitType, int>();

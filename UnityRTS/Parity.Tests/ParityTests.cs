@@ -7,17 +7,17 @@ namespace Parity.Tests
 {
     /// <summary>
     /// Verifies SimGame determinism: recording commands from a live agent and replaying
-    /// them through a CommandPlayer produces identical game state at every tick.
+    /// them through a CommandPlayer produces identical game state at every frame.
     ///
     /// Test pattern:
-    /// 1. Run game with real agents + recording enabled, collect per-tick state hashes
+    /// 1. Run game with real agents + recording enabled, collect per-frame state hashes
     /// 2. Replay recorded commands through CommandPlayer agents on a fresh game
-    /// 3. Assert hashes match at every tick
+    /// 3. Assert hashes match at every frame
     /// </summary>
     public class ParityTests
     {
         /// <summary>
-        /// Run a scenario with recording, then replay and compare per-tick state hashes.
+        /// Run a scenario with recording, then replay and compare per-frame state hashes.
         /// Returns a DivergenceReport with the result.
         /// </summary>
         private DivergenceReport RunScenario(ParityScenario scenario)
@@ -25,7 +25,7 @@ namespace Parity.Tests
             var builder = scenario.BuilderFactory();
             var agent0 = scenario.Agent0Factory();
             var agent1 = scenario.Agent1Factory();
-            int ticks = scenario.Ticks;
+            int frames = scenario.Frames;
 
             // --- Recording run ---
             builder.WithAgent(0, agent0).WithAgent(1, agent1);
@@ -34,10 +34,10 @@ namespace Parity.Tests
             game1.InitializeMatch();
             game1.InitializeRound();
 
-            var hashes1 = new long[ticks];
-            for (int t = 0; t < ticks; t++)
+            var hashes1 = new long[frames];
+            for (int t = 0; t < frames; t++)
             {
-                game1.Tick();
+                game1.Step();
                 hashes1[t] = game1.GetStateHash();
             }
 
@@ -52,19 +52,19 @@ namespace Parity.Tests
             game2.InitializeMatch();
             game2.InitializeRound();
 
-            for (int t = 0; t < ticks; t++)
+            for (int t = 0; t < frames; t++)
             {
-                game2.Tick();
+                game2.Step();
                 long hash2 = game2.GetStateHash();
                 if (hashes1[t] != hash2)
                 {
                     return new DivergenceReport
                     {
                         ScenarioName = scenario.Name,
-                        DivergenceTick = t + 1,
+                        DivergenceFrame = t + 1,
                         ExpectedHash = hashes1[t],
                         ActualHash = hash2,
-                        TotalTicks = ticks
+                        TotalFrames = frames
                     };
                 }
             }
@@ -72,7 +72,7 @@ namespace Parity.Tests
             return new DivergenceReport
             {
                 ScenarioName = scenario.Name,
-                TotalTicks = ticks
+                TotalFrames = frames
             };
         }
 
@@ -140,7 +140,7 @@ namespace Parity.Tests
                 .Build();
             game1.InitializeMatch();
             game1.InitializeRound();
-            game1.Tick();
+            game1.Step();
 
             var game2 = new SimGameBuilder()
                 .WithMapSize(20, 20)
@@ -149,7 +149,7 @@ namespace Parity.Tests
                 .Build();
             game2.InitializeMatch();
             game2.InitializeRound();
-            game2.Tick();
+            game2.Step();
 
             Assert.NotEqual(game1.GetStateHash(), game2.GetStateHash());
         }
@@ -174,8 +174,8 @@ namespace Parity.Tests
 
             for (int t = 0; t < 50; t++)
             {
-                game1.Tick();
-                game2.Tick();
+                game1.Step();
+                game2.Step();
                 Assert.Equal(game1.GetStateHash(), game2.GetStateHash());
             }
         }

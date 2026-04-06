@@ -232,7 +232,7 @@ namespace GameManager
             failedCommands.Add(failure);
         }
 
-        /// <summary>Clear failed commands at the start of each tick.</summary>
+        /// <summary>Clear failed commands at the start of each step.</summary>
         internal void ClearFailedCommands()
         {
             failedCommands.Clear();

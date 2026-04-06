@@ -13,27 +13,27 @@ namespace AgentTestHarness
         public Func<SimGameBuilder> BuilderFactory { get; }
         public Func<IPlanningAgent> Agent0Factory { get; }
         public Func<IPlanningAgent> Agent1Factory { get; }
-        public int Ticks { get; }
+        public int Frames { get; }
 
         /// <summary>
-        /// Create a scenario with an explicit tick count.
+        /// Create a scenario with an explicit frame count.
         /// </summary>
         public ParityScenario(string name,
             Func<SimGameBuilder> builderFactory,
             Func<IPlanningAgent> agent0Factory,
             Func<IPlanningAgent> agent1Factory,
-            int ticks)
+            int frames)
         {
             Name = name;
             BuilderFactory = builderFactory;
             Agent0Factory = agent0Factory;
             Agent1Factory = agent1Factory;
-            Ticks = ticks;
+            Frames = frames;
         }
 
         /// <summary>
         /// Create a scenario with a duration in seconds.
-        /// Tick count is computed from the default SimConfig step rate (60 Hz).
+        /// Frame count is computed from the default SimConfig step rate (60 Hz).
         /// </summary>
         public static ParityScenario FromDuration(string name,
             Func<SimGameBuilder> builderFactory,
@@ -41,9 +41,9 @@ namespace AgentTestHarness
             Func<IPlanningAgent> agent1Factory,
             float durationSeconds)
         {
-            float tickDuration = new SimConfig().TickDuration;
-            int ticks = (int)Math.Ceiling(durationSeconds / tickDuration);
-            return new ParityScenario(name, builderFactory, agent0Factory, agent1Factory, ticks);
+            float stepDuration = new SimConfig().StepDuration;
+            int frames = (int)Math.Ceiling(durationSeconds / stepDuration);
+            return new ParityScenario(name, builderFactory, agent0Factory, agent1Factory, frames);
         }
 
         public override string ToString() => Name;

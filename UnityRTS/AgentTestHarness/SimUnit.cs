@@ -69,7 +69,7 @@ namespace AgentTestHarness
         public int HealTargetNbr { get; set; }
 
         // Local avoidance (not in ISimUnit but kept for backward compat)
-        internal int LocalAvoidWaitTicks;
+        internal int LocalAvoidWaitFrames;
 
         // Legacy alias for code that still uses "Path"
         internal List<Position> Path

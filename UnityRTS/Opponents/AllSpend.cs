@@ -15,9 +15,9 @@ namespace PlanningAgent
         private const int ATTACK_THRESHOLD = 4;
         private const float GOLD_STARVED = 100f;
         private const float GOLD_RICH = 150f;
-        private const int ATTACK_TICKS = 2;
-        private const int KITE_TICKS = 1;
-        private const int CYCLE_LENGTH = ATTACK_TICKS + KITE_TICKS;
+        private const int ATTACK_FRAMES = 2;
+        private const int KITE_FRAMES = 1;
+        private const int CYCLE_LENGTH = ATTACK_FRAMES + KITE_FRAMES;
         private const int RETREAT_DISTANCE = 2;
         private const float ANIM_DURATION_BASE = 0.5f; // 6 frames at 12 FPS
         private const float FRAME_DURATION = 0.02f;  // 50 Hz fixed update
@@ -25,22 +25,22 @@ namespace PlanningAgent
         private enum JoustState { Charging, Striking, Retreating }
 
         private int _lastArmySize;
-        private int _ticksSinceArmyShrunk;
+        private int _framesSinceArmyShrunk;
         private UnitType _priorityUnit = UnitType.MINE;
         private Dictionary<int, int> _lastArcherTarget = new Dictionary<int, int>();
-        private Dictionary<int, int> _archerCycleTick = new Dictionary<int, int>();
+        private Dictionary<int, int> _archerCycleFrame = new Dictionary<int, int>();
         private Dictionary<int, JoustState> _joustState = new Dictionary<int, JoustState>();
-        private Dictionary<int, int> _strikeTicks = new Dictionary<int, int>();
+        private Dictionary<int, int> _strikeFrames = new Dictionary<int, int>();
 
         public override void InitializeMatch()
         {
             _lastArmySize = 0;
-            _ticksSinceArmyShrunk = 999;
+            _framesSinceArmyShrunk = 999;
             _priorityUnit = UnitType.MINE;
             _lastArcherTarget = new Dictionary<int, int>();
-            _archerCycleTick = new Dictionary<int, int>();
+            _archerCycleFrame = new Dictionary<int, int>();
             _joustState = new Dictionary<int, JoustState>();
-            _strikeTicks = new Dictionary<int, int>();
+            _strikeFrames = new Dictionary<int, int>();
         }
 
         public override void Update(IGameState state, IAgentActions actions)
@@ -56,8 +56,8 @@ namespace PlanningAgent
             }
 
             int armySize = myWarriors.Count + myArchers.Count + myLancers.Count;
-            if (armySize < _lastArmySize) _ticksSinceArmyShrunk = 0;
-            else _ticksSinceArmyShrunk++;
+            if (armySize < _lastArmySize) _framesSinceArmyShrunk = 0;
+            else _framesSinceArmyShrunk++;
             _lastArmySize = armySize;
 
             // Scout enemy and pick counter priority
@@ -76,7 +76,7 @@ namespace PlanningAgent
                 + state.GetEnemyUnits(UnitType.LANCER).Count;
             bool goldStarved = state.MyGold < GOLD_STARVED;
             bool goldRich = state.MyGold > GOLD_RICH;
-            bool takingLosses = _ticksSinceArmyShrunk < 20;
+            bool takingLosses = _framesSinceArmyShrunk < 20;
             bool outnumbered = enemyArmy > armySize;
             bool needMorePawns = myPawns.Count < 5 || (goldStarved && myPawns.Count < 8);
 
@@ -218,10 +218,10 @@ namespace PlanningAgent
             {
                 var info = state.GetUnit(archerNbr);
                 if (!info.HasValue) continue;
-                if (!_archerCycleTick.ContainsKey(archerNbr)) _archerCycleTick[archerNbr] = 0;
-                int cycleTick = _archerCycleTick[archerNbr] % CYCLE_LENGTH;
-                _archerCycleTick[archerNbr]++;
-                if (cycleTick < ATTACK_TICKS)
+                if (!_archerCycleFrame.ContainsKey(archerNbr)) _archerCycleFrame[archerNbr] = 0;
+                int cycleFrame = _archerCycleFrame[archerNbr] % CYCLE_LENGTH;
+                _archerCycleFrame[archerNbr]++;
+                if (cycleFrame < ATTACK_FRAMES)
                 {
                     int lastTarget = _lastArcherTarget.ContainsKey(archerNbr) ? _lastArcherTarget[archerNbr] : -1;
                     int chosenTarget = -1;
@@ -247,7 +247,7 @@ namespace PlanningAgent
                 if (!_joustState.ContainsKey(lancerNbr))
                 {
                     _joustState[lancerNbr] = JoustState.Charging;
-                    _strikeTicks[lancerNbr] = 0;
+                    _strikeFrames[lancerNbr] = 0;
                 }
 
                 switch (_joustState[lancerNbr])
@@ -272,17 +272,17 @@ namespace PlanningAgent
                                 if (dist < range)
                                 {
                                     _joustState[lancerNbr] = JoustState.Striking;
-                                    _strikeTicks[lancerNbr] = 0;
+                                    _strikeFrames[lancerNbr] = 0;
                                 }
                             }
                         }
                         break;
 
                     case JoustState.Striking:
-                        _strikeTicks[lancerNbr]++;
+                        _strikeFrames[lancerNbr]++;
                         int framesPerAnim = System.Math.Max(1,
                             (int)System.Math.Ceiling(ANIM_DURATION_BASE / (state.GameSpeed * FRAME_DURATION)));
-                        if (_strikeTicks[lancerNbr] >= framesPerAnim)
+                        if (_strikeFrames[lancerNbr] >= framesPerAnim)
                         {
                             var atkTarget = info.Value.AttackTargetNbr >= 0
                                 ? state.GetUnit(info.Value.AttackTargetNbr) : null;
@@ -297,7 +297,7 @@ namespace PlanningAgent
                             }
                             else
                             {
-                                _strikeTicks[lancerNbr] = 0;
+                                _strikeFrames[lancerNbr] = 0;
                             }
                         }
                         break;

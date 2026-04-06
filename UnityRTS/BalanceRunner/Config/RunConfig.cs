@@ -14,8 +14,8 @@ namespace BalanceRunner.Config
         /// <summary>Number of seeds per matchup ordering (default 5).</summary>
         public int SeedCount { get; set; } = 5;
 
-        /// <summary>Maximum ticks per match before timeout (default 5000).</summary>
-        public int TickLimit { get; set; } = 5000;
+        /// <summary>Maximum frames per match before timeout (default 5000).</summary>
+        public int FrameLimit { get; set; } = 5000;
 
         /// <summary>Map template to use (default OpenField).</summary>
         public MapTemplate MapTemplate { get; set; } = MapTemplate.OpenField;

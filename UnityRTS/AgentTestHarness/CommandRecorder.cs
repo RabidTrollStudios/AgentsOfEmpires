@@ -6,31 +6,31 @@ namespace AgentTestHarness
 {
     /// <summary>
     /// Decorator that wraps an IAgentActions and records every command issued,
-    /// tagged with the current tick. Delegates all calls to the inner instance.
+    /// tagged with the current frame. Delegates all calls to the inner instance.
     ///
-    /// Usage: inject between the agent and the real SimAgentActions in the tick loop
+    /// Usage: inject between the agent and the real SimAgentActions in the step loop
     /// by calling SimGame.EnableRecording() before running.
     /// </summary>
     public class CommandRecorder : IAgentActions
     {
         private readonly IAgentActions inner;
         private readonly int agentNbr;
-        private readonly Func<int> getCurrentTick;
+        private readonly Func<int> getCurrentFrame;
 
         public List<CommandRecord> Records { get; } = new List<CommandRecord>();
 
-        public CommandRecorder(IAgentActions inner, int agentNbr, Func<int> getCurrentTick)
+        public CommandRecorder(IAgentActions inner, int agentNbr, Func<int> getCurrentFrame)
         {
             this.inner = inner;
             this.agentNbr = agentNbr;
-            this.getCurrentTick = getCurrentTick;
+            this.getCurrentFrame = getCurrentFrame;
         }
 
         public CommandResult Move(int unitNbr, Position target)
         {
             Records.Add(new CommandRecord
             {
-                Tick = getCurrentTick(),
+                Frame = getCurrentFrame(),
                 AgentNbr = agentNbr,
                 Type = CommandType.Move,
                 UnitNbr = unitNbr,
@@ -43,7 +43,7 @@ namespace AgentTestHarness
         {
             Records.Add(new CommandRecord
             {
-                Tick = getCurrentTick(),
+                Frame = getCurrentFrame(),
                 AgentNbr = agentNbr,
                 Type = CommandType.Build,
                 UnitNbr = unitNbr,
@@ -57,7 +57,7 @@ namespace AgentTestHarness
         {
             Records.Add(new CommandRecord
             {
-                Tick = getCurrentTick(),
+                Frame = getCurrentFrame(),
                 AgentNbr = agentNbr,
                 Type = CommandType.Gather,
                 UnitNbr = pawnNbr,
@@ -71,7 +71,7 @@ namespace AgentTestHarness
         {
             Records.Add(new CommandRecord
             {
-                Tick = getCurrentTick(),
+                Frame = getCurrentFrame(),
                 AgentNbr = agentNbr,
                 Type = CommandType.Train,
                 BuildingNbr = buildingNbr,
@@ -84,7 +84,7 @@ namespace AgentTestHarness
         {
             Records.Add(new CommandRecord
             {
-                Tick = getCurrentTick(),
+                Frame = getCurrentFrame(),
                 AgentNbr = agentNbr,
                 Type = CommandType.Attack,
                 UnitNbr = unitNbr,
@@ -97,7 +97,7 @@ namespace AgentTestHarness
         {
             Records.Add(new CommandRecord
             {
-                Tick = getCurrentTick(),
+                Frame = getCurrentFrame(),
                 AgentNbr = agentNbr,
                 Type = CommandType.Repair,
                 UnitNbr = pawnNbr,
@@ -110,7 +110,7 @@ namespace AgentTestHarness
         {
             Records.Add(new CommandRecord
             {
-                Tick = getCurrentTick(),
+                Frame = getCurrentFrame(),
                 AgentNbr = agentNbr,
                 Type = CommandType.Heal,
                 UnitNbr = monkNbr,
@@ -123,7 +123,7 @@ namespace AgentTestHarness
         {
             Records.Add(new CommandRecord
             {
-                Tick = getCurrentTick(),
+                Frame = getCurrentFrame(),
                 AgentNbr = agentNbr,
                 Type = CommandType.Log,
                 LogMessage = message

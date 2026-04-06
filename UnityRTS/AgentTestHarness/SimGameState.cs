@@ -8,7 +8,7 @@ namespace AgentTestHarness
     /// Read-only view of the simulation state for a specific agent.
     /// Implements IGameState by delegating to SimGame and SimMap.
     ///
-    /// Includes per-tick pathfinding cache/budget and buildability pawn filtering
+    /// Includes per-frame pathfinding cache/budget and buildability pawn filtering
     /// to match Unity's GameStateAdapter for cross-engine parity.
     /// </summary>
     public class SimGameState : IGameState
@@ -16,10 +16,10 @@ namespace AgentTestHarness
         private readonly SimGame game;
         private readonly int agentNbr;
 
-        // Per-tick pathfinding cache and rate limiting — mirrors GameStateAdapter
-        private const int MAX_PATH_CALLS_PER_TICK = 20;
-        private int lastCacheTick = -1;
-        private int pathCallsThisTick = 0;
+        // Per-frame pathfinding cache and rate limiting — mirrors GameStateAdapter
+        private const int MAX_PATH_CALLS_PER_FRAME = 20;
+        private int lastCacheFrame = -1;
+        private int pathCallsThisFrame = 0;
         private Dictionary<(Position, Position), IReadOnlyList<Position>> pathBetweenCache
             = new Dictionary<(Position, Position), IReadOnlyList<Position>>();
         private Dictionary<(Position, UnitType, Position), IReadOnlyList<Position>> pathToUnitCache
@@ -33,26 +33,26 @@ namespace AgentTestHarness
         }
 
         /// <summary>
-        /// Clear the path cache at the start of each tick.
-        /// Called by SimGame.Tick() before agent update.
+        /// Clear the path cache at the start of each frame.
+        /// Called by SimGame.Step() before agent update.
         /// </summary>
         internal void ClearPathCache()
         {
-            pathCallsThisTick = 0;
+            pathCallsThisFrame = 0;
             pathBetweenCache.Clear();
             pathToUnitCache.Clear();
         }
 
         /// <summary>
-        /// Reset cache if we're on a new tick (fallback — ClearPathCache is the primary mechanism).
+        /// Reset cache if we're on a new frame (fallback — ClearPathCache is the primary mechanism).
         /// </summary>
-        private void ResetCacheIfNewTick()
+        private void ResetCacheIfNewFrame()
         {
-            int currentTick = game.CurrentTick;
-            if (currentTick != lastCacheTick)
+            int currentFrame = game.CurrentFrame;
+            if (currentFrame != lastCacheFrame)
             {
-                lastCacheTick = currentTick;
-                pathCallsThisTick = 0;
+                lastCacheFrame = currentFrame;
+                pathCallsThisFrame = 0;
                 pathBetweenCache.Clear();
                 pathToUnitCache.Clear();
             }
@@ -130,16 +130,16 @@ namespace AgentTestHarness
 
         public IReadOnlyList<Position> GetPathBetween(Position start, Position end)
         {
-            ResetCacheIfNewTick();
+            ResetCacheIfNewFrame();
 
             var key = (start, end);
             if (pathBetweenCache.TryGetValue(key, out var cached))
                 return cached;
 
-            if (pathCallsThisTick >= MAX_PATH_CALLS_PER_TICK)
+            if (pathCallsThisFrame >= MAX_PATH_CALLS_PER_FRAME)
                 return EmptyPath;
 
-            pathCallsThisTick++;
+            pathCallsThisFrame++;
             var result = game.Map.FindPath(start, end);
             pathBetweenCache[key] = result;
             return result;
@@ -150,27 +150,27 @@ namespace AgentTestHarness
             if (!avoidUnits)
                 return GetPathBetween(start, end);
 
-            ResetCacheIfNewTick();
+            ResetCacheIfNewFrame();
 
-            if (pathCallsThisTick >= MAX_PATH_CALLS_PER_TICK)
+            if (pathCallsThisFrame >= MAX_PATH_CALLS_PER_FRAME)
                 return EmptyPath;
 
-            pathCallsThisTick++;
+            pathCallsThisFrame++;
             return game.Map.FindPath(start, end, avoidUnits);
         }
 
         public IReadOnlyList<Position> GetPathToUnit(Position start, UnitType unitType, Position unitPosition)
         {
-            ResetCacheIfNewTick();
+            ResetCacheIfNewFrame();
 
             var key = (start, unitType, unitPosition);
             if (pathToUnitCache.TryGetValue(key, out var cached))
                 return cached;
 
-            if (pathCallsThisTick >= MAX_PATH_CALLS_PER_TICK)
+            if (pathCallsThisFrame >= MAX_PATH_CALLS_PER_FRAME)
                 return EmptyPath;
 
-            pathCallsThisTick++;
+            pathCallsThisFrame++;
             var result = game.Map.FindPathToUnit(start, unitType, unitPosition);
             pathToUnitCache[key] = result;
             return result;

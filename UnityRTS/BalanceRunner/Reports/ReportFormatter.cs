@@ -368,7 +368,7 @@ namespace BalanceRunner.Reports
 
         /// <summary>
         /// Aggregate timeline snapshots per agent across all matches.
-        /// Averages each metric at each tick bucket.
+        /// Averages each metric at each frame bucket.
         /// </summary>
         private static Dictionary<string, object> AggregateTimelines(List<MatchResult> results)
         {
@@ -401,17 +401,17 @@ namespace BalanceRunner.Reports
                 string name = kvp.Key;
                 var allRuns = kvp.Value;
 
-                // Find all unique ticks across runs
-                var tickSet = new HashSet<int>();
+                // Find all unique frames across runs
+                var frameSet = new HashSet<int>();
                 foreach (var run in allRuns)
                     foreach (var snap in run)
-                        tickSet.Add(snap.Tick);
+                        frameSet.Add(snap.Frame);
 
-                var ticks = tickSet.OrderBy(t => t).ToList();
+                var frames = frameSet.OrderBy(t => t).ToList();
 
-                // Average each metric at each tick
+                // Average each metric at each frame
                 var avgSnapshots = new List<object>();
-                foreach (int tick in ticks)
+                foreach (int frame in frames)
                 {
                     int count = 0;
                     float gold = 0, goldMined = 0, goldSpent = 0, pawnCount = 0;
@@ -421,7 +421,7 @@ namespace BalanceRunner.Reports
 
                     foreach (var run in allRuns)
                     {
-                        var snap = run.FirstOrDefault(s => s.Tick == tick);
+                        var snap = run.FirstOrDefault(s => s.Frame == frame);
                         if (snap == null) continue;
                         count++;
                         gold += snap.Gold;
@@ -452,7 +452,7 @@ namespace BalanceRunner.Reports
 
                     avgSnapshots.Add(new
                     {
-                        Tick = tick,
+                        Frame = frame,
                         Gold = gold / count,
                         GoldMined = goldMined / count,
                         GoldSpent = goldSpent / count,
@@ -465,18 +465,18 @@ namespace BalanceRunner.Reports
                     });
                 }
 
-                // Summarize milestones (median tick for each type)
+                // Summarize milestones (median frame for each type)
                 var milestonesByType = agentMilestones[name]
                     .GroupBy(m => m.Type)
                     .Select(g =>
                     {
-                        var sorted = g.Select(m => m.Tick).OrderBy(t => t).ToList();
+                        var sorted = g.Select(m => m.Frame).OrderBy(t => t).ToList();
                         return new
                         {
                             Type = g.Key,
-                            MedianTick = sorted[sorted.Count / 2],
-                            MinTick = sorted[0],
-                            MaxTick = sorted[sorted.Count - 1],
+                            MedianFrame = sorted[sorted.Count / 2],
+                            MinFrame = sorted[0],
+                            MaxFrame = sorted[sorted.Count - 1],
                             Count = sorted.Count
                         };
                     })

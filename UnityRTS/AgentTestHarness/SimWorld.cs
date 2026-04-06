@@ -55,6 +55,6 @@ namespace AgentTestHarness
 
         public DerivedGameConstants Constants => game.derived;
 
-        public float StepDuration => game.Config.TickDuration;
+        public float StepDuration => game.Config.StepDuration;
     }
 }

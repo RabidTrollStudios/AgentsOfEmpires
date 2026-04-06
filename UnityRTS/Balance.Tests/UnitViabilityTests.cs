@@ -25,7 +25,7 @@ namespace Balance.Tests
             var config = new RunConfig
             {
                 SeedCount = 2,
-                TickLimit = 3000
+                FrameLimit = 3000
             };
 
             var results = BatchRunner.Run(config);

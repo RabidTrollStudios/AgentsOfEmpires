@@ -244,11 +244,11 @@ namespace GameManager
 		#region Public Methods
 
 		/// <summary>
-		/// Called once per simulation tick (from SimulateTick) to let the agent
-		/// observe post-advance state and issue commands for the next tick.
+		/// Called once per simulation step (from SimulateStep) to let the agent
+		/// observe post-advance state and issue commands for the next step.
 		/// NOT called by Unity's MonoBehaviour update loop.
 		/// </summary>
-		public virtual void TickUpdate() { }
+		public virtual void StepUpdate() { }
 
 		/// <summary>
 		/// Record a command that failed during Phase 1 dispatch.

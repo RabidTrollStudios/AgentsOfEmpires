@@ -20,17 +20,17 @@ namespace Opponent.Tests
 
         private enum JoustState { Charging, Striking, Retreating }
         private Dictionary<int, JoustState> _joustState = new Dictionary<int, JoustState>();
-        private Dictionary<int, int> _strikeTicks = new Dictionary<int, int>();
+        private Dictionary<int, int> _strikeFrames = new Dictionary<int, int>();
 
         private int _lastArmySize;
-        private int _ticksSinceArmyShrunk;
+        private int _framesSinceArmyShrunk;
 
         public override void InitializeMatch()
         {
             _lastArmySize = 0;
-            _ticksSinceArmyShrunk = 999;
+            _framesSinceArmyShrunk = 999;
             _joustState = new Dictionary<int, JoustState>();
-            _strikeTicks = new Dictionary<int, int>();
+            _strikeFrames = new Dictionary<int, int>();
         }
 
         public override void Update(IGameState state, IAgentActions actions)
@@ -46,8 +46,8 @@ namespace Opponent.Tests
             }
 
             int armySize = myWarriors.Count + myArchers.Count + myLancers.Count;
-            if (armySize < _lastArmySize) _ticksSinceArmyShrunk = 0;
-            else _ticksSinceArmyShrunk++;
+            if (armySize < _lastArmySize) _framesSinceArmyShrunk = 0;
+            else _framesSinceArmyShrunk++;
             _lastArmySize = armySize;
 
             int enemyArmy = state.GetEnemyUnits(UnitType.WARRIOR).Count
@@ -55,7 +55,7 @@ namespace Opponent.Tests
                 + state.GetEnemyUnits(UnitType.LANCER).Count;
             bool goldStarved = state.MyGold < GOLD_STARVED;
             bool goldRich = state.MyGold > GOLD_RICH;
-            bool takingLosses = _ticksSinceArmyShrunk < 20;
+            bool takingLosses = _framesSinceArmyShrunk < 20;
             bool outnumbered = enemyArmy > armySize;
             bool needMorePawns = myPawns.Count < 5 || (goldStarved && myPawns.Count < 8);
 
@@ -121,7 +121,7 @@ namespace Opponent.Tests
                 if (!_joustState.ContainsKey(lancerNbr))
                 {
                     _joustState[lancerNbr] = JoustState.Charging;
-                    _strikeTicks[lancerNbr] = 0;
+                    _strikeFrames[lancerNbr] = 0;
                 }
 
                 switch (_joustState[lancerNbr])
@@ -150,7 +150,7 @@ namespace Opponent.Tests
                                 {
                                     // In range — transition to striking
                                     _joustState[lancerNbr] = JoustState.Striking;
-                                    _strikeTicks[lancerNbr] = 0;
+                                    _strikeFrames[lancerNbr] = 0;
                                 }
                             }
                         }
@@ -158,10 +158,10 @@ namespace Opponent.Tests
 
                     case JoustState.Striking:
                         // In range, dealing damage. Wait one animation cycle then retreat.
-                        _strikeTicks[lancerNbr]++;
+                        _strikeFrames[lancerNbr]++;
                         int framesPerAnim = System.Math.Max(1,
                             (int)System.Math.Ceiling(ANIM_DURATION_BASE / (state.GameSpeed * FRAME_DURATION)));
-                        if (_strikeTicks[lancerNbr] >= framesPerAnim)
+                        if (_strikeFrames[lancerNbr] >= framesPerAnim)
                         {
                             var atkTarget = info.Value.AttackTargetNbr >= 0
                                 ? state.GetUnit(info.Value.AttackTargetNbr) : null;
@@ -177,7 +177,7 @@ namespace Opponent.Tests
                             else
                             {
                                 // Can't retreat — stay and fight
-                                _strikeTicks[lancerNbr] = 0;
+                                _strikeFrames[lancerNbr] = 0;
                             }
                         }
                         break;

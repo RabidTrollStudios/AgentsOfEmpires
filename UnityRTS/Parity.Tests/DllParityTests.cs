@@ -46,18 +46,18 @@ namespace Parity.Tests
         }
 
         /// <summary>
-        /// Record-replay parity: run the agent for 500 ticks recording all commands,
+        /// Record-replay parity: run the agent for 500 frames recording all commands,
         /// then replay the exact commands on a fresh game and verify state hashes match
-        /// at every tick.
+        /// at every frame.
         /// </summary>
         [Theory]
         [MemberData(nameof(AllOpponentDlls))]
         public void DllAgent_Parity_IsDeterministic(string agentName, string dllPath)
         {
             var agent = LoadAgent(dllPath);
-            _output.WriteLine($"Parity test: {agentName} (500 ticks)");
+            _output.WriteLine($"Parity test: {agentName} (500 frames)");
 
-            const int ticks = 500;
+            const int frames = 500;
 
             // --- Recording run ---
             var game1 = BuildStandardGame(agent, new DoNothingAgent());
@@ -65,10 +65,10 @@ namespace Parity.Tests
             game1.InitializeMatch();
             game1.InitializeRound();
 
-            var hashes = new long[ticks];
-            for (int t = 0; t < ticks; t++)
+            var hashes = new long[frames];
+            for (int t = 0; t < frames; t++)
             {
-                game1.Tick();
+                game1.Step();
                 hashes[t] = game1.GetStateHash();
             }
 
@@ -81,27 +81,27 @@ namespace Parity.Tests
             game2.InitializeMatch();
             game2.InitializeRound();
 
-            for (int t = 0; t < ticks; t++)
+            for (int t = 0; t < frames; t++)
             {
-                game2.Tick();
+                game2.Step();
                 long h2 = game2.GetStateHash();
                 if (hashes[t] != h2)
                 {
                     var sub1 = game1.GetSubsystemHash();
                     var sub2 = game2.GetSubsystemHash();
-                    _output.WriteLine($"  DIVERGED at tick {t + 1}: {SubsystemHash.Diff(sub1, sub2)}");
+                    _output.WriteLine($"  DIVERGED at frame {t + 1}: {SubsystemHash.Diff(sub1, sub2)}");
 
                     // Capture state snapshots for detailed diff
                     var snap1 = StateSnapshot.Capture(game1);
                     var snap2 = StateSnapshot.Capture(game2);
                     _output.WriteLine(StateSnapshot.Diff(snap1, snap2));
 
-                    Assert.Fail($"{agentName}: diverged at tick {t + 1}/{ticks} " +
+                    Assert.Fail($"{agentName}: diverged at frame {t + 1}/{frames} " +
                                 $"(expected 0x{hashes[t]:X16}, got 0x{h2:X16})");
                 }
             }
 
-            _output.WriteLine($"  PASSED — {ticks} ticks deterministic");
+            _output.WriteLine($"  PASSED — {frames} frames deterministic");
         }
 
         /// <summary>
@@ -114,19 +114,19 @@ namespace Parity.Tests
         {
             var agent0 = LoadAgent(dllPath);
             var agent1 = LoadAgent(dllPath);
-            _output.WriteLine($"PvP parity test: {agentName} vs {agentName} (300 ticks)");
+            _output.WriteLine($"PvP parity test: {agentName} vs {agentName} (300 frames)");
 
-            const int ticks = 300;
+            const int frames = 300;
 
             var game1 = BuildStandardGame(agent0, agent1);
             game1.EnableRecording();
             game1.InitializeMatch();
             game1.InitializeRound();
 
-            var hashes = new long[ticks];
-            for (int t = 0; t < ticks; t++)
+            var hashes = new long[frames];
+            for (int t = 0; t < frames; t++)
             {
-                game1.Tick();
+                game1.Step();
                 hashes[t] = game1.GetStateHash();
             }
 
@@ -137,17 +137,17 @@ namespace Parity.Tests
             game2.InitializeMatch();
             game2.InitializeRound();
 
-            for (int t = 0; t < ticks; t++)
+            for (int t = 0; t < frames; t++)
             {
-                game2.Tick();
+                game2.Step();
                 long h2 = game2.GetStateHash();
                 if (hashes[t] != h2)
                 {
-                    Assert.Fail($"{agentName} PvP: diverged at tick {t + 1}/{ticks}");
+                    Assert.Fail($"{agentName} PvP: diverged at frame {t + 1}/{frames}");
                 }
             }
 
-            _output.WriteLine($"  PASSED — {ticks} ticks deterministic");
+            _output.WriteLine($"  PASSED — {frames} frames deterministic");
         }
 
         #region Helpers

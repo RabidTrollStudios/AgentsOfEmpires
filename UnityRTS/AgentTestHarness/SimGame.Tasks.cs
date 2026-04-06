@@ -9,7 +9,7 @@ namespace AgentTestHarness
     public partial class SimGame
     {
         /// <summary>Lazy-initialized world adapter for StepEngine.</summary>
-        private SimWorld tickWorld;
+        private SimWorld stepWorld;
 
         /// <summary>
         /// Get the shared ISimWorld adapter for direct CommandProcessor calls.
@@ -17,17 +17,17 @@ namespace AgentTestHarness
         /// </summary>
         public ISimWorld GetSimWorld()
         {
-            if (tickWorld == null)
-                tickWorld = new SimWorld(this);
-            return tickWorld;
+            if (stepWorld == null)
+                stepWorld = new SimWorld(this);
+            return stepWorld;
         }
 
         private void AdvanceAllUnits()
         {
-            if (tickWorld == null)
-                tickWorld = new SimWorld(this);
+            if (stepWorld == null)
+                stepWorld = new SimWorld(this);
 
-            SimulationRunner.AdvanceStep(tickWorld, NullSimCallbacks.Instance);
+            SimulationRunner.AdvanceStep(stepWorld, NullSimCallbacks.Instance);
         }
     }
 }

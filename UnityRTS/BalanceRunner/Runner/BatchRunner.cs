@@ -65,7 +65,7 @@ namespace BalanceRunner.Runner
                     var result = MatchRunner.Run(
                         nameA, AgentRegistry.Create(nameA),
                         nameB, AgentRegistry.Create(nameB),
-                        seed, config.TickLimit, config.MapTemplate);
+                        seed, config.FrameLimit, config.MapTemplate);
 
                     results.Add(result);
                     matchIndex++;
@@ -78,7 +78,7 @@ namespace BalanceRunner.Runner
                         var reverseResult = MatchRunner.Run(
                             nameB, AgentRegistry.Create(nameB),
                             nameA, AgentRegistry.Create(nameA),
-                            reverseSeed, config.TickLimit, config.MapTemplate);
+                            reverseSeed, config.FrameLimit, config.MapTemplate);
 
                         results.Add(reverseResult);
                         matchIndex++;

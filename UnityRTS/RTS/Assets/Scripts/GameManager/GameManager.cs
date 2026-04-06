@@ -391,7 +391,7 @@ namespace GameManager
 			Constants.CalculateGameConstants();
 
 	
-			// Fixed timestep matching SimGame's TickDuration for exact parity.
+			// Fixed timestep matching SimGame's StepDuration for exact parity.
 			// All game logic runs in FixedUpdate at this rate (50 Hz).
 			Time.fixedDeltaTime = 0.02f;
 

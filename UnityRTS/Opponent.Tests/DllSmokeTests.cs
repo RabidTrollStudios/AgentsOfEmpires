@@ -60,11 +60,11 @@ namespace Opponent.Tests
         public void DllAgent_RunsWithoutCrashing(string agentName, string dllPath)
         {
             var agent = LoadAgentFromDll(dllPath, agentName);
-            _output.WriteLine($"Running {agentName} for 1000 ticks...");
+            _output.WriteLine($"Running {agentName} for 1000 frames...");
 
-            RunOpponentTest(agent, ticks: 1000);
+            RunOpponentTest(agent, frames: 1000);
 
-            _output.WriteLine($"{agentName}: completed 1000 ticks without crashing");
+            _output.WriteLine($"{agentName}: completed 1000 frames without crashing");
         }
 
         [Theory]
@@ -81,7 +81,7 @@ namespace Opponent.Tests
             {
                 game.InitializeRound();
                 game.Run(200);
-                _output.WriteLine($"{agentName} round {round + 1}: completed 200 ticks");
+                _output.WriteLine($"{agentName} round {round + 1}: completed 200 frames");
             }
         }
 

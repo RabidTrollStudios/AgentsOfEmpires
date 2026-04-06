@@ -170,7 +170,7 @@
             <summary>Damage per second for each unit at current game speed.</summary>
         </member>
         <member name="P:AgentSDK.DerivedGameConstants.MovingSpeed">
-            <summary>Movement speed (cells/tick) for each unit at current game speed.</summary>
+            <summary>Movement speed (cells/step) for each unit at current game speed.</summary>
         </member>
         <member name="P:AgentSDK.DerivedGameConstants.MiningSpeedPerUnit">
             <summary>Mining speed for each unit type.</summary>
@@ -706,7 +706,7 @@
         </member>
         <member name="M:AgentSDK.IGameState.GetFailedCommands">
             <summary>
-            Get commands from the previous tick that passed queue-time validation
+            Get commands from the previous step that passed queue-time validation
             but failed during Phase 1 processing. Gold for failed Build/Train
             commands is automatically refunded.
             </summary>
@@ -948,7 +948,7 @@
             <summary>
             Continuous euclidean movement system. Units advance along their path
             by speed * dt each call, crossing cell boundaries as distance is consumed.
-            Both Unity (per-frame with Time.deltaTime) and SimGame (per-tick with tickDuration)
+            Both Unity (per-frame with Time.deltaTime) and SimGame (per-step with stepDuration)
             call this with their respective time deltas for identical results.
             </summary>
         </member>
@@ -1254,9 +1254,9 @@
             Returns the spliced detour + remainder, or null if no detour found.
             </summary>
         </member>
-        <member name="M:AgentSDK.TaskEngine.ComputeDamagePerTick(AgentSDK.UnitType,AgentSDK.UnitType,System.Single,System.Single)">
+        <member name="M:AgentSDK.TaskEngine.ComputeDamagePerStep(AgentSDK.UnitType,AgentSDK.UnitType,System.Single,System.Single)">
             <summary>
-            Compute damage dealt per tick by an attacker to a target.
+            Compute damage dealt per step by an attacker to a target.
             </summary>
         </member>
         <member name="M:AgentSDK.TaskEngine.IsInAttackRange(AgentSDK.UnitType,AgentSDK.Position,AgentSDK.UnitType,AgentSDK.Position)">
@@ -1277,7 +1277,7 @@
             Small epsilon for timer comparisons. Floating-point accumulation error
             (e.g. 0.2f - 4×0.05f leaves ~8e-9 residual) can prevent timers from
             reaching exactly zero. 1e-4 is safely above worst-case drift (~1e-6)
-            but well below the smallest tick duration (0.05).
+            but well below the smallest step duration (0.05).
             </summary>
         </member>
         <member name="M:AgentSDK.TaskEngine.AdvanceTrainTimer(System.Single@,System.Single)">
@@ -1317,14 +1317,14 @@
             Check if a healer is within heal range of a target.
             </summary>
         </member>
-        <member name="M:AgentSDK.TaskEngine.ComputeRepairPerTick(AgentSDK.UnitType,System.Single,System.Single)">
+        <member name="M:AgentSDK.TaskEngine.ComputeRepairPerStep(AgentSDK.UnitType,System.Single,System.Single)">
             <summary>
-            Compute repair amount per tick. Repair rate is 110% of build rate.
+            Compute repair amount per step. Repair rate is 110% of build rate.
             </summary>
         </member>
         <member name="M:AgentSDK.TaskEngine.RegenMana(System.Single,System.Single,System.Single,System.Single)">
             <summary>
-            Regenerate mana for a unit per tick.
+            Regenerate mana for a unit per step.
             </summary>
         </member>
         <member name="T:AgentSDK.UnitAction">

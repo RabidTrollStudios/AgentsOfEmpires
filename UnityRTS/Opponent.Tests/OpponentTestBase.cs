@@ -51,12 +51,12 @@ namespace Opponent.Tests
                 .Build();
         }
 
-        protected void RunOpponentTest(PlanningAgentBase opponent, int ticks = 1000)
+        protected void RunOpponentTest(PlanningAgentBase opponent, int frames = 1000)
         {
             var game = BuildStandardGame(opponent);
             game.InitializeMatch();
             game.InitializeRound();
-            game.Run(ticks);
+            game.Run(frames);
         }
     }
 }

@@ -94,7 +94,7 @@ namespace Gameplay.Tests
             var bases = game.GetUnitsByType(1, UnitType.BASE);
             Assert.Single(bases);
             // Archer base damage 40, scaled by game speed. BASE has 1000 HP,
-            // so a single archer shouldn't kill it in 20 ticks (40*20=800 damage).
+            // so a single archer shouldn't kill it in 20 frames (40*20=800 damage).
             Assert.True(bases[0].Health < baseBefore);
             Assert.True(bases[0].Health > 0, "BASE should still be alive — archer DPS is moderate");
         }

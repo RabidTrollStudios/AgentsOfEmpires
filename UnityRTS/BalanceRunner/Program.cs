@@ -24,7 +24,7 @@ namespace BalanceRunner
             string matchupList = null;
             int seed = 42;
             int seeds = 5;
-            int tickLimit = 5000;
+            int frameLimit = 5000;
             string jsonFile = null;
             bool jsonOutput = false;
             bool recommend = false;
@@ -51,8 +51,8 @@ namespace BalanceRunner
                     case "--seeds" when i + 1 < args.Length:
                         seeds = int.Parse(args[++i]);
                         break;
-                    case "--ticks" when i + 1 < args.Length:
-                        tickLimit = int.Parse(args[++i]);
+                    case "--frames" when i + 1 < args.Length:
+                        frameLimit = int.Parse(args[++i]);
                         break;
                     case "--json":
                         jsonOutput = true;
@@ -70,16 +70,16 @@ namespace BalanceRunner
             }
 
             if (singleMatchup != null)
-                return RunSingle(singleMatchup, seed, tickLimit, jsonOutput, jsonFile);
+                return RunSingle(singleMatchup, seed, frameLimit, jsonOutput, jsonFile);
 
             if (matrixMode != null || matchupList != null)
-                return RunBatch(matrixMode, matchupList, seeds, tickLimit, jsonOutput, jsonFile, recommend);
+                return RunBatch(matrixMode, matchupList, seeds, frameLimit, jsonOutput, jsonFile, recommend);
 
             Console.Error.WriteLine("No mode specified. Use --single, --matrix, --matchup, or --list. See --help.");
             return 1;
         }
 
-        static int RunSingle(string matchup, int seed, int tickLimit, bool jsonOutput, string jsonFile)
+        static int RunSingle(string matchup, int seed, int frameLimit, bool jsonOutput, string jsonFile)
         {
             var parts = matchup.Split(',');
             if (parts.Length != 2)
@@ -103,14 +103,14 @@ namespace BalanceRunner
                 return 1;
             }
 
-            Console.WriteLine($"BalanceRunner: {name0} vs {name1} (seed={seed}, ticks={tickLimit})");
+            Console.WriteLine($"BalanceRunner: {name0} vs {name1} (seed={seed}, frames={frameLimit})");
             Console.WriteLine(new string('=', 60));
 
             var sw = Stopwatch.StartNew();
             var result = MatchRunner.Run(
                 name0, AgentRegistry.Create(name0),
                 name1, AgentRegistry.Create(name1),
-                seed, tickLimit);
+                seed, frameLimit);
             sw.Stop();
 
             PrintMatchResult(result, sw.ElapsedMilliseconds);
@@ -121,13 +121,13 @@ namespace BalanceRunner
             return 0;
         }
 
-        static int RunBatch(string matrixMode, string matchupList, int seeds, int tickLimit,
+        static int RunBatch(string matrixMode, string matchupList, int seeds, int frameLimit,
             bool jsonOutput, string jsonFile, bool recommend)
         {
             var config = new RunConfig
             {
                 SeedCount = seeds,
-                TickLimit = tickLimit
+                FrameLimit = frameLimit
             };
 
             // Determine agent list
@@ -152,14 +152,14 @@ namespace BalanceRunner
             }
 
             int agentCount = config.Agents.Count > 0 ? config.Agents.Count : AgentRegistry.All.Count;
-            Console.WriteLine($"BalanceRunner: {agentCount} agents, {seeds} seeds, {tickLimit} tick limit");
+            Console.WriteLine($"BalanceRunner: {agentCount} agents, {seeds} seeds, {frameLimit} frame limit");
             Console.WriteLine(new string('=', 60));
 
             var sw = Stopwatch.StartNew();
             var results = BatchRunner.Run(config, (idx, total, result) =>
             {
                 string winner = result.Winner >= 0 ? result.GetAgentName(result.Winner) : "Draw";
-                Console.Write($"\r  [{idx}/{total}] {result.Agent0Name} vs {result.Agent1Name}: {winner} ({result.DurationTicks}t)");
+                Console.Write($"\r  [{idx}/{total}] {result.Agent0Name} vs {result.Agent1Name}: {winner} ({result.DurationFrames}t)");
             });
             sw.Stop();
 
@@ -188,7 +188,7 @@ namespace BalanceRunner
 
             Console.WriteLine($"  Winner:   {winnerName}");
             Console.WriteLine($"  Reason:   {result.EndReason}");
-            Console.WriteLine($"  Duration: {result.DurationTicks} ticks ({elapsedMs}ms wall)");
+            Console.WriteLine($"  Duration: {result.DurationFrames} frames ({elapsedMs}ms wall)");
             Console.WriteLine();
 
             for (int a = 0; a < 2; a++)
@@ -209,7 +209,7 @@ namespace BalanceRunner
                 Console.WriteLine($"    Lost:      {lost}");
                 Console.WriteLine($"    Surviving: {surviving} ({stats.SurvivingHpPercent:F1}% HP)");
 
-                Console.WriteLine($"    Timings:   military@{FormatTick(stats.FirstMilitaryTick)}  attack@{FormatTick(stats.FirstAttackTick)}  kill@{FormatTick(stats.FirstKillTick)}");
+                Console.WriteLine($"    Timings:   military@{FormatFrame(stats.FirstMilitaryFrame)}  attack@{FormatFrame(stats.FirstAttackFrame)}  kill@{FormatFrame(stats.FirstKillFrame)}");
                 Console.WriteLine();
             }
         }
@@ -226,9 +226,9 @@ namespace BalanceRunner
             return sb.ToString();
         }
 
-        static string FormatTick(int tick)
+        static string FormatFrame(int frame)
         {
-            return tick >= 0 ? tick.ToString() : "never";
+            return frame >= 0 ? frame.ToString() : "never";
         }
 
         static void WriteJson(MatchResult result, long elapsedMs, string jsonFile)
@@ -282,14 +282,14 @@ namespace BalanceRunner
             Console.WriteLine("Options:");
             Console.WriteLine("  --seed <n>            Map generation seed for --single (default: 42)");
             Console.WriteLine("  --seeds <n>           Seeds per matchup for --matrix (default: 5)");
-            Console.WriteLine("  --ticks <n>           Max ticks per match (default: 5000)");
+            Console.WriteLine("  --frames <n>           Max frames per match (default: 5000)");
             Console.WriteLine("  --recommend           Include balance recommendations in output");
             Console.WriteLine("  --json [file]         Output JSON report (to stdout or file)");
             Console.WriteLine("  --help, -h            Show this help");
             Console.WriteLine();
             Console.WriteLine("Examples:");
-            Console.WriteLine("  BalanceRunner --single \"WarriorRush,Turtle\" --seed 42 --ticks 5000");
-            Console.WriteLine("  BalanceRunner --matrix all --seeds 3 --ticks 3000");
+            Console.WriteLine("  BalanceRunner --single \"WarriorRush,Turtle\" --seed 42 --frames 5000");
+            Console.WriteLine("  BalanceRunner --matrix all --seeds 3 --frames 3000");
             Console.WriteLine("  BalanceRunner --matchup \"WarriorRush,Turtle,Balanced\" --seeds 10");
             Console.WriteLine("  BalanceRunner --matrix all --seeds 5 --recommend");
             Console.WriteLine("  BalanceRunner --matrix all --seeds 1 --json report.json");

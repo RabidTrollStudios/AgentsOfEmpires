@@ -47,7 +47,7 @@ namespace Gameplay.Tests
             game.InitializeMatch();
             game.InitializeRound();
 
-            // Run just a few ticks so build command is issued but not yet complete
+            // Run just a few frames so build command is issued but not yet complete
             game.Run(5);
 
             int barracksCost = (int)GameConstants.COST[UnitType.BARRACKS]; // 400

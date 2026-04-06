@@ -358,7 +358,7 @@ namespace Opponent.Tests
         {
             var sb = new StringBuilder();
             sb.AppendLine("=== MIXED ARMY vs PURE WARRIORS (Focus Fire, Equal Gold) ===");
-            sb.AppendLine("  Gold | Mix (Sol+Arc)    | Pure Warriors | Winner | Survivors | HP%    | Ticks");
+            sb.AppendLine("  Gold | Mix (Sol+Arc)    | Pure Warriors | Winner | Survivors | HP%    | Frames");
             sb.AppendLine("  -----+------------------+---------------+--------+-----------+--------+------");
 
             foreach (int gold in new[] { 400, 600, 800, 1000, 1200, 1600 })
@@ -378,7 +378,7 @@ namespace Opponent.Tests
                 int survivors = result.WinnerAgent == 0 ? result.Agent0Units : result.Agent1Units;
                 float hpPct = result.WinnerAgent == 0 ? result.Agent0HpPercent : result.Agent1HpPercent;
 
-                sb.AppendLine($"  {gold,4} | {mixWarriors}S + {mixArchers}A ({mixWarriors * 100 + mixArchers * 80}g) | {pureWarriors,13} | {winner,-6} | {survivors,9} | {hpPct,5:F1}% | {result.TicksElapsed}");
+                sb.AppendLine($"  {gold,4} | {mixWarriors}S + {mixArchers}A ({mixWarriors * 100 + mixArchers * 80}g) | {pureWarriors,13} | {winner,-6} | {survivors,9} | {hpPct,5:F1}% | {result.FramesElapsed}");
             }
 
             _output.WriteLine(sb.ToString());
@@ -389,7 +389,7 @@ namespace Opponent.Tests
         {
             var sb = new StringBuilder();
             sb.AppendLine("=== MIXED ARMY vs PURE ARCHERS (Focus Fire, Equal Gold) ===");
-            sb.AppendLine("  Gold | Mix (Sol+Arc)    | Pure Archers | Winner | Survivors | HP%    | Ticks");
+            sb.AppendLine("  Gold | Mix (Sol+Arc)    | Pure Archers | Winner | Survivors | HP%    | Frames");
             sb.AppendLine("  -----+------------------+--------------+--------+-----------+--------+------");
 
             foreach (int gold in new[] { 400, 600, 800, 1000, 1200, 1600 })
@@ -408,7 +408,7 @@ namespace Opponent.Tests
                 int survivors = result.WinnerAgent == 0 ? result.Agent0Units : result.Agent1Units;
                 float hpPct = result.WinnerAgent == 0 ? result.Agent0HpPercent : result.Agent1HpPercent;
 
-                sb.AppendLine($"  {gold,4} | {mixWarriors}S + {mixArchers}A ({mixWarriors * 100 + mixArchers * 80}g) | {pureArchers,12} | {winner,-6} | {survivors,9} | {hpPct,5:F1}% | {result.TicksElapsed}");
+                sb.AppendLine($"  {gold,4} | {mixWarriors}S + {mixArchers}A ({mixWarriors * 100 + mixArchers * 80}g) | {pureArchers,12} | {winner,-6} | {survivors,9} | {hpPct,5:F1}% | {result.FramesElapsed}");
             }
 
             _output.WriteLine(sb.ToString());
@@ -420,7 +420,7 @@ namespace Opponent.Tests
             var sb = new StringBuilder();
             sb.AppendLine("=== MIXED ARMY OPTIMAL RATIO: 1000g budget, vary warrior:archer split ===");
             sb.AppendLine("  vs 10 Pure Warriors (1000g):");
-            sb.AppendLine("  Warriors | Archers | Gold Used | Winner | Survivors | HP%    | Ticks");
+            sb.AppendLine("  Warriors | Archers | Gold Used | Winner | Survivors | HP%    | Frames");
             sb.AppendLine("  ---------+---------+-----------+--------+-----------+--------+------");
 
             // Test various ratios against pure warriors
@@ -438,12 +438,12 @@ namespace Opponent.Tests
                 int survivors = result.WinnerAgent == 0 ? result.Agent0Units : result.Agent1Units;
                 float hpPct = result.WinnerAgent == 0 ? result.Agent0HpPercent : result.Agent1HpPercent;
 
-                sb.AppendLine($"  {sol,8} | {arc,7} | {goldUsed,9} | {winner,-6} | {survivors,9} | {hpPct,5:F1}% | {result.TicksElapsed}");
+                sb.AppendLine($"  {sol,8} | {arc,7} | {goldUsed,9} | {winner,-6} | {survivors,9} | {hpPct,5:F1}% | {result.FramesElapsed}");
             }
 
             sb.AppendLine();
             sb.AppendLine("  vs 12 Pure Archers (960g):");
-            sb.AppendLine("  Warriors | Archers | Gold Used | Winner | Survivors | HP%    | Ticks");
+            sb.AppendLine("  Warriors | Archers | Gold Used | Winner | Survivors | HP%    | Frames");
             sb.AppendLine("  ---------+---------+-----------+--------+-----------+--------+------");
 
             foreach (var (sol, arc) in ratios)
@@ -459,7 +459,7 @@ namespace Opponent.Tests
                 int survivors = result.WinnerAgent == 0 ? result.Agent0Units : result.Agent1Units;
                 float hpPct = result.WinnerAgent == 0 ? result.Agent0HpPercent : result.Agent1HpPercent;
 
-                sb.AppendLine($"  {sol,8} | {arc,7} | {goldUsed,9} | {winner,-6} | {survivors,9} | {hpPct,5:F1}% | {result.TicksElapsed}");
+                sb.AppendLine($"  {sol,8} | {arc,7} | {goldUsed,9} | {winner,-6} | {survivors,9} | {hpPct,5:F1}% | {result.FramesElapsed}");
             }
 
             _output.WriteLine(sb.ToString());
@@ -515,7 +515,7 @@ namespace Opponent.Tests
                 string winner = total0 == 0 ? "Eco" : total1 == 0 ? "Rush" : "Timeout";
 
                 sb.AppendLine($"  Rush@{rushThreshold} warriors:");
-                sb.AppendLine($"    Result: {winner} wins @ tick {game.CurrentTick}");
+                sb.AppendLine($"    Result: {winner} wins @ frame {game.CurrentFrame}");
                 sb.AppendLine($"    Rusher:  {sol0} warriors, {pawns0} pawns, base={base0}, gold={game.GetGold(0)}");
                 sb.AppendLine($"    Eco:     {sol1} warriors, {arc1} archers, {pawns1} pawns, base={base1}, gold={game.GetGold(1)}");
                 sb.AppendLine();
@@ -565,7 +565,7 @@ namespace Opponent.Tests
                 string winner = total0 == 0 ? "Eco" : total1 == 0 ? "Rush" : "Timeout";
 
                 sb.AppendLine($"  Rush@{rushThreshold} archers:");
-                sb.AppendLine($"    Result: {winner} wins @ tick {game.CurrentTick}");
+                sb.AppendLine($"    Result: {winner} wins @ frame {game.CurrentFrame}");
                 sb.AppendLine($"    Rusher:  {arc0} archers, {pawns0} pawns, base={base0}, gold={game.GetGold(0)}");
                 sb.AppendLine($"    Eco:     {sol1} warriors, {arc1} archers, {pawns1} pawns, base={base1}, gold={game.GetGold(1)}");
                 sb.AppendLine();
@@ -620,7 +620,7 @@ namespace Opponent.Tests
                 string winner = total0 == 0 ? "Eco" : total1 == 0 ? "Rush" : "Timeout";
 
                 sb.AppendLine($"  Eco with {ecoPawns} pawns vs 3-warrior rush:");
-                sb.AppendLine($"    Result: {winner} wins @ tick {game.CurrentTick}");
+                sb.AppendLine($"    Result: {winner} wins @ frame {game.CurrentFrame}");
                 sb.AppendLine($"    Rusher:  {sol0} warriors, base={base0}, gold={game.GetGold(0)}");
                 sb.AppendLine($"    Eco:     {sol1} warriors, {pawns1} pawns, base={base1}, gold={game.GetGold(1)}");
                 sb.AppendLine();
@@ -638,7 +638,7 @@ namespace Opponent.Tests
         {
             var sb = new StringBuilder();
             sb.AppendLine("=== BUILDING DURABILITY: Time to destroy buildings ===");
-            sb.AppendLine("  Attackers       | Target   | HP   | Ticks to Destroy | Seconds");
+            sb.AppendLine("  Attackers       | Target   | HP   | Frames to Destroy | Seconds");
             sb.AppendLine("  ----------------+----------+------+------------------+--------");
 
             var attackConfigs = new[]
@@ -680,11 +680,11 @@ namespace Opponent.Tests
 
                     game.RunUntil(g => g.GetUnitsByType(1, buildingType).Count == 0, 5000);
 
-                    int ticks = game.CurrentTick;
-                    float seconds = ticks * 0.05f;
+                    int frames = game.CurrentFrame;
+                    float seconds = frames * 0.05f;
                     float hp = GameConstants.HEALTH[buildingType];
 
-                    sb.AppendLine($"  {cfg.label,-15} | {buildingType,-8} | {hp,4:F0} | {ticks,16} | {seconds,6:F1}s");
+                    sb.AppendLine($"  {cfg.label,-15} | {buildingType,-8} | {hp,4:F0} | {frames,16} | {seconds,6:F1}s");
                 }
                 sb.AppendLine();
             }
@@ -701,7 +701,7 @@ namespace Opponent.Tests
         {
             var sb = new StringBuilder();
             sb.AppendLine("=== MINE DEPLETION: Time to exhaust mine by pawn count ===");
-            sb.AppendLine("  Pawns | Mine HP | Depletion Tick | Seconds | Gold Collected | Gold/tick");
+            sb.AppendLine("  Pawns | Mine HP | Depletion Frame | Seconds | Gold Collected | Gold/frame");
             sb.AppendLine("  --------+---------+----------------+---------+----------------+----------");
 
             foreach (int mineHp in new[] { 2000, 5000 })
@@ -734,12 +734,12 @@ namespace Opponent.Tests
                         return mineUnit == null || mineUnit.Health <= 0;
                     }, 10000);
 
-                    int depletionTick = game.CurrentTick;
-                    float seconds = depletionTick * 0.05f;
+                    int depletionFrame = game.CurrentFrame;
+                    float seconds = depletionFrame * 0.05f;
                     int goldCollected = game.GetGold(0);
-                    float goldPerTick = depletionTick > 0 ? (float)goldCollected / depletionTick : 0;
+                    float goldPerFrame = depletionFrame > 0 ? (float)goldCollected / depletionFrame : 0;
 
-                    sb.AppendLine($"  {pawnCount,7} | {mineHp,7} | {depletionTick,14} | {seconds,7:F1} | {goldCollected,14} | {goldPerTick,8:F2}");
+                    sb.AppendLine($"  {pawnCount,7} | {mineHp,7} | {depletionFrame,14} | {seconds,7:F1} | {goldCollected,14} | {goldPerFrame,8:F2}");
                 }
                 sb.AppendLine();
             }
@@ -756,7 +756,7 @@ namespace Opponent.Tests
         {
             var sb = new StringBuilder();
             sb.AppendLine("=== PAWN HARASSMENT: Warriors raiding pawns ===");
-            sb.AppendLine("  Warriors | Pawns | Pawns Killed | Ticks | Warriors Surviving");
+            sb.AppendLine("  Warriors | Pawns | Pawns Killed | Frames | Warriors Surviving");
             sb.AppendLine("  ---------+---------+----------------+-------+-------------------");
 
             foreach (int warriorCount in new[] { 1, 2, 3 })
@@ -788,7 +788,7 @@ namespace Opponent.Tests
                     int pawnsKilled = pawnCount - pawnsLeft;
                     int warriorsLeft = game.GetUnitsByType(0, UnitType.WARRIOR).Count;
 
-                    sb.AppendLine($"  {warriorCount,8} | {pawnCount,7} | {pawnsKilled,14} | {game.CurrentTick,5} | {warriorsLeft,18}");
+                    sb.AppendLine($"  {warriorCount,8} | {pawnCount,7} | {pawnsKilled,14} | {game.CurrentFrame,5} | {warriorsLeft,18}");
                 }
             }
 
@@ -808,7 +808,7 @@ namespace Opponent.Tests
         {
             var sb = new StringBuilder();
             sb.AppendLine("=== PAWN HARASSMENT: Archers raiding pawns ===");
-            sb.AppendLine("  Archers | Pawns | Pawns Killed | Ticks | Archers Surviving");
+            sb.AppendLine("  Archers | Pawns | Pawns Killed | Frames | Archers Surviving");
             sb.AppendLine("  --------+---------+----------------+-------+------------------");
 
             foreach (int archerCount in new[] { 1, 2, 3 })
@@ -838,7 +838,7 @@ namespace Opponent.Tests
                     int pawnsKilled = pawnCount - pawnsLeft;
                     int archersLeft = game.GetUnitsByType(0, UnitType.ARCHER).Count;
 
-                    sb.AppendLine($"  {archerCount,7} | {pawnCount,7} | {pawnsKilled,14} | {game.CurrentTick,5} | {archersLeft,17}");
+                    sb.AppendLine($"  {archerCount,7} | {pawnCount,7} | {pawnsKilled,14} | {game.CurrentFrame,5} | {archersLeft,17}");
                 }
             }
 

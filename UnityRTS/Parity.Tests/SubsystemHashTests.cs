@@ -15,8 +15,8 @@ namespace Parity.Tests
             var game1 = BuildIdleGame();
             var game2 = BuildIdleGame();
 
-            game1.Tick();
-            game2.Tick();
+            game1.Step();
+            game2.Step();
 
             var h1 = game1.GetSubsystemHash();
             var h2 = game2.GetSubsystemHash();
@@ -46,8 +46,8 @@ namespace Parity.Tests
                 .WithAgent(0, new DoNothingAgent())
                 .Build();
 
-            game1.InitializeMatch(); game1.InitializeRound(); game1.Tick();
-            game2.InitializeMatch(); game2.InitializeRound(); game2.Tick();
+            game1.InitializeMatch(); game1.InitializeRound(); game1.Step();
+            game2.InitializeMatch(); game2.InitializeRound(); game2.Step();
 
             var h1 = game1.GetSubsystemHash();
             var h2 = game2.GetSubsystemHash();
@@ -74,8 +74,8 @@ namespace Parity.Tests
                 .WithAgent(0, new DoNothingAgent())
                 .Build();
 
-            game1.InitializeMatch(); game1.InitializeRound(); game1.Tick();
-            game2.InitializeMatch(); game2.InitializeRound(); game2.Tick();
+            game1.InitializeMatch(); game1.InitializeRound(); game1.Step();
+            game2.InitializeMatch(); game2.InitializeRound(); game2.Step();
 
             var h1 = game1.GetSubsystemHash();
             var h2 = game2.GetSubsystemHash();
@@ -107,11 +107,11 @@ namespace Parity.Tests
         public void Snapshot_Capture_MatchesGameState()
         {
             var game = BuildIdleGame();
-            game.Tick();
+            game.Step();
 
             var snap = StateSnapshot.Capture(game);
 
-            Assert.Equal(game.CurrentTick, snap.CurrentTick);
+            Assert.Equal(game.CurrentFrame, snap.CurrentFrame);
             Assert.Equal(game.GetGold(0), snap.Gold0);
             Assert.Equal(game.GetGold(1), snap.Gold1);
             // Verify snapshot captured the unit
@@ -122,7 +122,7 @@ namespace Parity.Tests
         public void Snapshot_Diff_IdenticalSnapshots_EmptyDiff()
         {
             var game = BuildIdleGame();
-            game.Tick();
+            game.Step();
 
             var snap1 = StateSnapshot.Capture(game);
             var snap2 = StateSnapshot.Capture(game);
@@ -132,17 +132,17 @@ namespace Parity.Tests
         }
 
         [Fact]
-        public void Snapshot_Diff_DifferentTicks_ShowsChange()
+        public void Snapshot_Diff_DifferentFrames_ShowsChange()
         {
             var game = BuildIdleGame();
-            game.Tick();
+            game.Step();
             var snap1 = StateSnapshot.Capture(game);
 
-            game.Tick();
+            game.Step();
             var snap2 = StateSnapshot.Capture(game);
 
             var diff = StateSnapshot.Diff(snap1, snap2);
-            Assert.Contains("CurrentTick", diff);
+            Assert.Contains("CurrentFrame", diff);
         }
 
         [Fact]
@@ -156,15 +156,15 @@ namespace Parity.Tests
             game.InitializeMatch();
             game.InitializeRound();
 
-            game.Tick();
+            game.Step();
             var snap1 = StateSnapshot.Capture(game);
 
-            // Run enough ticks for the pawn to move
-            for (int i = 0; i < 50; i++) game.Tick();
+            // Run enough frames for the pawn to move
+            for (int i = 0; i < 50; i++) game.Step();
             var snap2 = StateSnapshot.Capture(game);
 
             var diff = StateSnapshot.Diff(snap1, snap2);
-            Assert.Contains("CurrentTick", diff);
+            Assert.Contains("CurrentFrame", diff);
             Assert.Contains("GridPosition", diff);
         }
 
@@ -181,11 +181,11 @@ namespace Parity.Tests
             game.InitializeMatch();
             game.InitializeRound();
 
-            game.Tick();
+            game.Step();
             var snap1 = StateSnapshot.Capture(game);
 
             // Run until one warrior dies
-            for (int i = 0; i < 300; i++) game.Tick();
+            for (int i = 0; i < 300; i++) game.Step();
             var snap2 = StateSnapshot.Capture(game);
 
             var diff = StateSnapshot.Diff(snap1, snap2);

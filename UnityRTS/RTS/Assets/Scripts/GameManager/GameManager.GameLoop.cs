@@ -21,7 +21,7 @@ namespace GameManager
 		private UnitySimCallbacks unitySimCallbacks;
 
 		/// <summary>Get the shared sim world adapter (lazy-initialized).</summary>
-		internal AgentSDK.ISimWorld GetTickWorld()
+		internal AgentSDK.ISimWorld GetStepWorld()
 		{
 			if (unitySimWorld == null)
 				unitySimWorld = new UnitySimWorld();
@@ -29,7 +29,7 @@ namespace GameManager
 		}
 
 		/// <summary>Get the shared sim callbacks adapter (lazy-initialized).</summary>
-		internal AgentSDK.ISimCallbacks GetTickCallbacks()
+		internal AgentSDK.ISimCallbacks GetStepCallbacks()
 		{
 			if (unitySimCallbacks == null)
 				unitySimCallbacks = new UnitySimCallbacks();
@@ -37,13 +37,13 @@ namespace GameManager
 		}
 
 		/// <summary>
-		/// Run one game tick: process commands, advance all units via shared
-		/// SimulationRunner, then run post-tick updates. Used by tests to
-		/// simulate ticks without waiting for Unity's FixedUpdate cycle.
+		/// Run one game step: process commands, advance all units via shared
+		/// SimulationRunner, then run post-step updates. Used by tests to
+		/// simulate steps without waiting for Unity's FixedUpdate cycle.
 		/// </summary>
-		internal void SimulateTick()
+		internal void SimulateStep()
 		{
-			// Phase 1: Process commands queued during previous tick's Agent Update
+			// Phase 1: Process commands queued during previous step's Agent Update
 			DeferredCommandQueue.ProcessAll();
 
 			if (unitySimWorld == null)
@@ -56,7 +56,7 @@ namespace GameManager
 			// movement) in deterministic order, identical to SimGame.
 			AgentSDK.SimulationRunner.AdvanceStep(unitySimWorld, unitySimCallbacks);
 
-			// Phase 3: Post-tick updates (Unity-specific: sync cached references)
+			// Phase 3: Post-step updates (Unity-specific: sync cached references)
 			var allUnits = unitManager.GetAllUnits();
 			var sortedKeys = new System.Collections.Generic.List<int>(allUnits.Keys);
 			sortedKeys.Sort();
@@ -65,11 +65,11 @@ namespace GameManager
 				if (!allUnits.TryGetValue(key, out var go)) continue;
 				var unit = go.GetComponent<GameElements.Unit>();
 				if (unit != null)
-					unit.PostTickUpdate();
+					unit.PostStepUpdate();
 			}
 
 			// Phase 4: Agent Update — agents observe post-advance state and
-			// queue commands for the next tick. Matches SimGame's tick order:
+			// queue commands for the next step. Matches SimGame's step order:
 			// ProcessCommands → AdvanceAllUnits → AgentUpdate.
 			if (Agents != null)
 			{
@@ -77,7 +77,7 @@ namespace GameManager
 				{
 					var agent = agentGo.GetComponent<AgentController>()?.Agent;
 					if (agent != null && agent.gameObject.activeInHierarchy)
-						agent.TickUpdate();
+						agent.StepUpdate();
 				}
 			}
 		}
@@ -86,7 +86,7 @@ namespace GameManager
 		{
 			if (gameState != GameState.PLAYING) return;
 
-			// Clear failed commands from previous tick before processing new commands
+			// Clear failed commands from previous step before processing new commands
 			if (Agents != null)
 			{
 				foreach (var agentGo in Agents.Values)
@@ -97,7 +97,7 @@ namespace GameManager
 				}
 			}
 
-			SimulateTick();
+			SimulateStep();
 		}
 
 		/// <summary>

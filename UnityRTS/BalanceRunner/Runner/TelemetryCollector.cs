@@ -9,7 +9,7 @@ namespace BalanceRunner.Runner
 {
     /// <summary>
     /// Non-invasive observer that wraps a SimGame and collects per-agent
-    /// telemetry by comparing state snapshots before and after each tick.
+    /// telemetry by comparing state snapshots before and after each frame.
     /// Does not modify SimGame behavior — uses only the public/internal query API.
     /// </summary>
     internal class TelemetryCollector
@@ -54,17 +54,17 @@ namespace BalanceRunner.Runner
         public AgentMatchStats GetStats(int agentNbr) => _stats[agentNbr];
 
         /// <summary>
-        /// Advance one tick and collect telemetry from the state diff.
+        /// Advance one step and collect telemetry from the state diff.
         /// </summary>
-        public void TickAndCollect()
+        public void StepAndCollect()
         {
             var unitsBefore = _previousUnits;
             int[] goldBefore = { _previousGold[0], _previousGold[1] };
 
-            _game.Tick();
+            _game.Step();
 
             var unitsAfter = SnapshotCurrentUnits();
-            int currentTick = _game.CurrentTick;
+            int currentFrame = _game.CurrentFrame;
 
             // Detect births (new unit IDs not in previous snapshot)
             foreach (var kvp in unitsAfter)
@@ -79,8 +79,8 @@ namespace BalanceRunner.Runner
                     _stats[owner].GoldSpent += (int)GameConstants.COST[type];
 
                     // Track first military unit
-                    if (_stats[owner].FirstMilitaryTick < 0 && IsMilitary(type))
-                        _stats[owner].FirstMilitaryTick = currentTick;
+                    if (_stats[owner].FirstMilitaryFrame < 0 && IsMilitary(type))
+                        _stats[owner].FirstMilitaryFrame = currentFrame;
                 }
             }
 
@@ -101,8 +101,8 @@ namespace BalanceRunner.Runner
                     // Track first kill (enemy died)
                     int killer = 1 - owner;
                     _cumulativeEnemyKilled[killer] += deadValue;
-                    if (_stats[killer].FirstKillTick < 0)
-                        _stats[killer].FirstKillTick = currentTick;
+                    if (_stats[killer].FirstKillFrame < 0)
+                        _stats[killer].FirstKillFrame = currentFrame;
                 }
             }
 
@@ -127,7 +127,7 @@ namespace BalanceRunner.Runner
                         _buildingsCompleted[owner].Add(type);
                         _stats[owner].Timeline.Milestones.Add(new MilestoneEvent
                         {
-                            Tick = currentTick,
+                            Frame = currentFrame,
                             Type = "BuildingStarted",
                             Description = $"{type} construction started"
                         });
@@ -140,14 +140,14 @@ namespace BalanceRunner.Runner
             {
                 int owner = kvp.Value.OwnerAgentNbr;
                 if (owner < 0 || owner > 1) continue;
-                if (_stats[owner].FirstAttackTick >= 0) continue;
+                if (_stats[owner].FirstAttackFrame >= 0) continue;
 
                 if (kvp.Value.CurrentAction == UnitAction.ATTACK)
                 {
                     if (!unitsBefore.TryGetValue(kvp.Key, out var prev)
                         || prev.CurrentAction != UnitAction.ATTACK)
                     {
-                        _stats[owner].FirstAttackTick = currentTick;
+                        _stats[owner].FirstAttackFrame = currentFrame;
                     }
                 }
             }
@@ -179,14 +179,14 @@ namespace BalanceRunner.Runner
                 }
             }
 
-            // Sample timeline snapshot every N ticks
-            if (currentTick % SAMPLE_INTERVAL == 0)
+            // Sample timeline snapshot every N frames
+            if (currentFrame % SAMPLE_INTERVAL == 0)
             {
                 for (int a = 0; a < 2; a++)
-                    RecordTimelineSnapshot(a, currentTick, unitsAfter);
+                    RecordTimelineSnapshot(a, currentFrame, unitsAfter);
             }
 
-            // Update snapshot for next tick
+            // Update snapshot for next frame
             _previousUnits = unitsAfter;
             _previousGold[0] = _game.GetGold(0);
             _previousGold[1] = _game.GetGold(1);
@@ -221,42 +221,42 @@ namespace BalanceRunner.Runner
                 _stats[a].SurvivingHpPercent = totalMaxHp > 0 ? totalHp / totalMaxHp * 100f : 0f;
 
                 // Add key milestones
-                if (_stats[a].FirstMilitaryTick >= 0)
+                if (_stats[a].FirstMilitaryFrame >= 0)
                     _stats[a].Timeline.Milestones.Add(new MilestoneEvent
                     {
-                        Tick = _stats[a].FirstMilitaryTick,
+                        Frame = _stats[a].FirstMilitaryFrame,
                         Type = "FirstMilitary",
                         Description = "First military unit trained"
                     });
-                if (_stats[a].FirstAttackTick >= 0)
+                if (_stats[a].FirstAttackFrame >= 0)
                     _stats[a].Timeline.Milestones.Add(new MilestoneEvent
                     {
-                        Tick = _stats[a].FirstAttackTick,
+                        Frame = _stats[a].FirstAttackFrame,
                         Type = "FirstAttack",
                         Description = "First attack launched"
                     });
-                if (_stats[a].FirstKillTick >= 0)
+                if (_stats[a].FirstKillFrame >= 0)
                     _stats[a].Timeline.Milestones.Add(new MilestoneEvent
                     {
-                        Tick = _stats[a].FirstKillTick,
+                        Frame = _stats[a].FirstKillFrame,
                         Type = "FirstKill",
                         Description = "First enemy unit killed"
                     });
 
-                // Sort milestones by tick
-                _stats[a].Timeline.Milestones.Sort((x, y) => x.Tick.CompareTo(y.Tick));
+                // Sort milestones by frame
+                _stats[a].Timeline.Milestones.Sort((x, y) => x.Frame.CompareTo(y.Frame));
 
                 // Record final snapshot
-                RecordTimelineSnapshot(a, _game.CurrentTick, SnapshotCurrentUnits());
+                RecordTimelineSnapshot(a, _game.CurrentFrame, SnapshotCurrentUnits());
             }
         }
 
-        private void RecordTimelineSnapshot(int agentNbr, int tick,
+        private void RecordTimelineSnapshot(int agentNbr, int frame,
             Dictionary<int, UnitSnapshot> units)
         {
             var snapshot = new TimelineSnapshot
             {
-                Tick = tick,
+                Frame = frame,
                 Gold = _game.GetGold(agentNbr),
                 GoldMined = _stats[agentNbr].GoldMined,
                 GoldSpent = _stats[agentNbr].GoldSpent,

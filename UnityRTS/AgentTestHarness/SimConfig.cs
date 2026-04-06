@@ -28,6 +28,6 @@ namespace AgentTestHarness
         /// Simulated seconds per step. Default 0.02s = 50 steps per second.
         /// Matches Unity's default Time.fixedDeltaTime.
         /// </summary>
-        public float TickDuration { get; set; } = 0.02f;
+        public float StepDuration { get; set; } = 0.02f;
     }
 }

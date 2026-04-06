@@ -106,13 +106,13 @@ namespace AgentSDK
         #region Combat
 
         /// <summary>
-        /// Compute damage dealt per tick by an attacker to a target.
+        /// Compute damage dealt per step by an attacker to a target.
         /// </summary>
-        public static float ComputeDamagePerTick(
+        public static float ComputeDamagePerStep(
             UnitType attackerType, UnitType targetType,
-            float baseDamage, float tickDuration)
+            float baseDamage, float stepDuration)
         {
-            return baseDamage * tickDuration
+            return baseDamage * stepDuration
                 * GameConstants.DamageMultiplier(attackerType, targetType);
         }
 
@@ -158,16 +158,16 @@ namespace AgentSDK
         /// Small epsilon for timer comparisons. Floating-point accumulation error
         /// (e.g. 0.2f - 4×0.05f leaves ~8e-9 residual) can prevent timers from
         /// reaching exactly zero. 1e-4 is safely above worst-case drift (~1e-6)
-        /// but well below the smallest tick duration (0.05).
+        /// but well below the smallest step duration (0.05).
         /// </summary>
         public const float TimerEpsilon = 1e-4f;
 
         /// <summary>
         /// Advance training timer. Returns true when training is complete.
         /// </summary>
-        public static bool AdvanceTrainTimer(ref float trainTimer, float tickDuration)
+        public static bool AdvanceTrainTimer(ref float trainTimer, float stepDuration)
         {
-            trainTimer -= tickDuration;
+            trainTimer -= stepDuration;
             return trainTimer <= TimerEpsilon;
         }
 
@@ -178,9 +178,9 @@ namespace AgentSDK
         /// <summary>
         /// Advance build timer. Returns true when construction is complete.
         /// </summary>
-        public static bool AdvanceBuildTimer(ref float buildTimer, float tickDuration)
+        public static bool AdvanceBuildTimer(ref float buildTimer, float stepDuration)
         {
-            buildTimer -= tickDuration;
+            buildTimer -= stepDuration;
             return buildTimer <= TimerEpsilon;
         }
 
@@ -249,14 +249,14 @@ namespace AgentSDK
         #region Repair
 
         /// <summary>
-        /// Compute repair amount per tick. Repair rate is 110% of build rate.
+        /// Compute repair amount per step. Repair rate is 110% of build rate.
         /// </summary>
-        public static float ComputeRepairPerTick(
-            UnitType buildingType, float creationTime, float tickDuration)
+        public static float ComputeRepairPerStep(
+            UnitType buildingType, float creationTime, float stepDuration)
         {
             float maxHp = GameConstants.HEALTH[buildingType];
             float repairRate = 1.1f * maxHp / creationTime;
-            return repairRate * tickDuration;
+            return repairRate * stepDuration;
         }
 
         #endregion
@@ -264,12 +264,12 @@ namespace AgentSDK
         #region Mana
 
         /// <summary>
-        /// Regenerate mana for a unit per tick.
+        /// Regenerate mana for a unit per step.
         /// </summary>
-        public static float RegenMana(float currentMana, float maxMana, float manaRegenPerSecond, float tickDuration)
+        public static float RegenMana(float currentMana, float maxMana, float manaRegenPerSecond, float stepDuration)
         {
             if (maxMana <= 0 || currentMana >= maxMana) return currentMana;
-            return Math.Min(currentMana + manaRegenPerSecond * tickDuration, maxMana);
+            return Math.Min(currentMana + manaRegenPerSecond * stepDuration, maxMana);
         }
 
         #endregion

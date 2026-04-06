@@ -125,19 +125,19 @@ namespace Gameplay.Tests
         // ------------------------------------------------------------------
 
         [Fact]
-        public void DoubleTrainSameTick_OnlyOneSucceeds()
+        public void DoubleTrainSameFrame_OnlyOneSucceeds()
         {
             var game = new SimGameBuilder()
                 .WithMapSize(30, 30)
                 .WithGold(0, 200) // Enough for 4 pawns (50 each)
                 .WithUnit(0, UnitType.BASE, new Position(5, 5), isBuilt: true)
-                .WithAgent(0, new SpamTrainAgent()) // Sends train every tick
+                .WithAgent(0, new SpamTrainAgent()) // Sends train every frame
                 .Build();
 
             game.InitializeMatch();
             game.InitializeRound();
 
-            // Run 2 ticks: tick 1 = agent queues TRAIN, tick 2 = command dispatched
+            // Run 2 frames: frame 1 = agent queues TRAIN, frame 2 = command dispatched
             game.Run(2);
 
             // Base should now be training (not idle)
@@ -168,7 +168,7 @@ namespace Gameplay.Tests
             game.Run(100);
 
             // Should complete without crashing
-            Assert.Equal(100, game.CurrentTick);
+            Assert.Equal(100, game.CurrentFrame);
         }
     }
 

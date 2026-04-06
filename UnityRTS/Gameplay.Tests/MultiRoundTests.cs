@@ -109,7 +109,7 @@ namespace Gameplay.Tests
         }
 
         [Fact]
-        public void TickCounter_ContinuesAcrossRounds()
+        public void FrameCounter_ContinuesAcrossRounds()
         {
             var game = new SimGameBuilder()
                 .WithMapSize(30, 30)
@@ -120,14 +120,14 @@ namespace Gameplay.Tests
             game.InitializeRound();
             game.Run(100);
 
-            int tickAfterRound1 = game.CurrentTick;
-            Assert.Equal(100, tickAfterRound1);
+            int frameAfterRound1 = game.CurrentFrame;
+            Assert.Equal(100, frameAfterRound1);
 
             game.Learn();
             game.InitializeRound();
             game.Run(50);
 
-            Assert.Equal(150, game.CurrentTick);
+            Assert.Equal(150, game.CurrentFrame);
         }
     }
 }

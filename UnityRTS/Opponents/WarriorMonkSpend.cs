@@ -17,12 +17,12 @@ namespace PlanningAgent
         private const float GOLD_RICH = 150f;
 
         private int _lastArmySize;
-        private int _ticksSinceArmyShrunk;
+        private int _framesSinceArmyShrunk;
 
         public override void InitializeMatch()
         {
             _lastArmySize = 0;
-            _ticksSinceArmyShrunk = 999;
+            _framesSinceArmyShrunk = 999;
         }
 
         public override void Update(IGameState state, IAgentActions actions)
@@ -40,9 +40,9 @@ namespace PlanningAgent
             // Track army losses
             int armySize = myWarriors.Count + myArchers.Count + myLancers.Count;
             if (armySize < _lastArmySize)
-                _ticksSinceArmyShrunk = 0;
+                _framesSinceArmyShrunk = 0;
             else
-                _ticksSinceArmyShrunk++;
+                _framesSinceArmyShrunk++;
             _lastArmySize = armySize;
 
             // --- Adaptive decisions ---
@@ -51,7 +51,7 @@ namespace PlanningAgent
                 + state.GetEnemyUnits(UnitType.LANCER).Count;
             bool goldStarved = state.MyGold < GOLD_STARVED;
             bool goldRich = state.MyGold > GOLD_RICH;
-            bool takingLosses = _ticksSinceArmyShrunk < 20;
+            bool takingLosses = _framesSinceArmyShrunk < 20;
             bool outnumbered = enemyArmy > armySize;
             bool needMorePawns = myPawns.Count < 5 || (goldStarved && myPawns.Count < 8);
             bool needMonastery = myMonasteries.Count == 0;

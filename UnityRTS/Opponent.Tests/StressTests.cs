@@ -11,7 +11,7 @@ namespace Opponent.Tests
     public class StressTests
     {
         [Fact]
-        public void FullGameSimulation_500Ticks_NoCrash()
+        public void FullGameSimulation_500Frames_NoCrash()
         {
             var agent = new global::PlanningAgent.PlanningAgent();
             var game = new SimGameBuilder()
@@ -37,11 +37,11 @@ namespace Opponent.Tests
             // Basic sanity: agent 0 should still have units
             Assert.True(game.GetUnitsByType(0, UnitType.BASE).Count > 0 ||
                          game.GetUnitsByType(0, UnitType.PAWN).Count > 0,
-                "Agent 0 should have some units after 500 ticks");
+                "Agent 0 should have some units after 500 frames");
         }
 
         [Fact]
-        public void FullGameSimulation_2000Ticks_NoCrash()
+        public void FullGameSimulation_2000Frames_NoCrash()
         {
             var agent = new global::PlanningAgent.PlanningAgent();
             var game = new SimGameBuilder()
@@ -62,14 +62,14 @@ namespace Opponent.Tests
             game.InitializeRound();
             game.Run(2000);
 
-            // After 2000 ticks the agent should have built an army
+            // After 2000 frames the agent should have built an army
             int totalUnits = 0;
             foreach (UnitType ut in new[] { UnitType.PAWN, UnitType.WARRIOR, UnitType.ARCHER,
                                             UnitType.BASE, UnitType.BARRACKS })
             {
                 totalUnits += game.GetUnitsByType(0, ut).Count;
             }
-            Assert.True(totalUnits > 2, $"Agent should have more than 2 units after 2000 ticks, got {totalUnits}");
+            Assert.True(totalUnits > 2, $"Agent should have more than 2 units after 2000 frames, got {totalUnits}");
         }
 
         [Fact]
@@ -115,14 +115,14 @@ namespace Opponent.Tests
             game.InitializeMatch();
             game.InitializeRound();
 
-            bool satisfied = game.RunUntil(g => g.GetUnitsByType(0, UnitType.PAWN).Count > 0, maxTicks: 100);
+            bool satisfied = game.RunUntil(g => g.GetUnitsByType(0, UnitType.PAWN).Count > 0, maxFrames: 100);
 
             Assert.True(satisfied, "RunUntil should find the pawn was trained");
-            Assert.True(game.CurrentTick < 100, $"Should stop early, but ran {game.CurrentTick} ticks");
+            Assert.True(game.CurrentFrame < 100, $"Should stop early, but ran {game.CurrentFrame} frames");
         }
 
         [Fact]
-        public void RunUntil_ReturnsFlase_WhenMaxTicksExceeded()
+        public void RunUntil_ReturnsFlase_WhenMaxFramesExceeded()
         {
             var game = new SimGameBuilder()
                 .WithMapSize(30, 30)
@@ -134,7 +134,7 @@ namespace Opponent.Tests
             game.InitializeMatch();
             game.InitializeRound();
 
-            bool satisfied = game.RunUntil(g => g.GetUnitsByType(0, UnitType.PAWN).Count > 0, maxTicks: 50);
+            bool satisfied = game.RunUntil(g => g.GetUnitsByType(0, UnitType.PAWN).Count > 0, maxFrames: 50);
 
             Assert.False(satisfied, "Should not satisfy predicate with no gold");
         }
@@ -164,7 +164,7 @@ namespace Opponent.Tests
             game.InitializeMatch();
             game.InitializeRound();
 
-            // 20 pawns gathering for 500 ticks — should complete quickly
+            // 20 pawns gathering for frames — should complete quickly
             game.Run(500);
 
             Assert.True(game.GetGold(0) > 50000,

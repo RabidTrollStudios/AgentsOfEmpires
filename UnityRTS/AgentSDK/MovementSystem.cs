@@ -6,7 +6,7 @@ namespace AgentSDK
     /// <summary>
     /// Continuous euclidean movement system. Units advance along their path
     /// by speed * dt each call, crossing cell boundaries as distance is consumed.
-    /// Both Unity (per-frame with Time.deltaTime) and SimGame (per-tick with tickDuration)
+    /// Both Unity (per-frame with Time.deltaTime) and SimGame (per-step with stepDuration)
     /// call this with their respective time deltas for identical results.
     /// </summary>
     public static class MovementSystem

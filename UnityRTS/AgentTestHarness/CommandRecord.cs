@@ -3,12 +3,12 @@ using AgentSDK;
 namespace AgentTestHarness
 {
     /// <summary>
-    /// A single recorded agent command with the tick it was issued on.
+    /// A single recorded agent command with the frame it was issued on.
     /// Uses a flat structure — unused fields per command type cost nothing meaningful.
     /// </summary>
     public class CommandRecord
     {
-        public int Tick;
+        public int Frame;
         public int AgentNbr;
         public CommandType Type;
 
