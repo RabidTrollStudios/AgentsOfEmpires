@@ -103,6 +103,19 @@ tr:hover { background: rgba(255,255,255,0.03); }
 <h2>Unit Stats</h2>
 <table id="unit-table"><thead></thead><tbody></tbody></table>
 
+<!-- Unit Abilities -->
+<h2>Unit Abilities (Engine-Level)</h2>
+<table style="font-size:0.85em;margin-bottom:20px">
+<thead><tr><th>Unit</th><th>Ability</th><th>Bonus</th><th>Trigger</th><th>Cooldown</th></tr></thead>
+<tbody>
+<tr><td style="font-weight:700;color:#b91c1c">WARRIOR</td><td>Charge</td><td>3x move speed</td><td>Target within 8 range</td><td>5s (resets on hit)</td></tr>
+<tr><td style="font-weight:700;color:#15803d">ARCHER</td><td>Volley</td><td>1.75x damage</td><td>First hit on new target</td><td>3s per target</td></tr>
+<tr><td style="font-weight:700;color:#1d4ed8">LANCER</td><td>Joust</td><td>1.75x damage</td><td>First hit after moving 3+ cells</td><td>Resets on hit</td></tr>
+<tr><td style="font-weight:700;color:#b91c1c">R-P-S</td><td>Counter</td><td>1.5x damage</td><td>W→A, A→L, L→W</td><td>—</td></tr>
+<tr><td style="font-weight:700;color:#b91c1c">R-P-S</td><td>Countered</td><td>0.67x damage</td><td>W→L, A→W, L→A</td><td>—</td></tr>
+</tbody>
+</table>
+
 <!-- Building Stats -->
 <h2>Building Stats</h2>
 <table id="building-table"><thead></thead><tbody></tbody></table>

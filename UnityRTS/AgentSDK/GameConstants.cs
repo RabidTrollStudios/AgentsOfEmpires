@@ -87,11 +87,11 @@ namespace AgentSDK
                 { UnitType.MINE,        0f },
                 { UnitType.PAWN,      0f },
                 { UnitType.WARRIOR,     50f },
-                { UnitType.ARCHER,      30f },
+                { UnitType.ARCHER,      28f },
                 { UnitType.BASE,        0f },
                 { UnitType.BARRACKS,    0f },
                 { UnitType.ARCHERY,     0f },
-                { UnitType.LANCER,      42f },
+                { UnitType.LANCER,      35f },
                 { UnitType.TOWER,       0f },
                 { UnitType.MONASTERY,   0f },
                 { UnitType.MONK,        0f },
@@ -146,7 +146,7 @@ namespace AgentSDK
                 { UnitType.MINE,        0.0f },
                 { UnitType.PAWN,      0.0f },
                 { UnitType.WARRIOR,     1.0f },
-                { UnitType.ARCHER,      9.0f },
+                { UnitType.ARCHER,      8.0f },
                 { UnitType.BASE,        0.0f },
                 { UnitType.BARRACKS,    0.0f },
                 { UnitType.ARCHERY,     0.0f },
@@ -342,7 +342,7 @@ namespace AgentSDK
         /// <summary>Lancer Joust: minimum distance traveled since last attack to trigger bonus.</summary>
         public static readonly float JOUST_MIN_DISTANCE = 3.0f;
         /// <summary>Lancer Joust: damage multiplier on first hit after moving minimum distance.</summary>
-        public static readonly float JOUST_BONUS_MULTIPLIER = 2.25f;
+        public static readonly float JOUST_BONUS_MULTIPLIER = 1.75f;
 
         /// <summary>
         /// Compute effective attack range against a target, accounting for target unit size.
