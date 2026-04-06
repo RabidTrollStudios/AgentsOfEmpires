@@ -30,7 +30,7 @@ namespace GameManager.Tests
             game1.InitializeMatch();
             game1.InitializeRound();
 
-            var hashes1 = new long[frames];
+            var hashes1 = new long[steps];
             for (int t = 0; t < steps; t++)
             {
                 game1.Step();

@@ -185,7 +185,7 @@ namespace GameManager.Tests.PlayMode
 		[UnityTest]
 		public IEnumerator Stress_RapidFireCommands_500Steps()
 		{
-			// Agent issues many commands per step to exercise cooldown/dedup.
+			// Agent issues many commands per frame to exercise cooldown/dedup.
 			var base0 = PlaceUnit(UnitType.BASE, new Vector3Int(5, 10, 0));
 			base0.IsBuilt = true;
 			for (int i = 0; i < 8; i++)
@@ -206,7 +206,7 @@ namespace GameManager.Tests.PlayMode
 		[UnityTest]
 		public IEnumerator Stress_PathfindingFlood_300Steps()
 		{
-			// Agent calls GetPathBetween 30+ times per step to hit the budget.
+			// Agent calls GetPathBetween 30+ times per frame to hit the budget.
 			var pawn = PlaceUnit(UnitType.PAWN, new Vector3Int(5, 5, 0));
 
 			WireAgent(ctx.Agent0Go, 0, new StressPathfloodAgent());
@@ -457,14 +457,14 @@ namespace GameManager.Tests.PlayMode
 		}
 
 		/// <summary>
-		/// Rapid fire agent: issues many commands per step to stress cooldown and dedup.
+		/// Rapid fire agent: issues many commands per frame to stress cooldown and dedup.
 		/// Moves all pawns to random valid positions every frame.
 		/// </summary>
 		private class StressRapidFireAgent : IPlanningAgent
 		{
 			private int frame;
 
-			public void InitializeMatch() { step = 0; }
+			public void InitializeMatch() { frame = 0; }
 			public void InitializeRound(IGameState state) { }
 			public void Learn(IGameState state) { }
 
@@ -473,11 +473,11 @@ namespace GameManager.Tests.PlayMode
 				frame++;
 				var pawns = state.GetMyUnits(UnitType.PAWN);
 
-				// Move all pawns to a new position each frame (deterministic, based on step number)
+				// Move all pawns to a new position each frame (deterministic, based on frame number)
 				for (int i = 0; i < pawns.Count; i++)
 				{
-					int x = 5 + ((step * 7 + i * 3) % 20);
-					int y = 5 + ((step * 11 + i * 5) % 20);
+					int x = 5 + (( frame * 7 + i * 3) % 20);
+					int y = 5 + (( frame * 11 + i * 5) % 20);
 					actions.Move(pawns[i], new Position(x, y));
 				}
 
@@ -491,34 +491,34 @@ namespace GameManager.Tests.PlayMode
 		}
 
 		/// <summary>
-		/// Pathfinding flood agent: calls GetPathBetween 30+ times per step.
+		/// Pathfinding flood agent: calls GetPathBetween 30+ times per frame.
 		/// Tests the pathfinding budget (20 calls/step cap).
 		/// </summary>
 		private class StressPathfloodAgent : IPlanningAgent
 		{
 			private int frame;
 
-			public void InitializeMatch() { step = 0; }
+			public void InitializeMatch() { frame = 0; }
 			public void InitializeRound(IGameState state) { }
 			public void Learn(IGameState state) { }
 
 			public void Update(IGameState state, IAgentActions actions)
 			{
 				frame++;
-				// Query 30 paths per step — exceeds budget of 20
+				// Query 30 paths per frame — exceeds budget of 20
 				for (int i = 0; i < 30; i++)
 				{
 					int x = 2 + (i % 26);
-					int y = 2 + ((step + i) % 26);
+					int y = 2 + ((frame + i) % 26);
 					state.GetPathBetween(new Position(5, 5), new Position(x, y));
 				}
 
-				// Move the pawn based on step to keep things dynamic
+				// Move the pawn based on frame to keep things dynamic
 				var pawns = state.GetMyUnits(UnitType.PAWN);
 				if (pawns.Count > 0)
 				{
 					int x = 5 + (step % 20);
-					int y = 5 + ((step * 3) % 20);
+					int y = 5 + (( frame * 3) % 20);
 					actions.Move(pawns[0], new Position(x, y));
 				}
 			}
