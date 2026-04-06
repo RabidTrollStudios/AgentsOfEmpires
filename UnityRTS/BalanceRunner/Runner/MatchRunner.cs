@@ -40,7 +40,7 @@ namespace BalanceRunner.Runner
                     Height = 40,
                     Seed = seed,
                     Template = mapTemplate,
-                    ObstacleDensity = 0.20f,
+                    ObstacleDensity = 0.0f,
                     MinesPerPlayer = 2,
                     Symmetry = AgentSDK.SymmetryType.Mirror
                 })

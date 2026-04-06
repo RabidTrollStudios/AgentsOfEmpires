@@ -48,7 +48,7 @@ namespace AgentSDK
             {
                 { UnitType.MINE,        0.0f },
                 { UnitType.PAWN,      200.0f },
-                { UnitType.WARRIOR,     1500.0f },
+                { UnitType.WARRIOR,     2000.0f },
                 { UnitType.ARCHER,      600.0f },
                 { UnitType.BASE,        8000.0f },
                 { UnitType.BARRACKS,    4000.0f },
@@ -105,8 +105,8 @@ namespace AgentSDK
             {
                 { UnitType.MINE,        0f },
                 { UnitType.PAWN,      2f },
-                { UnitType.WARRIOR,     4.5f },
-                { UnitType.ARCHER,      3.5f },
+                { UnitType.WARRIOR,     4f },
+                { UnitType.ARCHER,      4f },
                 { UnitType.BASE,        10f },
                 { UnitType.BARRACKS,    20f },
                 { UnitType.ARCHERY,     18f },
@@ -326,7 +326,7 @@ namespace AgentSDK
         // --- Unit Abilities ---
 
         /// <summary>Warrior Charge: speed multiplier when charging toward an enemy.</summary>
-        public static readonly float CHARGE_SPEED_MULTIPLIER = 2.0f;
+        public static readonly float CHARGE_SPEED_MULTIPLIER = 3.0f;
         /// <summary>Warrior Charge: triggers when an attack target is within this range.</summary>
         public static readonly float CHARGE_RANGE = 8.0f;
         /// <summary>Warrior Charge: duration of the speed boost (seconds at game speed 1).</summary>
@@ -359,25 +359,25 @@ namespace AgentSDK
         /// <summary>
         /// Damage multiplier based on attacker/defender type interaction.
         /// Rock-paper-scissors triangle: Warrior→Archer→Lancer→Warrior.
-        /// Strong matchup = 1.25x damage, weak matchup = 0.75x damage.
+        /// Strong matchup = 1.5x damage, weak matchup = 0.67x damage.
         /// </summary>
         public static float DamageMultiplier(UnitType attacker, UnitType defender)
         {
             // Warrior beats Archer (close combat overwhelms light ranged)
             if (attacker == UnitType.WARRIOR && defender == UnitType.ARCHER)
-                return 1.25f;
+                return 1.5f;
             if (attacker == UnitType.ARCHER && defender == UnitType.WARRIOR)
-                return 0.75f;
+                return 0.67f;
             // Archer beats Lancer (ranged fire picks off cavalry)
             if (attacker == UnitType.ARCHER && defender == UnitType.LANCER)
-                return 1.25f;
+                return 1.5f;
             if (attacker == UnitType.LANCER && defender == UnitType.ARCHER)
-                return 0.75f;
+                return 0.67f;
             // Lancer beats Warrior (lance reach defeats heavy melee)
             if (attacker == UnitType.LANCER && defender == UnitType.WARRIOR)
-                return 1.25f;
+                return 1.5f;
             if (attacker == UnitType.WARRIOR && defender == UnitType.LANCER)
-                return 0.75f;
+                return 0.67f;
             return 1.0f;
         }
 
