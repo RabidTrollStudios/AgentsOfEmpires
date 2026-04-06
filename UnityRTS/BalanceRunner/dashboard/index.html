@@ -199,8 +199,8 @@ const AGENT_STRATEGIES = {
   MixedRush:   { pawns: '6', buildings: '2 (reactive counter)', attack: '3 units', tactics: ['Closest mine', 'Closest build', 'Scout → counter-pick'], notes: 'Dual production of counter unit type' },
   // Hard (Dual/Triple)
   WarriorDual: { pawns: '6', buildings: '3 Barracks', attack: '6 warriors', tactics: ['Closest mine', 'Closest build', 'Squad-of-3 targeting'], notes: 'Triple production, squads retarget on kill' },
-  ArcherDual:  { pawns: '6', buildings: '3 Archery', attack: '6 archers', tactics: ['Closest mine', 'Closest build', 'Volley target cycling', 'Kite 2/1'], notes: 'Attack 2 ticks (cycle targets), retreat 1 tick' },
-  LancerDual:  { pawns: '6', buildings: '3 Tower', attack: '6 lancers', tactics: ['Closest mine', 'Closest build', 'Hit-and-run joust'], notes: 'Fight 3 ticks, disengage to base, re-engage at 5+ dist' },
+  ArcherDual:  { pawns: '6', buildings: '3 Archery', attack: '6 archers', tactics: ['Closest mine', 'Closest build', 'Volley target cycling', 'Kite 2/1'], notes: 'Attack 2 frames (cycle targets), retreat 1 frame' },
+  LancerDual:  { pawns: '6', buildings: '3 Tower', attack: '6 lancers', tactics: ['Closest mine', 'Closest build', 'Hit-and-run joust'], notes: 'Fight 3 frames, disengage to base, re-engage at 5+ dist' },
   MixedDual:   { pawns: '6', buildings: '1 each (reactive)', attack: '6 total', tactics: ['Closest mine', 'Closest build', 'Scout → counter-pick', 'Squad-of-3', 'Volley+kite', 'Hit-and-run joust'], notes: 'All 3 buildings, counter-pick priority, all micro' },
   // Impossible (Adaptive + Monks)
   WarriorMonkSpend:  { pawns: '5-8 adaptive', buildings: '1-3 Barracks + 1 Monastery', attack: '4 warriors', tactics: ['Closest mine', 'Closest build', 'Adaptive economy', 'Adaptive production', 'Squad-of-3', 'Monk heal'], notes: 'Scales pawns when gold-starved, buildings when gold-rich, monks when losing' },
@@ -435,7 +435,7 @@ function render(data) {
     <div class="card">
       <div class="card-header">Game Duration</div>
       <div class="card-value">${ds.Median || 0}</div>
-      <div class="card-sub">median ticks (range ${ds.Min || 0}-${ds.Max || 0})</div>
+      <div class="card-sub">median frames (range ${ds.Min || 0}-${ds.Max || 0})</div>
     </div>
     <div class="card">
       <div class="card-header">Timeout Rate</div>
@@ -661,20 +661,20 @@ function getSeriesForAgent(name, chartType) {
     case 'economy':
       return {
         label: name,
-        points: snaps.map(s => ({ x: s.Tick, y: s.Gold })),
-        secondary: snaps.map(s => ({ x: s.Tick, y: s.GoldMined }))
+        points: snaps.map(s => ({ x: s.Frame, y: s.Gold })),
+        secondary: snaps.map(s => ({ x: s.Frame, y: s.GoldMined }))
       };
     case 'army':
       return {
         label: name,
-        points: snaps.map(s => ({ x: s.Tick, y: s.ArmyValue }))
+        points: snaps.map(s => ({ x: s.Frame, y: s.ArmyValue }))
       };
     case 'units':
       return {
         label: name,
         points: snaps.map(s => {
           const total = Object.values(s.UnitCounts || {}).reduce((a,b) => a+b, 0);
-          return { x: s.Tick, y: total };
+          return { x: s.Frame, y: total };
         })
       };
     case 'combat':
@@ -682,14 +682,14 @@ function getSeriesForAgent(name, chartType) {
         label: name,
         points: snaps.map(s => {
           const lost = s.OwnGoldLost || 1;
-          return { x: s.Tick, y: s.EnemyGoldKilled / Math.max(lost, 1) };
+          return { x: s.Frame, y: s.EnemyGoldKilled / Math.max(lost, 1) };
         })
       };
     case 'hp':
       return {
         label: name,
         points: snaps.map(s => {
-          return { x: s.Tick, y: s.TotalMaxHp > 0 ? (s.TotalHp / s.TotalMaxHp) * 100 : 100 };
+          return { x: s.Frame, y: s.TotalMaxHp > 0 ? (s.TotalHp / s.TotalMaxHp) * 100 : 100 };
         })
       };
     default:
@@ -768,7 +768,7 @@ function drawChart() {
 
   // Axis labels
   ctx.fillStyle = '#888'; ctx.font = '11px sans-serif'; ctx.textAlign = 'center';
-  ctx.fillText('Tick', W/2, H - 4);
+  ctx.fillText('Frame', W/2, H - 4);
   ctx.save();
   ctx.translate(12, H/2);
   ctx.rotate(-Math.PI/2);
@@ -822,7 +822,7 @@ function drawChart() {
     if (!tl || !tl.Milestones) return;
     const color = CHART_COLORS[i % CHART_COLORS.length];
     tl.Milestones.forEach(m => {
-      msHtml += `<span style="color:${color}">${name}</span>: ${m.Type} @ tick ${m.MedianTick} `;
+      msHtml += `<span style="color:${color}">${name}</span>: ${m.Type} @ frame ${m.MedianFrame} `;
     });
   });
   document.getElementById('milestone-list').innerHTML = msHtml;
@@ -835,7 +835,7 @@ fetch(DATA_FILE)
   .catch(err => {
     document.getElementById('loading').innerHTML =
       `<div style="color:var(--red)">Error: ${err.message}</div>
-       <div style="margin-top:10px;color:var(--text-dim)">Run: dotnet run --project BalanceRunner -- --matrix all --seeds 1 --ticks 5000 --json dashboard/balance-data.json</div>`;
+       <div style="margin-top:10px;color:var(--text-dim)">Run: dotnet run --project BalanceRunner -- --matrix all --seeds 1 --frames 5000 --json dashboard/balance-data.json</div>`;
   });
 </script>
 </body>
