@@ -74,11 +74,11 @@ namespace Opponent.Tests
             }
 
             // Build: tower first, then monastery, then scale towers
-            if (myTowers.Count == 0 && HasBuiltUnit(myBases, state))
+            if (myTowers.Count == 0 && HasBuiltUnit(myBases, state) && !IsPawnBuilding(state))
                 BuildStructure(UnitType.TOWER, state, actions);
-            else if (myMonasteries.Count == 0 && HasBuiltUnit(myTowers, state))
+            else if (myMonasteries.Count == 0 && HasBuiltUnit(myTowers, state) && !IsPawnBuilding(state))
                 BuildStructure(UnitType.MONASTERY, state, actions);
-            else if (goldRich && myTowers.Count < 3 && HasBuiltUnit(myBases, state))
+            else if (goldRich && myTowers.Count < 3 && HasBuiltUnit(myBases, state) && !IsPawnBuilding(state))
                 BuildStructure(UnitType.TOWER, state, actions);
 
             GatherWithIdlePawns(state, actions);
@@ -345,6 +345,17 @@ namespace Opponent.Tests
                     }
                 }
             }
+        }
+
+        private bool IsPawnBuilding(IGameState state)
+        {
+            foreach (int pawn in myPawns)
+            {
+                var info = state.GetUnit(pawn);
+                if (info.HasValue && info.Value.CurrentAction == UnitAction.BUILD)
+                    return true;
+            }
+            return false;
         }
 
         private int FindClosestMine(IGameState state)

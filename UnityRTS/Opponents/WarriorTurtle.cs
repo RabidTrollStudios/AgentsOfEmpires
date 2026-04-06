@@ -33,7 +33,7 @@ namespace PlanningAgent
             GatherWithIdlePawns(state, actions);
 
             // Build barracks, then mass warriors
-            if (myBarracks.Count == 0 && HasBuiltUnit(myBases, state))
+            if (myBarracks.Count == 0 && HasBuiltUnit(myBases, state) && !IsPawnBuilding(state))
                 BuildStructure(UnitType.BARRACKS, state, actions);
 
             // Train warriors
@@ -126,6 +126,17 @@ namespace PlanningAgent
                 if (info.HasValue && info.Value.CurrentAction == UnitAction.IDLE)
                     actions.Attack(unitNbr, target.Value);
             }
+        }
+
+        private bool IsPawnBuilding(IGameState state)
+        {
+            foreach (int pawn in myPawns)
+            {
+                var info = state.GetUnit(pawn);
+                if (info.HasValue && info.Value.CurrentAction == UnitAction.BUILD)
+                    return true;
+            }
+            return false;
         }
 
         private int FindClosestMine(IGameState state)

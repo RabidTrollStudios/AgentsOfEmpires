@@ -41,7 +41,7 @@ namespace PlanningAgent
             GatherWithIdlePawns(state, actions);
 
             // Build 3 towers for triple lancer production
-            if (myTowers.Count < 3 && HasBuiltUnit(myBases, state))
+            if (myTowers.Count < 3 && HasBuiltUnit(myBases, state) && !IsPawnBuilding(state))
                 BuildStructure(UnitType.TOWER, state, actions);
 
             // Train lancers from all towers
@@ -168,6 +168,17 @@ namespace PlanningAgent
                     }
                 }
             }
+        }
+
+        private bool IsPawnBuilding(IGameState state)
+        {
+            foreach (int pawn in myPawns)
+            {
+                var info = state.GetUnit(pawn);
+                if (info.HasValue && info.Value.CurrentAction == UnitAction.BUILD)
+                    return true;
+            }
+            return false;
         }
 
         private int FindClosestMine(IGameState state)

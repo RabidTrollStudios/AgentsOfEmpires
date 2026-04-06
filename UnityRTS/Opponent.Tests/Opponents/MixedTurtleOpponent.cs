@@ -72,7 +72,7 @@ namespace Opponent.Tests
                     : _chosenBuilding == UnitType.ARCHERY ? myArchery.Count > 0
                     : myTowers.Count > 0;
 
-                if (!hasBuilding && HasBuiltUnit(myBases, state))
+                if (!hasBuilding && HasBuiltUnit(myBases, state) && !IsPawnBuilding(state))
                     BuildStructure(_chosenBuilding, state, actions);
 
                 // Train counter units
@@ -174,6 +174,17 @@ namespace Opponent.Tests
                 if (info.HasValue && info.Value.CurrentAction == UnitAction.IDLE)
                     actions.Attack(unitNbr, target.Value);
             }
+        }
+
+        private bool IsPawnBuilding(IGameState state)
+        {
+            foreach (int pawn in myPawns)
+            {
+                var info = state.GetUnit(pawn);
+                if (info.HasValue && info.Value.CurrentAction == UnitAction.BUILD)
+                    return true;
+            }
+            return false;
         }
 
         private int FindClosestMine(IGameState state)

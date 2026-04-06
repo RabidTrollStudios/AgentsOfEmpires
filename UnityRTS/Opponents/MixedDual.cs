@@ -72,13 +72,13 @@ namespace PlanningAgent
                 : _priorityUnit == UnitType.ARCHER ? UnitType.ARCHERY
                 : UnitType.BARRACKS;
 
-            if (GetBuildingCount(firstBuilding) < 1 && HasBuiltUnit(myBases, state))
+            if (GetBuildingCount(firstBuilding) < 1 && HasBuiltUnit(myBases, state) && !IsPawnBuilding(state))
                 BuildStructure(firstBuilding, state, actions);
-            else if (myBarracks.Count < 1 && HasBuiltUnit(myBases, state))
+            else if (myBarracks.Count < 1 && HasBuiltUnit(myBases, state) && !IsPawnBuilding(state))
                 BuildStructure(UnitType.BARRACKS, state, actions);
-            else if (myArchery.Count < 1 && HasBuiltUnit(myBases, state))
+            else if (myArchery.Count < 1 && HasBuiltUnit(myBases, state) && !IsPawnBuilding(state))
                 BuildStructure(UnitType.ARCHERY, state, actions);
-            else if (myTowers.Count < 1 && HasBuiltUnit(myBases, state))
+            else if (myTowers.Count < 1 && HasBuiltUnit(myBases, state) && !IsPawnBuilding(state))
                 BuildStructure(UnitType.TOWER, state, actions);
 
             // Train from all buildings
@@ -349,6 +349,17 @@ namespace PlanningAgent
                 if (info.HasValue && info.Value.CurrentAction == UnitAction.IDLE)
                     actions.Attack(unitNbr, target.Value);
             }
+        }
+
+        private bool IsPawnBuilding(IGameState state)
+        {
+            foreach (int pawn in myPawns)
+            {
+                var info = state.GetUnit(pawn);
+                if (info.HasValue && info.Value.CurrentAction == UnitAction.BUILD)
+                    return true;
+            }
+            return false;
         }
 
         private int FindClosestMine(IGameState state)

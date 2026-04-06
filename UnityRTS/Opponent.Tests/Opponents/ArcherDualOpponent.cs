@@ -44,7 +44,7 @@ namespace Opponent.Tests
             GatherWithIdlePawns(state, actions);
 
             // Build 3 archeries for triple archer production
-            if (myArchery.Count < 3 && HasBuiltUnit(myBases, state))
+            if (myArchery.Count < 3 && HasBuiltUnit(myBases, state) && !IsPawnBuilding(state))
                 BuildStructure(UnitType.ARCHERY, state, actions);
 
             // Train archers from all archeries
@@ -207,6 +207,17 @@ namespace Opponent.Tests
                     }
                 }
             }
+        }
+
+        private bool IsPawnBuilding(IGameState state)
+        {
+            foreach (int pawn in myPawns)
+            {
+                var info = state.GetUnit(pawn);
+                if (info.HasValue && info.Value.CurrentAction == UnitAction.BUILD)
+                    return true;
+            }
+            return false;
         }
 
         private int FindClosestMine(IGameState state)

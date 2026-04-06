@@ -50,6 +50,17 @@ namespace Opponent.Tests
                     actions.Gather(pawn, mainMineNbr, mainBaseNbr);
             }
         }
+        private bool IsPawnBuilding(IGameState state)
+        {
+            foreach (int pawn in myPawns)
+            {
+                var info = state.GetUnit(pawn);
+                if (info.HasValue && info.Value.CurrentAction == UnitAction.BUILD)
+                    return true;
+            }
+            return false;
+        }
+
         private int FindClosestMine(IGameState state)
         {
             Position refPos = mainBaseNbr >= 0 && state.GetUnit(mainBaseNbr).HasValue

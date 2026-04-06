@@ -35,7 +35,7 @@ namespace Opponent.Tests
             GatherWithIdlePawns(state, actions);
 
             // Build archery, then mass archers
-            if (myArchery.Count == 0 && HasBuiltUnit(myBases, state))
+            if (myArchery.Count == 0 && HasBuiltUnit(myBases, state) && !IsPawnBuilding(state))
                 BuildStructure(UnitType.ARCHERY, state, actions);
 
             // Train archers
@@ -128,6 +128,17 @@ namespace Opponent.Tests
                 if (info.HasValue && info.Value.CurrentAction == UnitAction.IDLE)
                     actions.Attack(unitNbr, target.Value);
             }
+        }
+
+        private bool IsPawnBuilding(IGameState state)
+        {
+            foreach (int pawn in myPawns)
+            {
+                var info = state.GetUnit(pawn);
+                if (info.HasValue && info.Value.CurrentAction == UnitAction.BUILD)
+                    return true;
+            }
+            return false;
         }
 
         private int FindClosestMine(IGameState state)

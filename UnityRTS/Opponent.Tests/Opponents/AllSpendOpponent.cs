@@ -102,17 +102,17 @@ namespace Opponent.Tests
 
             int totalCombatBuildings = myBarracks.Count + myArchery.Count + myTowers.Count;
 
-            if (GetBuildingCount(priorityBuilding) == 0 && HasBuiltUnit(myBases, state))
+            if (GetBuildingCount(priorityBuilding) == 0 && HasBuiltUnit(myBases, state) && !IsPawnBuilding(state))
                 BuildStructure(priorityBuilding, state, actions);
-            else if (myMonasteries.Count == 0 && totalCombatBuildings > 0 && HasBuiltUnit(myBases, state))
+            else if (myMonasteries.Count == 0 && totalCombatBuildings > 0 && HasBuiltUnit(myBases, state) && !IsPawnBuilding(state))
                 BuildStructure(UnitType.MONASTERY, state, actions);
-            else if (myBarracks.Count == 0 && HasBuiltUnit(myBases, state))
+            else if (myBarracks.Count == 0 && HasBuiltUnit(myBases, state) && !IsPawnBuilding(state))
                 BuildStructure(UnitType.BARRACKS, state, actions);
-            else if (myArchery.Count == 0 && HasBuiltUnit(myBases, state))
+            else if (myArchery.Count == 0 && HasBuiltUnit(myBases, state) && !IsPawnBuilding(state))
                 BuildStructure(UnitType.ARCHERY, state, actions);
-            else if (myTowers.Count == 0 && HasBuiltUnit(myBases, state))
+            else if (myTowers.Count == 0 && HasBuiltUnit(myBases, state) && !IsPawnBuilding(state))
                 BuildStructure(UnitType.TOWER, state, actions);
-            else if (goldRich && GetBuildingCount(priorityBuilding) < 2 && HasBuiltUnit(myBases, state))
+            else if (goldRich && GetBuildingCount(priorityBuilding) < 2 && HasBuiltUnit(myBases, state) && !IsPawnBuilding(state))
                 BuildStructure(priorityBuilding, state, actions);
 
             GatherWithIdlePawns(state, actions);
@@ -427,6 +427,17 @@ namespace Opponent.Tests
                     }
                 }
             }
+        }
+
+        private bool IsPawnBuilding(IGameState state)
+        {
+            foreach (int pawn in myPawns)
+            {
+                var info = state.GetUnit(pawn);
+                if (info.HasValue && info.Value.CurrentAction == UnitAction.BUILD)
+                    return true;
+            }
+            return false;
         }
 
         private int FindClosestMine(IGameState state)
