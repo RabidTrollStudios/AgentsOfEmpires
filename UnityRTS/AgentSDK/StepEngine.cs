@@ -398,6 +398,14 @@ namespace AgentSDK
             if (TaskEngine.IsInAttackRange(attacker.UnitType, attacker.CenterPosition,
                     target.UnitType, target.CenterPosition))
             {
+                // In range — stop moving (don't walk past attack range into melee)
+                if (attacker.SimPath != null && attacker.PathIndex < attacker.SimPath.Count)
+                {
+                    attacker.SimPath = null;
+                    attacker.PathIndex = 0;
+                    attacker.PathProgress = 0f;
+                }
+
                 // Anti-stack: if in range but sharing a cell and stationary, spread out
                 if (attacker.CanMove
                     && world.Grid.GetOccupantCount(attacker.GridPosition) > 1
@@ -576,6 +584,14 @@ namespace AgentSDK
 
             if (TaskEngine.IsInHealRange(monk.UnitType, monk.CenterPosition, target.CenterPosition))
             {
+                // In range — stop moving
+                if (monk.SimPath != null && monk.PathIndex < monk.SimPath.Count)
+                {
+                    monk.SimPath = null;
+                    monk.PathIndex = 0;
+                    monk.PathProgress = 0f;
+                }
+
                 if (!TaskEngine.CanHeal(monk.Mana, target.Health, target.UnitType))
                 {
                     GoIdle(monk);

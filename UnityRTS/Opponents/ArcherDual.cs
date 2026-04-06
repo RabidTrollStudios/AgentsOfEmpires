@@ -14,19 +14,21 @@ namespace PlanningAgent
     {
         private const int MAX_PAWNS = 6;
         private const int ATTACK_THRESHOLD = 6;
-        private const int ATTACK_FRAMES = 2;  // attack for frames
-        private const int KITE_FRAMES = 1;    // kite for 1 frame
-        private const int CYCLE_LENGTH = ATTACK_FRAMES + KITE_FRAMES; // 3-frame cycle
+        private const float ANIM_DURATION_BASE = 0.5f;
+        private const float FRAME_DURATION = 0.02f;
 
-        private Dictionary<int, int> _lastArcherTarget = new Dictionary<int, int>();
-        private Dictionary<int, int> _archerCycleFrame = new Dictionary<int, int>();
+        private enum ArcherState { Targeting, Firing, Kiting }
+        private Dictionary<int, ArcherState> _archerState = new Dictionary<int, ArcherState>();
+        private Dictionary<int, int> _archerFireFrames = new Dictionary<int, int>();
+        private Dictionary<int, int> _archerLastTarget = new Dictionary<int, int>();
 
         private bool _buildQueued;
 
         public override void InitializeMatch()
         {
-            _lastArcherTarget = new Dictionary<int, int>();
-            _archerCycleFrame = new Dictionary<int, int>();
+            _archerState = new Dictionary<int, ArcherState>();
+            _archerFireFrames = new Dictionary<int, int>();
+            _archerLastTarget = new Dictionary<int, int>();
         }
 
         public override void Update(IGameState state, IAgentActions actions)
@@ -70,7 +72,6 @@ namespace PlanningAgent
 
         private void VolleyKiteMicro(IGameState state, IAgentActions actions)
         {
-            // Build list of living enemies
             var enemies = new List<int>();
             foreach (UnitType ut in new[] { UnitType.WARRIOR, UnitType.ARCHER, UnitType.LANCER,
                                             UnitType.MONK, UnitType.PAWN, UnitType.BASE,
@@ -82,49 +83,92 @@ namespace PlanningAgent
             }
             if (enemies.Count == 0) return;
 
+            int framesPerAnim = System.Math.Max(1,
+                (int)System.Math.Ceiling(ANIM_DURATION_BASE / (state.GameSpeed * FRAME_DURATION)));
+
             foreach (int archerNbr in myArchers)
             {
                 var info = state.GetUnit(archerNbr);
                 if (!info.HasValue) continue;
 
-                if (!_archerCycleFrame.ContainsKey(archerNbr))
-                    _archerCycleFrame[archerNbr] = 0;
-
-                int cycleFrame = _archerCycleFrame[archerNbr] % CYCLE_LENGTH;
-                _archerCycleFrame[archerNbr]++;
-
-                if (cycleFrame < ATTACK_FRAMES)
+                if (!_archerState.ContainsKey(archerNbr))
                 {
-                    // Attack phase — volley micro (cycle targets)
-                    int lastTarget = _lastArcherTarget.ContainsKey(archerNbr)
-                        ? _lastArcherTarget[archerNbr] : -1;
-
-                    int chosenTarget = -1;
-                    foreach (int enemyNbr in enemies)
-                    {
-                        if (enemyNbr != lastTarget)
-                        {
-                            chosenTarget = enemyNbr;
-                            break;
-                        }
-                    }
-                    if (chosenTarget < 0) chosenTarget = enemies[0];
-
-                    actions.Attack(archerNbr, chosenTarget);
-                    _lastArcherTarget[archerNbr] = chosenTarget;
+                    _archerState[archerNbr] = ArcherState.Targeting;
+                    _archerFireFrames[archerNbr] = 0;
                 }
-                else
+
+                switch (_archerState[archerNbr])
                 {
-                    // Kite phase — move away from nearest enemy
-                    int? nearestEnemy = FindNearestEnemy(info.Value.CenterPosition, state);
-                    if (nearestEnemy.HasValue && mainBaseNbr >= 0)
-                    {
-                        var baseInfo = state.GetUnit(mainBaseNbr);
-                        if (baseInfo.HasValue)
+                    case ArcherState.Targeting:
+                        // Pick a different target from last time (volley bonus)
+                        int lastTarget = _archerLastTarget.ContainsKey(archerNbr)
+                            ? _archerLastTarget[archerNbr] : -1;
+                        int chosenTarget = -1;
+                        foreach (int enemyNbr in enemies)
                         {
-                            actions.Move(archerNbr, baseInfo.Value.CenterPosition);
+                            if (enemyNbr != lastTarget)
+                            { chosenTarget = enemyNbr; break; }
                         }
-                    }
+                        if (chosenTarget < 0) chosenTarget = enemies[0];
+
+                        actions.Attack(archerNbr, chosenTarget);
+                        _archerLastTarget[archerNbr] = chosenTarget;
+                        _archerState[archerNbr] = ArcherState.Firing;
+                        _archerFireFrames[archerNbr] = 0;
+                        break;
+
+                    case ArcherState.Firing:
+                        // Wait for one attack animation to complete.
+                        // Don't issue any commands — let the engine handle movement + attack.
+                        _archerFireFrames[archerNbr]++;
+
+                        if (info.Value.CurrentAction == UnitAction.ATTACK)
+                        {
+                            // Check if in range (actually firing, not walking)
+                            var atkTarget = info.Value.AttackTargetNbr >= 0
+                                ? state.GetUnit(info.Value.AttackTargetNbr) : null;
+                            bool inRange = false;
+                            if (atkTarget.HasValue)
+                            {
+                                float dist = Position.Distance(info.Value.CenterPosition,
+                                    atkTarget.Value.CenterPosition);
+                                float range = GameConstants.EffectiveAttackRange(
+                                    UnitType.ARCHER, atkTarget.Value.UnitType) + 0.5f;
+                                inRange = dist < range;
+                            }
+
+                            // Once we've been in range for one animation, kite
+                            if (inRange && _archerFireFrames[archerNbr] >= framesPerAnim)
+                                _archerState[archerNbr] = ArcherState.Kiting;
+
+                            // If target died (atkTarget null), retarget
+                            if (atkTarget == null || !atkTarget.HasValue)
+                                _archerState[archerNbr] = ArcherState.Targeting;
+                        }
+                        else if (info.Value.CurrentAction == UnitAction.IDLE
+                            && _archerFireFrames[archerNbr] > framesPerAnim * 2)
+                        {
+                            // Stuck idle for too long — retarget
+                            _archerState[archerNbr] = ArcherState.Targeting;
+                        }
+                        // Otherwise stay in Firing (command is being processed or unit is walking)
+                        break;
+
+                    case ArcherState.Kiting:
+                        // Brief retreat toward base then retarget
+                        if (info.Value.CurrentAction != UnitAction.MOVE && mainBaseNbr >= 0)
+                        {
+                            var baseInfo = state.GetUnit(mainBaseNbr);
+                            if (baseInfo.HasValue)
+                                actions.Move(archerNbr, baseInfo.Value.CenterPosition);
+                        }
+
+                        if (info.Value.CurrentAction == UnitAction.IDLE
+                            || info.Value.CurrentAction == UnitAction.MOVE)
+                        {
+                            _archerState[archerNbr] = ArcherState.Targeting;
+                        }
+                        break;
                 }
             }
         }

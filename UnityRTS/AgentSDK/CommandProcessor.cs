@@ -130,20 +130,11 @@ namespace AgentSDK
             attacker.CurrentAction = UnitAction.ATTACK;
             attacker.AttackTargetNbr = targetNbr;
 
-            // Check if already in range — skip pathfinding
-            if (TaskEngine.IsInAttackRange(attacker.UnitType, attacker.CenterPosition,
-                    target.UnitType, target.CenterPosition))
-            {
-                attacker.SimPath = null;
-                attacker.PathIndex = 0;
-                attacker.PathProgress = 0f;
-            }
-            else
-            {
-                var path = world.FindPathToUnit(attacker.GridPosition, target.UnitType, target.GridPosition);
-                attacker.SimPath = path;
-                attacker.PathIndex = 0;
-            }
+            // Always pathfind to the target — AdvanceAttack will stop movement when in range
+            var path = world.FindPathToUnit(attacker.GridPosition, target.UnitType, target.GridPosition);
+            attacker.SimPath = path;
+            attacker.PathIndex = 0;
+            attacker.PathProgress = 0f;
             return CommandResult.SUCCESS;
         }
 
@@ -182,19 +173,11 @@ namespace AgentSDK
             monk.CurrentAction = UnitAction.HEAL;
             monk.HealTargetNbr = targetNbr;
 
-            // Check if already in range — skip pathfinding
-            if (TaskEngine.IsInHealRange(monk.UnitType, monk.CenterPosition, target.CenterPosition))
-            {
-                monk.SimPath = null;
-                monk.PathIndex = 0;
-                monk.PathProgress = 0f;
-            }
-            else
-            {
-                var path = world.FindPathToUnit(monk.GridPosition, target.UnitType, target.GridPosition);
-                monk.SimPath = path;
-                monk.PathIndex = 0;
-            }
+            // Always pathfind to the target — AdvanceHeal will stop movement when in range
+            var path = world.FindPathToUnit(monk.GridPosition, target.UnitType, target.GridPosition);
+            monk.SimPath = path;
+            monk.PathIndex = 0;
+            monk.PathProgress = 0f;
             return CommandResult.SUCCESS;
         }
     }
