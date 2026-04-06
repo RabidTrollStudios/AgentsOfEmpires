@@ -409,6 +409,7 @@ namespace GameManager
 			_input.asset.bindingMask = null;
 			_input.Gameplay.Enable();
 
+			BuildDebugTogglePanel();
 			InitializeDebugToggles();
 			SetupGameOverBanner();
 

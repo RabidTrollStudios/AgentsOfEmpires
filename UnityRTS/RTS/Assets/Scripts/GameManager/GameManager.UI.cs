@@ -294,6 +294,126 @@ namespace GameManager
 			}
 		}
 
+		/// <summary>
+		/// Build the debug-toggle panel at runtime and wire each toggle into its
+		/// corresponding [SerializeField] private Toggle field on this GameManager.
+		/// Must be called BEFORE InitializeDebugToggles(), which adds listeners
+		/// and sets initial isOn values on the same fields.
+		/// </summary>
+		private void BuildDebugTogglePanel()
+		{
+			var parent = Prefabs != null ? Prefabs.UnitInfoCanvas : null;
+			if (parent == null) return;
+
+			var font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+
+			// Container — bottom-right of the canvas
+			var panelGo = new GameObject("Debug Toggle Panel");
+			var panelRect = panelGo.AddComponent<RectTransform>();
+			panelRect.SetParent(parent, false);
+			panelRect.anchorMin = new Vector2(1f, 0f);
+			panelRect.anchorMax = new Vector2(1f, 0f);
+			panelRect.pivot = new Vector2(1f, 0f);
+			panelRect.anchoredPosition = new Vector2(-10f, 10f);
+			panelRect.sizeDelta = new Vector2(180f, 0f); // height auto-fits
+
+			panelGo.AddComponent<CanvasRenderer>();
+			var panelBg = panelGo.AddComponent<Image>();
+			panelBg.color = new Color(0f, 0f, 0f, 0.55f);
+			panelBg.raycastTarget = true;
+
+			var layout = panelGo.AddComponent<VerticalLayoutGroup>();
+			layout.padding = new RectOffset(8, 8, 8, 8);
+			layout.spacing = 2f;
+			layout.childAlignment = TextAnchor.UpperLeft;
+			layout.childControlWidth = true;
+			layout.childControlHeight = false;
+			layout.childForceExpandWidth = true;
+			layout.childForceExpandHeight = false;
+
+			var fitter = panelGo.AddComponent<ContentSizeFitter>();
+			fitter.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
+
+			// Build each toggle and assign it to the matching [SerializeField] field.
+			// These fields live on this same partial class, so direct assignment works.
+			// The (N) suffix matches the DebugToggleN hotkey in the input actions.
+			AgentToggle        = CreateDebugToggle(panelGo.transform, "Agent Debug (1)",   font);
+			UnitToggle         = CreateDebugToggle(panelGo.transform, "Unit Debug (2)",    font);
+			InfluenceToggle    = CreateDebugToggle(panelGo.transform, "Influence Map (3)", font);
+			MoveTintToggle     = CreateDebugToggle(panelGo.transform, "Move Tint (4)",     font);
+			GatherTintToggle   = CreateDebugToggle(panelGo.transform, "Gather Tint (5)",   font);
+			BuildTintToggle    = CreateDebugToggle(panelGo.transform, "Build Tint (6)",    font);
+			AttackTintToggle   = CreateDebugToggle(panelGo.transform, "Attack Tint (7)",   font);
+			PathTintToggle     = CreateDebugToggle(panelGo.transform, "Path Line (8)",     font);
+			TargetLineTintToggle = CreateDebugToggle(panelGo.transform, "Target Line (9)", font);
+		}
+
+		/// <summary>
+		/// Create a single labelled Toggle row for the debug panel.
+		/// Uses Unity's default Toggle layout: a checkbox box on the left and a
+		/// label to its right.
+		/// </summary>
+		private Toggle CreateDebugToggle(Transform parent, string label, Font font)
+		{
+			var rowGo = new GameObject(label + " Toggle");
+			var rowRect = rowGo.AddComponent<RectTransform>();
+			rowRect.SetParent(parent, false);
+			rowRect.sizeDelta = new Vector2(0f, 22f);
+
+			var toggle = rowGo.AddComponent<Toggle>();
+
+			// Checkbox background (16x16, left side)
+			var bgGo = new GameObject("Background");
+			var bgRect = bgGo.AddComponent<RectTransform>();
+			bgRect.SetParent(rowGo.transform, false);
+			bgRect.anchorMin = new Vector2(0f, 0.5f);
+			bgRect.anchorMax = new Vector2(0f, 0.5f);
+			bgRect.pivot = new Vector2(0f, 0.5f);
+			bgRect.sizeDelta = new Vector2(16f, 16f);
+			bgRect.anchoredPosition = new Vector2(0f, 0f);
+			bgGo.AddComponent<CanvasRenderer>();
+			var bgImg = bgGo.AddComponent<Image>();
+			bgImg.color = new Color(1f, 1f, 1f, 0.9f);
+
+			// Checkmark (filled when on, hidden when off)
+			var checkGo = new GameObject("Checkmark");
+			var checkRect = checkGo.AddComponent<RectTransform>();
+			checkRect.SetParent(bgGo.transform, false);
+			checkRect.anchorMin = new Vector2(0.5f, 0.5f);
+			checkRect.anchorMax = new Vector2(0.5f, 0.5f);
+			checkRect.pivot = new Vector2(0.5f, 0.5f);
+			checkRect.sizeDelta = new Vector2(12f, 12f);
+			checkRect.anchoredPosition = Vector2.zero;
+			checkGo.AddComponent<CanvasRenderer>();
+			var checkImg = checkGo.AddComponent<Image>();
+			checkImg.color = new Color(0.15f, 0.85f, 0.15f, 1f);
+
+			// Label text (right of the checkbox)
+			var labelGo = new GameObject("Label");
+			var labelRect = labelGo.AddComponent<RectTransform>();
+			labelRect.SetParent(rowGo.transform, false);
+			labelRect.anchorMin = new Vector2(0f, 0f);
+			labelRect.anchorMax = new Vector2(1f, 1f);
+			labelRect.pivot = new Vector2(0f, 0.5f);
+			labelRect.offsetMin = new Vector2(22f, 0f);
+			labelRect.offsetMax = new Vector2(0f, 0f);
+			labelGo.AddComponent<CanvasRenderer>();
+			var labelText = labelGo.AddComponent<Text>();
+			labelText.font = font;
+			labelText.fontSize = 13;
+			labelText.alignment = TextAnchor.MiddleLeft;
+			labelText.color = Color.white;
+			labelText.text = label;
+			labelText.raycastTarget = false;
+
+			toggle.targetGraphic = bgImg;
+			toggle.graphic = checkImg;
+			toggle.transition = Selectable.Transition.ColorTint;
+			toggle.isOn = false;
+
+			return toggle;
+		}
+
 		#endregion
 
 	}
