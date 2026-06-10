@@ -1,0 +1,33 @@
+<Project>
+
+  <!--
+    Auto-imported by MSBuild into every project under UnityRTS/.
+
+    Purpose: make compiled assemblies byte-for-byte reproducible so the
+    committed DLLs (EnemyAgents/PlanningAgent_*.dll, Plugins/AgentSDK.dll,
+    Plugins/AgentTestHarness.dll) don't show up as "modified" in git after
+    every rebuild even when no source changed.
+
+    Without this, each build randomizes four pieces of build-identity metadata
+    baked into the PE/metadata:
+      - the module MVID (a fresh GUID per compile)
+      - the PDB debug GUID (and the matching id in the DLL's debug directory)
+      - the PE COFF TimeDateStamp (wall-clock time of the build)
+    Deterministic builds replace all of these with values hashed from the
+    compilation inputs, so identical source -> identical bytes.
+
+    Deterministic is already the default for SDK-style projects, but the MVID
+    hash still folds in the absolute source paths embedded in debug info, which
+    are machine-specific. PathMap normalizes the repo root to a stable token so
+    those paths (and therefore the MVID) are identical across machines/checkouts.
+  -->
+  <PropertyGroup>
+    <Deterministic>true</Deterministic>
+    <!-- Normalize the absolute repo path embedded in debug info to a fixed
+         token, so the MVID and embedded paths don't depend on where the repo
+         is checked out. MSBuildThisFileDirectory is the folder holding this
+         props file (UnityRTS/), with a trailing slash. -->
+    <PathMap>$(MSBuildThisFileDirectory)=/_/</PathMap>
+  </PropertyGroup>
+
+</Project>

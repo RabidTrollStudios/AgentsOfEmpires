@@ -25,6 +25,9 @@
 
 # --- Runtime output (logs, parity exports, command logs) ---
 UnityRTS/EnemyAgents/CommandLogs/
+# Per-match telemetry the agents emit into EnemyAgents/ at run time — output, not source.
+UnityRTS/EnemyAgents/*.csv
+UnityRTS/EnemyAgents/CommandLog_*.txt
 UnityRTS/RTS/ParityCommands_*.csv
 UnityRTS/RTS/ParityState_*.csv
 UnityRTS/RTS/CommandLogs/
