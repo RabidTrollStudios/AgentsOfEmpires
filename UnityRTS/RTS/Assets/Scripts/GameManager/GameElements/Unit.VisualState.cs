@@ -209,11 +209,14 @@ namespace GameManager.GameElements
 				onEnter: u => { lastAttackNormTime = 0f; });
 			var guard   = sm.AddState("Guard", 4);
 
-			// Moving always overrides
+			// Moving overrides idle/guard always.
 			sm.AddTransition(idle, run,    u => u.IsVisuallyMoving);
 			sm.AddTransition(guard, run,   u => u.IsVisuallyMoving);
-			sm.AddTransition(attack1, run, u => u.IsVisuallyMoving);
-			sm.AddTransition(attack2, run, u => u.IsVisuallyMoving);
+			// Moving overrides attack ONLY when the target is out of range. This lets
+			// the anti-stack spread (a short path to a different in-range cell) run
+			// without visually breaking the attack animation.
+			sm.AddTransition(attack1, run, u => u.IsVisuallyMoving && !IsAttackTargetInRange(u));
+			sm.AddTransition(attack2, run, u => u.IsVisuallyMoving && !IsAttackTargetInRange(u));
 
 			// From Run — stop
 			sm.AddTransition(run, idle, u => !u.IsVisuallyMoving);
@@ -244,6 +247,24 @@ namespace GameManager.GameElements
 			return completed;
 		}
 
+		/// <summary>
+		/// True when the unit's current attack target exists and is within the
+		/// unit's effective attack range. Used by VSM transitions to keep the
+		/// attack animation playing during anti-stack spread moves (short paths
+		/// to a different cell that is still in range).
+		/// </summary>
+		private static bool IsAttackTargetInRange(Unit u)
+		{
+			if (u.AttackUnit == null) return false;
+			var myCenter = AgentSDK.TaskEngine.ComputeCenterPosition(
+				u.UnitType, new AgentSDK.Position(u.GridPosition.x, u.GridPosition.y));
+			var tgtCenter = AgentSDK.TaskEngine.ComputeCenterPosition(
+				u.AttackUnit.UnitType,
+				new AgentSDK.Position(u.AttackUnit.GridPosition.x, u.AttackUnit.GridPosition.y));
+			return AgentSDK.TaskEngine.IsInAttackRange(
+				u.UnitType, myCenter, u.AttackUnit.UnitType, tgtCenter);
+		}
+
 		#endregion
 
 		#region Archer
@@ -258,7 +279,8 @@ namespace GameManager.GameElements
 				onUpdate: u => UpdateArrowSpawn(u));
 
 			sm.AddTransition(idle, run,   u => u.IsVisuallyMoving);
-			sm.AddTransition(shoot, run,  u => u.IsVisuallyMoving);
+			// Don't break shoot animation for anti-stack spread (target still in range).
+			sm.AddTransition(shoot, run,  u => u.IsVisuallyMoving && !IsAttackTargetInRange(u));
 
 			sm.AddTransition(run, idle, u => !u.IsVisuallyMoving);
 
@@ -306,8 +328,9 @@ namespace GameManager.GameElements
 			var atkStates = new[] { atkRight, atkUp, atkDown, atkUpRight, atkDownRight };
 
 			sm.AddTransition(idle, run, u => u.IsVisuallyMoving);
+			// Don't break attack animation for anti-stack spread (target still in range).
 			foreach (var atk in atkStates)
-				sm.AddTransition(atk, run, u => u.IsVisuallyMoving);
+				sm.AddTransition(atk, run, u => u.IsVisuallyMoving && !IsAttackTargetInRange(u));
 
 			sm.AddTransition(run, idle, u => !u.IsVisuallyMoving);
 

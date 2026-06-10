@@ -59,6 +59,7 @@ namespace GameManager.GameElements
 			UpdateDebuggingInfo();
 			UpdatePathVisualization();
 			UpdateTargetVisualization();
+			RefreshInspectorDebug();
 		}
 
 		/// <summary>

@@ -108,32 +108,47 @@ namespace AgentSDK
                     {
                         if (unit.PathIndex == path.Count - 1)
                         {
-                            // Final cell blocked — find a nearby OPEN cell
+                            // Final cell blocked — find a different neighbor of the target
                             unit.PathProgress = 0f;
                             bool redirected = false;
 
-                            // For attack/heal, use the target's current position as reference
-                            // so the redirect cell is adjacent to where the target IS, not WAS
-                            Position searchCenter = nextCell;
+                            // Resolve the current task target, if any
+                            ISimUnit taskTarget = null;
                             if (unit.CurrentAction == UnitAction.ATTACK && unit.AttackTargetNbr >= 0)
-                            {
-                                var target = world.GetUnit(unit.AttackTargetNbr);
-                                if (target != null && target.CanMove)
-                                    searchCenter = target.GridPosition;
-                            }
+                                taskTarget = world.GetUnit(unit.AttackTargetNbr);
                             else if (unit.CurrentAction == UnitAction.HEAL && unit.HealTargetNbr >= 0)
-                            {
-                                var target = world.GetUnit(unit.HealTargetNbr);
-                                if (target != null && target.CanMove)
-                                    searchCenter = target.GridPosition;
-                            }
+                                taskTarget = world.GetUnit(unit.HealTargetNbr);
 
-                            // Search expanding rings around the target for an OPEN cell
-                            var bestCell = grid.FindNearestOpenCell(searchCenter);
-
-                            if (bestCell.HasValue)
+                            if (taskTarget != null && taskTarget.Health > 0)
                             {
-                                var redirect = grid.FindPath(unit.GridPosition, bestCell.Value);
+                                // Preferred: pick a different OPEN cell within attack range
+                                // of the target. FindPathToAttackPosition searches the full
+                                // attack-range disc (not just adjacency), so for large
+                                // buildings the search includes cells two or three steps
+                                // away from the footprint that are still in range — letting
+                                // warriors spread out instead of all piling on one cell.
+                                List<Position> redirect;
+                                var claimedDests = CommandProcessor.CollectClaimedDestinations(unit, world);
+                                if (unit.CurrentAction == UnitAction.ATTACK)
+                                {
+                                    redirect = grid.FindPathToAttackPosition(
+                                        unit.GridPosition, unit.UnitType,
+                                        taskTarget.UnitType, taskTarget.GridPosition, unit.UnitNbr,
+                                        claimedDests);
+                                    if (redirect.Count == 0)
+                                        redirect = grid.FindPathToUnit(
+                                            unit.GridPosition, taskTarget.UnitType, taskTarget.GridPosition,
+                                            claimedDests);
+                                }
+                                else
+                                {
+                                    // HEAL — heal range is short and target is mobile, so
+                                    // the adjacency-ring search is fine.
+                                    redirect = grid.FindPathToUnit(
+                                        unit.GridPosition, taskTarget.UnitType, taskTarget.GridPosition,
+                                        claimedDests);
+                                }
+
                                 if (redirect.Count > 0)
                                 {
                                     unit.SimPath = redirect;
@@ -141,18 +156,45 @@ namespace AgentSDK
                                     unit.PathIndex = 0;
                                     redirected = true;
                                 }
-                            }
-
-                            if (!redirected)
-                            {
-                                if (unit.CurrentAction == UnitAction.MOVE)
-                                    StepEngine.SetIdle(unit);
                                 else
                                 {
+                                    // No reachable in-range OPEN cell — stay put.
+                                    // The task logic's in-range check (AdvanceAttack/AdvanceHeal)
+                                    // will still fire each step; no point wandering to a distant
+                                    // OPEN cell that doesn't help us reach the target.
                                     unit.SimPath = null;
                                     unit.PathIndex = 0;
+                                    return;
                                 }
-                                return;
+                            }
+                            else
+                            {
+                                // Plain MOVE (no task target): fall back to nearest OPEN cell
+                                // around the blocked destination.
+                                var bestCell = grid.FindNearestOpenCell(nextCell);
+                                if (bestCell.HasValue)
+                                {
+                                    var redirect = grid.FindPath(unit.GridPosition, bestCell.Value);
+                                    if (redirect.Count > 0)
+                                    {
+                                        unit.SimPath = redirect;
+                                        path = redirect;
+                                        unit.PathIndex = 0;
+                                        redirected = true;
+                                    }
+                                }
+
+                                if (!redirected)
+                                {
+                                    if (unit.CurrentAction == UnitAction.MOVE)
+                                        StepEngine.SetIdle(unit);
+                                    else
+                                    {
+                                        unit.SimPath = null;
+                                        unit.PathIndex = 0;
+                                    }
+                                    return;
+                                }
                             }
                             continue; // restart movement loop with new path
                         }

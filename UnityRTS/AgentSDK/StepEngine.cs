@@ -206,7 +206,9 @@ namespace AgentSDK
             }
             else
             {
-                var repath = world.FindPathToUnit(pawn.GridPosition, UnitType.MINE, mine.GridPosition);
+                var claimedDests = CommandProcessor.CollectClaimedDestinations(pawn, world);
+                var repath = world.Grid.FindPathToUnit(
+                    pawn.GridPosition, UnitType.MINE, mine.GridPosition, claimedDests);
                 if (repath.Count > 0)
                 {
                     pawn.SimPath = repath;
@@ -246,7 +248,9 @@ namespace AgentSDK
                 }
                 else
                 {
-                    var emptyPath = world.FindPathToUnit(pawn.GridPosition, UnitType.BASE, baseForEmpty.GridPosition);
+                    var claimedDests = CommandProcessor.CollectClaimedDestinations(pawn, world);
+                    var emptyPath = world.Grid.FindPathToUnit(
+                        pawn.GridPosition, UnitType.BASE, baseForEmpty.GridPosition, claimedDests);
                     var oldPhase = pawn.GatherPhase;
                     pawn.GatherPhase = GatherPhase.TO_BASE;
                     pawn.SimPath = emptyPath;
@@ -303,7 +307,9 @@ namespace AgentSDK
                     }
                     else
                     {
-                        var minePath = world.FindPathToUnit(pawn.GridPosition, UnitType.MINE, mine.GridPosition);
+                        var claimedDests2 = CommandProcessor.CollectClaimedDestinations(pawn, world);
+                        var minePath = world.Grid.FindPathToUnit(
+                            pawn.GridPosition, UnitType.MINE, mine.GridPosition, claimedDests2);
                         var oldPhase2 = pawn.GatherPhase;
                         pawn.GatherPhase = GatherPhase.TO_MINE;
                         pawn.SimPath = minePath;
@@ -313,7 +319,9 @@ namespace AgentSDK
                 }
                 else
                 {
-                    var path = world.FindPathToUnit(pawn.GridPosition, UnitType.BASE, baseUnit.GridPosition);
+                    var claimedDests = CommandProcessor.CollectClaimedDestinations(pawn, world);
+                    var path = world.Grid.FindPathToUnit(
+                        pawn.GridPosition, UnitType.BASE, baseUnit.GridPosition, claimedDests);
                     var oldPhase = pawn.GatherPhase;
                     pawn.GatherPhase = GatherPhase.TO_BASE;
                     pawn.SimPath = path;
@@ -359,7 +367,9 @@ namespace AgentSDK
                 }
                 else
                 {
-                    var path = world.FindPathToUnit(pawn.GridPosition, UnitType.MINE, mine.GridPosition);
+                    var claimedDests = CommandProcessor.CollectClaimedDestinations(pawn, world);
+                    var path = world.Grid.FindPathToUnit(
+                        pawn.GridPosition, UnitType.MINE, mine.GridPosition, claimedDests);
                     var oldPhase = pawn.GatherPhase;
                     pawn.GatherPhase = GatherPhase.TO_MINE;
                     pawn.SimPath = path;
@@ -369,7 +379,9 @@ namespace AgentSDK
             }
             else
             {
-                var path = world.FindPathToUnit(pawn.GridPosition, UnitType.BASE, baseUnit.GridPosition);
+                var claimedDests = CommandProcessor.CollectClaimedDestinations(pawn, world);
+                var path = world.Grid.FindPathToUnit(
+                    pawn.GridPosition, UnitType.BASE, baseUnit.GridPosition, claimedDests);
                 if (path.Count > 0)
                 {
                     pawn.SimPath = path;
@@ -398,20 +410,39 @@ namespace AgentSDK
             if (TaskEngine.IsInAttackRange(attacker.UnitType, attacker.CenterPosition,
                     target.UnitType, target.CenterPosition))
             {
-                // In range — stop moving (don't walk past attack range into melee)
+                // In range — stop moving if the current path isn't keeping us in range
+                // (e.g., the old path headed OUT of range). A path that stays within
+                // range is OK: it's an anti-stack spread to a different in-range cell.
                 if (attacker.SimPath != null && attacker.PathIndex < attacker.SimPath.Count)
                 {
-                    attacker.SimPath = null;
-                    attacker.PathIndex = 0;
-                    attacker.PathProgress = 0f;
+                    // Check if the path destination is also in attack range — if so,
+                    // this is a spread path and we should let it run. Otherwise clear it.
+                    var pathDest = attacker.SimPath[attacker.SimPath.Count - 1];
+                    var destCenter = TaskEngine.ComputeCenterPosition(attacker.UnitType, pathDest);
+                    bool destInRange = TaskEngine.IsInAttackRange(
+                        attacker.UnitType, destCenter,
+                        target.UnitType, target.CenterPosition);
+                    if (!destInRange)
+                    {
+                        attacker.SimPath = null;
+                        attacker.PathIndex = 0;
+                        attacker.PathProgress = 0f;
+                    }
                 }
 
-                // Anti-stack: if in range but sharing a cell and stationary, spread out
+                // Anti-stack: if in range AND stationary AND sharing a cell, spread to
+                // a different in-range OPEN cell. The spread destination must also be
+                // in attack range so the visual state machine keeps the attack animation
+                // (the warrior VSM's attack→run transition is gated on target-in-range).
                 if (attacker.CanMove
                     && world.Grid.GetOccupantCount(attacker.GridPosition) > 1
                     && (attacker.SimPath == null || attacker.PathIndex >= attacker.SimPath.Count))
                 {
-                    var spreadPath = world.FindPathToUnit(attacker.GridPosition, target.UnitType, target.GridPosition);
+                    var claimedDests = CommandProcessor.CollectClaimedDestinations(attacker, world);
+                    var spreadPath = world.Grid.FindPathToAttackPosition(
+                        attacker.GridPosition, attacker.UnitType,
+                        target.UnitType, target.GridPosition, attacker.UnitNbr,
+                        claimedDests);
                     if (spreadPath.Count > 0)
                     {
                         attacker.SimPath = spreadPath;
@@ -501,7 +532,14 @@ namespace AgentSDK
 
                 if (pathExhausted || targetMoved)
                 {
-                    var path = world.FindPathToUnit(attacker.GridPosition, target.UnitType, target.GridPosition);
+                    var claimedDests = CommandProcessor.CollectClaimedDestinations(attacker, world);
+                    var path = world.Grid.FindPathToAttackPosition(
+                        attacker.GridPosition, attacker.UnitType,
+                        target.UnitType, target.GridPosition, attacker.UnitNbr,
+                        claimedDests);
+                    if (path.Count == 0)
+                        path = world.Grid.FindPathToUnit(
+                            attacker.GridPosition, target.UnitType, target.GridPosition, claimedDests);
                     if (path.Count > 0)
                     {
                         attacker.SimPath = path;
@@ -622,7 +660,9 @@ namespace AgentSDK
 
                 if (pathExhausted || targetMoved)
                 {
-                    var path = world.FindPathToUnit(monk.GridPosition, target.UnitType, target.GridPosition);
+                    var claimedDests = CommandProcessor.CollectClaimedDestinations(monk, world);
+                    var path = world.Grid.FindPathToUnit(
+                        monk.GridPosition, target.UnitType, target.GridPosition, claimedDests);
                     if (path.Count > 0)
                     {
                         monk.SimPath = path;

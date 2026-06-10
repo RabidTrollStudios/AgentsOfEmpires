@@ -122,6 +122,188 @@ namespace GameManager.GameElements
 
 		#endregion
 
+		#region Inspector Debug
+
+		// Read-only mirror of live unit state for inspection while paused.
+		// Updated once per frame from RefreshInspectorDebug() in Update().
+		// All fields are [SerializeField] private with no setters elsewhere — they
+		// must not be edited from the inspector and have no effect on game logic.
+
+		[Header("Live State (read-only)")]
+		[SerializeField, InspectorReadOnly] private int _dbgUnitNbr;
+		[SerializeField, InspectorReadOnly] private UnitType _dbgUnitType;
+		[SerializeField, InspectorReadOnly] private string _dbgOwner;
+		[SerializeField, InspectorReadOnly] private UnitAction _dbgCurrentAction;
+		[SerializeField, InspectorReadOnly] private bool _dbgIsBuilt;
+
+		[Header("Health / Mana")]
+		[SerializeField, InspectorReadOnly] private float _dbgHealth;
+		[SerializeField, InspectorReadOnly] private float _dbgMaxHealth;
+		[SerializeField, InspectorReadOnly] private float _dbgMana;
+
+		[Header("Position")]
+		[SerializeField, InspectorReadOnly] private Vector3Int _dbgGridPosition;
+		[SerializeField, InspectorReadOnly] private Vector3Int _dbgCenterGridPosition;
+
+		[Header("Movement / Path")]
+		[SerializeField, InspectorReadOnly] private int _dbgPathLength;
+		[SerializeField, InspectorReadOnly] private int _dbgPathIndex;
+		[SerializeField, InspectorReadOnly] private float _dbgPathProgress;
+		[SerializeField, InspectorReadOnly] private Vector3Int _dbgPathDestination;
+		[SerializeField, InspectorReadOnly] private string _dbgPathDestState;
+		[SerializeField, InspectorReadOnly] private int _dbgPathDestOccupants;
+		[SerializeField, InspectorReadOnly] private Vector3Int _dbgPathNextCell;
+		[SerializeField, InspectorReadOnly] private string _dbgPathNextState;
+		[SerializeField, InspectorReadOnly] private string _dbgGridPosState;
+		[SerializeField, InspectorReadOnly] private int _dbgGridPosOccupants;
+
+		[Header("Combat / Targeting")]
+		[SerializeField, InspectorReadOnly] private int _dbgAttackTargetNbr;
+		[SerializeField, InspectorReadOnly] private string _dbgAttackTargetType;
+		[SerializeField, InspectorReadOnly] private float _dbgDistToAttackTarget;
+		[SerializeField, InspectorReadOnly] private bool _dbgInAttackRange;
+		[SerializeField, InspectorReadOnly] private float _dbgAttackCooldown;
+		[SerializeField, InspectorReadOnly] private float _dbgChargeCooldown;
+		[SerializeField, InspectorReadOnly] private int _dbgHealTargetNbr;
+
+		[Header("Tasks (Build / Gather / Train)")]
+		// These four fields are only meaningful while the unit is in the matching action.
+		// taskUnitType / taskTime are scratch fields shared by BUILD/TRAIN; gatherPhase
+		// and totalGold are only used by GATHER. For other actions they hold stale data
+		// (e.g. a warrior's gatherPhase defaults to TO_MINE for life and means nothing).
+		[SerializeField, InspectorReadOnly] private string _dbgTaskTimeRelevant;
+		[SerializeField, InspectorReadOnly] private string _dbgTaskUnitTypeRelevant;
+		[SerializeField, InspectorReadOnly] private string _dbgGatherPhaseRelevant;
+		[SerializeField, InspectorReadOnly] private string _dbgGoldCarriedRelevant;
+
+		/// <summary>
+		/// Refresh all inspector debug fields from live state. Called once per frame
+		/// from Unit.Update(). Has no game-logic side effects.
+		/// </summary>
+		private void RefreshInspectorDebug()
+		{
+			_dbgUnitNbr = UnitNbr;
+			_dbgUnitType = UnitType;
+			_dbgOwner = Agent != null
+				? Agent.GetComponent<AgentController>().Agent.AgentName
+				: "(neutral)";
+			_dbgCurrentAction = CurrentAction;
+			_dbgIsBuilt = IsBuilt;
+
+			_dbgHealth = Health;
+			_dbgMaxHealth = Constants.HEALTH.ContainsKey(UnitType) ? Constants.HEALTH[UnitType] : 0f;
+			_dbgMana = Mana;
+
+			_dbgGridPosition = GridPosition;
+			_dbgCenterGridPosition = CenterGridPosition;
+
+			var grid = GameManager.Instance != null ? GameManager.Instance.Map?.Grid : null;
+			if (_simPath != null && _simPath.Count > 0)
+			{
+				_dbgPathLength = _simPath.Count;
+				_dbgPathIndex = pathIndex;
+				_dbgPathProgress = PathProgress;
+				var dest = _simPath[_simPath.Count - 1];
+				_dbgPathDestination = new Vector3Int(dest.X, dest.Y, 0);
+				if (grid != null)
+				{
+					_dbgPathDestState = grid.GetCell(dest).ToString();
+					_dbgPathDestOccupants = grid.GetOccupantCount(dest);
+				}
+				if (pathIndex >= 0 && pathIndex < _simPath.Count)
+				{
+					var nxt = _simPath[pathIndex];
+					_dbgPathNextCell = new Vector3Int(nxt.X, nxt.Y, 0);
+					if (grid != null)
+						_dbgPathNextState = grid.GetCell(nxt).ToString();
+				}
+				else
+				{
+					_dbgPathNextCell = new Vector3Int(-1, -1, 0);
+					_dbgPathNextState = "";
+				}
+			}
+			else
+			{
+				_dbgPathLength = 0;
+				_dbgPathIndex = 0;
+				_dbgPathProgress = 0f;
+				_dbgPathDestination = new Vector3Int(-1, -1, 0);
+				_dbgPathDestState = "";
+				_dbgPathDestOccupants = 0;
+				_dbgPathNextCell = new Vector3Int(-1, -1, 0);
+				_dbgPathNextState = "";
+			}
+
+			// Show the cell state of where the unit currently stands.
+			if (grid != null)
+			{
+				var here = new AgentSDK.Position(GridPosition.x, GridPosition.y);
+				_dbgGridPosState = grid.GetCell(here).ToString();
+				_dbgGridPosOccupants = grid.GetOccupantCount(here);
+			}
+			else
+			{
+				_dbgGridPosState = "";
+				_dbgGridPosOccupants = 0;
+			}
+
+			_dbgAttackTargetNbr = attackUnitNbr;
+			if (attackUnitNbr >= 0 && GameManager.Instance != null)
+			{
+				var targetUnit = GameManager.Instance.Units.GetUnit(attackUnitNbr);
+				if (targetUnit != null)
+				{
+					_dbgAttackTargetType = targetUnit.UnitType.ToString();
+					var myCenter = AgentSDK.TaskEngine.ComputeCenterPosition(
+						UnitType, new AgentSDK.Position(GridPosition.x, GridPosition.y));
+					var tgtCenter = AgentSDK.TaskEngine.ComputeCenterPosition(
+						targetUnit.UnitType,
+						new AgentSDK.Position(targetUnit.GridPosition.x, targetUnit.GridPosition.y));
+					_dbgDistToAttackTarget = AgentSDK.Position.Distance(myCenter, tgtCenter);
+					_dbgInAttackRange = AgentSDK.TaskEngine.IsInAttackRange(
+						UnitType, myCenter, targetUnit.UnitType, tgtCenter);
+				}
+				else
+				{
+					_dbgAttackTargetType = "(missing)";
+					_dbgDistToAttackTarget = -1f;
+					_dbgInAttackRange = false;
+				}
+			}
+			else
+			{
+				_dbgAttackTargetType = "";
+				_dbgDistToAttackTarget = 0f;
+				_dbgInAttackRange = false;
+			}
+
+			_dbgAttackCooldown = _attackCooldown;
+			_dbgChargeCooldown = _chargeCooldown;
+			_dbgHealTargetNbr = healTargetNbr;
+
+			// Task fields are context-specific. Only show them when the matching action
+			// is active; otherwise mark "n/a" so stale defaults don't mislead.
+			bool buildOrTrain = CurrentAction == UnitAction.BUILD
+				|| CurrentAction == UnitAction.TRAIN
+				|| CurrentAction == UnitAction.REPAIR;
+			bool gathering = CurrentAction == UnitAction.GATHER;
+			_dbgTaskTimeRelevant = buildOrTrain
+				? taskTime.ToString("0.00") + "s"
+				: "n/a (not BUILD/TRAIN/REPAIR)";
+			_dbgTaskUnitTypeRelevant = buildOrTrain
+				? taskUnitType.ToString()
+				: "n/a (not BUILD/TRAIN/REPAIR)";
+			_dbgGatherPhaseRelevant = gathering
+				? gatherPhase.ToString()
+				: "n/a (not GATHER)";
+			_dbgGoldCarriedRelevant = gathering
+				? totalGold.ToString()
+				: "n/a (not GATHER)";
+		}
+
+		#endregion
+
 		#region Data Members
 
 		// State Variables

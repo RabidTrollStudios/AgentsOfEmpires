@@ -434,16 +434,22 @@ namespace AgentSDK
         /// units approaching the same building naturally spread to different cells.
         /// Returns the first successful path.
         /// </summary>
-        public List<Position> FindPathToUnit(Position start, UnitType unitType, Position unitAnchor)
+        public List<Position> FindPathToUnit(
+            Position start, UnitType unitType, Position unitAnchor,
+            HashSet<Position> excludedCells = null)
         {
             // Get all neighbor cells around the target unit
             var allNeighbors = GetPositionsNearUnit(unitType, unitAnchor);
 
-            // Separate into OPEN (preferred) and WALKABLE (fallback) lists
+            // Separate into OPEN (preferred) and WALKABLE (fallback) lists.
+            // Cells already claimed as another unit's destination are skipped — this
+            // prevents multiple pawns from picking the same approach cell when their
+            // commands are issued in the same step.
             var openCells = new List<Position>();
             var walkableCells = new List<Position>();
             foreach (var p in allNeighbors)
             {
+                if (excludedCells != null && excludedCells.Contains(p)) continue;
                 if (cells[p.X, p.Y] == CellState.OPEN)
                     openCells.Add(p);
                 else if (cells[p.X, p.Y] == CellState.WALKABLE)
@@ -480,6 +486,133 @@ namespace AgentSDK
             foreach (var cell in walkableCells)
             {
                 var path = FindPath(start, cell);
+                if (path.Count > 0)
+                    return path;
+            }
+
+            return new List<Position>();
+        }
+
+        /// <summary>
+        /// Find a path to an OPEN cell from which the attacker can attack the target,
+        /// considering full attack range — not just the building's adjacency ring.
+        /// This lets melee units attacking large buildings stand on any nearby OPEN cell
+        /// (including spots two or three cells away from the footprint, if those are
+        /// still inside effective attack range), avoiding stacking when the immediate
+        /// ring is full.
+        ///
+        /// Uses the same range formula as TaskEngine.IsInAttackRange so a unit standing
+        /// on the returned cell will satisfy the in-range check immediately on arrival.
+        ///
+        /// tiebreakKey is mixed into the sort so multiple attackers issuing simultaneous
+        /// commands from the same starting cell pick different stand-cells. Pass the
+        /// attacker's UnitNbr.
+        ///
+        /// excludedCells optionally filters out cells that are already claimed as the
+        /// destination of another unit's current path, even if they're still marked
+        /// OPEN in the grid. This prevents two attackers from picking the same
+        /// destination when both commands are issued in the same step (before either
+        /// unit has physically arrived and marked the cell WALKABLE). Pass null to
+        /// skip this filter.
+        ///
+        /// Returns an empty path if no OPEN cell within attack range is reachable.
+        /// </summary>
+        public List<Position> FindPathToAttackPosition(
+            Position start, UnitType attackerType,
+            UnitType targetType, Position targetAnchor, int tiebreakKey,
+            HashSet<Position> excludedCells = null)
+        {
+            float range = GameConstants.EffectiveAttackRange(attackerType, targetType) + 0.5f;
+            // Slack < 1 cell — IsInAttackRange uses < range + 0.5, so the OPEN cell
+            // must lie strictly inside that disc when the attacker stands on it.
+            float rangeSqr = range * range;
+
+            Position targetCenter = TaskEngine.ComputeCenterPosition(targetType, targetAnchor);
+
+            // Search bound: square of side 2*ceil(range)+1 around the target center.
+            int searchRadius = (int)System.Math.Ceiling(range);
+
+            // Skip cells inside the building footprint itself.
+            var targetSize = GameConstants.UNIT_SIZE[targetType];
+            int footprintMinX = targetAnchor.X;
+            int footprintMaxX = targetAnchor.X + targetSize.X - 1;
+            int footprintMinY = targetAnchor.Y;
+            int footprintMaxY = targetAnchor.Y + targetSize.Y - 1;
+
+            var candidates = new List<Position>();
+            for (int dx = -searchRadius; dx <= searchRadius; dx++)
+            {
+                for (int dy = -searchRadius; dy <= searchRadius; dy++)
+                {
+                    int cx = targetCenter.X + dx;
+                    int cy = targetCenter.Y + dy;
+                    if (cx < 0 || cx >= Width || cy < 0 || cy >= Height) continue;
+
+                    // Skip the footprint itself
+                    if (cx >= footprintMinX && cx <= footprintMaxX
+                        && cy >= footprintMinY && cy <= footprintMaxY) continue;
+
+                    if (cells[cx, cy] != CellState.OPEN) continue;
+
+                    // Distance from this cell (where the attacker would stand) to the
+                    // target center, using float math to match Position.Distance.
+                    float ddx = cx - targetCenter.X;
+                    float ddy = cy - targetCenter.Y;
+                    float distSqr = ddx * ddx + ddy * ddy;
+                    if (distSqr >= rangeSqr) continue;
+
+                    // Exclude cells already claimed by another unit's path destination.
+                    var cellPos = new Position(cx, cy);
+                    if (excludedCells != null && excludedCells.Contains(cellPos)) continue;
+
+                    candidates.Add(cellPos);
+                }
+            }
+
+            if (candidates.Count == 0)
+                return new List<Position>();
+
+            // Sort by squared distance from the mover (closest first).
+            candidates.Sort((a, b) =>
+            {
+                int dxA = a.X - start.X, dyA = a.Y - start.Y;
+                int dxB = b.X - start.X, dyB = b.Y - start.Y;
+                return (dxA * dxA + dyA * dyA).CompareTo(dxB * dxB + dyB * dyB);
+            });
+
+            // Spread attackers: take the K closest candidates and shuffle them by
+            // a per-attacker hash. Multiple units issuing simultaneous attacks from
+            // the same start cell will pick different cells from the same "good
+            // enough" neighborhood, instead of all converging on the single closest.
+            // K is large enough to give 5-10 units room to spread, but small enough
+            // that nobody walks halfway across the map.
+            const int SHUFFLE_WINDOW = 16;
+            int windowEnd = System.Math.Min(SHUFFLE_WINDOW, candidates.Count);
+            int seed = (start.X * 397 ^ start.Y) ^ (tiebreakKey * 1009);
+
+            // Sort the first `windowEnd` candidates by per-attacker hash. (Only shuffle
+            // the closest window — leaving the rest in distance order so the fallback
+            // path is still "go to the next closest reachable cell".)
+            var window = candidates.GetRange(0, windowEnd);
+            window.Sort((a, b) =>
+            {
+                int hashA = (a.X * 31 + a.Y) ^ seed;
+                int hashB = (b.X * 31 + b.Y) ^ seed;
+                return hashA.CompareTo(hashB);
+            });
+
+            // Try shuffled window first.
+            foreach (var cell in window)
+            {
+                var path = FindPath(start, cell);
+                if (path.Count > 0)
+                    return path;
+            }
+
+            // Fallback: try remaining candidates in strict distance order.
+            for (int i = windowEnd; i < candidates.Count; i++)
+            {
+                var path = FindPath(start, candidates[i]);
                 if (path.Count > 0)
                     return path;
             }
