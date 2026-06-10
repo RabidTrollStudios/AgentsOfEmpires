@@ -76,13 +76,13 @@ namespace GameManager
 			}
 			else
 			{
-				// Buildings: anchor is bottom-left. Footprint extends right and up.
-				// Passage row (top, j=sizeY-1) is walkable.
-				// Body rows: 0..sizeY-2 (height = sizeY-1).
-				// Visual center of body: anchor + (sizeX/2, bodyHeight/2)
+				// Buildings: bottom-left anchor; footprint cells span columns [x, x+sizeX)
+				// and rows [y, y+sizeY). Cell (c,r) renders centered at world (c+0.5, r+0.5)
+				// (see MapManager tree placement), so the footprint's visual center is
+				// (x + sizeX/2, y + sizeY/2). Building sprites are center-pivoted (import
+				// alignment 0) and ~sizeY cells tall, so the pivot sits at that center.
 				var size = Constants.UNIT_SIZE[unitType];
-				float bodyHeight = size.y > 1 ? size.y - 1 : size.y;
-				position = gridPosition + new Vector3(size.x * 0.5f, bodyHeight * 0.5f);
+				position = gridPosition + new Vector3(size.x * 0.5f, size.y * 0.5f);
 			}
 
 			GameObject unit = Object.Instantiate(
@@ -122,10 +122,10 @@ namespace GameManager
 		/// </summary>
 		public GameObject PlaceNeutralUnit(Vector3Int gridPosition, UnitType unitType, Color color)
 		{
-			// Bottom-left anchor. Body center for visual placement.
+			// Bottom-left anchor; footprint center is (x + sizeX/2, y + sizeY/2).
+			// Center-pivoted sprite sits at that center. (matches PlaceUnit)
 			var size = Constants.UNIT_SIZE[unitType];
-			float bodyHeight = size.y > 1 ? size.y - 1 : size.y;
-			Vector3 position = gridPosition + new Vector3(size.x * 0.5f, bodyHeight * 0.5f);
+			Vector3 position = gridPosition + new Vector3(size.x * 0.5f, size.y * 0.5f);
 
 			// Use agent 0's prefab (mines look the same regardless)
 			GameObject unit = Object.Instantiate(
