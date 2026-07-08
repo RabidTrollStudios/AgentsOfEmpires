@@ -103,7 +103,6 @@ namespace GameManager.GameElements
 	public partial class Unit
 	{
 		private UnitVisualStateMachine _vsm;
-		private int _lastLancerStateInt = -1;
 
 		internal void InitializeVisualStateMachine()
 		{

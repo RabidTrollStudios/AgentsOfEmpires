@@ -19,7 +19,6 @@ namespace GameManager.GameElements
 	public partial class Unit
 	{
 		private bool facingRight = true;
-		private bool useAttack2 = false;
 		private float lastAttackNormTime = 0f;
 
 		#region Update Methods

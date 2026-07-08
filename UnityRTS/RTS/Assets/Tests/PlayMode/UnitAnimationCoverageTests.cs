@@ -127,11 +127,12 @@ namespace GameManager.Tests.PlayMode
 
 		#endregion
 
-		#region Warrior useAttack2 toggle (Unit.Movement.cs:437)
+		#region Warrior attack alternation (Attack1 <-> Attack2)
 
 		/// <summary>
-		/// Warrior attack animation alternates between Attack1 and Attack2
-		/// when normalizedTime crosses 1.0. Covers the useAttack2 toggle line.
+		/// Warrior attack animation alternates between Attack1 (State 2) and Attack2
+		/// (State 3) when the attack animation completes a loop. The alternation is
+		/// driven by the visual state machine, surfaced via the animator "State" param.
 		/// </summary>
 		[UnityTest]
 		public IEnumerator Warrior_Attack_AlternatesAttackAnimation()
@@ -162,24 +163,31 @@ namespace GameManager.Tests.PlayMode
 					break;
 			}
 
-			// Advance animation past normalizedTime 1.0 to trigger useAttack2 toggle
-			bool toggled = false;
-			bool initialUseAttack2 = GetPrivateField<bool>(warrior, "useAttack2");
+			// Advance past normalizedTime 1.0 to trigger the Attack1<->Attack2 flip.
+			// Warrior attack states: 2 = Attack1, 3 = Attack2.
+			bool alternated = false;
+			int firstAttackState = -1; // the attack state we first observe
 			for (int step = 0; step < 80; step++)
 			{
 				animator.Update(0.1f);
-				warrior.Update(); // calls UpdateAnimation
+				warrior.Update(); // calls UpdateAnimation, which drives "State"
 				yield return null;
 
-				bool currentUseAttack2 = GetPrivateField<bool>(warrior, "useAttack2");
-				if (currentUseAttack2 != initialUseAttack2)
+				int currentState = animator.GetInteger("State");
+				if (currentState != 2 && currentState != 3)
+					continue; // only track attack states
+
+				if (firstAttackState < 0)
+					firstAttackState = currentState;
+				else if (currentState != firstAttackState)
 				{
-					toggled = true;
+					alternated = true;
 					break;
 				}
 			}
 
-			Assert.IsTrue(toggled, "useAttack2 should toggle after attack animation completes a loop");
+			Assert.IsTrue(alternated,
+				"Warrior should alternate between Attack1 (State 2) and Attack2 (State 3) after the attack animation completes a loop");
 		}
 
 		#endregion
