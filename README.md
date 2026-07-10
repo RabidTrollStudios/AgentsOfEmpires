@@ -259,4 +259,6 @@ Released under the [MIT License](LICENSE). © 2026 Rabid Troll Studios LLC.
 
 This repository also bundles third-party assets and packages (e.g. Unity packages and sprite
 art) that are covered by their own licenses; those licenses remain in effect for the
-respective files.
+respective files. See [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md) for the inventory.
+
+Security issues? See our [Security Policy](SECURITY.md).
