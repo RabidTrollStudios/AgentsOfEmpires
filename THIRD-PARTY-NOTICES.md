@@ -22,12 +22,38 @@ own license file, that file is authoritative.
 - **Location:** `UnityRTS/RTS/Assets/Tiny Swords/`
 - **What it is:** 2D sprite art used for the game's visual front-end (buildings, pawns
   and resources, terrain, UI elements, particle FX).
-- **Author / source:** **[VERIFY]** — record the creator and where it was obtained
-  (e.g. asset store, itch.io, direct license).
-- **License:** **[VERIFY]** — confirm the asset's license and whether it permits
-  redistribution in a public repository. If the license does **not** permit
-  redistribution, the art should be removed from the repo and documented as a
-  separately-obtained dependency instead.
+- **Source:** Unity Asset Store —
+  <https://assetstore.unity.com/packages/2d/environments/tiny-swords-352566>
+- **License:** [Unity Asset Store EULA](https://unity.com/legal/as-terms).
+
+> ### ⚠️ Redistribution is NOT permitted — this art must be removed before public release
+>
+> The Unity Asset Store EULA (Appendix 1, **§2.2.1.1(d)**) prohibits the END-USER from
+> distributing an Asset except as **embedded within a compiled "Licensed Product"** —
+> i.e. baked into a shipped application where the Asset "does not comprise a substantial
+> portion" of it (§2.2.1(a)–(b)). All rights not expressly granted are reserved
+> (§9.2).
+>
+> Committing the **raw sprite files to a public repository** is *not* an embedded
+> Licensed Product — it distributes the original, extractable Asset files, which the
+> EULA does not permit. **Hosting this art in a public repo is therefore a license
+> violation.**
+>
+> **Required action before this repository is made (or kept) public:**
+> 1. Remove the `UnityRTS/RTS/Assets/Tiny Swords/` files from the repository, and
+>    purge them from git **history** (not just the latest commit — a deletion commit
+>    still leaves the files downloadable from earlier history).
+> 2. Add the path to `.gitignore`.
+> 3. Document Tiny Swords as a **separately-obtained dependency**: contributors who
+>    want the visuals must purchase/download it themselves from the Asset Store link
+>    above and place it under `Assets/Tiny Swords/`.
+>
+> The engine, SDK, tests, and headless simulation do **not** depend on this art — only
+> the Unity visualization front-end does — so removing it does not affect building or
+> running matches headlessly.
+>
+> *This note reflects a reading of the EULA text, not formal legal advice; confirm with
+> counsel if in doubt.*
 
 ---
 
