@@ -19,14 +19,14 @@ namespace GameManager.EditorTools
     {
         private static readonly string[] ATLAS_PATHS = new string[] {
             null, // index 0 unused
-            "Assets/Tiny Swords/Terrain/Tileset/Tilemap_color1.png",
-            "Assets/Tiny Swords/Terrain/Tileset/Tilemap_color2.png",
-            "Assets/Tiny Swords/Terrain/Tileset/Tilemap_color3.png",
-            "Assets/Tiny Swords/Terrain/Tileset/Tilemap_color4.png",
-            "Assets/Tiny Swords/Terrain/Tileset/Tilemap_color5.png",
+            "Assets/PlaceholderArt/Terrain/Tileset/Tilemap_color1.png",
+            "Assets/PlaceholderArt/Terrain/Tileset/Tilemap_color2.png",
+            "Assets/PlaceholderArt/Terrain/Tileset/Tilemap_color3.png",
+            "Assets/PlaceholderArt/Terrain/Tileset/Tilemap_color4.png",
+            "Assets/PlaceholderArt/Terrain/Tileset/Tilemap_color5.png",
         };
 
-        private const string OUTPUT_DIR = "Assets/Tiny Swords/Terrain/Tileset/Rule Tiles";
+        private const string OUTPUT_DIR = "Assets/PlaceholderArt/Terrain/Tileset/Rule Tiles";
 
         // Neighbor constraint values (from RuleTile.TilingRuleOutput.Neighbor)
         private const int DC = 0;   // Don't care
@@ -38,7 +38,7 @@ namespace GameManager.EditorTools
         {
             if (!AssetDatabase.IsValidFolder(OUTPUT_DIR))
             {
-                AssetDatabase.CreateFolder("Assets/Tiny Swords/Terrain/Tileset", "Rule Tiles");
+                AssetDatabase.CreateFolder("Assets/PlaceholderArt/Terrain/Tileset", "Rule Tiles");
             }
 
             for (int color = 1; color <= 1; color++)
