@@ -7,7 +7,7 @@ PROJECT_ROOT="$SCRIPT_DIR/.."
 
 echo "Cleaning build artifacts..."
 
-for proj in AgentSDK PlanningAgent Opponents AgentTestHarness PlanningAgent.Tests; do
+for proj in AgentSDK PlanningAgent Opponents AgentTestHarness Gameplay.Tests Opponent.Tests Parity.Tests; do
     if [ -d "$PROJECT_ROOT/$proj" ]; then
         echo "  Cleaning $proj..."
         dotnet clean "$PROJECT_ROOT/$proj" --nologo -v quiet 2>/dev/null || true
