@@ -281,7 +281,7 @@ namespace GameManager.GameElements
 				healthBarFill.localPosition = new Vector3(
 					SM_BAR_FILL_X_OFFSET + leftEdgeOffset, SM_BAR_FILL_Y_OFFSET, 0f);
 
-				healthBarBg.localScale = new Vector3(SM_BAR_SCALE, SM_BAR_SCALE, 1f);
+				healthBarBg.localScale = new Vector3(SM_BAR_SCALE_X, SM_BAR_SCALE_Y, 1f);
 				healthBarBg.localPosition = new Vector3(0f, SM_BAR_Y_OFFSET, 0f);
 			}
 
