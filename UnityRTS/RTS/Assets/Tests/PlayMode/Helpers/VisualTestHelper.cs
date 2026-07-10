@@ -15,27 +15,27 @@ namespace GameManager.Tests.PlayMode
 	{
 		// Asset paths (relative to project root)
 		private const string ARROW_SPRITE_PATH =
-			"Assets/Tiny Swords/Units/Extra/Arrow/Arrow.png";
+			"Assets/PlaceholderArt/Units/Extra/Arrow/Arrow.png";
 		private const string GOLD_SPRITE_PATH =
-			"Assets/Tiny Swords/Pawn and Resources/Gold/Gold Resource/Gold_Resource.png";
+			"Assets/PlaceholderArt/Pawn and Resources/Gold/Gold Resource/Gold_Resource.png";
 		private const string DUST2_CONTROLLER_PATH =
-			"Assets/Tiny Swords/Particle FX/Dust 2 Animation/Dust 2.controller";
+			"Assets/PlaceholderArt/Particle FX/Dust 2 Animation/Dust 2.controller";
 		private const string FIRE1_CONTROLLER_PATH =
-			"Assets/Tiny Swords/Particle FX/Fire 1 Animation/Fire 1.controller";
+			"Assets/PlaceholderArt/Particle FX/Fire 1 Animation/Fire 1.controller";
 		private const string FIRE2_CONTROLLER_PATH =
-			"Assets/Tiny Swords/Particle FX/Fire 2 Animation/Fire 2.controller";
+			"Assets/PlaceholderArt/Particle FX/Fire 2 Animation/Fire 2.controller";
 		private const string FIRE3_CONTROLLER_PATH =
-			"Assets/Tiny Swords/Particle FX/FIre 3 Animation/Fire 3.controller";
+			"Assets/PlaceholderArt/Particle FX/FIre 3 Animation/Fire 3.controller";
 		private const string EXPLOSION_CONTROLLER_PATH =
-			"Assets/Tiny Swords/Particle FX/Explosion 2 Animation/Explosion 2.controller";
+			"Assets/PlaceholderArt/Particle FX/Explosion 2 Animation/Explosion 2.controller";
 		private const string LANCER_BLUE_CONTROLLER_PATH =
-			"Assets/Tiny Swords/Units/Blue Units/Lancer/Lancer Blue Animations/Lancer_Blue.controller";
+			"Assets/PlaceholderArt/Units/Blue Units/Lancer/Lancer Blue Animations/Lancer_Blue.controller";
 		private const string WARRIOR_BLUE_CONTROLLER_PATH =
-			"Assets/Tiny Swords/Units/Blue Units/Warrior/Warrior Blue Animations/Warrior_Blue.controller";
+			"Assets/PlaceholderArt/Units/Blue Units/Warrior/Warrior Blue Animations/Warrior_Blue.controller";
 		private const string ARCHER_BLUE_CONTROLLER_PATH =
-			"Assets/Tiny Swords/Units/Blue Units/Archer/Archer Blue Animations/Archer_Blue.controller";
+			"Assets/PlaceholderArt/Units/Blue Units/Archer/Archer Blue Animations/Archer_Blue.controller";
 		private const string PAWN_BLUE_CONTROLLER_PATH =
-			"Assets/Tiny Swords/Pawn and Resources/Pawn/Blue Pawn/Pawn Blue Animations/Pawn_Blue.controller";
+			"Assets/PlaceholderArt/Pawn and Resources/Pawn/Blue Pawn/Pawn Blue Animations/Pawn_Blue.controller";
 		private const string MINE_CONTROLLER_PATH =
 			"Assets/Animators/Mine Animator.controller";
 
