@@ -304,7 +304,7 @@ namespace GameManager
 			text.font = font;
 			text.fontSize = fontSize;
 			text.alignment = TextAnchor.MiddleCenter;
-			text.color = Color.white;
+			text.color = Color.black;
 			text.raycastTarget = false;
 			return text;
 		}
