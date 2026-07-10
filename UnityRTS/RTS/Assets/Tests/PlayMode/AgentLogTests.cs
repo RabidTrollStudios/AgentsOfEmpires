@@ -215,15 +215,15 @@ namespace GameManager.Tests.PlayMode
 			Assert.DoesNotThrow(() => bridge.CloseCommandLog());
 		}
 
-		// ── Update (virtual, empty base) ──────────────────────────────────────
+		// ── TickAgent (per-tick agent decision) ───────────────────────────────
 
 		[UnityTest]
-		public IEnumerator Update_DoesNotThrow()
+		public IEnumerator TickAgent_DoesNotThrow()
 		{
 			yield return null;
 			var bridge = CreateAgentBridge("Blue", "TestDLL", 0);
 
-			Assert.DoesNotThrow(() => bridge.Update());
+			Assert.DoesNotThrow(() => bridge.TickAgent());
 		}
 
 		// ── OnDestroy ─────────────────────────────────────────────────────────

@@ -52,7 +52,7 @@ namespace GameManager
             planningAgent?.InitializeRound(gameState);
         }
 
-        public override void Update()
+        public override void TickAgent()
         {
             if (planningAgent == null || !GameManager.Instance.IsPlaying) return;
             planningAgent.Update(gameState, actions);

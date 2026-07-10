@@ -15,7 +15,7 @@ namespace AgentTestHarness
     /// 3. Advance all in-progress unit tasks (move, train, build, gather, attack)
     /// 4. Remove dead units (health &lt;= 0)
     /// </summary>
-    public partial class SimGame
+    public partial class SimGame : ITickParticipant
     {
         public SimMap Map { get; }
         public SimConfig Config { get; }
@@ -165,21 +165,33 @@ namespace AgentTestHarness
         /// </summary>
         public void Tick()
         {
-            // Phase 1: Process commands queued during the PREVIOUS tick's Agent Update.
-            ProcessCommandsSorted();
+            // Drive one tick through the canonical shared phase order (see AgentSDK.TickSequence).
+            // Identical ordering is used by Unity's GameManager, guaranteeing per-tick parity.
+            TickSequence.RunOneTick(this, CurrentTick);
+            CurrentTick++;
+        }
 
-            // Phase 2: Advance tasks/movement, mana regen, remove dead (shared TickEngine).
-            AdvanceAllUnits();
+        // --- ITickParticipant: the four canonical tick phases ---
 
-            // Phase 3: Agent Update (agents see post-advance state, queue commands for next tick).
+        /// <summary>Phase 0: the headless sim has no exporter; state is observed by the
+        /// caller after Tick(). No-op unless a snapshot sink is later added.</summary>
+        void ITickParticipant.RecordSnapshot(int tick) { /* headless: nothing to export */ }
+
+        /// <summary>Phase 1: process commands queued during the previous tick's agent Update.</summary>
+        void ITickParticipant.ProcessQueuedCommands() => ProcessCommandsSorted();
+
+        /// <summary>Phase 2: advance tasks/movement, mana regen, remove dead (shared TickEngine).</summary>
+        void ITickParticipant.AdvanceUnits() => AdvanceAllUnits();
+
+        /// <summary>Phase 3: run each agent's Update; agents queue commands for the next tick.</summary>
+        void ITickParticipant.RunAgentUpdates()
+        {
             for (int a = 0; a < 2; a++)
             {
                 actions[a].ClearPending();
                 IAgentActions agentActions = recorders != null ? (IAgentActions)recorders[a] : actions[a];
                 agents[a]?.Update(states[a], agentActions);
             }
-
-            CurrentTick++;
         }
 
         /// <summary>Run the simulation for a fixed number of ticks.</summary>
