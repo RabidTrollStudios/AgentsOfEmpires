@@ -41,7 +41,7 @@ namespace GameManager.Tests
 		public void PriorityNode_InitialIndex_IsMinusOne()
 		{
 			var node = new PriorityNode<int>(0, 1.0);
-			Assert.AreEqual(-1, node.index,
+			Assert.AreEqual(-1, node.Index,
 				"Newly created PriorityNode should have index = -1 (not yet in queue)");
 		}
 
@@ -82,7 +82,7 @@ namespace GameManager.Tests
 			pq.Enqueue(original); // sets index to 0
 
 			var copy = new PriorityNode<int>(original);
-			Assert.AreEqual(original.index, copy.index,
+			Assert.AreEqual(original.Index, copy.Index,
 				"Copy ctor should preserve the index value");
 		}
 
@@ -155,7 +155,7 @@ namespace GameManager.Tests
 			var node = new PriorityNode<int>(42, 1.0);
 			pq.Enqueue(node);
 
-			Assert.GreaterOrEqual(node.index, 0,
+			Assert.GreaterOrEqual(node.Index, 0,
 				"After enqueue, node.index should be a valid heap position");
 		}
 
@@ -172,7 +172,7 @@ namespace GameManager.Tests
 			pq.Enqueue(nodeA);
 			pq.Enqueue(nodeB);
 
-			Assert.AreEqual(0, nodeB.index,
+			Assert.AreEqual(0, nodeB.Index,
 				"The node with the lowest priority value should be at heap root (index 0)");
 		}
 
