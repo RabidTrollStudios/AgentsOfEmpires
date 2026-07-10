@@ -10,7 +10,7 @@ namespace GameManager.Tests.PlayMode
 	/// <summary>
 	/// PlayMode tests for animation state management:
 	/// - Lancer state hash initialization and directional attacks
-	/// - Warrior attack animation toggle (useAttack2)
+	/// - Warrior attack animation alternation (Attack1 <-> Attack2 VSM states)
 	/// - Pawn/Archer animation state selection
 	/// Uses real AnimatorControllers via VisualTestHelper.
 	/// </summary>
@@ -162,7 +162,7 @@ namespace GameManager.Tests.PlayMode
 
 		/// <summary>
 		/// Warrior attacking with real animator transitions between
-		/// Attack1 and Attack2 states (useAttack2 toggle).
+		/// the Attack1 and Attack2 VSM states.
 		/// </summary>
 		[UnityTest]
 		public IEnumerator Warrior_Attacking_AnimationPlaysWithoutCrash()
@@ -176,7 +176,7 @@ namespace GameManager.Tests.PlayMode
 			Assert.AreEqual(UnitAction.ATTACK, warrior.CurrentAction);
 
 			// Tick many frames to allow the animation to complete one loop
-			// and potentially trigger the useAttack2 toggle
+			// and potentially alternate to the other attack state
 			for (int i = 0; i < 60; i++)
 			{
 				BuildingTestHelper.Tick(warrior);

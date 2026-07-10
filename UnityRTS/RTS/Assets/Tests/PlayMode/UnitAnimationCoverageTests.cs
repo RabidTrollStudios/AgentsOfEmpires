@@ -127,11 +127,12 @@ namespace GameManager.Tests.PlayMode
 
 		#endregion
 
-		#region Warrior useAttack2 toggle (Unit.Movement.cs:437)
+		#region Warrior attack alternation (Attack1 <-> Attack2 VSM states)
 
 		/// <summary>
-		/// Warrior attack animation alternates between Attack1 and Attack2
-		/// when normalizedTime crosses 1.0. Covers the useAttack2 toggle line.
+		/// Warrior attack animation alternates between the Attack1 and Attack2
+		/// visual-state-machine states as each attack loop completes
+		/// (see CreateWarriorVSM transitions in Unit.VisualState.cs).
 		/// </summary>
 		[UnityTest]
 		public IEnumerator Warrior_Attack_AlternatesAttackAnimation()
@@ -162,24 +163,28 @@ namespace GameManager.Tests.PlayMode
 					break;
 			}
 
-			// Advance animation past normalizedTime 1.0 to trigger useAttack2 toggle
-			bool toggled = false;
-			bool initialUseAttack2 = GetPrivateField<bool>(warrior, "useAttack2");
-			for (int step = 0; step < 80; step++)
+			// Advance the animation across several loops; the warrior VSM should
+			// visit BOTH the Attack1 (state int 2) and Attack2 (state int 3) states,
+			// proving the attack animation alternates as each loop completes.
+			const int Attack1StateInt = 2;
+			const int Attack2StateInt = 3;
+			bool sawAttack1 = false;
+			bool sawAttack2 = false;
+			for (int step = 0; step < 80 && !(sawAttack1 && sawAttack2); step++)
 			{
 				animator.Update(0.1f);
-				warrior.Update(); // calls UpdateAnimation
-				yield return null;
+				warrior.Update(); // calls UpdateAnimation, which ticks the VSM
 
-				bool currentUseAttack2 = GetPrivateField<bool>(warrior, "useAttack2");
-				if (currentUseAttack2 != initialUseAttack2)
-				{
-					toggled = true;
-					break;
-				}
+				var vsm = GetPrivateField<UnitVisualStateMachine>(warrior, "_vsm");
+				int stateInt = vsm != null ? vsm.AnimatorStateInt : -1;
+				if (stateInt == Attack1StateInt) sawAttack1 = true;
+				if (stateInt == Attack2StateInt) sawAttack2 = true;
+
+				yield return null;
 			}
 
-			Assert.IsTrue(toggled, "useAttack2 should toggle after attack animation completes a loop");
+			Assert.IsTrue(sawAttack1 && sawAttack2,
+				"Warrior attack should alternate between the Attack1 and Attack2 VSM states");
 		}
 
 		#endregion
