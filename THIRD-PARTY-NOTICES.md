@@ -57,6 +57,26 @@ own license file, that file is authoritative.
 
 ---
 
+## Fonts
+
+### Kingthings Foundation
+
+- **Location:** `UnityRTS/RTS/Assets/Fonts/KingsThings/Kingthings Foundation.ttf`
+- **Author / source:** Kevin King, <https://www.kingthingsfonts.co.uk>
+- **License:** free for any use, per the Kingthings EULA — the only condition is that the
+  original `.TTF` file must not be modified. This permits redistribution (including in a
+  public repository) and imposes no restriction on use as ML-training input. The bundled
+  file is unmodified. *(The paid CheapProFonts versions of Kingthings fonts carry a
+  separate EULA and are not used here.)*
+
+### LiberationSans (TextMesh Pro)
+
+- **Location:** `UnityRTS/RTS/Assets/TextMesh Pro/Fonts/LiberationSans.ttf`
+- **License:** [SIL Open Font License](https://scripts.sil.org/OFL) — see the bundled
+  `LiberationSans - OFL.txt`. Redistributable.
+
+---
+
 ## Unity packages & plugins
 
 ### MobileDependencyResolver
