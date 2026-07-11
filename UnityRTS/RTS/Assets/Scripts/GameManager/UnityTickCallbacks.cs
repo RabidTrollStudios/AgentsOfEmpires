@@ -44,7 +44,10 @@ namespace GameManager
                 u.SpawnDeathDust();
         }
 
-        public void OnTrainingComplete(ITickUnit building, ITickUnit spawnedUnit) { }
+        public void OnTrainingComplete(ITickUnit building, ITickUnit spawnedUnit)
+        {
+            UnityEngine.Debug.Log($"[TRAINDBG] OnTrainingComplete: {building.UnitType} -> spawned {spawnedUnit?.UnitType} #{spawnedUnit?.UnitNbr}");
+        }
 
         public void OnBuildProgress(ITickUnit pawn, ITickUnit building, float progress, float total)
         {
