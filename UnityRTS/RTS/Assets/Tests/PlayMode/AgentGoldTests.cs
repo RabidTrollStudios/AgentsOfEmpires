@@ -189,9 +189,12 @@ namespace GameManager.Tests.PlayMode
 		{
 			Unit baseUnit = PlaceUnit(UnitType.BASE, new Vector3Int(5, 5, 0));
 			baseUnit.IsBuilt = true;
-			Unit mine = PlaceUnit(UnitType.MINE, new Vector3Int(20, 10, 0));
-			// Pawn must be outside the BASE footprint (6x4: x=[5,10], y=[5,8] bottom-left)
-			Unit pawn = PlaceUnit(UnitType.PAWN, new Vector3Int(12, 10, 0));
+			// Mine placed adjacent to the base so gather trips are short and fast.
+			// Distance is incidental to this test — it only checks that a deposit occurs.
+			// BASE 6x4 occupies x=[5,10], y=[5,8]; MINE 3x3 at (12,7) occupies x=[12,14], y=[5,7].
+			Unit mine = PlaceUnit(UnitType.MINE, new Vector3Int(12, 7, 0));
+			// Pawn in the gap between base (edge x=10) and mine (x=12), outside both footprints.
+			Unit pawn = PlaceUnit(UnitType.PAWN, new Vector3Int(11, 7, 0));
 
 			Agent agent = GetAgent0();
 			int initialGold = agent.Gold;
@@ -216,9 +219,12 @@ namespace GameManager.Tests.PlayMode
 		{
 			Unit baseUnit = PlaceUnit(UnitType.BASE, new Vector3Int(5, 5, 0));
 			baseUnit.IsBuilt = true;
-			Unit mine = PlaceUnit(UnitType.MINE, new Vector3Int(20, 10, 0));
-			// Pawn must be outside the BASE footprint (6x4: x=[5,10], y=[5,8] bottom-left)
-			Unit pawn = PlaceUnit(UnitType.PAWN, new Vector3Int(12, 10, 0));
+			// Mine adjacent to the base: two full gather trips must fit in the timeout.
+			// Distance is incidental — this test checks gold COMPOUNDING over trips, not travel.
+			// BASE 6x4 occupies x=[5,10], y=[5,8]; MINE 3x3 at (12,7) occupies x=[12,14], y=[5,7].
+			Unit mine = PlaceUnit(UnitType.MINE, new Vector3Int(12, 7, 0));
+			// Pawn in the gap between base (edge x=10) and mine (x=12), outside both footprints.
+			Unit pawn = PlaceUnit(UnitType.PAWN, new Vector3Int(11, 7, 0));
 
 			Agent agent = GetAgent0();
 			int initialGold = agent.Gold;
