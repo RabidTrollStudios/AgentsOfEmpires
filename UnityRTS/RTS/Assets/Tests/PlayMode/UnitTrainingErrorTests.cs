@@ -26,7 +26,7 @@ namespace GameManager.Tests.PlayMode
 			return baseUnit;
 		}
 
-		private void TickUnit(Unit unit) => unit.Update();
+		private void TickUnit(Unit unit) { unit.TickFixedUpdate(); unit.Update(); }
 
 		// ── Error conditions ───────────────────────────────────────────────────
 
