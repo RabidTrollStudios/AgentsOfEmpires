@@ -157,10 +157,15 @@ namespace GameManager.Tests.PlayMode
 			// Destroy the unit
 			warrior.Health = 0;
 
-			yield return WaitUntil(
-				() => ctx.UnitManager.GetUnit(warriorNbr) == null,
-				timeoutSeconds: 10f,
-				failMessage: "Warrior was not destroyed");
+			// The test GameManager GO is inactive, so FixedUpdate never fires. Drive
+			// ticks explicitly — dead units are reaped in TickEngine.AdvanceAllUnits.
+			int guard = 0;
+			while (ctx.UnitManager.GetUnit(warriorNbr) != null && guard++ < 20)
+			{
+				BuildingTestHelper.Tick(warrior);
+				yield return null;
+			}
+			Assert.IsNull(ctx.UnitManager.GetUnit(warriorNbr), "Warrior was not destroyed");
 
 			var warriorsAfter = ctx.UnitManager.GetUnitNbrsOfType(UnitType.WARRIOR, agent0Nbr);
 			Assert.IsFalse(warriorsAfter.Contains(warriorNbr),
