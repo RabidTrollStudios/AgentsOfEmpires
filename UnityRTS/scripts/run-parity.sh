@@ -7,7 +7,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$SCRIPT_DIR/.."
 
 echo "Running parity tests..."
-dotnet test "$PROJECT_ROOT/PlanningAgent.Tests/PlanningAgent.Tests.csproj" \
+dotnet test "$PROJECT_ROOT/Parity.Tests/Parity.Tests.csproj" \
     --nologo \
     --filter "FullyQualifiedName~Parity" \
     "$@"

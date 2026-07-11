@@ -199,7 +199,10 @@ namespace GameManager.GameElements
 		private int lastFireThreshold = 50; // starts at 100% = 50 (100/2)
 		// Small bar (mobile units): SmallBar_Base visible = 94x19 px, inner channel = 82x9 px
 		// PPU = 64.  Channel spans image y=[27,35], center at y=31 (sprite center y=32).
-		private const float SM_BAR_SCALE = 64f / 94f;            // uniform scale → visible = 1 cell
+		// Base is now a solid rectangle (placeholder art); size it to ~10% larger than the
+		// fill so it reads as a thin frame rather than a large panel. Base sprite = 192x64 px.
+		private const float SM_BAR_SCALE_X = 0.295541f;          // base X → ~2.6px border each side
+		private const float SM_BAR_SCALE_Y = 0.128324f;          // base Y → matching ~2.6px border top/bottom
 		private const float SM_BAR_FILL_SCALE_X = 0.629089713f;  // fill X scale (tuned to frame)
 		private const float SM_BAR_FILL_SCALE_Y = 0.339356124f;  // fill Y scale (tuned to frame)
 		private const float SM_BAR_FILL_X_OFFSET = 0.00120000006f;
@@ -207,8 +210,8 @@ namespace GameManager.GameElements
 		private const float SM_BAR_Y_OFFSET = 1.0f;
 
 		// Big bar (buildings/mines): tuned in editor
-		private const float BIG_BAR_SCALE_X = 0.928591847f;
-		private const float BIG_BAR_SCALE_Y = 0.528470576f;
+		private const float BIG_BAR_SCALE_X = 0.481496f;  // base X → ~4.2px border each side (solid-rect base)
+		private const float BIG_BAR_SCALE_Y = 0.303666f;  // base Y → matching ~4.2px border top/bottom
 		private const float BIG_BAR_Y_OFFSET = 2.67000008f;
 		private const float BIG_BAR_FILL_SCALE_X = 0.933809578f;
 		private const float BIG_BAR_FILL_SCALE_Y = 0.580541074f;
@@ -703,7 +706,7 @@ namespace GameManager.GameElements
 				var bgObj = new GameObject("HealthBarFrame");
 				bgObj.transform.SetParent(transform);
 				bgObj.transform.localPosition = new Vector3(0f, SM_BAR_Y_OFFSET, 0f);
-				bgObj.transform.localScale = new Vector3(SM_BAR_SCALE, SM_BAR_SCALE, 1f);
+				bgObj.transform.localScale = new Vector3(SM_BAR_SCALE_X, SM_BAR_SCALE_Y, 1f);
 				var bgSr = bgObj.AddComponent<SpriteRenderer>();
 				bgSr.sprite = GameManager.Instance.SmallBarBase;
 				bgSr.sortingLayerName = "AgentUI";
@@ -730,7 +733,7 @@ namespace GameManager.GameElements
 					var manaBgObj = new GameObject("ManaBarFrame");
 					manaBgObj.transform.SetParent(transform);
 					manaBgObj.transform.localPosition = new Vector3(0f, manaBarY, 0f);
-					manaBgObj.transform.localScale = new Vector3(SM_BAR_SCALE, SM_BAR_SCALE, 1f);
+					manaBgObj.transform.localScale = new Vector3(SM_BAR_SCALE_X, SM_BAR_SCALE_Y, 1f);
 					var manaBgSr = manaBgObj.AddComponent<SpriteRenderer>();
 					manaBgSr.sprite = GameManager.Instance.SmallBarBase;
 					manaBgSr.sortingLayerName = "AgentUI";

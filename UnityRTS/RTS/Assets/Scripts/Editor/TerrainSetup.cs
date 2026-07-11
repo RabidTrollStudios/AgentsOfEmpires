@@ -6,7 +6,7 @@ using GridPalette = UnityEditor.GridPalette;
 namespace GameManager.EditorTools
 {
     /// <summary>
-    /// Editor tool to set up Tiny Swords terrain tilemap layers.
+    /// Editor tool to set up placeholder terrain tilemap layers.
     /// Adds a Water Background layer behind everything and fills the
     /// Flat Ground layer with the FlatGround_color1 rule tile,
     /// leaving a water border around the edges.
@@ -46,9 +46,9 @@ namespace GameManager.EditorTools
 
             // Load tile assets
             var waterBgTile = AssetDatabase.LoadAssetAtPath<TileBase>(
-                "Assets/Tiny Swords/Terrain/Tileset/Tilemap Settings/Water Background color.asset");
+                "Assets/PlaceholderArt/Terrain/Tileset/Tilemap Settings/Water Background color.asset");
             var flatGroundTile = AssetDatabase.LoadAssetAtPath<TileBase>(
-                "Assets/Tiny Swords/Terrain/Tileset/Rule Tiles/FlatGround_color1.asset");
+                "Assets/PlaceholderArt/Terrain/Tileset/Rule Tiles/FlatGround_color1.asset");
 
             if (waterBgTile == null)
             {
@@ -210,10 +210,10 @@ namespace GameManager.EditorTools
         [MenuItem("Tools/Terrain/Create Terrain Tile Palette")]
         public static void CreateTerrainPalette()
         {
-            string paletteDir = "Assets/Tiny Swords/Terrain/Tileset/Palette";
+            string paletteDir = "Assets/PlaceholderArt/Terrain/Tileset/Palette";
             if (!AssetDatabase.IsValidFolder(paletteDir))
             {
-                AssetDatabase.CreateFolder("Assets/Tiny Swords/Terrain/Tileset", "Palette");
+                AssetDatabase.CreateFolder("Assets/PlaceholderArt/Terrain/Tileset", "Palette");
             }
 
             string palettePath = paletteDir + "/Terrain Palette.prefab";
@@ -231,13 +231,13 @@ namespace GameManager.EditorTools
             // Load all the tiles we want in the palette
             var tiles = new (string name, string path, Vector3Int pos)[]
             {
-                ("FlatGround", "Assets/Tiny Swords/Terrain/Tileset/Rule Tiles/FlatGround_color1.asset",
+                ("FlatGround", "Assets/PlaceholderArt/Terrain/Tileset/Rule Tiles/FlatGround_color1.asset",
                     new Vector3Int(0, 0, 0)),
-                ("Water BG", "Assets/Tiny Swords/Terrain/Tileset/Tilemap Settings/Water Background color.asset",
+                ("Water BG", "Assets/PlaceholderArt/Terrain/Tileset/Tilemap Settings/Water Background color.asset",
                     new Vector3Int(1, 0, 0)),
-                ("Water Foam", "Assets/Tiny Swords/Terrain/Tileset/Tilemap Settings/Water Tile animated.asset",
+                ("Water Foam", "Assets/PlaceholderArt/Terrain/Tileset/Tilemap Settings/Water Tile animated.asset",
                     new Vector3Int(2, 0, 0)),
-                ("Shadow", "Assets/Tiny Swords/Terrain/Tileset/Tilemap Settings/Shadow.asset",
+                ("Shadow", "Assets/PlaceholderArt/Terrain/Tileset/Tilemap Settings/Shadow.asset",
                     new Vector3Int(3, 0, 0)),
             };
 
@@ -273,7 +273,7 @@ namespace GameManager.EditorTools
             // Add individual sliced tiles for manual placement (stairs, cliffs)
             // Row 2: Left side flat ground pieces (sp0-sp27 that aren't covered by the rule tile)
             // Row 3: Right side elevated/cliff pieces
-            string tileSettingsDir = "Assets/Tiny Swords/Terrain/Tileset/Tilemap Settings";
+            string tileSettingsDir = "Assets/PlaceholderArt/Terrain/Tileset/Tilemap Settings";
             for (int i = 0; i <= 43; i++)
             {
                 string tilePath = $"{tileSettingsDir}/Tilemap_color1_{i}.asset";
