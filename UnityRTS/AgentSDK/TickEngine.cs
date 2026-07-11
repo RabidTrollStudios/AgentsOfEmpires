@@ -136,21 +136,27 @@ namespace AgentSDK
             if (pawn.TickPath != null && pawn.PathIndex < pawn.TickPath.Count)
                 return;
 
-            pawn.BuildTimer += world.TickDuration;
+            // Progress accumulates ON THE BUILDING, so it survives the pawn's death
+            // and can be resumed by another pawn (see CommandProcessor.ProcessBuild).
+            var building = world.GetUnit(pawn.BuildTargetNbr);
+            if (building == null)
+            {
+                // Building was destroyed while the pawn was building — abandon the task.
+                GoIdle(pawn);
+                return;
+            }
+
             float creationTime = world.Constants.CreationTime[pawn.BuildTarget];
+            building.BuildProgress += world.TickDuration;
 
-            callbacks.OnBuildProgress(pawn, world.GetUnit(pawn.BuildTargetNbr), pawn.BuildTimer, creationTime);
+            callbacks.OnBuildProgress(pawn, building, building.BuildProgress, creationTime);
 
-            if (pawn.BuildTimer < creationTime)
+            if (building.BuildProgress < creationTime)
                 return;
 
             // Build complete
-            var building = world.GetUnit(pawn.BuildTargetNbr);
-            if (building != null)
-            {
-                building.IsBuilt = true;
-                callbacks.OnBuildComplete(pawn, building);
-            }
+            building.IsBuilt = true;
+            callbacks.OnBuildComplete(pawn, building);
             GoIdle(pawn);
         }
 

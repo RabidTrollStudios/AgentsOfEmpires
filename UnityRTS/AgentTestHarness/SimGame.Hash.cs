@@ -22,7 +22,7 @@ namespace AgentTestHarness
         /// <summary>Per-unit: CurrentAction, AttackTargetNbr, GatherPhase, RepairBuildingNbr</summary>
         public long UnitActions;
 
-        /// <summary>Per-unit: PathProgress, PathIndex, Path.Count, TrainTimer, BuildTimer, MiningTimer, etc.</summary>
+        /// <summary>Per-unit: PathProgress, PathIndex, Path.Count, TrainTimer, BuildTimer, BuildProgress, MiningTimer, etc.</summary>
         public long UnitTimers;
 
         /// <summary>Combined hash of all subsystems (equivalent to GetStateHash())</summary>
@@ -144,6 +144,7 @@ namespace AgentTestHarness
                     timers = timers * 31 + (u.Path != null ? u.Path.Count : -1);
                     timers = timers * 31 + FloatToStableBits(u.TrainTimer);
                     timers = timers * 31 + FloatToStableBits(u.BuildTimer);
+                    timers = timers * 31 + FloatToStableBits(u.BuildProgress);
                     timers = timers * 31 + FloatToStableBits(u.MiningTimer);
                     timers = timers * 31 + FloatToStableBits(u.Mana);
                     timers = timers * 31 + u.LocalAvoidWaitTicks;
@@ -185,6 +186,7 @@ namespace AgentTestHarness
                 hash = hash * 31 + FloatToStableBits(u.TrainTimer);
                 hash = hash * 31 + (int)u.TrainTarget;
                 hash = hash * 31 + FloatToStableBits(u.BuildTimer);
+                hash = hash * 31 + FloatToStableBits(u.BuildProgress);
                 hash = hash * 31 + (int)u.BuildTarget;
                 hash = hash * 31 + u.BuildSite.X;
                 hash = hash * 31 + u.BuildSite.Y;

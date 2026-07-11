@@ -34,6 +34,32 @@ namespace AgentSDK
 
         public static CommandResult ProcessBuild(ITickUnit pawn, Position target, UnitType buildingType, ITickWorld world)
         {
+            if (!pawn.CanBuild) return CommandResult.UNIT_CANNOT_PERFORM_ACTION;
+
+            // ── RESUME PATH ──────────────────────────────────────────────────
+            // If a same-owner unbuilt building of this type already sits at the
+            // target, attach the pawn to finish it instead of placing a new one.
+            // Progress lives on the building (BuildProgress), so it survived the
+            // previous builder's death/abandonment and any pawn can pick it up.
+            // No gold is charged and no unit is spawned — those happened when the
+            // building was first placed.
+            var existing = FindUnbuiltBuildingAt(world, target, buildingType, pawn.OwnerAgentNbr);
+            if (existing != null && pawn.CurrentAction != UnitAction.BUILD)
+            {
+                var resumePath = world.FindPathToUnit(pawn.GridPosition, buildingType, target);
+                if (resumePath.Count == 0 && !world.IsNeighborOfUnit(pawn.GridPosition, buildingType, target))
+                    return CommandResult.NO_PATH_FOUND;
+
+                pawn.CurrentAction = UnitAction.BUILD;
+                pawn.BuildTarget = buildingType;
+                pawn.BuildSite = target;
+                pawn.BuildTargetNbr = existing.UnitNbr;
+                pawn.BuildTimer = 0f;
+                pawn.TickPath = resumePath;
+                pawn.PathIndex = 0;
+                return CommandResult.SUCCESS;
+            }
+
             // Validation
             bool areaBuildable = world.Grid.IsAreaBuildable(buildingType, target, pawn.GridPosition);
             var ownedBuiltTypes = new List<UnitType>();
@@ -74,6 +100,25 @@ namespace AgentSDK
             pawn.TickPath = path;
             pawn.PathIndex = 0;
             return CommandResult.SUCCESS;
+        }
+
+        /// <summary>
+        /// Find an unbuilt building of the given type anchored at <paramref name="position"/>
+        /// owned by <paramref name="ownerAgentNbr"/>. Returns null if none — used to resume
+        /// construction of a building whose original builder died or moved away.
+        /// </summary>
+        private static ITickUnit FindUnbuiltBuildingAt(
+            ITickWorld world, Position position, UnitType buildingType, int ownerAgentNbr)
+        {
+            foreach (var u in world.AllUnits)
+            {
+                if (!u.IsBuilt
+                    && u.UnitType == buildingType
+                    && u.OwnerAgentNbr == ownerAgentNbr
+                    && u.GridPosition == position)
+                    return u;
+            }
+            return null;
         }
 
         public static CommandResult ProcessGather(ITickUnit pawn, int mineNbr, int baseNbr, ITickWorld world)

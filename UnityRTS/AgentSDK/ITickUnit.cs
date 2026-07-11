@@ -42,6 +42,13 @@ namespace AgentSDK
         Position BuildSite { get; set; }
         int BuildTargetNbr { get; set; }
 
+        /// <summary>
+        /// Construction progress (seconds) accumulated on an unbuilt BUILDING unit.
+        /// Lives on the building — not the pawn — so it survives the builder's death
+        /// and lets any pawn resume construction. Ignored on non-building units.
+        /// </summary>
+        float BuildProgress { get; set; }
+
         // Gathering
         int GatherMineNbr { get; set; }
         int GatherBaseNbr { get; set; }

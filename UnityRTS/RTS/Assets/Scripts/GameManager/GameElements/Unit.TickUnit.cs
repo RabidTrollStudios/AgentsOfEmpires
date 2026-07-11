@@ -82,8 +82,10 @@ namespace GameManager.GameElements
         float ITickUnit.TrainTimer { get => taskTime; set => taskTime = value; }
         UnitType ITickUnit.TrainTarget { get => taskUnitType; set => taskUnitType = value; }
 
-        // Building — BuildTimer stored on pawn as taskTime (same as training)
+        // Building — BuildTimer stored on pawn as taskTime (same as training).
+        // BuildProgress lives on the BUILDING unit (survives pawn death, enables resume).
         float ITickUnit.BuildTimer { get => taskTime; set => taskTime = value; }
+        float ITickUnit.BuildProgress { get => BuildProgress; set => BuildProgress = value; }
         UnitType ITickUnit.BuildTarget { get => taskUnitType; set => taskUnitType = value; }
         private Position _buildSite;
         Position ITickUnit.BuildSite
