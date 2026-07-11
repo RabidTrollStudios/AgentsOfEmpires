@@ -76,17 +76,19 @@ namespace GameManager.Tests.PlayMode
 
 			int prevGold = agent.Gold;
 			int depositsObserved = 0;
-			float elapsed = 0f;
+			// GameManager GO is inactive → FixedUpdate never fires. Drive ticks explicitly.
+			int maxTicks = 15 * 20; // 15s @ 20 Hz
+			int ticks = 0;
 
 			while (depositsObserved < 3)
 			{
-				elapsed += Time.deltaTime;
-				if (elapsed > 15f)
+				if (ticks++ >= maxTicks)
 				{
 					Assert.Fail("Did not observe 3 deposits within 15s with three pawns");
 					yield break;
 				}
 
+				GameManager.Instance.SimulateTick();
 				if (agent.Gold > prevGold)
 				{
 					Assert.GreaterOrEqual(agent.Gold, prevGold,
