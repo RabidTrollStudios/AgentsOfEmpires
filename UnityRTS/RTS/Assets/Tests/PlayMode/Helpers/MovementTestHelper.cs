@@ -35,17 +35,20 @@ namespace GameManager.Tests.PlayMode
 		{
 			unit.StartMoving(new MoveEventArgs(unit, unit.UnitType, destination));
 
-			float elapsed = 0f;
+			// GameManager GO is inactive → FixedUpdate never fires. Drive ticks so the
+			// unit actually moves; timeoutSeconds reinterpreted as a tick budget (×20).
+			int maxTicks = Mathf.Max(1, Mathf.RoundToInt(timeoutSeconds * 20f));
+			int ticks = 0;
 			while (unit.CurrentAction != UnitAction.IDLE)
 			{
-				elapsed += Time.deltaTime;
-				if (elapsed > timeoutSeconds)
+				if (ticks++ >= maxTicks)
 				{
 					Assert.Fail(
 						$"Unit {unit.UnitType} did not go IDLE after move to {destination} " +
 						$"within {timeoutSeconds}s (current action: {unit.CurrentAction})");
 					yield break;
 				}
+				GameManager.Instance.SimulateTick();
 				yield return null;
 			}
 		}
@@ -59,16 +62,19 @@ namespace GameManager.Tests.PlayMode
 		{
 			unit.StartMoving(new MoveEventArgs(unit, unit.UnitType, destination));
 
-			float elapsed = 0f;
+			// StartMoving sets MOVE synchronously; drive ticks anyway for robustness.
+			// GameManager GO is inactive → FixedUpdate never fires.
+			int maxTicks = Mathf.Max(1, Mathf.RoundToInt(timeoutSeconds * 20f));
+			int ticks = 0;
 			while (unit.CurrentAction != UnitAction.MOVE)
 			{
-				elapsed += Time.deltaTime;
-				if (elapsed > timeoutSeconds)
+				if (ticks++ >= maxTicks)
 				{
 					Assert.Fail(
 						$"Unit {unit.UnitType} did not enter MOVE state within {timeoutSeconds}s");
 					yield break;
 				}
+				GameManager.Instance.SimulateTick();
 				yield return null;
 			}
 		}
