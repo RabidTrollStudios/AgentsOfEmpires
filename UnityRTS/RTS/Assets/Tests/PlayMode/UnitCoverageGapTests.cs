@@ -241,14 +241,17 @@ namespace GameManager.Tests.PlayMode
 
 		#endregion
 
-		#region IDLE Cleanup of currentBuilding (Unit.Movement.cs:67)
+		#region Leaving a build releases currentBuilding
 
 		/// <summary>
-		/// When a unit transitions to IDLE while having a currentBuilding reference,
-		/// the currentBuilding reference should be cleared.
+		/// When a build is left (interrupted by a move), the pawn releases its
+		/// currentBuilding reference. In the shared model this happens through the
+		/// real IDLE transition (TickEngine.SetIdle clears BuildTargetNbr, which the
+		/// Unity bridge maps to currentBuilding = null) — not a per-tick defensive
+		/// branch, so drive it via a genuine interrupt rather than a raw state write.
 		/// </summary>
 		[UnityTest]
-		public IEnumerator Idle_WithCurrentBuilding_ClearsCurrentBuilding()
+		public IEnumerator LeavingBuild_ClearsCurrentBuilding()
 		{
 			PlaceBuiltBase(new Vector3Int(0, 0, 0));
 			Unit pawn = PlaceUnit(UnitType.PAWN, new Vector3Int(10, 10, 0));
@@ -260,20 +263,16 @@ namespace GameManager.Tests.PlayMode
 			if (pawn.CurrentAction != UnitAction.BUILD)
 				Assert.Ignore("Could not start build for this test");
 
-			// Get the currentBuilding reference
 			var buildingObj = GetPrivateField<GameObject>(pawn, "currentBuilding");
-			Assert.IsNotNull(buildingObj, "currentBuilding should be set");
+			Assert.IsNotNull(buildingObj, "currentBuilding should be set while building");
 
-			// Force pawn to IDLE (simulates interruption)
-			pawn.CurrentAction = UnitAction.IDLE;
-
-			// Tick — the IDLE branch should clean up currentBuilding
-			pawn.TickFixedUpdate();
+			// A move interrupts the build — the real path that releases build state.
+			pawn.StartMoving(new MoveEventArgs(pawn, UnitType.PAWN, new Vector3Int(5, 5, 0)));
 			yield return null;
 
 			var afterBuilding = GetPrivateField<GameObject>(pawn, "currentBuilding");
 			Assert.IsNull(afterBuilding,
-				"currentBuilding should be null after IDLE cleanup");
+				"currentBuilding should be released when the build is interrupted");
 		}
 
 		#endregion
