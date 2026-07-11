@@ -106,6 +106,17 @@ namespace GameManager.Tests.PlayMode
 			ctx.Agent0Go = CreateTestAgent(ctx, 0, "TestPlayer0", unitPrefabMap);
 			ctx.Agent1Go = CreateTestAgent(ctx, 1, "TestPlayer1", unitPrefabMap);
 
+			// 9. Populate GameManager.Agents (keyed by AgentNbr). The shared command
+			// path (UnityTickWorld.SpawnUnit/AddGold/GetGold) resolves agents through
+			// this dictionary, so it must be wired for StartX-driven tests to run.
+			typeof(GameManager)
+				.GetProperty("Agents", BindingFlags.NonPublic | BindingFlags.Instance)
+				.SetValue(gm, new Dictionary<int, GameObject>
+				{
+					{ 0, ctx.Agent0Go },
+					{ 1, ctx.Agent1Go },
+				});
+
 			return ctx;
 		}
 
