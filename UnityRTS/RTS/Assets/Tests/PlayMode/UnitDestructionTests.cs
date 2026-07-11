@@ -60,26 +60,24 @@ namespace GameManager.Tests.PlayMode
 		}
 
 		/// <summary>
-		/// When a BASE (3x3 building) is destroyed, all of its occupied cells
-		/// should become buildable and walkable again.
+		/// When a BASE is destroyed, all of its occupied cells should become
+		/// buildable and walkable again. BASE is 6x4 with an upward footprint
+		/// (anchor + (i, +j)) per GameGrid/MapManager.
 		/// </summary>
 		[UnityTest]
 		public IEnumerator Building_Destroyed_AllOccupiedCellsFreed()
 		{
-			// BASE occupies 3x3: position (10,12) covers cells
-			// (10,12),(11,12),(12,12) for j=0
-			// (10,11),(11,11),(12,11) for j=1
-			// (10,10),(11,10),(12,10) for j=2
-			var basePos = new Vector3Int(10, 12, 0);
+			var basePos = new Vector3Int(10, 10, 0);
 			Unit building = PlaceUnit(UnitType.BASE, basePos);
 
-			// Verify all 9 cells are not buildable
+			// Verify every footprint cell is not buildable while the BASE is alive.
+			var size = Constants.UNIT_SIZE[UnitType.BASE]; // (6, 4)
 			var occupiedCells = new List<Vector3Int>();
-			for (int i = 0; i < 3; i++)
+			for (int i = 0; i < size.x; i++)
 			{
-				for (int j = 0; j < 3; j++)
+				for (int j = 0; j < size.y; j++)
 				{
-					var cell = basePos + new Vector3Int(i, -j, 0);
+					var cell = basePos + new Vector3Int(i, j, 0);
 					occupiedCells.Add(cell);
 					Assert.IsFalse(ctx.MapManager.IsGridPositionBuildable(cell),
 						$"Cell {cell} should not be buildable while BASE is alive");
@@ -91,7 +89,7 @@ namespace GameManager.Tests.PlayMode
 
 			yield return null;
 
-			// All 9 cells should now be buildable
+			// All footprint cells should now be buildable
 			foreach (var cell in occupiedCells)
 			{
 				Assert.IsTrue(ctx.MapManager.IsGridPositionBuildable(cell),

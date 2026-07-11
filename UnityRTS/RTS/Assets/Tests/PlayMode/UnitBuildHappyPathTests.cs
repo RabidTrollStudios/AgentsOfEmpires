@@ -61,15 +61,17 @@ namespace GameManager.Tests.PlayMode
 
 			yield return null;
 
+			// Footprint extends UP (anchor + (i, +j)); the TOP row (j == size.y-1) is the
+			// walkable passage, the body rows are not walkable.
 			Vector3Int size = Constants.UNIT_SIZE[UnitType.BASE];
 			for (int i = 0; i < size.x; i++)
 			{
 				for (int j = 0; j < size.y; j++)
 				{
-					Vector3Int cell = buildPos + new Vector3Int(i, -j, 0);
+					Vector3Int cell = buildPos + new Vector3Int(i, j, 0);
 					Assert.IsFalse(ctx.MapManager.IsGridPositionBuildable(cell),
 						$"Cell {cell} in building footprint should not be buildable");
-					if (j == 0 && size.y > 1)
+					if (j == size.y - 1 && size.y > 1)
 						Assert.IsTrue(ctx.MapManager.IsGridPositionWalkable(cell),
 							$"Top row cell {cell} should remain walkable (passage)");
 					else

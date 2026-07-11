@@ -60,11 +60,12 @@ namespace GameManager.Tests.PlayMode
 			var barracksPos = new Vector3Int(15, 10, 0);
 			Unit barracks = PlaceUnit(UnitType.BARRACKS, barracksPos, ctx.Agent1Go);
 
+			// Footprint extends UP from the anchor (anchor + (i, +j)) per GameGrid/MapManager.
 			var size = Constants.UNIT_SIZE[UnitType.BARRACKS];
 			var footprint = new List<Vector3Int>();
 			for (int i = 0; i < size.x; i++)
 				for (int j = 0; j < size.y; j++)
-					footprint.Add(barracksPos + new Vector3Int(i, -j, 0));
+					footprint.Add(barracksPos + new Vector3Int(i, j, 0));
 
 			int barracksNbr = barracks.UnitNbr;
 
@@ -171,11 +172,11 @@ namespace GameManager.Tests.PlayMode
 			var basePos = new Vector3Int(10, 10, 0);
 			Unit building = PlaceUnit(UnitType.BASE, basePos);
 
-			var size = Constants.UNIT_SIZE[UnitType.BASE];
-			// Check center cell (not walkable while BASE is alive)
-			var centerCell = basePos + new Vector3Int(1, -1, 0);
+			// Pick a BODY cell of the 6x4 upward footprint (anchor + (i, +j)). Avoid the
+			// top passage row (j == size.y-1), which is walkable even while the BASE stands.
+			var centerCell = basePos + new Vector3Int(1, 1, 0);
 			Assert.IsFalse(ctx.MapManager.IsGridPositionWalkable(centerCell),
-				"BASE footprint cell should not be walkable while building stands");
+				"BASE footprint body cell should not be walkable while building stands");
 
 			building.Health = 0;
 			building.TickFixedUpdate();
