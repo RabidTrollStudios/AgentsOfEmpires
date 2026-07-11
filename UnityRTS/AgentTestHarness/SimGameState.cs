@@ -64,12 +64,31 @@ namespace AgentTestHarness
 
         public bool IsAreaBuildable(UnitType unitType, Position position)
         {
-            return game.Map.IsAreaBuildable(unitType, position);
+            // Exclude the agent's own pawns (they can move out of the way before
+            // building), matching Unity's GameStateAdapter.IsAreaBuildable — so both
+            // engines answer identically. See engine-parity H2.
+            return game.Map.Grid.IsAreaBuildable(unitType, position, GetMyPawnPositions());
         }
 
         public bool IsBoundedAreaBuildable(UnitType unitType, Position position)
         {
-            return game.Map.IsBoundedAreaBuildable(unitType, position);
+            return game.Map.Grid.IsBoundedAreaBuildable(unitType, position, GetMyPawnPositions());
+        }
+
+        /// <summary>
+        /// Cells occupied by this agent's own PAWNs. Excluded from buildability
+        /// queries because the agent can move them before building — mirrors Unity's
+        /// GameStateAdapter.GetMyPawnPositions.
+        /// </summary>
+        private ISet<Position> GetMyPawnPositions()
+        {
+            var positions = new HashSet<Position>();
+            foreach (var u in game.Units.Values)
+            {
+                if (u.OwnerAgentNbr == agentNbr && u.UnitType == UnitType.PAWN)
+                    positions.Add(u.GridPosition);
+            }
+            return positions;
         }
 
         public IReadOnlyList<Position> GetPathBetween(Position start, Position end)
@@ -94,7 +113,10 @@ namespace AgentTestHarness
 
         public IReadOnlyList<Position> FindProspectiveBuildPositions(UnitType unitType)
         {
-            return game.Map.FindProspectiveBuildPositions(unitType);
+            // Exclude the agent's own pawns from the candidate scan, matching Unity's
+            // GameStateAdapter.FindProspectiveBuildPositions — otherwise the two engines
+            // produce different candidate lists and pick different build sites (H2).
+            return game.Map.Grid.FindProspectiveBuildPositions(unitType, GetMyPawnPositions());
         }
 
         public IReadOnlyList<FailedCommand> GetFailedCommands()

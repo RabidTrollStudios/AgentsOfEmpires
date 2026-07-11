@@ -140,6 +140,27 @@ namespace AgentSDK
         }
 
         /// <summary>
+        /// Check if the full footprint is buildable, excluding a set of positions
+        /// (e.g. the agent's own pawns, which it can move out of the way before
+        /// building). Both engines must exclude the SAME set for parity.
+        /// </summary>
+        public bool IsAreaBuildable(UnitType unitType, Position anchor, ISet<Position> exclude)
+        {
+            var size = GameConstants.UNIT_SIZE[unitType];
+            for (int i = 0; i < size.X; i++)
+            {
+                for (int j = 0; j < size.Y; j++)
+                {
+                    var cell = new Position(anchor.X + i, anchor.Y + j);
+                    if (exclude != null && exclude.Contains(cell)) continue;
+                    if (!IsPositionBuildable(cell))
+                        return false;
+                }
+            }
+            return true;
+        }
+
+        /// <summary>
         /// Check if the unit footprint plus a 1-cell border is all buildable.
         /// </summary>
         public bool IsBoundedAreaBuildable(UnitType unitType, Position anchor)
@@ -150,6 +171,26 @@ namespace AgentSDK
                 for (int j = -1; j <= size.Y; j++)
                 {
                     var cell = new Position(anchor.X + i, anchor.Y + j);
+                    if (!IsPositionBuildable(cell))
+                        return false;
+                }
+            }
+            return true;
+        }
+
+        /// <summary>
+        /// Bounded-buildable check excluding a set of positions (the agent's own
+        /// pawns). Mirrors <see cref="IsAreaBuildable(UnitType, Position, ISet{Position})"/>.
+        /// </summary>
+        public bool IsBoundedAreaBuildable(UnitType unitType, Position anchor, ISet<Position> exclude)
+        {
+            var size = GameConstants.UNIT_SIZE[unitType];
+            for (int i = -1; i <= size.X; i++)
+            {
+                for (int j = -1; j <= size.Y; j++)
+                {
+                    var cell = new Position(anchor.X + i, anchor.Y + j);
+                    if (exclude != null && exclude.Contains(cell)) continue;
                     if (!IsPositionBuildable(cell))
                         return false;
                 }
@@ -312,6 +353,28 @@ namespace AgentSDK
                 {
                     var pos = new Position(x, y);
                     if (IsBoundedAreaBuildable(unitType, pos))
+                        result.Add(pos);
+                }
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Prospective build positions, excluding a set of cells (the agent's own
+        /// pawns) from the buildability test — the agent can move them before
+        /// building. Both engines must scan in the SAME (x outer, y inner) order and
+        /// exclude the SAME set for parity. Mirrors Unity's
+        /// GameStateAdapter.FindProspectiveBuildPositions.
+        /// </summary>
+        public List<Position> FindProspectiveBuildPositions(UnitType unitType, ISet<Position> exclude)
+        {
+            var result = new List<Position>();
+            for (int x = 0; x < Width; x++)
+            {
+                for (int y = 0; y < Height; y++)
+                {
+                    var pos = new Position(x, y);
+                    if (IsBoundedAreaBuildable(unitType, pos, exclude))
                         result.Add(pos);
                 }
             }
