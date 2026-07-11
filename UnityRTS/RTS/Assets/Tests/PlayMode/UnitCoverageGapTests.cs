@@ -245,10 +245,10 @@ namespace GameManager.Tests.PlayMode
 
 		/// <summary>
 		/// When a unit transitions to IDLE while having a currentBuilding reference,
-		/// the building's ActiveBuilders should be cleaned up.
+		/// the currentBuilding reference should be cleared.
 		/// </summary>
 		[UnityTest]
-		public IEnumerator Idle_WithCurrentBuilding_CleansUpActiveBuilders()
+		public IEnumerator Idle_WithCurrentBuilding_ClearsCurrentBuilding()
 		{
 			PlaceBuiltBase(new Vector3Int(0, 0, 0));
 			Unit pawn = PlaceUnit(UnitType.PAWN, new Vector3Int(10, 10, 0));
@@ -615,52 +615,16 @@ namespace GameManager.Tests.PlayMode
 
 		#endregion
 
-		#region Death During Build — ActiveBuilders Cleanup (Unit.Movement.cs:58-60)
+		#region Move Interrupts Build — pawn switches to MOVE
 
 		/// <summary>
-		/// When a pawn dies while building, the building's ActiveBuilders
-		/// should have the pawn removed.
+		/// A move command interrupts an in-progress build: the pawn switches to MOVE.
+		/// (Build progress lives on the building — see BuildResumeTests — so no per-pawn
+		/// builder bookkeeping is needed; the building simply keeps its BuildProgress and
+		/// can be resumed later.)
 		/// </summary>
 		[UnityTest]
-		public IEnumerator Death_WhileBuilding_CleansUpActiveBuilders()
-		{
-			PlaceBuiltBase(new Vector3Int(0, 0, 0));
-			Unit pawn = PlaceUnit(UnitType.PAWN, new Vector3Int(10, 10, 0));
-			yield return null;
-
-			// Start building
-			pawn.StartBuilding(new BuildEventArgs(pawn, new Vector3Int(12, 10, 0), UnitType.BASE));
-
-			if (pawn.CurrentAction != UnitAction.BUILD)
-				Assert.Ignore("Could not start build for this test");
-
-			var buildingObj = GetPrivateField<GameObject>(pawn, "currentBuilding");
-			Assert.IsNotNull(buildingObj, "currentBuilding should be set");
-
-			Unit buildingUnit = buildingObj.GetComponent<Unit>();
-			Assert.IsTrue(buildingUnit.ActiveBuilders.Contains(pawn.UnitNbr),
-				"Pawn should be in ActiveBuilders");
-
-			// Kill the pawn
-			pawn.Health = 0;
-			pawn.TickFixedUpdate();
-			yield return WaitFrames(2);
-
-			// ActiveBuilders should not contain the dead pawn
-			Assert.IsFalse(buildingUnit.ActiveBuilders.Contains(pawn.UnitNbr),
-				"Dead pawn should be removed from ActiveBuilders");
-		}
-
-		#endregion
-
-		#region Move Interrupts Build — currentBuilding Cleanup
-
-		/// <summary>
-		/// When a move command interrupts a build, currentBuilding should be
-		/// cleaned up and ActiveBuilders updated.
-		/// </summary>
-		[UnityTest]
-		public IEnumerator Move_InterruptsBuild_CleansUpCurrentBuilding()
+		public IEnumerator Move_InterruptsBuild_PawnSwitchesToMove()
 		{
 			PlaceBuiltBase(new Vector3Int(0, 0, 0));
 			Unit pawn = PlaceUnit(UnitType.PAWN, new Vector3Int(10, 10, 0));
@@ -670,16 +634,12 @@ namespace GameManager.Tests.PlayMode
 
 			if (pawn.CurrentAction != UnitAction.BUILD)
 				Assert.Ignore("Could not start build for this test");
-
-			var buildingObj = GetPrivateField<GameObject>(pawn, "currentBuilding");
-			Unit buildingUnit = buildingObj.GetComponent<Unit>();
 
 			// Move interrupts build
 			pawn.StartMoving(new MoveEventArgs(pawn, UnitType.PAWN, new Vector3Int(5, 5, 0)));
 
-			Assert.AreEqual(UnitAction.MOVE, pawn.CurrentAction);
-			Assert.IsFalse(buildingUnit.ActiveBuilders.Contains(pawn.UnitNbr),
-				"Pawn should be removed from ActiveBuilders after move interrupt");
+			Assert.AreEqual(UnitAction.MOVE, pawn.CurrentAction,
+				"Pawn should switch from BUILD to MOVE when a move interrupts the build");
 		}
 
 		#endregion

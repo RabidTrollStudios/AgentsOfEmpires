@@ -108,5 +108,49 @@ namespace Gameplay.Tests
             // Gold charged only once across the whole resume flow.
             Assert.Equal(startingGold - barracksCost, game.GetGold(0));
         }
+
+        /// <summary>
+        /// Multiple pawns can co-build one structure: each builder's tick adds to the
+        /// SAME building.BuildProgress, so N pawns complete it faster than 1. This is
+        /// the real "co-building" behavior (previously only observed via the now-removed
+        /// ActiveBuilders bookkeeping set).
+        /// </summary>
+        [Fact]
+        public void TwoPawns_CoBuildOneStructure_FasterThanOne()
+        {
+            int TicksToBuildWith(int pawnCount)
+            {
+                var b = new SimGameBuilder()
+                    .WithMapSize(30, 30)
+                    .WithGold(0, 5000)
+                    .WithUnit(0, UnitType.BASE, new Position(5, 5), isBuilt: true);
+                // Pawns clustered next to the build site so all reach it quickly.
+                for (int i = 0; i < pawnCount; i++)
+                    b.WithUnit(0, UnitType.PAWN, new Position(14 + i, 12));
+                var g = b.WithAgent(0, new ResumeBuildAgent(UnitType.BARRACKS, new Position(15, 15)))
+                         .WithAgent(1, new DoNothingAgent())
+                         .Build();
+                g.InitializeMatch();
+                g.InitializeRound();
+
+                for (int t = 1; t <= 3000; t++)
+                {
+                    g.Tick();
+                    var built = g.GetUnitsByType(0, UnitType.BARRACKS).FirstOrDefault(u => u.IsBuilt);
+                    if (built != null) return t;
+                }
+                return int.MaxValue; // never completed
+            }
+
+            int oneTicks = TicksToBuildWith(1);
+            int twoTicks = TicksToBuildWith(2);
+
+            Assert.True(oneTicks < int.MaxValue, "Single pawn should complete the build");
+            Assert.True(twoTicks < int.MaxValue, "Two pawns should complete the build");
+            // Two builders accumulate BuildProgress ~2x per tick, so the build finishes
+            // meaningfully sooner. Allow slack for travel/pathing before both attach.
+            Assert.True(twoTicks < oneTicks,
+                $"Two pawns should co-build faster than one (1 pawn: {oneTicks} ticks, 2 pawns: {twoTicks} ticks)");
+        }
     }
 }
