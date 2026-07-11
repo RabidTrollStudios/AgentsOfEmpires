@@ -181,9 +181,13 @@ namespace GameManager
 		/// <summary>
 		/// Gets a list of units of the given type
 		/// </summary>
+		// Agent-facing unit lists are sorted ascending by UnitNbr so both engines
+		// present units in an identical, deterministic order regardless of Dictionary
+		// enumeration (which differs between Mono and .NET). See engine-parity H3.
 		public List<int> GetUnitNbrsOfType(UnitType unitType)
 		{
-			return Units.Keys.Where(key => Units[key].GetComponent<Unit>().UnitType == unitType).ToList();
+			return Units.Keys.Where(key => Units[key].GetComponent<Unit>().UnitType == unitType)
+							  .OrderBy(key => key).ToList();
 		}
 
 		/// <summary>
@@ -192,7 +196,8 @@ namespace GameManager
 		public List<int> GetUnitNbrsOfType(UnitType unitType, int agentNbr)
 		{
 			return Units.Keys.Where(key => Units[key].GetComponent<Unit>().UnitType == unitType
-								&& Units[key].GetComponent<Unit>().OwnerAgentNbr == agentNbr).ToList();
+								&& Units[key].GetComponent<Unit>().OwnerAgentNbr == agentNbr)
+							  .OrderBy(key => key).ToList();
 		}
 
 		/// <summary>

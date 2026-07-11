@@ -26,11 +26,15 @@ namespace AgentTestHarness
         public Position MapSize => game.Map.Size;
         public int MyWins => game.GetWins(agentNbr);
 
+        // Agent-facing unit lists are sorted ascending by UnitNbr so both engines
+        // present units in an identical, deterministic order regardless of Dictionary
+        // enumeration (which differs between Mono and .NET). See engine-parity H3.
         public IReadOnlyList<int> GetMyUnits(UnitType unitType)
         {
             return game.Units.Values
                 .Where(u => u.OwnerAgentNbr == agentNbr && u.UnitType == unitType)
                 .Select(u => u.UnitNbr)
+                .OrderBy(n => n)
                 .ToList();
         }
 
@@ -39,6 +43,7 @@ namespace AgentTestHarness
             return game.Units.Values
                 .Where(u => u.OwnerAgentNbr == EnemyAgentNbr && u.UnitType == unitType)
                 .Select(u => u.UnitNbr)
+                .OrderBy(n => n)
                 .ToList();
         }
 
@@ -47,6 +52,7 @@ namespace AgentTestHarness
             return game.Units.Values
                 .Where(u => u.UnitType == unitType)
                 .Select(u => u.UnitNbr)
+                .OrderBy(n => n)
                 .ToList();
         }
 

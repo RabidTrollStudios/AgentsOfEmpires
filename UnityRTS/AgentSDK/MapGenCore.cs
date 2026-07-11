@@ -94,8 +94,16 @@ namespace AgentSDK
         /// <summary>Tree groves for visual rendering (each grove has a single tree type).</summary>
         public List<GroveData> Groves { get; }
 
+        /// <summary>
+        /// Deterministic agent-slot assignment, derived from the map seed so BOTH
+        /// engines agree without any Unity-runtime randomness. When true, the BLUE
+        /// player is AgentNbr 0 (spawn slot 0) and RED is 1; when false they swap.
+        /// Replaces Unity's old UnityEngine.Random.Range(0,2) coin flip (see U5).
+        /// </summary>
+        public bool BlueIsAgent0 { get; }
+
         internal MapGenResult(int width, int height, HashSet<Position> blocked,
-            Position[] spawns, Position[] mines, List<GroveData> groves)
+            Position[] spawns, Position[] mines, List<GroveData> groves, bool blueIsAgent0)
         {
             Width = width;
             Height = height;
@@ -103,6 +111,7 @@ namespace AgentSDK
             SpawnPositions = spawns;
             MinePositions = mines;
             Groves = groves;
+            BlueIsAgent0 = blueIsAgent0;
         }
     }
 
@@ -126,6 +135,14 @@ namespace AgentSDK
         /// Generate a procedural map with the given parameters.
         /// Retries on connectivity failure with advancing RNG state.
         /// </summary>
+        /// <summary>
+        /// Deterministically decide whether BLUE is AgentNbr 0 for a given map seed.
+        /// Drawn from a separate PRNG (seed+1) so it never perturbs map generation.
+        /// Both engines (and the parity harness) call this to agree on agent-slot
+        /// assignment without any Unity-runtime randomness. See U5.
+        /// </summary>
+        public static bool ComputeBlueIsAgent0(int seed) => new Random(seed + 1).Next(2) == 0;
+
         public static MapGenResult Generate(MapGenConfig config)
         {
             if (config.PlayerCount != 2)
@@ -138,18 +155,24 @@ namespace AgentSDK
             var mines = ComputeMinePositions(spawns[0], config, rng);
             var exclusions = BuildExclusionZones(config.Width, config.Height, spawns, mines);
 
+            // Deterministic agent-slot flip, drawn from a SEPARATE PRNG so it never
+            // perturbs the map-generation stream above (existing maps stay identical).
+            // Both engines read this from the result → identical slot assignment,
+            // replacing Unity's nondeterministic UnityEngine.Random coin flip (U5).
+            bool blueIsAgent0 = ComputeBlueIsAgent0(config.Seed);
+
             for (int attempt = 0; attempt < MaxRetries; attempt++)
             {
                 var (blocked, groves) = GenerateObstacles(config, exclusions, rng);
 
                 if (ValidateConnectivity(config.Width, config.Height, blocked, spawns, mines))
                     return new MapGenResult(config.Width, config.Height,
-                        blocked, spawns, mines, groves);
+                        blocked, spawns, mines, groves, blueIsAgent0);
             }
 
             // Fallback: empty map
             return new MapGenResult(config.Width, config.Height,
-                new HashSet<Position>(), spawns, mines, new List<GroveData>());
+                new HashSet<Position>(), spawns, mines, new List<GroveData>(), blueIsAgent0);
         }
 
         #region Spawn & Mine Placement

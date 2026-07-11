@@ -91,8 +91,13 @@ namespace Parity.Tests
                     builder.WithWall(new Position(cell.X, cell.Y), new Position(cell.X, cell.Y));
             }
 
-            builder.WithAgent(0, blueAgent);
-            builder.WithAgent(1, redAgent);
+            // Agent-slot assignment is deterministic from the map seed (U5): if
+            // BlueIsAgent0, blue is AgentNbr 0 / spawn slot 0, else red is. Unity now
+            // makes the SAME choice from the shared seed, so assign slots to match —
+            // otherwise every unit's owner is swapped from tick 1.
+            bool blueIsAgent0 = !meta.IsProcedural || MapGenCore.ComputeBlueIsAgent0(meta.Seed);
+            builder.WithAgent(0, blueIsAgent0 ? blueAgent : redAgent);
+            builder.WithAgent(1, blueIsAgent0 ? redAgent : blueAgent);
 
             var game = builder.Build();
 

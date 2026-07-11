@@ -18,6 +18,8 @@ namespace GameManager
         public Vector3Int[] SpawnPositions;
         public Vector3Int[] MinePositions;
         public List<ProceduralGrove> Groves;
+        /// <summary>Deterministic agent-slot flip from the shared seed (see MapGenResult.BlueIsAgent0).</summary>
+        public bool BlueIsAgent0;
     }
 
     /// <summary>A cluster of blocked cells sharing one visual tree type (1–4).</summary>
@@ -101,7 +103,8 @@ namespace GameManager
                 Groves = core.Groves.Select(g => new ProceduralGrove(
                     g.TreeType,
                     g.Cells.Select(c => new Vector3Int(c.X, c.Y, 0)).ToList()
-                )).ToList()
+                )).ToList(),
+                BlueIsAgent0 = core.BlueIsAgent0
             };
         }
 
