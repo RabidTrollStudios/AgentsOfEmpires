@@ -132,8 +132,10 @@ namespace GameManager.Tests.PlayMode
 			Assert.AreEqual(UnitAction.GATHER, pawn.CurrentAction);
 			Assert.AreEqual(UnitAction.MOVE, warrior.CurrentAction);
 
-			// Wait for warrior to arrive AND at least one gold deposit
-			yield return WaitUntil(
+			// Wait for warrior to arrive AND at least one gold deposit.
+			// WaitForTick drives SimulateTick each iteration (the GameManager GO is
+			// inactive, so nothing advances on its own).
+			yield return WaitForTick(
 				() => warrior.CurrentAction == UnitAction.IDLE && agent.Gold > initialGold,
 				timeoutSeconds: 15f,
 				failMessage: "Warrior did not finish moving or pawn did not deposit gold");

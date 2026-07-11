@@ -52,7 +52,7 @@ namespace GameManager.Tests.PlayMode
 			}, timeoutSeconds: 10f, failMessage: "BASE did not complete");
 
 			// Pawn is now idle; try building BARRACKS
-			yield return WaitUntil(
+			yield return WaitForTick(
 				() => pawn.CurrentAction == UnitAction.IDLE,
 				timeoutSeconds: 5f,
 				failMessage: "Pawn did not go IDLE after building BASE");
@@ -93,7 +93,7 @@ namespace GameManager.Tests.PlayMode
 				return baseUnit != null && baseUnit.IsBuilt;
 			}, timeoutSeconds: 10f, failMessage: "BASE did not complete");
 
-			yield return WaitUntil(
+			yield return WaitForTick(
 				() => pawn.CurrentAction == UnitAction.IDLE,
 				timeoutSeconds: 5f,
 				failMessage: "Pawn did not go IDLE after building BASE");
