@@ -26,8 +26,12 @@ namespace GameManager
         [Tooltip("Maximum number of ticks to record (0 = unlimited)")]
         public int MaxTicks = 2000;
 
-        [Tooltip("Ticks between state snapshots")]
+        [Tooltip("Ticks between state snapshots (used only when SnapshotEveryTick is off)")]
         public int SnapshotInterval = 50;
+
+        [Tooltip("Record a snapshot on EVERY tick (fine-grained parity debugging). " +
+                 "Files stay small; leave on to pinpoint the exact divergence tick.")]
+        public bool SnapshotEveryTick = true;
 
         [Tooltip("Enable/disable export")]
         public bool IsEnabled = true;
@@ -134,8 +138,14 @@ namespace GameManager
 
             currentTick++;
 
-            // Write state snapshot: every tick for debug windows, then at intervals
-            if (currentTick <= 55 || (currentTick >= 300 && currentTick <= 350) || currentTick % SnapshotInterval == 0)
+            // Record EVERY tick for fine-grained parity analysis — pinpoints the exact
+            // tick a divergence first appears. Full-resolution CSVs are small (well under
+            // 1 MB for a few hundred ticks). Set SnapshotEveryTick=false to fall back to
+            // the sampled cadence (<=55, 300-350, then every SnapshotInterval).
+            bool record = SnapshotEveryTick
+                || currentTick <= 55 || (currentTick >= 300 && currentTick <= 350)
+                || currentTick % SnapshotInterval == 0;
+            if (record)
                 WriteStateSnapshot();
 
             if (MaxTicks > 0 && currentTick >= MaxTicks)
