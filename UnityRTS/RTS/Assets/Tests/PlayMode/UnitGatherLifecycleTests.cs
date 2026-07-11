@@ -121,9 +121,12 @@ namespace GameManager.Tests.PlayMode
 		[UnityTest]
 		public IEnumerator Gather_MineFarFromBase_GatherCompletesEventually()
 		{
+			// BASE is 6x4 at (2,2) -> occupies x=[2,7], y=[2,5]. The pawn must start
+			// OUTSIDE that footprint (x=8 is just past the base's right edge), while the
+			// mine stays far away to keep the long round-trip this test exercises.
 			Unit baseUnit = PlaceBuiltBase(new Vector3Int(2, 2, 0));
 			Unit mine     = PlaceUnit(UnitType.MINE,   new Vector3Int(25, 25, 0));
-			Unit pawn   = PlaceUnit(UnitType.PAWN, new Vector3Int(3,  3,  0));
+			Unit pawn   = PlaceUnit(UnitType.PAWN, new Vector3Int(8,  3,  0));
 
 			Agent agent = GetAgent0();
 			int initialGold = agent.Gold;
