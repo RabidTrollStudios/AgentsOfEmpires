@@ -433,17 +433,13 @@ namespace AgentSDK
             }
             else
             {
-                // Retarget: check for closer enemy in range
-                int? closerNbr = FindClosestEnemyInRange(attacker, world);
-                if (closerNbr.HasValue && closerNbr.Value != attacker.AttackTargetNbr)
-                {
-                    attacker.AttackTargetNbr = closerNbr.Value;
-                    attacker.TickPath = null;
-                    attacker.PathIndex = 0;
-                    return;
-                }
-
-                // Out of range — repath if path exhausted
+                // Out of range — pursue the ASSIGNED target only. Target selection is
+                // the PlanningAgent's job; the engine never retargets to a different
+                // enemy. When the path is exhausted (the target has moved past the end
+                // of our last path), repath toward its CURRENT position once — this is
+                // how a unit follows a moving target. At most one pathfind per tick.
+                // If no path exists, the pursuit has failed: go IDLE so the agent can
+                // decide what to do next tick.
                 if (attacker.TickPath == null || attacker.PathIndex >= attacker.TickPath.Count)
                 {
                     var path = world.FindPathToUnit(attacker.GridPosition, target.UnitType, target.GridPosition);
@@ -453,30 +449,13 @@ namespace AgentSDK
                         attacker.PathIndex = 0;
                         callbacks.OnUnitRepath(attacker, path);
                     }
+                    else
+                    {
+                        // Target unreachable — abandon pursuit; agent re-decides next tick.
+                        GoIdle(attacker);
+                    }
                 }
             }
-        }
-
-        private static int? FindClosestEnemyInRange(ITickUnit attacker, ITickWorld world)
-        {
-            float closestDist = float.MaxValue;
-            int? closest = null;
-
-            foreach (var enemy in world.AllUnits)
-            {
-                if (enemy.OwnerAgentNbr == attacker.OwnerAgentNbr) continue;
-                if (enemy.UnitType == UnitType.MINE) continue;
-                if (enemy.Health <= 0) continue;
-
-                float effectiveRange = GameConstants.EffectiveAttackRange(attacker.UnitType, enemy.UnitType);
-                float dist = Position.Distance(attacker.CenterPosition, enemy.CenterPosition);
-                if (dist <= effectiveRange + 0.1f && dist < closestDist)
-                {
-                    closestDist = dist;
-                    closest = enemy.UnitNbr;
-                }
-            }
-            return closest;
         }
 
         #endregion
