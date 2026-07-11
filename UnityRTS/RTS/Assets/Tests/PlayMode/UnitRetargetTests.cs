@@ -8,10 +8,12 @@ using UnityEngine.TestTools;
 namespace GameManager.Tests.PlayMode
 {
 	/// <summary>
-	/// PlayMode tests for FindClosestReachableEnemy — the attack retargeting
-	/// logic that fires when a unit can't path to its assigned target.
-	/// Neighbors must be made non-walkable AFTER StartAttacking succeeds,
-	/// because UpdatePath(avoidUnits=false) ignores mobile units.
+	/// PlayMode tests for attack pursuit (U3). The engine does NOT retarget:
+	/// a unit pursues only the target its agent assigned. When that target
+	/// becomes unreachable, the unit goes IDLE (pursuit failed) so the agent
+	/// can decide what to do next — it never auto-switches to another enemy.
+	/// (Previously the engine retargeted via FindClosestReachableEnemy; that
+	/// behavior was removed — target selection belongs to the PlanningAgent.)
 	/// </summary>
 	[TestFixture]
 	public class UnitRetargetTests : PlayModeTestBase
@@ -30,114 +32,70 @@ namespace GameManager.Tests.PlayMode
 					}
 		}
 
-		#region FindClosestReachableEnemy
+		#region No engine retargeting
 
 		/// <summary>
-		/// When a warrior's path to its attack target is blocked repeatedly,
-		/// it retargets to the closest reachable enemy via FindClosestReachableEnemy.
+		/// When a warrior's path to its assigned target becomes blocked, the engine
+		/// does NOT switch it to a closer reachable enemy — the unit keeps the target
+		/// its agent assigned (and ultimately goes IDLE when it can't reach it).
 		/// </summary>
 		[UnityTest]
-		public IEnumerator Warrior_PathBlocked_RetargetsToReachableEnemy()
+		public IEnumerator Warrior_PathBlocked_DoesNotRetargetToOtherEnemy()
 		{
 			Unit warrior = PlaceUnit(UnitType.WARRIOR, new Vector3Int(5, 5, 0));
 			Unit unreachableEnemy = PlaceUnit(UnitType.PAWN, new Vector3Int(20, 20, 0), ctx.Agent1Go);
-			Unit reachableEnemy = PlaceUnit(UnitType.PAWN, new Vector3Int(8, 5, 0), ctx.Agent1Go);
+			Unit otherEnemy = PlaceUnit(UnitType.PAWN, new Vector3Int(8, 5, 0), ctx.Agent1Go);
 			yield return null;
 
-			// Start attacking — neighbors are walkable so initial path succeeds
+			// Assign the unreachable enemy as the target.
 			warrior.StartAttacking(new AttackEventArgs(warrior, unreachableEnemy));
 			Assert.AreEqual(UnitAction.ATTACK, warrior.CurrentAction);
+			int assignedNbr = unreachableEnemy.UnitNbr;
 
-			// Now wall off the unreachable enemy so subsequent re-paths fail
+			// Wall off the assigned target so pursuit fails.
 			WallOff(20, 20);
 
-			// Tick — after pathFailCount >= 3, FindClosestReachableEnemy fires
-			bool retargeted = false;
-			for (int i = 0; i < 300; i++)
+			// Tick — the warrior must NEVER switch to otherEnemy.
+			for (int i = 0; i < 200; i++)
 			{
 				BuildingTestHelper.Tick(warrior);
 				yield return null;
 
-				if (warrior.AttackUnit == reachableEnemy)
-				{
-					retargeted = true;
-					break;
-				}
+				if (warrior.CurrentAction == UnitAction.ATTACK)
+					Assert.AreNotEqual(otherEnemy.UnitNbr, warrior.AttackTargetNbr,
+						"Engine must not retarget to a different enemy");
+				else
+					break; // went IDLE — expected once the target is unreachable
 			}
-
-			Assert.IsTrue(retargeted,
-				"Warrior should retarget to reachable enemy when path to original target is blocked");
 		}
 
 		/// <summary>
-		/// When all enemies are unreachable, the attacker stays in ATTACK state
-		/// and keeps retrying (pathFailCount resets).
+		/// When the assigned target is unreachable, the warrior gives up pursuit
+		/// and goes IDLE (so the agent can re-decide), rather than staying stuck.
 		/// </summary>
 		[UnityTest]
-		public IEnumerator Warrior_AllEnemiesUnreachable_StaysInAttack()
+		public IEnumerator Warrior_UnreachableTarget_GoesIdle()
 		{
 			Unit warrior = PlaceUnit(UnitType.WARRIOR, new Vector3Int(5, 5, 0));
 			Unit enemy = PlaceUnit(UnitType.PAWN, new Vector3Int(20, 20, 0), ctx.Agent1Go);
 			yield return null;
 
-			// Start attacking — neighbors walkable so initial path succeeds
 			warrior.StartAttacking(new AttackEventArgs(warrior, enemy));
 			Assert.AreEqual(UnitAction.ATTACK, warrior.CurrentAction);
 
-			// Now wall off the enemy so subsequent re-paths fail
+			// Wall off the enemy so no path to it exists.
 			WallOff(20, 20);
 
-			// Tick many frames — warrior should stay in ATTACK (doesn't go IDLE)
-			// because attack retargeting resets pathFailCount when no alt found
+			bool wentIdle = false;
 			for (int i = 0; i < 200; i++)
 			{
 				BuildingTestHelper.Tick(warrior);
 				yield return null;
+				if (warrior.CurrentAction == UnitAction.IDLE) { wentIdle = true; break; }
 			}
 
-			Assert.AreEqual(UnitAction.ATTACK, warrior.CurrentAction,
-				"Warrior should stay in ATTACK state when all enemies unreachable (retries)");
-		}
-
-		/// <summary>
-		/// FindClosestReachableEnemy skips mines and friendly units.
-		/// </summary>
-		[UnityTest]
-		public IEnumerator Warrior_Retarget_SkipsMinesAndFriendlies()
-		{
-			Unit warrior = PlaceUnit(UnitType.WARRIOR, new Vector3Int(5, 5, 0));
-			Unit unreachableEnemy = PlaceUnit(UnitType.PAWN, new Vector3Int(20, 20, 0), ctx.Agent1Go);
-
-			// Place a mine (should be skipped) and a friendly pawn (should be skipped)
-			PlaceUnit(UnitType.MINE, new Vector3Int(8, 5, 0));
-			PlaceUnit(UnitType.PAWN, new Vector3Int(7, 5, 0)); // friendly — same agent
-
-			// Place a reachable enemy further away
-			Unit reachableEnemy = PlaceUnit(UnitType.WARRIOR, new Vector3Int(10, 5, 0), ctx.Agent1Go);
-			yield return null;
-
-			// Start attacking — initial path succeeds
-			warrior.StartAttacking(new AttackEventArgs(warrior, unreachableEnemy));
-			Assert.AreEqual(UnitAction.ATTACK, warrior.CurrentAction);
-
-			// Now wall off the unreachable enemy
-			WallOff(20, 20);
-
-			bool retargeted = false;
-			for (int i = 0; i < 300; i++)
-			{
-				BuildingTestHelper.Tick(warrior);
-				yield return null;
-
-				if (warrior.AttackUnit == reachableEnemy)
-				{
-					retargeted = true;
-					break;
-				}
-			}
-
-			Assert.IsTrue(retargeted,
-				"Warrior should retarget to enemy warrior, skipping mines and friendly units");
+			Assert.IsTrue(wentIdle,
+				"Warrior should go IDLE when its assigned target is unreachable");
 		}
 
 		#endregion

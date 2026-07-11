@@ -810,18 +810,20 @@ namespace GameManager.Tests.PlayMode
 
 		#endregion
 
-		#region FindClosestReachableEnemy tried >= 3 (Unit.Tasks.cs:270)
+		#region Unreachable target → IDLE (no engine retargeting, U3)
 
 		/// <summary>
-		/// When FindClosestReachableEnemy has checked 3 enemies without finding a reachable one,
-		/// it stops trying and returns null.
+		/// A warrior assigned an enemy it cannot path to goes IDLE rather than
+		/// retargeting to another enemy. The engine never picks targets — that is
+		/// the PlanningAgent's job. (Replaces the former FindClosestReachableEnemy
+		/// coverage, which tested engine-side retargeting that was removed.)
 		/// </summary>
 		[UnityTest]
-		public IEnumerator FindClosestReachableEnemy_TriedThree_ReturnsNull()
+		public IEnumerator AttackerWalledOffFromTarget_GoesIdle()
 		{
 			Unit warrior = PlaceUnit(UnitType.WARRIOR, new Vector3Int(5, 5, 0));
 
-			// Create a wall that blocks pathing to all enemies (both legacy GridCells and shared GameGrid)
+			// Wall that blocks pathing to all enemies (legacy GridCells + shared GameGrid)
 			for (int y = 0; y < 30; y++)
 			{
 				ctx.MapManager.GridCells[10, y].SetWalkable(false);
@@ -829,22 +831,25 @@ namespace GameManager.Tests.PlayMode
 				ctx.MapManager.Grid.SetCellBlocked(10, y);
 			}
 
-			// Place 4+ enemies on the other side of the wall
-			PlaceUnit(UnitType.PAWN, new Vector3Int(15, 5, 0), ctx.Agent1Go);
+			// Enemies on the far side of the wall
+			Unit target = PlaceUnit(UnitType.PAWN, new Vector3Int(15, 5, 0), ctx.Agent1Go);
 			PlaceUnit(UnitType.PAWN, new Vector3Int(15, 10, 0), ctx.Agent1Go);
 			PlaceUnit(UnitType.PAWN, new Vector3Int(15, 15, 0), ctx.Agent1Go);
-			PlaceUnit(UnitType.PAWN, new Vector3Int(15, 20, 0), ctx.Agent1Go);
 			yield return null;
 
-			// Call FindClosestReachableEnemy(Unit excluding) via reflection
-			var method = typeof(Unit).GetMethod("FindClosestReachableEnemy",
-				BindingFlags.NonPublic | BindingFlags.Instance);
-			if (method != null)
+			warrior.StartAttacking(new AttackEventArgs(warrior, target));
+			Assert.AreEqual(UnitAction.ATTACK, warrior.CurrentAction);
+
+			bool wentIdle = false;
+			for (int i = 0; i < 200; i++)
 			{
-				var result = method.Invoke(warrior, new object[] { (Unit)null });
-				Assert.IsNull(result,
-					"FindClosestReachableEnemy should return null after trying 3 unreachable enemies");
+				BuildingTestHelper.Tick(warrior);
+				yield return null;
+				if (warrior.CurrentAction == UnitAction.IDLE) { wentIdle = true; break; }
 			}
+
+			Assert.IsTrue(wentIdle,
+				"Warrior should go IDLE when its assigned target is unreachable (no engine retarget)");
 		}
 
 		#endregion

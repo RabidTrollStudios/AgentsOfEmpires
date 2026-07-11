@@ -92,13 +92,9 @@ namespace GameManager.Tests.PlayMode
 			// 4. Build UnitManager
 			ctx.UnitManager = new UnitManager(ctx.MapManager, prefabs);
 
-			// 5. Build EventDispatcher
-			var eventDispatcher = new EventDispatcher(ctx.UnitManager, ctx.MapManager);
-
-			// 6. Inject sub-managers into GameManager via reflection
+			// 5. Inject sub-managers into GameManager via reflection
 			SetPrivateField(gm, "mapManager", ctx.MapManager);
 			SetPrivateField(gm, "unitManager", ctx.UnitManager);
-			SetPrivateField(gm, "eventDispatcher", eventDispatcher);
 			SetPrivateField(gm, "Prefabs", prefabs);
 
 			// 7. Set gameState to PLAYING so Unit.FixedUpdate (which checks IsPlaying) doesn't NRE

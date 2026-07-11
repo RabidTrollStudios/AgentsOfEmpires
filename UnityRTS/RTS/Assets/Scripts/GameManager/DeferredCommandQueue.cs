@@ -19,7 +19,7 @@ namespace GameManager
         public int AgentNbr;
         public DeferredCommandType Type;
         public int UnitNbr;
-        public Agent Agent;      // Owning agent (passed as sender to EventDispatcher)
+        public Agent Agent;      // Owning agent (for command recording / attribution)
 
         // Move / Build
         public Vector3Int Target;
@@ -79,8 +79,6 @@ namespace GameManager
                 if (cmp != 0) return cmp;
                 return a.UnitNbr.CompareTo(b.UnitNbr);
             });
-
-            var events = GameManager.Instance.Events;
 
             // Use shared CommandProcessor for identical logic with SimGame.
             var world = GameManager.Instance.GetTickWorld();

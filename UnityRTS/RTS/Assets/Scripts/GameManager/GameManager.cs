@@ -197,11 +197,6 @@ namespace GameManager
 		public UnitManager Units => unitManager;
 
 		/// <summary>
-		/// Event dispatcher - command validation and dispatch
-		/// </summary>
-		public EventDispatcher Events => eventDispatcher;
-
-		/// <summary>
 		/// Turns the unit-specific debugging UIs on and off
 		/// </summary>
 		public bool HasUnitDebugging { get; private set; }
@@ -350,7 +345,6 @@ namespace GameManager
 		// Sub-managers
 		private MapManager mapManager;
 		private UnitManager unitManager;
-		private EventDispatcher eventDispatcher;
 		private AgentLoader agentLoader;
 
 		// Optional parity exporter (present only when a ParityExporter component is in
@@ -413,7 +407,6 @@ namespace GameManager
 			// Initialize sub-managers
 			mapManager = new MapManager();
 			unitManager = new UnitManager(mapManager, Prefabs);
-			eventDispatcher = new EventDispatcher(unitManager, mapManager);
 			agentLoader = new AgentLoader(pathToDLLs);
 
 			_input = new InputSystem_Actions();

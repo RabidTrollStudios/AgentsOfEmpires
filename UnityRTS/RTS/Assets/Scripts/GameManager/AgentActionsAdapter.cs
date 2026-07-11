@@ -65,18 +65,12 @@ namespace GameManager
         }
 
         /// <summary>
-        /// Validate through Agent.Commands. If it succeeds, queue the deferred command
-        /// instead of letting the Agent dispatch immediately.
-        /// Agent.Commands still calls EventDispatcher — we intercept by checking
-        /// the result and queueing separately. But we need to prevent the immediate dispatch.
-        ///
-        /// CHANGE: We no longer call agent.Move/Build/etc (which dispatch immediately).
-        /// Instead we do lightweight validation here and queue for deferred dispatch.
-        /// Heavy validation (pathfinding, buildability) happens at dispatch time via EventDispatcher.
-        /// </summary>
-        /// <summary>
-        /// Queue the command. Returns SUCCESS. Sets enqueued=true if this was the first
-        /// command for this unit this tick (for recording purposes).
+        /// Do lightweight capability validation here, then queue the command for
+        /// deferred dispatch. The full rule validation, pathfinding, gold, and state
+        /// init happen at dispatch time in AgentSDK.CommandProcessor (via
+        /// DeferredCommandQueue.ProcessAll) — the same shared path SimGame uses.
+        /// Returns SUCCESS. Sets enqueued=true if this was the first command for this
+        /// unit this tick (for recording purposes).
         /// </summary>
         private CommandResult ValidateAndQueue(int unitNbr, DeferredCommand cmd, out bool enqueued)
         {

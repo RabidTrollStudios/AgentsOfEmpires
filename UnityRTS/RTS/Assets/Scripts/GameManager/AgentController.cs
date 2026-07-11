@@ -46,8 +46,7 @@ namespace GameManager
             {
                 bridge.InitializeAdapters(agentNbr,
                     GameManager.Instance.Units,
-                    GameManager.Instance.Map,
-                    GameManager.Instance.Events);
+                    GameManager.Instance.Map);
             }
 
             _debugUpdaters = new Dictionary<string, Func<string>>

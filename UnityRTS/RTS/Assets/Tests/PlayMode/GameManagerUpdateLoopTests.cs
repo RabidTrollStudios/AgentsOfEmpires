@@ -140,10 +140,7 @@ namespace GameManager.Tests.PlayMode
 			bridge.Gold = 5000;
 
 			// Initialize adapters so InitializeRound → UpdateEnemyAgentNbr doesn't NRE
-			var eventDispatcher = (EventDispatcher)typeof(GameManager)
-				.GetField("eventDispatcher", BindingFlags.NonPublic | BindingFlags.Instance)
-				.GetValue(GM);
-			bridge.InitializeAdapters(agentNbr, ctx.UnitManager, ctx.MapManager, eventDispatcher);
+			bridge.InitializeAdapters(agentNbr, ctx.UnitManager, ctx.MapManager);
 
 			var controller = go.AddComponent<AgentController>();
 			controller.enabled = false; // Prevent Update() from running (null _debugTextAreas)
@@ -185,14 +182,6 @@ namespace GameManager.Tests.PlayMode
 			typeof(UnitManager)
 				.GetField("mapManager", BindingFlags.NonPublic | BindingFlags.Instance)
 				.SetValue(ctx.UnitManager, largeMap);
-
-			// Inject into EventDispatcher (private field)
-			var eventDispatcher = typeof(GameManager)
-				.GetField("eventDispatcher", BindingFlags.NonPublic | BindingFlags.Instance)
-				.GetValue(GM);
-			typeof(EventDispatcher)
-				.GetField("mapManager", BindingFlags.NonPublic | BindingFlags.Instance)
-				.SetValue(eventDispatcher, largeMap);
 
 			ctx.MapManager = largeMap;
 

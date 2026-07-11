@@ -26,7 +26,7 @@ namespace GameManager
         }
 
         internal void InitializeAdapters(int agentNbr, UnitManager unitManager,
-            MapManager mapManager, EventDispatcher events)
+            MapManager mapManager)
         {
             gameState = new GameStateAdapter(agentNbr, unitManager, mapManager);
             actions = new AgentActionsAdapter(this, unitManager);

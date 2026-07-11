@@ -318,7 +318,6 @@ namespace GameManager.Tests.PlayMode
 				"Odd TotalNbrOfRounds should remain unchanged");
 			Assert.IsNotNull(gm.Map, "MapManager should be initialized");
 			Assert.IsNotNull(gm.Units, "UnitManager should be initialized");
-			Assert.IsNotNull(gm.Events, "EventDispatcher should be initialized");
 
 			// Map generated correctly
 			Assert.AreEqual(72, gm.Map.MapSize.x, "Map width should be 72");
