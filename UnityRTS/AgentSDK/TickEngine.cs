@@ -397,14 +397,38 @@ namespace AgentSDK
                 float dmg = TaskEngine.ComputeDamagePerTick(
                     attacker.UnitType, target.UnitType,
                     world.Constants.Damage[attacker.UnitType], world.TickDuration);
-                target.Health -= dmg;
-                callbacks.OnDamageDealt(attacker, target, dmg);
 
-                if (target.Health <= 0)
+                if (!target.IsBuilt)
                 {
-                    GoIdle(attacker);
-                    callbacks.OnUnitKilled(target);
-                    return;
+                    // Attacking an under-construction building drains its build
+                    // progress rather than health (U2). Convert HP damage to
+                    // build-time damage so the same total damage destroys a
+                    // building regardless of how far along it is.
+                    float maxHp = GameConstants.HEALTH[target.UnitType];
+                    float creationTime = world.Constants.CreationTime[target.UnitType];
+                    float progressDmg = maxHp > 0f ? dmg * creationTime / maxHp : dmg;
+                    target.BuildProgress -= progressDmg;
+                    callbacks.OnDamageDealt(attacker, target, dmg);
+
+                    if (target.BuildProgress <= 0f)
+                    {
+                        target.Health = 0; // triggers normal death handling
+                        GoIdle(attacker);
+                        callbacks.OnUnitKilled(target);
+                        return;
+                    }
+                }
+                else
+                {
+                    target.Health -= dmg;
+                    callbacks.OnDamageDealt(attacker, target, dmg);
+
+                    if (target.Health <= 0)
+                    {
+                        GoIdle(attacker);
+                        callbacks.OnUnitKilled(target);
+                        return;
+                    }
                 }
             }
             else
