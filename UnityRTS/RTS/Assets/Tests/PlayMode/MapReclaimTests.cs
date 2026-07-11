@@ -75,7 +75,7 @@ namespace GameManager.Tests.PlayMode
 			s2.StartAttacking(new AttackEventArgs(s2, barracks));
 			s3.StartAttacking(new AttackEventArgs(s3, barracks));
 
-			yield return WaitUntil(
+			yield return WaitForTick(
 				() => ctx.UnitManager.GetUnit(barracksNbr) == null,
 				timeoutSeconds: 10f,
 				failMessage: "Barracks was not destroyed by warriors");
@@ -144,7 +144,7 @@ namespace GameManager.Tests.PlayMode
 			Unit attacker = PlaceUnit(UnitType.WARRIOR, new Vector3Int(9, 10, 0));
 			attacker.StartAttacking(new AttackEventArgs(attacker, friendlyWarrior));
 
-			yield return WaitUntil(
+			yield return WaitForTick(
 				() => ctx.UnitManager.GetUnit(warriorNbr) == null,
 				timeoutSeconds: 10f,
 				failMessage: "Warrior was not destroyed by attacker");

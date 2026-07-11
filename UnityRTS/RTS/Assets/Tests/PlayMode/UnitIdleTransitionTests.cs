@@ -48,7 +48,7 @@ namespace GameManager.Tests.PlayMode
 
 			Assert.AreEqual(UnitAction.MOVE, pawn.CurrentAction);
 
-			yield return WaitUntil(
+			yield return WaitForTick(
 				() => pawn.CurrentAction == UnitAction.IDLE,
 				timeoutSeconds: 20f,
 				failMessage: "Pawn did not return to IDLE after completing move");
@@ -76,7 +76,7 @@ namespace GameManager.Tests.PlayMode
 
 			yield return CombatTestHelper.WaitForDeath(ctx, enemyNbr, timeoutSeconds: 20f);
 
-			yield return WaitUntil(
+			yield return WaitForTick(
 				() => warrior.CurrentAction == UnitAction.IDLE,
 				timeoutSeconds: 10f,
 				failMessage: "Warrior did not return to IDLE after killing enemy");
@@ -100,7 +100,7 @@ namespace GameManager.Tests.PlayMode
 
 			yield return CombatTestHelper.WaitForDeath(ctx, enemyNbr, timeoutSeconds: 20f);
 
-			yield return WaitUntil(
+			yield return WaitForTick(
 				() => archer.CurrentAction == UnitAction.IDLE,
 				timeoutSeconds: 10f,
 				failMessage: "Archer did not return to IDLE after kill");
@@ -126,7 +126,7 @@ namespace GameManager.Tests.PlayMode
 			Assert.AreEqual(UnitAction.TRAIN, barracks.CurrentAction,
 				"BARRACKS should enter TRAIN state");
 
-			yield return WaitUntil(
+			yield return WaitForTick(
 				() => barracks.CurrentAction == UnitAction.IDLE,
 				timeoutSeconds: 10f,
 				failMessage: "BARRACKS did not return to IDLE after training completed");
@@ -147,7 +147,7 @@ namespace GameManager.Tests.PlayMode
 			baseUnit.StartTraining(new TrainEventArgs(baseUnit, UnitType.PAWN));
 			Assert.AreEqual(UnitAction.TRAIN, baseUnit.CurrentAction);
 
-			yield return WaitUntil(
+			yield return WaitForTick(
 				() => baseUnit.CurrentAction == UnitAction.IDLE,
 				timeoutSeconds: 10f,
 				failMessage: "BASE did not return to IDLE after training");
@@ -177,7 +177,7 @@ namespace GameManager.Tests.PlayMode
 			// Deplete the mine immediately
 			mine.Health = 0;
 
-			yield return WaitUntil(
+			yield return WaitForTick(
 				() => pawn.CurrentAction == UnitAction.IDLE,
 				timeoutSeconds: 20f,
 				failMessage: "Pawn did not go IDLE after mine was depleted");

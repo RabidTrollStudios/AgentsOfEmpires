@@ -58,7 +58,7 @@ namespace GameManager.Tests.PlayMode
 
 			yield return CombatTestHelper.WaitForDeath(ctx, enemyNbr, timeoutSeconds: 10f);
 
-			yield return WaitUntil(
+			yield return WaitForTick(
 				() => warrior.CurrentAction == UnitAction.IDLE,
 				timeoutSeconds: 10f,
 				failMessage: "Warrior did not return to IDLE after killing enemy");
@@ -85,7 +85,7 @@ namespace GameManager.Tests.PlayMode
 			warrior.StartAttacking(new AttackEventArgs(warrior, enemy));
 
 			// Wait for any damage to occur
-			yield return WaitUntil(
+			yield return WaitForTick(
 				() => enemy.Health < initialEnemyHealth,
 				timeoutSeconds: 20f,
 				failMessage: "Warrior did not deal damage to distant enemy after chasing");
@@ -111,7 +111,7 @@ namespace GameManager.Tests.PlayMode
 
 			archer.StartAttacking(new AttackEventArgs(archer, enemy));
 
-			yield return WaitUntil(
+			yield return WaitForTick(
 				() => enemy.Health < initialEnemyHealth,
 				timeoutSeconds: 20f,
 				failMessage: "Archer did not deal damage to distant enemy");

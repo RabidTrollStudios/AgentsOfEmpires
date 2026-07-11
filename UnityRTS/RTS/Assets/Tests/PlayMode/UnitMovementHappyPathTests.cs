@@ -26,7 +26,7 @@ namespace GameManager.Tests.PlayMode
 			Assert.AreEqual(UnitAction.MOVE, pawn.CurrentAction,
 				"Pawn should be in MOVE state after StartMoving");
 
-			yield return WaitUntil(
+			yield return WaitForTick(
 				() => pawn.CurrentAction == UnitAction.IDLE,
 				timeoutSeconds: 15f,
 				failMessage: "Pawn did not arrive at destination and go IDLE");
@@ -48,7 +48,7 @@ namespace GameManager.Tests.PlayMode
 
 			pawn.StartMoving(new MoveEventArgs(pawn, UnitType.PAWN, target));
 
-			yield return WaitUntil(
+			yield return WaitForTick(
 				() => pawn.CurrentAction == UnitAction.IDLE,
 				timeoutSeconds: 15f,
 				failMessage: "Pawn did not finish moving");
@@ -70,7 +70,7 @@ namespace GameManager.Tests.PlayMode
 
 			Assert.AreEqual(UnitAction.MOVE, pawn.CurrentAction);
 
-			yield return WaitUntil(
+			yield return WaitForTick(
 				() => pawn.CurrentAction == UnitAction.IDLE,
 				timeoutSeconds: 10f,
 				failMessage: "Pawn did not arrive at distant target via multi-step path");

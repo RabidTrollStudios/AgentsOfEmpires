@@ -42,7 +42,7 @@ namespace GameManager.Tests.PlayMode
 
 			StartGathering(pawn, mine, baseUnit);
 
-			yield return WaitUntil(
+			yield return WaitForTick(
 				() => agent.Gold > initialGold,
 				30f,
 				"Pawn did not deposit gold after a full gather round trip");
@@ -64,7 +64,7 @@ namespace GameManager.Tests.PlayMode
 
 			StartGathering(pawn, mine, baseUnit);
 
-			yield return WaitUntil(
+			yield return WaitForTick(
 				() => agent.Gold > initialGold,
 				30f,
 				"Pawn did not complete first deposit");
@@ -85,7 +85,7 @@ namespace GameManager.Tests.PlayMode
 
 			StartGathering(pawn, mine, baseUnit);
 
-			yield return WaitUntil(
+			yield return WaitForTick(
 				() => mine.Health < initialMineHealth,
 				15f,
 				"Mine health did not decrease during pawn mining");
@@ -109,7 +109,7 @@ namespace GameManager.Tests.PlayMode
 
 			StartGathering(pawn, mine, baseUnit);
 
-			yield return WaitUntil(
+			yield return WaitForTick(
 				() => agent.Gold > initialGold,
 				20f,
 				"Pawn did not deposit gold even with mine close to base");
@@ -130,7 +130,7 @@ namespace GameManager.Tests.PlayMode
 
 			StartGathering(pawn, mine, baseUnit);
 
-			yield return WaitUntil(
+			yield return WaitForTick(
 				() => agent.Gold > initialGold,
 				120f,
 				"Pawn did not deposit gold when mine is far from base");
@@ -151,7 +151,7 @@ namespace GameManager.Tests.PlayMode
 
 			StartGathering(pawn, mine, baseUnit);
 
-			yield return WaitUntil(
+			yield return WaitForTick(
 				() => pawn.CurrentAction == UnitAction.IDLE,
 				30f,
 				"Pawn did not go IDLE after depleting a low-health mine");

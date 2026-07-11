@@ -42,7 +42,7 @@ namespace GameManager.Tests.PlayMode
 			AgentSDK.CommandProcessor.ProcessGather(pawn, mine.UnitNbr, baseUnit.UnitNbr, GameManager.Instance.GetTickWorld());
 
 			// Wait for first deposit
-			yield return WaitUntil(
+			yield return WaitForTick(
 				() => agent.Gold > initialGold,
 				timeoutSeconds: 10f,
 				failMessage: "First deposit did not occur");
@@ -69,7 +69,7 @@ namespace GameManager.Tests.PlayMode
 
 			// Wait for 3 deposits
 			int depositCount = 0;
-			yield return WaitUntil(() =>
+			yield return WaitForTick(() =>
 			{
 				if (agent.Gold > lastGold)
 				{
@@ -111,7 +111,7 @@ namespace GameManager.Tests.PlayMode
 
 			// Wait for gold to increase by at least 2 mining capacities
 			int targetGold = initialGold + (int)(Constants.MINING_CAPACITY[UnitType.PAWN] * 2);
-			yield return WaitUntil(
+			yield return WaitForTick(
 				() => agent.Gold >= targetGold,
 				timeoutSeconds: 15f,
 				failMessage: "Two pawns did not together deposit enough gold");
@@ -141,7 +141,7 @@ namespace GameManager.Tests.PlayMode
 			AgentSDK.CommandProcessor.ProcessGather(pawn, mine.UnitNbr, baseUnit.UnitNbr, GameManager.Instance.GetTickWorld());
 
 			// Wait for first deposit (one complete cycle)
-			yield return WaitUntil(
+			yield return WaitForTick(
 				() => agent.Gold > initialGold,
 				timeoutSeconds: 10f,
 				failMessage: "First gather cycle did not complete");
@@ -150,7 +150,7 @@ namespace GameManager.Tests.PlayMode
 			mine.Health = 0;
 
 			// Pawn should eventually go IDLE when it can't mine
-			yield return WaitUntil(
+			yield return WaitForTick(
 				() => pawn.CurrentAction == UnitAction.IDLE,
 				timeoutSeconds: 20f,
 				failMessage: "Pawn did not go IDLE after mine was depleted");
@@ -176,7 +176,7 @@ namespace GameManager.Tests.PlayMode
 			AgentSDK.CommandProcessor.ProcessGather(pawn, mine.UnitNbr, baseUnit.UnitNbr, GameManager.Instance.GetTickWorld());
 
 			// Wait for first deposit
-			yield return WaitUntil(
+			yield return WaitForTick(
 				() => agent.Gold > initialGold,
 				timeoutSeconds: 20f,
 				failMessage: "First gather deposit did not occur");
@@ -184,7 +184,7 @@ namespace GameManager.Tests.PlayMode
 			// Destroy the base
 			baseUnit.Health = 0;
 
-			yield return WaitUntil(
+			yield return WaitForTick(
 				() => pawn.CurrentAction == UnitAction.IDLE,
 				timeoutSeconds: 20f,
 				failMessage: "Pawn did not go IDLE after base was destroyed");

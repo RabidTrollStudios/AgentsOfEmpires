@@ -128,7 +128,7 @@ namespace GameManager.Tests.PlayMode
 
 			yield return CombatTestHelper.WaitForDeath(ctx, enemy.UnitNbr, timeoutSeconds: 20f);
 
-			yield return WaitUntil(
+			yield return WaitForTick(
 				() => s1.CurrentAction == UnitAction.IDLE && s2.CurrentAction == UnitAction.IDLE,
 				timeoutSeconds: 10f,
 				failMessage: "Warriors did not return to IDLE after group kill");

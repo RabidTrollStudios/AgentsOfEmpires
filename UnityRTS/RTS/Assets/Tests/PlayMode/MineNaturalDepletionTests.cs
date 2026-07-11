@@ -39,7 +39,7 @@ namespace GameManager.Tests.PlayMode
 			pawn.StartGathering(new GatherEventArgs(pawn, mine, baseUnit));
 
 			// Wait for pawn to go IDLE (mine exhausted)
-			yield return WaitUntil(
+			yield return WaitForTick(
 				() => pawn.CurrentAction == UnitAction.IDLE,
 				timeoutSeconds: 10f,
 				failMessage: "Pawn did not go IDLE after low-health mine was depleted");
@@ -70,7 +70,7 @@ namespace GameManager.Tests.PlayMode
 			pawn.StartGathering(new GatherEventArgs(pawn, mine, baseUnit));
 
 			// Wait for gold to increase (deposit occurred) or pawn to go IDLE
-			yield return WaitUntil(
+			yield return WaitForTick(
 				() => agent.Gold > initialGold || pawn.CurrentAction == UnitAction.IDLE,
 				timeoutSeconds: 10f,
 				failMessage: "Pawn did not complete gather cycle before going IDLE");
@@ -103,7 +103,7 @@ namespace GameManager.Tests.PlayMode
 
 			pawn.StartGathering(new GatherEventArgs(pawn, mine, baseUnit));
 
-			yield return WaitUntil(
+			yield return WaitForTick(
 				() => pawn.CurrentAction == UnitAction.IDLE,
 				timeoutSeconds: 20f,
 				failMessage: "Pawn did not go IDLE when mine was already depleted");
@@ -137,7 +137,7 @@ namespace GameManager.Tests.PlayMode
 			pawn.StartGathering(new GatherEventArgs(pawn, mine, baseUnit));
 
 			// Wait for first deposit (one complete mining cycle)
-			yield return WaitUntil(
+			yield return WaitForTick(
 				() => agent.Gold > initialGold,
 				timeoutSeconds: 10f,
 				failMessage: "First gather deposit did not occur");

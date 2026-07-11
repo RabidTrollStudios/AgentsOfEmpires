@@ -42,7 +42,7 @@ namespace GameManager.Tests.PlayMode
 
 			// Wait until the building exists and has accumulated some progress
 			Unit building = null;
-			yield return WaitUntil(() =>
+			yield return WaitForTick(() =>
 			{
 				building = FindUnbuiltBuilding(UnitType.BASE);
 				return building != null && building.BuildProgress > 0f;
@@ -80,7 +80,7 @@ namespace GameManager.Tests.PlayMode
 
 			// Wait for some build progress to accumulate
 			Unit building = null;
-			yield return WaitUntil(() =>
+			yield return WaitForTick(() =>
 			{
 				building = FindUnbuiltBuilding(UnitType.BASE);
 				return building != null && building.BuildProgress > 0f;
@@ -101,7 +101,7 @@ namespace GameManager.Tests.PlayMode
 				"Pawn B should resume building the incomplete BASE");
 
 			// Wait for the building to complete
-			yield return WaitUntil(
+			yield return WaitForTick(
 				() => building != null && building.IsBuilt,
 				timeoutSeconds: 10f,
 				failMessage: "Building should complete after Pawn B resumes");
@@ -127,7 +127,7 @@ namespace GameManager.Tests.PlayMode
 
 			// Wait for build progress to accumulate
 			Unit building = null;
-			yield return WaitUntil(() =>
+			yield return WaitForTick(() =>
 			{
 				building = FindUnbuiltBuilding(UnitType.BASE);
 				return building != null && building.BuildProgress > 0f;
@@ -143,7 +143,7 @@ namespace GameManager.Tests.PlayMode
 				"Building should retain progress after move interrupts build");
 
 			// Wait for pawn to be idle
-			yield return WaitUntil(
+			yield return WaitForTick(
 				() => pawn.CurrentAction == UnitAction.IDLE,
 				timeoutSeconds: 15f,
 				failMessage: "Pawn should become idle after reaching move target");
@@ -154,7 +154,7 @@ namespace GameManager.Tests.PlayMode
 				"Pawn should be able to resume its own interrupted build");
 
 			// Wait for completion
-			yield return WaitUntil(
+			yield return WaitForTick(
 				() => building.IsBuilt,
 				timeoutSeconds: 10f,
 				failMessage: "Building should complete after pawn resumes");
