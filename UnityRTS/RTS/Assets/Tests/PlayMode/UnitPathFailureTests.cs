@@ -53,17 +53,15 @@ namespace GameManager.Tests.PlayMode
 			Unit pawn = PlaceUnit(UnitType.PAWN, new Vector3Int(7, 5, 0));
 			yield return null;
 
+			// The mine is fully walled off, so there is no path to any of its neighbor
+			// cells at command time. ProcessGather rejects an unreachable gather up front
+			// (NO_PATH_FOUND) without entering GATHER, so the pawn stays IDLE.
 			pawn.StartGathering(new GatherEventArgs(pawn, mine, baseUnit));
-			Assert.AreEqual(UnitAction.GATHER, pawn.CurrentAction);
 
-			// Tick many times — the pawn should eventually give up and go IDLE
-			yield return WaitUntil(() =>
-			{
-				BuildingTestHelper.Tick(pawn);
-				return pawn.CurrentAction == UnitAction.IDLE;
-			}, timeoutSeconds: 15f, failMessage: "Pawn should go IDLE after repeated path failures");
-
-			Assert.AreEqual(UnitAction.IDLE, pawn.CurrentAction);
+			Assert.AreNotEqual(UnitAction.GATHER, pawn.CurrentAction,
+				"Pawn should not start gathering a fully-unreachable mine");
+			Assert.AreEqual(UnitAction.IDLE, pawn.CurrentAction,
+				"Pawn should stay IDLE when the mine cannot be reached");
 		}
 
 		#endregion
