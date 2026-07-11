@@ -39,11 +39,7 @@ namespace GameManager
             => Grid.FindPathToUnit(start, unitType, anchor);
 
         public List<Position> GetBuildablePositionsNearUnit(UnitType unitType, Position anchor)
-        {
-            var r = Grid.GetBuildablePositionsNearUnit(unitType, anchor);
-            UnityEngine.Debug.Log($"[TRAINDBG] GetBuildablePositionsNearUnit({unitType}, {anchor.X},{anchor.Y}) -> {r.Count} cells");
-            return r;
-        }
+            => Grid.GetBuildablePositionsNearUnit(unitType, anchor);
 
         public bool IsNeighborOfUnit(Position pos, UnitType unitType, Position anchor)
             => Grid.IsNeighborOfUnit(pos, unitType, anchor);
@@ -74,7 +70,6 @@ namespace GameManager
 
         public ITickUnit SpawnUnit(int ownerAgentNbr, UnitType unitType, Position pos, float health, bool isBuilt)
         {
-            UnityEngine.Debug.Log($"[TRAINDBG] SpawnUnit(owner={ownerAgentNbr}, {unitType}, {pos.X},{pos.Y}) — Agents has key? {GameManager.Instance.Agents != null && GameManager.Instance.Agents.ContainsKey(ownerAgentNbr)}");
             var gm = GameManager.Instance;
             var agentGo = gm.Agents[ownerAgentNbr];
             var gridPos = new UnityEngine.Vector3Int(pos.X, pos.Y, 0);
@@ -92,15 +87,6 @@ namespace GameManager
 
         DerivedGameConstants ITickWorld.Constants => GameConstants.Derived;
 
-        public float TickDuration
-        {
-            get
-            {
-                float d = UnityEngine.Time.fixedDeltaTime;
-                if (!_loggedTickDur) { UnityEngine.Debug.Log($"[TRAINDBG] TickDuration = {d}"); _loggedTickDur = true; }
-                return d;
-            }
-        }
-        private bool _loggedTickDur;
+        public float TickDuration => UnityEngine.Time.fixedDeltaTime;
     }
 }
