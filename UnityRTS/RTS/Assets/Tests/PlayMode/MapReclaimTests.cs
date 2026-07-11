@@ -19,22 +19,24 @@ namespace GameManager.Tests.PlayMode
 		#region Building Destruction
 
 		/// <summary>
-		/// When a 3x3 BASE is destroyed (health set to 0), all 9 footprint cells
-		/// become buildable again.
+		/// When a BASE is destroyed (health set to 0), every cell of its footprint
+		/// becomes buildable again. BASE is 6x4 and the footprint extends UP from the
+		/// anchor (anchor + (i, +j)), matching GameGrid/MapManager.SetUnitFootprint.
 		/// </summary>
 		[UnityTest]
-		public IEnumerator Base_Destroyed_All9CellsReclaimed()
+		public IEnumerator Base_Destroyed_AllCellsReclaimed()
 		{
 			var basePos = new Vector3Int(10, 10, 0);
 			Unit building = PlaceUnit(UnitType.BASE, basePos);
 
-			var size = Constants.UNIT_SIZE[UnitType.BASE];
+			var size = Constants.UNIT_SIZE[UnitType.BASE]; // (6, 4)
 			var footprint = new List<Vector3Int>();
 			for (int i = 0; i < size.x; i++)
 				for (int j = 0; j < size.y; j++)
-					footprint.Add(basePos + new Vector3Int(i, -j, 0));
+					footprint.Add(basePos + new Vector3Int(i, j, 0));
 
-			// All footprint cells should be blocked
+			// All footprint cells should be non-buildable while the BASE is alive
+			// (the top passage row is walkable but still not buildable).
 			foreach (var cell in footprint)
 				Assert.IsFalse(ctx.MapManager.IsGridPositionBuildable(cell),
 					$"Cell {cell} should be blocked while BASE is alive");
