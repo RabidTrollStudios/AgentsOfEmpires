@@ -48,7 +48,7 @@ namespace GameManager.Tests.PlayMode
 
 		#endregion
 
-		#region StartBuilding — Resume No Path (Unit.Actions.cs:99-102)
+		#region StartBuilding — Resume No Path
 
 		/// <summary>
 		/// When a pawn tries to resume building an unfinished building but
@@ -81,7 +81,7 @@ namespace GameManager.Tests.PlayMode
 
 		#endregion
 
-		#region StartGathering — Busy Unit (Unit.Actions.cs:234-237)
+		#region StartGathering — Busy Unit
 
 		/// <summary>
 		/// A pawn in BUILD state cannot start gathering — the busy branch fires.
@@ -113,7 +113,7 @@ namespace GameManager.Tests.PlayMode
 
 		#endregion
 
-		#region StartGathering — Resource/Base Gone (Unit.Actions.cs:244-247)
+		#region StartGathering — Resource/Base Gone
 
 		/// <summary>
 		/// When the base referenced in GatherEventArgs no longer exists
@@ -144,7 +144,7 @@ namespace GameManager.Tests.PlayMode
 
 		#endregion
 
-		#region StartAttacking — No Path (Unit.Actions.cs:297-300)
+		#region StartAttacking — No Path
 
 		/// <summary>
 		/// When a warrior tries to attack a target behind an impassable wall
@@ -165,13 +165,18 @@ namespace GameManager.Tests.PlayMode
 
 			warrior.StartAttacking(new AttackEventArgs(warrior, enemy));
 
+			// ProcessAttack accepts the command and enters ATTACK with an empty path;
+			// the shared TickEngine then gives up pursuit (unreachable target) and goes
+			// IDLE on the next tick — target selection is the agent's job, not the engine's.
+			BuildingTestHelper.Tick(warrior);
+
 			Assert.AreEqual(UnitAction.IDLE, warrior.CurrentAction,
-				"Warrior should stay IDLE when no path to target exists");
+				"Warrior should go IDLE when no path to target exists (after one tick)");
 		}
 
 		#endregion
 
-		#region StartRepairing — No Path (Unit.Actions.cs:349-352)
+		#region StartRepairing — No Path (TickEngine / CommandProcessor.ProcessRepair)
 
 		/// <summary>
 		/// When a pawn tries to repair a building behind an impassable wall,
@@ -318,7 +323,7 @@ namespace GameManager.Tests.PlayMode
 
 		#endregion
 
-		#region UpdateRepair — Building Health <= 0 (Unit.Tasks.cs:366-369)
+		#region Repair — Building Health <= 0 (TickEngine.AdvanceRepair)
 
 		/// <summary>
 		/// If a building's health drops to 0 during repair (not destroyed via Update),
@@ -361,7 +366,7 @@ namespace GameManager.Tests.PlayMode
 
 		#endregion
 
-		#region UpdateGather — Mine Dead + No Base (Unit.Tasks.cs:488-491)
+		#region Gather — Mine Dead + No Base (TickEngine.AdvanceGather)
 
 		/// <summary>
 		/// When a pawn is in MINING phase and the mine dies but the base
@@ -407,7 +412,7 @@ namespace GameManager.Tests.PlayMode
 
 		#endregion
 
-		#region UpdateGather — TO_BASE Phase: Not At Neighbor (Unit.Tasks.cs:564-569)
+		#region Gather — TO_BASE Phase: Not At Neighbor (TickEngine.AdvanceGather)
 
 		/// <summary>
 		/// When a pawn in TO_BASE phase reaches end of its path but is not
@@ -450,7 +455,7 @@ namespace GameManager.Tests.PlayMode
 
 		#endregion
 
-		#region UpdateGather — TO_BASE Phase: Base Destroyed (Unit.Tasks.cs:570-574)
+		#region Gather — TO_BASE Phase: Base Destroyed (TickEngine.AdvanceGather)
 
 		/// <summary>
 		/// When a pawn in TO_BASE phase finds that the base has been destroyed,
@@ -495,7 +500,7 @@ namespace GameManager.Tests.PlayMode
 
 		#endregion
 
-		#region UpdateGather — MINING Phase: Capacity Reached, No Base (Unit.Tasks.cs:534-538)
+		#region Gather — MINING Phase: Capacity Reached, No Base (TickEngine.AdvanceGather)
 
 		/// <summary>
 		/// When a pawn reaches mining capacity but the base is destroyed,
@@ -533,7 +538,7 @@ namespace GameManager.Tests.PlayMode
 
 		#endregion
 
-		#region UpdateGather — Mine Depleted at Base: No Mine for Return Trip (Unit.Tasks.cs:558-562)
+		#region Gather — Mine Depleted at Base: No Mine for Return Trip (TickEngine.AdvanceGather)
 
 		/// <summary>
 		/// When a pawn deposits gold at the base but the mine has been destroyed,
@@ -580,7 +585,7 @@ namespace GameManager.Tests.PlayMode
 
 		#endregion
 
-		#region StartGathering — Unit in REPAIR state (Unit.Actions.cs:234-237, alternate)
+		#region StartGathering — Unit in REPAIR state, alternate
 
 		/// <summary>
 		/// A pawn in REPAIR state cannot start gathering.
@@ -648,7 +653,7 @@ namespace GameManager.Tests.PlayMode
 
 		#endregion
 
-		#region Move Interrupts Build — currentBuilding Cleanup (Unit.Actions.cs:164-167)
+		#region Move Interrupts Build — currentBuilding Cleanup
 
 		/// <summary>
 		/// When a move command interrupts a build, currentBuilding should be
