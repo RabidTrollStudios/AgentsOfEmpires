@@ -643,7 +643,7 @@ namespace PlanningAgent
                     {
                         Position mineRef = mineNeighbors[0];
                         var sorted = new System.Collections.Generic.List<Position>(freshPositions);
-                        sorted.Sort((a, b) => Position.Distance(a, mineRef).CompareTo(Position.Distance(b, mineRef)));
+                        DeterministicSort.SortByDistance(sorted, mineRef);
                         int bestPathLen = int.MaxValue;
                         Position bestPos = new Position(-1, -1);
                         foreach (Position pos in sorted)

@@ -638,13 +638,13 @@ namespace PlanningAgent
                 if (mineInfo.HasValue)
                 {
                     Position mineCenter = mineInfo.Value.CenterPosition;
-                    sorted.Sort((a, b) => Position.Distance(a, mineCenter).CompareTo(Position.Distance(b, mineCenter)));
+                    DeterministicSort.SortByDistance(sorted, mineCenter);
                 }
             }
             else if (baseCenter.X >= 0)
             {
                 // Place other buildings near the base
-                sorted.Sort((a, b) => Position.Distance(a, baseCenter).CompareTo(Position.Distance(b, baseCenter)));
+                DeterministicSort.SortByDistance(sorted, baseCenter);
             }
 
             foreach (Position pos in sorted)

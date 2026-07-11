@@ -186,6 +186,41 @@
             Compute all game-speed-dependent constants for the given game speed.
             </summary>
         </member>
+        <member name="T:AgentSDK.DeterministicSort">
+             <summary>
+             Deterministic sorting helpers for agent code.
+            
+             <para>
+             <see cref="M:System.Collections.Generic.List`1.Sort(System.Comparison{`0})"/> uses an UNSTABLE introsort, and its
+             tie-breaking order differs between runtimes — notably Unity's Mono/IL2CPP versus the
+             headless .NET runtime used by the simulation harness. When an agent sorts candidate
+             positions purely by distance, grid cells that are equidistant from the target tie, and
+             the two runtimes can order those ties differently. The agent then picks a different
+             build/placement position in Unity than in the headless sim — a parity divergence
+             (see issue #4: barracks placed at a different position at ~tick 28).
+             </para>
+            
+             <para>
+             These helpers sort by the primary key and break ties with a fixed, coordinate-based
+             order, so the result is identical on every runtime. Prefer them over a bare
+             <c>list.Sort((a, b) =&gt; Distance(a, t).CompareTo(Distance(b, t)))</c> anywhere the
+             result feeds a decision that must match between Unity and the simulation.
+             </para>
+             </summary>
+        </member>
+        <member name="M:AgentSDK.DeterministicSort.Compare(AgentSDK.Position,AgentSDK.Position)">
+            <summary>
+            Deterministic ordering of two positions: lower X first, then lower Y.
+            Total order over the grid, so it fully resolves any tie.
+            </summary>
+        </member>
+        <member name="M:AgentSDK.DeterministicSort.SortByDistance(System.Collections.Generic.List{AgentSDK.Position},AgentSDK.Position)">
+            <summary>
+            Sort <paramref name="positions"/> in place by distance to <paramref name="target"/>,
+            ascending, breaking ties by <see cref="M:AgentSDK.DeterministicSort.Compare(AgentSDK.Position,AgentSDK.Position)"/> so the order is identical on
+            every runtime.
+            </summary>
+        </member>
         <member name="T:AgentSDK.FailedCommand">
             <summary>
             A command that passed queue-time validation but failed during Phase 1 processing.
