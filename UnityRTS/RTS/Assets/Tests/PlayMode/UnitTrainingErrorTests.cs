@@ -40,15 +40,20 @@ namespace GameManager.Tests.PlayMode
 			Vector3Int basePos = new Vector3Int(15, 15, 0);
 			Unit baseUnit = PlaceBuiltBase(basePos);
 
-			List<Vector3Int> neighborPositions =
-				ctx.MapManager.GetBuildableGridPositionsNearUnit(UnitType.BASE, basePos);
+			// Occupy the actual SPAWN candidate cells. Training spawns via the shared
+			// Grid.GetBuildablePositionsNearUnit (OPEN cells only) — NOT MapManager's
+			// GetBuildableGridPositionsNearUnit, which also returns the building's
+			// walkable passage row (those can't be "occupied away" by placing a pawn,
+			// so using that query here left the passage cells and failed the precondition).
+			var anchor = new Position(basePos.x, basePos.y);
+			var spawnCells = ctx.MapManager.Grid.GetBuildablePositionsNearUnit(UnitType.BASE, anchor);
 
-			foreach (Vector3Int pos in neighborPositions)
-				PlaceUnit(UnitType.PAWN, pos);
+			foreach (var p in spawnCells)
+				PlaceUnit(UnitType.PAWN, new Vector3Int(p.X, p.Y, 0));
 
-			var remaining = ctx.MapManager.GetBuildableGridPositionsNearUnit(UnitType.BASE, basePos);
+			var remaining = ctx.MapManager.Grid.GetBuildablePositionsNearUnit(UnitType.BASE, anchor);
 			Assert.AreEqual(0, remaining.Count,
-				"All neighbor cells should be occupied before training");
+				"All spawn candidate cells should be occupied before training");
 
 			baseUnit.StartTraining(new TrainEventArgs(baseUnit, UnitType.PAWN));
 			Assert.AreEqual(UnitAction.TRAIN, baseUnit.CurrentAction);
