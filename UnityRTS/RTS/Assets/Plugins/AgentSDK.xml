@@ -22,6 +22,13 @@
             Both engines call these methods to guarantee identical command handling.
             </summary>
         </member>
+        <member name="M:AgentSDK.CommandProcessor.FindUnbuiltBuildingAt(AgentSDK.ITickWorld,AgentSDK.Position,AgentSDK.UnitType,System.Int32)">
+            <summary>
+            Find an unbuilt building of the given type anchored at <paramref name="position"/>
+            owned by <paramref name="ownerAgentNbr"/>. Returns null if none — used to resume
+            construction of a building whose original builder died or moved away.
+            </summary>
+        </member>
         <member name="T:AgentSDK.CommandResult">
             <summary>
             Result codes returned by IAgentActions command methods.
@@ -745,6 +752,13 @@
             <summary>
             Abstraction over a game unit for the shared TickEngine.
             Both SimUnit (headless) and Unity's Unit (MonoBehaviour) implement this.
+            </summary>
+        </member>
+        <member name="P:AgentSDK.ITickUnit.BuildProgress">
+            <summary>
+            Construction progress (seconds) accumulated on an unbuilt BUILDING unit.
+            Lives on the building — not the pawn — so it survives the builder's death
+            and lets any pawn resume construction. Ignored on non-building units.
             </summary>
         </member>
         <member name="T:AgentSDK.ITickWorld">
