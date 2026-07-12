@@ -127,6 +127,11 @@ namespace GameManager.GameElements
         // Combat
         int ITickUnit.AttackTargetNbr { get => attackUnitNbr; set => attackUnitNbr = value; }
 
+        // Transient engine-side flag: a pursuit pathfind was deferred by PathBudget this
+        // tick. Not serialized and not visual — lives only for the tick loop's retry.
+        private bool repathPending;
+        bool ITickUnit.RepathPending { get => repathPending; set => repathPending = value; }
+
         // Repair
         int ITickUnit.RepairBuildingNbr
         {

@@ -87,6 +87,7 @@ namespace AgentSDK
             unit.HealTargetNbr = -1;
             unit.BuildTargetNbr = -1;
             unit.RepairBuildingNbr = -1;
+            unit.RepathPending = false;
         }
 
         #region Movement
@@ -202,8 +203,17 @@ namespace AgentSDK
             }
             else
             {
-                var repath = world.FindPathToUnit(pawn.GridPosition, UnitType.MINE, mine.GridPosition);
-                if (repath.Count > 0)
+                // Gated like combat pursuit: a whole crew whose mine vanished won't all
+                // repath on one tick. Deferred (null) → hold and retry next tick; empty
+                // path → mine genuinely unreachable, abandon.
+                var repath = PathBudget.GatedRepath(world, pawn,
+                    () => world.FindPathToUnit(pawn.GridPosition, UnitType.MINE, mine.GridPosition));
+                if (repath == null)
+                {
+                    pawn.TickPath = null;
+                    pawn.PathIndex = 0;
+                }
+                else if (repath.Count > 0)
                 {
                     pawn.TickPath = repath;
                     pawn.PathIndex = 0;
@@ -365,8 +375,15 @@ namespace AgentSDK
             }
             else
             {
-                var path = world.FindPathToUnit(pawn.GridPosition, UnitType.BASE, baseUnit.GridPosition);
-                if (path.Count > 0)
+                // Gated like combat pursuit (see AdvanceGatherToMine).
+                var path = PathBudget.GatedRepath(world, pawn,
+                    () => world.FindPathToUnit(pawn.GridPosition, UnitType.BASE, baseUnit.GridPosition));
+                if (path == null)
+                {
+                    pawn.TickPath = null;
+                    pawn.PathIndex = 0;
+                }
+                else if (path.Count > 0)
                 {
                     pawn.TickPath = path;
                     pawn.PathIndex = 0;
@@ -442,8 +459,20 @@ namespace AgentSDK
                 // decide what to do next tick.
                 if (attacker.TickPath == null || attacker.PathIndex >= attacker.TickPath.Count)
                 {
-                    var path = world.FindPathToUnit(attacker.GridPosition, target.UnitType, target.GridPosition);
-                    if (path.Count > 0)
+                    // Gated: PathBudget staggers pursuit re-paths so a base-death herd
+                    // doesn't all pathfind on one tick. A deferred unit gets null (keep
+                    // ATTACK + target, RepathPending set) and retries next tick — it is
+                    // NOT treated as unreachable. Only an empty path (Count == 0) means
+                    // the target is genuinely unreachable, which ends the pursuit.
+                    var path = PathBudget.GatedRepath(world, attacker,
+                        () => world.FindPathToUnit(attacker.GridPosition, target.UnitType, target.GridPosition));
+                    if (path == null)
+                    {
+                        // Deferred this tick — hold position, keep the assigned target.
+                        attacker.TickPath = null;
+                        attacker.PathIndex = 0;
+                    }
+                    else if (path.Count > 0)
                     {
                         attacker.TickPath = path;
                         attacker.PathIndex = 0;

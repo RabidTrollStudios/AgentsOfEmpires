@@ -418,9 +418,22 @@
             (e.g., the building pawn's cell which it will vacate).
             </summary>
         </member>
+        <member name="M:AgentSDK.GameGrid.IsAreaBuildable(AgentSDK.UnitType,AgentSDK.Position,System.Collections.Generic.ISet{AgentSDK.Position})">
+            <summary>
+            Check if the full footprint is buildable, excluding a set of positions
+            (e.g. the agent's own pawns, which it can move out of the way before
+            building). Both engines must exclude the SAME set for parity.
+            </summary>
+        </member>
         <member name="M:AgentSDK.GameGrid.IsBoundedAreaBuildable(AgentSDK.UnitType,AgentSDK.Position)">
             <summary>
             Check if the unit footprint plus a 1-cell border is all buildable.
+            </summary>
+        </member>
+        <member name="M:AgentSDK.GameGrid.IsBoundedAreaBuildable(AgentSDK.UnitType,AgentSDK.Position,System.Collections.Generic.ISet{AgentSDK.Position})">
+            <summary>
+            Bounded-buildable check excluding a set of positions (the agent's own
+            pawns). Mirrors <see cref="M:AgentSDK.GameGrid.IsAreaBuildable(AgentSDK.UnitType,AgentSDK.Position,System.Collections.Generic.ISet{AgentSDK.Position})"/>.
             </summary>
         </member>
         <member name="M:AgentSDK.GameGrid.SetCell(AgentSDK.Position,AgentSDK.CellState)">
@@ -465,6 +478,15 @@
         <member name="M:AgentSDK.GameGrid.FindProspectiveBuildPositions(AgentSDK.UnitType)">
             <summary>
             Find all valid build positions on the map for a given unit type.
+            </summary>
+        </member>
+        <member name="M:AgentSDK.GameGrid.FindProspectiveBuildPositions(AgentSDK.UnitType,System.Collections.Generic.ISet{AgentSDK.Position})">
+            <summary>
+            Prospective build positions, excluding a set of cells (the agent's own
+            pawns) from the buildability test — the agent can move them before
+            building. Both engines must scan in the SAME (x outer, y inner) order and
+            exclude the SAME set for parity. Mirrors Unity's
+            GameStateAdapter.FindProspectiveBuildPositions.
             </summary>
         </member>
         <member name="M:AgentSDK.GameGrid.FindPath(AgentSDK.Position,AgentSDK.Position)">
@@ -761,6 +783,15 @@
             and lets any pawn resume construction. Ignored on non-building units.
             </summary>
         </member>
+        <member name="P:AgentSDK.ITickUnit.RepathPending">
+            <summary>
+            Set when a pursuit pathfind was deferred this tick by <see cref="T:AgentSDK.PathBudget"/>.
+            The unit keeps its action and target but has no path yet; the per-tick Advance*
+            handler retries the (gated) pathfind each tick until the budget admits it.
+            Cleared as soon as a path is obtained or the action ends. Purely an engine-side
+            rate-limit flag — the PlanningAgent neither sets nor sees it.
+            </summary>
+        </member>
         <member name="T:AgentSDK.ITickWorld">
             <summary>
             World abstraction for the shared TickEngine.
@@ -805,6 +836,13 @@
         </member>
         <member name="P:AgentSDK.ITickWorld.TickDuration">
             <summary>Seconds per tick (0.05 at 20Hz).</summary>
+        </member>
+        <member name="P:AgentSDK.ITickWorld.CurrentTick">
+            <summary>
+            The tick currently being processed. Advanced identically in both engines
+            (SimGame.CurrentTick / GameManager.CurrentTick, both driven by TickSequence).
+            Used by <see cref="T:AgentSDK.PathBudget"/> to stagger pursuit re-pathing deterministically.
+            </summary>
         </member>
         <member name="T:AgentSDK.SymmetryType">
             <summary>Symmetry mode for map generation.</summary>
@@ -890,6 +928,14 @@
         <member name="P:AgentSDK.MapGenResult.Groves">
             <summary>Tree groves for visual rendering (each grove has a single tree type).</summary>
         </member>
+        <member name="P:AgentSDK.MapGenResult.BlueIsAgent0">
+            <summary>
+            Deterministic agent-slot assignment, derived from the map seed so BOTH
+            engines agree without any Unity-runtime randomness. When true, the BLUE
+            player is AgentNbr 0 (spawn slot 0) and RED is 1; when false they swap.
+            Replaces Unity's old UnityEngine.Random.Range(0,2) coin flip (see U5).
+            </summary>
+        </member>
         <member name="T:AgentSDK.MapGenCore">
              <summary>
              Pure game-logic procedural map generator. No engine dependencies.
@@ -901,10 +947,16 @@
              - All spawns are connected to each other, their mines, and the map center.
              </summary>
         </member>
-        <member name="M:AgentSDK.MapGenCore.Generate(AgentSDK.MapGenConfig)">
+        <member name="M:AgentSDK.MapGenCore.ComputeBlueIsAgent0(System.Int32)">
             <summary>
             Generate a procedural map with the given parameters.
             Retries on connectivity failure with advancing RNG state.
+            </summary>
+            <summary>
+            Deterministically decide whether BLUE is AgentNbr 0 for a given map seed.
+            Drawn from a separate PRNG (seed+1) so it never perturbs map generation.
+            Both engines (and the parity harness) call this to agree on agent-slot
+            assignment without any Unity-runtime randomness. See U5.
             </summary>
         </member>
         <member name="M:AgentSDK.MapGenCore.MirrorPos(AgentSDK.Position,System.Int32,System.Int32)">
@@ -935,6 +987,65 @@
         </member>
         <member name="M:AgentSDK.MovementSystem.CheckCell(AgentSDK.Position,AgentSDK.GameGrid)">
             <summary>Check if a cell is passable, without accumulator logic.</summary>
+        </member>
+        <member name="T:AgentSDK.PathBudget">
+             <summary>
+             Deterministic per-tick cap on pursuit re-pathing, shared by both engines.
+            
+             The problem it solves: when a large army's shared target vanishes in a single
+             tick — classically, an enemy BASE (6x4) being destroyed while dozens of
+             soldiers/lancers/archers surround it — every attacker is told to re-path on the
+             SAME tick. Each pursuit pathfind costs ~0.7ms on the real map, so 80+ units
+             re-pathing at once is a ~56ms frame hitch. The same thundering-herd shape shows
+             up when a moving target outruns many pursuers' paths simultaneously, and (rarely)
+             when a mine a whole worker crew is gathering runs out.
+            
+             The fix is a rate limit, NOT a behavior change: the unit keeps its assigned
+             action and target (the PlanningAgent's target choice is never second-guessed —
+             see U3). It is only rate-limited on WHEN it may compute its pursuit path. A unit
+             that is gated out this tick keeps CurrentAction, clears TickPath, and sets
+             RepathPending — the per-tick Advance* handlers already re-attempt a path whenever
+             one is missing, so the deferred unit simply tries again next tick until the gate
+             admits it. No RNG, no per-instance counters: the gate is a pure function of
+             (tick, unitNbr), so Unity and SimGame admit exactly the same units on every tick.
+            
+             Data (PathfindingStressTest, real divergent-parity map): normal play peaks at
+             ~15-29 pursuit re-paths/tick and never exceeds a 60fps frame; the herd is the only
+             case that does. With SLOTS_PER_TICK=15 the worst-case pathfinding cost is held to
+             roughly half a 60fps frame, and an 80-unit herd fully re-engages over ~6 ticks
+             (~0.3s at 20Hz) — imperceptible in play, and the game never stutters.
+             </summary>
+        </member>
+        <member name="F:AgentSDK.PathBudget.SLOTS_PER_TICK">
+            <summary>
+            How many gated pursuit pathfinds may run per tick. AI is conventionally
+            budgeted to ~half a frame; 15 lands slightly over that in the rare herd
+            case but keeps normal play well clear. Tune here only.
+            </summary>
+        </member>
+        <member name="F:AgentSDK.PathBudget.SPREAD">
+            <summary>
+            Rotating-window size. (unitNbr + tick) % SPREAD selects a slot in [0,SPREAD);
+            slots below SLOTS_PER_TICK pass. Adding <c>tick</c> rotates the window every
+            tick, so a deferred unit's slot shifts each tick and is guaranteed to enter
+            the pass-window within SPREAD ticks — no unit is ever starved. SPREAD must be
+            &gt;= SLOTS_PER_TICK; larger SPREAD spreads a big herd over more ticks.
+            </summary>
+        </member>
+        <member name="M:AgentSDK.PathBudget.CanPathThisTick(System.Int32,System.Int32)">
+            <summary>
+            True if this unit is allowed to run a pursuit pathfind on this tick.
+            Pure function of (tick, unitNbr) — identical across both engines.
+            </summary>
+        </member>
+        <member name="M:AgentSDK.PathBudget.GatedRepath(AgentSDK.ITickWorld,AgentSDK.ITickUnit,System.Func{System.Collections.Generic.List{AgentSDK.Position}})">
+            <summary>
+            Run a gated pursuit pathfind for <paramref name="unit"/>. If the unit is
+            admitted this tick, computes and returns the path (via <paramref name="pathfind"/>)
+            and clears RepathPending. If gated out, returns null and sets RepathPending so the
+            caller's per-tick handler retries next tick. Keeps the deterministic gate and the
+            pending-flag bookkeeping in one place so every call site behaves identically.
+            </summary>
         </member>
         <member name="T:AgentSDK.Pathfinder">
              <summary>

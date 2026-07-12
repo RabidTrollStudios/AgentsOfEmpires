@@ -185,7 +185,12 @@ namespace AgentSDK
             }
             else
             {
-                var path = world.FindPathToUnit(attacker.GridPosition, target.UnitType, target.GridPosition);
+                // Gated pursuit pathfind: when a whole army is (re-)commanded to attack the
+                // same target on one tick, PathBudget staggers who computes a path this tick.
+                // A deferred unit stays in ATTACK with RepathPending set; AdvanceAttack retries
+                // next tick. Prevents the thundering-herd frame hitch when a base is destroyed.
+                var path = PathBudget.GatedRepath(world, attacker,
+                    () => world.FindPathToUnit(attacker.GridPosition, target.UnitType, target.GridPosition));
                 attacker.TickPath = path;
                 attacker.PathIndex = 0;
             }

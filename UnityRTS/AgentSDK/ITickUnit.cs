@@ -59,6 +59,15 @@ namespace AgentSDK
         // Combat
         int AttackTargetNbr { get; set; }
 
+        /// <summary>
+        /// Set when a pursuit pathfind was deferred this tick by <see cref="PathBudget"/>.
+        /// The unit keeps its action and target but has no path yet; the per-tick Advance*
+        /// handler retries the (gated) pathfind each tick until the budget admits it.
+        /// Cleared as soon as a path is obtained or the action ends. Purely an engine-side
+        /// rate-limit flag — the PlanningAgent neither sets nor sees it.
+        /// </summary>
+        bool RepathPending { get; set; }
+
         // Repair
         int RepairBuildingNbr { get; set; }
 

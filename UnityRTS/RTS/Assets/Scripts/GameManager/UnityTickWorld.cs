@@ -88,5 +88,7 @@ namespace GameManager
         DerivedGameConstants ITickWorld.Constants => GameConstants.Derived;
 
         public float TickDuration => UnityEngine.Time.fixedDeltaTime;
+
+        public int CurrentTick => GameManager.Instance.CurrentTick;
     }
 }

@@ -46,17 +46,25 @@ namespace GameManager
         private static readonly HashSet<int> unitsSeen = new HashSet<int>();
 
         /// <summary>
-        /// Enqueue a command. Returns true if accepted, false if a command for this
-        /// unit was already queued this tick (duplicate suppressed).
+        /// Enqueue a command. Returns true if this is the first command queued for this
+        /// unit this tick (used only for parity command recording — see below), false if
+        /// a later duplicate.
+        ///
+        /// IMPORTANT: every command is kept in <see cref="pending"/> regardless of the
+        /// return value. The per-unit "one command per tick" rule is applied at dispatch
+        /// time in <see cref="ProcessAll"/>, AFTER sorting by (AgentNbr, Type, UnitNbr) —
+        /// NOT here at enqueue time. This matches SimGame.ProcessCommandsSorted exactly:
+        /// the winning command for a unit is the one with the lowest command-Type enum
+        /// (BUILD=1 beats GATHER=2), not the one the agent happened to call first. Dropping
+        /// duplicates at enqueue time instead kept the FIRST-CALLED command, so a GATHER
+        /// issued before a BUILD in the same Update() beat the BUILD in Unity but lost in
+        /// the sim — a one-tick cross-engine divergence (barracks built a tick late).
         /// </summary>
         public static bool Enqueue(DeferredCommand cmd)
         {
-            // Only accept the first command per unit per tick.
-            // With deferred dispatch, agents may re-issue the same command on
-            // consecutive frames before the first one executes.
-            if (!unitsSeen.Add(cmd.UnitNbr)) return false;
             pending.Add(cmd);
-            return true;
+            // Report first-per-unit for recording purposes only; does not gate the queue.
+            return unitsSeen.Add(cmd.UnitNbr);
         }
 
         public static int Count => pending.Count;
@@ -83,10 +91,16 @@ namespace GameManager
             // Use shared CommandProcessor for identical logic with SimGame.
             var world = GameManager.Instance.GetTickWorld();
 
+            // Per-unit "one command per tick", applied AFTER the sort so the winner is the
+            // lowest-Type command (BUILD before GATHER), identical to SimGame's
+            // ProcessCommandsSorted. See Enqueue for why this must not happen at enqueue time.
+            var processedUnits = new HashSet<int>();
+
             foreach (var cmd in pending)
             {
                 // Units may have died between queue time and dispatch time
                 if (cmd.Unit == null) continue;
+                if (!processedUnits.Add(cmd.UnitNbr)) continue; // unit already commanded this tick
 
                 AgentSDK.CommandResult result;
                 switch (cmd.Type)

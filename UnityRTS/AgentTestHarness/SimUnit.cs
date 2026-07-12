@@ -55,6 +55,7 @@ namespace AgentTestHarness
 
         // Combat
         public int AttackTargetNbr { get; set; }
+        public bool RepathPending { get; set; }
 
         // Repair
         public int RepairBuildingNbr { get; set; }
