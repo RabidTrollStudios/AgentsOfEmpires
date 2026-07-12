@@ -187,18 +187,38 @@ namespace Parity.Tests
                     continue;
                 }
 
-                if (su.UnitType != eu.UnitType)
-                    diffs.Add($"Unit {eu.UnitNbr}: type sim={su.UnitType} engine={eu.UnitType}");
-                if (su.OwnerAgentNbr != eu.Owner)
-                    diffs.Add($"Unit {eu.UnitNbr}: owner sim={su.OwnerAgentNbr} engine={eu.Owner}");
-                if (su.GridPosition.X != eu.X || su.GridPosition.Y != eu.Y)
-                    diffs.Add($"Unit {eu.UnitNbr}: pos sim=({su.GridPosition.X},{su.GridPosition.Y}) engine=({eu.X},{eu.Y})");
-                if (Math.Abs(su.Health - eu.Health) > 0.1f)
-                    diffs.Add($"Unit {eu.UnitNbr}: health sim={su.Health:F1} engine={eu.Health:F1}");
-                if (su.IsBuilt != eu.IsBuilt)
-                    diffs.Add($"Unit {eu.UnitNbr}: isBuilt sim={su.IsBuilt} engine={eu.IsBuilt}");
-                if (su.CurrentAction != eu.Action)
-                    diffs.Add($"Unit {eu.UnitNbr}: action sim={su.CurrentAction} engine={eu.Action}");
+                // Each field is compared only if the recording carried it (eu.Present),
+                // so pre-instrumentation CSVs still validate on the original 8 fields while
+                // full recordings validate every ITickUnit field. sim side (su) is read via
+                // ITickUnit so both engines expose identical semantics.
+                var p = eu.Present ?? EightFieldKeys;
+                AgentSDK.ITickUnit s = su;
+
+                void D(string label, object simVal, object engVal)
+                    => diffs.Add($"Unit {eu.UnitNbr}: {label} sim={simVal} engine={engVal}");
+
+                if (p.Contains("t") && s.UnitType != eu.UnitType) D("type", s.UnitType, eu.UnitType);
+                if (p.Contains("o") && s.OwnerAgentNbr != eu.Owner) D("owner", s.OwnerAgentNbr, eu.Owner);
+                if ((p.Contains("x") || p.Contains("y")) && (s.GridPosition.X != eu.X || s.GridPosition.Y != eu.Y))
+                    D("pos", $"({s.GridPosition.X},{s.GridPosition.Y})", $"({eu.X},{eu.Y})");
+                if (p.Contains("hp") && Math.Abs(s.Health - eu.Health) > 0.1f) D("health", s.Health.ToString("F1"), eu.Health.ToString("F1"));
+                if (p.Contains("b") && s.IsBuilt != eu.IsBuilt) D("isBuilt", s.IsBuilt, eu.IsBuilt);
+                if (p.Contains("a") && s.CurrentAction != eu.Action) D("action", s.CurrentAction, eu.Action);
+
+                // Fine-grained fields (only present in full-instrumentation CSVs).
+                if (p.Contains("pp") && Math.Abs(s.PathProgress - eu.PathProgress) > 1e-3f) D("pathProgress", s.PathProgress.ToString("F4"), eu.PathProgress.ToString("F4"));
+                if (p.Contains("pi") && s.PathIndex != eu.PathIndex) D("pathIndex", s.PathIndex, eu.PathIndex);
+                if (p.Contains("mana") && Math.Abs(s.Mana - eu.Mana) > 0.05f) D("mana", s.Mana.ToString("F2"), eu.Mana.ToString("F2"));
+                if (p.Contains("bp") && Math.Abs(s.BuildProgress - eu.BuildProgress) > 1e-3f) D("buildProgress", s.BuildProgress.ToString("F4"), eu.BuildProgress.ToString("F4"));
+                if (p.Contains("tt") && Math.Abs(s.TrainTimer - eu.TrainTimer) > 1e-3f) D("taskTimer", s.TrainTimer.ToString("F4"), eu.TrainTimer.ToString("F4"));
+                if (p.Contains("gph") && s.GatherPhase != eu.GatherPhase) D("gatherPhase", s.GatherPhase, eu.GatherPhase);
+                if (p.Contains("mt") && Math.Abs(s.MiningTimer - eu.MiningTimer) > 1e-3f) D("miningTimer", s.MiningTimer.ToString("F4"), eu.MiningTimer.ToString("F4"));
+                if (p.Contains("gc") && s.GoldCarried != eu.GoldCarried) D("goldCarried", s.GoldCarried, eu.GoldCarried);
+                if (p.Contains("atk") && s.AttackTargetNbr != eu.AttackTargetNbr) D("attackTarget", s.AttackTargetNbr, eu.AttackTargetNbr);
+                if (p.Contains("bld") && s.BuildTargetNbr != eu.BuildTargetNbr) D("buildTarget", s.BuildTargetNbr, eu.BuildTargetNbr);
+                if (p.Contains("rep") && s.RepairBuildingNbr != eu.RepairBuildingNbr) D("repairTarget", s.RepairBuildingNbr, eu.RepairBuildingNbr);
+                if (p.Contains("heal") && s.HealTargetNbr != eu.HealTargetNbr) D("healTarget", s.HealTargetNbr, eu.HealTargetNbr);
+                if (p.Contains("rpp") && s.RepathPending != eu.RepathPending) D("repathPending", s.RepathPending, eu.RepathPending);
             }
 
             foreach (var su in simUnits)
@@ -285,6 +305,10 @@ namespace Parity.Tests
             public List<UnitSnap> Units = new List<UnitSnap>();
         }
 
+        /// <summary>Fallback field set (the original 8) when a UnitSnap has no Present set.</summary>
+        private static readonly HashSet<string> EightFieldKeys =
+            new HashSet<string> { "n", "t", "o", "x", "y", "hp", "b", "a" };
+
         private struct UnitSnap
         {
             public int UnitNbr, Owner, X, Y;
@@ -292,6 +316,15 @@ namespace Parity.Tests
             public float Health;
             public bool IsBuilt;
             public UnitAction Action;
+            // Fine-grained fields (full per-field parity). Defaults are benign for older
+            // CSVs that don't carry these keys (key=value parsing degrades gracefully).
+            public float PathProgress, Mana, BuildProgress, TrainTimer, MiningTimer;
+            public int PathIndex, GoldCarried, AttackTargetNbr, BuildTargetNbr, RepairBuildingNbr, HealTargetNbr;
+            public GatherPhase GatherPhase;
+            public bool RepathPending;
+            // Which keys were actually present in the CSV — so we only compare fields the
+            // recording carried (a pre-instrumentation CSV won't fail on missing columns).
+            public HashSet<string> Present;
         }
 
         private static ExportMetadata ParseMetadata(string path)
@@ -366,19 +399,11 @@ namespace Parity.Tests
                 {
                     foreach (string unitStr in parts[4].Split('|'))
                     {
-                        var u = unitStr.Split(':');
-                        if (u.Length < 8) continue;
-                        snap.Units.Add(new UnitSnap
-                        {
-                            UnitNbr = int.Parse(u[0]),
-                            UnitType = Enum.TryParse(u[1], out UnitType ut) ? ut : UnitType.PAWN,
-                            Owner = int.Parse(u[2]),
-                            X = int.Parse(u[3]),
-                            Y = int.Parse(u[4]),
-                            Health = float.Parse(u[5]),
-                            IsBuilt = u[6] == "1",
-                            Action = Enum.TryParse(u[7], out UnitAction ua) ? ua : UnitAction.IDLE,
-                        });
+                        if (string.IsNullOrEmpty(unitStr)) continue;
+                        // New format is key=value;key=value; old format is positional a:b:c.
+                        snap.Units.Add(unitStr.Contains("=")
+                            ? ParseUnitKeyed(unitStr)
+                            : ParseUnitPositional(unitStr));
                     }
                 }
 
@@ -386,6 +411,67 @@ namespace Parity.Tests
             }
             return snapshots;
         }
+
+        /// <summary>Legacy positional encoding: unitNbr:type:owner:x:y:health:isBuilt:action[:pp].</summary>
+        private static UnitSnap ParseUnitPositional(string unitStr)
+        {
+            var u = unitStr.Split(':');
+            var snap = new UnitSnap { Present = new HashSet<string>() };
+            if (u.Length < 8) return snap;
+            snap.UnitNbr = int.Parse(u[0]);
+            snap.UnitType = Enum.TryParse(u[1], out UnitType ut) ? ut : UnitType.PAWN;
+            snap.Owner = int.Parse(u[2]);
+            snap.X = int.Parse(u[3]);
+            snap.Y = int.Parse(u[4]);
+            snap.Health = ParseF(u[5]);
+            snap.IsBuilt = u[6] == "1";
+            snap.Action = Enum.TryParse(u[7], out UnitAction ua) ? ua : UnitAction.IDLE;
+            foreach (var k in new[] { "n", "t", "o", "x", "y", "hp", "b", "a" }) snap.Present.Add(k);
+            return snap;
+        }
+
+        /// <summary>Full per-field encoding: key=value;key=value;... (see ParityExporter.EncodeUnit).</summary>
+        private static UnitSnap ParseUnitKeyed(string unitStr)
+        {
+            var snap = new UnitSnap { Present = new HashSet<string>() };
+            foreach (var pair in unitStr.Split(';'))
+            {
+                int eq = pair.IndexOf('=');
+                if (eq <= 0) continue;
+                string key = pair.Substring(0, eq);
+                string val = pair.Substring(eq + 1);
+                snap.Present.Add(key);
+                switch (key)
+                {
+                    case "n": snap.UnitNbr = int.Parse(val); break;
+                    case "t": snap.UnitType = Enum.TryParse(val, out UnitType ut) ? ut : UnitType.PAWN; break;
+                    case "o": snap.Owner = int.Parse(val); break;
+                    case "x": snap.X = int.Parse(val); break;
+                    case "y": snap.Y = int.Parse(val); break;
+                    case "hp": snap.Health = ParseF(val); break;
+                    case "b": snap.IsBuilt = val == "1"; break;
+                    case "a": snap.Action = Enum.TryParse(val, out UnitAction ua) ? ua : UnitAction.IDLE; break;
+                    case "pp": snap.PathProgress = ParseF(val); break;
+                    case "pi": snap.PathIndex = int.Parse(val); break;
+                    case "mana": snap.Mana = ParseF(val); break;
+                    case "bp": snap.BuildProgress = ParseF(val); break;
+                    case "tt": snap.TrainTimer = ParseF(val); break;
+                    case "gph": snap.GatherPhase = Enum.TryParse(val, out GatherPhase gp) ? gp : GatherPhase.TO_MINE; break;
+                    case "mt": snap.MiningTimer = ParseF(val); break;
+                    case "gc": snap.GoldCarried = int.Parse(val); break;
+                    case "atk": snap.AttackTargetNbr = int.Parse(val); break;
+                    case "bld": snap.BuildTargetNbr = int.Parse(val); break;
+                    case "rep": snap.RepairBuildingNbr = int.Parse(val); break;
+                    case "heal": snap.HealTargetNbr = int.Parse(val); break;
+                    case "rpp": snap.RepathPending = val == "1"; break;
+                }
+            }
+            return snap;
+        }
+
+        private static float ParseF(string s)
+            => float.Parse(s, System.Globalization.NumberStyles.Float,
+                           System.Globalization.CultureInfo.InvariantCulture);
 
         #endregion
 

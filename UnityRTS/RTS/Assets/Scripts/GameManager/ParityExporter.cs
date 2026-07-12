@@ -194,13 +194,52 @@ namespace GameManager
             {
                 var u = kvp.Value.GetComponent<Unit>();
                 if (u == null) continue;
-                int owner = u.OwnerAgentNbr;
-                // Format: unitNbr:type:owner:x:y:health:isBuilt:action:moveAcc
-                unitParts.Add($"{u.UnitNbr}:{u.UnitType}:{owner}:{u.GridPosition.x}:{u.GridPosition.y}:{u.Health:F1}:{(u.IsBuilt?1:0)}:{u.CurrentAction}:{u.PathProgress:F4}");
+                unitParts.Add(EncodeUnit(u));
             }
 
             string units = string.Join("|", unitParts);
             stateWriter.WriteLine($"{currentTick},{gold0},{gold1},{allUnits.Count},{units}");
+        }
+
+        /// <summary>
+        /// Encode ONE unit's full per-field state for fine-grained parity comparison.
+        ///
+        /// Format is <c>key=value;key=value;...</c> (units separated by '|', snapshots by
+        /// ',' in the CSV row). Reading through the shared <see cref="ITickUnit"/> interface
+        /// means Unity and SimGame serialize the exact same field set, so the parity test can
+        /// catch a divergence in ANY of them — build progress, timers, path index, mana,
+        /// gather phase, carried gold, and every target reference — not just position/health/
+        /// action. The key=value scheme (vs. the old positional a:b:c) means adding a field
+        /// later never shifts existing columns and a missing key degrades gracefully.
+        ///
+        /// Floats are written at fixed precision; the comparer uses a small tolerance.
+        /// </summary>
+        private static string EncodeUnit(Unit unit)
+        {
+            var u = (AgentSDK.ITickUnit)unit;
+            var sb = new System.Text.StringBuilder(160);
+            sb.Append("n=").Append(u.UnitNbr);
+            sb.Append(";t=").Append(u.UnitType);
+            sb.Append(";o=").Append(u.OwnerAgentNbr);
+            sb.Append(";x=").Append(u.GridPosition.X);
+            sb.Append(";y=").Append(u.GridPosition.Y);
+            sb.Append(";hp=").Append(u.Health.ToString("F1"));
+            sb.Append(";b=").Append(u.IsBuilt ? 1 : 0);
+            sb.Append(";a=").Append(u.CurrentAction);
+            sb.Append(";pp=").Append(u.PathProgress.ToString("F4"));
+            sb.Append(";pi=").Append(u.PathIndex);
+            sb.Append(";mana=").Append(u.Mana.ToString("F2"));
+            sb.Append(";bp=").Append(u.BuildProgress.ToString("F4"));
+            sb.Append(";tt=").Append(u.TrainTimer.ToString("F4"));
+            sb.Append(";gph=").Append(u.GatherPhase);
+            sb.Append(";mt=").Append(u.MiningTimer.ToString("F4"));
+            sb.Append(";gc=").Append(u.GoldCarried);
+            sb.Append(";atk=").Append(u.AttackTargetNbr);
+            sb.Append(";bld=").Append(u.BuildTargetNbr);
+            sb.Append(";rep=").Append(u.RepairBuildingNbr);
+            sb.Append(";heal=").Append(u.HealTargetNbr);
+            sb.Append(";rpp=").Append(u.RepathPending ? 1 : 0);
+            return sb.ToString();
         }
 
         private Dictionary<int, GameObject> GetAgents()

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using AgentSDK;
@@ -170,15 +171,25 @@ namespace Parity.Tests
             return game;
         }
 
-        /// <summary>One-line-per-tick digest of all unit state, for exact comparison.</summary>
+        /// <summary>
+        /// One-line-per-tick digest of FULL per-unit state (every ITickUnit field), for
+        /// exact comparison. Reading every field also exercises the same getters the parity
+        /// exporter serializes, so this test doubles as a check that the full-field encode
+        /// path is clean across a whole match.
+        /// </summary>
         private static string Digest(SimGame game)
         {
             var parts = new List<string>();
             for (int i = 0; i < 2000; i++)
             {
-                var u = game.GetUnit(i);
+                AgentSDK.ITickUnit u = game.GetUnit(i);
                 if (u == null) continue;
-                parts.Add($"{u.UnitNbr}:{u.UnitType}:{u.OwnerAgentNbr}:{u.GridPosition.X}:{u.GridPosition.Y}:{u.Health:F1}:{(u.IsBuilt ? 1 : 0)}:{u.CurrentAction}");
+                parts.Add(
+                    $"n{u.UnitNbr}:t{u.UnitType}:o{u.OwnerAgentNbr}:x{u.GridPosition.X}:y{u.GridPosition.Y}" +
+                    $":hp{u.Health:F1}:b{(u.IsBuilt ? 1 : 0)}:a{u.CurrentAction}:pp{u.PathProgress:F4}:pi{u.PathIndex}" +
+                    $":mana{u.Mana:F2}:bp{u.BuildProgress:F4}:tt{u.TrainTimer:F4}:gph{u.GatherPhase}:mt{u.MiningTimer:F4}" +
+                    $":gc{u.GoldCarried}:atk{u.AttackTargetNbr}:bld{u.BuildTargetNbr}:rep{u.RepairBuildingNbr}" +
+                    $":heal{u.HealTargetNbr}:rpp{(u.RepathPending ? 1 : 0)}");
             }
             return $"g{game.GetGold(0)},{game.GetGold(1)}|" + string.Join("|", parts);
         }
@@ -202,8 +213,15 @@ namespace Parity.Tests
             if (firstDiff > 0)
             {
                 _output.WriteLine($"Two sim runs DIVERGED at tick {firstDiff}");
-                _output.WriteLine($"  A: {runA[firstDiff - 1]}");
-                _output.WriteLine($"  B: {runB[firstDiff - 1]}");
+                // Print only the units that differ, field by field, so the culprit is obvious.
+                var au = runA[firstDiff - 1].Split('|');
+                var bu = runB[firstDiff - 1].Split('|');
+                for (int k = 0; k < Math.Max(au.Length, bu.Length); k++)
+                {
+                    string a = k < au.Length ? au[k] : "<none>";
+                    string b = k < bu.Length ? bu[k] : "<none>";
+                    if (a != b) { _output.WriteLine($"  A: {a}"); _output.WriteLine($"  B: {b}"); }
+                }
             }
             else
             {
@@ -234,7 +252,8 @@ namespace Parity.Tests
             int maxAttack = 0, attackTick = 0;
             for (int t = 0; t < Ticks; t++)
             {
-                int atk = runA[t].Split('|').Count(p => p.EndsWith(":ATTACK"));
+                // Digest action field is ":a<Action>:" (e.g. ":aATTACK:").
+                int atk = runA[t].Split('|').Count(p => p.Contains(":aATTACK:"));
                 if (atk > maxAttack) { maxAttack = atk; attackTick = t + 1; }
             }
             _output.WriteLine($"Peak concurrent ATTACK units: {maxAttack} at tick {attackTick}");
