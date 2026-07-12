@@ -45,7 +45,7 @@ namespace AgentSDK
 
                 // Distance for the full segment (current grid cell to next cell)
                 float segmentDist = Position.Distance(unit.GridPosition, nextCell);
-                if (segmentDist < 0.01f) segmentDist = 1.0f; // safety: same-cell
+                if (segmentDist < GameConstants.MOVEMENT_EPSILON) segmentDist = 1.0f; // safety: same-cell
 
                 // How much distance remains in this segment
                 float progressDist = segmentDist * (1.0f - unit.PathProgress);

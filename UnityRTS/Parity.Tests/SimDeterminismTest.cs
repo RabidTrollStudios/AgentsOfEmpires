@@ -137,7 +137,7 @@ namespace Parity.Tests
                 if (pawn < 0) return;
 
                 // Build nearest the pawn (deterministic), not the global first cell —
-                // otherwise the top-right spawn walks the whole map. Mirrors DetCommander.
+                // otherwise the top-right spawn walks the whole map. Mirrors DetSimple.
                 var pawnInfo = state.GetUnit(pawn);
                 Position anchor = pawnInfo.HasValue ? pawnInfo.Value.GridPosition : new Position(0, 0);
                 var candidates = new List<Position>(state.FindProspectiveBuildPositions(type));

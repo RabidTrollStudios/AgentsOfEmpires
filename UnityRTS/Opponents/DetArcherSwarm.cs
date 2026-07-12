@@ -1,0 +1,903 @@
+using System.Collections.Generic;
+using AgentSDK;
+
+namespace PlanningAgent
+{
+    // ============================================================================
+    // [DET-SNAPSHOT of ArcherSwarm, frozen 2026-07-12] TEST-ONLY deterministic copy.
+    //
+    // A faithful, verbatim copy of the competitive ArcherSwarm agent for the parity test set
+    // (real, long, engine-exercising games). ArcherSwarm uses Dictionary/HashSet, but every
+    // such use was audited as ORDER-INDEPENDENT and therefore cross-runtime safe:
+    //   - command loops iterate PlanningAgentBase's pre-ordered unit lists (myArchers/
+    //     myWarriors/...), never the dictionary, so commands issue in unit-number order;
+    //   - dict/HashSet iterations only build set membership, count commutatively, remove
+    //     dead keys (removal order is irrelevant), or produce debug text (no commands).
+    // No RNG, no raw List.Sort (DeterministicSort only). Hence no changes were needed.
+    //
+    // FROZEN snapshot, NOT maintained in lockstep with ArcherSwarm. Built to
+    // EnemyAgents/PlanningAgent_DetArcherSwarm.dll.
+    // ============================================================================
+    /// <summary>
+    /// [MEDIUM] Builds a solid economy, then masses archers. Attacks with 8+.
+    /// Uses a hybrid state machine (army-level FSM + per-archer FSM) without
+    /// kiting, engaging, or gang-up mechanics. Archers rally before attacking
+    /// and stand-and-fight when engaged.
+    /// </summary>
+    public class PlanningAgent : PlanningAgentBase
+    {
+        #region Enums
+
+        /// <summary>Army-level strategy phase.</summary>
+        private enum ArmyPhase
+        {
+            /// <summary>No archery yet — building infrastructure.</summary>
+            ECONOMY,
+            /// <summary>Archery built, accumulating archers at rally.</summary>
+            RALLYING,
+            /// <summary>Army ready — rally then attack with idle archers at rally.</summary>
+            ATTACKING,
+            /// <summary>Overwhelming advantage — all idle archers attack directly.</summary>
+            MOPPING_UP
+        }
+
+        /// <summary>Per-archer tactical state, evaluated fresh each tick.</summary>
+        private enum ArcherTactic
+        {
+            /// <summary>Moving to or holding at rally point.</summary>
+            RALLYING,
+            /// <summary>Reacting to a nearby enemy within aggro/defend range.</summary>
+            DEFENDING,
+            /// <summary>Attacking priority targets during attack/mop-up phase.</summary>
+            ASSAULTING
+        }
+
+        #endregion
+
+        #region Constants
+
+        private const int MAX_PAWNS = 5;
+        private const int MAX_MONKS = 2;
+        private const int ATTACK_THRESHOLD = 8;
+        private const float RALLY_DISTANCE = 10f;
+        private const float AGGRO_RANGE = 10f;
+        private const float RALLY_PROXIMITY = 3.0f;
+        private const float DEFEND_RADIUS = 5.0f;
+        private const float MONK_FOLLOW_DISTANCE = 3.0f;
+
+        #endregion
+
+        #region Fields
+
+        private Position _rallyPoint = new Position(-1, -1);
+        private ArmyPhase _armyPhase = ArmyPhase.ECONOMY;
+        private Dictionary<int, ArcherTactic> _archerTactics = new Dictionary<int, ArcherTactic>();
+        private Dictionary<int, float> _previousHealth = new Dictionary<int, float>();
+
+        #endregion
+
+        #region Lifecycle
+
+        public override void InitializeMatch() { }
+
+        public override void InitializeRound(IGameState state)
+        {
+            base.InitializeRound(state);
+            _rallyPoint = new Position(-1, -1);
+            _armyPhase = ArmyPhase.ECONOMY;
+            _archerTactics.Clear();
+            _previousHealth.Clear();
+        }
+
+        #endregion
+
+        #region Update (5-phase loop)
+
+        public override void Update(IGameState state, IAgentActions actions)
+        {
+            UpdateGameState(state);
+            mainBaseNbr = myBases.Count > 0 ? myBases[0] : -1;
+            if (mainMineNbr < 0 || !state.GetUnit(mainMineNbr).HasValue || state.GetUnit(mainMineNbr).Value.Health <= 0)
+                mainMineNbr = FindClosestMine(state);
+
+            // ---- Phase 1: Economy ----
+            if (myBases.Count == 0)
+            {
+                BuildStructure(UnitType.BASE, state, actions);
+                return;
+            }
+
+            TrainPawns(state, actions);
+
+            if (myArchery.Count == 0 && HasBuiltUnit(myBases, state))
+                BuildStructure(UnitType.ARCHERY, state, actions);
+
+            // Build monastery once archery is up
+            if (myMonasteries.Count == 0 && HasBuiltUnit(myArchery, state))
+                BuildStructure(UnitType.MONASTERY, state, actions);
+
+            RepairDamagedBuildings(state, actions);
+            GatherWithIdlePawns(state, actions);
+
+            // Hold off on archers while saving for the monastery
+            bool savingForMonastery = myMonasteries.Count == 0
+                && HasBuiltUnit(myArchery, state)
+                && state.MyGold < GameConstants.COST[UnitType.MONASTERY];
+            if (!savingForMonastery)
+                TrainArchers(state, actions);
+
+            TrainMonks(state, actions);
+
+            // ---- Phase 2: Evaluate army phase ----
+            Position rallyPoint = ComputeRallyPoint(state);
+            UpdateArmyPhase(state);
+
+            // ---- Phase 3: Evaluate each archer's tactical state ----
+            EvaluateArcherTactics(state, rallyPoint);
+
+            // ---- Phase 4: Execute actions for each archer ----
+            ExecuteArcherActions(state, actions, rallyPoint);
+
+            // ---- Phase 4b: Monks heal wounded archers, then follow army ----
+            ExecuteMonkActions(state, actions, rallyPoint);
+
+            // ---- Phase 5: Clean up dead archers ----
+            CleanDeadArchers();
+
+            // ---- Debug overlay ----
+            BuildDebugText(state);
+
+            // Snapshot health for next-tick damage detection
+            SnapshotHealth(state);
+        }
+
+        private void SnapshotHealth(IGameState state)
+        {
+            _previousHealth.Clear();
+            foreach (int archerNbr in myArchers)
+            {
+                var info = state.GetUnit(archerNbr);
+                if (info.HasValue)
+                    _previousHealth[archerNbr] = info.Value.Health;
+            }
+        }
+
+        #endregion
+
+        #region Phase 2: Army Phase
+
+        /// <summary>
+        /// Evaluate the global army phase based on army size and enemy composition.
+        /// Re-evaluated from scratch each tick so losing archers in combat
+        /// naturally drops from ATTACKING back to RALLYING.
+        /// </summary>
+        private void UpdateArmyPhase(IGameState state)
+        {
+            int enemyCombat = enemyWarriors.Count + enemyArchers.Count + enemyLancers.Count;
+
+            if (myArchers.Count >= ATTACK_THRESHOLD
+                && (enemyCombat == 0 || myArchers.Count >= 4 * enemyCombat))
+            {
+                _armyPhase = ArmyPhase.MOPPING_UP;
+                return;
+            }
+
+            if (myArchers.Count >= ATTACK_THRESHOLD)
+            {
+                _armyPhase = ArmyPhase.ATTACKING;
+                return;
+            }
+
+            if (myArchery.Count > 0 && HasBuiltUnit(myArchery, state))
+            {
+                _armyPhase = ArmyPhase.RALLYING;
+                return;
+            }
+
+            _armyPhase = ArmyPhase.ECONOMY;
+        }
+
+        #endregion
+
+        #region Phase 3: Per-Archer Tactical Evaluation
+
+        /// <summary>
+        /// For each living archer, determine its tactical state for this tick.
+        /// During ECONOMY/RALLYING: defend if attacked or enemy in radius, otherwise rally.
+        /// During ATTACKING: defend nearby, assault if idle near rally, else rally.
+        /// During MOPPING_UP: defend nearby, assault all idle.
+        /// </summary>
+        private void EvaluateArcherTactics(IGameState state, Position rallyPoint)
+        {
+            foreach (int archerNbr in myArchers)
+            {
+                var info = state.GetUnit(archerNbr);
+                if (!info.HasValue) continue;
+
+                var curAction = info.Value.CurrentAction;
+
+                // Skip archers doing non-combat actions
+                if (curAction == UnitAction.BUILD || curAction == UnitAction.TRAIN
+                    || curAction == UnitAction.GATHER)
+                {
+                    _archerTactics[archerNbr] = ArcherTactic.RALLYING;
+                    continue;
+                }
+
+                Position myPos = info.Value.CenterPosition;
+
+                // During ECONOMY/RALLYING: defend only, no assaulting
+                if (_armyPhase == ArmyPhase.ECONOMY || _armyPhase == ArmyPhase.RALLYING)
+                {
+                    // Already attacking — hold
+                    if (curAction == UnitAction.ATTACK)
+                    {
+                        if (!_archerTactics.ContainsKey(archerNbr))
+                            _archerTactics[archerNbr] = ArcherTactic.DEFENDING;
+                        continue;
+                    }
+
+                    // Being attacked (health dropped) — fight back
+                    if (_previousHealth.TryGetValue(archerNbr, out float prevHp)
+                        && info.Value.Health < prevHp)
+                    {
+                        _archerTactics[archerNbr] = ArcherTactic.DEFENDING;
+                        continue;
+                    }
+
+                    // Enemy within defend radius
+                    if (curAction == UnitAction.IDLE || curAction == UnitAction.MOVE)
+                    {
+                        int nearEnemy = FindEnemyInRadius(myPos, DEFEND_RADIUS, state);
+                        if (nearEnemy >= 0)
+                        {
+                            _archerTactics[archerNbr] = ArcherTactic.DEFENDING;
+                            continue;
+                        }
+                    }
+
+                    _archerTactics[archerNbr] = ArcherTactic.RALLYING;
+                    continue;
+                }
+
+                // ---- ATTACKING / MOPPING_UP ----
+
+                // Already attacking and enemy nearby — hold
+                if (curAction == UnitAction.ATTACK)
+                {
+                    if (!_archerTactics.ContainsKey(archerNbr))
+                        _archerTactics[archerNbr] = ArcherTactic.DEFENDING;
+                    continue;
+                }
+
+                // Enemy within AGGRO_RANGE — defend
+                if (curAction == UnitAction.IDLE || curAction == UnitAction.MOVE)
+                {
+                    int nearEnemy = FindEnemyInRadius(myPos, AGGRO_RANGE, state);
+                    if (nearEnemy >= 0)
+                    {
+                        _archerTactics[archerNbr] = ArcherTactic.DEFENDING;
+                        continue;
+                    }
+                }
+
+                // ASSAULTING — army phase says attack and archer is idle
+                if (curAction == UnitAction.IDLE)
+                {
+                    if (_armyPhase == ArmyPhase.MOPPING_UP)
+                    {
+                        _archerTactics[archerNbr] = ArcherTactic.ASSAULTING;
+                        continue;
+                    }
+
+                    if (_armyPhase == ArmyPhase.ATTACKING && rallyPoint.X >= 0)
+                    {
+                        float distToRally = Position.Distance(myPos, rallyPoint);
+                        if (distToRally <= RALLY_PROXIMITY)
+                        {
+                            _archerTactics[archerNbr] = ArcherTactic.ASSAULTING;
+                            continue;
+                        }
+                    }
+                }
+
+                // Default: rally
+                _archerTactics[archerNbr] = ArcherTactic.RALLYING;
+            }
+        }
+
+        #endregion
+
+        #region Phase 4: Execute Actions
+
+        /// <summary>
+        /// Execute the action for each archer based on its resolved tactical state.
+        /// Each archer is processed exactly once via a single switch dispatch.
+        /// </summary>
+        private void ExecuteArcherActions(IGameState state, IAgentActions actions, Position rallyPoint)
+        {
+            var assignedTargets = new HashSet<int>();
+
+            foreach (int archerNbr in myArchers)
+            {
+                if (!_archerTactics.TryGetValue(archerNbr, out var tactic)) continue;
+
+                switch (tactic)
+                {
+                    case ArcherTactic.DEFENDING:
+                        ExecuteDefending(archerNbr, state, actions, assignedTargets);
+                        break;
+                    case ArcherTactic.ASSAULTING:
+                        ExecuteAssaulting(archerNbr, state, actions, assignedTargets);
+                        break;
+                    case ArcherTactic.RALLYING:
+                        ExecuteRallying(archerNbr, state, actions, rallyPoint);
+                        break;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Attack closest enemy within AGGRO_RANGE. Uses simple target spreading
+        /// via HashSet to avoid all archers piling on the same enemy.
+        /// </summary>
+        private void ExecuteDefending(int archerNbr, IGameState state, IAgentActions actions,
+            HashSet<int> assignedTargets)
+        {
+            var info = state.GetUnit(archerNbr);
+            if (!info.HasValue) return;
+
+            var curAction = info.Value.CurrentAction;
+            if (curAction != UnitAction.IDLE && curAction != UnitAction.MOVE) return;
+
+            Position myPos = info.Value.CenterPosition;
+
+            int? bestTarget = null;
+            float bestDist = float.MaxValue;
+
+            foreach (UnitType ut in new[] { UnitType.WARRIOR, UnitType.ARCHER, UnitType.LANCER, UnitType.MONK, UnitType.PAWN,
+                                            UnitType.BASE, UnitType.BARRACKS, UnitType.ARCHERY, UnitType.TOWER, UnitType.MONASTERY })
+            {
+                foreach (int enemyNbr in state.GetEnemyUnits(ut))
+                {
+                    if (assignedTargets.Contains(enemyNbr)) continue;
+                    var enemyInfo = state.GetUnit(enemyNbr);
+                    if (!enemyInfo.HasValue) continue;
+                    float dist = Position.Distance(myPos, enemyInfo.Value.CenterPosition);
+                    if (dist <= AGGRO_RANGE && dist < bestDist)
+                    {
+                        bestDist = dist;
+                        bestTarget = enemyNbr;
+                    }
+                }
+            }
+
+            // Fallback: closest enemy in AGGRO_RANGE ignoring spreading
+            if (!bestTarget.HasValue)
+            {
+                bestDist = float.MaxValue;
+                foreach (UnitType ut in new[] { UnitType.WARRIOR, UnitType.ARCHER, UnitType.LANCER, UnitType.MONK, UnitType.PAWN,
+                                                UnitType.BASE, UnitType.BARRACKS, UnitType.ARCHERY, UnitType.TOWER, UnitType.MONASTERY })
+                {
+                    foreach (int enemyNbr in state.GetEnemyUnits(ut))
+                    {
+                        var enemyInfo = state.GetUnit(enemyNbr);
+                        if (!enemyInfo.HasValue) continue;
+                        float dist = Position.Distance(myPos, enemyInfo.Value.CenterPosition);
+                        if (dist <= AGGRO_RANGE && dist < bestDist)
+                        {
+                            bestDist = dist;
+                            bestTarget = enemyNbr;
+                        }
+                    }
+                }
+            }
+
+            if (bestTarget.HasValue)
+            {
+                actions.Attack(archerNbr, bestTarget.Value);
+                assignedTargets.Add(bestTarget.Value);
+            }
+        }
+
+        /// <summary>
+        /// Attack closest enemy with priority: combat > pawn > building.
+        /// Only acts on IDLE archers. Uses simple target spreading.
+        /// </summary>
+        private void ExecuteAssaulting(int archerNbr, IGameState state, IAgentActions actions,
+            HashSet<int> assignedTargets)
+        {
+            var info = state.GetUnit(archerNbr);
+            if (!info.HasValue || info.Value.CurrentAction != UnitAction.IDLE) return;
+
+            int? target = FindClosestEnemy(archerNbr, state, assignedTargets)
+                       ?? FindClosestEnemy(archerNbr, state, null);
+            if (target.HasValue)
+            {
+                actions.Attack(archerNbr, target.Value);
+                assignedTargets.Add(target.Value);
+            }
+        }
+
+        /// <summary>
+        /// If idle and not yet near the rally point, move toward it.
+        /// Once within RALLY_PROXIMITY, stay put.
+        /// </summary>
+        private void ExecuteRallying(int archerNbr, IGameState state, IAgentActions actions,
+            Position rallyPoint)
+        {
+            if (rallyPoint.X < 0) return;
+
+            var info = state.GetUnit(archerNbr);
+            if (!info.HasValue || info.Value.CurrentAction != UnitAction.IDLE) return;
+
+            Position myPos = info.Value.CenterPosition;
+            float distToRally = Position.Distance(myPos, rallyPoint);
+            if (distToRally <= RALLY_PROXIMITY) return;
+
+            Position targetCell = FindRallyCell(myPos, rallyPoint, state);
+            actions.Move(archerNbr, targetCell);
+        }
+
+        #endregion
+
+        #region Phase 5: Cleanup
+
+        /// <summary>
+        /// Remove entries for archers that no longer exist (died this tick).
+        /// </summary>
+        private void CleanDeadArchers()
+        {
+            var archerSet = new HashSet<int>(myArchers);
+            var deadKeys = new List<int>();
+
+            foreach (int key in _archerTactics.Keys)
+            {
+                if (!archerSet.Contains(key))
+                    deadKeys.Add(key);
+            }
+
+            foreach (int key in deadKeys)
+            {
+                _archerTactics.Remove(key);
+            }
+        }
+
+        /// <summary>
+        /// Build the debug overlay text showing army phase, archer counts per tactic,
+        /// and economy summary.
+        /// </summary>
+        private void BuildDebugText(IGameState state)
+        {
+            int defending = 0, assaulting = 0, rallying = 0;
+            foreach (var tactic in _archerTactics.Values)
+            {
+                switch (tactic)
+                {
+                    case ArcherTactic.DEFENDING:  defending++;  break;
+                    case ArcherTactic.ASSAULTING: assaulting++; break;
+                    case ArcherTactic.RALLYING:   rallying++;   break;
+                }
+            }
+
+            var sb = new System.Text.StringBuilder();
+            sb.Append("Phase: ").AppendLine(_armyPhase.ToString());
+            sb.Append("Gold: ").AppendLine(state.MyGold.ToString());
+            sb.Append("Pawns: ").Append(myPawns.Count)
+              .Append("  Archers: ").Append(myArchers.Count)
+              .Append("  Monks: ").AppendLine(myMonks.Count.ToString());
+            sb.Append("  Rally: ").Append(rallying)
+              .Append("  Defend: ").Append(defending)
+              .Append("  Assault: ").Append(assaulting);
+
+            DebugText = sb.ToString();
+        }
+
+        #endregion
+
+        #region Economy Helpers
+
+        private void TrainPawns(IGameState state, IAgentActions actions)
+        {
+            foreach (int baseNbr in myBases)
+            {
+                var info = state.GetUnit(baseNbr);
+                if (info.HasValue && info.Value.IsBuilt
+                    && info.Value.CurrentAction == UnitAction.IDLE
+                    && state.MyGold >= GameConstants.COST[UnitType.PAWN]
+                    && myPawns.Count < MAX_PAWNS)
+                {
+                    actions.Train(baseNbr, UnitType.PAWN);
+                }
+            }
+        }
+
+        private void TrainArchers(IGameState state, IAgentActions actions)
+        {
+            foreach (int archeryNbr in myArchery)
+            {
+                var info = state.GetUnit(archeryNbr);
+                if (info.HasValue && info.Value.IsBuilt
+                    && info.Value.CurrentAction == UnitAction.IDLE
+                    && state.MyGold >= GameConstants.COST[UnitType.ARCHER])
+                {
+                    actions.Train(archeryNbr, UnitType.ARCHER);
+                }
+            }
+        }
+
+        private void RepairDamagedBuildings(IGameState state, IAgentActions actions)
+        {
+            if (state.MyGold <= 1000) return;
+
+            foreach (var buildingList in new[] { myBases, myArchery, myMonasteries })
+            {
+                foreach (int buildingNbr in buildingList)
+                {
+                    var info = state.GetUnit(buildingNbr);
+                    if (!info.HasValue || !info.Value.IsBuilt) continue;
+                    float maxHp = GameConstants.HEALTH[info.Value.UnitType];
+                    if (info.Value.Health >= maxHp * 0.5f) continue;
+
+                    int sent = 0;
+                    foreach (int pawn in myPawns)
+                    {
+                        if (sent >= 2) break;
+                        var wInfo = state.GetUnit(pawn);
+                        if (wInfo.HasValue && (wInfo.Value.CurrentAction == UnitAction.IDLE
+                            || wInfo.Value.CurrentAction == UnitAction.GATHER))
+                        {
+                            actions.Repair(pawn, buildingNbr);
+                            sent++;
+                        }
+                    }
+                }
+            }
+        }
+
+        private void GatherWithIdlePawns(IGameState state, IAgentActions actions)
+        {
+            if (mainBaseNbr < 0 || mainMineNbr < 0) return;
+            var mineInfo = state.GetUnit(mainMineNbr);
+            if (!mineInfo.HasValue || mineInfo.Value.Health <= 0) return;
+
+            foreach (int pawn in myPawns)
+            {
+                var info = state.GetUnit(pawn);
+                if (info.HasValue && info.Value.CurrentAction == UnitAction.IDLE)
+                    actions.Gather(pawn, mainMineNbr, mainBaseNbr);
+            }
+        }
+
+        private int FindClosestMine(IGameState state)
+        {
+            if (mines.Count == 0) return -1;
+            if (myPawns.Count == 0) return mines[0];
+            var pawnInfo = state.GetUnit(myPawns[0]);
+            if (!pawnInfo.HasValue) return mines[0];
+
+            Position pawnPos = pawnInfo.Value.GridPosition;
+            int bestMine = -1;
+            int bestPathLen = int.MaxValue;
+            foreach (int mineNbr in mines)
+            {
+                var mineInfo = state.GetUnit(mineNbr);
+                if (mineInfo.HasValue && mineInfo.Value.Health > 0)
+                {
+                    int pathLen = state.GetPathToUnit(pawnPos, UnitType.MINE, mineInfo.Value.GridPosition).Count;
+                    if (pathLen > 0 && pathLen < bestPathLen)
+                    {
+                        bestPathLen = pathLen;
+                        bestMine = mineNbr;
+                    }
+                }
+            }
+
+            if (bestMine == -1)
+            {
+                float bestDist = float.MaxValue;
+                foreach (int mineNbr in mines)
+                {
+                    var mineInfo = state.GetUnit(mineNbr);
+                    if (mineInfo.HasValue && mineInfo.Value.Health > 0)
+                    {
+                        float dist = Position.Distance(pawnPos, mineInfo.Value.CenterPosition);
+                        if (dist < bestDist)
+                        {
+                            bestDist = dist;
+                            bestMine = mineNbr;
+                        }
+                    }
+                }
+            }
+
+            return bestMine >= 0 ? bestMine : mines[0];
+        }
+
+        #endregion
+
+        #region Building Helpers
+
+        private void BuildStructure(UnitType type, IGameState state, IAgentActions actions)
+        {
+            if (state.MyGold < GameConstants.COST[type]) return;
+
+            // Prefer idle pawns, fall back to gathering pawns
+            int chosenPawn = -1;
+            foreach (int pawn in myPawns)
+            {
+                var info = state.GetUnit(pawn);
+                if (!info.HasValue) continue;
+                if (info.Value.CurrentAction == UnitAction.IDLE)
+                {
+                    chosenPawn = pawn;
+                    break;
+                }
+                if (chosenPawn < 0 && info.Value.CurrentAction == UnitAction.GATHER)
+                    chosenPawn = pawn;
+            }
+            if (chosenPawn < 0) return;
+
+            // Try multiple positions — the best one may be blocked by a mobile unit
+            var positions = state.FindProspectiveBuildPositions(type);
+            if (positions.Count == 0) return;
+
+            var baseInfo = mainBaseNbr >= 0 ? state.GetUnit(mainBaseNbr) : null;
+            Position baseCenter = baseInfo.HasValue ? baseInfo.Value.CenterPosition : new Position(-1, -1);
+
+            var sorted = new List<Position>(positions);
+            if (type == UnitType.BASE && mainMineNbr >= 0)
+            {
+                // Place base near the mine
+                var mineInfo = state.GetUnit(mainMineNbr);
+                if (mineInfo.HasValue)
+                {
+                    Position mineCenter = mineInfo.Value.CenterPosition;
+                    DeterministicSort.SortByDistance(sorted, mineCenter);
+                }
+            }
+            else if (baseCenter.X >= 0)
+            {
+                // Place other buildings near the base
+                DeterministicSort.SortByDistance(sorted, baseCenter);
+            }
+
+            foreach (Position pos in sorted)
+            {
+                if (type != UnitType.BASE && baseCenter.X >= 0
+                    && Position.Distance(pos, baseCenter) < 2f)
+                    continue;
+
+                // Pre-check buildability to avoid triggering cooldown on a blocked cell
+                if (!state.IsAreaBuildable(type, pos))
+                    continue;
+
+                actions.Build(chosenPawn, pos, type);
+                return;
+            }
+        }
+
+        /// <summary>
+        /// Computes a rally point RALLY_DISTANCE path-steps from the archery along the
+        /// navigable route toward the map center. Picks the first position where a 4x4
+        /// area is fully buildable. Cached after first successful computation.
+        /// </summary>
+        private Position ComputeRallyPoint(IGameState state)
+        {
+            if (_rallyPoint.X >= 0) return _rallyPoint;
+            if (myArchery.Count == 0) return new Position(-1, -1);
+            var info = state.GetUnit(myArchery[0]);
+            if (!info.HasValue) return new Position(-1, -1);
+
+            Position barracks = info.Value.GridPosition;
+            Position mapCenter = new Position(state.MapSize.X / 2, state.MapSize.Y / 2);
+
+            var path = state.GetPathBetween(barracks, mapCenter);
+            if (path.Count == 0) return new Position(-1, -1);
+
+            int startIdx = System.Math.Min((int)RALLY_DISTANCE - 1, path.Count - 1);
+
+            for (int i = startIdx; i < path.Count; i++)
+            {
+                if (IsAreaBuildable(path[i], 4, state))
+                {
+                    _rallyPoint = path[i];
+                    return _rallyPoint;
+                }
+            }
+
+            for (int i = startIdx - 1; i >= 0; i--)
+            {
+                if (IsAreaBuildable(path[i], 4, state))
+                {
+                    _rallyPoint = path[i];
+                    return _rallyPoint;
+                }
+            }
+
+            _rallyPoint = path[startIdx];
+            return _rallyPoint;
+        }
+
+        private bool IsAreaBuildable(Position center, int size, IGameState state)
+        {
+            int half = size / 2;
+            for (int dx = -(half - 1); dx <= half; dx++)
+            {
+                for (int dy = -(half - 1); dy <= half; dy++)
+                {
+                    if (!state.IsPositionBuildable(new Position(center.X + dx, center.Y + dy)))
+                        return false;
+                }
+            }
+            return true;
+        }
+
+        private Position FindRallyCell(Position unitPos, Position rallyCenter, IGameState state)
+        {
+            Position bestCell = new Position(-1, -1);
+            float bestDist = float.MinValue;
+
+            for (int dx = -1; dx <= 2; dx++)
+            {
+                for (int dy = -1; dy <= 2; dy++)
+                {
+                    Position cell = new Position(rallyCenter.X + dx, rallyCenter.Y + dy);
+                    if (!state.IsPositionBuildable(cell)) continue;
+
+                    float dist = Position.Distance(unitPos, cell);
+                    if (dist > bestDist)
+                    {
+                        bestDist = dist;
+                        bestCell = cell;
+                    }
+                }
+            }
+
+            return bestCell.X >= 0 ? bestCell : rallyCenter;
+        }
+
+        #endregion
+
+        #region Monk Support
+
+        private void TrainMonks(IGameState state, IAgentActions actions)
+        {
+            if (myMonks.Count >= MAX_MONKS) return;
+
+            foreach (int monasteryNbr in myMonasteries)
+            {
+                var info = state.GetUnit(monasteryNbr);
+                if (info.HasValue && info.Value.IsBuilt
+                    && info.Value.CurrentAction == UnitAction.IDLE
+                    && state.MyGold >= GameConstants.COST[UnitType.MONK])
+                {
+                    actions.Train(monasteryNbr, UnitType.MONK);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Monks heal the most-wounded archer within heal range, then follow
+        /// the army toward the rally point staying behind the front line.
+        /// </summary>
+        private void ExecuteMonkActions(IGameState state, IAgentActions actions, Position rallyPoint)
+        {
+            foreach (int monkNbr in myMonks)
+            {
+                var monkInfo = state.GetUnit(monkNbr);
+                if (!monkInfo.HasValue) continue;
+
+                // Skip busy monks (already healing / moving to heal)
+                if (monkInfo.Value.CurrentAction == UnitAction.HEAL) continue;
+
+                Position monkPos = monkInfo.Value.CenterPosition;
+
+                // Priority 1: heal the most-wounded allied mobile unit in range
+                if (monkInfo.Value.Mana >= GameConstants.MANA_COST)
+                {
+                    int bestTarget = -1;
+                    float lowestHealth = float.MaxValue;
+
+                    foreach (int archerNbr in myArchers)
+                    {
+                        var archerInfo = state.GetUnit(archerNbr);
+                        if (!archerInfo.HasValue) continue;
+                        float maxHp = GameConstants.HEALTH[archerInfo.Value.UnitType];
+                        if (archerInfo.Value.Health > maxHp - GameConstants.HEAL_AMOUNT) continue;
+                        if (archerInfo.Value.Health < lowestHealth)
+                        {
+                            lowestHealth = archerInfo.Value.Health;
+                            bestTarget = archerNbr;
+                        }
+                    }
+
+                    if (bestTarget >= 0)
+                    {
+                        actions.Heal(monkNbr, bestTarget);
+                        continue;
+                    }
+                }
+
+                // Priority 2: follow army — move toward rally point
+                if (monkInfo.Value.CurrentAction == UnitAction.IDLE && rallyPoint.X >= 0)
+                {
+                    float distToRally = Position.Distance(monkPos, rallyPoint);
+                    if (distToRally > MONK_FOLLOW_DISTANCE)
+                        actions.Move(monkNbr, rallyPoint);
+                }
+            }
+        }
+
+        #endregion
+
+        #region Targeting Helpers
+
+        /// <summary>
+        /// Find the closest enemy unit within a fixed radius.
+        /// Returns the enemy unit number, or -1 if none found.
+        /// </summary>
+        private int FindEnemyInRadius(Position myPos, float radius, IGameState state)
+        {
+            float bestDist = float.MaxValue;
+            int bestEnemy = -1;
+
+            foreach (UnitType ut in new[] { UnitType.WARRIOR, UnitType.ARCHER, UnitType.LANCER, UnitType.MONK, UnitType.PAWN,
+                                             UnitType.BASE, UnitType.BARRACKS, UnitType.ARCHERY, UnitType.TOWER, UnitType.MONASTERY })
+            {
+                foreach (int enemyNbr in state.GetEnemyUnits(ut))
+                {
+                    var enemyInfo = state.GetUnit(enemyNbr);
+                    if (!enemyInfo.HasValue) continue;
+                    float dist = Position.Distance(myPos, enemyInfo.Value.CenterPosition);
+                    if (dist <= radius && dist < bestDist)
+                    {
+                        bestDist = dist;
+                        bestEnemy = enemyNbr;
+                    }
+                }
+            }
+
+            return bestEnemy;
+        }
+
+        /// <summary>
+        /// Find closest enemy with priority: combat > pawn > building.
+        /// When excluded is non-null, skips enemies in the set (target spreading).
+        /// </summary>
+        private int? FindClosestEnemy(int attackerNbr, IGameState state, HashSet<int> excluded)
+        {
+            var attackerInfo = state.GetUnit(attackerNbr);
+            if (!attackerInfo.HasValue) return null;
+            Position attackerPos = attackerInfo.Value.GridPosition;
+
+            int? bestCombat = null;
+            float bestCombatDist = float.MaxValue;
+            int? bestPawn = null;
+            float bestPawnDist = float.MaxValue;
+            int? bestBuilding = null;
+            float bestBuildingDist = float.MaxValue;
+
+            foreach (UnitType ut in new[] { UnitType.WARRIOR, UnitType.ARCHER, UnitType.LANCER, UnitType.MONK, UnitType.PAWN,
+                                            UnitType.BASE, UnitType.BARRACKS, UnitType.ARCHERY, UnitType.TOWER, UnitType.MONASTERY })
+            {
+                bool isCombat = ut == UnitType.WARRIOR || ut == UnitType.ARCHER || ut == UnitType.LANCER;
+                bool isPawn = ut == UnitType.PAWN;
+                var enemies = state.GetEnemyUnits(ut);
+                foreach (int enemyNbr in enemies)
+                {
+                    if (excluded != null && excluded.Contains(enemyNbr)) continue;
+                    var enemyInfo = state.GetUnit(enemyNbr);
+                    if (!enemyInfo.HasValue) continue;
+                    float dist = Position.Distance(attackerPos, enemyInfo.Value.CenterPosition);
+                    if (isCombat && dist < bestCombatDist) { bestCombatDist = dist; bestCombat = enemyNbr; }
+                    else if (isPawn && dist < bestPawnDist) { bestPawnDist = dist; bestPawn = enemyNbr; }
+                    else if (!isCombat && !isPawn && dist < bestBuildingDist) { bestBuildingDist = dist; bestBuilding = enemyNbr; }
+                }
+            }
+            return bestCombat ?? bestPawn ?? bestBuilding;
+        }
+
+        #endregion
+    }
+}
