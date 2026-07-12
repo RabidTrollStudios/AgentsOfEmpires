@@ -334,6 +334,20 @@
         <member name="F:AgentSDK.GameConstants.MAX_MANA">
             <summary>Maximum mana pool for each unit type</summary>
         </member>
+        <member name="F:AgentSDK.GameConstants.MOVEMENT_EPSILON">
+            <summary>
+            Canonical "distances/quantities smaller than this are effectively zero" tolerance for
+            the continuous-movement and float-threshold math. Historically a bare 0.01f literal at
+            the same-cell movement guards (MovementSystem, TaskEngine.TryMoveToCell); promoted to a
+            named constant so movement AND mana share one value. Also the grid mana is SNAPPED to
+            this resolution each regen tick (see TaskEngine.RegenMana): mana accumulates in float32
+            and Mono (Unity) vs .NET (sim) round the running sum to opposite sides of a whole-number
+            threshold like MANA_COST=10, so an agent/engine `mana >= MANA_COST` check disagrees
+            across runtimes (the divergence the faithful DetCommander parity game surfaced near
+            tick 317, oscillating around 10.0). Snapping every mana value to this 0.01 grid makes
+            both engines carry the IDENTICAL value, so every threshold comparison agrees.
+            </summary>
+        </member>
         <member name="F:AgentSDK.GameConstants.MANA_COST">
             <summary>Mana cost per heal action (10% of max mana)</summary>
         </member>
@@ -1423,7 +1437,17 @@
         </member>
         <member name="M:AgentSDK.TaskEngine.RegenMana(System.Single,System.Single,System.Single,System.Single)">
             <summary>
-            Regenerate mana for a unit per tick.
+            Regenerate mana for a unit per tick. The result is SNAPPED to the shared
+            <see cref="F:AgentSDK.GameConstants.MOVEMENT_EPSILON"/> grid (0.01) so the accumulated value is
+            bit-identical across Mono/.NET and every `mana >= MANA_COST` check agrees on both
+            engines — see that constant for the full rationale.
+            </summary>
+        </member>
+        <member name="M:AgentSDK.TaskEngine.SnapToGrid(System.Single,System.Single)">
+            <summary>
+            Round <paramref name="value"/> to the nearest multiple of <paramref name="grid"/> using
+            IEEE round-half-to-even, which is identical across runtimes. Used to keep accumulated
+            float quantities (mana) on a shared grid so both engines carry the same value.
             </summary>
         </member>
         <member name="T:AgentSDK.TickEngine">
