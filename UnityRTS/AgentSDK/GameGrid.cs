@@ -491,5 +491,85 @@ namespace AgentSDK
         }
 
         #endregion
+
+        #region Parity digests
+
+        // Order-stable FNV-1a digests of the grid's DERIVED internal state, hashed identically
+        // for both engines because both call THIS shared method on the SAME shared grid type.
+        // These catch a divergence in engine internals (occupancy, walkability, building
+        // passages) that would NOT yet show up in any per-unit field — e.g. a footprint update
+        // applied in a different order, or a building passage cell set on one engine but not the
+        // other. FNV-1a (not string.GetHashCode) is used deliberately: it is deterministic across
+        // runtimes and process runs, which the randomized string hash is not.
+
+        private const ulong FnvOffset = 14695981039346656037UL;
+        private const ulong FnvPrime = 1099511628211UL;
+
+        private static ulong FnvStep(ulong h, int value)
+        {
+            unchecked
+            {
+                // Fold the 32-bit value byte-by-byte, low-to-high, for a stable ordering.
+                h = (h ^ (byte)(value)) * FnvPrime;
+                h = (h ^ (byte)(value >> 8)) * FnvPrime;
+                h = (h ^ (byte)(value >> 16)) * FnvPrime;
+                h = (h ^ (byte)(value >> 24)) * FnvPrime;
+                return h;
+            }
+        }
+
+        /// <summary>
+        /// Digest of the walkability map: every cell's <see cref="CellState"/> (OPEN/WALKABLE/
+        /// BLOCKED) plus whether it is a building passage. Static terrain contributes a constant
+        /// baseline; the digest MOVES when a building goes up or dies (footprint → BLOCKED, top
+        /// row → WALKABLE passage). Iteration is column-major (x outer, y inner) — fixed order so
+        /// the value is reproducible.
+        /// </summary>
+        public ulong ComputeWalkabilityDigest() => ComputeWalkabilityDigest(Width, Height);
+
+        /// <summary>
+        /// Walkability digest over only the [0,regionW) x [0,regionH) sub-region. Used for
+        /// cross-engine parity: the Unity engine's grid is larger than the playable area (it
+        /// includes a wide water/border margin outside the generated map), while the headless sim
+        /// builds only the playable grid. Hashing the SHARED playable region — the generated map
+        /// dimensions, at the common (0,0) origin — makes the two digests comparable without
+        /// forcing the sim to replicate Unity's decorative border. Out-of-bounds cells read as
+        /// BLOCKED (via GetCell), so passing a region larger than the grid is safe.
+        /// </summary>
+        public ulong ComputeWalkabilityDigest(int regionW, int regionH)
+        {
+            ulong h = FnvOffset;
+            for (int x = 0; x < regionW; x++)
+                for (int y = 0; y < regionH; y++)
+                {
+                    h = FnvStep(h, (int)GetCell(x, y));
+                    h = FnvStep(h, (IsPositionValid(x, y) && isPassage[x, y]) ? 1 : 0);
+                }
+            return h;
+        }
+
+        /// <summary>
+        /// Digest of the occupancy map: the mobile-unit occupant count per cell. Catches a
+        /// divergence in which cells the two engines believe are occupied even when every unit's
+        /// reported GridPosition already matches (an occupancy-accounting skew). Same fixed
+        /// column-major iteration order as the walkability digest.
+        /// </summary>
+        public ulong ComputeOccupancyDigest() => ComputeOccupancyDigest(Width, Height);
+
+        /// <summary>
+        /// Occupancy digest over only the [0,regionW) x [0,regionH) sub-region. See
+        /// <see cref="ComputeWalkabilityDigest(int,int)"/> for why the parity path restricts to
+        /// the shared playable region. Out-of-bounds cells contribute a 0 occupant count.
+        /// </summary>
+        public ulong ComputeOccupancyDigest(int regionW, int regionH)
+        {
+            ulong h = FnvOffset;
+            for (int x = 0; x < regionW; x++)
+                for (int y = 0; y < regionH; y++)
+                    h = FnvStep(h, IsPositionValid(x, y) ? occupantCount[x, y] : 0);
+            return h;
+        }
+
+        #endregion
     }
 }
