@@ -106,7 +106,7 @@ namespace GameManager
                 stateWriter.WriteLine(blocked.ToString());
             }
 
-            stateWriter.WriteLine("tick,gold0,gold1,unit_count,units");
+            stateWriter.WriteLine("tick,gold0,gold1,unit_count,units,digests");
 
             Debug.Log($"[ParityExporter] Writing to: {cmdPath}");
         }
@@ -190,15 +190,41 @@ namespace GameManager
 
             var allUnits = gm.Units.GetAllUnits();
             var unitParts = new List<string>();
+            var unitNbrsAsc = new List<int>();
             foreach (var kvp in allUnits.OrderBy(k => k.Key))
             {
                 var u = kvp.Value.GetComponent<Unit>();
                 if (u == null) continue;
                 unitParts.Add(EncodeUnit(u));
+                unitNbrsAsc.Add(kvp.Key);
             }
 
             string units = string.Join("|", unitParts);
-            stateWriter.WriteLine($"{currentTick},{gold0},{gold1},{allUnits.Count},{units}");
+
+            // Derived engine-internal state (grid occupancy/walkability, PathBudget slot grants).
+            // Computed via the SHARED AgentSDK helpers so the sim side hashes identical inputs —
+            // catches internal divergences that don't yet surface in any per-unit field. Emitted
+            // as trailing key=value columns; older parsers that stop at the units column ignore
+            // them, and the parity comparer only checks a digest the CSV actually carried.
+            string digests = "";
+            if (gm.Map != null && gm.Map.Grid != null)
+            {
+                // Hash only the PLAYABLE region (the generated map size), not Unity's full grid.
+                // Unity's GameGrid spans the whole tilemap — including a wide water/border margin
+                // outside the playable area — whereas the headless sim builds only the playable
+                // grid. Both share the (0,0) origin and identical cells inside the playable
+                // region, so digesting [0,genW)x[0,genH) makes the two engines' digests comparable
+                // without the sim having to replicate Unity's decorative border. Falls back to the
+                // full grid for hand-made maps (no gen size).
+                int regionW = gm.MapConfigMode == MapMode.PROCEDURAL ? gm.MapConfigWidth : gm.Map.MapSize.x;
+                int regionH = gm.MapConfigMode == MapMode.PROCEDURAL ? gm.MapConfigHeight : gm.Map.MapSize.y;
+                ulong occ = gm.Map.Grid.ComputeOccupancyDigest(regionW, regionH);
+                ulong walk = gm.Map.Grid.ComputeWalkabilityDigest(regionW, regionH);
+                ulong pbslots = AgentSDK.PathBudget.ComputeSlotDigest(currentTick, unitNbrsAsc);
+                digests = $",occ={occ};walk={walk};pbslots={pbslots}";
+            }
+
+            stateWriter.WriteLine($"{currentTick},{gold0},{gold1},{allUnits.Count},{units}{digests}");
         }
 
         /// <summary>

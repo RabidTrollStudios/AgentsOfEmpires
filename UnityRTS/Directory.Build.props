@@ -1,0 +1,26 @@
+<Project>
+
+  <!-- Repo-wide build settings applied to every project under UnityRTS/.
+
+       Goal: keep the COMMITTED build outputs (agent DLLs in EnemyAgents/, the shared
+       AgentSDK.dll / AgentTestHarness.dll in RTS/Assets/Plugins/) byte-stable across git
+       commits, so a rebuild that changes no code reproduces the committed bytes and does not
+       show up as a spurious diff.
+
+       Without this, the .NET SDK embeds the current git commit into the build in two ways, and
+       a deterministic build folds both into each assembly's MVID + PE timestamp hash:
+         1. IncludeSourceRevisionInInformationalVersion → stamps +<sha> into InformationalVersion.
+         2. The SourceControl (SourceLink) manager → queries git and embeds commit metadata into
+            the portable PDB / debug directory.
+       Because AgentSDK is referenced by every agent, AgentSDK's per-commit MVID change also
+       rippled into every agent DLL's AssemblyRef — so ALL 21 agent DLLs churned on every commit
+       even when no agent source changed (diagnosed 2026-07-12; the only byte diffs vs the
+       committed DLLs were commit-derived). Disabling both makes builds reproducible across
+       commits. Determinism itself (same commit → same bytes) was already holding. -->
+
+  <PropertyGroup>
+    <IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
+    <EnableSourceControlManagerQueries>false</EnableSourceControlManagerQueries>
+  </PropertyGroup>
+
+</Project>

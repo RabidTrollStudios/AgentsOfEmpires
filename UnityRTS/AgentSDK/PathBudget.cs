@@ -74,5 +74,35 @@ namespace AgentSDK
             unit.RepathPending = false;
             return pathfind();
         }
+
+        /// <summary>
+        /// Parity digest of the gate's grant/defer decision this tick over a set of unit
+        /// numbers. Because <see cref="CanPathThisTick"/> is a pure function of (tick, unitNbr),
+        /// both engines fed the SAME live-unit set produce the SAME digest — so a mismatch means
+        /// the two engines disagree on which units EXIST this tick (a roster skew) or on the
+        /// tick number itself, either of which is a real divergence that can precede any visible
+        /// position change. The caller must pass unit numbers in ascending order for a stable
+        /// value; sort before calling. FNV-1a for cross-runtime determinism.
+        /// </summary>
+        public static ulong ComputeSlotDigest(int tick,
+            System.Collections.Generic.IEnumerable<int> ascendingUnitNbrs)
+        {
+            const ulong offset = 14695981039346656037UL;
+            const ulong prime = 1099511628211UL;
+            ulong h = offset;
+            unchecked
+            {
+                foreach (int unitNbr in ascendingUnitNbrs)
+                {
+                    // Fold the unit number and its grant/defer bit together.
+                    int v = (unitNbr << 1) | (CanPathThisTick(tick, unitNbr) ? 1 : 0);
+                    h = (h ^ (byte)v) * prime;
+                    h = (h ^ (byte)(v >> 8)) * prime;
+                    h = (h ^ (byte)(v >> 16)) * prime;
+                    h = (h ^ (byte)(v >> 24)) * prime;
+                }
+            }
+            return h;
+        }
     }
 }
