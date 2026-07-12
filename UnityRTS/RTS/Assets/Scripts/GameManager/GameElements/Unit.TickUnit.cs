@@ -96,9 +96,13 @@ namespace GameManager.GameElements
                 : _buildSite;
             set => _buildSite = value;
         }
+        // Guards on BUILD for the same reason RepairBuildingNbr guards on REPAIR: the two
+        // targets share the currentBuilding field, so each must only report during its own
+        // action to match SimUnit's separate fields and avoid a false parity divergence.
         int ITickUnit.BuildTargetNbr
         {
-            get => currentBuilding != null ? currentBuilding.GetComponent<Unit>().UnitNbr : -1;
+            get => (CurrentAction == UnitAction.BUILD && currentBuilding != null)
+                ? currentBuilding.GetComponent<Unit>().UnitNbr : -1;
             set
             {
                 if (value >= 0)
@@ -132,10 +136,16 @@ namespace GameManager.GameElements
         private bool repathPending;
         bool ITickUnit.RepathPending { get => repathPending; set => repathPending = value; }
 
-        // Repair
+        // Repair. NOTE: currentBuilding is SHARED with BuildTargetNbr (a pawn's build
+        // site and its repair target are the same Unity field). So the getter MUST guard
+        // on the action — during BUILD, RepairBuildingNbr is -1 (there is no repair target),
+        // matching SimUnit which keeps the two as separate fields. Without this guard a
+        // building pawn reported its build target as its repair target, a false parity
+        // divergence surfaced by the full-field snapshot.
         int ITickUnit.RepairBuildingNbr
         {
-            get => currentBuilding != null ? currentBuilding.GetComponent<Unit>().UnitNbr : -1;
+            get => (CurrentAction == UnitAction.REPAIR && currentBuilding != null)
+                ? currentBuilding.GetComponent<Unit>().UnitNbr : -1;
             set
             {
                 if (value >= 0)
