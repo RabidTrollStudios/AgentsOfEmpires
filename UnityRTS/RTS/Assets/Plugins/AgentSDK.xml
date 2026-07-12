@@ -526,6 +526,41 @@
         <member name="M:AgentSDK.GameGrid.SetCellStandable(AgentSDK.Position,System.Boolean)">
             <summary>Legacy alias for SetCellOccupied.</summary>
         </member>
+        <member name="M:AgentSDK.GameGrid.ComputeWalkabilityDigest">
+            <summary>
+            Digest of the walkability map: every cell's <see cref="T:AgentSDK.CellState"/> (OPEN/WALKABLE/
+            BLOCKED) plus whether it is a building passage. Static terrain contributes a constant
+            baseline; the digest MOVES when a building goes up or dies (footprint → BLOCKED, top
+            row → WALKABLE passage). Iteration is column-major (x outer, y inner) — fixed order so
+            the value is reproducible.
+            </summary>
+        </member>
+        <member name="M:AgentSDK.GameGrid.ComputeWalkabilityDigest(System.Int32,System.Int32)">
+            <summary>
+            Walkability digest over only the [0,regionW) x [0,regionH) sub-region. Used for
+            cross-engine parity: the Unity engine's grid is larger than the playable area (it
+            includes a wide water/border margin outside the generated map), while the headless sim
+            builds only the playable grid. Hashing the SHARED playable region — the generated map
+            dimensions, at the common (0,0) origin — makes the two digests comparable without
+            forcing the sim to replicate Unity's decorative border. Out-of-bounds cells read as
+            BLOCKED (via GetCell), so passing a region larger than the grid is safe.
+            </summary>
+        </member>
+        <member name="M:AgentSDK.GameGrid.ComputeOccupancyDigest">
+            <summary>
+            Digest of the occupancy map: the mobile-unit occupant count per cell. Catches a
+            divergence in which cells the two engines believe are occupied even when every unit's
+            reported GridPosition already matches (an occupancy-accounting skew). Same fixed
+            column-major iteration order as the walkability digest.
+            </summary>
+        </member>
+        <member name="M:AgentSDK.GameGrid.ComputeOccupancyDigest(System.Int32,System.Int32)">
+            <summary>
+            Occupancy digest over only the [0,regionW) x [0,regionH) sub-region. See
+            <see cref="M:AgentSDK.GameGrid.ComputeWalkabilityDigest(System.Int32,System.Int32)"/> for why the parity path restricts to
+            the shared playable region. Out-of-bounds cells contribute a 0 occupant count.
+            </summary>
+        </member>
         <member name="T:AgentSDK.GatherPhase">
             <summary>
             Phases of the gathering action cycle.
@@ -1045,6 +1080,17 @@
             and clears RepathPending. If gated out, returns null and sets RepathPending so the
             caller's per-tick handler retries next tick. Keeps the deterministic gate and the
             pending-flag bookkeeping in one place so every call site behaves identically.
+            </summary>
+        </member>
+        <member name="M:AgentSDK.PathBudget.ComputeSlotDigest(System.Int32,System.Collections.Generic.IEnumerable{System.Int32})">
+            <summary>
+            Parity digest of the gate's grant/defer decision this tick over a set of unit
+            numbers. Because <see cref="M:AgentSDK.PathBudget.CanPathThisTick(System.Int32,System.Int32)"/> is a pure function of (tick, unitNbr),
+            both engines fed the SAME live-unit set produce the SAME digest — so a mismatch means
+            the two engines disagree on which units EXIST this tick (a roster skew) or on the
+            tick number itself, either of which is a real divergence that can precede any visible
+            position change. The caller must pass unit numbers in ascending order for a stable
+            value; sort before calling. FNV-1a for cross-runtime determinism.
             </summary>
         </member>
         <member name="T:AgentSDK.Pathfinder">
