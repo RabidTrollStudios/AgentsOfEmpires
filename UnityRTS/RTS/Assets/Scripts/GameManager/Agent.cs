@@ -244,9 +244,13 @@ namespace GameManager
 		#region Public Methods
 
 		/// <summary>
-		/// Updates the agent each frame
+		/// Runs the agent's decision logic for exactly one game tick. Invoked from
+		/// GameManager's canonical tick sequence (Phase 3), NOT from Unity's per-frame
+		/// MonoBehaviour.Update — so the agent ticks in lockstep with the fixed-timestep
+		/// simulation, matching the headless SimGame. (Deliberately NOT named Update(),
+		/// which Unity would auto-invoke every render frame.)
 		/// </summary>
-		public virtual void Update() { }
+		public virtual void TickAgent() { }
 
 		/// <summary>
 		/// Record a command that failed during Phase 1 dispatch.

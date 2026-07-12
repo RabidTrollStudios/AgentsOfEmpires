@@ -44,7 +44,7 @@ namespace GameManager.Tests.PlayMode
 			// Kill the mine
 			mine.Health = 0;
 
-			yield return WaitUntil(
+			yield return WaitForTick(
 				() => pawn.CurrentAction == UnitAction.IDLE,
 				15f,
 				"Pawn did not go IDLE after mine was destroyed mid-trip");
@@ -65,7 +65,7 @@ namespace GameManager.Tests.PlayMode
 
 			// Wait until mining starts (mine health drops)
 			float initialMineHealth = mine.Health;
-			yield return WaitUntil(
+			yield return WaitForTick(
 				() => mine.Health < initialMineHealth,
 				15f,
 				"Pawn did not start mining");
@@ -73,7 +73,7 @@ namespace GameManager.Tests.PlayMode
 			// Kill the base
 			baseUnit.Health = 0;
 
-			yield return WaitUntil(
+			yield return WaitForTick(
 				() => pawn.CurrentAction == UnitAction.IDLE,
 				30f,
 				"Pawn did not go IDLE after base was destroyed during gathering");
@@ -105,7 +105,7 @@ namespace GameManager.Tests.PlayMode
 				StartGathering(pawn, mine, baseUnit);
 
 			// MiningCapacity for PAWN = 10 * 10 = 100 gold per trip; 5 pawns collectively exceed that
-			yield return WaitUntil(
+			yield return WaitForTick(
 				() => agent.Gold >= initialGold + 100,
 				60f,
 				"Multiple pawns did not deposit enough gold from the same mine");

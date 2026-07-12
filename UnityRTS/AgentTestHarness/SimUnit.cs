@@ -43,6 +43,9 @@ namespace AgentTestHarness
         public Position BuildSite { get; set; }
         public int BuildTargetNbr { get; set; }
 
+        /// <summary>Construction progress (seconds) on an unbuilt building — see ITickUnit.BuildProgress.</summary>
+        public float BuildProgress { get; set; }
+
         // Gathering
         public int GatherMineNbr { get; set; }
         public int GatherBaseNbr { get; set; }
@@ -52,6 +55,7 @@ namespace AgentTestHarness
 
         // Combat
         public int AttackTargetNbr { get; set; }
+        public bool RepathPending { get; set; }
 
         // Repair
         public int RepairBuildingNbr { get; set; }

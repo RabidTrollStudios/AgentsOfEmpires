@@ -117,6 +117,9 @@ namespace AgentTestHarness
         /// <summary>All blocked cell positions on the map.</summary>
         public HashSet<Position> BlockedCells { get; }
 
+        /// <summary>Deterministic agent-slot flip from the shared seed (see MapGenResult.BlueIsAgent0).</summary>
+        public bool BlueIsAgent0 { get; }
+
         internal MapGeneratorResult(int seed, MapGenResult core, SimMap map)
         {
             Seed = seed;
@@ -127,6 +130,7 @@ namespace AgentTestHarness
             MinePositions = core.MinePositions;
             BlockedCells = core.BlockedCells;
             Groves = core.Groves.Select(g => new Grove(g)).ToList();
+            BlueIsAgent0 = core.BlueIsAgent0;
         }
     }
 

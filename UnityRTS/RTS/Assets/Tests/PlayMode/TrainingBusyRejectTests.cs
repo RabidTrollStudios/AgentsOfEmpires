@@ -100,7 +100,7 @@ namespace GameManager.Tests.PlayMode
 			Assert.AreEqual(UnitAction.TRAIN, barracks.CurrentAction);
 
 			// Wait for first training to complete
-			yield return WaitUntil(
+			yield return WaitForTick(
 				() => barracks.CurrentAction == UnitAction.IDLE,
 				timeoutSeconds: 10f,
 				failMessage: "First BARRACKS training did not complete");

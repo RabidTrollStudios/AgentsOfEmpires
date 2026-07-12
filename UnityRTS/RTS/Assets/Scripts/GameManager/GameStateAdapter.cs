@@ -9,7 +9,7 @@ namespace GameManager
     /// <summary>
     /// Implements IGameState by wrapping the game engine's managers.
     /// Converts between Unity types (Vector3Int) and SDK types (Position).
-    /// Includes per-frame pathfinding cache and rate limiting.
+    /// Includes a per-frame pathfinding cache (dedupe only — no rate limiting; see below).
     /// </summary>
     public class GameStateAdapter : IGameState
     {
@@ -18,15 +18,19 @@ namespace GameManager
         private UnitManager unitManager;
         private MapManager mapManager;
 
-        // Per-frame pathfinding cache and rate limiting
-        private const int MAX_PATH_CALLS_PER_FRAME = 20;
+        // Per-frame pathfinding cache (dedupe only). The old per-agent rate limit
+        // (MAX_PATH_CALLS_PER_FRAME, returning EmptyPath when exceeded) was REMOVED:
+        // the headless SimGameState has no such cap, so an agent that pathfinds a lot
+        // while thinking got EmptyPath in Unity but a real path in the sim → different
+        // decisions → parity divergence (tick-95 sim=MOVE/engine=IDLE). The expensive
+        // part — actual unit repaths — is still rate-limited deterministically by the
+        // shared AgentSDK.PathBudget in the tick engine. This layer now only caches to
+        // avoid recomputing identical queries within a frame; it never withholds a path.
         private int lastCacheFrame = -1;
-        private int pathCallsThisFrame = 0;
         private Dictionary<(Position, Position), IReadOnlyList<Position>> pathBetweenCache
             = new Dictionary<(Position, Position), IReadOnlyList<Position>>();
         private Dictionary<(Position, AgentSDK.UnitType, Position), IReadOnlyList<Position>> pathToUnitCache
             = new Dictionary<(Position, AgentSDK.UnitType, Position), IReadOnlyList<Position>>();
-        private static readonly IReadOnlyList<Position> EmptyPath = new List<Position>();
 
         public GameStateAdapter(int agentNbr, UnitManager unitManager, MapManager mapManager)
         {
@@ -49,7 +53,6 @@ namespace GameManager
             if (currentFrame != lastCacheFrame)
             {
                 lastCacheFrame = currentFrame;
-                pathCallsThisFrame = 0;
                 pathBetweenCache.Clear();
                 pathToUnitCache.Clear();
             }
@@ -128,15 +131,6 @@ namespace GameManager
             if (pathBetweenCache.TryGetValue(key, out var cached))
                 return cached;
 
-            if (pathCallsThisFrame >= MAX_PATH_CALLS_PER_FRAME)
-            {
-                GameManager.Instance.Log("WARNING: Agent " + agentNbr
-                    + " exceeded pathfinding budget (" + MAX_PATH_CALLS_PER_FRAME + " calls/frame)",
-                    GameManager.Instance.gameObject);
-                return EmptyPath;
-            }
-
-            pathCallsThisFrame++;
             var path = mapManager.GetPathBetweenGridPositions(
                 new Vector3Int(start.X, start.Y, 0),
                 new Vector3Int(end.X, end.Y, 0));
@@ -152,15 +146,6 @@ namespace GameManager
 
             ResetCacheIfNewFrame();
 
-            if (pathCallsThisFrame >= MAX_PATH_CALLS_PER_FRAME)
-            {
-                GameManager.Instance.Log("WARNING: Agent " + agentNbr
-                    + " exceeded pathfinding budget (" + MAX_PATH_CALLS_PER_FRAME + " calls/frame)",
-                    GameManager.Instance.gameObject);
-                return EmptyPath;
-            }
-
-            pathCallsThisFrame++;
             var path = mapManager.GetPathBetweenGridPositions(
                 new Vector3Int(start.X, start.Y, 0),
                 new Vector3Int(end.X, end.Y, 0),
@@ -177,15 +162,6 @@ namespace GameManager
             if (pathToUnitCache.TryGetValue(key, out var cached))
                 return cached;
 
-            if (pathCallsThisFrame >= MAX_PATH_CALLS_PER_FRAME)
-            {
-                GameManager.Instance.Log("WARNING: Agent " + agentNbr
-                    + " exceeded pathfinding budget (" + MAX_PATH_CALLS_PER_FRAME + " calls/frame)",
-                    GameManager.Instance.gameObject);
-                return EmptyPath;
-            }
-
-            pathCallsThisFrame++;
             var path = mapManager.GetPathToUnit(
                 new Vector3Int(start.X, start.Y, 0),
                 unitType,

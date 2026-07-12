@@ -251,7 +251,7 @@ namespace GameManager.Tests
 		public void GetPathToUnit_CallerAlreadyAdjacent_ShortPath()
 		{
 			var targetPos = new Vector3Int(10, 10, 0);
-			var from = new Vector3Int(9, 10, 0); // directly west, a neighbor of a 3x3 BASE at (10,10)
+			var from = new Vector3Int(9, 10, 0); // directly west, a neighbor of a 6x4 BASE at (10,10)
 
 			// Mark the building footprint as not-buildable (bottom-left anchor, extends up)
 			var size = Constants.UNIT_SIZE[UnitType.BASE];

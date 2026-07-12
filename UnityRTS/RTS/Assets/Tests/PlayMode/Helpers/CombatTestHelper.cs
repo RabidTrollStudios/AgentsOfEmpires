@@ -50,15 +50,19 @@ namespace GameManager.Tests.PlayMode
 			string failMessage = null)
 		{
 			failMessage = failMessage ?? $"Unit {unitNbr} was not destroyed within {timeoutSeconds}s";
-			float elapsed = 0f;
+			// The test GameManager GO is inactive, so FixedUpdate never fires — drive
+			// ticks explicitly. Combat/death only advances when we call SimulateTick.
+			// timeoutSeconds is reinterpreted as a tick budget (×20 at the 20 Hz rate).
+			int maxTicks = Mathf.Max(1, Mathf.RoundToInt(timeoutSeconds * 20f));
+			int ticks = 0;
 			while (ctx.UnitManager.GetUnit(unitNbr) != null)
 			{
-				elapsed += Time.deltaTime;
-				if (elapsed > timeoutSeconds)
+				if (ticks++ >= maxTicks)
 				{
 					Assert.Fail(failMessage);
 					yield break;
 				}
+				GameManager.Instance.SimulateTick();
 				yield return null;
 			}
 		}

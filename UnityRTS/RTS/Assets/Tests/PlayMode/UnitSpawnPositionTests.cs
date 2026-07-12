@@ -34,7 +34,7 @@ namespace GameManager.Tests.PlayMode
 				"BARRACKS should enter TRAIN state");
 
 			// Wait for training to complete (barracks returns to IDLE)
-			yield return WaitUntil(
+			yield return WaitForTick(
 				() => barracks.CurrentAction == UnitAction.IDLE,
 				timeoutSeconds: 10f,
 				failMessage: "BARRACKS did not complete WARRIOR training");
@@ -56,7 +56,7 @@ namespace GameManager.Tests.PlayMode
 
 			barracks.StartTraining(new TrainEventArgs(barracks, UnitType.WARRIOR));
 
-			yield return WaitUntil(
+			yield return WaitForTick(
 				() => barracks.CurrentAction == UnitAction.IDLE,
 				timeoutSeconds: 10f,
 				failMessage: "BARRACKS did not complete training");
@@ -90,7 +90,7 @@ namespace GameManager.Tests.PlayMode
 			Assert.AreEqual(UnitAction.TRAIN, baseUnit.CurrentAction,
 				"BASE should enter TRAIN state");
 
-			yield return WaitUntil(
+			yield return WaitForTick(
 				() => baseUnit.CurrentAction == UnitAction.IDLE,
 				timeoutSeconds: 10f,
 				failMessage: "BASE did not complete PAWN training");
@@ -118,7 +118,7 @@ namespace GameManager.Tests.PlayMode
 			archery.StartTraining(new TrainEventArgs(archery, UnitType.ARCHER));
 			Assert.AreEqual(UnitAction.TRAIN, archery.CurrentAction);
 
-			yield return WaitUntil(
+			yield return WaitForTick(
 				() => archery.CurrentAction == UnitAction.IDLE,
 				timeoutSeconds: 10f,
 				failMessage: "ARCHERY did not complete ARCHER training");
@@ -148,14 +148,14 @@ namespace GameManager.Tests.PlayMode
 
 			// First training
 			barracks.StartTraining(new TrainEventArgs(barracks, UnitType.WARRIOR));
-			yield return WaitUntil(
+			yield return WaitForTick(
 				() => barracks.CurrentAction == UnitAction.IDLE,
 				timeoutSeconds: 10f,
 				failMessage: "First training did not complete");
 
 			// Second training
 			barracks.StartTraining(new TrainEventArgs(barracks, UnitType.WARRIOR));
-			yield return WaitUntil(
+			yield return WaitForTick(
 				() => barracks.CurrentAction == UnitAction.IDLE,
 				timeoutSeconds: 10f,
 				failMessage: "Second training did not complete");

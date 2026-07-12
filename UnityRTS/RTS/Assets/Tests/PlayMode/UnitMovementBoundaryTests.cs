@@ -27,7 +27,7 @@ namespace GameManager.Tests.PlayMode
 
 			pawn.StartMoving(new MoveEventArgs(pawn, UnitType.PAWN, target));
 
-			yield return WaitUntil(
+			yield return WaitForTick(
 				() => pawn.CurrentAction == UnitAction.IDLE,
 				timeoutSeconds: 10f,
 				failMessage: "Pawn at map edge (0,0) did not reach interior target");
@@ -45,7 +45,7 @@ namespace GameManager.Tests.PlayMode
 
 			pawn.StartMoving(new MoveEventArgs(pawn, UnitType.PAWN, target));
 
-			yield return WaitUntil(
+			yield return WaitForTick(
 				() => pawn.CurrentAction == UnitAction.IDLE,
 				timeoutSeconds: 10f,
 				failMessage: "Pawn did not reach near-corner target (27,27)");
@@ -66,7 +66,7 @@ namespace GameManager.Tests.PlayMode
 			var target = new Vector3Int(20, 20, 0);
 			pawn.StartMoving(new MoveEventArgs(pawn, UnitType.PAWN, target));
 
-			yield return WaitUntil(
+			yield return WaitForTick(
 				() => pawn.CurrentAction == UnitAction.IDLE,
 				timeoutSeconds: 15f,
 				failMessage: "Pawn near building did not reach target or go IDLE");
@@ -107,7 +107,7 @@ namespace GameManager.Tests.PlayMode
 			// Place a BASE blocking the direct path
 			PlaceUnit(UnitType.BASE, new Vector3Int(4, 9, 0));
 
-			yield return WaitUntil(
+			yield return WaitForTick(
 				() => pawn.CurrentAction == UnitAction.IDLE,
 				timeoutSeconds: 10f,
 				failMessage: "Pawn did not resolve blocked path (re-path or go IDLE)");
@@ -131,7 +131,7 @@ namespace GameManager.Tests.PlayMode
 			var target = new Vector3Int(25, 25, 0);
 			pawn.StartMoving(new MoveEventArgs(pawn, UnitType.PAWN, target));
 
-			yield return WaitUntil(
+			yield return WaitForTick(
 				() => pawn.CurrentAction == UnitAction.IDLE,
 				timeoutSeconds: 15f,
 				failMessage: "Surrounded pawn did not go IDLE after path failures");
@@ -160,7 +160,7 @@ namespace GameManager.Tests.PlayMode
 			for (int i = 0; i < pawnCount; i++)
 				pawns[i].StartMoving(new MoveEventArgs(pawns[i], UnitType.PAWN, targets[i]));
 
-			yield return WaitUntil(
+			yield return WaitForTick(
 				() =>
 				{
 					foreach (var w in pawns)

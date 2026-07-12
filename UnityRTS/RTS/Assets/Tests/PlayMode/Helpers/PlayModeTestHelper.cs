@@ -92,13 +92,9 @@ namespace GameManager.Tests.PlayMode
 			// 4. Build UnitManager
 			ctx.UnitManager = new UnitManager(ctx.MapManager, prefabs);
 
-			// 5. Build EventDispatcher
-			var eventDispatcher = new EventDispatcher(ctx.UnitManager, ctx.MapManager);
-
-			// 6. Inject sub-managers into GameManager via reflection
+			// 5. Inject sub-managers into GameManager via reflection
 			SetPrivateField(gm, "mapManager", ctx.MapManager);
 			SetPrivateField(gm, "unitManager", ctx.UnitManager);
-			SetPrivateField(gm, "eventDispatcher", eventDispatcher);
 			SetPrivateField(gm, "Prefabs", prefabs);
 
 			// 7. Set gameState to PLAYING so Unit.FixedUpdate (which checks IsPlaying) doesn't NRE
@@ -109,6 +105,17 @@ namespace GameManager.Tests.PlayMode
 			// 8. Create test agents
 			ctx.Agent0Go = CreateTestAgent(ctx, 0, "TestPlayer0", unitPrefabMap);
 			ctx.Agent1Go = CreateTestAgent(ctx, 1, "TestPlayer1", unitPrefabMap);
+
+			// 9. Populate GameManager.Agents (keyed by AgentNbr). The shared command
+			// path (UnityTickWorld.SpawnUnit/AddGold/GetGold) resolves agents through
+			// this dictionary, so it must be wired for StartX-driven tests to run.
+			typeof(GameManager)
+				.GetProperty("Agents", BindingFlags.NonPublic | BindingFlags.Instance)
+				.SetValue(gm, new Dictionary<int, GameObject>
+				{
+					{ 0, ctx.Agent0Go },
+					{ 1, ctx.Agent1Go },
+				});
 
 			return ctx;
 		}

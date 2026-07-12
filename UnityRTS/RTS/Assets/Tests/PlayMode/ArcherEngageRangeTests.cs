@@ -45,7 +45,7 @@ namespace GameManager.Tests.PlayMode
 
 			// Wait for archer to deal damage
 			float initialHealth = enemy.Health;
-			yield return WaitUntil(
+			yield return WaitForTick(
 				() => enemy.Health < initialHealth || ctx.UnitManager.GetUnit(enemy.UnitNbr) == null,
 				timeoutSeconds: 15f,
 				failMessage: "ARCHER did not deal damage to enemy within range");
@@ -116,7 +116,7 @@ namespace GameManager.Tests.PlayMode
 			archer.StartAttacking(new AttackEventArgs(archer, enemy));
 			warrior.StartAttacking(new AttackEventArgs(warrior, enemy));
 
-			yield return WaitUntil(
+			yield return WaitForTick(
 				() => enemy.Health < initialHealth,
 				timeoutSeconds: 15f,
 				failMessage: "Combined archer+warrior attack did not reduce enemy health");

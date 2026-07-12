@@ -77,7 +77,7 @@ namespace GameManager.Tests.PlayMode
 			Assert.AreEqual(UnitAction.ATTACK, warrior.CurrentAction,
 				"Agent 0 warrior should attack agent 1 pawn");
 
-			yield return WaitUntil(
+			yield return WaitForTick(
 				() => enemy == null || enemy.Health < initialHealth,
 				timeoutSeconds: 10f,
 				failMessage: "Agent 1 enemy health did not decrease from agent 0 warrior attack");
@@ -101,7 +101,7 @@ namespace GameManager.Tests.PlayMode
 			Assert.AreEqual(UnitAction.ATTACK, enemy.CurrentAction,
 				"Agent 1 warrior should attack agent 0 pawn");
 
-			yield return WaitUntil(
+			yield return WaitForTick(
 				() => friendlyPawn == null || friendlyPawn.Health < initialHealth,
 				timeoutSeconds: 10f,
 				failMessage: "Agent 0 pawn health did not decrease from agent 1 attack");
@@ -143,7 +143,7 @@ namespace GameManager.Tests.PlayMode
 			pawn1.StartGathering(new GatherEventArgs(pawn1, mine, base1));
 
 			// Wait until both agents gain gold
-			yield return WaitUntil(
+			yield return WaitForTick(
 				() => agent0.Gold > gold0Before && agent1.Gold > gold1Before,
 				timeoutSeconds: 15f,
 				failMessage: "Both agents did not gain gold from competing gather");

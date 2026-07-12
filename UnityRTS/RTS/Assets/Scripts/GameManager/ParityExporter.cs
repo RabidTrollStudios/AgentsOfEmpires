@@ -26,8 +26,12 @@ namespace GameManager
         [Tooltip("Maximum number of ticks to record (0 = unlimited)")]
         public int MaxTicks = 2000;
 
-        [Tooltip("Ticks between state snapshots")]
+        [Tooltip("Ticks between state snapshots (used only when SnapshotEveryTick is off)")]
         public int SnapshotInterval = 50;
+
+        [Tooltip("Record a snapshot on EVERY tick (fine-grained parity debugging). " +
+                 "Files stay small; leave on to pinpoint the exact divergence tick.")]
+        public bool SnapshotEveryTick = true;
 
         [Tooltip("Enable/disable export")]
         public bool IsEnabled = true;
@@ -108,35 +112,50 @@ namespace GameManager
         }
 
         /// <summary>
-        /// Runs once per fixed timestep (0.05s = 20 Hz), matching SimGame's tick rate exactly.
-        /// Each FixedUpdate call = one SimGame tick.
+        /// Records one tick's state snapshot. Driven explicitly by
+        /// <see cref="GameManager.SimulateTick"/> at the TOP of the tick, BEFORE
+        /// DeferredCommandQueue.ProcessAll(), so each snapshot captures the
+        /// pre-processing state. This matches SimGame's tick semantics, where the
+        /// state observed at tick N is the state before tick N's command processing.
+        ///
+        /// Previously this ran in FixedUpdate at default execution order (0), i.e.
+        /// AFTER GameManager (order -100) had already processed the tick — which made
+        /// every snapshot one processing-phase ahead of SimGame and broke parity at
+        /// tick 1 (Unity showed the opening base already built; SimGame had only just
+        /// queued it). See docs/parity-base-build-desync investigation.
         /// </summary>
-        private void FixedUpdate()
+        internal void RecordTick()
         {
             if (!IsEnabled || finished || cmdWriter == null) return;
-            if (GameManager.Instance == null || !GameManager.Instance.IsPlaying) return;
 
-            // Write initial state snapshot (tick 0) once the game starts playing
+            // Write initial state snapshot (tick 0) before the first tick is processed.
             if (!wroteInitialSnapshot)
             {
                 wroteInitialSnapshot = true;
                 WriteStateSnapshot();
+                return; // tick 0 is the pristine pre-processing state; do not advance yet
             }
 
             currentTick++;
 
-            // Write state snapshot: every tick for debug windows, then at intervals
-            if (currentTick <= 55 || (currentTick >= 300 && currentTick <= 350) || currentTick % SnapshotInterval == 0)
+            // Record EVERY tick for fine-grained parity analysis — pinpoints the exact
+            // tick a divergence first appears. Full-resolution CSVs are small (well under
+            // 1 MB for a few hundred ticks). Set SnapshotEveryTick=false to fall back to
+            // the sampled cadence (<=55, 300-350, then every SnapshotInterval).
+            bool record = SnapshotEveryTick
+                || currentTick <= 55 || (currentTick >= 300 && currentTick <= 350)
+                || currentTick % SnapshotInterval == 0;
+            if (record)
                 WriteStateSnapshot();
 
             if (MaxTicks > 0 && currentTick >= MaxTicks)
             {
                 finished = true;
-                WriteStateSnapshot();
                 cmdWriter.Flush(); cmdWriter.Close(); cmdWriter = null;
                 stateWriter.Flush(); stateWriter.Close(); stateWriter = null;
-                GameManager.Instance.Log(
-                    $"ParityExporter: finished {currentTick} ticks", gameObject);
+                if (GameManager.Instance != null)
+                    GameManager.Instance.Log(
+                        $"ParityExporter: finished {currentTick} ticks", gameObject);
             }
         }
 

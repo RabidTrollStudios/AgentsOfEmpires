@@ -87,6 +87,7 @@ namespace AgentSDK
             unit.HealTargetNbr = -1;
             unit.BuildTargetNbr = -1;
             unit.RepairBuildingNbr = -1;
+            unit.RepathPending = false;
         }
 
         #region Movement
@@ -136,21 +137,27 @@ namespace AgentSDK
             if (pawn.TickPath != null && pawn.PathIndex < pawn.TickPath.Count)
                 return;
 
-            pawn.BuildTimer += world.TickDuration;
+            // Progress accumulates ON THE BUILDING, so it survives the pawn's death
+            // and can be resumed by another pawn (see CommandProcessor.ProcessBuild).
+            var building = world.GetUnit(pawn.BuildTargetNbr);
+            if (building == null)
+            {
+                // Building was destroyed while the pawn was building — abandon the task.
+                GoIdle(pawn);
+                return;
+            }
+
             float creationTime = world.Constants.CreationTime[pawn.BuildTarget];
+            building.BuildProgress += world.TickDuration;
 
-            callbacks.OnBuildProgress(pawn, world.GetUnit(pawn.BuildTargetNbr), pawn.BuildTimer, creationTime);
+            callbacks.OnBuildProgress(pawn, building, building.BuildProgress, creationTime);
 
-            if (pawn.BuildTimer < creationTime)
+            if (building.BuildProgress < creationTime)
                 return;
 
             // Build complete
-            var building = world.GetUnit(pawn.BuildTargetNbr);
-            if (building != null)
-            {
-                building.IsBuilt = true;
-                callbacks.OnBuildComplete(pawn, building);
-            }
+            building.IsBuilt = true;
+            callbacks.OnBuildComplete(pawn, building);
             GoIdle(pawn);
         }
 
@@ -196,8 +203,17 @@ namespace AgentSDK
             }
             else
             {
-                var repath = world.FindPathToUnit(pawn.GridPosition, UnitType.MINE, mine.GridPosition);
-                if (repath.Count > 0)
+                // Gated like combat pursuit: a whole crew whose mine vanished won't all
+                // repath on one tick. Deferred (null) → hold and retry next tick; empty
+                // path → mine genuinely unreachable, abandon.
+                var repath = PathBudget.GatedRepath(world, pawn,
+                    () => world.FindPathToUnit(pawn.GridPosition, UnitType.MINE, mine.GridPosition));
+                if (repath == null)
+                {
+                    pawn.TickPath = null;
+                    pawn.PathIndex = 0;
+                }
+                else if (repath.Count > 0)
                 {
                     pawn.TickPath = repath;
                     pawn.PathIndex = 0;
@@ -359,8 +375,15 @@ namespace AgentSDK
             }
             else
             {
-                var path = world.FindPathToUnit(pawn.GridPosition, UnitType.BASE, baseUnit.GridPosition);
-                if (path.Count > 0)
+                // Gated like combat pursuit (see AdvanceGatherToMine).
+                var path = PathBudget.GatedRepath(world, pawn,
+                    () => world.FindPathToUnit(pawn.GridPosition, UnitType.BASE, baseUnit.GridPosition));
+                if (path == null)
+                {
+                    pawn.TickPath = null;
+                    pawn.PathIndex = 0;
+                }
+                else if (path.Count > 0)
                 {
                     pawn.TickPath = path;
                     pawn.PathIndex = 0;
@@ -391,62 +414,77 @@ namespace AgentSDK
                 float dmg = TaskEngine.ComputeDamagePerTick(
                     attacker.UnitType, target.UnitType,
                     world.Constants.Damage[attacker.UnitType], world.TickDuration);
-                target.Health -= dmg;
-                callbacks.OnDamageDealt(attacker, target, dmg);
 
-                if (target.Health <= 0)
+                if (!target.IsBuilt)
                 {
-                    GoIdle(attacker);
-                    callbacks.OnUnitKilled(target);
-                    return;
+                    // Attacking an under-construction building drains its build
+                    // progress rather than health (U2). Convert HP damage to
+                    // build-time damage so the same total damage destroys a
+                    // building regardless of how far along it is.
+                    float maxHp = GameConstants.HEALTH[target.UnitType];
+                    float creationTime = world.Constants.CreationTime[target.UnitType];
+                    float progressDmg = maxHp > 0f ? dmg * creationTime / maxHp : dmg;
+                    target.BuildProgress -= progressDmg;
+                    callbacks.OnDamageDealt(attacker, target, dmg);
+
+                    if (target.BuildProgress <= 0f)
+                    {
+                        target.Health = 0; // triggers normal death handling
+                        GoIdle(attacker);
+                        callbacks.OnUnitKilled(target);
+                        return;
+                    }
+                }
+                else
+                {
+                    target.Health -= dmg;
+                    callbacks.OnDamageDealt(attacker, target, dmg);
+
+                    if (target.Health <= 0)
+                    {
+                        GoIdle(attacker);
+                        callbacks.OnUnitKilled(target);
+                        return;
+                    }
                 }
             }
             else
             {
-                // Retarget: check for closer enemy in range
-                int? closerNbr = FindClosestEnemyInRange(attacker, world);
-                if (closerNbr.HasValue && closerNbr.Value != attacker.AttackTargetNbr)
-                {
-                    attacker.AttackTargetNbr = closerNbr.Value;
-                    attacker.TickPath = null;
-                    attacker.PathIndex = 0;
-                    return;
-                }
-
-                // Out of range — repath if path exhausted
+                // Out of range — pursue the ASSIGNED target only. Target selection is
+                // the PlanningAgent's job; the engine never retargets to a different
+                // enemy. When the path is exhausted (the target has moved past the end
+                // of our last path), repath toward its CURRENT position once — this is
+                // how a unit follows a moving target. At most one pathfind per tick.
+                // If no path exists, the pursuit has failed: go IDLE so the agent can
+                // decide what to do next tick.
                 if (attacker.TickPath == null || attacker.PathIndex >= attacker.TickPath.Count)
                 {
-                    var path = world.FindPathToUnit(attacker.GridPosition, target.UnitType, target.GridPosition);
-                    if (path.Count > 0)
+                    // Gated: PathBudget staggers pursuit re-paths so a base-death herd
+                    // doesn't all pathfind on one tick. A deferred unit gets null (keep
+                    // ATTACK + target, RepathPending set) and retries next tick — it is
+                    // NOT treated as unreachable. Only an empty path (Count == 0) means
+                    // the target is genuinely unreachable, which ends the pursuit.
+                    var path = PathBudget.GatedRepath(world, attacker,
+                        () => world.FindPathToUnit(attacker.GridPosition, target.UnitType, target.GridPosition));
+                    if (path == null)
+                    {
+                        // Deferred this tick — hold position, keep the assigned target.
+                        attacker.TickPath = null;
+                        attacker.PathIndex = 0;
+                    }
+                    else if (path.Count > 0)
                     {
                         attacker.TickPath = path;
                         attacker.PathIndex = 0;
                         callbacks.OnUnitRepath(attacker, path);
                     }
+                    else
+                    {
+                        // Target unreachable — abandon pursuit; agent re-decides next tick.
+                        GoIdle(attacker);
+                    }
                 }
             }
-        }
-
-        private static int? FindClosestEnemyInRange(ITickUnit attacker, ITickWorld world)
-        {
-            float closestDist = float.MaxValue;
-            int? closest = null;
-
-            foreach (var enemy in world.AllUnits)
-            {
-                if (enemy.OwnerAgentNbr == attacker.OwnerAgentNbr) continue;
-                if (enemy.UnitType == UnitType.MINE) continue;
-                if (enemy.Health <= 0) continue;
-
-                float effectiveRange = GameConstants.EffectiveAttackRange(attacker.UnitType, enemy.UnitType);
-                float dist = Position.Distance(attacker.CenterPosition, enemy.CenterPosition);
-                if (dist <= effectiveRange + 0.1f && dist < closestDist)
-                {
-                    closestDist = dist;
-                    closest = enemy.UnitNbr;
-                }
-            }
-            return closest;
         }
 
         #endregion

@@ -32,7 +32,7 @@ namespace GameManager.Tests.PlayMode
 			Assert.AreEqual(UnitAction.ATTACK, archer.CurrentAction,
 				"Archer should enter ATTACK state");
 
-			yield return WaitUntil(
+			yield return WaitForTick(
 				() => enemy == null || enemy.Health < initialHealth,
 				timeoutSeconds: 10f,
 				failMessage: "Adjacent enemy health did not decrease from archer attack");
@@ -69,7 +69,7 @@ namespace GameManager.Tests.PlayMode
 
 			archer.StartAttacking(new AttackEventArgs(archer, enemy));
 
-			yield return WaitUntil(
+			yield return WaitForTick(
 				() => archer.CurrentAction == UnitAction.IDLE,
 				timeoutSeconds: 10f,
 				failMessage: "Archer did not go IDLE after killing target");
@@ -103,7 +103,7 @@ namespace GameManager.Tests.PlayMode
 			float initialHealth = enemy.Health;
 			archer.StartAttacking(new AttackEventArgs(archer, enemy));
 
-			yield return WaitUntil(
+			yield return WaitForTick(
 				() => enemy == null || enemy.Health < initialHealth,
 				timeoutSeconds: 15f,
 				failMessage: "Archer did not deal damage to in-range enemy");
@@ -124,7 +124,7 @@ namespace GameManager.Tests.PlayMode
 
 			archer.StartAttacking(new AttackEventArgs(archer, enemy));
 
-			yield return WaitUntil(
+			yield return WaitForTick(
 				() => enemy.Health < initialHealth - Constants.DAMAGE[UnitType.ARCHER],
 				timeoutSeconds: 15f,
 				failMessage: "Archer did not deal at least one hit worth of damage to building");
@@ -161,7 +161,7 @@ namespace GameManager.Tests.PlayMode
 			Assert.AreEqual(UnitAction.ATTACK, a3.CurrentAction);
 
 			// Three archers should destroy the enemy building
-			yield return WaitUntil(
+			yield return WaitForTick(
 				() => ctx.UnitManager.GetUnit(enemyNbr) == null,
 				timeoutSeconds: 10f,
 				failMessage: "Three archers could not destroy the enemy BASE");
@@ -189,7 +189,7 @@ namespace GameManager.Tests.PlayMode
 			warrior.StartAttacking(new AttackEventArgs(warrior, enemy));
 
 			// Wait for significant health loss
-			yield return WaitUntil(
+			yield return WaitForTick(
 				() => enemy == null || enemy.Health < startHealth * 0.5f,
 				timeoutSeconds: 10f,
 				failMessage: "Archer+Warrior combo did not deal 50% health to enemy");

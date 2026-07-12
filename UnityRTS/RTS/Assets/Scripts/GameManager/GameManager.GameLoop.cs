@@ -52,22 +52,43 @@ namespace GameManager
 		/// </summary>
 		internal void SimulateTick()
 		{
-			// Phase 1: Process commands queued during previous tick's Agent Update
-			DeferredCommandQueue.ProcessAll();
+			// Drive one tick through the canonical shared phase order (AgentSDK.TickSequence),
+			// the SAME sequence the headless SimGame uses. This guarantees Unity and SimGame
+			// execute identical per-tick phases in identical order — the source of parity.
+			AgentSDK.TickSequence.RunOneTick(this, CurrentTick);
+			CurrentTick++;
+		}
 
-			if (unityTickWorld == null)
+		// --- ITickParticipant: the four canonical tick phases (see AgentSDK.TickSequence) ---
+
+		/// <summary>Phase 0: record the parity snapshot BEFORE any command processing, so the
+		/// exported state at tick N matches SimGame's pre-processing state at tick N.</summary>
+		void AgentSDK.ITickParticipant.RecordSnapshot(int tick)
+		{
+			if (!parityExporterLookedUp)
 			{
-				unityTickWorld = new UnityTickWorld();
+				parityExporter = FindFirstObjectByType<ParityExporter>();
+				parityExporterLookedUp = true;
 			}
-			if (unityTickCallbacks == null)
-			{
-				unityTickCallbacks = new UnityTickCallbacks();
-			}
-			
-			// Phase 2: Advance all units via shared TickEngine (task logic)
+			parityExporter?.RecordTick();
+		}
+
+		/// <summary>Phase 1: process commands queued during the previous tick's agent Update.</summary>
+		void AgentSDK.ITickParticipant.ProcessQueuedCommands()
+		{
+			DeferredCommandQueue.ProcessAll();
+		}
+
+		/// <summary>Phase 2: advance all units by one tick (task logic + movement + post-tick).</summary>
+		void AgentSDK.ITickParticipant.AdvanceUnits()
+		{
+			if (unityTickWorld == null) unityTickWorld = new UnityTickWorld();
+			if (unityTickCallbacks == null) unityTickCallbacks = new UnityTickCallbacks();
+
+			// Task logic via shared TickEngine
 			AgentSDK.TickEngine.AdvanceAllUnits(unityTickWorld, unityTickCallbacks);
 
-			// Phase 2b: Movement — advance all units by one tick's worth of distance
+			// Movement — advance all units by one tick's worth of distance.
 			// Must run per-tick (not per-frame) for deterministic parity with SimGame.
 			{
 				var moveUnits = unitManager.GetAllUnits();
@@ -96,7 +117,7 @@ namespace GameManager
 				}
 			}
 
-			// Phase 3: Post-tick updates
+			// Post-tick updates (visual/cleanup)
 			var allUnits = unitManager.GetAllUnits();
 			var sortedKeys = new System.Collections.Generic.List<int>(allUnits.Keys);
 			sortedKeys.Sort();
@@ -106,6 +127,23 @@ namespace GameManager
 				var unit = go.GetComponent<GameElements.Unit>();
 				if (unit != null)
 					unit.PostTickUpdate();
+			}
+		}
+
+		/// <summary>Phase 3: run each agent's decision Update exactly once per tick, in agent-number
+		/// order. Previously each agent's IPlanningAgent.Update ran on Unity's per-FRAME
+		/// MonoBehaviour.Update (AgentBridge.Update), decoupled from the fixed-timestep tick — which
+		/// broke determinism and per-tick parity with SimGame. Now it is an explicit in-tick phase.</summary>
+		void AgentSDK.ITickParticipant.RunAgentUpdates()
+		{
+			if (Agents == null) return;
+			var agentKeys = new System.Collections.Generic.List<int>(Agents.Keys);
+			agentKeys.Sort();
+			foreach (int nbr in agentKeys)
+			{
+				if (!Agents.TryGetValue(nbr, out var agentGo) || agentGo == null) continue;
+				var bridge = agentGo.GetComponent<AgentController>()?.Agent;
+				bridge?.TickAgent();
 			}
 		}
 

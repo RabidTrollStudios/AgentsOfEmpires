@@ -77,7 +77,7 @@ namespace GameManager.Tests.PlayMode
 			warrior.StartAttacking(new AttackEventArgs(warrior, enemy));
 
 			// Wait for at least one hit
-			yield return WaitUntil(
+			yield return WaitForTick(
 				() => enemy.Health < initialHealth,
 				timeoutSeconds: 15f,
 				failMessage: "Warrior did not deal any damage");
@@ -101,7 +101,7 @@ namespace GameManager.Tests.PlayMode
 
 			archer.StartAttacking(new AttackEventArgs(archer, enemy));
 
-			yield return WaitUntil(
+			yield return WaitForTick(
 				() => enemy.Health < initialHealth,
 				timeoutSeconds: 15f,
 				failMessage: "Archer did not deal any damage");

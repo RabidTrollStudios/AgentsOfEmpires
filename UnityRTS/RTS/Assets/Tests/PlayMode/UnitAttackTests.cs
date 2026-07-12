@@ -34,7 +34,7 @@ namespace GameManager.Tests.PlayMode
 				"Warrior should enter ATTACK state after StartAttacking");
 
 			// Wait until enemy health decreases
-			yield return WaitUntil(
+			yield return WaitForTick(
 				() => enemy == null || enemy.Health < initialHealth,
 				timeoutSeconds: 10f,
 				failMessage: "Enemy health did not decrease after warrior attack");
@@ -60,7 +60,7 @@ namespace GameManager.Tests.PlayMode
 			warrior.StartAttacking(new AttackEventArgs(warrior, enemy));
 
 			// Wait until the enemy is removed from UnitManager
-			yield return WaitUntil(
+			yield return WaitForTick(
 				() => ctx.UnitManager.GetUnit(enemyNbr) == null,
 				timeoutSeconds: 10f,
 				failMessage: "Enemy was not destroyed after warrior attack");
@@ -84,7 +84,7 @@ namespace GameManager.Tests.PlayMode
 
 			warrior.StartAttacking(new AttackEventArgs(warrior, enemy));
 
-			yield return WaitUntil(
+			yield return WaitForTick(
 				() => warrior.CurrentAction == UnitAction.IDLE,
 				timeoutSeconds: 15f,
 				failMessage: "Warrior did not go IDLE after killing its target");
@@ -115,7 +115,7 @@ namespace GameManager.Tests.PlayMode
 			Assert.AreEqual(UnitAction.ATTACK, warrior.CurrentAction);
 
 			// Wait until health decreases (attack landed)
-			yield return WaitUntil(
+			yield return WaitForTick(
 				() => enemy == null || enemy.Health < initialHealth,
 				timeoutSeconds: 10f,
 				failMessage: "Warrior never reached or attacked out-of-range enemy");
@@ -137,7 +137,7 @@ namespace GameManager.Tests.PlayMode
 			warrior.StartAttacking(new AttackEventArgs(warrior, enemy));
 
 			// Wait for at least some damage
-			yield return WaitUntil(
+			yield return WaitForTick(
 				() => enemy.Health < initialHealth,
 				timeoutSeconds: 15f,
 				failMessage: "Warrior did not damage a high-health building");
@@ -199,7 +199,7 @@ namespace GameManager.Tests.PlayMode
 			Assert.AreEqual(UnitAction.ATTACK, s3.CurrentAction);
 
 			// Wait for enemy to be destroyed
-			yield return WaitUntil(
+			yield return WaitForTick(
 				() => ctx.UnitManager.GetUnit(enemyNbr) == null,
 				timeoutSeconds: 10f,
 				failMessage: "Three warriors could not destroy the enemy building");

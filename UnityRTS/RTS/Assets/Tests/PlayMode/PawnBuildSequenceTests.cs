@@ -77,7 +77,7 @@ namespace GameManager.Tests.PlayMode
 				timeoutSeconds: 10f);
 
 			// After construction, pawn should be IDLE
-			yield return WaitUntil(
+			yield return WaitForTick(
 				() => pawn.CurrentAction == UnitAction.IDLE,
 				timeoutSeconds: 10f,
 				failMessage: "Pawn should return to IDLE after BASE construction completes");

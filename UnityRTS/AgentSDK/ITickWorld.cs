@@ -46,5 +46,12 @@ namespace AgentSDK
 
         /// <summary>Seconds per tick (0.05 at 20Hz).</summary>
         float TickDuration { get; }
+
+        /// <summary>
+        /// The tick currently being processed. Advanced identically in both engines
+        /// (SimGame.CurrentTick / GameManager.CurrentTick, both driven by TickSequence).
+        /// Used by <see cref="PathBudget"/> to stagger pursuit re-pathing deterministically.
+        /// </summary>
+        int CurrentTick { get; }
     }
 }

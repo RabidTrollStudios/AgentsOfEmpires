@@ -220,7 +220,16 @@ namespace PlanningAgent
                 float d = Position.Distance(barracksMidpoint, buildPositions[i]);
                 candidates.Add((buildPositions[i], d));
             }
-            candidates.Sort((a, b) => a.dist.CompareTo(b.dist));
+            // Sort by distance with a deterministic coordinate tiebreak (see
+            // AgentSDK.DeterministicSort). List.Sort is unstable and orders ties differently
+            // across runtimes (Unity's Mono vs. the headless .NET runtime), so ties must be
+            // broken by a fixed key or the engines pick different build positions — a parity
+            // divergence. See issue #4.
+            candidates.Sort((a, b) =>
+            {
+                int c = a.dist.CompareTo(b.dist);
+                return c != 0 ? c : DeterministicSort.Compare(a.pos, b.pos);
+            });
             if (candidates.Count > CANDIDATE_COUNT)
                 candidates.RemoveRange(CANDIDATE_COUNT, candidates.Count - CANDIDATE_COUNT);
 

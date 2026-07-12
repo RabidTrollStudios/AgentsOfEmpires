@@ -26,7 +26,7 @@ namespace GameManager
         }
 
         internal void InitializeAdapters(int agentNbr, UnitManager unitManager,
-            MapManager mapManager, EventDispatcher events)
+            MapManager mapManager)
         {
             gameState = new GameStateAdapter(agentNbr, unitManager, mapManager);
             actions = new AgentActionsAdapter(this, unitManager);
@@ -52,7 +52,7 @@ namespace GameManager
             planningAgent?.InitializeRound(gameState);
         }
 
-        public override void Update()
+        public override void TickAgent()
         {
             if (planningAgent == null || !GameManager.Instance.IsPlaying) return;
             planningAgent.Update(gameState, actions);

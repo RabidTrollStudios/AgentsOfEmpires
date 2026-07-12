@@ -42,7 +42,7 @@ namespace GameManager.Tests.PlayMode
 
 			StartGathering(pawn, mine, baseUnit);
 
-			yield return WaitUntil(
+			yield return WaitForTick(
 				() => agent.Gold > initialGold,
 				30f,
 				"Pawn did not deposit gold after a full gather round trip");
@@ -64,7 +64,7 @@ namespace GameManager.Tests.PlayMode
 
 			StartGathering(pawn, mine, baseUnit);
 
-			yield return WaitUntil(
+			yield return WaitForTick(
 				() => agent.Gold > initialGold,
 				30f,
 				"Pawn did not complete first deposit");
@@ -85,7 +85,7 @@ namespace GameManager.Tests.PlayMode
 
 			StartGathering(pawn, mine, baseUnit);
 
-			yield return WaitUntil(
+			yield return WaitForTick(
 				() => mine.Health < initialMineHealth,
 				15f,
 				"Mine health did not decrease during pawn mining");
@@ -109,7 +109,7 @@ namespace GameManager.Tests.PlayMode
 
 			StartGathering(pawn, mine, baseUnit);
 
-			yield return WaitUntil(
+			yield return WaitForTick(
 				() => agent.Gold > initialGold,
 				20f,
 				"Pawn did not deposit gold even with mine close to base");
@@ -121,16 +121,19 @@ namespace GameManager.Tests.PlayMode
 		[UnityTest]
 		public IEnumerator Gather_MineFarFromBase_GatherCompletesEventually()
 		{
+			// BASE is 6x4 at (2,2) -> occupies x=[2,7], y=[2,5]. The pawn must start
+			// OUTSIDE that footprint (x=8 is just past the base's right edge), while the
+			// mine stays far away to keep the long round-trip this test exercises.
 			Unit baseUnit = PlaceBuiltBase(new Vector3Int(2, 2, 0));
 			Unit mine     = PlaceUnit(UnitType.MINE,   new Vector3Int(25, 25, 0));
-			Unit pawn   = PlaceUnit(UnitType.PAWN, new Vector3Int(3,  3,  0));
+			Unit pawn   = PlaceUnit(UnitType.PAWN, new Vector3Int(8,  3,  0));
 
 			Agent agent = GetAgent0();
 			int initialGold = agent.Gold;
 
 			StartGathering(pawn, mine, baseUnit);
 
-			yield return WaitUntil(
+			yield return WaitForTick(
 				() => agent.Gold > initialGold,
 				120f,
 				"Pawn did not deposit gold when mine is far from base");
@@ -151,7 +154,7 @@ namespace GameManager.Tests.PlayMode
 
 			StartGathering(pawn, mine, baseUnit);
 
-			yield return WaitUntil(
+			yield return WaitForTick(
 				() => pawn.CurrentAction == UnitAction.IDLE,
 				30f,
 				"Pawn did not go IDLE after depleting a low-health mine");

@@ -188,11 +188,19 @@ namespace AgentTestHarness
                         map.SetCellBlocked(new Position(x, y));
             }
 
-            // Place spawns and mines from generated map
+            // Place spawns and mines from generated map.
+            // Unity's PlaceUnitsFromProceduralMap places BLUE at spawn 0 (bottom-left)
+            // and RED at spawn 1 (top-right), in that order — so blue's pawn always gets
+            // the lower UnitNbr. Blue's AgentNbr depends on the deterministic slot flip
+            // (BlueIsAgent0). Mirror that exactly so UnitNbr AND owner both match (U5).
             if (genResult != null)
             {
+                int blueOwner = genResult.BlueIsAgent0 ? 0 : 1;
+                int redOwner  = genResult.BlueIsAgent0 ? 1 : 0;
+                var spawnOwners = new[] { blueOwner, redOwner };
+
                 for (int i = 0; i < genResult.SpawnPositions.Length; i++)
-                    game.PlaceUnit(i, UnitType.PAWN, genResult.SpawnPositions[i],
+                    game.PlaceUnit(spawnOwners[i], UnitType.PAWN, genResult.SpawnPositions[i],
                         GameConstants.HEALTH[UnitType.PAWN], true);
 
                 for (int i = 0; i < genResult.MinePositions.Length; i++)

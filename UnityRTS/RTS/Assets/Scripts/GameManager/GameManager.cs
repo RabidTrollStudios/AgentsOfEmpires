@@ -29,7 +29,7 @@ namespace GameManager
 	/// to specialized managers for map, units, events, and DLL loading.
 	/// </summary>
 	[DefaultExecutionOrder(-100)] // Run FixedUpdate before Unit components
-	public partial class GameManager : MonoBehaviour
+	public partial class GameManager : MonoBehaviour, AgentSDK.ITickParticipant
 	{
 		#region Public GameObjects
 
@@ -197,11 +197,6 @@ namespace GameManager
 		public UnitManager Units => unitManager;
 
 		/// <summary>
-		/// Event dispatcher - command validation and dispatch
-		/// </summary>
-		public EventDispatcher Events => eventDispatcher;
-
-		/// <summary>
 		/// Turns the unit-specific debugging UIs on and off
 		/// </summary>
 		public bool HasUnitDebugging { get; private set; }
@@ -350,8 +345,17 @@ namespace GameManager
 		// Sub-managers
 		private MapManager mapManager;
 		private UnitManager unitManager;
-		private EventDispatcher eventDispatcher;
 		private AgentLoader agentLoader;
+
+		// Optional parity exporter (present only when a ParityExporter component is in
+		// the scene). Driven from SimulateTick so snapshots are taken at a deterministic
+		// phase point. Lazily located once; may remain null if no exporter is present.
+		private ParityExporter parityExporter;
+		private bool parityExporterLookedUp;
+
+		/// <summary>Current game tick, advanced once per SimulateTick via the canonical
+		/// TickSequence. Matches SimGame.CurrentTick semantics for parity.</summary>
+		internal int CurrentTick { get; private set; }
 
 		// Procedural map state (set during InitializeMatch if mapMode == Procedural)
 		private ProceduralMapResult proceduralMapResult;
@@ -403,7 +407,6 @@ namespace GameManager
 			// Initialize sub-managers
 			mapManager = new MapManager();
 			unitManager = new UnitManager(mapManager, Prefabs);
-			eventDispatcher = new EventDispatcher(unitManager, mapManager);
 			agentLoader = new AgentLoader(pathToDLLs);
 
 			_input = new InputSystem_Actions();

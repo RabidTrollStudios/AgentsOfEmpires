@@ -202,6 +202,41 @@ namespace AgentTestHarness
         }
     }
 
+    /// <summary>
+    /// Orders any idle PAWN to build a structure at a fixed position — every time one is
+    /// idle and the building is not yet complete. Because it re-issues the build against the
+    /// same position, a second pawn will RESUME an already-placed unbuilt building rather than
+    /// try to place a new one. Used to exercise the build-resume path.
+    /// </summary>
+    public class ResumeBuildAgent : IPlanningAgent
+    {
+        private readonly UnitType buildType;
+        private readonly Position buildPos;
+
+        public ResumeBuildAgent(UnitType buildType, Position buildPos)
+        {
+            this.buildType = buildType;
+            this.buildPos = buildPos;
+        }
+
+        public void InitializeMatch() { }
+        public void InitializeRound(IGameState state) { }
+        public void Learn(IGameState state) { }
+
+        public void Update(IGameState state, IAgentActions actions)
+        {
+            foreach (int pawnNbr in state.GetMyUnits(UnitType.PAWN))
+            {
+                var info = state.GetUnit(pawnNbr);
+                if (info.HasValue && info.Value.CurrentAction == UnitAction.IDLE)
+                {
+                    actions.Build(pawnNbr, buildPos, buildType);
+                    return; // one command per tick
+                }
+            }
+        }
+    }
+
     /// <summary>Attempts to build with a WARRIOR (should fail — warriors can't build).</summary>
     public class BuildWithWarriorAgent : IPlanningAgent
     {

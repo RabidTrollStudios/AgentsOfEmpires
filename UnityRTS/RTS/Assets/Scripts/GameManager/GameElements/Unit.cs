@@ -44,12 +44,6 @@ namespace GameManager.GameElements
 		internal float BuildProgress { get; set; }
 
 		/// <summary>
-		/// Set of UnitNbrs of pawns currently constructing or repairing this building.
-		/// Empty when unattended. Multiple pawns can build/repair simultaneously.
-		/// </summary>
-		internal HashSet<int> ActiveBuilders { get; set; } = new HashSet<int>();
-
-		/// <summary>
 		/// Color of this agent
 		/// </summary>
 		public Color Color { get; internal set; }

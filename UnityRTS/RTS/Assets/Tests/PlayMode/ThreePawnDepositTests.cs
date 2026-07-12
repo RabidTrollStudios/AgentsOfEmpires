@@ -41,7 +41,7 @@ namespace GameManager.Tests.PlayMode
 			w2.StartGathering(new GatherEventArgs(w2, mine, baseUnit));
 			w3.StartGathering(new GatherEventArgs(w3, mine, baseUnit));
 
-			yield return WaitUntil(
+			yield return WaitForTick(
 				() => agent.Gold >= targetGold,
 				timeoutSeconds: 15f,
 				failMessage: $"Three pawns did not accumulate {targetGold} gold (started at {initialGold})");
@@ -76,17 +76,19 @@ namespace GameManager.Tests.PlayMode
 
 			int prevGold = agent.Gold;
 			int depositsObserved = 0;
-			float elapsed = 0f;
+			// GameManager GO is inactive → FixedUpdate never fires. Drive ticks explicitly.
+			int maxTicks = 15 * 20; // 15s @ 20 Hz
+			int ticks = 0;
 
 			while (depositsObserved < 3)
 			{
-				elapsed += Time.deltaTime;
-				if (elapsed > 15f)
+				if (ticks++ >= maxTicks)
 				{
 					Assert.Fail("Did not observe 3 deposits within 15s with three pawns");
 					yield break;
 				}
 
+				GameManager.Instance.SimulateTick();
 				if (agent.Gold > prevGold)
 				{
 					Assert.GreaterOrEqual(agent.Gold, prevGold,
@@ -132,7 +134,7 @@ namespace GameManager.Tests.PlayMode
 
 			int targetGold = initialGold + (int)(Constants.MINING_CAPACITY[UnitType.PAWN] * 2);
 
-			yield return WaitUntil(
+			yield return WaitForTick(
 				() => agent.Gold >= targetGold,
 				timeoutSeconds: 15f,
 				failMessage: "Staggered three pawns did not accumulate expected gold");

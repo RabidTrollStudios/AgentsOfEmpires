@@ -112,7 +112,10 @@ namespace GameManager.Tests.PlayMode
 			float elapsed = 0f;
 			while (trainer.CurrentAction != UnitAction.IDLE)
 			{
-				trainer.Update();
+				// Must drive a full game tick (Tick → TickFixedUpdate → SimulateTick),
+				// not just trainer.Update() (visual only) — training advances in the
+				// TickEngine, and the GameManager GO is inactive so FixedUpdate never fires.
+				Tick(trainer);
 				elapsed += Time.deltaTime;
 				if (elapsed > timeoutSeconds)
 				{

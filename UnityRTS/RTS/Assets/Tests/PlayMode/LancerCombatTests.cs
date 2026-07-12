@@ -33,7 +33,7 @@ namespace GameManager.Tests.PlayMode
 			Assert.AreEqual(UnitAction.ATTACK, lancer.CurrentAction,
 				"LANCER should enter ATTACK state after StartAttacking");
 
-			yield return WaitUntil(
+			yield return WaitForTick(
 				() => enemy == null || enemy.Health < initialHealth,
 				timeoutSeconds: 10f,
 				failMessage: "Enemy health did not decrease after LANCER attack");
@@ -55,12 +55,12 @@ namespace GameManager.Tests.PlayMode
 
 			lancer.StartAttacking(new AttackEventArgs(lancer, enemy));
 
-			yield return WaitUntil(
+			yield return WaitForTick(
 				() => ctx.UnitManager.GetUnit(enemyNbr) == null,
 				timeoutSeconds: 10f,
 				failMessage: "Enemy was not killed by LANCER");
 
-			yield return WaitUntil(
+			yield return WaitForTick(
 				() => lancer.CurrentAction == UnitAction.IDLE,
 				timeoutSeconds: 5f,
 				failMessage: "LANCER did not return to IDLE after killing target");

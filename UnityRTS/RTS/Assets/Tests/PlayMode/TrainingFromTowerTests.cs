@@ -18,6 +18,9 @@ namespace GameManager.Tests.PlayMode
 	{
 		private void TickUnit(Unit unit)
 		{
+			// Drive a real game tick (TickFixedUpdate → SimulateTick), not just visual
+			// Update() — the inactive test GameManager GO never fires FixedUpdate.
+			unit.TickFixedUpdate();
 			unit.Update();
 		}
 

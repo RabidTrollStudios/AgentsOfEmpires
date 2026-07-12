@@ -19,22 +19,24 @@ namespace GameManager.Tests.PlayMode
 		#region Building Destruction
 
 		/// <summary>
-		/// When a 3x3 BASE is destroyed (health set to 0), all 9 footprint cells
-		/// become buildable again.
+		/// When a BASE is destroyed (health set to 0), every cell of its footprint
+		/// becomes buildable again. BASE is 6x4 and the footprint extends UP from the
+		/// anchor (anchor + (i, +j)), matching GameGrid/MapManager.SetUnitFootprint.
 		/// </summary>
 		[UnityTest]
-		public IEnumerator Base_Destroyed_All9CellsReclaimed()
+		public IEnumerator Base_Destroyed_AllCellsReclaimed()
 		{
 			var basePos = new Vector3Int(10, 10, 0);
 			Unit building = PlaceUnit(UnitType.BASE, basePos);
 
-			var size = Constants.UNIT_SIZE[UnitType.BASE];
+			var size = Constants.UNIT_SIZE[UnitType.BASE]; // (6, 4)
 			var footprint = new List<Vector3Int>();
 			for (int i = 0; i < size.x; i++)
 				for (int j = 0; j < size.y; j++)
-					footprint.Add(basePos + new Vector3Int(i, -j, 0));
+					footprint.Add(basePos + new Vector3Int(i, j, 0));
 
-			// All footprint cells should be blocked
+			// All footprint cells should be non-buildable while the BASE is alive
+			// (the top passage row is walkable but still not buildable).
 			foreach (var cell in footprint)
 				Assert.IsFalse(ctx.MapManager.IsGridPositionBuildable(cell),
 					$"Cell {cell} should be blocked while BASE is alive");
@@ -58,11 +60,12 @@ namespace GameManager.Tests.PlayMode
 			var barracksPos = new Vector3Int(15, 10, 0);
 			Unit barracks = PlaceUnit(UnitType.BARRACKS, barracksPos, ctx.Agent1Go);
 
+			// Footprint extends UP from the anchor (anchor + (i, +j)) per GameGrid/MapManager.
 			var size = Constants.UNIT_SIZE[UnitType.BARRACKS];
 			var footprint = new List<Vector3Int>();
 			for (int i = 0; i < size.x; i++)
 				for (int j = 0; j < size.y; j++)
-					footprint.Add(barracksPos + new Vector3Int(i, -j, 0));
+					footprint.Add(barracksPos + new Vector3Int(i, j, 0));
 
 			int barracksNbr = barracks.UnitNbr;
 
@@ -75,7 +78,7 @@ namespace GameManager.Tests.PlayMode
 			s2.StartAttacking(new AttackEventArgs(s2, barracks));
 			s3.StartAttacking(new AttackEventArgs(s3, barracks));
 
-			yield return WaitUntil(
+			yield return WaitForTick(
 				() => ctx.UnitManager.GetUnit(barracksNbr) == null,
 				timeoutSeconds: 10f,
 				failMessage: "Barracks was not destroyed by warriors");
@@ -144,7 +147,7 @@ namespace GameManager.Tests.PlayMode
 			Unit attacker = PlaceUnit(UnitType.WARRIOR, new Vector3Int(9, 10, 0));
 			attacker.StartAttacking(new AttackEventArgs(attacker, friendlyWarrior));
 
-			yield return WaitUntil(
+			yield return WaitForTick(
 				() => ctx.UnitManager.GetUnit(warriorNbr) == null,
 				timeoutSeconds: 10f,
 				failMessage: "Warrior was not destroyed by attacker");
@@ -169,11 +172,11 @@ namespace GameManager.Tests.PlayMode
 			var basePos = new Vector3Int(10, 10, 0);
 			Unit building = PlaceUnit(UnitType.BASE, basePos);
 
-			var size = Constants.UNIT_SIZE[UnitType.BASE];
-			// Check center cell (not walkable while BASE is alive)
-			var centerCell = basePos + new Vector3Int(1, -1, 0);
+			// Pick a BODY cell of the 6x4 upward footprint (anchor + (i, +j)). Avoid the
+			// top passage row (j == size.y-1), which is walkable even while the BASE stands.
+			var centerCell = basePos + new Vector3Int(1, 1, 0);
 			Assert.IsFalse(ctx.MapManager.IsGridPositionWalkable(centerCell),
-				"BASE footprint cell should not be walkable while building stands");
+				"BASE footprint body cell should not be walkable while building stands");
 
 			building.Health = 0;
 			building.TickFixedUpdate();

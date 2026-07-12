@@ -101,7 +101,7 @@ namespace GameManager.Tests.PlayMode
 			// Move warrior away
 			warrior.StartMoving(new MoveEventArgs(warrior, warrior.UnitType, new Vector3Int(15, 10, 0)));
 
-			yield return WaitUntil(
+			yield return WaitForTick(
 				() => warrior.CurrentAction == UnitAction.IDLE,
 				timeoutSeconds: 20f,
 				failMessage: "Warrior did not finish moving");

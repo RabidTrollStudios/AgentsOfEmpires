@@ -82,8 +82,10 @@ namespace GameManager.GameElements
         float ITickUnit.TrainTimer { get => taskTime; set => taskTime = value; }
         UnitType ITickUnit.TrainTarget { get => taskUnitType; set => taskUnitType = value; }
 
-        // Building — BuildTimer stored on pawn as taskTime (same as training)
+        // Building — BuildTimer stored on pawn as taskTime (same as training).
+        // BuildProgress lives on the BUILDING unit (survives pawn death, enables resume).
         float ITickUnit.BuildTimer { get => taskTime; set => taskTime = value; }
+        float ITickUnit.BuildProgress { get => BuildProgress; set => BuildProgress = value; }
         UnitType ITickUnit.BuildTarget { get => taskUnitType; set => taskUnitType = value; }
         private Position _buildSite;
         Position ITickUnit.BuildSite
@@ -124,6 +126,11 @@ namespace GameManager.GameElements
 
         // Combat
         int ITickUnit.AttackTargetNbr { get => attackUnitNbr; set => attackUnitNbr = value; }
+
+        // Transient engine-side flag: a pursuit pathfind was deferred by PathBudget this
+        // tick. Not serialized and not visual — lives only for the tick loop's retry.
+        private bool repathPending;
+        bool ITickUnit.RepathPending { get => repathPending; set => repathPending = value; }
 
         // Repair
         int ITickUnit.RepairBuildingNbr

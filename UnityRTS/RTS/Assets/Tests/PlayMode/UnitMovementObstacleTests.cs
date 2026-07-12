@@ -44,7 +44,7 @@ namespace GameManager.Tests.PlayMode
 			Assert.AreEqual(UnitAction.MOVE, warrior.CurrentAction,
 				"Warrior should enter MOVE state");
 
-			yield return WaitUntil(
+			yield return WaitForTick(
 				() => warrior.CurrentAction == UnitAction.IDLE,
 				timeoutSeconds: 20f,
 				failMessage: "Warrior did not complete its move and return to IDLE");
@@ -70,7 +70,7 @@ namespace GameManager.Tests.PlayMode
 			Assert.AreEqual(UnitAction.MOVE, pawn.CurrentAction,
 				"Pawn should accept the move command");
 
-			yield return WaitUntil(
+			yield return WaitForTick(
 				() => pawn.CurrentAction == UnitAction.IDLE,
 				timeoutSeconds: 10f,
 				failMessage: "Pawn with obstacle in path did not complete its move");
@@ -90,7 +90,7 @@ namespace GameManager.Tests.PlayMode
 
 			Assert.AreEqual(UnitAction.MOVE, archer.CurrentAction);
 
-			yield return WaitUntil(
+			yield return WaitForTick(
 				() => archer.CurrentAction == UnitAction.IDLE,
 				timeoutSeconds: 20f,
 				failMessage: "Archer did not complete its open-path move");
@@ -110,7 +110,7 @@ namespace GameManager.Tests.PlayMode
 			warrior.StartMoving(new MoveEventArgs(warrior, warrior.UnitType, new Vector3Int(7, 5, 0)));
 
 			// Wait for first move to complete
-			yield return WaitUntil(
+			yield return WaitForTick(
 				() => warrior.CurrentAction == UnitAction.IDLE,
 				timeoutSeconds: 20f,
 				failMessage: "Warrior did not complete first move");
@@ -120,7 +120,7 @@ namespace GameManager.Tests.PlayMode
 			Assert.AreEqual(UnitAction.MOVE, warrior.CurrentAction,
 				"Warrior should accept a second move command after completing the first");
 
-			yield return WaitUntil(
+			yield return WaitForTick(
 				() => warrior.CurrentAction == UnitAction.IDLE,
 				timeoutSeconds: 20f,
 				failMessage: "Warrior did not complete second move");

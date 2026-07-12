@@ -97,7 +97,15 @@ namespace GameManager
                 healerUnit.healLineTimer = Unit.HEAL_LINE_DURATION;
             }
         }
-        public void OnRepairTick(ITickUnit pawn, ITickUnit building, float amount) { }
+        public void OnRepairTick(ITickUnit pawn, ITickUnit building, float amount)
+        {
+            // Repair reuses the build/hammer animation: once the pawn has reached the
+            // building and is actively repairing (this callback fires), transition it
+            // to the BUILDING phase — mirrors OnBuildProgress. (The dead UpdateRepair
+            // used to do this; it must be driven from the shared tick callback now.)
+            if (pawn is Unit pawnUnit)
+                pawnUnit.buildPhase = BuildPhase.BUILDING;
+        }
         public void OnUnitRepath(ITickUnit unit, List<Position> newPath) { }
     }
 }

@@ -90,10 +90,12 @@ namespace GameManager.Tests.PlayMode
 		{
 			var pos      = new Vector3Int(5, 15, 0);
 			var barracks = PlaceUnit(UnitType.BARRACKS, pos);
-			var expected = new Vector3Int(pos.x + 1, pos.y - 1, 0);
+			// Footprint extends UP from the bottom-left anchor; the top row is a walkable
+			// passage, so the body center of a 3x3 building is anchor + (1, +1).
+			var expected = new Vector3Int(pos.x + 1, pos.y + 1, 0);
 
 			Assert.AreEqual(expected, barracks.CenterGridPosition,
-				"3×3 building CenterGridPosition should be GridPosition + (1,−1)");
+				"3×3 building CenterGridPosition should be GridPosition + (1,+1)");
 			yield return null;
 		}
 	}

@@ -28,7 +28,7 @@ namespace GameManager.Tests.PlayMode
 			barracks.StartTraining(new TrainEventArgs(barracks, UnitType.WARRIOR));
 			Assert.AreEqual(UnitAction.TRAIN, barracks.CurrentAction);
 
-			yield return WaitUntil(
+			yield return WaitForTick(
 				() => barracks.CurrentAction == UnitAction.IDLE,
 				timeoutSeconds: 15f,
 				failMessage: "WARRIOR training did not complete within 15s");
@@ -54,7 +54,7 @@ namespace GameManager.Tests.PlayMode
 			baseUnit.StartTraining(new TrainEventArgs(baseUnit, UnitType.PAWN));
 			Assert.AreEqual(UnitAction.TRAIN, baseUnit.CurrentAction);
 
-			yield return WaitUntil(
+			yield return WaitForTick(
 				() => baseUnit.CurrentAction == UnitAction.IDLE,
 				timeoutSeconds: 15f,
 				failMessage: "PAWN training did not complete within 15s");
@@ -79,7 +79,7 @@ namespace GameManager.Tests.PlayMode
 			archery.StartTraining(new TrainEventArgs(archery, UnitType.ARCHER));
 			Assert.AreEqual(UnitAction.TRAIN, archery.CurrentAction);
 
-			yield return WaitUntil(
+			yield return WaitForTick(
 				() => archery.CurrentAction == UnitAction.IDLE,
 				timeoutSeconds: 15f,
 				failMessage: "ARCHER training did not complete within 15s");

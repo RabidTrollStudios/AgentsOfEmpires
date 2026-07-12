@@ -40,17 +40,20 @@ namespace GameManager.Tests.PlayMode
 			Agent agent, int initialGold, int minimumIncrease,
 			float timeoutSeconds = 10f)
 		{
-			float elapsed = 0f;
+			// GameManager GO is inactive in tests → FixedUpdate never fires. Drive ticks
+			// explicitly; timeoutSeconds is reinterpreted as a tick budget (×20 @ 20 Hz).
+			int maxTicks = Mathf.Max(1, Mathf.RoundToInt(timeoutSeconds * 20f));
+			int ticks = 0;
 			while (agent.Gold < initialGold + minimumIncrease)
 			{
-				elapsed += Time.deltaTime;
-				if (elapsed > timeoutSeconds)
+				if (ticks++ >= maxTicks)
 				{
 					Assert.Fail(
 						$"Gold did not increase by {minimumIncrease} within {timeoutSeconds}s " +
 						$"(started at {initialGold}, now {agent.Gold})");
 					yield break;
 				}
+				GameManager.Instance.SimulateTick();
 				yield return null;
 			}
 		}
@@ -65,18 +68,21 @@ namespace GameManager.Tests.PlayMode
 		{
 			int depositsObserved = 0;
 			int lastGold = agent.Gold;
-			float elapsed = 0f;
+			// GameManager GO is inactive in tests → FixedUpdate never fires. Drive ticks
+			// explicitly; timeoutSeconds is reinterpreted as a tick budget (×20 @ 20 Hz).
+			int maxTicks = Mathf.Max(1, Mathf.RoundToInt(timeoutSeconds * 20f));
+			int ticks = 0;
 
 			while (depositsObserved < nDeposits)
 			{
-				elapsed += Time.deltaTime;
-				if (elapsed > timeoutSeconds)
+				if (ticks++ >= maxTicks)
 				{
 					Assert.Fail(
 						$"Did not observe {nDeposits} deposits within {timeoutSeconds}s " +
 						$"(got {depositsObserved})");
 					yield break;
 				}
+				GameManager.Instance.SimulateTick();
 				if (agent.Gold > lastGold)
 				{
 					depositsObserved++;

@@ -91,7 +91,7 @@ namespace GameManager.Tests.PlayMode
 			// Destroy the building
 			barracks.Health = 0;
 
-			yield return WaitUntil(
+			yield return WaitForTick(
 				() => ctx.UnitManager.GetUnit(barracks.UnitNbr) == null,
 				timeoutSeconds: 10f,
 				failMessage: "Building was not removed from UnitManager after health=0");

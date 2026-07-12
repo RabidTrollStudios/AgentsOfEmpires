@@ -94,6 +94,40 @@ namespace GameManager.Tests.PlayMode
 		}
 
 		/// <summary>
+		/// Drive game ticks until the predicate is true, or fail after maxTicks.
+		///
+		/// Use this instead of <see cref="WaitUntil"/> whenever the condition depends
+		/// on the game advancing (movement, combat, gather/build progress, unit death).
+		/// The test GameManager lives on an INACTIVE GameObject, so its FixedUpdate
+		/// never fires — nothing advances unless we tick explicitly. Each iteration
+		/// calls GameManager.SimulateTick() (advances all units via the shared
+		/// TickEngine), then yields one frame so coroutine-style state settles.
+		/// </summary>
+		/// <remarks>
+		/// Signature is drop-in compatible with <see cref="WaitUntil"/> so call sites
+		/// that relied on background ticking can switch by renaming the call. The
+		/// <paramref name="timeoutSeconds"/> value is reinterpreted as a tick budget
+		/// (ticks = timeoutSeconds * 20, matching the 20 Hz tick rate) so existing
+		/// timeouts stay generous.
+		/// </remarks>
+		protected IEnumerator WaitForTick(Func<bool> predicate, float timeoutSeconds = 10f,
+			string failMessage = "Condition not met within tick budget")
+		{
+			int maxTicks = Mathf.Max(1, Mathf.RoundToInt(timeoutSeconds * 20f));
+			int ticks = 0;
+			while (!predicate())
+			{
+				if (ticks++ >= maxTicks)
+				{
+					Assert.Fail(failMessage + $" (drove {maxTicks} ticks)");
+					yield break;
+				}
+				GameManager.Instance.SimulateTick();
+				yield return null;
+			}
+		}
+
+		/// <summary>
 		/// Wait a fixed number of frames.
 		/// </summary>
 		protected IEnumerator WaitFrames(int count)

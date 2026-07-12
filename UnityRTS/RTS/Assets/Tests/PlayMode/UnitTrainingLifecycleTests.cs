@@ -25,7 +25,7 @@ namespace GameManager.Tests.PlayMode
 			return baseUnit;
 		}
 
-		private void TickUnit(Unit unit) => unit.Update();
+		private void TickUnit(Unit unit) { unit.TickFixedUpdate(); unit.Update(); }
 
 		// ── Happy path ─────────────────────────────────────────────────────────
 
@@ -150,11 +150,12 @@ namespace GameManager.Tests.PlayMode
 				.OrderByDescending(u => u.UnitNbr)
 				.First();
 
+			// Footprint extends UP from the anchor (anchor + (i, +j)).
 			Vector3Int baseSize = Constants.UNIT_SIZE[UnitType.BASE];
 			HashSet<Vector3Int> baseCells = new HashSet<Vector3Int>();
 			for (int i = 0; i < baseSize.x; i++)
 				for (int j = 0; j < baseSize.y; j++)
-					baseCells.Add(basePos + new Vector3Int(i, -j, 0));
+					baseCells.Add(basePos + new Vector3Int(i, j, 0));
 
 			Assert.IsFalse(baseCells.Contains(newPawn.GridPosition),
 				$"Pawn spawned at {newPawn.GridPosition} which is inside the base footprint");

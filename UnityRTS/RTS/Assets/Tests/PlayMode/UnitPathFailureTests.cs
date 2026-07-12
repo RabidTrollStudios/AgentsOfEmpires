@@ -29,52 +29,39 @@ namespace GameManager.Tests.PlayMode
 			Unit baseUnit = PlaceUnit(UnitType.BASE, new Vector3Int(0, 5, 0));
 			baseUnit.IsBuilt = true;
 
-			// Place mine in the middle of the map
-			// MINE is 3x3 at (15,15), occupying (15..17, 15..13)
+			// Place mine in the middle of the map.
+			// MINE is 3x3 with an UPWARD footprint: anchor (15,15) occupies
+			// x=[15,17], y=[15,17]. Wall off the full 1-cell ring around that
+			// footprint (x=[14,18], y=[14,18]) so the pawn cannot reach any
+			// neighbor cell — forcing the "no path -> IDLE" behavior under test.
 			Unit mine = PlaceUnit(UnitType.MINE, new Vector3Int(15, 15, 0));
 
-			// Block all neighbor cells around the mine with terrain walls.
-			// The mine occupies x=[15,16,17], y=[15,14,13].
-			// Neighbors: ring around that 3x3 area.
-			int[] xs = { 14, 15, 16, 17, 18 };
-			int[] blockYs = { 16, 12 }; // top row and bottom row
-			foreach (int x in xs)
+			for (int x = 14; x <= 18; x++)
 			{
-				foreach (int y in blockYs)
+				for (int y = 14; y <= 18; y++)
 				{
-					if (x >= 0 && x < 30 && y >= 0 && y < 30)
-					{
-						ctx.MapManager.GridCells[x, y].SetWalkable(false);
-						ctx.MapManager.GridCells[x, y].SetBuildable(false);
-						ctx.MapManager.Grid.SetCellBlocked(x, y);
-					}
+					// Skip the mine's own footprint cells (x/y in [15,17]).
+					bool insideMine = x >= 15 && x <= 17 && y >= 15 && y <= 17;
+					if (insideMine) continue;
+					if (x < 0 || x >= 30 || y < 0 || y >= 30) continue;
+					ctx.MapManager.GridCells[x, y].SetWalkable(false);
+					ctx.MapManager.GridCells[x, y].SetBuildable(false);
+					ctx.MapManager.Grid.SetCellBlocked(x, y);
 				}
-			}
-			// Left and right columns
-			for (int y = 13; y <= 15; y++)
-			{
-				ctx.MapManager.GridCells[14, y].SetWalkable(false);
-				ctx.MapManager.GridCells[14, y].SetBuildable(false);
-				ctx.MapManager.Grid.SetCellBlocked(14, y);
-				ctx.MapManager.GridCells[18, y].SetWalkable(false);
-				ctx.MapManager.GridCells[18, y].SetBuildable(false);
-				ctx.MapManager.Grid.SetCellBlocked(18, y);
 			}
 
 			Unit pawn = PlaceUnit(UnitType.PAWN, new Vector3Int(7, 5, 0));
 			yield return null;
 
+			// The mine is fully walled off, so there is no path to any of its neighbor
+			// cells at command time. ProcessGather rejects an unreachable gather up front
+			// (NO_PATH_FOUND) without entering GATHER, so the pawn stays IDLE.
 			pawn.StartGathering(new GatherEventArgs(pawn, mine, baseUnit));
-			Assert.AreEqual(UnitAction.GATHER, pawn.CurrentAction);
 
-			// Tick many times — the pawn should eventually give up and go IDLE
-			yield return WaitUntil(() =>
-			{
-				BuildingTestHelper.Tick(pawn);
-				return pawn.CurrentAction == UnitAction.IDLE;
-			}, timeoutSeconds: 15f, failMessage: "Pawn should go IDLE after repeated path failures");
-
-			Assert.AreEqual(UnitAction.IDLE, pawn.CurrentAction);
+			Assert.AreNotEqual(UnitAction.GATHER, pawn.CurrentAction,
+				"Pawn should not start gathering a fully-unreachable mine");
+			Assert.AreEqual(UnitAction.IDLE, pawn.CurrentAction,
+				"Pawn should stay IDLE when the mine cannot be reached");
 		}
 
 		#endregion

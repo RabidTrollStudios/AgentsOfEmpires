@@ -11,17 +11,21 @@ namespace GameManager
     /// in deterministic order at the start of the next FixedUpdate via DeferredCommandQueue.
     ///
     /// This ensures command execution order matches SimGame for parity.
+    ///
+    /// NOTE: this adapter previously carried a per-unit failure "cooldown" (keyed on
+    /// Time.frameCount) that dropped repeated failing commands to throttle spam. The
+    /// headless SimGame has no such throttle, so it caused a cross-engine parity skew:
+    /// a command retried right after a precondition finally cleared (e.g. a build issued
+    /// the tick a base completes) was still on cooldown in Unity and took effect one tick
+    /// later than in the sim. The cooldown was removed so both engines queue every command
+    /// immediately; the shared CommandProcessor still validates and rejects invalid
+    /// commands at dispatch, so nothing actually executes that shouldn't.
     /// </summary>
     public class AgentActionsAdapter : IAgentActions
     {
         private Agent agent;
         private UnitManager unitManager;
         private ParityExporter parityExporter;
-
-        private readonly Dictionary<int, int> cooldownExpiry = new Dictionary<int, int>();
-        private readonly Dictionary<int, int> failureCount = new Dictionary<int, int>();
-        private const int BASE_COOLDOWN_FRAMES = 15;
-        private const int MAX_COOLDOWN_FRAMES = 120;
 
         public AgentActionsAdapter(Agent agent, UnitManager unitManager)
         {
@@ -38,59 +42,25 @@ namespace GameManager
                 targetX, targetY, targetUnit, buildingType, mineNbr, baseNbr);
         }
 
-        private bool IsOnCooldown(int unitNbr)
-        {
-            if (cooldownExpiry.TryGetValue(unitNbr, out int expiry))
-            {
-                if (Time.frameCount < expiry) return true;
-                cooldownExpiry.Remove(unitNbr);
-            }
-            return false;
-        }
-
-        private void ApplyCooldown(int unitNbr)
-        {
-            failureCount.TryGetValue(unitNbr, out int failures);
-            failures++;
-            failureCount[unitNbr] = failures;
-            int cooldown = BASE_COOLDOWN_FRAMES * (1 << System.Math.Min(failures - 1, 3));
-            if (cooldown > MAX_COOLDOWN_FRAMES) cooldown = MAX_COOLDOWN_FRAMES;
-            cooldownExpiry[unitNbr] = Time.frameCount + cooldown;
-        }
-
-        private void ResetCooldown(int unitNbr)
-        {
-            failureCount.Remove(unitNbr);
-            cooldownExpiry.Remove(unitNbr);
-        }
-
         /// <summary>
-        /// Validate through Agent.Commands. If it succeeds, queue the deferred command
-        /// instead of letting the Agent dispatch immediately.
-        /// Agent.Commands still calls EventDispatcher — we intercept by checking
-        /// the result and queueing separately. But we need to prevent the immediate dispatch.
-        ///
-        /// CHANGE: We no longer call agent.Move/Build/etc (which dispatch immediately).
-        /// Instead we do lightweight validation here and queue for deferred dispatch.
-        /// Heavy validation (pathfinding, buildability) happens at dispatch time via EventDispatcher.
-        /// </summary>
-        /// <summary>
-        /// Queue the command. Returns SUCCESS. Sets enqueued=true if this was the first
-        /// command for this unit this tick (for recording purposes).
+        /// Do lightweight capability validation here, then queue the command for
+        /// deferred dispatch. The full rule validation, pathfinding, gold, and state
+        /// init happen at dispatch time in AgentSDK.CommandProcessor (via
+        /// DeferredCommandQueue.ProcessAll) — the same shared path SimGame uses.
+        /// Returns SUCCESS. Sets enqueued=true if this was the first command for this
+        /// unit this tick (for recording purposes).
         /// </summary>
         private CommandResult ValidateAndQueue(int unitNbr, DeferredCommand cmd, out bool enqueued)
         {
             enqueued = DeferredCommandQueue.Enqueue(cmd);
-            if (enqueued) ResetCooldown(unitNbr);
             return CommandResult.SUCCESS;
         }
 
         public CommandResult Move(int unitNbr, Position target)
         {
-            if (IsOnCooldown(unitNbr)) return CommandResult.ON_COOLDOWN;
             var unit = unitManager.GetUnit(unitNbr);
-            if (unit == null) { ApplyCooldown(unitNbr); return CommandResult.UNIT_NOT_FOUND; }
-            if (!unit.CanMove) { ApplyCooldown(unitNbr); return CommandResult.UNIT_CANNOT_PERFORM_ACTION; }
+            if (unit == null) { return CommandResult.UNIT_NOT_FOUND; }
+            if (!unit.CanMove) { return CommandResult.UNIT_CANNOT_PERFORM_ACTION; }
 
             var targetVec = new Vector3Int(target.X, target.Y, 0);
             if (unit.CurrentAction == UnitAction.MOVE && unit.TargetGridPos == targetVec)
@@ -108,10 +78,9 @@ namespace GameManager
 
         public CommandResult Build(int unitNbr, Position target, AgentSDK.UnitType unitType)
         {
-            if (IsOnCooldown(unitNbr)) return CommandResult.ON_COOLDOWN;
             var unit = unitManager.GetUnit(unitNbr);
-            if (unit == null) { ApplyCooldown(unitNbr); return CommandResult.UNIT_NOT_FOUND; }
-            if (!unit.CanBuild) { ApplyCooldown(unitNbr); return CommandResult.UNIT_CANNOT_PERFORM_ACTION; }
+            if (unit == null) { return CommandResult.UNIT_NOT_FOUND; }
+            if (!unit.CanBuild) { return CommandResult.UNIT_CANNOT_PERFORM_ACTION; }
 
             var result = ValidateAndQueue(unitNbr, new DeferredCommand
             {
@@ -126,13 +95,12 @@ namespace GameManager
 
         public CommandResult Gather(int pawnNbr, int mineNbr, int baseNbr)
         {
-            if (IsOnCooldown(pawnNbr)) return CommandResult.ON_COOLDOWN;
             var pawn = unitManager.GetUnit(pawnNbr);
             var mine = unitManager.GetUnit(mineNbr);
             var baseUnit = unitManager.GetUnit(baseNbr);
-            if (pawn == null) { ApplyCooldown(pawnNbr); return CommandResult.UNIT_NOT_FOUND; }
-            if (mine == null || baseUnit == null) { ApplyCooldown(pawnNbr); return CommandResult.TARGET_NOT_FOUND; }
-            if (!pawn.CanGather) { ApplyCooldown(pawnNbr); return CommandResult.UNIT_CANNOT_PERFORM_ACTION; }
+            if (pawn == null) { return CommandResult.UNIT_NOT_FOUND; }
+            if (mine == null || baseUnit == null) { return CommandResult.TARGET_NOT_FOUND; }
+            if (!pawn.CanGather) { return CommandResult.UNIT_CANNOT_PERFORM_ACTION; }
 
             var result = ValidateAndQueue(pawnNbr, new DeferredCommand
             {
@@ -146,10 +114,9 @@ namespace GameManager
 
         public CommandResult Train(int buildingNbr, AgentSDK.UnitType unitType)
         {
-            if (IsOnCooldown(buildingNbr)) return CommandResult.ON_COOLDOWN;
             var building = unitManager.GetUnit(buildingNbr);
-            if (building == null) { ApplyCooldown(buildingNbr); return CommandResult.UNIT_NOT_FOUND; }
-            if (!building.CanTrain) { ApplyCooldown(buildingNbr); return CommandResult.UNIT_CANNOT_PERFORM_ACTION; }
+            if (building == null) { return CommandResult.UNIT_NOT_FOUND; }
+            if (!building.CanTrain) { return CommandResult.UNIT_CANNOT_PERFORM_ACTION; }
 
             var result = ValidateAndQueue(buildingNbr, new DeferredCommand
             {
@@ -163,12 +130,11 @@ namespace GameManager
 
         public CommandResult Attack(int unitNbr, int targetNbr)
         {
-            if (IsOnCooldown(unitNbr)) return CommandResult.ON_COOLDOWN;
             var unit = unitManager.GetUnit(unitNbr);
             var target = unitManager.GetUnit(targetNbr);
-            if (unit == null) { ApplyCooldown(unitNbr); return CommandResult.UNIT_NOT_FOUND; }
-            if (target == null) { ApplyCooldown(unitNbr); return CommandResult.TARGET_NOT_FOUND; }
-            if (!unit.CanAttack) { ApplyCooldown(unitNbr); return CommandResult.UNIT_CANNOT_PERFORM_ACTION; }
+            if (unit == null) { return CommandResult.UNIT_NOT_FOUND; }
+            if (target == null) { return CommandResult.TARGET_NOT_FOUND; }
+            if (!unit.CanAttack) { return CommandResult.UNIT_CANNOT_PERFORM_ACTION; }
 
             if (unit.CurrentAction == UnitAction.ATTACK
                 && unit.AttackUnit != null
@@ -187,12 +153,11 @@ namespace GameManager
 
         public CommandResult Repair(int pawnNbr, int buildingNbr)
         {
-            if (IsOnCooldown(pawnNbr)) return CommandResult.ON_COOLDOWN;
             var pawn = unitManager.GetUnit(pawnNbr);
             var building = unitManager.GetUnit(buildingNbr);
-            if (pawn == null) { ApplyCooldown(pawnNbr); return CommandResult.UNIT_NOT_FOUND; }
-            if (building == null) { ApplyCooldown(pawnNbr); return CommandResult.TARGET_NOT_FOUND; }
-            if (!pawn.CanBuild) { ApplyCooldown(pawnNbr); return CommandResult.UNIT_CANNOT_PERFORM_ACTION; }
+            if (pawn == null) { return CommandResult.UNIT_NOT_FOUND; }
+            if (building == null) { return CommandResult.TARGET_NOT_FOUND; }
+            if (!pawn.CanBuild) { return CommandResult.UNIT_CANNOT_PERFORM_ACTION; }
 
             var result = ValidateAndQueue(pawnNbr, new DeferredCommand
             {
@@ -206,12 +171,11 @@ namespace GameManager
 
         public CommandResult Heal(int monkNbr, int targetNbr)
         {
-            if (IsOnCooldown(monkNbr)) return CommandResult.ON_COOLDOWN;
             var monk = unitManager.GetUnit(monkNbr);
             var target = unitManager.GetUnit(targetNbr);
-            if (monk == null) { ApplyCooldown(monkNbr); return CommandResult.UNIT_NOT_FOUND; }
-            if (target == null) { ApplyCooldown(monkNbr); return CommandResult.TARGET_NOT_FOUND; }
-            if (!monk.CanHeal) { ApplyCooldown(monkNbr); return CommandResult.UNIT_CANNOT_PERFORM_ACTION; }
+            if (monk == null) { return CommandResult.UNIT_NOT_FOUND; }
+            if (target == null) { return CommandResult.TARGET_NOT_FOUND; }
+            if (!monk.CanHeal) { return CommandResult.UNIT_CANNOT_PERFORM_ACTION; }
 
             if (monk.CurrentAction == UnitAction.HEAL)
                 return CommandResult.SUCCESS;

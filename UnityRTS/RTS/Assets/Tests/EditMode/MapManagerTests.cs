@@ -223,7 +223,7 @@ namespace GameManager.Tests
 		}
 
 		[Test]
-		public void IsNeighborOfUnit_Base3x3_AdjacentToFootprint_True()
+		public void IsNeighborOfUnit_Base_AdjacentToFootprint_True()
 		{
 			// BASE is 6x4 at (2,5). Cell (1,5) is left of the footprint
 			Assert.IsTrue(manager.IsNeighborOfUnit(

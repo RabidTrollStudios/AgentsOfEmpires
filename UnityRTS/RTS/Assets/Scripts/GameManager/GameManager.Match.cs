@@ -78,8 +78,14 @@ namespace GameManager
 			unitManager.UnitPrefabs = new Dictionary<int, Dictionary<UnitType, GameObject>>();
 			Agents = new Dictionary<int, GameObject>();
 
-			// Randomly select one player to be instantiated first, for fairness
-			if (Random.Range(0, 2) == 0)
+			// Which player is instantiated first (AgentNbr 0 / spawn slot 0) is chosen
+			// deterministically from the shared map seed (MapGenResult.BlueIsAgent0),
+			// so the headless SimGame makes the SAME choice — no UnityEngine.Random, no
+			// parity swap. Hand-made maps (no procedural result) default to blue-first.
+			// Mirror-diagonal maps make this mechanically fair; the flip just varies who
+			// visually starts where. (Replaces the old Random.Range(0,2) coin flip — U5.)
+			bool blueIsAgent0 = proceduralMapResult?.BlueIsAgent0 ?? true;
+			if (blueIsAgent0)
 			{
 				CreateAgent(Constants.BLUE_ABBR, BlueDllName, Prefabs.BluePlayerPrefab, unitManager.BlueUnitPrefabs, blueDebuggerPanel);
 				CreateAgent(Constants.RED_ABBR, RedDllName, Prefabs.RedPlayerPrefab, unitManager.RedUnitPrefabs, redDebuggerPanel);

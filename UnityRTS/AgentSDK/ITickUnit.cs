@@ -42,6 +42,13 @@ namespace AgentSDK
         Position BuildSite { get; set; }
         int BuildTargetNbr { get; set; }
 
+        /// <summary>
+        /// Construction progress (seconds) accumulated on an unbuilt BUILDING unit.
+        /// Lives on the building — not the pawn — so it survives the builder's death
+        /// and lets any pawn resume construction. Ignored on non-building units.
+        /// </summary>
+        float BuildProgress { get; set; }
+
         // Gathering
         int GatherMineNbr { get; set; }
         int GatherBaseNbr { get; set; }
@@ -51,6 +58,15 @@ namespace AgentSDK
 
         // Combat
         int AttackTargetNbr { get; set; }
+
+        /// <summary>
+        /// Set when a pursuit pathfind was deferred this tick by <see cref="PathBudget"/>.
+        /// The unit keeps its action and target but has no path yet; the per-tick Advance*
+        /// handler retries the (gated) pathfind each tick until the budget admits it.
+        /// Cleared as soon as a path is obtained or the action ends. Purely an engine-side
+        /// rate-limit flag — the PlanningAgent neither sets nor sees it.
+        /// </summary>
+        bool RepathPending { get; set; }
 
         // Repair
         int RepairBuildingNbr { get; set; }
