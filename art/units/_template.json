@@ -1,0 +1,49 @@
+{
+  "$schema-note": "Reproducibility manifest for one unit's art. Copy this file to art/units/<unit>/manifest.json and fill it in. Its purpose: any frame can be regenerated identically later, and the dataset is self-documenting for AI training. See docs/art-generation.md.",
+
+  "unit": "PAWN",
+  "displayName": "Pawn",
+  "owner": "Rabid Troll Studios LLC",
+  "license": "MIT (art/LICENSE)",
+
+  "generation": {
+    "tool": "ComfyUI",
+    "baseModel": {
+      "name": "sd_xl_base_1.0.safetensors",
+      "family": "SDXL",
+      "license": "CreativeML OpenRAIL-M",
+      "sha256": "FILL_IN"
+    },
+    "styleFragment": "flat 2D game sprite, top-down 3/4 view, clean cel shading, bold readable silhouette, limited palette, cute cartoonish character, single character centered on transparent background, no ground shadow, consistent line weight",
+    "unitPrompt": "FILL_IN — the unit-specific description appended to the style fragment",
+    "negativePrompt": "FILL_IN",
+    "sampler": "dpmpp_2m",
+    "scheduler": "karras",
+    "steps": 30,
+    "cfg": 6.5,
+    "seed": 0,
+    "loras": [
+      { "name": "aoe-style", "purpose": "house style consistency", "weight": 0.8 }
+    ],
+    "controlnet": {
+      "model": "FILL_IN (e.g. SDXL OpenPose / ControlNet Union)",
+      "poses": "art/units/PAWN/poses/  (OpenPose skeletons, one per frame)"
+    },
+    "animateDiff": {
+      "motionModule": "mm_sdxl_v10_beta.ckpt",
+      "contextFrames": 8
+    }
+  },
+
+  "animations": {
+    "idle":   { "frames": 4, "sheet": "idle.png" },
+    "walk":   { "frames": 8, "sheet": "walk.png" },
+    "attack": { "frames": 6, "sheet": "attack.png" }
+  },
+
+  "handEditing": "FILL_IN — describe any manual cleanup/compositing done. (Relevant both for reproducibility and because meaningful human editing is what can make the assembled sprite sheet copyrightable, if that is ever wanted.)",
+
+  "deployedTo": "UnityRTS/RTS/Assets/... (path where the finished sheet is imported into Unity)",
+
+  "notes": ""
+}

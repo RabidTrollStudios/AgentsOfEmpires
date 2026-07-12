@@ -255,10 +255,23 @@ By participating you agree to abide by the [Code of Conduct](CODE_OF_CONDUCT.md)
 
 ## License
 
-Released under the [MIT License](LICENSE). © 2026 Rabid Troll Studios LLC.
+© 2026 Rabid Troll Studios LLC. This repository is **dual-licensed** — see the
+[LICENSE](LICENSE) map for the authoritative details and [NOTICE.md](NOTICE.md) for a
+plain-English summary:
 
-This repository also bundles third-party assets and packages (e.g. Unity packages and sprite
-art) that are covered by their own licenses; those licenses remain in effect for the
-respective files. See [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md) for the inventory.
+| Part | License |
+|------|---------|
+| **Agent SDK** (`UnityRTS/AgentSDK/`) — the contract agents build against | [MIT](UnityRTS/AgentSDK/LICENSE) — write & keep your agent private or commercial |
+| **Engine & everything else** — simulation, harness, runners, Unity front-end, tests | [AGPL-3.0-or-later](LICENSES/AGPL-3.0.txt) + [AI-training exception](LICENSES/EXCEPTION-AI-TRAINING.txt) |
+| **Art** (`art/`) | [MIT](art/LICENSE) — maximally open |
+
+**Why:** the SDK is permissive so anyone can build (even commercial) agents against it; the
+engine is copyleft so it can't be taken closed-source; the art is fully open. **AI/ML training
+on the whole repo — code and art — is expressly permitted for everyone, commercially, with no
+attribution required** (the AGPL part is freed for training use by the exception above).
+
+This repository also bundles third-party assets and packages (e.g. Unity packages and fonts)
+that are covered by their own licenses; those licenses remain in effect for the respective
+files. See [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md) for the inventory.
 
 Security issues? See our [Security Policy](SECURITY.md).
