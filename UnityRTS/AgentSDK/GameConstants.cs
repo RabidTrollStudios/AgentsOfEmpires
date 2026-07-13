@@ -292,6 +292,20 @@ namespace AgentSDK
                 { UnitType.MONASTERY, 0f }, { UnitType.MONK, 100f },
             });
 
+        /// <summary>
+        /// Canonical "distances/quantities smaller than this are effectively zero" tolerance for
+        /// the continuous-movement and float-threshold math. Historically a bare 0.01f literal at
+        /// the same-cell movement guards (MovementSystem, TaskEngine.TryMoveToCell); promoted to a
+        /// named constant so movement AND mana share one value. Also the grid mana is SNAPPED to
+        /// this resolution each regen tick (see TaskEngine.RegenMana): mana accumulates in float32
+        /// and Mono (Unity) vs .NET (sim) round the running sum to opposite sides of a whole-number
+        /// threshold like MANA_COST=10, so an agent/engine `mana >= MANA_COST` check disagrees
+        /// across runtimes (the divergence the faithful DetCommander parity game surfaced near
+        /// tick 317, oscillating around 10.0). Snapping every mana value to this 0.01 grid makes
+        /// both engines carry the IDENTICAL value, so every threshold comparison agrees.
+        /// </summary>
+        public static readonly float MOVEMENT_EPSILON = 0.01f;
+
         /// <summary>Mana cost per heal action (10% of max mana)</summary>
         public static readonly float MANA_COST = 10f;
 

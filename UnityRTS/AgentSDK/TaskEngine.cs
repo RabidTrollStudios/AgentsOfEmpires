@@ -44,7 +44,7 @@ namespace AgentSDK
             GameGrid grid, out float distCost)
         {
             distCost = Position.Distance(currentPos, nextPos);
-            if (distCost < 0.01f) distCost = 1.0f; // safety: same-cell fallback
+            if (distCost < GameConstants.MOVEMENT_EPSILON) distCost = 1.0f; // safety: same-cell fallback
 
             if (moveAccumulator < distCost)
                 return MoveResult.INSUFFICIENT_MOVEMENT;
@@ -264,12 +264,27 @@ namespace AgentSDK
         #region Mana
 
         /// <summary>
-        /// Regenerate mana for a unit per tick.
+        /// Regenerate mana for a unit per tick. The result is SNAPPED to the shared
+        /// <see cref="GameConstants.MOVEMENT_EPSILON"/> grid (0.01) so the accumulated value is
+        /// bit-identical across Mono/.NET and every `mana >= MANA_COST` check agrees on both
+        /// engines — see that constant for the full rationale.
         /// </summary>
         public static float RegenMana(float currentMana, float maxMana, float manaRegenPerSecond, float tickDuration)
         {
             if (maxMana <= 0 || currentMana >= maxMana) return currentMana;
-            return Math.Min(currentMana + manaRegenPerSecond * tickDuration, maxMana);
+            float regened = Math.Min(currentMana + manaRegenPerSecond * tickDuration, maxMana);
+            return SnapToGrid(regened, GameConstants.MOVEMENT_EPSILON);
+        }
+
+        /// <summary>
+        /// Round <paramref name="value"/> to the nearest multiple of <paramref name="grid"/> using
+        /// IEEE round-half-to-even, which is identical across runtimes. Used to keep accumulated
+        /// float quantities (mana) on a shared grid so both engines carry the same value.
+        /// </summary>
+        public static float SnapToGrid(float value, float grid)
+        {
+            if (grid <= 0f) return value;
+            return (float)(Math.Round(value / grid, MidpointRounding.ToEven) * grid);
         }
 
         #endregion
