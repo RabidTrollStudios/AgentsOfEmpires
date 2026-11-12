@@ -11,10 +11,20 @@ and the workflow for keeping art consistent across units is documented in
 
 ## Art direction
 
-Flat-vector, smooth, cartoonish — cute, readable characters that make matches
-fun to watch. Bold silhouettes, limited palette, clean cel shading, top-down
-3/4 view. Consistency across the roster is maintained with a shared style
-prompt fragment and a style LoRA (see the generation guide).
+Soft hand-painted 2.5D — cute, readable creatures that make matches fun to watch.
+A **high-angle 3/4 top-down camera**, **soft volumetric shading** (single top-left
+light, gentle form shadows, soft occlusion, crisp rim highlights), **chibi
+proportions** (big round head/helmet, small stout body, stubby limbs), a **thin
+dark desaturated outline**, and a **cohesive muted palette** (teal, slate-blue,
+warm sand, soft green). Cute comes from roundness and proportion, not exaggerated
+faces. Every creature must read instantly from above at tiny spectator-view scale.
+
+The authoritative art direction and the full prompt kit live in
+[`style/house-style.md`](style/house-style.md), with per-asset prompt lines in
+[`style/prompts-units.md`](style/prompts-units.md) and
+[`style/prompts-buildings.md`](style/prompts-buildings.md). Consistency across the
+roster is maintained with that shared style fragment plus a trained style LoRA
+(see the generation guide).
 
 ## Layout
 
