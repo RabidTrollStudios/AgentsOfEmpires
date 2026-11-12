@@ -1,0 +1,55 @@
+{
+  "$schema-note": "Reproducibility manifest for one unit's art. Pre-filled from art/style/ (house-style.md + prompts-units.md). Fill in sha256, seed(s), controlnet model, and handEditing after generating. See docs/art-generation.md.",
+
+  "unit": "LANCER",
+  "displayName": "Lancer",
+  "owner": "Rabid Troll Studios LLC",
+  "license": "MIT (art/LICENSE)",
+
+  "role": "Reach / cavalry — 900 hp, dmg 42, range 2.5, mobile. Trained at the Tower. Longest weapon silhouette. Beats Warrior, loses to Archer (RPS triangle).",
+
+  "openQuestion": "MOUNTED vs ON FOOT not yet locked — unitPrompt offers both as an option. Pick one, delete the other half of the prompt, then lock. (See art/style/prompts-units.md LANCER notes.)",
+
+  "generation": {
+    "tool": "ComfyUI",
+    "baseModel": {
+      "name": "sd_xl_base_1.0.safetensors",
+      "family": "SDXL",
+      "license": "CreativeML OpenRAIL-M",
+      "sha256": "FILL_IN"
+    },
+    "styleFragment": "soft hand-painted 2D game sprite, high-angle 3/4 top-down view, chibi proportions with large rounded head and small stout body and short stubby limbs, soft volumetric cel shading, single soft light from top-left, gentle gradient form shadows, soft ambient occlusion, crisp rim highlight, thin dark desaturated outline, cohesive muted palette of teal slate-blue warm-sand and soft-green, bold readable silhouette, cute by proportion not by expression, single character centered, transparent background, no cast ground shadow, consistent line weight, game asset, clean edges",
+    "styleFragmentSource": "art/style/house-style.md (authoritative — keep in sync)",
+    "unitPrompt": "a chibi lancer with a very long spear or lance held forward, a light open helmet with a small blue pennant as the team color, a medium build between the heavy knight and the light archer, a blue tunic, poised and mobile, long reach, braced forward stance, calm determined simple face; OPTION: riding a small round sturdy pony seen from a high 3/4 top-down angle",
+    "teamColorZone": "blue pennant on the lance + blue tunic (generate master in blue key, recolor per team)",
+    "negativePrompt": "side view, front orthographic view, flat orthographic, isometric grid, realistic human proportions, tall lanky body, heavy black comic ink outline, cel-shaded anime, harsh cast shadow on ground, busy background, scenery, multiple characters, text, watermark, signature, logo, oversaturated neon colors, gradient background, photorealistic, 3d render, blurry, low contrast, extra limbs, deformed hands, exaggerated screaming face, bulging eyes, short weapon",
+    "sampler": "dpmpp_2m",
+    "scheduler": "karras",
+    "steps": 30,
+    "cfg": 6.5,
+    "seed": "FILL_IN — record the winning seed",
+    "loras": [
+      { "name": "aoe-style", "purpose": "house style consistency", "weight": 0.8 }
+    ],
+    "controlnet": {
+      "model": "FILL_IN (e.g. SDXL OpenPose / ControlNet Union)",
+      "poses": "art/units/lancer/poses/  (OpenPose skeletons, one per frame, posed from a high 3/4 angle)"
+    },
+    "animateDiff": {
+      "motionModule": "mm_sdxl_v10_beta.ckpt",
+      "contextFrames": 8
+    }
+  },
+
+  "animations": {
+    "idle":   { "frames": 4, "sheet": "idle.png",   "note": "lance upright, mobile stance" },
+    "walk":   { "frames": 8, "sheet": "walk.png",   "note": "quick advance (gallop if mounted)" },
+    "attack": { "frames": 6, "sheet": "attack.png", "note": "signature action: braced forward lance thrust" }
+  },
+
+  "handEditing": "FILL_IN — describe any manual cleanup/compositing done.",
+
+  "deployedTo": "UnityRTS/RTS/Assets/... (path where the finished sheet is imported into Unity)",
+
+  "notes": "The long lance is the silhouette read — give it the longest weapon of the roster so the triangle (bulky Warrior / lithe Archer / long-reach Lancer) is obvious from above. Lock mounted-vs-foot before generating so idle/walk/attack poses are consistent."
+}
