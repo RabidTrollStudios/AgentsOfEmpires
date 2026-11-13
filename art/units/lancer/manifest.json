@@ -6,9 +6,9 @@
   "owner": "Rabid Troll Studios LLC",
   "license": "MIT (art/LICENSE)",
 
-  "role": "Reach / cavalry — 900 hp, dmg 42, range 2.5, mobile. Trained at the Tower. Longest weapon silhouette. Beats Warrior, loses to Archer (RPS triangle).",
+  "role": "Reach fighter (on foot) — 900 hp, dmg 42, range 2.5, mobile. Trained at the Tower. Longest weapon silhouette. Beats Warrior, loses to Archer (RPS triangle).",
 
-  "openQuestion": "MOUNTED vs ON FOOT not yet locked — unitPrompt offers both as an option. Pick one, delete the other half of the prompt, then lock. (See art/style/prompts-units.md LANCER notes.)",
+  "mountDecision": "ON FOOT (locked 2026-11-13). A foot pikeman with a very long lance — not mounted. Reach comes from the weapon length, not a mount.",
 
   "generation": {
     "tool": "ComfyUI",
@@ -20,9 +20,9 @@
     },
     "styleFragment": "soft hand-painted 2D game sprite, high-angle 3/4 top-down view, chibi proportions with large rounded head and small stout body and short stubby limbs, soft volumetric cel shading, single soft light from top-left, gentle gradient form shadows, soft ambient occlusion, crisp rim highlight, thin dark desaturated outline, cohesive muted palette of teal slate-blue warm-sand and soft-green, bold readable silhouette, cute by proportion not by expression, single character centered, transparent background, no cast ground shadow, consistent line weight, game asset, clean edges",
     "styleFragmentSource": "art/style/house-style.md (authoritative — keep in sync)",
-    "unitPrompt": "a chibi lancer with a very long spear or lance held forward, a light open helmet with a small blue pennant as the team color, a medium build between the heavy knight and the light archer, a blue tunic, poised and mobile, long reach, braced forward stance, calm determined simple face; OPTION: riding a small round sturdy pony seen from a high 3/4 top-down angle",
+    "unitPrompt": "a chibi foot soldier pikeman holding a very long lance forward with both hands, standing on foot (no mount), a light open helmet with a small blue pennant as the team color, a medium build between the heavy knight and the light archer, a blue tunic, poised and mobile, long reach, braced forward stance, calm determined simple face",
     "teamColorZone": "blue pennant on the lance + blue tunic (generate master in blue key, recolor per team)",
-    "negativePrompt": "side view, front orthographic view, flat orthographic, isometric grid, realistic human proportions, tall lanky body, heavy black comic ink outline, cel-shaded anime, harsh cast shadow on ground, busy background, scenery, multiple characters, text, watermark, signature, logo, oversaturated neon colors, gradient background, photorealistic, 3d render, blurry, low contrast, extra limbs, deformed hands, exaggerated screaming face, bulging eyes, short weapon",
+    "negativePrompt": "side view, front orthographic view, flat orthographic, isometric grid, realistic human proportions, tall lanky body, heavy black comic ink outline, cel-shaded anime, harsh cast shadow on ground, busy background, scenery, multiple characters, text, watermark, signature, logo, oversaturated neon colors, gradient background, photorealistic, 3d render, blurry, low contrast, extra limbs, deformed hands, exaggerated screaming face, bulging eyes, short weapon, horse, pony, mount, riding, cavalry",
     "sampler": "dpmpp_2m",
     "scheduler": "karras",
     "steps": 30,
@@ -43,7 +43,7 @@
 
   "animations": {
     "idle":   { "frames": 4, "sheet": "idle.png",   "note": "lance upright, mobile stance" },
-    "walk":   { "frames": 8, "sheet": "walk.png",   "note": "quick advance (gallop if mounted)" },
+    "walk":   { "frames": 8, "sheet": "walk.png",   "note": "quick advance on foot, lance carried" },
     "attack": { "frames": 6, "sheet": "attack.png", "note": "signature action: braced forward lance thrust" }
   },
 
@@ -51,5 +51,5 @@
 
   "deployedTo": "UnityRTS/RTS/Assets/... (path where the finished sheet is imported into Unity)",
 
-  "notes": "The long lance is the silhouette read — give it the longest weapon of the roster so the triangle (bulky Warrior / lithe Archer / long-reach Lancer) is obvious from above. Lock mounted-vs-foot before generating so idle/walk/attack poses are consistent."
+  "notes": "On foot (locked). The long lance is the silhouette read — give it the longest weapon of the roster so the triangle (bulky Warrior / lithe Archer / long-reach Lancer) is obvious from above."
 }

@@ -70,27 +70,28 @@ clearly lighter and more agile than the armored knight
 
 ---
 
-## LANCER — reach / cavalry (900 hp, dmg 42, range 2.5, mobile, beats Warrior)
+## LANCER — reach fighter, on foot (900 hp, dmg 42, range 2.5, mobile, beats Warrior)
 
 The reach fighter. The engine has the **Tower** train the Lancer, and its 2.5 range
-+ mobility read as a mounted or long-reach spearman. Give it the longest weapon
-silhouette and a sense of speed. (Mount optional — a small sturdy pony reads great
-from above and sells "cavalry"; a foot pikeman with a very long lance also works.
-Pick one and keep it consistent.)
++ mobility read as a long-reach spearman. **On foot (locked 2026-11-13)** — a foot
+pikeman with a very long lance, not mounted. Reach comes from the weapon length, and
+mobility from a light, poised stance. Give it the longest weapon silhouette of the
+roster.
 
 ```
-a chibi lancer with a very long spear or lance held forward, a light open helmet
-with a small blue pennant as the team color, a medium build between the heavy
-knight and the light archer, a blue tunic, poised and mobile, long reach, braced
-forward stance, calm determined simple face; OPTION: riding a small round sturdy
-pony seen from a high 3/4 top-down angle
+a chibi foot soldier pikeman holding a very long lance forward with both hands,
+standing on foot, a light open helmet with a small blue pennant as the team color,
+a medium build between the heavy knight and the light archer, a blue tunic, poised
+and mobile, long reach, braced forward stance, calm determined simple face
 ```
 
 - **Team zone:** blue pennant on the lance + blue tunic.
 - **Signature action:** a braced forward lance thrust.
+- **Negatives (per-unit):** add `horse, pony, mount, riding, cavalry` so it stays
+  reliably on foot.
 - **Notes:** the **long lance** is the read — give it the longest weapon of the
   roster so the triangle (bulky warrior / lithe archer / long-reach lancer) is
-  obvious from above. Decide mounted-vs-foot once, then lock it.
+  obvious from above.
 
 ---
 
